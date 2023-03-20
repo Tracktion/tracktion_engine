@@ -1,0 +1,9 @@
+<map id="tracktion::engine::ClipOwner" name="tracktion::engine::ClipOwner">
+<area shape="rect" id="node1" title="Base class for items that can contain clips." alt="" coords="5,137,145,179"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ClipTrack.html" title=" " alt="" coords="193,104,333,145"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="193,169,333,211"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="381,5,521,47"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1AudioTrack.html" title=" " alt="" coords="381,71,521,112"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1ChordTrack.html" title=" " alt="" coords="381,136,521,177"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1MarkerTrack.html" title=" " alt="" coords="381,201,521,243"/>
+</map>

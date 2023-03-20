@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -117,7 +117,7 @@
 <a name="55"><span class="lineNum">      55 </span>            :         {</a>
 <a name="56"><span class="lineNum">      56 </span>            :             const auto duration = 8.0s;</a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :             auto c = getAudioTracks (*edit)[0]-&gt;insertMIDIClip ({ 0.0s, TimePosition (duration) }, nullptr);</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :             const auto sequence = test_utilities::createRandomMidiMessageSequence (c-&gt;getPosition().getLength().inSeconds(), r, { 0.031, 0.062 });</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :             const auto sequence = graph::test_utilities::createRandomMidiMessageSequence (c-&gt;getPosition().getLength().inSeconds(), r, { 0.031, 0.062 });</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :             {</a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">          3 :                 ScopedBenchmark sb (getDescription (&quot;Add sequence to clip&quot;));</span></a>

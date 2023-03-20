@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">94</td>
-            <td class="headerCovTableEntry">218</td>
-            <td class="headerCovTableEntryLo">43.1 %</td>
+            <td class="headerCovTableEntry">219</td>
+            <td class="headerCovTableEntryLo">42.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -277,13 +277,13 @@
 <a name="215"><span class="lineNum">     215 </span>            :     return false;</a>
 <a name="216"><span class="lineNum">     216 </span>            : }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3829373 : float FolderTrack::getVcaDb (TimePosition time)</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3829375 : float FolderTrack::getVcaDb (TimePosition time)</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3829373 :     const std::scoped_lock sl (pluginMutex);</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3829375 :     const std::scoped_lock sl (pluginMutex);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    3829373 :     if (auto ptr = vcaPlugin)</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">    3810013 :         if (ptr-&gt;isEnabled())</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    3810010 :             return ptr-&gt;updateAutomationStreamAndGetVolumeDb (time);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    3829375 :     if (auto ptr = vcaPlugin)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">    3810015 :         if (ptr-&gt;isEnabled())</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    3810014 :             return ptr-&gt;updateAutomationStreamAndGetVolumeDb (time);</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">      19360 :     return 0.0f;</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : }</a>
@@ -366,7 +366,7 @@
 <a name="304"><span class="lineNum">     304 </span>            : </a>
 <a name="305"><span class="lineNum">     305 </span>            :         // find all the clips on sub tracks</a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :         for (auto at : getAllAudioSubTracks (true))</span></a>
-<a name="307"><span class="lineNum">     307 </span>            :             clips.addArray (at-&gt;getClips());</a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :             clips.addArray (at-&gt;getClips());</span></a>
 <a name="308"><span class="lineNum">     308 </span>            : </a>
 <a name="309"><span class="lineNum">     309 </span>            :         TrackItem::sortByTime (clips);</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>

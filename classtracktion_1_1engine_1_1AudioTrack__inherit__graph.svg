@@ -12,9 +12,9 @@
 <g id="node1" class="node">
 <title>Node1</title>
 <g id="a_node1"><a xlink:title=" ">
-<polygon fill="#bfbfbf" stroke="black" points="455,-49.5 455,-79.5 560,-79.5 560,-49.5 455,-49.5"/>
-<text text-anchor="start" x="463" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="507.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">AudioTrack</text>
+<polygon fill="#bfbfbf" stroke="black" points="455,-24.5 455,-54.5 560,-54.5 560,-24.5 455,-24.5"/>
+<text text-anchor="start" x="463" y="-42.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="507.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">AudioTrack</text>
 </a>
 </g>
 </g>
@@ -22,17 +22,17 @@
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classtracktion_1_1engine_1_1ClipTrack.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="314,-49.5 314,-79.5 419,-79.5 419,-49.5 314,-49.5"/>
-<text text-anchor="start" x="322" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="366.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClipTrack</text>
+<polygon fill="none" stroke="black" points="314,-24.5 314,-54.5 419,-54.5 419,-24.5 314,-24.5"/>
+<text text-anchor="start" x="322" y="-42.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="366.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClipTrack</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M429.44,-64.5C437.88,-64.5 446.47,-64.5 454.7,-64.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="429.26,-61 419.26,-64.5 429.26,-68 429.26,-61"/>
+<path fill="none" stroke="midnightblue" d="M429.44,-39.5C437.88,-39.5 446.47,-39.5 454.7,-39.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="429.26,-36 419.26,-39.5 429.26,-43 429.26,-36"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
@@ -47,8 +47,8 @@
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M288.44,-64.5C296.88,-64.5 305.47,-64.5 313.7,-64.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="288.26,-61 278.26,-64.5 288.26,-68 288.26,-61"/>
+<path fill="none" stroke="midnightblue" d="M288.16,-53.41C296.69,-51.88 305.38,-50.31 313.7,-48.82"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="287.48,-49.98 278.26,-55.19 288.72,-56.87 287.48,-49.98"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
@@ -97,6 +97,22 @@
 <title>Node6&#45;&gt;Node3</title>
 <path fill="none" stroke="midnightblue" d="M127.26,-33.76C143.61,-38.93 161.21,-44.49 176.89,-49.45"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="127.86,-30.28 117.27,-30.6 125.75,-36.95 127.86,-30.28"/>
+</g>
+<!-- Node7 -->
+<g id="node7" class="node">
+<title>Node7</title>
+<g id="a_node7"><a xlink:href="classtracktion_1_1engine_1_1ClipOwner.html" target="_top" xlink:title="Base class for items that can contain clips.">
+<polygon fill="none" stroke="black" points="173,-0.5 173,-30.5 278,-30.5 278,-0.5 173,-0.5"/>
+<text text-anchor="start" x="181" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="225.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClipOwner</text>
+</a>
+</g>
+</g>
+<!-- Node7&#45;&gt;Node2 -->
+<g id="edge6" class="edge">
+<title>Node7&#45;&gt;Node2</title>
+<path fill="none" stroke="midnightblue" d="M288.16,-26.15C296.69,-27.62 305.38,-29.12 313.7,-30.56"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="288.71,-22.69 278.26,-24.44 287.52,-29.59 288.71,-22.69"/>
 </g>
 </g>
 </svg>

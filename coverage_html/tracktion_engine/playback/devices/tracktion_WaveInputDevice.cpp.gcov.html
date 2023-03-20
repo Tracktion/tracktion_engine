@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">18</td>
@@ -1216,21 +1216,21 @@
 <a name="1154"><span class="lineNum">    1154 </span>            : };</a>
 <a name="1155"><span class="lineNum">    1155 </span>            : </a>
 <a name="1156"><span class="lineNum">    1156 </span>            : //==============================================================================</a>
-<a name="1157"><span class="lineNum">    1157 </span><span class="lineCov">        840 : WaveInputDevice::WaveInputDevice (Engine&amp; e, const juce::String&amp; deviceName, const juce::String&amp; devType,</span></a>
-<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">        840 :                                   const std::vector&lt;ChannelIndex&gt;&amp; channels, DeviceType t)</span></a>
+<a name="1157"><span class="lineNum">    1157 </span><span class="lineCov">        841 : WaveInputDevice::WaveInputDevice (Engine&amp; e, const juce::String&amp; deviceName, const juce::String&amp; devType,</span></a>
+<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">        841 :                                   const std::vector&lt;ChannelIndex&gt;&amp; channels, DeviceType t)</span></a>
 <a name="1159"><span class="lineNum">    1159 </span>            :     : InputDevice (e, devType, deviceName),</a>
-<a name="1160"><span class="lineNum">    1160 </span><span class="lineCov">        840 :       deviceChannels (channels),</span></a>
-<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">        840 :       deviceType (t),</span></a>
-<a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">        840 :       channelSet (createChannelSet (channels))</span></a>
+<a name="1160"><span class="lineNum">    1160 </span><span class="lineCov">        841 :       deviceChannels (channels),</span></a>
+<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">        841 :       deviceType (t),</span></a>
+<a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">        841 :       channelSet (createChannelSet (channels))</span></a>
 <a name="1163"><span class="lineNum">    1163 </span>            : {</a>
-<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">        840 :     loadProps();</span></a>
-<a name="1165"><span class="lineNum">    1165 </span><span class="lineCov">        840 : }</span></a>
+<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">        841 :     loadProps();</span></a>
+<a name="1165"><span class="lineNum">    1165 </span><span class="lineCov">        841 : }</span></a>
 <a name="1166"><span class="lineNum">    1166 </span>            : </a>
-<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">       1680 : WaveInputDevice::~WaveInputDevice()</span></a>
+<a name="1167"><span class="lineNum">    1167 </span><span class="lineCov">       1682 : WaveInputDevice::~WaveInputDevice()</span></a>
 <a name="1168"><span class="lineNum">    1168 </span>            : {</a>
-<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">        840 :     notifyListenersOfDeletion();</span></a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">        841 :     notifyListenersOfDeletion();</span></a>
 <a name="1170"><span class="lineNum">    1170 </span>            :     closeDevice();</a>
-<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">       3360 : }</span></a>
+<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">       3364 : }</span></a>
 <a name="1172"><span class="lineNum">    1172 </span>            : </a>
 <a name="1173"><span class="lineNum">    1173 </span><span class="lineNoCov">          0 : juce::StringArray WaveInputDevice::getMergeModes()</span></a>
 <a name="1174"><span class="lineNum">    1174 </span>            : {</a>
@@ -1242,16 +1242,16 @@
 <a name="1180"><span class="lineNum">    1180 </span><span class="lineNoCov">          0 :     return s;</span></a>
 <a name="1181"><span class="lineNum">    1181 </span>            : }</a>
 <a name="1182"><span class="lineNum">    1182 </span>            : </a>
-<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">        839 : juce::StringArray WaveInputDevice::getRecordFormatNames()</span></a>
+<a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">        840 : juce::StringArray WaveInputDevice::getRecordFormatNames()</span></a>
 <a name="1184"><span class="lineNum">    1184 </span>            : {</a>
-<a name="1185"><span class="lineNum">    1185 </span><span class="lineCov">        839 :     juce::StringArray s;</span></a>
+<a name="1185"><span class="lineNum">    1185 </span><span class="lineCov">        840 :     juce::StringArray s;</span></a>
 <a name="1186"><span class="lineNum">    1186 </span>            : </a>
-<a name="1187"><span class="lineNum">    1187 </span><span class="lineCov">        839 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
-<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">        839 :     s.add (afm.getWavFormat()-&gt;getFormatName());</span></a>
-<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">        839 :     s.add (afm.getAiffFormat()-&gt;getFormatName());</span></a>
-<a name="1190"><span class="lineNum">    1190 </span><span class="lineCov">        839 :     s.add (afm.getFlacFormat()-&gt;getFormatName());</span></a>
+<a name="1187"><span class="lineNum">    1187 </span><span class="lineCov">        840 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
+<a name="1188"><span class="lineNum">    1188 </span><span class="lineCov">        840 :     s.add (afm.getWavFormat()-&gt;getFormatName());</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">        840 :     s.add (afm.getAiffFormat()-&gt;getFormatName());</span></a>
+<a name="1190"><span class="lineNum">    1190 </span><span class="lineCov">        840 :     s.add (afm.getFlacFormat()-&gt;getFormatName());</span></a>
 <a name="1191"><span class="lineNum">    1191 </span>            : </a>
-<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">        839 :     return s;</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">        840 :     return s;</span></a>
 <a name="1193"><span class="lineNum">    1193 </span>            : }</a>
 <a name="1194"><span class="lineNum">    1194 </span>            : </a>
 <a name="1195"><span class="lineNum">    1195 </span>            : </a>
@@ -1270,9 +1270,9 @@
 <a name="1208"><span class="lineNum">    1208 </span><span class="lineNoCov">          0 :     loadProps();</span></a>
 <a name="1209"><span class="lineNum">    1209 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1210"><span class="lineNum">    1210 </span>            : </a>
-<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">        840 : void WaveInputDevice::setEnabled (bool b)</span></a>
+<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">        841 : void WaveInputDevice::setEnabled (bool b)</span></a>
 <a name="1212"><span class="lineNum">    1212 </span>            : {</a>
-<a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">        840 :     if (enabled != b)</span></a>
+<a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">        841 :     if (enabled != b)</span></a>
 <a name="1214"><span class="lineNum">    1214 </span>            :     {</a>
 <a name="1215"><span class="lineNum">    1215 </span><span class="lineNoCov">          0 :         enabled = b;</span></a>
 <a name="1216"><span class="lineNum">    1216 </span><span class="lineNoCov">          0 :         changed();</span></a>
@@ -1288,7 +1288,7 @@
 <a name="1226"><span class="lineNum">    1226 </span>            :         }</a>
 <a name="1227"><span class="lineNum">    1227 </span>            :         // do nothing now! this object is probably deleted..</a>
 <a name="1228"><span class="lineNum">    1228 </span>            :     }</a>
-<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">        840 : }</span></a>
+<a name="1229"><span class="lineNum">    1229 </span><span class="lineCov">        841 : }</span></a>
 <a name="1230"><span class="lineNum">    1230 </span>            : </a>
 <a name="1231"><span class="lineNum">    1231 </span><span class="lineNoCov">          0 : juce::String WaveInputDevice::openDevice()</span></a>
 <a name="1232"><span class="lineNum">    1232 </span>            : {</a>
@@ -1297,62 +1297,62 @@
 <a name="1235"><span class="lineNum">    1235 </span>            : </a>
 <a name="1236"><span class="lineNum">    1236 </span><span class="lineNoCov">          0 : void WaveInputDevice::closeDevice()</span></a>
 <a name="1237"><span class="lineNum">    1237 </span>            : {</a>
-<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">        840 :     saveProps();</span></a>
+<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">        841 :     saveProps();</span></a>
 <a name="1239"><span class="lineNum">    1239 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1240"><span class="lineNum">    1240 </span>            : </a>
-<a name="1241"><span class="lineNum">    1241 </span><span class="lineCov">        840 : void WaveInputDevice::loadProps()</span></a>
+<a name="1241"><span class="lineNum">    1241 </span><span class="lineCov">        841 : void WaveInputDevice::loadProps()</span></a>
 <a name="1242"><span class="lineNum">    1242 </span>            : {</a>
-<a name="1243"><span class="lineNum">    1243 </span><span class="lineCov">        840 :     filenameMask = getDefaultMask();</span></a>
-<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">        840 :     inputGainDb = 0.0f;</span></a>
-<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">        840 :     endToEndEnabled = false;</span></a>
-<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        840 :     outputFormat = engine.getAudioFileFormatManager().getDefaultFormat()-&gt;getFormatName();</span></a>
+<a name="1243"><span class="lineNum">    1243 </span><span class="lineCov">        841 :     filenameMask = getDefaultMask();</span></a>
+<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">        841 :     inputGainDb = 0.0f;</span></a>
+<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">        841 :     endToEndEnabled = false;</span></a>
+<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        841 :     outputFormat = engine.getAudioFileFormatManager().getDefaultFormat()-&gt;getFormatName();</span></a>
 <a name="1247"><span class="lineNum">    1247 </span>            : </a>
-<a name="1248"><span class="lineNum">    1248 </span><span class="lineCov">        840 :     recordTriggerDb = -50.0f;</span></a>
-<a name="1249"><span class="lineNum">    1249 </span><span class="lineCov">        840 :     mergeMode = 0;</span></a>
-<a name="1250"><span class="lineNum">    1250 </span><span class="lineCov">        840 :     bitDepth = 24;</span></a>
-<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">        840 :     recordAdjustMs = 0;</span></a>
+<a name="1248"><span class="lineNum">    1248 </span><span class="lineCov">        841 :     recordTriggerDb = -50.0f;</span></a>
+<a name="1249"><span class="lineNum">    1249 </span><span class="lineCov">        841 :     mergeMode = 0;</span></a>
+<a name="1250"><span class="lineNum">    1250 </span><span class="lineCov">        841 :     bitDepth = 24;</span></a>
+<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">        841 :     recordAdjustMs = 0;</span></a>
 <a name="1252"><span class="lineNum">    1252 </span>            : </a>
-<a name="1253"><span class="lineNum">    1253 </span><span class="lineCov">       1680 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
+<a name="1253"><span class="lineNum">    1253 </span><span class="lineCov">       1682 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
 <a name="1254"><span class="lineNum">    1254 </span>            : </a>
-<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">        840 :     if (auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::wavein, propName))</span></a>
+<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">        841 :     if (auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::wavein, propName))</span></a>
 <a name="1256"><span class="lineNum">    1256 </span>            :     {</a>
-<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">        839 :         filenameMask = n-&gt;getStringAttribute (&quot;filename&quot;, filenameMask);</span></a>
-<a name="1258"><span class="lineNum">    1258 </span><span class="lineCov">        839 :         inputGainDb = (float) n-&gt;getDoubleAttribute (&quot;gainDb&quot;, inputGainDb);</span></a>
-<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">        839 :         endToEndEnabled = n-&gt;getBoolAttribute (&quot;etoe&quot;, endToEndEnabled);</span></a>
-<a name="1260"><span class="lineNum">    1260 </span><span class="lineCov">        839 :         outputFormat = n-&gt;getStringAttribute (&quot;format&quot;, outputFormat);</span></a>
-<a name="1261"><span class="lineNum">    1261 </span><span class="lineCov">        839 :         bitDepth = n-&gt;getIntAttribute (&quot;bits&quot;, bitDepth);</span></a>
+<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">        840 :         filenameMask = n-&gt;getStringAttribute (&quot;filename&quot;, filenameMask);</span></a>
+<a name="1258"><span class="lineNum">    1258 </span><span class="lineCov">        840 :         inputGainDb = (float) n-&gt;getDoubleAttribute (&quot;gainDb&quot;, inputGainDb);</span></a>
+<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">        840 :         endToEndEnabled = n-&gt;getBoolAttribute (&quot;etoe&quot;, endToEndEnabled);</span></a>
+<a name="1260"><span class="lineNum">    1260 </span><span class="lineCov">        840 :         outputFormat = n-&gt;getStringAttribute (&quot;format&quot;, outputFormat);</span></a>
+<a name="1261"><span class="lineNum">    1261 </span><span class="lineCov">        840 :         bitDepth = n-&gt;getIntAttribute (&quot;bits&quot;, bitDepth);</span></a>
 <a name="1262"><span class="lineNum">    1262 </span>            : </a>
-<a name="1263"><span class="lineNum">    1263 </span><span class="lineCov">        839 :         if (! getRecordFormatNames().contains (outputFormat))</span></a>
+<a name="1263"><span class="lineNum">    1263 </span><span class="lineCov">        840 :         if (! getRecordFormatNames().contains (outputFormat))</span></a>
 <a name="1264"><span class="lineNum">    1264 </span><span class="lineNoCov">          0 :             outputFormat = engine.getAudioFileFormatManager().getDefaultFormat()-&gt;getFormatName();</span></a>
 <a name="1265"><span class="lineNum">    1265 </span>            : </a>
-<a name="1266"><span class="lineNum">    1266 </span><span class="lineCov">        839 :         recordTriggerDb = (float) n-&gt;getDoubleAttribute (&quot;triggerDb&quot;, recordTriggerDb);</span></a>
-<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">        839 :         mergeMode = n-&gt;getIntAttribute (&quot;mode&quot;, mergeMode);</span></a>
-<a name="1268"><span class="lineNum">    1268 </span><span class="lineCov">        839 :         recordAdjustMs = n-&gt;getDoubleAttribute (&quot;adjustMs&quot;, recordAdjustMs);</span></a>
+<a name="1266"><span class="lineNum">    1266 </span><span class="lineCov">        840 :         recordTriggerDb = (float) n-&gt;getDoubleAttribute (&quot;triggerDb&quot;, recordTriggerDb);</span></a>
+<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">        840 :         mergeMode = n-&gt;getIntAttribute (&quot;mode&quot;, mergeMode);</span></a>
+<a name="1268"><span class="lineNum">    1268 </span><span class="lineCov">        840 :         recordAdjustMs = n-&gt;getDoubleAttribute (&quot;adjustMs&quot;, recordAdjustMs);</span></a>
 <a name="1269"><span class="lineNum">    1269 </span>            : </a>
-<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">        839 :         if (recordAdjustMs != 0)</span></a>
+<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">        840 :         if (recordAdjustMs != 0)</span></a>
 <a name="1271"><span class="lineNum">    1271 </span><span class="lineNoCov">          0 :             TRACKTION_LOG (&quot;Manual record adjustment: &quot; + juce::String (recordAdjustMs) + &quot;ms&quot;);</span></a>
-<a name="1272"><span class="lineNum">    1272 </span><span class="lineCov">        840 :     }</span></a>
+<a name="1272"><span class="lineNum">    1272 </span><span class="lineCov">        841 :     }</span></a>
 <a name="1273"><span class="lineNum">    1273 </span>            : </a>
-<a name="1274"><span class="lineNum">    1274 </span><span class="lineCov">        840 :     checkBitDepth();</span></a>
-<a name="1275"><span class="lineNum">    1275 </span><span class="lineCov">        840 : }</span></a>
+<a name="1274"><span class="lineNum">    1274 </span><span class="lineCov">        841 :     checkBitDepth();</span></a>
+<a name="1275"><span class="lineNum">    1275 </span><span class="lineCov">        841 : }</span></a>
 <a name="1276"><span class="lineNum">    1276 </span>            : </a>
-<a name="1277"><span class="lineNum">    1277 </span><span class="lineCov">        840 : void WaveInputDevice::saveProps()</span></a>
+<a name="1277"><span class="lineNum">    1277 </span><span class="lineCov">        841 : void WaveInputDevice::saveProps()</span></a>
 <a name="1278"><span class="lineNum">    1278 </span>            : {</a>
-<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">        840 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
+<a name="1279"><span class="lineNum">    1279 </span><span class="lineCov">        841 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
 <a name="1280"><span class="lineNum">    1280 </span>            : </a>
-<a name="1281"><span class="lineNum">    1281 </span><span class="lineCov">        840 :     n.setAttribute (&quot;filename&quot;, filenameMask);</span></a>
-<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">        840 :     n.setAttribute (&quot;gainDb&quot;, inputGainDb);</span></a>
-<a name="1283"><span class="lineNum">    1283 </span><span class="lineCov">        840 :     n.setAttribute (&quot;etoe&quot;, endToEndEnabled);</span></a>
-<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">        840 :     n.setAttribute (&quot;format&quot;, outputFormat);</span></a>
-<a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">        840 :     n.setAttribute (&quot;bits&quot;, bitDepth);</span></a>
-<a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">        840 :     n.setAttribute (&quot;triggerDb&quot;, recordTriggerDb);</span></a>
-<a name="1287"><span class="lineNum">    1287 </span><span class="lineCov">        840 :     n.setAttribute (&quot;mode&quot;, mergeMode);</span></a>
-<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">        840 :     n.setAttribute (&quot;adjustMs&quot;, recordAdjustMs);</span></a>
+<a name="1281"><span class="lineNum">    1281 </span><span class="lineCov">        841 :     n.setAttribute (&quot;filename&quot;, filenameMask);</span></a>
+<a name="1282"><span class="lineNum">    1282 </span><span class="lineCov">        841 :     n.setAttribute (&quot;gainDb&quot;, inputGainDb);</span></a>
+<a name="1283"><span class="lineNum">    1283 </span><span class="lineCov">        841 :     n.setAttribute (&quot;etoe&quot;, endToEndEnabled);</span></a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">        841 :     n.setAttribute (&quot;format&quot;, outputFormat);</span></a>
+<a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">        841 :     n.setAttribute (&quot;bits&quot;, bitDepth);</span></a>
+<a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">        841 :     n.setAttribute (&quot;triggerDb&quot;, recordTriggerDb);</span></a>
+<a name="1287"><span class="lineNum">    1287 </span><span class="lineCov">        841 :     n.setAttribute (&quot;mode&quot;, mergeMode);</span></a>
+<a name="1288"><span class="lineNum">    1288 </span><span class="lineCov">        841 :     n.setAttribute (&quot;adjustMs&quot;, recordAdjustMs);</span></a>
 <a name="1289"><span class="lineNum">    1289 </span>            : </a>
-<a name="1290"><span class="lineNum">    1290 </span><span class="lineCov">       1680 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
+<a name="1290"><span class="lineNum">    1290 </span><span class="lineCov">       1682 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
 <a name="1291"><span class="lineNum">    1291 </span>            : </a>
-<a name="1292"><span class="lineNum">    1292 </span><span class="lineCov">        840 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::wavein, propName, n);</span></a>
-<a name="1293"><span class="lineNum">    1293 </span><span class="lineCov">        840 : }</span></a>
+<a name="1292"><span class="lineNum">    1292 </span><span class="lineCov">        841 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::wavein, propName, n);</span></a>
+<a name="1293"><span class="lineNum">    1293 </span><span class="lineCov">        841 : }</span></a>
 <a name="1294"><span class="lineNum">    1294 </span>            : </a>
 <a name="1295"><span class="lineNum">    1295 </span>            : //==============================================================================</a>
 <a name="1296"><span class="lineNum">    1296 </span><span class="lineNoCov">          0 : juce::String WaveInputDevice::getSelectableDescription()</span></a>
@@ -1427,13 +1427,13 @@
 <a name="1365"><span class="lineNum">    1365 </span>            :     }</a>
 <a name="1366"><span class="lineNum">    1366 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1367"><span class="lineNum">    1367 </span>            : </a>
-<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">        840 : juce::String WaveInputDevice::getDefaultMask()</span></a>
+<a name="1368"><span class="lineNum">    1368 </span><span class="lineCov">        841 : juce::String WaveInputDevice::getDefaultMask()</span></a>
 <a name="1369"><span class="lineNum">    1369 </span>            : {</a>
-<a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">        840 :     juce::String defaultFile;</span></a>
+<a name="1370"><span class="lineNum">    1370 </span><span class="lineCov">        841 :     juce::String defaultFile;</span></a>
 <a name="1371"><span class="lineNum">    1371 </span>            :     defaultFile &lt;&lt; projDirPattern &lt;&lt; juce::File::getSeparatorChar() &lt;&lt; editPattern &lt;&lt; '_'</a>
-<a name="1372"><span class="lineNum">    1372 </span><span class="lineCov">        840 :                 &lt;&lt; trackPattern&lt;&lt; '_'  &lt;&lt; TRANS(&quot;Take&quot;) &lt;&lt; '_' &lt;&lt; takePattern;</span></a>
+<a name="1372"><span class="lineNum">    1372 </span><span class="lineCov">        841 :                 &lt;&lt; trackPattern&lt;&lt; '_'  &lt;&lt; TRANS(&quot;Take&quot;) &lt;&lt; '_' &lt;&lt; takePattern;</span></a>
 <a name="1373"><span class="lineNum">    1373 </span>            : </a>
-<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">        840 :     return defaultFile;</span></a>
+<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">        841 :     return defaultFile;</span></a>
 <a name="1375"><span class="lineNum">    1375 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1376"><span class="lineNum">    1376 </span>            : </a>
 <a name="1377"><span class="lineNum">    1377 </span><span class="lineNoCov">          0 : void WaveInputDevice::setFilenameMask (const juce::String&amp; newMask)</span></a>
@@ -1463,20 +1463,20 @@
 <a name="1401"><span class="lineNum">    1401 </span>            :     }</a>
 <a name="1402"><span class="lineNum">    1402 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1403"><span class="lineNum">    1403 </span>            : </a>
-<a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">        840 : void WaveInputDevice::checkBitDepth()</span></a>
+<a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">        841 : void WaveInputDevice::checkBitDepth()</span></a>
 <a name="1405"><span class="lineNum">    1405 </span>            : {</a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">       1680 :     if (! getAvailableBitDepths().contains (bitDepth))</span></a>
+<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">       1682 :     if (! getAvailableBitDepths().contains (bitDepth))</span></a>
 <a name="1407"><span class="lineNum">    1407 </span><span class="lineNoCov">          0 :         bitDepth = getAvailableBitDepths().getLast();</span></a>
-<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">        840 : }</span></a>
+<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">        841 : }</span></a>
 <a name="1409"><span class="lineNum">    1409 </span>            : </a>
 <a name="1410"><span class="lineNum">    1410 </span><span class="lineNoCov">          0 : juce::Array&lt;int&gt; WaveInputDevice::getAvailableBitDepths() const</span></a>
 <a name="1411"><span class="lineNum">    1411 </span>            : {</a>
-<a name="1412"><span class="lineNum">    1412 </span><span class="lineCov">        840 :     return getFormatToUse()-&gt;getPossibleBitDepths();</span></a>
+<a name="1412"><span class="lineNum">    1412 </span><span class="lineCov">        841 :     return getFormatToUse()-&gt;getPossibleBitDepths();</span></a>
 <a name="1413"><span class="lineNum">    1413 </span>            : }</a>
 <a name="1414"><span class="lineNum">    1414 </span>            : </a>
-<a name="1415"><span class="lineNum">    1415 </span><span class="lineCov">        840 : juce::AudioFormat* WaveInputDevice::getFormatToUse() const</span></a>
+<a name="1415"><span class="lineNum">    1415 </span><span class="lineCov">        841 : juce::AudioFormat* WaveInputDevice::getFormatToUse() const</span></a>
 <a name="1416"><span class="lineNum">    1416 </span>            : {</a>
-<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">        840 :     return engine.getAudioFileFormatManager().getNamedFormat (outputFormat);</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineCov">        841 :     return engine.getAudioFileFormatManager().getNamedFormat (outputFormat);</span></a>
 <a name="1418"><span class="lineNum">    1418 </span>            : }</a>
 <a name="1419"><span class="lineNum">    1419 </span>            : </a>
 <a name="1420"><span class="lineNum">    1420 </span><span class="lineNoCov">          0 : void WaveInputDevice::setOutputFormat (const juce::String&amp; newFormat)</span></a>

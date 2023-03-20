@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
 <a name="21"><span class="lineNum">      21 </span>            :     /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */</a>
-<a name="22"><span class="lineNum">      22 </span>            :     WaveAudioClip (const juce::ValueTree&amp;, EditItemID, ClipTrack&amp;);</a>
+<a name="22"><span class="lineNum">      22 </span>            :     WaveAudioClip (const juce::ValueTree&amp;, EditItemID, ClipOwner&amp;);</a>
 <a name="23"><span class="lineNum">      23 </span>            :     </a>
 <a name="24"><span class="lineNum">      24 </span>            :     /** Destructor. */</a>
 <a name="25"><span class="lineNum">      25 </span>            :     ~WaveAudioClip() override;</a>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            :     /** @internal */</a>
 <a name="92"><span class="lineNum">      92 </span>            :     juce::StringArray getTakeDescriptions() const override;</a>
 <a name="93"><span class="lineNum">      93 </span>            :     /** @internal */</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() &gt; 0; }</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          6 :     bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() &gt; 0; }</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     /** @internal */</a>
 <a name="96"><span class="lineNum">      96 </span>            :     int getNumTakes (bool includeComps) override;</a>
 <a name="97"><span class="lineNum">      97 </span>            :     /** @internal */</a>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span>            :     static constexpr int takeIndexNeedsUpdating = -2;</a>
 <a name="119"><span class="lineNum">     119 </span>            :     mutable int currentTakeIndex = takeIndexNeedsUpdating;</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">       3391 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">       3395 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     void invalidateCurrentTake() noexcept;</a>
 <a name="123"><span class="lineNum">     123 </span>            :     void invalidateCurrentTake (const juce::ValueTree&amp;) noexcept;</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>

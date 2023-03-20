@@ -18,133 +18,149 @@
 </a>
 </g>
 </g>
-<!-- Node6 -->
-<g id="node6" class="node">
-<title>Node6</title>
-<g id="a_node6"><a xlink:href="classtracktion_1_1engine_1_1ArrangerTrack.html" target="_top" xlink:title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">
+<!-- Node7 -->
+<g id="node7" class="node">
+<title>Node7</title>
+<g id="a_node7"><a xlink:href="classtracktion_1_1engine_1_1ArrangerTrack.html" target="_top" xlink:title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">
 <polygon fill="none" stroke="black" points="455,-147.5 455,-177.5 560,-177.5 560,-147.5 455,-147.5"/>
 <text text-anchor="start" x="463" y="-165.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="507.5" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00">ArrangerTrack</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node6 -->
-<g id="edge5" class="edge">
-<title>Node1&#45;&gt;Node6</title>
+<!-- Node1&#45;&gt;Node7 -->
+<g id="edge6" class="edge">
+<title>Node1&#45;&gt;Node7</title>
 <path fill="none" stroke="midnightblue" d="M401.48,-108.79C417.54,-118.15 437.08,-129.22 455,-138.5 460.78,-141.49 467.01,-144.54 473.06,-147.41"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="402.86,-105.54 392.47,-103.5 399.32,-111.58 402.86,-105.54"/>
 </g>
-<!-- Node7 -->
-<g id="node7" class="node">
-<title>Node7</title>
-<g id="a_node7"><a xlink:href="classtracktion_1_1engine_1_1AudioTrack.html" target="_top" xlink:title=" ">
+<!-- Node8 -->
+<g id="node8" class="node">
+<title>Node8</title>
+<g id="a_node8"><a xlink:href="classtracktion_1_1engine_1_1AudioTrack.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="455,-98.5 455,-128.5 560,-128.5 560,-98.5 455,-98.5"/>
 <text text-anchor="start" x="463" y="-116.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="507.5" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00">AudioTrack</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node7 -->
-<g id="edge6" class="edge">
-<title>Node1&#45;&gt;Node7</title>
+<!-- Node1&#45;&gt;Node8 -->
+<g id="edge7" class="edge">
+<title>Node1&#45;&gt;Node8</title>
 <path fill="none" stroke="midnightblue" d="M429.16,-99.59C437.69,-101.12 446.38,-102.69 454.7,-104.18"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="429.72,-96.13 419.26,-97.81 428.48,-103.02 429.72,-96.13"/>
 </g>
-<!-- Node8 -->
-<g id="node8" class="node">
-<title>Node8</title>
-<g id="a_node8"><a xlink:href="classtracktion_1_1engine_1_1ChordTrack.html" target="_top" xlink:title=" ">
+<!-- Node9 -->
+<g id="node9" class="node">
+<title>Node9</title>
+<g id="a_node9"><a xlink:href="classtracktion_1_1engine_1_1ChordTrack.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="455,-49.5 455,-79.5 560,-79.5 560,-49.5 455,-49.5"/>
 <text text-anchor="start" x="463" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="507.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">ChordTrack</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node8 -->
-<g id="edge7" class="edge">
-<title>Node1&#45;&gt;Node8</title>
+<!-- Node1&#45;&gt;Node9 -->
+<g id="edge8" class="edge">
+<title>Node1&#45;&gt;Node9</title>
 <path fill="none" stroke="midnightblue" d="M429.16,-77.85C437.69,-76.38 446.38,-74.88 454.7,-73.44"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="428.52,-74.41 419.26,-79.56 429.71,-81.31 428.52,-74.41"/>
 </g>
-<!-- Node9 -->
-<g id="node9" class="node">
-<title>Node9</title>
-<g id="a_node9"><a xlink:href="classtracktion_1_1engine_1_1MarkerTrack.html" target="_top" xlink:title=" ">
+<!-- Node10 -->
+<g id="node10" class="node">
+<title>Node10</title>
+<g id="a_node10"><a xlink:href="classtracktion_1_1engine_1_1MarkerTrack.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="455,-0.5 455,-30.5 560,-30.5 560,-0.5 455,-0.5"/>
 <text text-anchor="start" x="463" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="507.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">MarkerTrack</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node9 -->
-<g id="edge8" class="edge">
-<title>Node1&#45;&gt;Node9</title>
-<path fill="none" stroke="midnightblue" d="M403.04,-68.48C418.85,-59.71 437.76,-49.41 455,-40.5 461.36,-37.22 468.21,-33.8 474.78,-30.59"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="401.16,-65.52 394.12,-73.45 404.56,-71.64 401.16,-65.52"/>
+<!-- Node1&#45;&gt;Node10 -->
+<g id="edge9" class="edge">
+<title>Node1&#45;&gt;Node10</title>
+<path fill="none" stroke="midnightblue" d="M402.22,-68.27C418.16,-59.19 437.38,-48.52 455,-39.5 460.88,-36.49 467.21,-33.41 473.36,-30.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="400.2,-65.4 393.26,-73.41 403.68,-71.47 400.2,-65.4"/>
 </g>
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:href="classtracktion_1_1engine_1_1Track.html" target="_top" xlink:title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">
-<polygon fill="none" stroke="black" points="173,-73.5 173,-103.5 278,-103.5 278,-73.5 173,-73.5"/>
-<text text-anchor="start" x="181" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="225.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">Track</text>
+<polygon fill="none" stroke="black" points="173,-98.5 173,-128.5 278,-128.5 278,-98.5 173,-98.5"/>
+<text text-anchor="start" x="181" y="-116.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="225.5" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00">Track</text>
 </a>
 </g>
 </g>
 <!-- Node2&#45;&gt;Node1 -->
 <g id="edge1" class="edge">
 <title>Node2&#45;&gt;Node1</title>
-<path fill="none" stroke="midnightblue" d="M288.44,-88.5C296.88,-88.5 305.47,-88.5 313.7,-88.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="288.26,-85 278.26,-88.5 288.26,-92 288.26,-85"/>
+<path fill="none" stroke="midnightblue" d="M288.16,-102.41C296.69,-100.88 305.38,-99.31 313.7,-97.82"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="287.48,-98.98 278.26,-104.19 288.72,-105.87 287.48,-98.98"/>
 </g>
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="classtracktion_1_1engine_1_1EditItem.html" target="_top" xlink:title="Base class for objects that live inside an edit &#45; e.g.">
-<polygon fill="none" stroke="black" points="16,-122.5 16,-152.5 121,-152.5 121,-122.5 16,-122.5"/>
-<text text-anchor="start" x="24" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="68.5" y="-129.5" font-family="Helvetica,sans-Serif" font-size="10.00">EditItem</text>
+<polygon fill="none" stroke="black" points="16,-147.5 16,-177.5 121,-177.5 121,-147.5 16,-147.5"/>
+<text text-anchor="start" x="24" y="-165.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="68.5" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00">EditItem</text>
 </a>
 </g>
 </g>
 <!-- Node3&#45;&gt;Node2 -->
 <g id="edge2" class="edge">
 <title>Node3&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M127.26,-119.24C143.61,-114.07 161.21,-108.51 176.89,-103.55"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="125.75,-116.05 117.27,-122.4 127.86,-122.72 125.75,-116.05"/>
+<path fill="none" stroke="midnightblue" d="M127.26,-144.24C143.61,-139.07 161.21,-133.51 176.89,-128.55"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="125.75,-141.05 117.27,-147.4 127.86,-147.72 125.75,-141.05"/>
 </g>
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
 <g id="a_node4"><a xlink:href="classtracktion_1_1engine_1_1Selectable.html" target="_top" xlink:title="Base class for things that can be selected, and whose properties can appear in the properties panel.">
-<polygon fill="none" stroke="black" points="16,-73.5 16,-103.5 121,-103.5 121,-73.5 16,-73.5"/>
-<text text-anchor="start" x="24" y="-91.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="68.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">Selectable</text>
+<polygon fill="none" stroke="black" points="16,-98.5 16,-128.5 121,-128.5 121,-98.5 16,-98.5"/>
+<text text-anchor="start" x="24" y="-116.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="68.5" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00">Selectable</text>
 </a>
 </g>
 </g>
 <!-- Node4&#45;&gt;Node2 -->
 <g id="edge3" class="edge">
 <title>Node4&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M131.45,-88.5C145.18,-88.5 159.58,-88.5 172.85,-88.5"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="131.11,-85 121.11,-88.5 131.11,-92 131.11,-85"/>
+<path fill="none" stroke="midnightblue" d="M131.45,-113.5C145.18,-113.5 159.58,-113.5 172.85,-113.5"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="131.11,-110 121.11,-113.5 131.11,-117 131.11,-110"/>
 </g>
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="classtracktion_1_1engine_1_1MacroParameterElement.html" target="_top" xlink:title="Base class for elements which can contain macro parameters.">
-<polygon fill="none" stroke="black" points="0,-24.5 0,-54.5 137,-54.5 137,-24.5 0,-24.5"/>
-<text text-anchor="start" x="8" y="-42.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="68.5" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">MacroParameterElement</text>
+<polygon fill="none" stroke="black" points="0,-49.5 0,-79.5 137,-79.5 137,-49.5 0,-49.5"/>
+<text text-anchor="start" x="8" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="68.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">MacroParameterElement</text>
 </a>
 </g>
 </g>
 <!-- Node5&#45;&gt;Node2 -->
 <g id="edge4" class="edge">
 <title>Node5&#45;&gt;Node2</title>
-<path fill="none" stroke="midnightblue" d="M127.26,-57.76C143.61,-62.93 161.21,-68.49 176.89,-73.45"/>
-<polygon fill="midnightblue" stroke="midnightblue" points="127.86,-54.28 117.27,-54.6 125.75,-60.95 127.86,-54.28"/>
+<path fill="none" stroke="midnightblue" d="M127.26,-82.76C143.61,-87.93 161.21,-93.49 176.89,-98.45"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="127.86,-79.28 117.27,-79.6 125.75,-85.95 127.86,-79.28"/>
+</g>
+<!-- Node6 -->
+<g id="node6" class="node">
+<title>Node6</title>
+<g id="a_node6"><a xlink:href="classtracktion_1_1engine_1_1ClipOwner.html" target="_top" xlink:title="Base class for items that can contain clips.">
+<polygon fill="none" stroke="black" points="173,-49.5 173,-79.5 278,-79.5 278,-49.5 173,-49.5"/>
+<text text-anchor="start" x="181" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="225.5" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClipOwner</text>
+</a>
+</g>
+</g>
+<!-- Node6&#45;&gt;Node1 -->
+<g id="edge5" class="edge">
+<title>Node6&#45;&gt;Node1</title>
+<path fill="none" stroke="midnightblue" d="M288.16,-75.15C296.69,-76.62 305.38,-78.12 313.7,-79.56"/>
+<polygon fill="midnightblue" stroke="midnightblue" points="288.71,-71.69 278.26,-73.44 287.52,-78.59 288.71,-71.69"/>
 </g>
 </g>
 </svg>

@@ -2943,6 +2943,275 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_ClipOwner.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
+    <filename>tracktion__ClipOwner_8h.html</filename>
+    <class kind="class">tracktion::engine::ClipOwner</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="enumeration">
+      <type></type>
+      <name>DeleteExistingClips</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>acb9cf874dc4e4feb1c368815603c6c9e</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="acb9cf874dc4e4feb1c368815603c6c9ea7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="acb9cf874dc4e4feb1c368815603c6c9eaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>findClipForState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a424d915816fce94fb9af7c6c8c820e9d</anchor>
+      <arglist>(ClipOwner &amp;, const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>findClipForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa17f7f539896c575f7648c9cd6f83a86</anchor>
+      <arglist>(ClipOwner &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertClipWithState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af122ceb01516fd8eab5dc1593e4bd6e9</anchor>
+      <arglist>(ClipOwner &amp;, juce::ValueTree)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertClipWithState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a40faa74c310138e5161006df65ea3bb0</anchor>
+      <arglist>(ClipOwner &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, TrackItem::Type, ClipPosition, DeleteExistingClips, bool allowSpottingAdjustment)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a41f7674013fea15f931a7b981225329d</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5f64e6bb1a9000391570325b688983f7</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a18fb32af4e33560e0a9cc73a14736235</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, ClipPosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; WaveAudioClip &gt;</type>
+      <name>insertWaveClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a6fd956ff5def788e9dc7251151116225</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, const juce::File &amp;sourceFile, ClipPosition, DeleteExistingClips)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; WaveAudioClip &gt;</type>
+      <name>insertWaveClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae2413335c05ce95535e854eec4549b2e</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, ProjectItemID sourceID, ClipPosition, DeleteExistingClips)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; MidiClip &gt;</type>
+      <name>insertMIDIClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abd32d137357fe1a9d6f324aba389fcf5</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; MidiClip &gt;</type>
+      <name>insertMIDIClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aca4d87704bf49e8728bc60c49bd0cb46</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; EditClip &gt;</type>
+      <name>insertEditClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a0ff69f1c4f08dcda37e0631c3ba0e68c</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange, ProjectItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>deleteRegion</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a3816c134835e1a0752e3522b8c9342be</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>deleteRegion</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac02c955b64cc8cabe1f86c6fb90c5e7a</anchor>
+      <arglist>(Clip &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>split</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad52f63d32aaabe8b7e767e4f9c6183b4</anchor>
+      <arglist>(ClipOwner &amp;, TimePosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>split</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a6f33dc3327f6e53eb98c7e7f6c1f88fb</anchor>
+      <arglist>(Clip &amp;, TimePosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>containsAnyMIDIClips</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1c2c64a9f961cf578fb0fd6175acef37</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipType * &gt;</type>
+      <name>getClipsOfType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a04e2868f9a01a8d72610b9fc69be0c0e</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipType * &gt;</type>
+      <name>getClipsOfTypeRecursive</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac6a69e00179990b2578fa4e566edd7bf</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMasterTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afb324a5c0788c55450272935b6c8ef67</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isTempoTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afe9906c6968f309202ea1f319c032d9a</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAutomationTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a60ec9f68ae4b0d8ec6d65be121fc2d83</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAudioTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a79aa6cca822633b3a0b0cb7c589ddd7f</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFolderTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a72ef6d793d0c8c54bbebb85cf2a15783</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMarkerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab3e0e2f5e2a5ba33dd4945400f02755f</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isChordTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aca97f9000707b1cbe89b63a4819738d9</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isArrangerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a844ae27339725c4a014b3f531fa7a4b3</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAudioTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aacebeb9301594bcbe97aaad9fb905787</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFolderTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad99071613966ffc19e2180b5ef213968</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMarkerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a5b6b174fb3924b4b94f5e568081200</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isChordTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a16ce80c18cb2ff9311fabbb8f3bafa6a</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isArrangerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac0fb3a8585f188b6cc703db29c2a80a9</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>canContainMIDI</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1ead560d6524f7008e20bf9a386a49cb</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>canContainAudio</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2327ec945ec11825d6481bb78777229d</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMovable</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a8298bd396d9de38aee1f38fc3fc4b67a</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isOnTop</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a4a884d27fad06ec84710c2ac9c370a38</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_ClipTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
     <filename>tracktion__ClipTrack_8h.html</filename>
@@ -3009,6 +3278,22 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__ConstrainedCachedValue_8h.html</filename>
     <class kind="class">tracktion::engine::ConstrainedCachedValue</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ContainerClip.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
+    <filename>tracktion__ContainerClip_8h.html</filename>
+    <class kind="class">tracktion::engine::ContainerClip</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ContainerClipNode.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__ContainerClipNode_8h.html</filename>
+    <class kind="class">tracktion::engine::ContainerClipNode</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -3349,6 +3634,20 @@
       <anchor>a53677fe52b2e7d61d34e343b70ad2c70</anchor>
       <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>ClipPosition</type>
+      <name>createClipPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a98835e892f35befe2365f84e884eee31</anchor>
+      <arglist>(const TempoSequence &amp;, TimeRange, TimeDuration offset={})</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipPosition</type>
+      <name>createClipPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af998faa7c14d93fa2450d16c0accacc0</anchor>
+      <arglist>(const TempoSequence &amp;, BeatRange, BeatDuration offset={})</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_EditTimeRange.h</name>
@@ -3538,6 +3837,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ad575b8b00deb9ca34d23a8a0ee8d592e</anchor>
       <arglist>(Edit &amp;, const juce::BigInteger &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; TrackItemType * &gt;</type>
+      <name>getTrackItemsOfType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aeed6b8603d1bc17e7d90397ecd9234ac</anchor>
+      <arglist>(const Track &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -6153,6 +6459,13 @@
       <anchor>a600a65c056f0e4fdea6d2a6bada3a296</anchor>
       <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
     </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getSquareFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>ad4815c2a3fef14a8e008e87be8a2dc0d</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_TextPlugin.h</name>
@@ -7957,8 +8270,8 @@
       <type></type>
       <name>ArrangerClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ArrangerClip.html</anchorfile>
-      <anchor>a2311e6c07e100a25efe9d031d45a5dad</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;targetTrack)</arglist>
+      <anchor>a5988b25768300ed4412a2c7cdb70c80c</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;targetParent)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -7976,10 +8289,10 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1ArrangerClip.html</anchorfile>
-      <anchor>adc595c9f1a8dbb0e73492ffff6dfe2f0</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>a04f86a3d3990826c20deff0ec248b4b9</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>juce::Colour</type>
@@ -8399,6 +8712,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>handleUpdateNowIfNeeded</name>
+      <anchorfile>structtracktion_1_1engine_1_1AsyncFunctionCaller.html</anchorfile>
+      <anchor>a9c6581ddac9e97c8a10c76437f0956de</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>handleAsyncUpdate</name>
       <anchorfile>structtracktion_1_1engine_1_1AsyncFunctionCaller.html</anchorfile>
       <anchor>a37e3ed5324bdbfc073b80cd03bed214d</anchor>
@@ -8738,8 +9058,8 @@
       <type></type>
       <name>AudioClipBase</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a918a9166894dcf80c131dbff67daade4</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, Type, ClipTrack &amp;)</arglist>
+      <anchor>aeb475e4217eca93e4e911d1a842d00a2</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, Type, ClipOwner &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -9625,17 +9945,17 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>setTrack</name>
+      <name>setParent</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a06dc39c34152aff90154633801a6b430</anchor>
-      <arglist>(ClipTrack *) override</arglist>
+      <anchor>a3867297cffac18471ea49ffd4ed58d28</anchor>
+      <arglist>(ClipOwner *) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>af6df6040a583c297d72910cc86f083cd</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>ae08d11c6d3219fd7603f262b1d07dcbf</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -16231,8 +16551,8 @@
       <type></type>
       <name>ChordClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ChordClip.html</anchorfile>
-      <anchor>ad2f91eaa6962c03f0cf0459517acbe6f</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;targetTrack)</arglist>
+      <anchor>a9950af79e9900f3ff2d19f00de2cf960</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;targetParent)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -16249,18 +16569,11 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1ChordClip.html</anchorfile>
-      <anchor>a16bd0195c97e61f2be9aa0da2a3356e9</anchor>
-      <arglist>(ClipTrack *) override</arglist>
-    </member>
-    <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1ChordClip.html</anchorfile>
-      <anchor>a377702d9607a63e8ee5a60dc3817b731</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>a9ad5bbd626e8dee89613b7727bee6ade</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>juce::Colour</type>
@@ -16793,8 +17106,8 @@
       <type></type>
       <name>Clip</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>afc48c2aebbd700687dea4637833e07b3</anchor>
-      <arglist>(const juce::ValueTree &amp;, ClipTrack &amp;, EditItemID, Type)</arglist>
+      <anchor>a8591bc44e7cac883131297d3d80989a4</anchor>
+      <arglist>(const juce::ValueTree &amp;, ClipOwner &amp;, EditItemID, Type)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -16854,10 +17167,10 @@
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a231dcff10d00951cd09611e91b46a298</anchor>
-      <arglist>(Track &amp;)=0</arglist>
+      <anchor>a258a149c923c374a954788dc57d07840</anchor>
+      <arglist>(ClipOwner &amp;)=0</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -16905,15 +17218,15 @@
       <type>BeatPosition</type>
       <name>getContentBeatAtTime</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>ad9a345c3974d56cd3c9fce4800212596</anchor>
-      <arglist>(TimePosition time) const</arglist>
+      <anchor>a6afc18ac1efa6fed4f20162a165b37dd</anchor>
+      <arglist>(TimePosition) const</arglist>
     </member>
     <member kind="function">
       <type>TimePosition</type>
       <name>getTimeOfContentBeat</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a45b023ca367469b22c0a096d51ab1d38</anchor>
-      <arglist>(BeatPosition beat) const</arglist>
+      <anchor>a2544adc4bd82c01bcc6e0f133e340357</anchor>
+      <arglist>(BeatPosition) const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual TimeDuration</type>
@@ -17099,17 +17412,17 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>removeFromParentTrack</name>
+      <name>removeFromParent</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a1580461f0b132baa89cca7970d8a02c3</anchor>
+      <anchor>a80159e4f8803e41d7b03ab85712d74b6</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>moveToTrack</name>
+      <name>moveTo</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>afd3ab518d72e50746edf0249f0260e1e</anchor>
-      <arglist>(Track &amp;)</arglist>
+      <anchor>a88c1ed21c0ac9333added03f562c238e</anchor>
+      <arglist>(ClipOwner &amp;)</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -17186,6 +17499,13 @@
       <name>getLinkGroupID</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
       <anchor>a5bfb7ccf0650fec8a3655e5b3b7c580b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipOwner *</type>
+      <name>getParent</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a58c41bf47c4d86398bbdd4d3c6f9502f</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -17384,6 +17704,13 @@
       <anchor>a07cdb220ae22e1b44049b8cff1d043db</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setParent</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>adf8d2b32dccfac1a28263e66f3dc6f9d</anchor>
+      <arglist>(ClipOwner *)</arglist>
+    </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>isClipState</name>
@@ -17402,8 +17729,8 @@
       <type>static Ptr</type>
       <name>createClipForState</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a36bf4ade3b62dc406061f90b49f93161</anchor>
-      <arglist>(const juce::ValueTree &amp;, ClipTrack &amp;targetTrack)</arglist>
+      <anchor>ac156d843346755293e078b33b2c3a487</anchor>
+      <arglist>(const juce::ValueTree &amp;, ClipOwner &amp;targetParent)</arglist>
     </member>
     <member kind="variable">
       <type>juce::ValueTree</type>
@@ -17427,13 +17754,6 @@
       <arglist>(const juce::File &amp;)</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="virtual">
-      <type>virtual void</type>
-      <name>setTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a7369f34576591c3f97bcfa7b34aed4c3</anchor>
-      <arglist>(ClipTrack *)</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="virtual">
       <type>virtual juce::Array&lt; TimePosition &gt;</type>
       <name>getRescaledMarkPoints</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
@@ -17446,27 +17766,6 @@
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
       <anchor>aac87f2bd3216f035d333c4be096ee172</anchor>
       <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>valueTreeChildAdded</name>
-      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>aa3c3213c06a08428d2e4d1c1ebd74cae</anchor>
-      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>valueTreeChildRemoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a909ca599fdf2d81cd61972faf0e5c091</anchor>
-      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;, int) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>valueTreeChildOrderChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a4bdda6cce77477d8d9e54246c092c2ec</anchor>
-      <arglist>(juce::ValueTree &amp;, int, int) override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
@@ -17497,10 +17796,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>ClipTrack *</type>
-      <name>track</name>
+      <type>ClipOwner *</type>
+      <name>parent</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>ac0dd545c50df4ddf2a46f2c51bc7513c</anchor>
+      <anchor>a4d0318c4e29a68be826de8bb72852d30</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -18174,6 +18473,87 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ClipOwner</name>
+    <filename>classtracktion_1_1engine_1_1ClipOwner.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ClipOwner</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a58bc5ed9213764c44951c4efd7ec43e7</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~ClipOwner</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a8130f0f1e278e0a1d82a9759bc900efd</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual juce::ValueTree &amp;</type>
+      <name>getClipOwnerState</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a3167704ae6d91d7663ca4f8ef79e587f</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Selectable *</type>
+      <name>getClipOwnerSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>aa4a3acce1c14b291d709b29c03a0c717</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Edit &amp;</type>
+      <name>getClipOwnerEdit</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>ac258e692f0fee7f7f7b22c75596381ec</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>const juce::Array&lt; Clip * &gt; &amp;</type>
+      <name>getClips</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a88f7eeacc254aca2b01dab5e4fe44a2c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>initialiseClipOwner</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a8d5b2c98e7356513845220b02e7de45d</anchor>
+      <arglist>(Edit &amp;, juce::ValueTree clipParentState)</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="pure">
+      <type>virtual void</type>
+      <name>clipCreated</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>ad11b4c82b069dce47ad9a3ec9e0954c6</anchor>
+      <arglist>(Clip &amp;)=0</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="pure">
+      <type>virtual void</type>
+      <name>clipAddedOrRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>adbd9ce870b751b14d6a6eb4cf8213e3c</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="pure">
+      <type>virtual void</type>
+      <name>clipOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>a7f14252b7bdc8db41adfdebfad853d40</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="pure">
+      <type>virtual void</type>
+      <name>clipPositionChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>ae6eb38a74f4e1373312962b86d351c42</anchor>
+      <arglist>()=0</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::ClipPosition</name>
     <filename>structtracktion_1_1engine_1_1ClipPosition.html</filename>
@@ -18345,6 +18725,14 @@
     <name>tracktion::engine::ClipTrack</name>
     <filename>classtracktion_1_1engine_1_1ClipTrack.html</filename>
     <base>tracktion::engine::Track</base>
+    <base>tracktion::engine::ClipOwner</base>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedObjectPtr&lt; ClipTrack &gt;</type>
+      <name>Ptr</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>aa5bb3f6b8dbc8b28006c0557095e0ae4</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type></type>
       <name>ClipTrack</name>
@@ -18361,17 +18749,17 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>initialise</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a5b8fa4d2f43b3b34621017e74adf2aba</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>flushStateToValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
       <anchor>a0055d342b1f1c092e150574fff678270</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>const juce::Array&lt; Clip * &gt; &amp;</type>
-      <name>getClips</name>
-      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>ac0320b1c7d344a22015c24839d6b601b</anchor>
-      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -18379,13 +18767,6 @@
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
       <anchor>a068e486d8f0671cd8f466bb9a20a433f</anchor>
       <arglist>(EditItemID) const override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>refreshCollectionClips</name>
-      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>a1028b170debcd4668f6d4ffb2184e5ea</anchor>
-      <arglist>(Clip &amp;newClip)</arglist>
     </member>
     <member kind="function">
       <type>CollectionClip *</type>
@@ -18517,8 +18898,8 @@
       <type>bool</type>
       <name>addClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>a64abd0de460c598f3353d05cd34eec9b</anchor>
-      <arglist>(const Clip::Ptr &amp;clip)</arglist>
+      <anchor>aed179f19a0cf5a40f3bc7cd3626907c5</anchor>
+      <arglist>(const Clip::Ptr &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -18667,6 +19048,55 @@
       <anchor>a55c8359b69cb65865e1f0b4e4c5ff811</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function">
+      <type>juce::ValueTree &amp;</type>
+      <name>getClipOwnerState</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a418480c14b30367b64223ac996ac67ad</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Selectable *</type>
+      <name>getClipOwnerSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>af94fbb0e5b871115d5fcb1e9fdd1e5df</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Edit &amp;</type>
+      <name>getClipOwnerEdit</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a32e035d90833197869316517566b597e</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clipCreated</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>aaec9da840a5b335b1781ae37c38039e9</anchor>
+      <arglist>(Clip &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clipAddedOrRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a0fc43a6de966a4f5531530f7bb344030</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clipOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a854732f853ce8e6d3f1ebad909809c1a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clipPositionChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a45cf2a0ac5ad2c940450fe32648f5627</anchor>
+      <arglist>() override</arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>juce::Array&lt; TimePosition &gt;</type>
       <name>findAllTimesOfInterest</name>
@@ -18680,13 +19110,6 @@
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
       <anchor>ab9a64be2e0589ff56163ca57732e0121</anchor>
       <arglist>() const</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>std::unique_ptr&lt; ClipList &gt;</type>
-      <name>clipList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>ac0ef437d0c1be76972155aa24b4e86d5</anchor>
-      <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>std::unique_ptr&lt; CollectionClipList &gt;</type>
@@ -18714,13 +19137,6 @@
       <name>Clip</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
       <anchor>a54cda048f452a2acf4d0cf488fece5cf</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="friend" protection="protected">
-      <type>friend struct</type>
-      <name>ClipList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>a21244620c837218efd62872a0c9533b2</anchor>
       <arglist></arglist>
     </member>
     <member kind="friend" protection="protected">
@@ -19025,6 +19441,13 @@
       <anchorfile>classtracktion_1_1engine_1_1CombiningNode.html</anchorfile>
       <anchor>a38994fe7923f2959cf741b7849790871</anchor>
       <arglist>(std::unique_ptr&lt; Node &gt;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addInput</name>
+      <anchorfile>classtracktion_1_1engine_1_1CombiningNode.html</anchorfile>
+      <anchor>a6e5df79d708601ec0c63826b80c9f6e9</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt;, BeatRange)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -20482,6 +20905,193 @@
       <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html</anchorfile>
       <anchor>ad666a22a178aa49c2a31cd888abaf9b2</anchor>
       <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ContainerClip</name>
+    <filename>classtracktion_1_1engine_1_1ContainerClip.html</filename>
+    <base>tracktion::engine::AudioClipBase</base>
+    <base>tracktion::engine::ClipOwner</base>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedObjectPtr&lt; ContainerClip &gt;</type>
+      <name>Ptr</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a947d227b3a31e6f1f4688e1905f679ea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ContainerClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a7b2fcfb0701d5597721e424a9e99c639</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ContainerClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a4776394cd6edc7f32e217efb926b3159</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ValueTree &amp;</type>
+      <name>getClipOwnerState</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a741f1f7ac6a50a3c5fb1b8c0de31fae6</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Selectable *</type>
+      <name>getClipOwnerSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>aa7614e12fd674e8f28fc0027c8146bf6</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Edit &amp;</type>
+      <name>getClipOwnerEdit</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a859c57504d925b000555c68fb88a9fa0</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::File</type>
+      <name>getOriginalFile</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a9bf9cd62584a7153484636f8796e98c2</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isUsingFile</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a4e894119d02d822bdd17ba51822ccef3</anchor>
+      <arglist>(const AudioFile &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a6354b70c611ab15c45a7785972f3a769</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cloneFrom</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a3443152708fec0bec2102a2f1d8cf354</anchor>
+      <arglist>(Clip *) override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getSelectableDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a21abf95af62e9410b5070fd499db2049</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMidi</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a0e787a346fc79c603de8d776036fa01f</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>TimeDuration</type>
+      <name>getSourceLength</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a2a423b9bd62a7fceee84bf17d47725b4</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>HashCode</type>
+      <name>getHash</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>ab846c46871e9ff81e85b3589339b642b</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLoopDefaults</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>ac201af442ac0635b168a741897bdc195</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLoopRangeBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a81cbc497735a5af88e501405c3b36096</anchor>
+      <arglist>(BeatRange) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>flushStateToValueTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a4e52a0d01fec72a957c63a2176d37651</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>pitchTempoTrackChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a554232ab64e4b02edb37d74742c507aa</anchor>
+      <arglist>() override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ContainerClipNode</name>
+    <filename>classtracktion_1_1engine_1_1ContainerClipNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
+    <member kind="function">
+      <type></type>
+      <name>ContainerClipNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>af9da1ee40ca16c1a01a3d6e541d3777b</anchor>
+      <arglist>(ProcessState &amp;editProcessState, EditItemID containerClipID, BeatRange clipPosition, BeatDuration clipOffset, BeatRange clipLoopRange, std::unique_ptr&lt; Node &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>acfc38502ca6827a24cf71bd5698ddb88</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>ae5fa75631a0fb0a30b91459ecb35519b</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getInternalNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>adcae8575038f8c4751ba7e9336e3611a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>a42158a59f986ed75319d36539bdb4dfa</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>af5d5fab3c2adbf8412c597ef74cdbc6a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClipNode.html</anchorfile>
+      <anchor>a4337d4040cf2a6400b2cee94eb19022a</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -27704,8 +28314,8 @@
       <type></type>
       <name>EditClip</name>
       <anchorfile>classtracktion_1_1engine_1_1EditClip.html</anchorfile>
-      <anchor>a6b128c2110edfe6aea452ba2c1a6782f</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;, ProjectItemID sourceEdit)</arglist>
+      <anchor>aa94bbe2e3cb6c3672f4412acc642d218</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;, ProjectItemID sourceEdit)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -41934,8 +42544,8 @@
       <type></type>
       <name>MarkerClip</name>
       <anchorfile>classtracktion_1_1engine_1_1MarkerClip.html</anchorfile>
-      <anchor>aa5e8ee8a1a253507a318337485ea4ebe</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;targetTrack)</arglist>
+      <anchor>a787e2dbf854ee16c4fb12015ac507b97</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;targetParent)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -41981,10 +42591,10 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1MarkerClip.html</anchorfile>
-      <anchor>ab7be369a93f18a1b7034a0584d1460f4</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>ab9b5dc498f34dd47f7e66b5bf21db08e</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>juce::Colour</type>
@@ -42796,8 +43406,8 @@
       <type></type>
       <name>MidiClip</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
-      <anchor>a43b73c39408a74b6c385149119f88db9</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;)</arglist>
+      <anchor>a2ab139c38f8a2c71cc9ab95cc3cc97fc</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -43067,10 +43677,10 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
-      <anchor>a8afb6fbe7e5653e772928e842cc0b2eb</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>aa05fca08712b3c4eac86be9c4ad3c1f0</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -52786,8 +53396,8 @@
       <type>void</type>
       <name>setLoopRange</name>
       <anchorfile>classtracktion_1_1graph_1_1PlayHead.html</anchorfile>
-      <anchor>a944860798b9e635d02736dc4ced4fe77</anchor>
-      <arglist>(bool loop, juce::Range&lt; int64_t &gt; loopRange)</arglist>
+      <anchor>a60bec6ac0630553386c2e15031ad99a6</anchor>
+      <arglist>(bool loop, juce::Range&lt; int64_t &gt; loopRange, bool updatePosition=true)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -55124,18 +55734,32 @@
       <anchor>ab6048bd8d4cbcfe3227b8f5be73dff9c</anchor>
       <arglist>(double newRatio)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setTempoSequence</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a1bcac8234d9e105c0a6812a99c3e415e</anchor>
+      <arglist>(const TempoSequence *)</arglist>
+    </member>
+    <member kind="function">
+      <type>const TempoSequence *</type>
+      <name>getTempoSequence</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a6644d9bfafc5285bc97c5411fd1f03b1</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const tempo::Sequence::Position *</type>
+      <name>getTempoSequencePosition</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>aa0a56eaa788ad5f20e40cd35cf8beeb1</anchor>
+      <arglist>() const</arglist>
+    </member>
     <member kind="variable">
       <type>tracktion::graph::PlayHeadState &amp;</type>
       <name>playHeadState</name>
       <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
       <anchor>ac3210d4b41b525fe52f0ef7099163922</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>std::unique_ptr&lt; tempo::Sequence::Position &gt;</type>
-      <name>tempoPosition</name>
-      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
-      <anchor>a8123d3c7c5dd0b21c57d9a5b5cde8828</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -59075,6 +59699,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
       <anchor>aacc30526af85e088125e76c5fb89da80</anchor>
       <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, juce::Array&lt; Clip * &gt; clips={}, bool useThread=true)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>renderToFile</name>
+      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
+      <anchor>a18c17ee8d4a644c1cc30e6f087676009</anchor>
+      <arglist>(Edit &amp;, const juce::File &amp;, bool useThread=true)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static Statistics</type>
@@ -64819,8 +65450,8 @@
       <type></type>
       <name>StepClip</name>
       <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
-      <anchor>a6794bcf12ffa453f5d9353cdde33a793</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;)</arglist>
+      <anchor>a4947d0589817b54a7d95d6fa91ddb69c</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -65034,10 +65665,10 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>canGoOnTrack</name>
+      <name>canBeAddedTo</name>
       <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
-      <anchor>ae44394d8166b4632226b835e857625c4</anchor>
-      <arglist>(Track &amp;) override</arglist>
+      <anchor>a098c917056f9ff20e64fb3495476f3eb</anchor>
+      <arglist>(ClipOwner &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -68748,13 +69379,6 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>isOnTop</name>
-      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>a881110c09c3b531d2ce0d0ab84a1c56c</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
       <name>acceptsInput</name>
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
       <anchor>a4d159084b8c79c2bca18008af7180b7e</anchor>
@@ -69797,6 +70421,7 @@
       <enumvalue file="classtracktion_1_1engine_1_1TrackItem.html" anchor="a01da0e462b71b30657a62268ef090f24afb89b9c2b78261ef2ab506e30d9c84f7">recording</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1TrackItem.html" anchor="a01da0e462b71b30657a62268ef090f24ad277c74c6c67461c562bdc2051681029">chord</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1TrackItem.html" anchor="a01da0e462b71b30657a62268ef090f24a6f86810cd8a76fcf25984c82cc40c219">arranger</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1TrackItem.html" anchor="a01da0e462b71b30657a62268ef090f24a5f0b6ebc4bea10285ba2b8a6ce78b863">container</enumvalue>
     </member>
     <member kind="function">
       <type></type>
@@ -70781,17 +71406,31 @@
       <anchor>a6da5b423bb5f734728a9967dea0f2dd2</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="variable" protection="protected">
+    <member kind="function">
       <type>ProcessState &amp;</type>
-      <name>processState</name>
+      <name>getProcessState</name>
       <anchorfile>classtracktion_1_1engine_1_1TracktionEngineNode.html</anchorfile>
-      <anchor>ac0c9648ef197a8ac1bb559e71cd3842f</anchor>
-      <arglist></arglist>
+      <anchor>a948adcf3f250e8e951ff7e773c87621c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setProcessState</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionEngineNode.html</anchorfile>
+      <anchor>a7535886e3f0a9d68e0db994db0fee32f</anchor>
+      <arglist>(ProcessState &amp;)</arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::TracktionNodePlayer</name>
     <filename>classtracktion_1_1engine_1_1TracktionNodePlayer.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>TracktionNodePlayer</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionNodePlayer.html</anchorfile>
+      <anchor>a2e72ce651c0532936a1ec113c6639f17</anchor>
+      <arglist>(ProcessState &amp;processStateToUse)</arglist>
+    </member>
     <member kind="function">
       <type></type>
       <name>TracktionNodePlayer</name>
@@ -77386,8 +78025,8 @@
       <type></type>
       <name>WaveAudioClip</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveAudioClip.html</anchorfile>
-      <anchor>aeb1c985c6fdb2c2df8212bdac5fa7277</anchor>
-      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipTrack &amp;)</arglist>
+      <anchor>a5e234adc79e526430ea532b8d6f0233d</anchor>
+      <arglist>(const juce::ValueTree &amp;, EditItemID, ClipOwner &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -78888,11 +79527,13 @@
     <class kind="struct">tracktion::MakeMonoEffect</class>
     <class kind="struct">tracktion::ReverseEffect</class>
     <class kind="struct">tracktion::InvertEffect</class>
+    <class kind="class">tracktion::ClipOwner</class>
     <class kind="class">tracktion::CollectionClip</class>
     <class kind="class">tracktion::CompManager</class>
     <class kind="class">tracktion::CompFactory</class>
     <class kind="class">tracktion::WaveCompManager</class>
     <class kind="class">tracktion::MidiCompManager</class>
+    <class kind="class">tracktion::ContainerClip</class>
     <class kind="class">tracktion::EditClip</class>
     <class kind="class">tracktion::EditRenderJob</class>
     <class kind="class">tracktion::MarkerClip</class>
@@ -78991,6 +79632,7 @@
     <class kind="class">tracktion::ClickGenerator</class>
     <class kind="class">tracktion::ClickNode</class>
     <class kind="class">tracktion::CombiningNode</class>
+    <class kind="class">tracktion::ContainerClipNode</class>
     <class kind="struct">tracktion::CreateNodeParams</class>
     <class kind="struct">tracktion::EditNodeBuilder</class>
     <class kind="class">tracktion::FadeInOutNode</class>
@@ -79298,11 +79940,13 @@
     <class kind="struct">tracktion::engine::MakeMonoEffect</class>
     <class kind="struct">tracktion::engine::ReverseEffect</class>
     <class kind="struct">tracktion::engine::InvertEffect</class>
+    <class kind="class">tracktion::engine::ClipOwner</class>
     <class kind="class">tracktion::engine::CollectionClip</class>
     <class kind="class">tracktion::engine::CompManager</class>
     <class kind="class">tracktion::engine::CompFactory</class>
     <class kind="class">tracktion::engine::WaveCompManager</class>
     <class kind="class">tracktion::engine::MidiCompManager</class>
+    <class kind="class">tracktion::engine::ContainerClip</class>
     <class kind="class">tracktion::engine::EditClip</class>
     <class kind="class">tracktion::engine::EditRenderJob</class>
     <class kind="class">tracktion::engine::MarkerClip</class>
@@ -79401,6 +80045,7 @@
     <class kind="class">tracktion::engine::ClickGenerator</class>
     <class kind="class">tracktion::engine::ClickNode</class>
     <class kind="class">tracktion::engine::CombiningNode</class>
+    <class kind="class">tracktion::engine::ContainerClipNode</class>
     <class kind="struct">tracktion::engine::CreateNodeParams</class>
     <class kind="struct">tracktion::engine::EditNodeBuilder</class>
     <class kind="class">tracktion::engine::FadeInOutNode</class>
@@ -79595,6 +80240,15 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a134d0029d7c5db278db98865a49c1b84</anchor>
       <arglist></arglist>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>DeleteExistingClips</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>acb9cf874dc4e4feb1c368815603c6c9e</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="acb9cf874dc4e4feb1c368815603c6c9ea7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="acb9cf874dc4e4feb1c368815603c6c9eaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
@@ -79917,6 +80571,258 @@
       <arglist>(ModifierList &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
+      <type>Clip *</type>
+      <name>findClipForState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a424d915816fce94fb9af7c6c8c820e9d</anchor>
+      <arglist>(ClipOwner &amp;, const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>findClipForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa17f7f539896c575f7648c9cd6f83a86</anchor>
+      <arglist>(ClipOwner &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertClipWithState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af122ceb01516fd8eab5dc1593e4bd6e9</anchor>
+      <arglist>(ClipOwner &amp;, juce::ValueTree)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertClipWithState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a40faa74c310138e5161006df65ea3bb0</anchor>
+      <arglist>(ClipOwner &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, TrackItem::Type, ClipPosition, DeleteExistingClips, bool allowSpottingAdjustment)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a41f7674013fea15f931a7b981225329d</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5f64e6bb1a9000391570325b688983f7</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertNewClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a18fb32af4e33560e0a9cc73a14736235</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, ClipPosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; WaveAudioClip &gt;</type>
+      <name>insertWaveClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a6fd956ff5def788e9dc7251151116225</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, const juce::File &amp;sourceFile, ClipPosition, DeleteExistingClips)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; WaveAudioClip &gt;</type>
+      <name>insertWaveClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae2413335c05ce95535e854eec4549b2e</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, ProjectItemID sourceID, ClipPosition, DeleteExistingClips)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; MidiClip &gt;</type>
+      <name>insertMIDIClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abd32d137357fe1a9d6f324aba389fcf5</anchor>
+      <arglist>(ClipOwner &amp;, const juce::String &amp;name, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; MidiClip &gt;</type>
+      <name>insertMIDIClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aca4d87704bf49e8728bc60c49bd0cb46</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; EditClip &gt;</type>
+      <name>insertEditClip</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a0ff69f1c4f08dcda37e0631c3ba0e68c</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange, ProjectItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>deleteRegion</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a3816c134835e1a0752e3522b8c9342be</anchor>
+      <arglist>(ClipOwner &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>deleteRegion</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac02c955b64cc8cabe1f86c6fb90c5e7a</anchor>
+      <arglist>(Clip &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>split</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad52f63d32aaabe8b7e767e4f9c6183b4</anchor>
+      <arglist>(ClipOwner &amp;, TimePosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>split</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a6f33dc3327f6e53eb98c7e7f6c1f88fb</anchor>
+      <arglist>(Clip &amp;, TimePosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>containsAnyMIDIClips</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1c2c64a9f961cf578fb0fd6175acef37</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipType * &gt;</type>
+      <name>getClipsOfType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a04e2868f9a01a8d72610b9fc69be0c0e</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipType * &gt;</type>
+      <name>getClipsOfTypeRecursive</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac6a69e00179990b2578fa4e566edd7bf</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMasterTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afb324a5c0788c55450272935b6c8ef67</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isTempoTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afe9906c6968f309202ea1f319c032d9a</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAutomationTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a60ec9f68ae4b0d8ec6d65be121fc2d83</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAudioTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a79aa6cca822633b3a0b0cb7c589ddd7f</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFolderTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a72ef6d793d0c8c54bbebb85cf2a15783</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMarkerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab3e0e2f5e2a5ba33dd4945400f02755f</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isChordTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aca97f9000707b1cbe89b63a4819738d9</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isArrangerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a844ae27339725c4a014b3f531fa7a4b3</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAudioTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aacebeb9301594bcbe97aaad9fb905787</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFolderTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad99071613966ffc19e2180b5ef213968</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMarkerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a5b6b174fb3924b4b94f5e568081200</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isChordTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a16ce80c18cb2ff9311fabbb8f3bafa6a</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isArrangerTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac0fb3a8585f188b6cc703db29c2a80a9</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>canContainMIDI</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1ead560d6524f7008e20bf9a386a49cb</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>canContainAudio</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2327ec945ec11825d6481bb78777229d</anchor>
+      <arglist>(const ClipOwner &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMovable</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a8298bd396d9de38aee1f38fc3fc4b67a</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isOnTop</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a4a884d27fad06ec84710c2ac9c370a38</anchor>
+      <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditFromFile</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -80104,6 +81010,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ad575b8b00deb9ca34d23a8a0ee8d592e</anchor>
       <arglist>(Edit &amp;, const juce::BigInteger &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; TrackItemType * &gt;</type>
+      <name>getTrackItemsOfType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aeed6b8603d1bc17e7d90397ecd9234ac</anchor>
+      <arglist>(const Track &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -80405,6 +81318,20 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a53677fe52b2e7d61d34e343b70ad2c70</anchor>
       <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipPosition</type>
+      <name>createClipPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a98835e892f35befe2365f84e884eee31</anchor>
+      <arglist>(const TempoSequence &amp;, TimeRange, TimeDuration offset={})</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipPosition</type>
+      <name>createClipPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af998faa7c14d93fa2450d16c0accacc0</anchor>
+      <arglist>(const TempoSequence &amp;, BeatRange, BeatDuration offset={})</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -83735,6 +84662,13 @@
       <anchor>a600a65c056f0e4fdea6d2a6bada3a296</anchor>
       <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
     </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getSquareFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>ad4815c2a3fef14a8e008e87be8a2dc0d</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
@@ -83813,11 +84747,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -83825,6 +84754,11 @@
     <subgroup>tracktion_graph-docs</subgroup>
     <subgroup>tracktion_graph-tracktion_graph</subgroup>
     <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>

@@ -314,6 +314,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InvertEffect.html">InvertEffect</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for items that can contain clips.  <a href="classtracktion_1_1engine_1_1ClipOwner.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CollectionClip.html">CollectionClip</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CompManager.html">CompManager</a></td></tr>
@@ -323,6 +326,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveCompManager.html">WaveCompManager</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiCompManager.html">MidiCompManager</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ContainerClip.html">ContainerClip</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A clip that can contain multiple other clips and mix their output together.  <a href="classtracktion_1_1engine_1_1ContainerClip.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditClip.html">EditClip</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the main source of an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> clip and is responsible for managing its properties.  <a href="classtracktion_1_1engine_1_1EditClip.html#details">More...</a><br /></td></tr>
@@ -578,6 +584,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html">CombiningNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> that mixes a sequence of clips of other nodes.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ContainerClipNode.html">ContainerClipNode</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1CreateNodeParams.html">CreateNodeParams</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains options for <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> content creation.  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#details">More...</a><br /></td></tr>
@@ -1013,6 +1021,11 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:acb9cf874dc4e4feb1c368815603c6c9e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a> { <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9ea7fa3b767c460b54a2be4d49030b349c7">no</a>
+, <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9eaa6105c0a611b41b08f1209506350279e">yes</a>
+ }</td></tr>
+<tr class="memdesc:acb9cf874dc4e4feb1c368815603c6c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines behaviour for overwriting clips.  <a href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">More...</a><br /></td></tr>
+<tr class="separator:acb9cf874dc4e4feb1c368815603c6c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b33ff26f5a23b76bceb9d152c43b34c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34c">CloseGap</a> { <a class="el" href="namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34ca7fa3b767c460b54a2be4d49030b349c7">no</a>
 , <a class="el" href="namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34caa6105c0a611b41b08f1209506350279e">yes</a>
  }</td></tr>
@@ -1257,6 +1270,116 @@ Functions</h2></td></tr>
 <tr class="memitem:a92172060d5623ea1950e31e5879815da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1Modifier.html#a3c429dca0b5b58a52e65de9cd96afa4c">Modifier::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a92172060d5623ea1950e31e5879815da">findModifierForID</a> (<a class="el" href="classtracktion_1_1engine_1_1ModifierList.html">ModifierList</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:a92172060d5623ea1950e31e5879815da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> if it can be found in the list.  <a href="namespacetracktion_1_1engine.html#a92172060d5623ea1950e31e5879815da">More...</a><br /></td></tr>
 <tr class="separator:a92172060d5623ea1950e31e5879815da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a424d915816fce94fb9af7c6c8c820e9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a424d915816fce94fb9af7c6c8c820e9d">findClipForState</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:a424d915816fce94fb9af7c6c8c820e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a clip with the given state if the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> contains it.  <a href="namespacetracktion_1_1engine.html#a424d915816fce94fb9af7c6c8c820e9d">More...</a><br /></td></tr>
+<tr class="separator:a424d915816fce94fb9af7c6c8c820e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa17f7f539896c575f7648c9cd6f83a86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aa17f7f539896c575f7648c9cd6f83a86">findClipForID</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
+<tr class="memdesc:aa17f7f539896c575f7648c9cd6f83a86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a clip with the given ID if the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> contains it.  <a href="namespacetracktion_1_1engine.html#aa17f7f539896c575f7648c9cd6f83a86">More...</a><br /></td></tr>
+<tr class="separator:aa17f7f539896c575f7648c9cd6f83a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af122ceb01516fd8eab5dc1593e4bd6e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#af122ceb01516fd8eab5dc1593e4bd6e9">insertClipWithState</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, juce::ValueTree)</td></tr>
+<tr class="memdesc:af122ceb01516fd8eab5dc1593e4bd6e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a clip with the given state in to the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#af122ceb01516fd8eab5dc1593e4bd6e9">More...</a><br /></td></tr>
+<tr class="separator:af122ceb01516fd8eab5dc1593e4bd6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40faa74c310138e5161006df65ea3bb0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a40faa74c310138e5161006df65ea3bb0">insertClipWithState</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>, <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>, <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>, bool allowSpottingAdjustment)</td></tr>
+<tr class="memdesc:a40faa74c310138e5161006df65ea3bb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a clip with the given state in to the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#a40faa74c310138e5161006df65ea3bb0">More...</a><br /></td></tr>
+<tr class="separator:a40faa74c310138e5161006df65ea3bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41f7674013fea15f931a7b981225329d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a41f7674013fea15f931a7b981225329d">insertNewClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>, TimeRange)</td></tr>
+<tr class="memdesc:a41f7674013fea15f931a7b981225329d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and a default name.  <a href="namespacetracktion_1_1engine.html#a41f7674013fea15f931a7b981225329d">More...</a><br /></td></tr>
+<tr class="separator:a41f7674013fea15f931a7b981225329d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f64e6bb1a9000391570325b688983f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a5f64e6bb1a9000391570325b688983f7">insertNewClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>, const juce::String &amp;name, TimeRange)</td></tr>
+<tr class="memdesc:a5f64e6bb1a9000391570325b688983f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and name.  <a href="namespacetracktion_1_1engine.html#a5f64e6bb1a9000391570325b688983f7">More...</a><br /></td></tr>
+<tr class="separator:a5f64e6bb1a9000391570325b688983f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18fb32af4e33560e0a9cc73a14736235"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a18fb32af4e33560e0a9cc73a14736235">insertNewClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>, const juce::String &amp;name, <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>)</td></tr>
+<tr class="memdesc:a18fb32af4e33560e0a9cc73a14736235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and name.  <a href="namespacetracktion_1_1engine.html#a18fb32af4e33560e0a9cc73a14736235">More...</a><br /></td></tr>
+<tr class="separator:a18fb32af4e33560e0a9cc73a14736235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fd956ff5def788e9dc7251151116225"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html">WaveAudioClip</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a6fd956ff5def788e9dc7251151116225">insertWaveClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::String &amp;name, const juce::File &amp;sourceFile, <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>, <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>)</td></tr>
+<tr class="memdesc:a6fd956ff5def788e9dc7251151116225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#a6fd956ff5def788e9dc7251151116225">More...</a><br /></td></tr>
+<tr class="separator:a6fd956ff5def788e9dc7251151116225"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2413335c05ce95535e854eec4549b2e"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html">WaveAudioClip</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ae2413335c05ce95535e854eec4549b2e">insertWaveClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::String &amp;name, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a> sourceID, <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>, <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>)</td></tr>
+<tr class="memdesc:ae2413335c05ce95535e854eec4549b2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#ae2413335c05ce95535e854eec4549b2e">More...</a><br /></td></tr>
+<tr class="separator:ae2413335c05ce95535e854eec4549b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd32d137357fe1a9d6f324aba389fcf5"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#abd32d137357fe1a9d6f324aba389fcf5">insertMIDIClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::String &amp;name, TimeRange)</td></tr>
+<tr class="memdesc:abd32d137357fe1a9d6f324aba389fcf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#abd32d137357fe1a9d6f324aba389fcf5">More...</a><br /></td></tr>
+<tr class="separator:abd32d137357fe1a9d6f324aba389fcf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca4d87704bf49e8728bc60c49bd0cb46"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aca4d87704bf49e8728bc60c49bd0cb46">insertMIDIClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, TimeRange)</td></tr>
+<tr class="memdesc:aca4d87704bf49e8728bc60c49bd0cb46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#aca4d87704bf49e8728bc60c49bd0cb46">More...</a><br /></td></tr>
+<tr class="separator:aca4d87704bf49e8728bc60c49bd0cb46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff69f1c4f08dcda37e0631c3ba0e68c"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1EditClip.html">EditClip</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a0ff69f1c4f08dcda37e0631c3ba0e68c">insertEditClip</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, TimeRange, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>)</td></tr>
+<tr class="memdesc:a0ff69f1c4f08dcda37e0631c3ba0e68c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new <a class="el" href="classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties.">EditClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#a0ff69f1c4f08dcda37e0631c3ba0e68c">More...</a><br /></td></tr>
+<tr class="separator:a0ff69f1c4f08dcda37e0631c3ba0e68c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3816c134835e1a0752e3522b8c9342be"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a3816c134835e1a0752e3522b8c9342be">deleteRegion</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, TimeRange)</td></tr>
+<tr class="memdesc:a3816c134835e1a0752e3522b8c9342be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a region of a <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> and returns any newly created clips.  <a href="namespacetracktion_1_1engine.html#a3816c134835e1a0752e3522b8c9342be">More...</a><br /></td></tr>
+<tr class="separator:a3816c134835e1a0752e3522b8c9342be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02c955b64cc8cabe1f86c6fb90c5e7a"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac02c955b64cc8cabe1f86c6fb90c5e7a">deleteRegion</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;, TimeRange)</td></tr>
+<tr class="memdesc:ac02c955b64cc8cabe1f86c6fb90c5e7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a region of a clip and returns any newly created clips.  <a href="namespacetracktion_1_1engine.html#ac02c955b64cc8cabe1f86c6fb90c5e7a">More...</a><br /></td></tr>
+<tr class="separator:ac02c955b64cc8cabe1f86c6fb90c5e7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad52f63d32aaabe8b7e767e4f9c6183b4"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ad52f63d32aaabe8b7e767e4f9c6183b4">split</a> (<a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, TimePosition)</td></tr>
+<tr class="memdesc:ad52f63d32aaabe8b7e767e4f9c6183b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the given clp owner at the time and returns any newly created clips.  <a href="namespacetracktion_1_1engine.html#ad52f63d32aaabe8b7e767e4f9c6183b4">More...</a><br /></td></tr>
+<tr class="separator:ad52f63d32aaabe8b7e767e4f9c6183b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f33dc3327f6e53eb98c7e7f6c1f88fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a6f33dc3327f6e53eb98c7e7f6c1f88fb">split</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;, TimePosition)</td></tr>
+<tr class="memdesc:a6f33dc3327f6e53eb98c7e7f6c1f88fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the given clip at the time and returns the newly created clip.  <a href="namespacetracktion_1_1engine.html#a6f33dc3327f6e53eb98c7e7f6c1f88fb">More...</a><br /></td></tr>
+<tr class="separator:a6f33dc3327f6e53eb98c7e7f6c1f88fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c2c64a9f961cf578fb0fd6175acef37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a1c2c64a9f961cf578fb0fd6175acef37">containsAnyMIDIClips</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a1c2c64a9f961cf578fb0fd6175acef37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the clip owner contains any MIDI clips.  <a href="namespacetracktion_1_1engine.html#a1c2c64a9f961cf578fb0fd6175acef37">More...</a><br /></td></tr>
+<tr class="separator:a1c2c64a9f961cf578fb0fd6175acef37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04e2868f9a01a8d72610b9fc69be0c0e"><td class="memTemplParams" colspan="2">template&lt;typename ClipType &gt; </td></tr>
+<tr class="memitem:a04e2868f9a01a8d72610b9fc69be0c0e"><td class="memTemplItemLeft" align="right" valign="top">juce::Array&lt; ClipType * &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a04e2868f9a01a8d72610b9fc69be0c0e">getClipsOfType</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a04e2868f9a01a8d72610b9fc69be0c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the subclips of the given type.  <a href="namespacetracktion_1_1engine.html#a04e2868f9a01a8d72610b9fc69be0c0e">More...</a><br /></td></tr>
+<tr class="separator:a04e2868f9a01a8d72610b9fc69be0c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6a69e00179990b2578fa4e566edd7bf"><td class="memTemplParams" colspan="2">template&lt;typename ClipType &gt; </td></tr>
+<tr class="memitem:ac6a69e00179990b2578fa4e566edd7bf"><td class="memTemplItemLeft" align="right" valign="top">juce::Array&lt; ClipType * &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac6a69e00179990b2578fa4e566edd7bf">getClipsOfTypeRecursive</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:ac6a69e00179990b2578fa4e566edd7bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the subclips of the given type, if any clips contain other clips, this will also return those.  <a href="namespacetracktion_1_1engine.html#ac6a69e00179990b2578fa4e566edd7bf">More...</a><br /></td></tr>
+<tr class="separator:ac6a69e00179990b2578fa4e566edd7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb324a5c0788c55450272935b6c8ef67"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#afb324a5c0788c55450272935b6c8ef67">isMasterTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:afb324a5c0788c55450272935b6c8ef67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MasterTrack.html" title="A track to represent the master plugins.">MasterTrack</a>.  <a href="namespacetracktion_1_1engine.html#afb324a5c0788c55450272935b6c8ef67">More...</a><br /></td></tr>
+<tr class="separator:afb324a5c0788c55450272935b6c8ef67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe9906c6968f309202ea1f319c032d9a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#afe9906c6968f309202ea1f319c032d9a">isTempoTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:afe9906c6968f309202ea1f319c032d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a>.  <a href="namespacetracktion_1_1engine.html#afe9906c6968f309202ea1f319c032d9a">More...</a><br /></td></tr>
+<tr class="separator:afe9906c6968f309202ea1f319c032d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60ec9f68ae4b0d8ec6d65be121fc2d83"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a60ec9f68ae4b0d8ec6d65be121fc2d83">isAutomationTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a60ec9f68ae4b0d8ec6d65be121fc2d83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AutomationTrack.html">AutomationTrack</a>.  <a href="namespacetracktion_1_1engine.html#a60ec9f68ae4b0d8ec6d65be121fc2d83">More...</a><br /></td></tr>
+<tr class="separator:a60ec9f68ae4b0d8ec6d65be121fc2d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79aa6cca822633b3a0b0cb7c589ddd7f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a79aa6cca822633b3a0b0cb7c589ddd7f">isAudioTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a79aa6cca822633b3a0b0cb7c589ddd7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>.  <a href="namespacetracktion_1_1engine.html#a79aa6cca822633b3a0b0cb7c589ddd7f">More...</a><br /></td></tr>
+<tr class="separator:a79aa6cca822633b3a0b0cb7c589ddd7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ef6d793d0c8c54bbebb85cf2a15783"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a72ef6d793d0c8c54bbebb85cf2a15783">isFolderTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a72ef6d793d0c8c54bbebb85cf2a15783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html">FolderTrack</a>.  <a href="namespacetracktion_1_1engine.html#a72ef6d793d0c8c54bbebb85cf2a15783">More...</a><br /></td></tr>
+<tr class="separator:a72ef6d793d0c8c54bbebb85cf2a15783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3e0e2f5e2a5ba33dd4945400f02755f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ab3e0e2f5e2a5ba33dd4945400f02755f">isMarkerTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:ab3e0e2f5e2a5ba33dd4945400f02755f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MarkerTrack.html">MarkerTrack</a>.  <a href="namespacetracktion_1_1engine.html#ab3e0e2f5e2a5ba33dd4945400f02755f">More...</a><br /></td></tr>
+<tr class="separator:ab3e0e2f5e2a5ba33dd4945400f02755f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca97f9000707b1cbe89b63a4819738d9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aca97f9000707b1cbe89b63a4819738d9">isChordTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:aca97f9000707b1cbe89b63a4819738d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1ChordTrack.html">ChordTrack</a>.  <a href="namespacetracktion_1_1engine.html#aca97f9000707b1cbe89b63a4819738d9">More...</a><br /></td></tr>
+<tr class="separator:aca97f9000707b1cbe89b63a4819738d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a844ae27339725c4a014b3f531fa7a4b3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a844ae27339725c4a014b3f531fa7a4b3">isArrangerTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a844ae27339725c4a014b3f531fa7a4b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>.  <a href="namespacetracktion_1_1engine.html#a844ae27339725c4a014b3f531fa7a4b3">More...</a><br /></td></tr>
+<tr class="separator:a844ae27339725c4a014b3f531fa7a4b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacebeb9301594bcbe97aaad9fb905787"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aacebeb9301594bcbe97aaad9fb905787">isAudioTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:aacebeb9301594bcbe97aaad9fb905787"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>.  <a href="namespacetracktion_1_1engine.html#aacebeb9301594bcbe97aaad9fb905787">More...</a><br /></td></tr>
+<tr class="separator:aacebeb9301594bcbe97aaad9fb905787"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad99071613966ffc19e2180b5ef213968"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ad99071613966ffc19e2180b5ef213968">isFolderTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:ad99071613966ffc19e2180b5ef213968"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html">FolderTrack</a>.  <a href="namespacetracktion_1_1engine.html#ad99071613966ffc19e2180b5ef213968">More...</a><br /></td></tr>
+<tr class="separator:ad99071613966ffc19e2180b5ef213968"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a5b6b174fb3924b4b94f5e568081200"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a5a5b6b174fb3924b4b94f5e568081200">isMarkerTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a5a5b6b174fb3924b4b94f5e568081200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MarkerTrack.html">MarkerTrack</a>.  <a href="namespacetracktion_1_1engine.html#a5a5b6b174fb3924b4b94f5e568081200">More...</a><br /></td></tr>
+<tr class="separator:a5a5b6b174fb3924b4b94f5e568081200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16ce80c18cb2ff9311fabbb8f3bafa6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a16ce80c18cb2ff9311fabbb8f3bafa6a">isChordTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a16ce80c18cb2ff9311fabbb8f3bafa6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1ChordTrack.html">ChordTrack</a>.  <a href="namespacetracktion_1_1engine.html#a16ce80c18cb2ff9311fabbb8f3bafa6a">More...</a><br /></td></tr>
+<tr class="separator:a16ce80c18cb2ff9311fabbb8f3bafa6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0fb3a8585f188b6cc703db29c2a80a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac0fb3a8585f188b6cc703db29c2a80a9">isArrangerTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:ac0fb3a8585f188b6cc703db29c2a80a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>.  <a href="namespacetracktion_1_1engine.html#ac0fb3a8585f188b6cc703db29c2a80a9">More...</a><br /></td></tr>
+<tr class="separator:ac0fb3a8585f188b6cc703db29c2a80a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ead560d6524f7008e20bf9a386a49cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a1ead560d6524f7008e20bf9a386a49cb">canContainMIDI</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a1ead560d6524f7008e20bf9a386a49cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> can contain <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a>[s].  <a href="namespacetracktion_1_1engine.html#a1ead560d6524f7008e20bf9a386a49cb">More...</a><br /></td></tr>
+<tr class="separator:a1ead560d6524f7008e20bf9a386a49cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2327ec945ec11825d6481bb78777229d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a2327ec945ec11825d6481bb78777229d">canContainAudio</a> (const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;)</td></tr>
+<tr class="memdesc:a2327ec945ec11825d6481bb78777229d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> can contain <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a>[s].  <a href="namespacetracktion_1_1engine.html#a2327ec945ec11825d6481bb78777229d">More...</a><br /></td></tr>
+<tr class="separator:a2327ec945ec11825d6481bb78777229d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8298bd396d9de38aee1f38fc3fc4b67a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a8298bd396d9de38aee1f38fc3fc4b67a">isMovable</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a8298bd396d9de38aee1f38fc3fc4b67a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> is movable.  <a href="namespacetracktion_1_1engine.html#a8298bd396d9de38aee1f38fc3fc4b67a">More...</a><br /></td></tr>
+<tr class="separator:a8298bd396d9de38aee1f38fc3fc4b67a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a884d27fad06ec84710c2ac9c370a38"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a4a884d27fad06ec84710c2ac9c370a38">isOnTop</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a4a884d27fad06ec84710c2ac9c370a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this a global <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> and should be on top of others.  <a href="namespacetracktion_1_1engine.html#a4a884d27fad06ec84710c2ac9c370a38">More...</a><br /></td></tr>
+<tr class="separator:a4a884d27fad06ec84710c2ac9c370a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95b6b590757519cdeff59b32bb32a71a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a95b6b590757519cdeff59b32bb32a71a">loadEditFromFile</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a> role=<a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::forEditing</a>)</td></tr>
 <tr class="memdesc:a95b6b590757519cdeff59b32bb32a71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from file, ready for playback / editing.  <a href="namespacetracktion_1_1engine.html#a95b6b590757519cdeff59b32bb32a71a">More...</a><br /></td></tr>
 <tr class="separator:a95b6b590757519cdeff59b32bb32a71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1339,6 +1462,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad575b8b00deb9ca34d23a8a0ee8d592e"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ad575b8b00deb9ca34d23a8a0ee8d592e">toTrackArray</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, const juce::BigInteger &amp;)</td></tr>
 <tr class="memdesc:ad575b8b00deb9ca34d23a8a0ee8d592e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an Array of <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>[s] corresponding to the set bits of all tracks in an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion_1_1engine.html#ad575b8b00deb9ca34d23a8a0ee8d592e">More...</a><br /></td></tr>
 <tr class="separator:ad575b8b00deb9ca34d23a8a0ee8d592e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeed6b8603d1bc17e7d90397ecd9234ac"><td class="memTemplParams" colspan="2">template&lt;typename TrackItemType &gt; </td></tr>
+<tr class="memitem:aeed6b8603d1bc17e7d90397ecd9234ac"><td class="memTemplItemLeft" align="right" valign="top">juce::Array&lt; TrackItemType * &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aeed6b8603d1bc17e7d90397ecd9234ac">getTrackItemsOfType</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="separator:aeed6b8603d1bc17e7d90397ecd9234ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6257fe64c38c421e5d57737c5ebfaf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ab6257fe64c38c421e5d57737c5ebfaf6">findClipForID</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:ab6257fe64c38c421e5d57737c5ebfaf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit.">Clip</a> with a given ID if contained in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion_1_1engine.html#ab6257fe64c38c421e5d57737c5ebfaf6">More...</a><br /></td></tr>
 <tr class="separator:ab6257fe64c38c421e5d57737c5ebfaf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1468,6 +1594,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a53677fe52b2e7d61d34e343b70ad2c70"><td class="memItemLeft" align="right" valign="top">BeatRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a53677fe52b2e7d61d34e343b70ad2c70">toBeats</a> (<a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html">EditTimeRange</a>, const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;)</td></tr>
 <tr class="memdesc:a53677fe52b2e7d61d34e343b70ad2c70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html" title="Represents a time range in an Edit stored as either time or beats.">EditTimeRange</a> to a BeatRange.  <a href="namespacetracktion_1_1engine.html#a53677fe52b2e7d61d34e343b70ad2c70">More...</a><br /></td></tr>
 <tr class="separator:a53677fe52b2e7d61d34e343b70ad2c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98835e892f35befe2365f84e884eee31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a98835e892f35befe2365f84e884eee31">createClipPosition</a> (const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;, TimeRange, TimeDuration offset={})</td></tr>
+<tr class="memdesc:a98835e892f35befe2365f84e884eee31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> from either a time or beat range.  <a href="namespacetracktion_1_1engine.html#a98835e892f35befe2365f84e884eee31">More...</a><br /></td></tr>
+<tr class="separator:a98835e892f35befe2365f84e884eee31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af998faa7c14d93fa2450d16c0accacc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#af998faa7c14d93fa2450d16c0accacc0">createClipPosition</a> (const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;, BeatRange, BeatDuration offset={})</td></tr>
+<tr class="memdesc:af998faa7c14d93fa2450d16c0accacc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> from either a time or beat range.  <a href="namespacetracktion_1_1engine.html#af998faa7c14d93fa2450d16c0accacc0">More...</a><br /></td></tr>
+<tr class="separator:af998faa7c14d93fa2450d16c0accacc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9524435c5c2eed1256ff4f22793a54aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9524435c5c2eed1256ff4f22793a54aa">moveAutomation</a> (const juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1TrackAutomationSection.html">TrackAutomationSection</a> &gt; &amp;, TimeDuration offset, bool copy)</td></tr>
 <tr class="memdesc:a9524435c5c2eed1256ff4f22793a54aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a set of automation optionally applying an offset and copying the automation (rather than moving it).  <a href="namespacetracktion_1_1engine.html#a9524435c5c2eed1256ff4f22793a54aa">More...</a><br /></td></tr>
 <tr class="separator:a9524435c5c2eed1256ff4f22793a54aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2131,6 +2263,34 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="acb9cf874dc4e4feb1c368815603c6c9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb9cf874dc4e4feb1c368815603c6c9e">&#9670;&nbsp;</a></span>DeleteExistingClips</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">tracktion::engine::DeleteExistingClips</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines behaviour for overwriting clips. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acb9cf874dc4e4feb1c368815603c6c9ea7fa3b767c460b54a2be4d49030b349c7"></a>no&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acb9cf874dc4e4feb1c368815603c6c9eaa6105c0a611b41b08f1209506350279e"></a>yes&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="a2b33ff26f5a23b76bceb9d152c43b34c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b33ff26f5a23b76bceb9d152c43b34c">&#9670;&nbsp;</a></span>CloseGap</h2>
 
@@ -2801,6 +2961,1000 @@ template&lt;typename ModifierType &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns a <a class="el" href="structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> if it can be found in the list. </p>
+
+</div>
+</div>
+<a id="a424d915816fce94fb9af7c6c8c820e9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a424d915816fce94fb9af7c6c8c820e9d">&#9670;&nbsp;</a></span>findClipForState() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::findClipForState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::ValueTree &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a clip with the given state if the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> contains it. </p>
+
+</div>
+</div>
+<a id="aa17f7f539896c575f7648c9cd6f83a86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa17f7f539896c575f7648c9cd6f83a86">&#9670;&nbsp;</a></span>findClipForID() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::findClipForID </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a clip with the given ID if the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> contains it. </p>
+
+</div>
+</div>
+<a id="af122ceb01516fd8eab5dc1593e4bd6e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af122ceb01516fd8eab5dc1593e4bd6e9">&#9670;&nbsp;</a></span>insertClipWithState() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::insertClipWithState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::ValueTree&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a clip with the given state in to the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="a40faa74c310138e5161006df65ea3bb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40faa74c310138e5161006df65ea3bb0">&#9670;&nbsp;</a></span>insertClipWithState() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::insertClipWithState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::ValueTree &amp;&#160;</td>
+          <td class="paramname"><em>stateToUse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allowSpottingAdjustment</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a clip with the given state in to the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="a41f7674013fea15f931a7b981225329d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41f7674013fea15f931a7b981225329d">&#9670;&nbsp;</a></span>insertNewClip() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::insertNewClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new clip with the given type and a default name. </p>
+
+</div>
+</div>
+<a id="a5f64e6bb1a9000391570325b688983f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f64e6bb1a9000391570325b688983f7">&#9670;&nbsp;</a></span>insertNewClip() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::insertNewClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new clip with the given type and name. </p>
+
+</div>
+</div>
+<a id="a18fb32af4e33560e0a9cc73a14736235"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18fb32af4e33560e0a9cc73a14736235">&#9670;&nbsp;</a></span>insertNewClip() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::insertNewClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">TrackItem::Type</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new clip with the given type and name. </p>
+
+</div>
+</div>
+<a id="a6fd956ff5def788e9dc7251151116225"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd956ff5def788e9dc7251151116225">&#9670;&nbsp;</a></span>insertWaveClip() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html">WaveAudioClip</a>&gt; tracktion::engine::insertWaveClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
+          <td class="paramname"><em>sourceFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="ae2413335c05ce95535e854eec4549b2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2413335c05ce95535e854eec4549b2e">&#9670;&nbsp;</a></span>insertWaveClip() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html">WaveAudioClip</a>&gt; tracktion::engine::insertWaveClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>&#160;</td>
+          <td class="paramname"><em>sourceID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e">DeleteExistingClips</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="abd32d137357fe1a9d6f324aba389fcf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd32d137357fe1a9d6f324aba389fcf5">&#9670;&nbsp;</a></span>insertMIDIClip() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a>&gt; tracktion::engine::insertMIDIClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="aca4d87704bf49e8728bc60c49bd0cb46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca4d87704bf49e8728bc60c49bd0cb46">&#9670;&nbsp;</a></span>insertMIDIClip() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a>&gt; tracktion::engine::insertMIDIClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="a0ff69f1c4f08dcda37e0631c3ba0e68c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ff69f1c4f08dcda37e0631c3ba0e68c">&#9670;&nbsp;</a></span>insertEditClip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1EditClip.html">EditClip</a>&gt; tracktion::engine::insertEditClip </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new <a class="el" href="classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties.">EditClip</a> into the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list. </p>
+
+</div>
+</div>
+<a id="a3816c134835e1a0752e3522b8c9342be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3816c134835e1a0752e3522b8c9342be">&#9670;&nbsp;</a></span>deleteRegion() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>*&gt; tracktion::engine::deleteRegion </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a region of a <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> and returns any newly created clips. </p>
+
+</div>
+</div>
+<a id="ac02c955b64cc8cabe1f86c6fb90c5e7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac02c955b64cc8cabe1f86c6fb90c5e7a">&#9670;&nbsp;</a></span>deleteRegion() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>*&gt; tracktion::engine::deleteRegion </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a region of a clip and returns any newly created clips. </p>
+
+</div>
+</div>
+<a id="ad52f63d32aaabe8b7e767e4f9c6183b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad52f63d32aaabe8b7e767e4f9c6183b4">&#9670;&nbsp;</a></span>split() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>*&gt; tracktion::engine::split </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Splits the given clp owner at the time and returns any newly created clips. </p>
+
+</div>
+</div>
+<a id="a6f33dc3327f6e53eb98c7e7f6c1f88fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f33dc3327f6e53eb98c7e7f6c1f88fb">&#9670;&nbsp;</a></span>split() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>* tracktion::engine::split </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Splits the given clip at the time and returns the newly created clip. </p>
+
+</div>
+</div>
+<a id="a1c2c64a9f961cf578fb0fd6175acef37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c2c64a9f961cf578fb0fd6175acef37">&#9670;&nbsp;</a></span>containsAnyMIDIClips()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::containsAnyMIDIClips </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the clip owner contains any MIDI clips. </p>
+
+</div>
+</div>
+<a id="a04e2868f9a01a8d72610b9fc69be0c0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04e2868f9a01a8d72610b9fc69be0c0e">&#9670;&nbsp;</a></span>getClipsOfType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ClipType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt; ClipType * &gt; tracktion::engine::getClipsOfType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"><em>parent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the subclips of the given type. </p>
+
+</div>
+</div>
+<a id="ac6a69e00179990b2578fa4e566edd7bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6a69e00179990b2578fa4e566edd7bf">&#9670;&nbsp;</a></span>getClipsOfTypeRecursive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ClipType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt; ClipType * &gt; tracktion::engine::getClipsOfTypeRecursive </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"><em>parent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the subclips of the given type, if any clips contain other clips, this will also return those. </p>
+
+</div>
+</div>
+<a id="afb324a5c0788c55450272935b6c8ef67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb324a5c0788c55450272935b6c8ef67">&#9670;&nbsp;</a></span>isMasterTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isMasterTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MasterTrack.html" title="A track to represent the master plugins.">MasterTrack</a>. </p>
+
+</div>
+</div>
+<a id="afe9906c6968f309202ea1f319c032d9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe9906c6968f309202ea1f319c032d9a">&#9670;&nbsp;</a></span>isTempoTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isTempoTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a>. </p>
+
+</div>
+</div>
+<a id="a60ec9f68ae4b0d8ec6d65be121fc2d83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60ec9f68ae4b0d8ec6d65be121fc2d83">&#9670;&nbsp;</a></span>isAutomationTrack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isAutomationTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AutomationTrack.html">AutomationTrack</a>. </p>
+
+</div>
+</div>
+<a id="a79aa6cca822633b3a0b0cb7c589ddd7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79aa6cca822633b3a0b0cb7c589ddd7f">&#9670;&nbsp;</a></span>isAudioTrack() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isAudioTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>. </p>
+
+</div>
+</div>
+<a id="a72ef6d793d0c8c54bbebb85cf2a15783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ef6d793d0c8c54bbebb85cf2a15783">&#9670;&nbsp;</a></span>isFolderTrack() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isFolderTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html">FolderTrack</a>. </p>
+
+</div>
+</div>
+<a id="ab3e0e2f5e2a5ba33dd4945400f02755f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3e0e2f5e2a5ba33dd4945400f02755f">&#9670;&nbsp;</a></span>isMarkerTrack() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isMarkerTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MarkerTrack.html">MarkerTrack</a>. </p>
+
+</div>
+</div>
+<a id="aca97f9000707b1cbe89b63a4819738d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca97f9000707b1cbe89b63a4819738d9">&#9670;&nbsp;</a></span>isChordTrack() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isChordTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1ChordTrack.html">ChordTrack</a>. </p>
+
+</div>
+</div>
+<a id="a844ae27339725c4a014b3f531fa7a4b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a844ae27339725c4a014b3f531fa7a4b3">&#9670;&nbsp;</a></span>isArrangerTrack() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isArrangerTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>. </p>
+
+</div>
+</div>
+<a id="aacebeb9301594bcbe97aaad9fb905787"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacebeb9301594bcbe97aaad9fb905787">&#9670;&nbsp;</a></span>isAudioTrack() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isAudioTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>. </p>
+
+</div>
+</div>
+<a id="ad99071613966ffc19e2180b5ef213968"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad99071613966ffc19e2180b5ef213968">&#9670;&nbsp;</a></span>isFolderTrack() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isFolderTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html">FolderTrack</a>. </p>
+
+</div>
+</div>
+<a id="a5a5b6b174fb3924b4b94f5e568081200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a5b6b174fb3924b4b94f5e568081200">&#9670;&nbsp;</a></span>isMarkerTrack() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isMarkerTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1MarkerTrack.html">MarkerTrack</a>. </p>
+
+</div>
+</div>
+<a id="a16ce80c18cb2ff9311fabbb8f3bafa6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16ce80c18cb2ff9311fabbb8f3bafa6a">&#9670;&nbsp;</a></span>isChordTrack() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isChordTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is a <a class="el" href="classtracktion_1_1engine_1_1ChordTrack.html">ChordTrack</a>. </p>
+
+</div>
+</div>
+<a id="ac0fb3a8585f188b6cc703db29c2a80a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0fb3a8585f188b6cc703db29c2a80a9">&#9670;&nbsp;</a></span>isArrangerTrack() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isArrangerTrack </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this is an <a class="el" href="classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around.">ArrangerTrack</a>. </p>
+
+</div>
+</div>
+<a id="a1ead560d6524f7008e20bf9a386a49cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ead560d6524f7008e20bf9a386a49cb">&#9670;&nbsp;</a></span>canContainMIDI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::canContainMIDI </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> can contain <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a>[s]. </p>
+
+</div>
+</div>
+<a id="a2327ec945ec11825d6481bb78777229d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2327ec945ec11825d6481bb78777229d">&#9670;&nbsp;</a></span>canContainAudio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::canContainAudio </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> can contain <a class="el" href="classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source.">WaveAudioClip</a>[s]. </p>
+
+</div>
+</div>
+<a id="a8298bd396d9de38aee1f38fc3fc4b67a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8298bd396d9de38aee1f38fc3fc4b67a">&#9670;&nbsp;</a></span>isMovable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isMovable </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> is movable. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>, <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html">FolderTrack</a> </dd></dl>
+
+</div>
+</div>
+<a id="a4a884d27fad06ec84710c2ac9c370a38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a884d27fad06ec84710c2ac9c370a38">&#9670;&nbsp;</a></span>isOnTop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::isOnTop </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if this a global <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> and should be on top of others. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion_1_1engine_1_1MarkerTrack.html">MarkerTrack</a>, <a class="el" href="classtracktion_1_1engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc.">TempoTrack</a> </dd></dl>
 
 </div>
 </div>
@@ -3494,8 +4648,28 @@ template&lt;typename TrackType &gt; </div>
 
 </div>
 </div>
+<a id="aeed6b8603d1bc17e7d90397ecd9234ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeed6b8603d1bc17e7d90397ecd9234ac">&#9670;&nbsp;</a></span>getTrackItemsOfType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename TrackItemType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt; TrackItemType * &gt; tracktion::engine::getTrackItemsOfType </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname"><em>track</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab6257fe64c38c421e5d57737c5ebfaf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6257fe64c38c421e5d57737c5ebfaf6">&#9670;&nbsp;</a></span>findClipForID()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6257fe64c38c421e5d57737c5ebfaf6">&#9670;&nbsp;</a></span>findClipForID() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3525,7 +4699,7 @@ template&lt;typename TrackType &gt; </div>
 </div>
 </div>
 <a id="abf9a9cea542a63b447f0d15e363c8be9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf9a9cea542a63b447f0d15e363c8be9">&#9670;&nbsp;</a></span>findClipForState()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abf9a9cea542a63b447f0d15e363c8be9">&#9670;&nbsp;</a></span>findClipForState() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4695,6 +5869,78 @@ template&lt;typename ModifierType &gt; </div>
 
 <p>Converts an <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html" title="Represents a time range in an Edit stored as either time or beats.">EditTimeRange</a> to a BeatRange. </p>
 <p>N.B. This may be a slow operation if this was created using a TimeRange. </p>
+
+</div>
+</div>
+<a id="a98835e892f35befe2365f84e884eee31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98835e892f35befe2365f84e884eee31">&#9670;&nbsp;</a></span>createClipPosition() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a> tracktion::engine::createClipPosition </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeDuration&#160;</td>
+          <td class="paramname"><em>offset</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> from either a time or beat range. </p>
+
+</div>
+</div>
+<a id="af998faa7c14d93fa2450d16c0accacc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af998faa7c14d93fa2450d16c0accacc0">&#9670;&nbsp;</a></span>createClipPosition() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a> tracktion::engine::createClipPosition </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BeatRange&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BeatDuration&#160;</td>
+          <td class="paramname"><em>offset</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> from either a time or beat range. </p>
 
 </div>
 </div>
@@ -12192,7 +13438,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 18:24:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 20 2023 10:45:37 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

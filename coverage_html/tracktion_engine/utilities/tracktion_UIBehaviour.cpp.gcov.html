@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">6</td>
-            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntry">93</td>
             <td class="headerCovTableEntryLo">6.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -190,106 +190,107 @@
 <a name="128"><span class="lineNum">     128 </span>            :             }</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :             for (int i = clips.size(); --i &gt;= 0;)</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                 if (auto targetTrack = allTracks [allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()) + trackDelta])</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                     clips.getUnchecked(i)-&gt;moveToTrack (*targetTrack);</span></a>
-<a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :             if (sections.size())</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, {}, false);</span></a>
-<a name="136"><span class="lineNum">     136 </span>            :         }</a>
-<a name="137"><span class="lineNum">     137 </span>            :     }</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     else if (delta != TimeDuration())</span></a>
-<a name="139"><span class="lineNum">     139 </span>            :     {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         juce::Array&lt;TrackAutomationSection&gt; sections;</span></a>
-<a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :         if (automationLocked)</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :             for (auto&amp;&amp; clip : clips)</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :                 sections.add (TrackAutomationSection (*clip));</span></a>
-<a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         if (auto first = clips.getFirst())</span></a>
-<a name="147"><span class="lineNum">     147 </span>            :         {</a>
-<a name="148"><span class="lineNum">     148 </span>            :             // if there's one clip, move it to the nearest interval, else</a>
-<a name="149"><span class="lineNum">     149 </span>            :             // move all the clips by the same amount</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             auto origClip1Start = first-&gt;getPosition().getStart();</span></a>
-<a name="151"><span class="lineNum">     151 </span>            :             auto clipStart = origClip1Start;</a>
-<a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             if (delta &gt; TimeDuration())</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeUp   (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
-<a name="155"><span class="lineNum">     155 </span>            :             else</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeDown (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
-<a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             if (clips.size() &gt; 1)</span></a>
-<a name="159"><span class="lineNum">     159 </span>            :             {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :                 delta = first-&gt;getPosition().getStart() - origClip1Start;</span></a>
-<a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :                 for (int i = clips.size(); --i &gt; 0;)</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :                     clips[i]-&gt;setStart (clips.getUnchecked (i)-&gt;getPosition().getStart() + delta, false, true);</span></a>
-<a name="164"><span class="lineNum">     164 </span>            :             }</a>
-<a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :             if (sections.size())</span></a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, first-&gt;getPosition().getStart() - clipStart, false);</span></a>
-<a name="168"><span class="lineNum">     168 </span>            :         }</a>
-<a name="169"><span class="lineNum">     169 </span>            :         else</a>
-<a name="170"><span class="lineNum">     170 </span>            :         {</a>
-<a name="171"><span class="lineNum">     171 </span>            :             jassertfalse;</a>
-<a name="172"><span class="lineNum">     172 </span>            :         }</a>
-<a name="173"><span class="lineNum">     173 </span>            :     }</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 : void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const juce::String&amp; commandDesc, bool automationLocked)</span></a>
-<a name="177"><span class="lineNum">     177 </span>            : {</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     if (auto sm = getCurrentlyFocusedSelectionManager())</span></a>
-<a name="179"><span class="lineNum">     179 </span>            :     {</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :         auto clips = sm-&gt;getItemsOfType&lt;Clip&gt;();</span></a>
-<a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :         for (auto cc : sm-&gt;getItemsOfType&lt;CollectionClip&gt;())</span></a>
-<a name="183"><span class="lineNum">     183 </span>            :             clips.addArray (cc-&gt;getClips());</a>
-<a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         clips = getAssociatedClipsToEdit (clips).getItemsOfType&lt;Clip&gt;();</span></a>
-<a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :         if (clips.size() &gt; 0)</span></a>
-<a name="188"><span class="lineNum">     188 </span>            :         {</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :             nudgeSelectedClips (snapType, commandDesc, *sm, clips, automationLocked);</span></a>
-<a name="190"><span class="lineNum">     190 </span>            :         }</a>
-<a name="191"><span class="lineNum">     191 </span>            :         else</a>
-<a name="192"><span class="lineNum">     192 </span>            :         {</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :             if (auto s = sm-&gt;getFirstItemOfType&lt;SelectedMidiEvents&gt;())</span></a>
-<a name="194"><span class="lineNum">     194 </span>            :             {</a>
-<a name="195"><span class="lineNum">     195 </span>            :                 int leftRight = 0, upDown = 0;</a>
-<a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :                 if (commandDesc.contains (&quot;right&quot;))          leftRight =  1;</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;left&quot;))      leftRight = -1;</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;up&quot;))        upDown =  1;</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;down&quot;))      upDown = -1;</span></a>
-<a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :                 s-&gt;nudge (snapType, leftRight, upDown);</span></a>
-<a name="203"><span class="lineNum">     203 </span>            :             }</a>
-<a name="204"><span class="lineNum">     204 </span>            :         }</a>
-<a name="205"><span class="lineNum">     205 </span>            :     }</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 : void UIBehaviour::nudgeSelected (const juce::String&amp; commandDesc)</span></a>
-<a name="209"><span class="lineNum">     209 </span>            : {</a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     if (auto edit = getCurrentlyFocusedEdit())</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :         nudgeSelected (edit-&gt;getTransport().getSnapType(), commandDesc, false);</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span>            : //==============================================================================</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : TimePosition UIBehaviour::getEditingPosition (Edit&amp; e)</span></a>
-<a name="216"><span class="lineNum">     216 </span>            : {</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     return e.getTransport().getPosition();</span></a>
-<a name="218"><span class="lineNum">     218 </span>            : }</a>
-<a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : TimeRange UIBehaviour::getEditingRange (Edit&amp; e)</span></a>
-<a name="221"><span class="lineNum">     221 </span>            : {</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     return e.getTransport().getLoopRange();</span></a>
-<a name="223"><span class="lineNum">     223 </span>            : }</a>
-<a name="224"><span class="lineNum">     224 </span>            : </a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 : void UIBehaviour::recreatePluginWindowContentAsync (Plugin&amp; p)</span></a>
-<a name="226"><span class="lineNum">     226 </span>            : {</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     p.windowState-&gt;recreateWindowIfShowing();</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                 if (auto targetTrack = allTracks[allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()) + trackDelta])</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                     if (auto ct = dynamic_cast&lt;ClipTrack*&gt; (targetTrack))</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :                         clips.getUnchecked (i)-&gt;moveTo (*ct);</span></a>
+<a name="134"><span class="lineNum">     134 </span>            : </a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             if (sections.size())</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, {}, false);</span></a>
+<a name="137"><span class="lineNum">     137 </span>            :         }</a>
+<a name="138"><span class="lineNum">     138 </span>            :     }</a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     else if (delta != TimeDuration())</span></a>
+<a name="140"><span class="lineNum">     140 </span>            :     {</a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :         juce::Array&lt;TrackAutomationSection&gt; sections;</span></a>
+<a name="142"><span class="lineNum">     142 </span>            : </a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :         if (automationLocked)</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :             for (auto&amp;&amp; clip : clips)</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :                 sections.add (TrackAutomationSection (*clip));</span></a>
+<a name="146"><span class="lineNum">     146 </span>            : </a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :         if (auto first = clips.getFirst())</span></a>
+<a name="148"><span class="lineNum">     148 </span>            :         {</a>
+<a name="149"><span class="lineNum">     149 </span>            :             // if there's one clip, move it to the nearest interval, else</a>
+<a name="150"><span class="lineNum">     150 </span>            :             // move all the clips by the same amount</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :             auto origClip1Start = first-&gt;getPosition().getStart();</span></a>
+<a name="152"><span class="lineNum">     152 </span>            :             auto clipStart = origClip1Start;</a>
+<a name="153"><span class="lineNum">     153 </span>            : </a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :             if (delta &gt; TimeDuration())</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeUp   (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
+<a name="156"><span class="lineNum">     156 </span>            :             else</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeDown (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
+<a name="158"><span class="lineNum">     158 </span>            : </a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :             if (clips.size() &gt; 1)</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :             {</a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :                 delta = first-&gt;getPosition().getStart() - origClip1Start;</span></a>
+<a name="162"><span class="lineNum">     162 </span>            : </a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :                 for (int i = clips.size(); --i &gt; 0;)</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :                     clips[i]-&gt;setStart (clips.getUnchecked (i)-&gt;getPosition().getStart() + delta, false, true);</span></a>
+<a name="165"><span class="lineNum">     165 </span>            :             }</a>
+<a name="166"><span class="lineNum">     166 </span>            : </a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :             if (sections.size())</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, first-&gt;getPosition().getStart() - clipStart, false);</span></a>
+<a name="169"><span class="lineNum">     169 </span>            :         }</a>
+<a name="170"><span class="lineNum">     170 </span>            :         else</a>
+<a name="171"><span class="lineNum">     171 </span>            :         {</a>
+<a name="172"><span class="lineNum">     172 </span>            :             jassertfalse;</a>
+<a name="173"><span class="lineNum">     173 </span>            :         }</a>
+<a name="174"><span class="lineNum">     174 </span>            :     }</a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 : void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const juce::String&amp; commandDesc, bool automationLocked)</span></a>
+<a name="178"><span class="lineNum">     178 </span>            : {</a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :     if (auto sm = getCurrentlyFocusedSelectionManager())</span></a>
+<a name="180"><span class="lineNum">     180 </span>            :     {</a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :         auto clips = sm-&gt;getItemsOfType&lt;Clip&gt;();</span></a>
+<a name="182"><span class="lineNum">     182 </span>            : </a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :         for (auto cc : sm-&gt;getItemsOfType&lt;CollectionClip&gt;())</span></a>
+<a name="184"><span class="lineNum">     184 </span>            :             clips.addArray (cc-&gt;getClips());</a>
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         clips = getAssociatedClipsToEdit (clips).getItemsOfType&lt;Clip&gt;();</span></a>
+<a name="187"><span class="lineNum">     187 </span>            : </a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :         if (clips.size() &gt; 0)</span></a>
+<a name="189"><span class="lineNum">     189 </span>            :         {</a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :             nudgeSelectedClips (snapType, commandDesc, *sm, clips, automationLocked);</span></a>
+<a name="191"><span class="lineNum">     191 </span>            :         }</a>
+<a name="192"><span class="lineNum">     192 </span>            :         else</a>
+<a name="193"><span class="lineNum">     193 </span>            :         {</a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             if (auto s = sm-&gt;getFirstItemOfType&lt;SelectedMidiEvents&gt;())</span></a>
+<a name="195"><span class="lineNum">     195 </span>            :             {</a>
+<a name="196"><span class="lineNum">     196 </span>            :                 int leftRight = 0, upDown = 0;</a>
+<a name="197"><span class="lineNum">     197 </span>            : </a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :                 if (commandDesc.contains (&quot;right&quot;))          leftRight =  1;</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;left&quot;))      leftRight = -1;</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;up&quot;))        upDown =  1;</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :                 else if (commandDesc.contains (&quot;down&quot;))      upDown = -1;</span></a>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :                 s-&gt;nudge (snapType, leftRight, upDown);</span></a>
+<a name="204"><span class="lineNum">     204 </span>            :             }</a>
+<a name="205"><span class="lineNum">     205 </span>            :         }</a>
+<a name="206"><span class="lineNum">     206 </span>            :     }</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="208"><span class="lineNum">     208 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : void UIBehaviour::nudgeSelected (const juce::String&amp; commandDesc)</span></a>
+<a name="210"><span class="lineNum">     210 </span>            : {</a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     if (auto edit = getCurrentlyFocusedEdit())</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         nudgeSelected (edit-&gt;getTransport().getSnapType(), commandDesc, false);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<a name="215"><span class="lineNum">     215 </span>            : //==============================================================================</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 : TimePosition UIBehaviour::getEditingPosition (Edit&amp; e)</span></a>
+<a name="217"><span class="lineNum">     217 </span>            : {</a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :     return e.getTransport().getPosition();</span></a>
+<a name="219"><span class="lineNum">     219 </span>            : }</a>
+<a name="220"><span class="lineNum">     220 </span>            : </a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 : TimeRange UIBehaviour::getEditingRange (Edit&amp; e)</span></a>
+<a name="222"><span class="lineNum">     222 </span>            : {</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     return e.getTransport().getLoopRange();</span></a>
+<a name="224"><span class="lineNum">     224 </span>            : }</a>
+<a name="225"><span class="lineNum">     225 </span>            : </a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 : void UIBehaviour::recreatePluginWindowContentAsync (Plugin&amp; p)</span></a>
+<a name="227"><span class="lineNum">     227 </span>            : {</a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     p.windowState-&gt;recreateWindowIfShowing();</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="230"><span class="lineNum">     230 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

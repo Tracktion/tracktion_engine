@@ -67,7 +67,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtracktion_1_1engine_1_1TracktionEngineNode-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion::engine::TracktionEngineNode Class Reference</div>  </div>
@@ -79,7 +78,7 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for tracktion::engine::TracktionEngineNode:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1TracktionEngineNode__inherit__graph.svg" width="426" height="706"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1TracktionEngineNode__inherit__graph.svg" width="426" height="771"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -127,11 +126,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6da5b423bb5f734728a9967dea0f2dd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html">tracktion::graph::PlayHead</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a6da5b423bb5f734728a9967dea0f2dd2">getPlayHead</a> ()</td></tr>
 <tr class="memdesc:a6da5b423bb5f734728a9967dea0f2dd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1PlayHead.html">PlayHead</a> in use.  <a href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a6da5b423bb5f734728a9967dea0f2dd2">More...</a><br /></td></tr>
 <tr class="separator:a6da5b423bb5f734728a9967dea0f2dd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:ac0c9648ef197a8ac1bb559e71cd3842f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a></td></tr>
-<tr class="separator:ac0c9648ef197a8ac1bb559e71cd3842f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a948adcf3f250e8e951ff7e773c87621c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a948adcf3f250e8e951ff7e773c87621c">getProcessState</a> ()</td></tr>
+<tr class="memdesc:a948adcf3f250e8e951ff7e773c87621c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html" title="Holds the state of a process call.">ProcessState</a> in use.  <a href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a948adcf3f250e8e951ff7e773c87621c">More...</a><br /></td></tr>
+<tr class="separator:a948adcf3f250e8e951ff7e773c87621c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7535886e3f0a9d68e0db994db0fee32f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a7535886e3f0a9d68e0db994db0fee32f">setProcessState</a> (<a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;)</td></tr>
+<tr class="separator:a7535886e3f0a9d68e0db994db0fee32f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for Nodes that provides information about the current process call. </p>
@@ -201,7 +200,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the number of samples in the current process block. </p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a6045591bb372c1807d327c0b03801690">tracktion::engine::ProcessState::numSamples</a>, and <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a6045591bb372c1807d327c0b03801690">tracktion::engine::ProcessState::numSamples</a>.</p>
 
 </div>
 </div>
@@ -222,7 +221,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the sample rate of the current process block. </p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>, and <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a813d9b82623e15748d1510ab07c51bae">tracktion::engine::ProcessState::sampleRate</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a813d9b82623e15748d1510ab07c51bae">tracktion::engine::ProcessState::sampleRate</a>.</p>
 
 </div>
 </div>
@@ -243,7 +242,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the timeline sample range of the current process block. </p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>, and <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ae0206b0c12f2f537e9e2e7b35d4fbb39">tracktion::engine::ProcessState::timelineSampleRange</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ae0206b0c12f2f537e9e2e7b35d4fbb39">tracktion::engine::ProcessState::timelineSampleRange</a>.</p>
 
 </div>
 </div>
@@ -264,7 +263,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the edit time range of the current process block. </p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aef901890480908cfc1dc4aa5aedba5b0">tracktion::engine::ProcessState::editTimeRange</a>, and <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aef901890480908cfc1dc4aa5aedba5b0">tracktion::engine::ProcessState::editTimeRange</a>.</p>
 
 </div>
 </div>
@@ -285,7 +284,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the edit beat range of the current process block. </p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ab821612622c18f1a22348c6e041a978b">tracktion::engine::ProcessState::editBeatRange</a>, and <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ab821612622c18f1a22348c6e041a978b">tracktion::engine::ProcessState::editBeatRange</a>.</p>
 
 </div>
 </div>
@@ -306,7 +305,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the reference sample range (from the <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html">DeviceManager</a>) of the current process block. </p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>, and <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a95a105ce10784daca1ba3eefbc61be85">tracktion::engine::ProcessState::referenceSampleRange</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a95a105ce10784daca1ba3eefbc61be85">tracktion::engine::ProcessState::referenceSampleRange</a>.</p>
 
 </div>
 </div>
@@ -403,7 +402,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Returns the <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html" title="Determines how this block releates to other previous render blocks and if the play head has jumped in...">PlayHeadState</a> in use. </p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ac3210d4b41b525fe52f0ef7099163922">tracktion::engine::ProcessState::playHeadState</a>, and <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#ac0c9648ef197a8ac1bb559e71cd3842f">processState</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ac3210d4b41b525fe52f0ef7099163922">tracktion::engine::ProcessState::playHeadState</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a6da5b423bb5f734728a9967dea0f2dd2">getPlayHead()</a>.</p>
 
@@ -430,28 +429,40 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ac0c9648ef197a8ac1bb559e71cd3842f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0c9648ef197a8ac1bb559e71cd3842f">&#9670;&nbsp;</a></span>processState</h2>
+<a id="a948adcf3f250e8e951ff7e773c87621c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a948adcf3f250e8e951ff7e773c87621c">&#9670;&nbsp;</a></span>getProcessState()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a>&amp; tracktion::engine::TracktionEngineNode::processState</td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a>&amp; tracktion::engine::TracktionEngineNode::getProcessState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#aa36db78bfffabf8fb4616958ea9b408b">getEditBeatRange()</a>, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a5ec91b2076e41017d410ec56f58847b0">getEditTimeRange()</a>, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a03d54cbe6989c9c004e9b3a0fb99d491">getNumSamples()</a>, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#abdf23f970d16748e6709624315602e9e">getPlayHeadState()</a>, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a1e50b7d04461fe25b02286b4784614cb">getReferenceSampleRange()</a>, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#accc3a2a1fb2fe98065d48058647576e4">getSampleRate()</a>, and <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a5927b5556b2b8da646b5803e6d9d7ca2">getTimelineSampleRange()</a>.</p>
+<p>Returns the <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html" title="Holds the state of a process call.">ProcessState</a> in use. </p>
+
+</div>
+</div>
+<a id="a7535886e3f0a9d68e0db994db0fee32f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7535886e3f0a9d68e0db994db0fee32f">&#9670;&nbsp;</a></span>setProcessState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::TracktionEngineNode::setProcessState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -461,7 +472,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 18:24:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 20 2023 10:45:38 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntryLo">41.7 %</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryLo">38.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -73,18 +73,18 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        272 : ChordTrack::ChordTrack (Edit&amp; ed, const juce::ValueTree&amp; v)  : ClipTrack (ed, v, 20, 13, 60)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        273 : ChordTrack::ChordTrack (Edit&amp; ed, const juce::ValueTree&amp; v)  : ClipTrack (ed, v, 20, 13, 60)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        272 : }</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        273 : }</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        544 : ChordTrack::~ChordTrack()</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        546 : ChordTrack::~ChordTrack()</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        272 :     notifyListenersOfDeletion();</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        544 : }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        273 :     notifyListenersOfDeletion();</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        546 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 : juce::String ChordTrack::getTrackWarning() const</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : {</a>
-<a name="25"><span class="lineNum">      25 </span>            :     auto&amp; clips = getClips();</a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     auto&amp; clips = getClips();</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; clips.size(); ++i)</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :     {</a>

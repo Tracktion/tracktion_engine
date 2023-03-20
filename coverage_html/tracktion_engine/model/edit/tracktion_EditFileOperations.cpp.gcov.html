@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -489,42 +489,42 @@
 <a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : }</a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">        270 : juce::ValueTree loadEditFromFile (Engine&amp; e, const juce::File&amp; f, ProjectItemID itemID)</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">        271 : juce::ValueTree loadEditFromFile (Engine&amp; e, const juce::File&amp; f, ProjectItemID itemID)</span></a>
 <a name="431"><span class="lineNum">     431 </span>            : {</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        270 :     CRASH_TRACER</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        270 :     juce::ValueTree state;</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        271 :     CRASH_TRACER</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        271 :     juce::ValueTree state;</span></a>
 <a name="434"><span class="lineNum">     434 </span>            : </a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        270 :     if (auto xml = juce::parseXML (f))</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">        271 :     if (auto xml = juce::parseXML (f))</span></a>
 <a name="436"><span class="lineNum">     436 </span>            :     {</a>
 <a name="437"><span class="lineNum">     437 </span><span class="lineCov">          1 :         updateLegacyEdit (*xml);</span></a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineCov">          1 :         state = juce::ValueTree::fromXml (*xml);</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineCov">        270 :     }</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">        271 :     }</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineCov">        270 :     if (! state.isValid())</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">        271 :     if (! state.isValid())</span></a>
 <a name="442"><span class="lineNum">     442 </span>            :     {</a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">        538 :         if (juce::FileInputStream is (f); is.openedOk())</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">        540 :         if (juce::FileInputStream is (f); is.openedOk())</span></a>
 <a name="444"><span class="lineNum">     444 </span>            :         {</a>
 <a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :             if (state = juce::ValueTree::readFromStream (is); state.hasType (IDs::EDIT))</span></a>
 <a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :                 state = updateLegacyEdit (state);</span></a>
 <a name="447"><span class="lineNum">     447 </span>            :             else</a>
 <a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 state = {};</span></a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineCov">        269 :         }</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">        270 :         }</span></a>
 <a name="450"><span class="lineNum">     450 </span>            :     }</a>
 <a name="451"><span class="lineNum">     451 </span>            : </a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">        270 :     if (! state.isValid())</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">        271 :     if (! state.isValid())</span></a>
 <a name="453"><span class="lineNum">     453 </span>            :     {</a>
 <a name="454"><span class="lineNum">     454 </span>            :         // If the file already exists and is not empty, don't write over it as it could have been corrupted and be recoverable</a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineCov">        269 :         if (f.existsAsFile() &amp;&amp; f.getSize() &gt; 0)</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">        270 :         if (f.existsAsFile() &amp;&amp; f.getSize() &gt; 0)</span></a>
 <a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :             return {};</span></a>
 <a name="457"><span class="lineNum">     457 </span>            :         </a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineCov">        269 :         state = juce::ValueTree (IDs::EDIT);</span></a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineCov">        269 :         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">        270 :         state = juce::ValueTree (IDs::EDIT);</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineCov">        270 :         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);</span></a>
 <a name="460"><span class="lineNum">     460 </span>            :     }</a>
 <a name="461"><span class="lineNum">     461 </span>            : </a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineCov">        270 :     state.setProperty (IDs::projectID, itemID.toString(), nullptr);</span></a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineCov">        271 :     state.setProperty (IDs::projectID, itemID.toString(), nullptr);</span></a>
 <a name="463"><span class="lineNum">     463 </span>            : </a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineCov">        270 :     return state;</span></a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineCov">        270 : }</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">        271 :     return state;</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineCov">        271 : }</span></a>
 <a name="466"><span class="lineNum">     466 </span>            : </a>
 <a name="467"><span class="lineNum">     467 </span><span class="lineCov">          1 : std::unique_ptr&lt;Edit&gt; loadEditFromFile (Engine&amp; engine, const juce::File&amp; editFile, Edit::EditRole role)</span></a>
 <a name="468"><span class="lineNum">     468 </span>            : {</a>
@@ -571,9 +571,9 @@
 <a name="509"><span class="lineNum">     509 </span><span class="lineCov">          2 :     return std::make_unique&lt;Edit&gt; (options);</span></a>
 <a name="510"><span class="lineNum">     510 </span><span class="lineCov">          1 : }</span></a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineCov">        268 : juce::ValueTree createEmptyEdit (Engine&amp; e)</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">        269 : juce::ValueTree createEmptyEdit (Engine&amp; e)</span></a>
 <a name="513"><span class="lineNum">     513 </span>            : {</a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineCov">        536 :     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">        538 :     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));</span></a>
 <a name="515"><span class="lineNum">     515 </span>            : }</a>
 <a name="516"><span class="lineNum">     516 </span>            : </a>
 <a name="517"><span class="lineNum">     517 </span>            : }} // namespace tracktion { inline namespace engine</a>

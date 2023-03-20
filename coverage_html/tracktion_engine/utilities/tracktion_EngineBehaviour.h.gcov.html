@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -136,7 +136,7 @@
 <a name="74"><span class="lineNum">      74 </span>            :         But by returning false here, you can opt to remove them from the playback graph entirely</a>
 <a name="75"><span class="lineNum">      75 </span>            :         which means they won't introduce latency which can be useful for tracking.</a>
 <a name="76"><span class="lineNum">      76 </span>            :     */</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        358 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        368 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            :     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */</a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     virtual void saveCustomPluginProperties (juce::ValueTree&amp;, juce::AudioPluginInstance&amp;, juce::UndoManager*) {}</span></a>
@@ -189,25 +189,25 @@
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     virtual bool shouldPlayMidiGuideNotes()                                         { return false; }</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">        357 :     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">        384 :     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span>            :     /** Should muted tracks processing be disabled to save CPU */</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       4852 :     virtual bool shouldProcessMutedTracks()                                         { return false; }</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       4870 :     virtual bool shouldProcessMutedTracks()                                         { return false; }</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span>            :     /** Should audio inputs be audible when monitor-enabled but not record enabled.  */</a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       3387 :     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       3389 :     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}</span></a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     virtual bool areAutoTempoClipsRemappedWhenTempoChanges()                        { return true; }</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     virtual void setAutoTempoClipsRemappedWhenTempoChanges (bool)                   {}</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">       5061 :     virtual bool areMidiClipsRemappedWhenTempoChanges()                             { return true; }</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     virtual void setMidiClipsRemappedWhenTempoChanges (bool)                        {}</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        725 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        726 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Should return the maximum number of elements that can be added to an Edit. */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      10255 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      10264 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** If this returns true, it means that the length (in seconds) of one &quot;beat&quot; at</a>
 <a name="151"><span class="lineNum">     151 </span>            :         any point in an edit is considered to be the length of one division in the current</a>
@@ -223,7 +223,7 @@
 <a name="161"><span class="lineNum">     161 </span>            :         You shouldn't dynamically change this function's return value - just implement a</a>
 <a name="162"><span class="lineNum">     162 </span>            :         function that always returns true or false.</a>
 <a name="163"><span class="lineNum">     163 </span>            :     */</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        439 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       1035 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span>            :     struct LevelMeterSettings</a>
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
@@ -235,12 +235,12 @@
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual void setLevelMeterSettings (LevelMeterSettings)                         {}</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
 <a name="175"><span class="lineNum">     175 </span>            :     // 0 = normal, 1 = high, 2 = realtime</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        170 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        188 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
 <a name="178"><span class="lineNum">     178 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4613638 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4619280 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="184"><span class="lineNum">     184 </span>            :         for a given audio device.</a>
@@ -266,7 +266,7 @@
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">      20060 :     virtual int getDefaultLoopedSequenceType()                                      { return 0; }</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span>            :     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       3387 :     virtual bool autoAddClipEdgeFades()                                             { return false; }</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       3388 :     virtual bool autoAddClipEdgeFades()                                             { return false; }</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            :     /** Determines the default properties of clips. */</a>
 <a name="210"><span class="lineNum">     210 </span>            :     struct ClipDefaults</a>
@@ -276,10 +276,10 @@
 <a name="214"><span class="lineNum">     214 </span>            :     };</a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            :     /** Returns the defaults to be applied to new clips. */</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">       3387 :     virtual ClipDefaults getClipDefaults()                                          { return {}; }</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">       3388 :     virtual ClipDefaults getClipDefaults()                                          { return {}; }</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
 <a name="219"><span class="lineNum">     219 </span>            :     /** Returns the defaults to be applied to new clips. */</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       8497 :     virtual void newClipAdded (Clip&amp;, [[ maybe_unused ]] bool fromRecording)        {}</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       8500 :     virtual void newClipAdded (Clip&amp;, [[ maybe_unused ]] bool fromRecording)        {}</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span>            :     struct ControlSurfaces</a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 18:40:38</td>
+            <td class="headerValue">2023-03-20 11:01:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -79,13 +79,13 @@
 <a name="17"><span class="lineNum">      17 </span>            : class ArrangerClip  : public Clip</a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
-<a name="20"><span class="lineNum">      20 </span>            :     ArrangerClip (const juce::ValueTree&amp;, EditItemID, ClipTrack&amp; targetTrack);</a>
+<a name="20"><span class="lineNum">      20 </span>            :     ArrangerClip (const juce::ValueTree&amp;, EditItemID, ClipOwner&amp; targetParent);</a>
 <a name="21"><span class="lineNum">      21 </span>            :     ~ArrangerClip() override;</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;ArrangerClip&gt;;</a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span>            :     juce::String getSelectableDescription() override;</a>
-<a name="26"><span class="lineNum">      26 </span>            :     bool canGoOnTrack (Track&amp;) override;</a>
+<a name="26"><span class="lineNum">      26 </span>            :     bool canBeAddedTo (ClipOwner&amp;) override;</a>
 <a name="27"><span class="lineNum">      27 </span>            :     juce::Colour getDefaultColour() const override;</a>
 <a name="28"><span class="lineNum">      28 </span>            :     void initialise() override;</a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>

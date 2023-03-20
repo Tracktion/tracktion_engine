@@ -100,13 +100,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab6048bd8d4cbcfe3227b8f5be73dff9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ab6048bd8d4cbcfe3227b8f5be73dff9c">setPlaybackSpeedRatio</a> (double newRatio)</td></tr>
 <tr class="memdesc:ab6048bd8d4cbcfe3227b8f5be73dff9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a playback speed ratio.  <a href="structtracktion_1_1engine_1_1ProcessState.html#ab6048bd8d4cbcfe3227b8f5be73dff9c">More...</a><br /></td></tr>
 <tr class="separator:ab6048bd8d4cbcfe3227b8f5be73dff9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bcac8234d9e105c0a6812a99c3e415e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a1bcac8234d9e105c0a6812a99c3e415e">setTempoSequence</a> (const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> *)</td></tr>
+<tr class="memdesc:a1bcac8234d9e105c0a6812a99c3e415e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">TempoSequence</a> this state utilises.  <a href="structtracktion_1_1engine_1_1ProcessState.html#a1bcac8234d9e105c0a6812a99c3e415e">More...</a><br /></td></tr>
+<tr class="separator:a1bcac8234d9e105c0a6812a99c3e415e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6644d9bfafc5285bc97c5411fd1f03b1"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a6644d9bfafc5285bc97c5411fd1f03b1">getTempoSequence</a> () const</td></tr>
+<tr class="memdesc:a6644d9bfafc5285bc97c5411fd1f03b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">TempoSequence</a> this state has been initialised with one.  <a href="structtracktion_1_1engine_1_1ProcessState.html#a6644d9bfafc5285bc97c5411fd1f03b1">More...</a><br /></td></tr>
+<tr class="separator:a6644d9bfafc5285bc97c5411fd1f03b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="memItemLeft" align="right" valign="top">const tempo::Sequence::Position *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aa0a56eaa788ad5f20e40cd35cf8beeb1">getTempoSequencePosition</a> () const</td></tr>
+<tr class="memdesc:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the tempo::Sequence::Position this state uses.  <a href="structtracktion_1_1engine_1_1ProcessState.html#aa0a56eaa788ad5f20e40cd35cf8beeb1">More...</a><br /></td></tr>
+<tr class="separator:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac3210d4b41b525fe52f0ef7099163922"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ac3210d4b41b525fe52f0ef7099163922">playHeadState</a></td></tr>
 <tr class="separator:ac3210d4b41b525fe52f0ef7099163922"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8123d3c7c5dd0b21c57d9a5b5cde8828"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; tempo::Sequence::Position &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a8123d3c7c5dd0b21c57d9a5b5cde8828">tempoPosition</a></td></tr>
-<tr class="separator:a8123d3c7c5dd0b21c57d9a5b5cde8828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a813d9b82623e15748d1510ab07c51bae"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a813d9b82623e15748d1510ab07c51bae">sampleRate</a> = 44100.0</td></tr>
 <tr class="separator:a813d9b82623e15748d1510ab07c51bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26a81aa60a0fa6d461f0ee89e4d2c79b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a26a81aa60a0fa6d461f0ee89e4d2c79b">playbackSpeedRatio</a> = 1.0</td></tr>
@@ -270,6 +277,64 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1bcac8234d9e105c0a6812a99c3e415e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bcac8234d9e105c0a6812a99c3e415e">&#9670;&nbsp;</a></span>setTempoSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ProcessState::setTempoSequence </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">TempoSequence</a> this state utilises. </p>
+
+</div>
+</div>
+<a id="a6644d9bfafc5285bc97c5411fd1f03b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6644d9bfafc5285bc97c5411fd1f03b1">&#9670;&nbsp;</a></span>getTempoSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a>* tracktion::engine::ProcessState::getTempoSequence </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">TempoSequence</a> this state has been initialised with one. </p>
+
+</div>
+</div>
+<a id="aa0a56eaa788ad5f20e40cd35cf8beeb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0a56eaa788ad5f20e40cd35cf8beeb1">&#9670;&nbsp;</a></span>getTempoSequencePosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const tempo::Sequence::Position* tracktion::engine::ProcessState::getTempoSequencePosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the tempo::Sequence::Position this state uses. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ac3210d4b41b525fe52f0ef7099163922"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac3210d4b41b525fe52f0ef7099163922">&#9670;&nbsp;</a></span>playHeadState</h2>
@@ -284,20 +349,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#abdf23f970d16748e6709624315602e9e">tracktion::engine::TracktionEngineNode::getPlayHeadState()</a>.</p>
-
-</div>
-</div>
-<a id="a8123d3c7c5dd0b21c57d9a5b5cde8828"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8123d3c7c5dd0b21c57d9a5b5cde8828">&#9670;&nbsp;</a></span>tempoPosition</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unique_ptr&lt;tempo::Sequence::Position&gt; tracktion::engine::ProcessState::tempoPosition</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -417,7 +468,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 18:24:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 20 2023 10:45:38 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

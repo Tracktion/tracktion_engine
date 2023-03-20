@@ -121,9 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa98b2f414ff43a7e98d35b7cde952611"><td class="memItemLeft" align="right" valign="top">juce::Range&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa98b2f414ff43a7e98d35b7cde952611">getLoopRange</a> () const noexcept</td></tr>
 <tr class="memdesc:aa98b2f414ff43a7e98d35b7cde952611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the looped playback range.  <a href="classtracktion_1_1graph_1_1PlayHead.html#aa98b2f414ff43a7e98d35b7cde952611">More...</a><br /></td></tr>
 <tr class="separator:aa98b2f414ff43a7e98d35b7cde952611"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a944860798b9e635d02736dc4ced4fe77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a944860798b9e635d02736dc4ced4fe77">setLoopRange</a> (bool loop, juce::Range&lt; int64_t &gt; loopRange)</td></tr>
-<tr class="memdesc:a944860798b9e635d02736dc4ced4fe77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a playback range and whether to loop or not.  <a href="classtracktion_1_1graph_1_1PlayHead.html#a944860798b9e635d02736dc4ced4fe77">More...</a><br /></td></tr>
-<tr class="separator:a944860798b9e635d02736dc4ced4fe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60bec6ac0630553386c2e15031ad99a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a60bec6ac0630553386c2e15031ad99a6">setLoopRange</a> (bool loop, juce::Range&lt; int64_t &gt; loopRange, bool updatePosition=true)</td></tr>
+<tr class="memdesc:a60bec6ac0630553386c2e15031ad99a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a playback range and whether to loop or not.  <a href="classtracktion_1_1graph_1_1PlayHead.html#a60bec6ac0630553386c2e15031ad99a6">More...</a><br /></td></tr>
+<tr class="separator:a60bec6ac0630553386c2e15031ad99a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4750ea61842260bb7f788b90c9a1872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#ab4750ea61842260bb7f788b90c9a1872">setRollInToLoop</a> (int64_t playbackPosition)</td></tr>
 <tr class="memdesc:ab4750ea61842260bb7f788b90c9a1872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puts the play head in to roll in to loop mode.  <a href="classtracktion_1_1graph_1_1PlayHead.html#ab4750ea61842260bb7f788b90c9a1872">More...</a><br /></td></tr>
 <tr class="separator:ab4750ea61842260bb7f788b90c9a1872"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,7 +219,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4b72f1c02725e7509e53c942a7b680b9">getPosition()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4de4dbe7d80cc819a705c69a04a43ca6">overridePosition()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aaf4bbdbbc5d9e03d0c8d736b46e8a24b">play()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a944860798b9e635d02736dc4ced4fe77">setLoopRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4dbd33beb139754d1d9442e78fc421c9">stop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aaf4bbdbbc5d9e03d0c8d736b46e8a24b">play()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a60bec6ac0630553386c2e15031ad99a6">setLoopRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4dbd33beb139754d1d9442e78fc421c9">stop()</a>.</p>
 
 </div>
 </div>
@@ -343,7 +343,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a9d45fe1c79837ff11ef0c339ea024557">referenceSamplePositionToTimelinePosition()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa824e230078f5836cab91daf7d24d546">play()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a944860798b9e635d02736dc4ced4fe77">setLoopRange()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa3b6cd7f8ea3dd4c1e81b4f64dd42077">setPosition()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa9b2c3a51f984a7d938115841051f7b1">setReferenceSampleRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4dbd33beb139754d1d9442e78fc421c9">stop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa824e230078f5836cab91daf7d24d546">play()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a60bec6ac0630553386c2e15031ad99a6">setLoopRange()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa3b6cd7f8ea3dd4c1e81b4f64dd42077">setPosition()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa9b2c3a51f984a7d938115841051f7b1">setReferenceSampleRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a4dbd33beb139754d1d9442e78fc421c9">stop()</a>.</p>
 
 </div>
 </div>
@@ -530,12 +530,12 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Returns the looped playback range. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a944860798b9e635d02736dc4ced4fe77">setLoopRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">tracktion::graph::PlayHeadState::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a60bec6ac0630553386c2e15031ad99a6">setLoopRange()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">tracktion::graph::PlayHeadState::update()</a>.</p>
 
 </div>
 </div>
-<a id="a944860798b9e635d02736dc4ced4fe77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a944860798b9e635d02736dc4ced4fe77">&#9670;&nbsp;</a></span>setLoopRange()</h2>
+<a id="a60bec6ac0630553386c2e15031ad99a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60bec6ac0630553386c2e15031ad99a6">&#9670;&nbsp;</a></span>setLoopRange()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -550,7 +550,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">juce::Range&lt; int64_t &gt;&#160;</td>
-          <td class="paramname"><em>loopRange</em>&#160;</td>
+          <td class="paramname"><em>loopRange</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>updatePosition</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -866,7 +872,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 18:24:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 20 2023 10:45:38 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

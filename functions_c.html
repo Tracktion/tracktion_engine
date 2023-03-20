@@ -91,6 +91,15 @@ $(function() {
 <li>canAddClipPlugin()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a284250626cc2e6e77cd9201364ebbc70">tracktion::engine::AudioClipBase</a>
 </li>
+<li>canBeAddedTo()
+: <a class="el" href="classtracktion_1_1engine_1_1ArrangerClip.html#a04f86a3d3990826c20deff0ec248b4b9">tracktion::engine::ArrangerClip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ae08d11c6d3219fd7603f262b1d07dcbf">tracktion::engine::AudioClipBase</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ChordClip.html#a9ad5bbd626e8dee89613b7727bee6ade">tracktion::engine::ChordClip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a258a149c923c374a954788dc57d07840">tracktion::engine::Clip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MarkerClip.html#ab9b5dc498f34dd47f7e66b5bf21db08e">tracktion::engine::MarkerClip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html#aa05fca08712b3c4eac86be9c4ad3c1f0">tracktion::engine::MidiClip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a098c917056f9ff20e64fb3495476f3eb">tracktion::engine::StepClip</a>
+</li>
 <li>canBeAddedToClip()
 : <a class="el" href="classtracktion_1_1engine_1_1AirWindowsPlugin.html#ab1458a3d88e378315ce148b525b29e39">tracktion::engine::AirWindowsPlugin</a>
 , <a class="el" href="classtracktion_1_1engine_1_1AuxReturnPlugin.html#a1dfbe56411486203bc22d30908efb2a6">tracktion::engine::AuxReturnPlugin</a>
@@ -207,15 +216,6 @@ $(function() {
 <li>canEditProgramSet()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#afef3089aeb4b916dd8f89da016a222c1">tracktion::engine::MidiOutputDevice</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiProgramManager.html#a4ae55b467f3efc81da8aae08fb156411">tracktion::engine::MidiProgramManager</a>
-</li>
-<li>canGoOnTrack()
-: <a class="el" href="classtracktion_1_1engine_1_1ArrangerClip.html#adc595c9f1a8dbb0e73492ffff6dfe2f0">tracktion::engine::ArrangerClip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#af6df6040a583c297d72910cc86f083cd">tracktion::engine::AudioClipBase</a>
-, <a class="el" href="classtracktion_1_1engine_1_1ChordClip.html#a377702d9607a63e8ee5a60dc3817b731">tracktion::engine::ChordClip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a231dcff10d00951cd09611e91b46a298">tracktion::engine::Clip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1MarkerClip.html#ab7be369a93f18a1b7034a0584d1460f4">tracktion::engine::MarkerClip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html#a8afb6fbe7e5653e772928e842cc0b2eb">tracktion::engine::MidiClip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ae44394d8166b4632226b835e857625c4">tracktion::engine::StepClip</a>
 </li>
 <li>canHandleFile()
 : <a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#a81a31cb4df87e309bc1b6a61b9133eec">tracktion::engine::FloatAudioFormat</a>
@@ -348,7 +348,7 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1ParameterControlMappings_1_1Mapping.html#a6986a10a6141ba2f96c12d70ad1b016a">tracktion::engine::ParameterControlMappings::Mapping</a>
 </li>
 <li>ChannelIndex()
-: <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html#a095d4be3e9be4a93b60861ab0baa1a6f">tracktion::engine::ChannelIndex</a>
+: <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html#a1facc26e84f991f5e961400832e372ce">tracktion::engine::ChannelIndex</a>
 </li>
 <li>channelLevelChanged()
 : <a class="el" href="classtracktion_1_1engine_1_1ControlSurface.html#aff385ca1d42f0eca3691b05117f8365a">tracktion::engine::ControlSurface</a>
@@ -427,7 +427,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1Chord.html#a075a7a494e443757f9b46d2a7bceaa40">tracktion::engine::Chord</a>
 </li>
 <li>ChordClip()
-: <a class="el" href="classtracktion_1_1engine_1_1ChordClip.html#ad2f91eaa6962c03f0cf0459517acbe6f">tracktion::engine::ChordClip</a>
+: <a class="el" href="classtracktion_1_1engine_1_1ChordClip.html#a9950af79e9900f3ff2d19f00de2cf960">tracktion::engine::ChordClip</a>
 </li>
 <li>ChordInKeyNote
 : <a class="el" href="classtracktion_1_1engine_1_1PatternGenerator.html#a69ba4d23c7544f72e2979f10764423fdab95be8ab9680f1c1bec7c0178e0463bd">tracktion::engine::PatternGenerator</a>
@@ -674,7 +674,7 @@ $(function() {
 , <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">PlaybackRegionWrapper</a>
 </li>
 <li>Clip()
-: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#afc48c2aebbd700687dea4637833e07b3">tracktion::engine::Clip</a>
+: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a8591bc44e7cac883131297d3d80989a4">tracktion::engine::Clip</a>
 </li>
 <li>clip
 : <a class="el" href="classtracktion_1_1engine_1_1ClipEffects.html#a9ddea35f4d3ad08ff0e52d6918e2cc5c">tracktion::engine::ClipEffects</a>
@@ -682,6 +682,10 @@ $(function() {
 , <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1Channel.html#a27a507170b30eee6b5dc862bf7636afb">tracktion::engine::StepClip::Channel</a>
 , <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1Pattern.html#a4912de15a485d4296490de007d93925c">tracktion::engine::StepClip::Pattern</a>
 , <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html#ae877fd86e9e52d596c1e1818097a214e">tracktion::engine::StepClip::PatternInstance</a>
+</li>
+<li>clipAddedOrRemoved()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html#adbd9ce870b751b14d6a6eb4cf8213e3c">tracktion::engine::ClipOwner</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#a0fc43a6de966a4f5531530f7bb344030">tracktion::engine::ClipTrack</a>
 </li>
 <li>Clipboard()
 : <a class="el" href="classtracktion_1_1engine_1_1Clipboard.html#a247f2ee794307ac54f848243efa28dd3">tracktion::engine::Clipboard</a>
@@ -691,6 +695,10 @@ $(function() {
 </li>
 <li>clipCache
 : <a class="el" href="classtracktion_1_1engine_1_1Edit.html#af0598c6a440a321412134a28bd1c76be">tracktion::engine::Edit</a>
+</li>
+<li>clipCreated()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html#ad11b4c82b069dce47ad9a3ec9e0954c6">tracktion::engine::ClipOwner</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#aaec9da840a5b335b1781ae37c38039e9">tracktion::engine::ClipTrack</a>
 </li>
 <li>ClipDirection
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ad8f885dd3dfab9f6928a33a74089d992">tracktion::engine::AudioClipBase</a>
@@ -711,17 +719,25 @@ $(function() {
 <li>clipForEvent()
 : <a class="el" href="classtracktion_1_1engine_1_1SelectedMidiEvents.html#aaed8a2bf896b75653f8288650b74fdf1">tracktion::engine::SelectedMidiEvents</a>
 </li>
-<li>clipList
-: <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#ac0ef437d0c1be76972155aa24b4e86d5">tracktion::engine::ClipTrack</a>
-</li>
 <li>clipName
 : <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a5c95c613efbfd1e9b84c9010c97492a4">tracktion::engine::Clip</a>
 </li>
-<li>clips
-: <a class="el" href="structtracktion_1_1engine_1_1Clipboard_1_1Clips.html#aab29ad8c286700a4a4723bdc712258aa">tracktion::engine::Clipboard::Clips</a>
+<li>clipOrderChanged()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html#a7f14252b7bdc8db41adfdebfad853d40">tracktion::engine::ClipOwner</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#a854732f853ce8e6d3f1ebad909809c1a">tracktion::engine::ClipTrack</a>
+</li>
+<li>ClipOwner()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html#a58bc5ed9213764c44951c4efd7ec43e7">tracktion::engine::ClipOwner</a>
+</li>
+<li>clipPositionChanged()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html#ae6eb38a74f4e1373312962b86d351c42">tracktion::engine::ClipOwner</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#a45cf2a0ac5ad2c940450fe32648f5627">tracktion::engine::ClipTrack</a>
 </li>
 <li>Clips()
 : <a class="el" href="structtracktion_1_1engine_1_1Clipboard_1_1Clips.html#a8e19316546e330f161b06fba1c4cb82d">tracktion::engine::Clipboard::Clips</a>
+</li>
+<li>clips
+: <a class="el" href="structtracktion_1_1engine_1_1Clipboard_1_1Clips.html#aab29ad8c286700a4a4723bdc712258aa">tracktion::engine::Clipboard::Clips</a>
 </li>
 <li>clipStart
 : <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a766eceb345598c022c65e28025adbccf">tracktion::engine::Clip</a>
@@ -741,6 +757,7 @@ $(function() {
 <li>cloneFrom()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ae89c11b34557add82248db9a2f3acaac">tracktion::engine::AudioClipBase</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#abc6862f678217f77d27f33aae1bbcd42">tracktion::engine::Clip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ContainerClip.html#a3443152708fec0bec2102a2f1d8cf354">tracktion::engine::ContainerClip</a>
 , <a class="el" href="classtracktion_1_1engine_1_1EditClip.html#aab3326b643995d0e4473b4d79b96275a">tracktion::engine::EditClip</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html#aba08fddb1815530f5c53c71cc50909e4">tracktion::engine::MidiClip</a>
 , <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a6f4270db77ed8f5ea52a51e26c80a754">tracktion::engine::StepClip</a>
@@ -843,7 +860,7 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1DummyConstrainer.html#a241f290d17c0878135b34030be0bcc41">tracktion::engine::DummyConstrainer&lt; Type &gt;</a>
 </li>
 <li>ConstrainedCachedValue()
-: <a class="el" href="classtracktion_1_1engine_1_1ConstrainedCachedValue.html#a2ceccf4bbbf7d5b47dce4845b7cd862b">tracktion::engine::ConstrainedCachedValue&lt; Type &gt;</a>
+: <a class="el" href="classtracktion_1_1engine_1_1ConstrainedCachedValue.html#ab0aaaa4078c71f8438bc637c8e33f100">tracktion::engine::ConstrainedCachedValue&lt; Type &gt;</a>
 </li>
 <li>constrainRange()
 : <a class="el" href="structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html#a099455e5bb9108e68855a85aeec68b45">tracktion::engine::legacy::EditTimeRange</a>
@@ -851,10 +868,16 @@ $(function() {
 <li>consumeNextAudioBlock()
 : <a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html#a91ce4248d1aa11c5973a097ca36608ad">tracktion::engine::WaveInputDevice</a>
 </li>
+<li>ContainerClip()
+: <a class="el" href="classtracktion_1_1engine_1_1ContainerClip.html#a7b2fcfb0701d5597721e424a9e99c639">tracktion::engine::ContainerClip</a>
+</li>
+<li>ContainerClipNode()
+: <a class="el" href="classtracktion_1_1engine_1_1ContainerClipNode.html#af9da1ee40ca16c1a01a3d6e541d3777b">tracktion::engine::ContainerClipNode</a>
+</li>
 <li>contains()
 : <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#a494be89d053e34f2ed76e712e3650c2d">tracktion::engine::ClipTrack</a>
 , <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html#a10cd3763c7f2d0b7ff5291d598706cde">tracktion::engine::FolderTrack</a>
-, <a class="el" href="structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html#a852930618abc073e0e07fe889a647fa1">tracktion::engine::legacy::EditTimeRange</a>
+, <a class="el" href="structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html#a61049321f7a1dd8a4ce7f601b100a3c3">tracktion::engine::legacy::EditTimeRange</a>
 , <a class="el" href="classtracktion_1_1engine_1_1PluginList.html#ac9785c2d74569f41fd949e23f966bf04">tracktion::engine::PluginList</a>
 , <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a1e8b41da3c8fed2314e8d7701f3d84b4">tracktion::engine::SelectableList</a>
 , <a class="el" href="structtracktion_1_1engine_1_1VSTXML_1_1Range.html#a65c1fa3c357c37ce00a7cb6408c92cca">tracktion::engine::VSTXML::Range</a>
@@ -888,7 +911,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1OutputDeviceInstance.html#a6119ca189668dc06aa52011125ffe3ff">tracktion::engine::OutputDeviceInstance</a>
 </li>
 <li>Context()
-: <a class="el" href="structtracktion_1_1engine_1_1ScopedSteadyLoad_1_1Context.html#a6a69098631f99cc1581ab437c2ac3ed3">tracktion::engine::ScopedSteadyLoad::Context</a>
+: <a class="el" href="structtracktion_1_1engine_1_1ScopedSteadyLoad_1_1Context.html#abb194e2d915ee873669c08a1ecb214d5">tracktion::engine::ScopedSteadyLoad::Context</a>
 </li>
 <li>ContextDeviceListRebuilder()
 : <a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html#a96fb555ac8de9b369857c51f82f52d19">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</a>
@@ -1026,10 +1049,10 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#afca889fc9aae763e359a2459beb8bc7d">tracktion::engine::PluginManager</a>
 </li>
 <li>createClipForState()
-: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a36bf4ade3b62dc406061f90b49f93161">tracktion::engine::Clip</a>
+: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ac156d843346755293e078b33b2c3a487">tracktion::engine::Clip</a>
 </li>
 <li>createControllerEvent()
-: <a class="el" href="classtracktion_1_1engine_1_1MidiControllerEvent.html#a36b488218786258fd446c8667c41d429">tracktion::engine::MidiControllerEvent</a>
+: <a class="el" href="classtracktion_1_1engine_1_1MidiControllerEvent.html#afcb08996882a4d6ffcc7698676e5ea8c">tracktion::engine::MidiControllerEvent</a>
 </li>
 <li>createCopy()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#aa89c40a12817d1abf4da5946b5b0a9d2">tracktion::engine::ProjectItem</a>
@@ -1126,8 +1149,8 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1ValueTreeObjectList.html#ae56ab4e92f57c7ac36e22ef9efd68a6e">tracktion::engine::ValueTreeObjectList&lt; ObjectType, CriticalSectionType &gt;</a>
 </li>
 <li>createNewPlugin()
-: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#ac62149d4b526a00c62dbff0a0a538542">tracktion::engine::PluginCache</a>
-, <a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#af06ca8be8daa53c6a6ed4bddc5a91e3c">tracktion::engine::PluginManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#aac8b7adb2c9924b54e6148f6d0b7d19b">tracktion::engine::PluginCache</a>
+, <a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a0fbdbd79ba75992ba96d9e2286ca0bc9">tracktion::engine::PluginManager</a>
 </li>
 <li>createNewProject()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#a079c0ec83e5ca08eb85e4a6d81f7b362">tracktion::engine::ProjectManager</a>
@@ -1224,7 +1247,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1TracktionArchiveFile.html#a929cbeb0ee2442807662ef79fcc7797d">tracktion::engine::TracktionArchiveFile</a>
 </li>
 <li>createSysexEvent()
-: <a class="el" href="classtracktion_1_1engine_1_1MidiSysexEvent.html#a48a1f01d1a50f1328477ef9148839f39">tracktion::engine::MidiSysexEvent</a>
+: <a class="el" href="classtracktion_1_1engine_1_1MidiSysexEvent.html#a3690f50b7b3153385c89b16d2afecd9c">tracktion::engine::MidiSysexEvent</a>
 </li>
 <li>createThreads()
 : <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a303fa74466d1dea82792c96a36f320cb">tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPool</a>
@@ -1245,7 +1268,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a28642f2d741286052646c084209c75be">tracktion::engine::DeviceManager</a>
 </li>
 <li>createWriterFor()
-: <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#afcd6fb67ce5cedbd1b86efdfa6e6a109">tracktion::engine::AudioFileUtils</a>
+: <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ac7f231f557de9969e85aa68792cc1bef">tracktion::engine::AudioFileUtils</a>
 , <a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#a968ad643815e22f9a89756322a09a5f3">tracktion::engine::FloatAudioFormat</a>
 </li>
 <li>createXml()
@@ -1351,7 +1374,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 18:24:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Mar 20 2023 10:45:38 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
