@@ -1,5 +1,9 @@
 # Changelist
 
+## v2.2
+- Added a new ContainerClip type which can contain other audio/MIDI clips and play them back looped
+- Lots of small internal performance improvements
+
 ## v2.1
 - Added support for user supplied thumbnails (and removed the TracktionThubmail class)
 - Added a "quantised jump" so you can delay a transport position change to a time in the future
