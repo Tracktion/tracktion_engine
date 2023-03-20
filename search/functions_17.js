@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['xmltagtotype_11604',['xmlTagToType',['../classtracktion_1_1engine_1_1TrackItem.html#afb739f8f01ae7666f4a311a0b906d7b2',1,'tracktion::engine::TrackItem']]],
-  ['xtotime_11605',['xToTime',['../classtracktion_1_1engine_1_1CurveEditor.html#a010777c27d1243146069528a32e63b3c',1,'tracktion::engine::CurveEditor']]]
+  ['xmltagtotype_11609',['xmlTagToType',['../classtracktion_1_1engine_1_1TrackItem.html#afb739f8f01ae7666f4a311a0b906d7b2',1,'tracktion::engine::TrackItem']]],
+  ['xtotime_11610',['xToTime',['../classtracktion_1_1engine_1_1CurveEditor.html#a010777c27d1243146069528a32e63b3c',1,'tracktion::engine::CurveEditor']]]
 ];

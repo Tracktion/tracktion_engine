@@ -42121,6 +42121,13 @@
       <anchor>abefa8d0e6b078e92c4aa00fe3c52632e</anchor>
       <arglist>() const override</arglist>
     </member>
+    <member kind="function">
+      <type>std::optional&lt; float &gt;</type>
+      <name>getDefaultValue</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameter.html</anchorfile>
+      <anchor>a7c4d87b192c88176dd96dc3411ce56ea</anchor>
+      <arglist>() const override</arglist>
+    </member>
     <member kind="variable">
       <type>Edit &amp;</type>
       <name>edit</name>
@@ -42140,6 +42147,13 @@
       <name>value</name>
       <anchorfile>classtracktion_1_1engine_1_1MacroParameter.html</anchorfile>
       <anchor>a3e590f1fe988f1d6ff845f929c36ed39</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>defaultValue</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameter.html</anchorfile>
+      <anchor>ab2558f22e2d4d980d5e735b61482383f</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
