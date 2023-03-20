@@ -55,7 +55,7 @@ private:
         {
             const auto duration = 8.0s;
             auto c = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0.0s, TimePosition (duration) }, nullptr);
-            const auto sequence = test_utilities::createRandomMidiMessageSequence (c->getPosition().getLength().inSeconds(), r, { 0.031, 0.062 });
+            const auto sequence = graph::test_utilities::createRandomMidiMessageSequence (c->getPosition().getLength().inSeconds(), r, { 0.031, 0.062 });
 
             {
                 ScopedBenchmark sb (getDescription ("Add sequence to clip"));
