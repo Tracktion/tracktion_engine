@@ -11522,15 +11522,15 @@
       <type>static bool</type>
       <name>convertToFormat</name>
       <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>ab223ad00f3c4da8fd849cb60e5fabefc</anchor>
-      <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata)</arglist>
+      <anchor>afe72abfaf59a1c168998756b8d78c4fc</anchor>
+      <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata, juce::int64 blockSize=-1, std::function&lt; bool()&gt; continuePredicate={}, std::function&lt; void(float)&gt; updateProgress={})</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>convertToFormat</name>
       <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>a41ce4c21368a127c8d8cb52c8ee34194</anchor>
-      <arglist>(juce::AudioFormatReader *reader, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata)</arglist>
+      <anchor>a5f62fa60f96251eaec99846f6fe3bc06</anchor>
+      <arglist>(juce::AudioFormatReader *reader, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata, juce::int64 blockSize=-1, std::function&lt; bool()&gt; continuePredicate={}, std::function&lt; void(float)&gt; updateProgress={})</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>

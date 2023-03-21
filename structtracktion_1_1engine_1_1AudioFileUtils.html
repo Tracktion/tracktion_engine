@@ -110,12 +110,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a27a65ad535070a609974f607a860a42e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac47b7711dcaa4c2110709e25fa548b6b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ac47b7711dcaa4c2110709e25fa548b6b">getFileLengthSamples</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;)</td></tr>
 <tr class="separator:ac47b7711dcaa4c2110709e25fa548b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab223ad00f3c4da8fd849cb60e5fabefc"><td class="memTemplParams" colspan="2">template&lt;class TargetFormat &gt; </td></tr>
-<tr class="memitem:ab223ad00f3c4da8fd849cb60e5fabefc"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ab223ad00f3c4da8fd849cb60e5fabefc">convertToFormat</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata)</td></tr>
-<tr class="separator:ab223ad00f3c4da8fd849cb60e5fabefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41ce4c21368a127c8d8cb52c8ee34194"><td class="memTemplParams" colspan="2">template&lt;class TargetFormat &gt; </td></tr>
-<tr class="memitem:a41ce4c21368a127c8d8cb52c8ee34194"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a41ce4c21368a127c8d8cb52c8ee34194">convertToFormat</a> (juce::AudioFormatReader *reader, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata)</td></tr>
-<tr class="separator:a41ce4c21368a127c8d8cb52c8ee34194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe72abfaf59a1c168998756b8d78c4fc"><td class="memTemplParams" colspan="2">template&lt;class TargetFormat &gt; </td></tr>
+<tr class="memitem:afe72abfaf59a1c168998756b8d78c4fc"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#afe72abfaf59a1c168998756b8d78c4fc">convertToFormat</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata, juce::int64 blockSize=-1, std::function&lt; bool()&gt; continuePredicate={}, std::function&lt; void(float)&gt; updateProgress={})</td></tr>
+<tr class="separator:afe72abfaf59a1c168998756b8d78c4fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f62fa60f96251eaec99846f6fe3bc06"><td class="memTemplParams" colspan="2">template&lt;class TargetFormat &gt; </td></tr>
+<tr class="memitem:a5f62fa60f96251eaec99846f6fe3bc06"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a5f62fa60f96251eaec99846f6fe3bc06">convertToFormat</a> (juce::AudioFormatReader *reader, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata, juce::int64 blockSize=-1, std::function&lt; bool()&gt; continuePredicate={}, std::function&lt; void(float)&gt; updateProgress={})</td></tr>
+<tr class="separator:a5f62fa60f96251eaec99846f6fe3bc06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a748ab45aa53a92eb8d6883b3b74d5b37"><td class="memTemplParams" colspan="2">template&lt;typename SourceFormat &gt; </td></tr>
 <tr class="memitem:a748ab45aa53a92eb8d6883b3b74d5b37"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a748ab45aa53a92eb8d6883b3b74d5b37">readFromFormat</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;engine, juce::InputStream &amp;source, const juce::File &amp;dest)</td></tr>
 <tr class="separator:a748ab45aa53a92eb8d6883b3b74d5b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,8 +154,6 @@ Static Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ab223ad00f3c4da8fd849cb60e5fabefc">convertToFormat()</a>.</p>
 
 </div>
 </div>
@@ -775,8 +773,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab223ad00f3c4da8fd849cb60e5fabefc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab223ad00f3c4da8fd849cb60e5fabefc">&#9670;&nbsp;</a></span>convertToFormat() <span class="overload">[1/2]</span></h2>
+<a id="afe72abfaf59a1c168998756b8d78c4fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe72abfaf59a1c168998756b8d78c4fc">&#9670;&nbsp;</a></span>convertToFormat() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -814,7 +812,25 @@ template&lt;class TargetFormat &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::StringPairArray &amp;&#160;</td>
-          <td class="paramname"><em>metadata</em>&#160;</td>
+          <td class="paramname"><em>metadata</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::int64&#160;</td>
+          <td class="paramname"><em>blockSize</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; bool()&gt;&#160;</td>
+          <td class="paramname"><em>continuePredicate</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(float)&gt;&#160;</td>
+          <td class="paramname"><em>updateProgress</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -829,12 +845,10 @@ template&lt;class TargetFormat &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a9777db3dd7187f0179c23e9608ace718">createReaderFor()</a>, and <a class="el" href="namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ead66636b253cb346dbb6240e30def3618">tracktion::engine::quality</a>.</p>
-
 </div>
 </div>
-<a id="a41ce4c21368a127c8d8cb52c8ee34194"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41ce4c21368a127c8d8cb52c8ee34194">&#9670;&nbsp;</a></span>convertToFormat() <span class="overload">[2/2]</span></h2>
+<a id="a5f62fa60f96251eaec99846f6fe3bc06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f62fa60f96251eaec99846f6fe3bc06">&#9670;&nbsp;</a></span>convertToFormat() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -866,7 +880,25 @@ template&lt;class TargetFormat &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::StringPairArray &amp;&#160;</td>
-          <td class="paramname"><em>metadata</em>&#160;</td>
+          <td class="paramname"><em>metadata</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::int64&#160;</td>
+          <td class="paramname"><em>blockSize</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; bool()&gt;&#160;</td>
+          <td class="paramname"><em>continuePredicate</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(float)&gt;&#160;</td>
+          <td class="paramname"><em>updateProgress</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -880,8 +912,6 @@ template&lt;class TargetFormat &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ead66636b253cb346dbb6240e30def3618">tracktion::engine::quality</a>.</p>
 
 </div>
 </div>
@@ -937,7 +967,7 @@ template&lt;typename SourceFormat &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2023 19:15:42 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Mar 21 2023 13:41:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
