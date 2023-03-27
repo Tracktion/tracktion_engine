@@ -20,7 +20,7 @@ class TimeStretcherTests  : public juce::UnitTest
 public:
     //==============================================================================
     TimeStretcherTests()
-        : juce::UnitTest ("TimeStretcherTests", "Tracktion")
+        : juce::UnitTest ("TimeStretcherTests", "tracktion_engine")
     {
     }
 

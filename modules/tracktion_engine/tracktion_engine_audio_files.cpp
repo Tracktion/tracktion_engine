@@ -24,6 +24,8 @@ extern "C"
    #endif
 }
 
+#include "../../modules/tracktion_core/tracktion_TestConfig.h"
+
 #include "tracktion_engine.h"
 
 #include <string>
@@ -32,6 +34,7 @@ extern "C"
 #include "audio_files/formats/tracktion_RexFileFormat.cpp"
 #include "audio_files/formats/tracktion_LAMEManager.cpp"
 
+#include "audio_files/tracktion_AudioFileCache.test.cpp"
 #include "audio_files/tracktion_AudioFileCache.cpp"
 #include "audio_files/tracktion_AudioFile.cpp"
 #include "audio_files/tracktion_AudioFile.test.cpp"

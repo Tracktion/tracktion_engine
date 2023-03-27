@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIO_FILE
 
 //==============================================================================
 //==============================================================================
@@ -19,7 +19,7 @@ class AudioFileTests    : public juce::UnitTest
 {
 public:
     AudioFileTests()
-        : juce::UnitTest ("AudioFile", "Tracktion")
+        : juce::UnitTest ("AudioFile", "tracktion_engine")
     {
     }
 

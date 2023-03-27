@@ -97,9 +97,7 @@ extern "C"
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_UNIT_TESTS
- #include <tracktion_core/tracktion_TestConfig.h>
-#endif
+#include <tracktion_core/tracktion_TestConfig.h>
 
 #include <tracktion_graph/tracktion_graph.h>
 

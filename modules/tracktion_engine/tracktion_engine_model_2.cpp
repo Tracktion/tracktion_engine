@@ -13,6 +13,8 @@
 #include <future>
 using namespace std::literals;
 
+#include "../../modules/tracktion_core/tracktion_TestConfig.h"
+
 #include "tracktion_engine.h"
 
 #include <tracktion_graph/tracktion_graph.h>

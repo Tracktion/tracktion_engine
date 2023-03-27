@@ -63,6 +63,8 @@
  #pragma warning (disable: 4005 4189 4189 4267 4702 4458 4100)
 #endif
 
+#include <tracktion_core/tracktion_TestConfig.h>
+
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"
 
