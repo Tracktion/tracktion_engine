@@ -436,7 +436,7 @@ static SequenceTests sequenceTests;
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && CORE_BENCHMARKS_TEMPO
 
 namespace tracktion { inline namespace engine
 {
@@ -447,7 +447,7 @@ class TempoBenchmarks   : public juce::UnitTest
 {
 public:
     TempoBenchmarks()
-        : juce::UnitTest ("Tempo", "tracktion_core")
+        : juce::UnitTest ("Tempo", "tracktion_benchmarks")
     {}
 
     void runTest() override

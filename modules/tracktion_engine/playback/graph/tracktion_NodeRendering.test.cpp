@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_NODE
 
 using namespace tracktion::graph;
 

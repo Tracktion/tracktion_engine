@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_MIDICLIP
 
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 

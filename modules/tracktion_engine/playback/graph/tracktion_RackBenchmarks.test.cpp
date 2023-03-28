@@ -10,7 +10,7 @@
 
 #pragma once
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_RACKS
 
 #include "tracktion_BenchmarkUtilities.h"
 
