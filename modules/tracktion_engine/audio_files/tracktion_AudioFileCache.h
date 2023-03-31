@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+struct FallbackReaderWrapper;
+
 //==============================================================================
 /**
 */
@@ -60,14 +62,22 @@ public:
         AudioFileCache& cache;
         void* file;
         std::atomic<SampleCount> readPos { 0 }, loopStart { 0 }, loopLength { 0 };
-        std::unique_ptr<juce::BufferingAudioReader> fallbackReader;
+//ddd        std::unique_ptr<juce::BufferingAudioReader> fallbackReader;
+        std::unique_ptr<FallbackReaderWrapper> fallbackReader;
 
-        Reader (AudioFileCache&, void*, juce::BufferingAudioReader* fallback);
+//ddd        Reader (AudioFileCache&, void*, juce::BufferingAudioReader* fallback);
+        Reader (AudioFileCache&, void*, FallbackReaderWrapper* fallback);
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Reader)
     };
 
     Reader::Ptr createReader (const AudioFile&);
+
+    /** @internal */
+    Reader::Ptr createReader (const AudioFile&,
+                              const std::function<FallbackReaderWrapper* (juce::AudioFormatReader* sourceReader,
+                                                                          juce::TimeSliceThread& timeSliceThread,
+                                                                          int samplesToBuffer)>& createFallbackReader);
 
     //==============================================================================
     void setCacheSizeSamples (SampleCount samplesPerFile);

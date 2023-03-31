@@ -57,6 +57,24 @@ juce::MemoryMappedAudioFormatReader* AudioFileUtils::createMemoryMappedReader (E
     return {};
 }
 
+std::unique_ptr<AudioFileUtils::MappedFileAndReader> AudioFileUtils::createMappedFileAndReaderFor (Engine& engine, const juce::File& file)
+{
+    if (auto mf = std::make_unique<juce::MemoryMappedFile> (file, juce::MemoryMappedFile::readOnly))
+    {
+        if (auto reader = engine.getAudioFileFormatManager().readFormatManager.createReaderFor (std::make_unique<juce::MemoryInputStream> (mf->getData(), mf->getSize(), false)))
+        {
+            auto result = std::make_unique<MappedFileAndReader>();
+            result->mappedFile = std::move (mf);
+            result->reader = std::unique_ptr<juce::AudioFormatReader> (reader);
+            return result;
+        }
+
+        return {};
+    }
+
+    return {};
+}
+
 juce::AudioFormatWriter* AudioFileUtils::createWriterFor (juce::AudioFormat* format, const juce::File& file,
                                                           double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                           const juce::StringPairArray& metadata, int quality)

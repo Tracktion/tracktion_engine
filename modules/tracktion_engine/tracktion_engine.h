@@ -389,6 +389,7 @@ namespace tracktion { inline namespace engine
     class Clipboard;
     class PropertyStorage;
     class TrackOutput;
+    class BufferedFileReader;
 }} // namespace tracktion { inline namespace engine
 
 

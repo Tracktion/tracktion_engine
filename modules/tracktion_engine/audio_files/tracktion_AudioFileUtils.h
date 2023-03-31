@@ -20,6 +20,14 @@ struct AudioFileUtils
     static juce::AudioFormatReader* createReaderFindingFormat (Engine&, const juce::File&, juce::AudioFormat*&);
     static juce::MemoryMappedAudioFormatReader* createMemoryMappedReader (Engine&, const juce::File&, juce::AudioFormat*&);
 
+    struct MappedFileAndReader
+    {
+        std::unique_ptr<juce::MemoryMappedFile> mappedFile;
+        std::unique_ptr<juce::AudioFormatReader> reader;
+    };
+
+    static std::unique_ptr<MappedFileAndReader> createMappedFileAndReaderFor (Engine&, const juce::File&);
+
     static juce::AudioFormatWriter* createWriterFor (Engine&, const juce::File&,
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
