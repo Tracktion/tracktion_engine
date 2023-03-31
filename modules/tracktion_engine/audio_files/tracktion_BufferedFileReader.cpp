@@ -159,6 +159,7 @@ void BufferedFileReader::BufferedBlock::update (juce::AudioFormatReader& reader,
     allSamplesRead = reader.read (&buffer, 0, numSamples, (int) range.getStart(), true, true);
     assert (slotIndex == static_cast<int> (currentSlotIndex));
     slotIndex = static_cast<int> (currentSlotIndex);
+    lastUseTime = juce::Time::getMillisecondCounter();
     DBG(slotIndex);
 }
 
@@ -207,34 +208,51 @@ int BufferedFileReader::useTimeSlice()
             case PositionStatus::fullyLoaded:                   return 100;
         }
     }
-
-    return 100;
 }
 
 BufferedFileReader::PositionStatus BufferedFileReader::readNextBufferChunk()
 {
+    if (isFullyBuffered())
+        return PositionStatus::fullyLoaded;
+
+    // First find the slot the audio thread is trying to read
+    // If that needs reading, set the next-slot-to-read to this
+    // If it's already read, use the current next-slot-to-read value
     const auto currentReadPosition = nextReadPosition.load();
-    auto desiredSlotIndex = getSlotIndexFromSamplePosition (currentReadPosition);
-    const juce::Range<juce::int64> slotSampleRange = getSlotRange (desiredSlotIndex);
-    bool needToFetchNewBlock = true;
+    const auto currentSlotIndex = getSlotIndexFromSamplePosition (currentReadPosition);
 
-    // Take exclusive control of the desired slot
-    ScopedSlotAccess desiredSlot (*this, desiredSlotIndex);
-
-    if (auto currentBlockInDesiredSlot = desiredSlot.getBlock())
+    // Check if the slot being read by the audio thread is buffered
     {
-        // If the slot has a valid block, it should have the correct range
-        assert (currentBlockInDesiredSlot->range == slotSampleRange);
+        // Take exclusive control of the current slot
+        ScopedSlotAccess currentSlot (*this, currentSlotIndex);
 
-        // If the block contains valid data, we can use this
-        if (currentBlockInDesiredSlot->allSamplesRead)
-            needToFetchNewBlock = false;
+        if (auto currentBlockInCurrentSlot = currentSlot.getBlock())
+        {
+            // If the slot has a valid block, it should have the correct range
+            assert (currentBlockInCurrentSlot->range == getSlotRange (currentSlotIndex));
+
+            // If the block contains invalid data, we need to re-read this
+            if (! currentBlockInCurrentSlot->allSamplesRead)
+                nextSlotScheduled = currentSlotIndex;
+        }
     }
 
-    // Otherwise, try to read it again
-    if (needToFetchNewBlock)
+    const auto slotToReadIndex = nextSlotScheduled.load();
+    bool readScheduledSlot = true;
+
     {
-        // Find the oldest block and read this sample range in to it.
+        // Take exclusive control of the scheduled slot
+        ScopedSlotAccess scheduledSlot (*this, slotToReadIndex);
+
+        // If that block is inthe correct slot with all the samples read, don't re-read
+        if (auto currentBlockInScheduledSlot = scheduledSlot.getBlock())
+            if (currentBlockInScheduledSlot->allSamplesRead)
+                readScheduledSlot = false;
+    }
+
+    // Read the next scheduled slot if its out of date
+    if (readScheduledSlot)
+    {
         // This can be done without taking any exclusive access as the
         // blocks won't move around and their time stamps are atomic
         juce::uint32 oldestTime = std::numeric_limits<juce::uint32>::max();
@@ -260,6 +278,7 @@ BufferedFileReader::PositionStatus BufferedFileReader::readNextBufferChunk()
 
         assert (blockToUse != nullptr);
         const int blockToUseSlotIndex = blockToUse->slotIndex.load (std::memory_order_relaxed);
+        ScopedSlotAccess desiredSlot (*this, slotToReadIndex);
 
         if (blockToUseSlotIndex < 0)
         {
@@ -278,46 +297,43 @@ BufferedFileReader::PositionStatus BufferedFileReader::readNextBufferChunk()
         }
 
         // Update the block's data
-        blockToUse->update (*source, slotSampleRange, desiredSlotIndex);
+        const juce::Range<juce::int64> slotSampleRange = getSlotRange (slotToReadIndex);
+        blockToUse->update (*source, slotSampleRange, slotToReadIndex);
 
         // Increment the number of blocks in use if this was a fresh block
         if (blockToUseSlotIndex < 0 && blockToUse->allSamplesRead)
             ++numBlocksBuffered;
     }
 
-    if (isFullyBuffered())
-        return PositionStatus::fullyLoaded;
-
     // If all the slots are in use, free the oldest slot from the current read position so a future one can be queued up
-    if (numBlocksBuffered == blocks.size() && desiredSlotIndex > 0)
+//ddd    if (numBlocksBuffered == blocks.size() && slotToReadIndex > 0)
+//    {
+//        for (auto& block : blocks)
+//        {
+//            // This won't change during this function
+//            const auto blockSlotIndex = block->slotIndex.load();
+//
+//            if (blockSlotIndex < 0)
+//                continue;
+//
+//            if (blockSlotIndex < int (slotToReadIndex) - 1)
+//            {
+//                ScopedSlotAccess slotAccess (*this, size_t (blockSlotIndex));
+//                slotAccess.setBlock (nullptr);
+//                --numBlocksBuffered;
+//            }
+//        }
+//
+//        return PositionStatus::nextChunkScheduled;
+//    }
+
+    // If the read position hasn't changed by the audio thread let the thread reschedule us
+    if (nextReadPosition == currentReadPosition)
     {
-        for (auto& block : blocks)
-        {
-            // This won't change during this function
-            const auto blockSlotIndex = block->slotIndex.load();
+        assert (blocks.size() > 0);
+        const auto startSlot = std::max (size_t (0), getSlotIndexFromSamplePosition (currentReadPosition));
+        nextSlotScheduled = (startSlot + 1) % slots.size();
 
-            if (blockSlotIndex < 0)
-                continue;
-
-            if (blockSlotIndex < int (desiredSlotIndex) - 1)
-            {
-                ScopedSlotAccess slotAccess (*this, size_t (blockSlotIndex));
-                slotAccess.setBlock (nullptr);
-            }
-        }
-
-        return PositionStatus::nextChunkScheduled;
-    }
-
-    // Move nextReadPosition to the next empty slot so it gets read next loop iteration
-    // But only set it if it hasn't been changed by the audio thread during this function call
-    const juce::int64 nextReadPositionFromThisChunk = static_cast<juce::int64> ((desiredSlotIndex + 1) % slots.size()) * samplesPerBlock;
-    assert (nextReadPositionFromThisChunk <= lengthInSamples);
-    auto readPos = currentReadPosition;
-
-    if (nextReadPosition.compare_exchange_strong (readPos, nextReadPositionFromThisChunk))
-    {
-        // If we set it, return false so give the thread a bit more time between calls
         return PositionStatus::nextChunkScheduled;
     }
 
