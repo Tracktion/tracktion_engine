@@ -2031,6 +2031,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
     else
     {
         lastSampleFadeLength = std::min (numFrames, 40u);
+        isFirstBlock = true; // Fade in the next block to avoid clicks
     }
 
     // Crossfade if a fade needs to be applied
