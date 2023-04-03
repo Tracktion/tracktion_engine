@@ -89,7 +89,8 @@ public:
         juce::MemoryBlock data;
         juce::MemoryOutputStream out (data, false);
 
-        if (dci->storeDocumentToArchive (dcRef, toHostRef (&out)) != kARAFalse)
+//ddd        if (dci->storeDocumentToArchive (dcRef, toHostRef (&out)) != kARAFalse)
+        if (dci->storeObjectsToArchive (dcRef, toHostRef (&out), nullptr))
         {
             out.flush();
 
@@ -115,7 +116,10 @@ public:
             lastArchiveState = std::make_unique<juce::MemoryBlock>();
             lastArchiveState->fromBase64Encoding (data);
 
-            dci->beginRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
+//ddd            dci->beginRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
+            beginEditing (true);
+            dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
+            endEditing (true);
         }
         else
         {
@@ -128,8 +132,8 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        if (lastArchiveState != nullptr)
-            dci->endRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
+//ddd        if (lastArchiveState != nullptr)
+//            dci->endRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
 
         lastArchiveState = nullptr;
     }
@@ -228,7 +232,8 @@ static ARADocument* createDocumentInternal (Edit& edit)
             &ArchivingFunctions::readBytesFromArchive,
             &ArchivingFunctions::writeBytesToArchive,
             &ArchivingFunctions::notifyDocumentArchivingProgress,
-            &ArchivingFunctions::notifyDocumentUnarchivingProgress
+            &ArchivingFunctions::notifyDocumentUnarchivingProgress,
+            &ArchivingFunctions::getDocumentArchiveID
         };
 
         static const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAContentAccessControllerInterface, destroyContentReader)>  content =

@@ -97,7 +97,7 @@ private:
 
                     const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
-                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Draft),
+                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
                         assertFuncPtr
                     };
 
@@ -140,7 +140,7 @@ private:
         if (type == "VST3")
             factory = getFactoryVST3();
 
-        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Draft)
+        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final)
             factory = nullptr;
     }
 
