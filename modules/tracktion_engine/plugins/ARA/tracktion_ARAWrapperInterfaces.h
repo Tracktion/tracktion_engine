@@ -118,8 +118,6 @@ public:
 
 //ddd            dci->beginRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
             beginEditing (true);
-            dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
-            endEditing (true);
         }
         else
         {
@@ -134,6 +132,8 @@ public:
 
 //ddd        if (lastArchiveState != nullptr)
 //            dci->endRestoringDocumentFromArchive (dcRef, toHostRef (lastArchiveState.get()));
+        dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
+        endEditing (true);
 
         lastArchiveState = nullptr;
     }
@@ -226,7 +226,7 @@ static ARADocument* createDocumentInternal (Edit& edit)
             &AudioSourceWrapper::destroyAudioReader
         };
 
-        static const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAArchivingControllerInterface, notifyDocumentUnarchivingProgress)> hostArchiving =
+        static const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAArchivingControllerInterface, getDocumentArchiveID)> hostArchiving =
         {
             &ArchivingFunctions::getArchiveSize,
             &ArchivingFunctions::readBytesFromArchive,
