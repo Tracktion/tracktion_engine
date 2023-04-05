@@ -141,40 +141,21 @@ void ContainerClipNode::process (ProcessContext& pc)
     const auto loopRangeSamples = toSamples (loopTimeRange, sampleRate);
 
 
+    // Updated the PlayHead so the position/play setting below is in sync
+    localPlayHead.setReferenceSampleRange (pc.referenceSampleRange);
+
+    // We don't want to update the playhead position as we'll do that manually below to avoid triggering playhead jumps
+    if (! loopRangeSamples.isEmpty() && localPlayHead.getLoopRange() != loopRangeSamples)
+        localPlayHead.setLoopRange (true, loopRangeSamples, false);
+
     // Syncronise positions
     const auto playheadOffset = toSamples (editStartTimeOfLocalTimeline, sampleRate);
     playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
 
     int64_t newPosition = editPlayHead.getPosition() - playheadOffset + loopRangeSamples.getStart();
 
-    ProcessContext localPC { pc.numSamples, pc.referenceSampleRange,
-                             { pc.buffers.audio, pc.buffers.midi } };
-
     if (localPlayHead.isLooping())
-    {
-        // If the position is negative and the local playhead is looping, the loop position will be truncated to the start of the loop range.
-        // This means the edit position and local position are no longer in sync. When the position becomes positive again,
-        // they will resync which leaves a slight period of error at the start of loops
-        if (newPosition < 0)
-        {
-            const int64_t numSamplesToDropAtStart = -newPosition;
-            localPC.numSamples -= static_cast<choc::buffer::FrameCount> (numSamplesToDropAtStart);
-            localPC.referenceSampleRange = pc.referenceSampleRange.withStart (pc.referenceSampleRange.getStart() + numSamplesToDropAtStart);
-            localPC.buffers.audio = localPC.buffers.audio.getEnd (localPC.numSamples);
-            newPosition = 0;
-        }
-
-        assert (newPosition >= 0);
         newPosition = localPlayHead.linearPositionToLoopPosition (newPosition, localPlayHead.getLoopRange());
-    }
-
-    // Updated the PlayHead so the position/play setting below is in sync
-    localPlayHead.setReferenceSampleRange (localPC.referenceSampleRange);
-
-    // We don't want to update the playhead position as we'll do that manually below to avoid triggering playhead jumps
-    if (! loopRangeSamples.isEmpty() && localPlayHead.getLoopRange() != loopRangeSamples)
-        localPlayHead.setLoopRange (true, loopRangeSamples, false);
-
 
     if (editPlayHeadState.isContiguousWithPreviousBlock())
         localPlayHead.overridePosition (newPosition);
@@ -191,6 +172,8 @@ void ContainerClipNode::process (ProcessContext& pc)
     assert (! localPlayHead.isLooping() || localPlayHead.getLoopRange().contains (localPlayHead.getPosition()));
 
     // Process
+    ProcessContext localPC { pc.numSamples, pc.referenceSampleRange,
+                             { pc.buffers.audio, pc.buffers.midi } };
     player.process (localPC);
 
     // Silence any samples before or after our edit time range
