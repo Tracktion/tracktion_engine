@@ -933,8 +933,8 @@ void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
     }
 
     //update thumbnail state
-    startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
-    numberOfThumbSamplesPerChannelToRead = 0;
+    //startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
+    //numberOfThumbSamplesPerChannelToRead = 0;
 }
 /*BEATCONNECT MODIFICATION END*/
 
