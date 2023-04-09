@@ -58,7 +58,7 @@ public:
                        EditTimeRange time, float verticalZoomFactor);
     /*BEATCONNECT MODIFICATION START*/
     void getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel);
-    void getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length);
+    bool getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length);
     /*BEATCONNECT MODIFICATION END*/
 
 private:

@@ -909,13 +909,13 @@ int TracktionThumbnail::getNumberOfThumbSamples(int channel)
     return sizeInSamples - startThumbSampleIndex;
 }
 
-void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length)
+bool TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length)
 {
     const juce::ScopedLock sl(lock);
 
     //The length that unity assigns should match the current thumbnail state
     if (length != numChannels * numberOfThumbSamplesPerChannelToRead)
-        return;
+        return false;
 
     //channel interleaved implementation
     int j = 0;
@@ -932,7 +932,10 @@ void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
         j += numChannels;
     }
 
+    return true;
+
     //update thumbnail state
+    // Commented this out as it was making subsequent calls to this never return the values
     //startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
     //numberOfThumbSamplesPerChannelToRead = 0;
 }
