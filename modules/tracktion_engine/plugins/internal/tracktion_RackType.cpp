@@ -495,8 +495,8 @@ bool RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool can
         p->removeFromParent();
 
         auto v = createValueTree (IDs::PLUGININSTANCE,
-                                  IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
-                                  IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
+                                  IDs::x, pos.x,
+                                  IDs::y, pos.y);
         v.addChild (p->state, -1, getUndoManager());
 
         state.addChild (v, -1, getUndoManager());
