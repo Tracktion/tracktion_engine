@@ -494,18 +494,22 @@ bool RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool can
 
         p->removeFromParent();
 
-        auto v = createValueTree (IDs::PLUGININSTANCE,
-                                  IDs::x, pos.x,
-                                  IDs::y, pos.y);
+        juce::StringArray ins, outs;
+        p->getChannelNames(&ins, &outs);
+
+        auto v = createValueTree (IDs::PLUGININSTANCE, 
+            IDs::x, pos.x,
+            IDs::y, pos.y,
+            IDs::numInputs, ins.size(),
+            IDs::numOutputs, outs.size(),
+            IDs::hasMidi, true);
+
         v.addChild (p->state, -1, getUndoManager());
 
         state.addChild (v, -1, getUndoManager());
 
         if (autoConnect)
         {
-            juce::StringArray ins, outs;
-            p->getChannelNames (&ins, &outs);
-
             while (outs.size() > getOutputNames().size() - 1)
                 if (addOutput (getOutputNames().size(), TRANS("Output") + " " + juce::String (getOutputNames().size())) == -1)
                     break;
