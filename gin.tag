@@ -8254,6 +8254,13 @@
       <anchor>a841d1b11b0e15bda5bfaa9cf1b365067</anchor>
       <arglist>(ARAArchivingControllerHostRef, float p)</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static ARAPersistentID ARA_CALL</type>
+      <name>getDocumentArchiveID</name>
+      <anchorfile>structArchivingFunctions.html</anchorfile>
+      <anchor>af5cd02d1e082e95806c58c544ac8b65e</anchor>
+      <arglist>(ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::ArrangerClip</name>
@@ -11692,10 +11699,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>SizedStruct&lt; ARA_MEMBER_PTR_ARGS(ARAAudioModificationProperties, persistentID)&gt;</type>
+      <type>SizedStruct&lt; ARA_STRUCT_MEMBER(ARAAudioModificationProperties, persistentID)&gt;</type>
       <name>getAudioModificationProperties</name>
       <anchorfile>classAudioModificationWrapper.html</anchorfile>
-      <anchor>aa1a1bb016e995982d9d1a01f7d3bc4fb</anchor>
+      <anchor>a486ae486e16d0d471878965289c34b4d</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -12295,10 +12302,10 @@
       <arglist>(bool b)</arglist>
     </member>
     <member kind="function">
-      <type>SizedStruct&lt; ARA_MEMBER_PTR_ARGS(ARAAudioSourceProperties, merits64BitSamples)&gt;</type>
+      <type>SizedStruct&lt; ARA_STRUCT_MEMBER(ARAAudioSourceProperties, merits64BitSamples)&gt;</type>
       <name>getAudioSourceProperties</name>
       <anchorfile>classAudioSourceWrapper.html</anchorfile>
-      <anchor>a83d585110e2e9146619366d99f172f58</anchor>
+      <anchor>abaf8c6187ec25d5f43cf8ae3d10d9e6a</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -48854,10 +48861,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>SizedStruct&lt; ARA_MEMBER_PTR_ARGS(ARAMusicalContextProperties, color)&gt;</type>
+      <type>SizedStruct&lt; ARA_STRUCT_MEMBER(ARAMusicalContextProperties, color)&gt;</type>
       <name>getMusicalContextProperties</name>
       <anchorfile>classMusicalContextWrapper.html</anchorfile>
-      <anchor>a11ef5d0ef554c946849b1f19a1290acf</anchor>
+      <anchor>a7c3df47dccb435c3ab868feb6cebd517</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -53097,10 +53104,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>SizedStruct&lt; ARA_MEMBER_PTR_ARGS(ARAPlaybackRegionProperties, color)&gt;</type>
+      <type>SizedStruct&lt; ARA_STRUCT_MEMBER(ARAPlaybackRegionProperties, color)&gt;</type>
       <name>getPlaybackRegionProperties</name>
       <anchorfile>classPlaybackRegionWrapper.html</anchorfile>
-      <anchor>a9647ca6dfac5464946373c70b0391312</anchor>
+      <anchor>a9f0ecb708fdff8b7c0fe6d46dd9363c0</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -59569,10 +59576,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>SizedStruct&lt; ARA_MEMBER_PTR_ARGS(ARARegionSequenceProperties, color)&gt;</type>
+      <type>SizedStruct&lt; ARA_STRUCT_MEMBER(ARARegionSequenceProperties, color)&gt;</type>
       <name>getRegionSequenceProperties</name>
       <anchorfile>classRegionSequenceWrapper.html</anchorfile>
-      <anchor>acb2176a2a061f8d83c93a7e693cd5a24</anchor>
+      <anchor>a6382250db38ef2fb0cfa1fc035f1df6f</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -84761,6 +84768,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -84770,18 +84782,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>
