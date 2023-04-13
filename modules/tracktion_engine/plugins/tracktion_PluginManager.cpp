@@ -695,8 +695,9 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
     {
         if (builtIn->type == type)
         {
-            auto v = createValueTree (IDs::PLUGIN,
-                                      IDs::type, type);
+            auto v = createValueTree(IDs::PLUGIN,
+                IDs::type, type,
+                IDs::name, desc.name);
 
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
