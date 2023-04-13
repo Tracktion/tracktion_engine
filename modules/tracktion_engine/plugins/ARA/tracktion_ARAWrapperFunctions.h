@@ -65,7 +65,7 @@ struct ArchivingFunctions
 
     static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)
     {
-        return "com.celemony.ara.chunk";
+        return "com.celemony.ara.chunk.1";
     }
 };
 
