@@ -62,6 +62,11 @@ struct ArchivingFunctions
         juce::ignoreUnused (p);
         //TRACKTION_LOG_ARA ("Unarchiving progress: " << p);
     }
+
+    static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)
+    {
+        return "com.celemony.ara.chunk.1";
+    }
 };
 
 //==============================================================================
