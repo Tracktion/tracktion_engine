@@ -16974,6 +16974,13 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
+      <type>int</type>
+      <name>getNumChannelsUsed</name>
+      <anchorfile>structtracktion_1_1engine_1_1LevelMeasurer_1_1Client.html</anchorfile>
+      <anchor>a6a1e15ff5bda29c4c28c60fc9d91cf51</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>reset</name>
       <anchorfile>structtracktion_1_1engine_1_1LevelMeasurer_1_1Client.html</anchorfile>
