@@ -382,7 +382,7 @@ public:
 
         if (gains[0] != 1.0f || gains[1] != 1.0f)
         {
-            choc::buffer::applyGain (destBuffer.getChannel (0), gains[1]);
+            choc::buffer::applyGain (destBuffer.getChannel (0), gains[0]);
 
             if (destBuffer.getNumChannels() > 1)
                 choc::buffer::applyGain (destBuffer.getChannel (1), gains[1]);
