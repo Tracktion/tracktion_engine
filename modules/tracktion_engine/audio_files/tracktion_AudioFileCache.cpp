@@ -11,72 +11,21 @@
 namespace tracktion { inline namespace engine
 {
 
-struct BufferedReaderBase
+//==============================================================================
+//==============================================================================
+FallbackReader::FallbackReader()
+    : juce::AudioFormatReader (nullptr, "FallbackReader")
 {
-    double sampleRate = 0;
-    unsigned int bitsPerSample = 0;
-    juce::int64 lengthInSamples = 0;
-    unsigned int numChannels = 0;
-    bool usesFloatingPointData = false;
-    juce::StringPairArray metadataValues;
+}
 
-    virtual ~BufferedReaderBase() {}
-    virtual void setReadTimeout (int timeoutMilliseconds) noexcept = 0;
 
-    virtual bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                              juce::int64 startSampleInFile, int numSamples) = 0;
-    virtual void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,
-                                float& lowestLeft,  float& highestLeft,
-                                float& lowestRight, float& highestRight) = 0;
-};
-
-template<typename BufferedReaderType>
-struct BufferedReaderWrapper : public BufferedReaderBase,
-                               private BufferedReaderType
+//==============================================================================
+//==============================================================================
+class BufferingAudioReaderWrapper   : public FallbackReader
 {
-    BufferedReaderWrapper (juce::AudioFormatReader* sourceReader,
-                           juce::TimeSliceThread& timeSliceThread,
-                           int samplesToBuffer)
-        : BufferedReaderType (sourceReader, timeSliceThread, samplesToBuffer)
-    {
-        BufferedReaderBase::sampleRate              = BufferedReaderType::sampleRate;
-        BufferedReaderBase::bitsPerSample           = BufferedReaderType::bitsPerSample;
-        BufferedReaderBase::lengthInSamples         = BufferedReaderType::lengthInSamples;
-        BufferedReaderBase::numChannels             = BufferedReaderType::numChannels;
-        BufferedReaderBase::usesFloatingPointData   = BufferedReaderType::usesFloatingPointData;
-        BufferedReaderBase::metadataValues          = BufferedReaderType::metadataValues;
-    }
-
-    using BufferedReaderBase::setReadTimeout;
-    void setReadTimeout (int timeoutMilliseconds) noexcept override
-    {
-        BufferedReaderType::setReadTimeout (timeoutMilliseconds);
-    }
-
-    using BufferedReaderBase::readSamples;
-    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples) override
-    {
-        return BufferedReaderType::readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
-                                                startSampleInFile, numSamples);
-    }
-
-    using BufferedReaderBase::readMaxLevels;
-    void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,
-                                float& lowestLeft,  float& highestLeft,
-                                float& lowestRight, float& highestRight) override
-    {
-        BufferedReaderType::readMaxLevels (startSample, numSamples,
-                                           lowestLeft,  highestLeft,
-                                           lowestRight, highestRight);
-    }
-};
-
-struct FallbackReaderWrapper    : public juce::AudioFormatReader
-{
-    FallbackReaderWrapper (std::unique_ptr<juce::AudioFormatReader> sourceReader)
-        : AudioFormatReader (nullptr, sourceReader->getFormatName()),
-          source (std::move (sourceReader))
+public:
+    BufferingAudioReaderWrapper (std::unique_ptr<juce::BufferingAudioReader> sourceReader)
+        : source (std::move (sourceReader))
     {
         sampleRate              = source->sampleRate;
         bitsPerSample           = source->bitsPerSample;
@@ -86,12 +35,9 @@ struct FallbackReaderWrapper    : public juce::AudioFormatReader
         metadataValues          = source->metadataValues;
     }
 
-    void setReadTimeout (int timeoutMilliseconds) noexcept
+    void setReadTimeout (int timeoutMilliseconds) override
     {
-        if (bufferingAudioReader)
-            bufferingAudioReader->setReadTimeout (timeoutMilliseconds);
-        else if (bufferedFileReader)
-            bufferedFileReader->setReadTimeout (timeoutMilliseconds);
+        source->setReadTimeout (timeoutMilliseconds);
     }
 
     bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
@@ -102,36 +48,12 @@ struct FallbackReaderWrapper    : public juce::AudioFormatReader
     }
 
 private:
-    std::unique_ptr<juce::AudioFormatReader> source;
-    juce::BufferingAudioReader* bufferingAudioReader { dynamic_cast<juce::BufferingAudioReader*> (source.get()) };
-    BufferedFileReader* bufferedFileReader { dynamic_cast<BufferedFileReader*> (source.get()) };
+    std::unique_ptr<juce::BufferingAudioReader> source;
 };
 
-struct MemoryMappedFileReader    : public juce::AudioFormatReader
-{
-    MemoryMappedFileReader (std::unique_ptr<AudioFileUtils::MappedFileAndReader> mappedFileAndReader)
-        : AudioFormatReader (nullptr, mappedFileAndReader->reader->getFormatName()),
-          source (std::move (mappedFileAndReader))
-    {
-        sampleRate              = source->reader->sampleRate;
-        bitsPerSample           = source->reader->bitsPerSample;
-        lengthInSamples         = source->reader->lengthInSamples;
-        numChannels             = source->reader->numChannels;
-        usesFloatingPointData   = source->reader->usesFloatingPointData;
-        metadataValues          = source->reader->metadataValues;
-    }
 
-    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples) override
-    {
-        return source->reader->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
-                                            startSampleInFile, numSamples);
-    }
-
-private:
-    std::unique_ptr<AudioFileUtils::MappedFileAndReader> source;
-};
-
+//==============================================================================
+//==============================================================================
 static void clearSetOfChannels (int* const* channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
@@ -857,19 +779,17 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
     {
         backgroundReaderThread.startThread (juce::Thread::Priority::low);
 
-//ddd        return new Reader (*this, nullptr, new FallbackReaderWrapper (std::make_unique<BufferedFileReader> (reader, backgroundReaderThread,
-//                                                                                                                    48000 * 5)));
-        return new Reader (*this, nullptr, new FallbackReaderWrapper (std::make_unique<juce::BufferingAudioReader> (reader, backgroundReaderThread,
-                                                                                                                    48000 * 5)));
+        return new Reader (*this, nullptr, std::make_unique<BufferingAudioReaderWrapper> (std::make_unique<juce::BufferingAudioReader> (reader, backgroundReaderThread,
+                                                                                                                                        48000 * 5)));
     }
 
     return {};
 }
 
 AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
-                                                          const std::function<FallbackReaderWrapper* (juce::AudioFormatReader* sourceReader,
-                                                                                                      juce::TimeSliceThread& timeSliceThread,
-                                                                                                      int samplesToBuffer)>& createFallbackReader)
+                                                          const std::function<std::unique_ptr<FallbackReader> (juce::AudioFormatReader* sourceReader,
+                                                                                                               juce::TimeSliceThread& timeSliceThread,
+                                                                                                               int samplesToBuffer)>& createFallbackReader)
 {
     CRASH_TRACER
     const juce::ScopedWriteLock sl (fileListLock);
@@ -884,10 +804,9 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
     if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
     {
         backgroundReaderThread.startThread (juce::Thread::Priority::low);
-
         auto fallbackReader = createFallbackReader (reader, backgroundReaderThread,
                                                     48000 * 5);
-        return new Reader (*this, nullptr, fallbackReader);
+        return new Reader (*this, nullptr, std::move (fallbackReader));
     }
 
     return {};
@@ -904,8 +823,8 @@ void AudioFileCache::purgeOrphanReaders()
 }
 
 //==============================================================================
-AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, FallbackReaderWrapper* fallback)
-    : cache (c), file (f), fallbackReader (fallback)
+AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, std::unique_ptr<FallbackReader> fallback)
+    : cache (c), file (f), fallbackReader (std::move (fallback))
 {
     jassert (file != nullptr || fallbackReader != nullptr);
 }

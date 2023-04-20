@@ -12,9 +12,12 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
-/**
+/** @internal
+
     An AudioFormatReader that uses a background thread to pre-read data from
     another reader.
+
+    N.B. This class is in development and not ready for public use yet!!
 */
 class BufferedFileReader    : public juce::AudioFormatReader,
                               private juce::TimeSliceClient
