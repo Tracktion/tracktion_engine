@@ -342,7 +342,7 @@ inline juce::Range<int64_t> PlayHead::referenceSampleRangeToSourceRangeUnlooped 
 inline int64_t PlayHead::linearPositionToLoopPosition (int64_t position, juce::Range<int64_t> loopRange)
 {
     const auto loopStart = loopRange.getStart();
-    return loopStart + ((position - loopStart) % loopRange.getLength());
+    return loopStart + juce::negativeAwareModulo ((position - loopStart), loopRange.getLength());
 }
 
 //==============================================================================

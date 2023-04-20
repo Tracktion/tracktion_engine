@@ -68,7 +68,7 @@
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDISequence.h>
- #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
+ #include <choc/containers/choc_MultipleReaderMultipleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
