@@ -39,6 +39,8 @@
 //==============================================================================
 
 //==============================================================================
+#include "tracktion_TestConfig.h"
+
 #include "audio/tracktion_AudioReader.h"
 
 #include "utilities/tracktion_CPU.h"

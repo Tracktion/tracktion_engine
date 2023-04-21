@@ -405,6 +405,7 @@ public:
 
     double speedRatio = 1.0, readPosition = 0.0;
     float gains[2] = { 1.0f, 1.0f };
+    bool failedToRead = false;
 
     SampleCount getReadPosition() const
     {
@@ -423,8 +424,10 @@ public:
         // Read data in to temp buffer
         auto scratchView = scratchBuffer.getView();
 
-        // If the reader fails, we can't bail out or SRC will hang so just give it an empty buffer
-        if (! source->readSamples (scratchView))
+        // If the reader fails, we can't bail out or SRC will hang so just give it an empty buffer and pass the fail via a flag
+
+
+        if (failedToRead = ! source->readSamples (scratchView); failedToRead)
             scratchView.clear();
 
         // Interleave
@@ -447,7 +450,8 @@ public:
                                                 static_cast<long> (numFramesToDo),
                                                 interleavedOutputScratchBuffer.getView().data.data);
 
-        if (static_cast<decltype (numFramesToDo)> (numRead) != numFramesToDo)
+        if (failedToRead
+            || static_cast<decltype (numFramesToDo)> (numRead) != numFramesToDo)
         {
             destBuffer.clear();
             return false;
@@ -666,7 +670,10 @@ public:
                 AudioScratchBuffer scratchBuffer (numChannels, numThisTime);
                 scratchBuffer.buffer.clear();
                 auto scratchView = toBufferView (scratchBuffer.buffer);
-                source->readSamples (scratchView);
+
+                if (! source->readSamples (scratchView))
+                    return false;
+
                 inputFifo.write (scratchBuffer.buffer);
             }
 
@@ -1846,7 +1853,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     if (fileCacheReader == nullptr || fileCacheReader->getSampleRate() == 0.0)
         return false;
 
-    std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 3ms,
+    std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
                                                                                       destChannels, channelsToUse);
 
     if (warpMap)

@@ -1007,7 +1007,7 @@ void TransportControl::timerCallback()
             if (looping)
             {
                 auto lr = getLoopRange();
-                lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + TimeDuration::fromSeconds (0.001)));
+                lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
                 playHeadWrapper->setLoopTimes (true, lr);
             }
             else

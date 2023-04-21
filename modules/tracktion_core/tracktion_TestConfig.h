@@ -20,6 +20,7 @@
 #define ENGINE_UNIT_TESTS_CLIPS            1
 #define ENGINE_UNIT_TESTS_SELECTABLE       1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE       1
+#define ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE 1
 
 // Defined in tracktion_graph
 #define GRAPH_UNIT_TESTS_PLAYHEAD          1
@@ -32,3 +33,14 @@
 #define GRAPH_UNIT_TESTS_AUDIOBUFFERPOOL   1
 #define GRAPH_UNIT_TESTS_SEMAPHORE         1
 #define GRAPH_UNIT_TESTS_ALLOCATION        1
+
+// Benchmarks
+#define CORE_BENCHMARKS_TEMPO              1
+
+#define GRAPH_BENCHMARKS_THREADS           1
+
+#define ENGINE_BENCHMARKS_AUDIOFILECACHE   1
+#define ENGINE_BENCHMARKS_MIDICLIP         1
+#define ENGINE_BENCHMARKS_EDITITEMID       1
+#define ENGINE_BENCHMARKS_NODE             1
+#define ENGINE_BENCHMARKS_RACKS            1

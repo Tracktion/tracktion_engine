@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && GRAPH_BENCHMARKS_THREADS
  #include "../../tracktion_core/utilities/tracktion_Benchmark.h"
 #endif
 
@@ -110,7 +110,7 @@ static SemaphoreTests semaphoreTests;
 
 #endif
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && GRAPH_BENCHMARKS_THREADS
 
 //==============================================================================
 //==============================================================================

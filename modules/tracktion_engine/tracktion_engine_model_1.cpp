@@ -17,7 +17,6 @@ using namespace std::literals;
 
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "../../modules/tracktion_core/utilities/tracktion_Benchmark.h"
-#include "../../modules/tracktion_core/tracktion_TestConfig.h"
 
 #include "tracktion_engine.h"
 

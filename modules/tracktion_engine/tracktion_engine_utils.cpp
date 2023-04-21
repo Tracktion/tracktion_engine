@@ -37,8 +37,6 @@
 //==============================================================================
 #include "tracktion_engine.h"
 
-#include "../tracktion_core/tracktion_TestConfig.h"
-
 //==============================================================================
 #if JUCE_MAC && TRACKTION_ENABLE_REX
 extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
