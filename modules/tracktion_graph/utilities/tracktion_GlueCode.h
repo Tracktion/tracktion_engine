@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -25,6 +25,13 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),
                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
+}
+
+//==============================================================================
+/** Converts a choc::midi event to a juce::MidiMessage */
+inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
+{
+    return { e.message.data(), (int) e.message.length(), e.timeStamp };
 }
 
 //==============================================================================
@@ -150,4 +157,33 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 
 }
 
-} // namespace tracktion_graph
+}} // namespace tracktion
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<juce::MidiMessageSequence>
+{
+    size_t operator() (const juce::MidiMessageSequence& sequence) const noexcept
+    {
+        size_t seed = 0;
+
+        for (auto meh : sequence)
+        {
+            auto& me = meh->message;
+            tracktion::hash_combine (seed, me.getTimeStamp());
+            tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());
+        }
+
+        return seed;
+    }
+};
+
+template<>
+struct std::hash<std::vector<juce::MidiMessageSequence>>
+{
+    size_t operator() (const std::vector<juce::MidiMessageSequence>& sequences) const noexcept
+    {
+        return tracktion::hash_range (sequences);
+    }
+};
+#endif

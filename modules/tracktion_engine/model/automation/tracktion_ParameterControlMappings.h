@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Controls the set of midi-controller-to-parameter mappings. */
@@ -97,4 +97,4 @@ private:
     void handleAsyncUpdate() override;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -7,7 +7,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -898,7 +898,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
 
     levelMeasurer.addClient (*this);
 
-    instrument->enableLegacyMode();
+    instrument.enableLegacyMode();
     setPitchbendTrackingMode (juce::MPEInstrument::allNotesOnChannel);
 
     setVoiceStealingEnabled (true);
@@ -1309,12 +1309,12 @@ void FourOscPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
             {
                 juce::MPEZoneLayout zones;
                 zones.setLowerZone (15);
-                instrument->setZoneLayout (zones);
+                instrument.setZoneLayout (zones);
                 setPitchbendTrackingMode (juce::MPEInstrument::lastNotePlayedOnChannel);
             }
             else
             {
-                instrument->enableLegacyMode();
+                instrument.enableLegacyMode();
                 setPitchbendTrackingMode (juce::MPEInstrument::allNotesOnChannel);
             }
         }
@@ -1458,9 +1458,8 @@ void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
         SCOPED_REALTIME_CHECK
 
         // find the tempo
-        double now = fc.editTime;
-        currentPos.setTime (now);
-        currentTempo = float (currentPos.getCurrentTempo().bpm);
+        currentPos.set (fc.editTime.getStart());
+        currentTempo = float (currentPos.getTempo());
 
         // Handle all notes off first
         if (fc.bufferForMidiMessages != nullptr)
@@ -1807,4 +1806,4 @@ float FourOscPlugin::paramValue (AutomatableParameter::Ptr param)
     return param->valueRange.convertFrom0to1 (smoothItr->second.getCurrentValue());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

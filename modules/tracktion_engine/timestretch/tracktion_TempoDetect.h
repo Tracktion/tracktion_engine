@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #ifdef __clang__
@@ -117,7 +117,7 @@ public:
         return bpm = bpmDetect.getBpm();
     }
 
-    void processSection (const float** const inputSamples, int numSamples)
+    void processSection (const float* const* inputSamples, int numSamples)
     {
         AudioScratchBuffer scratch (1, numChannels * numSamples);
         float* interleaved = scratch.buffer.getWritePointer (0);
@@ -139,4 +139,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoDetect)
 };
 
-}
+}} // namespace tracktion { inline namespace engine

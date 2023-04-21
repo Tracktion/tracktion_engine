@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** An Node that mixes a sequence of clips of other nodes.
@@ -19,11 +19,11 @@ namespace tracktion_engine
     It initialises and releases its inputs as required according to its current
     play position.
 */
-class CombiningNode final : public tracktion_graph::Node,
+class CombiningNode final : public tracktion::graph::Node,
                             public TracktionEngineNode
 {
 public:
-    CombiningNode (ProcessState&);
+    CombiningNode (EditItemID, ProcessState&);
     ~CombiningNode() override;
 
     //==============================================================================
@@ -34,12 +34,21 @@ public:
 
         Any nodes passed-in will be deleted by this node when required.
     */
-    void addInput (std::unique_ptr<Node>, EditTimeRange);
+    void addInput (std::unique_ptr<Node>, TimeRange);
+
+    /** Returns the number of inputs added. */
+    int getNumInputs() const;
+
+    /** Returns the inputs that have been added.
+        N.B. This is a bit of a temporary hack to ensure WaveNodes can access previous
+        Nodes that have been added via a CombinngNode. This will be cleaned up in the future.
+    */
+    std::vector<Node*> getInternalNodes() override;
 
     //==============================================================================
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) override;
     void process (ProcessContext&) override;
@@ -47,17 +56,21 @@ public:
     size_t getAllocatedBytes() const override;
 
 private:
+    const EditItemID itemID;
+    
     struct TimedNode;
     juce::OwnedArray<TimedNode> inputs;
     juce::OwnedArray<juce::Array<TimedNode*>> groups;
     std::atomic<bool> isReadyToProcessBlock { false };
     choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
+    MidiMessageArray noteOffEventsToSend;
 
-    tracktion_graph::NodeProperties nodeProperties;
+    tracktion::graph::NodeProperties nodeProperties;
 
-    void prefetchGroup (juce::Range<int64_t>, EditTimeRange);
+    void prefetchGroup (juce::Range<int64_t>, TimeRange);
+    void queueNoteOffsForClipsNoLongerPresent (const CombiningNode& oldNode);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

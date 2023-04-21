@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace NovationRemoteSL
@@ -67,7 +67,7 @@ void NovationRemoteSl::initialiseDevice (bool)
         param[i].clear();
     }
 
-    sendMidiArray (NovationRemoteSL::cmdOn);
+    sendMidiArray (0, NovationRemoteSL::cmdOn);
 
     clearLeft();
     clearRight();
@@ -84,10 +84,10 @@ void NovationRemoteSl::shutDownDevice()
 
     clearAllLights();
 
-    sendMidiArray (NovationRemoteSL::cmdOff);
+    sendMidiArray (0, NovationRemoteSL::cmdOff);
 }
 
-void NovationRemoteSl::setRightMode(RightMode rm)
+void NovationRemoteSl::setRightMode (RightMode rm)
 {
     auto m = juce::MidiMessage::controllerEvent (1, 0x55, 0);
 
@@ -99,7 +99,7 @@ void NovationRemoteSl::setRightMode(RightMode rm)
         case rmSolo: m = juce::MidiMessage::controllerEvent (1, 0x57, 0); break;
     }
 
-    sendMidiCommandToController (m);
+    sendMidiCommandToController (0, m);
 
     rightMode = rm;
 
@@ -111,16 +111,16 @@ void NovationRemoteSl::setRightMode(RightMode rm)
         case rmSolo: m = juce::MidiMessage::controllerEvent (1, 0x57, 1); break;
     }
 
-    sendMidiCommandToController (m);
+    sendMidiCommandToController (0, m);
     refreshRight(false);
 }
 
-void NovationRemoteSl::setLeftMode(LeftMode lm)
+void NovationRemoteSl::setLeftMode (LeftMode lm)
 {
     switch (leftMode)
     {
-        case lmParam1: sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x51, 0)); break;
-        case lmParam2: sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x53, 0)); break;
+        case lmParam1: sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x51, 0)); break;
+        case lmParam2: sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x53, 0)); break;
         default: break;
     }
 
@@ -140,8 +140,8 @@ void NovationRemoteSl::setLeftMode(LeftMode lm)
 
     switch (leftMode)
     {
-        case lmParam1: sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x51, 1)); break;
-        case lmParam2: sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x53, 1)); break;
+        case lmParam1: sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x51, 1)); break;
+        case lmParam2: sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x53, 1)); break;
         default: break;
     }
 
@@ -152,7 +152,7 @@ void NovationRemoteSl::updateMiscFeatures()
 {
 }
 
-void NovationRemoteSl::acceptMidiMessage (const juce::MidiMessage& m)
+void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -430,17 +430,18 @@ void NovationRemoteSl::acceptMidiMessage (const juce::MidiMessage& m)
 
 void NovationRemoteSl::moveFader (int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
+    
     level[channelNum] = volumeFaderPositionToDB (newSliderPos);
 
     if (rightMode == rmVol)
         refreshRight (false);
 }
 
-void NovationRemoteSl::moveMasterLevelFader (float, float) {}
-void NovationRemoteSl::moveAux (int, const char*, float) {}
-
 void NovationRemoteSl::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
+    
     pan[channelNum] = newPan;
 
     if (rightMode == rmPan)
@@ -467,7 +468,7 @@ void NovationRemoteSl::playStateChanged (bool) {}
 void NovationRemoteSl::recordStateChanged (bool isRecording)
 {
     if (online)
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x4C, isRecording ? 1 : 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x4C, isRecording ? 1 : 0));
 }
 
 void NovationRemoteSl::automationReadModeChanged (bool) {}
@@ -484,19 +485,10 @@ void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
         refreshLeft (true);
 }
 
-void NovationRemoteSl::channelLevelChanged (int, float) {}
-void NovationRemoteSl::trackSelectionChanged (int, bool) {}
-void NovationRemoteSl::trackRecordEnabled (int, bool) {}
-void NovationRemoteSl::masterLevelsChanged (float, float) {}
-void NovationRemoteSl::timecodeChanged (int, int, int, int, bool, bool) {}
-void NovationRemoteSl::clickOnOffChanged (bool) {}
-void NovationRemoteSl::snapOnOffChanged (bool) {}
-void NovationRemoteSl::loopOnOffChanged (bool) {}
-void NovationRemoteSl::slaveOnOffChanged (bool) {}
-void NovationRemoteSl::punchOnOffChanged (bool) {}
-
 void NovationRemoteSl::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
+    ControlSurface::parameterChanged (parameterNumber, newValue);
+    
     param[parameterNumber] = newValue;
 
     if (leftMode == lmParam1 || leftMode == lmParam2)
@@ -511,7 +503,7 @@ void NovationRemoteSl::clearParameter (int parameterNumber)
         refreshRight (false);
 }
 
-bool NovationRemoteSl::wantsMessage (const juce::MidiMessage& m)
+bool NovationRemoteSl::wantsMessage (int, const juce::MidiMessage& m)
 {
     if (m.isController())
     {
@@ -575,7 +567,7 @@ void NovationRemoteSl::setLock (bool l, bool w)
     if (isLocked != l || wasLocked != w)
     {
         if (online)
-            sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x50, (l || w) ? 1 : 0));
+            sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x50, (l || w) ? 1 : 0));
 
         isLocked  = l;
         wasLocked = w;
@@ -585,7 +577,7 @@ void NovationRemoteSl::setLock (bool l, bool w)
 void NovationRemoteSl::clearLeft()
 {
     if (online)
-        sendMidiArray (NovationRemoteSL::cmdClearLeft);
+        sendMidiArray (0, NovationRemoteSL::cmdClearLeft);
 
     screenContents[0] = juce::String::repeatedString (" ", 8 * 9);
     screenContents[2] = juce::String::repeatedString (" ", 8 * 9);
@@ -594,7 +586,7 @@ void NovationRemoteSl::clearLeft()
 void NovationRemoteSl::clearRight()
 {
     if (online)
-        sendMidiArray (NovationRemoteSL::cmdClearRight);
+        sendMidiArray (0, NovationRemoteSL::cmdClearRight);
 
     screenContents[1] = juce::String::repeatedString (" ", 8 * 9);
     screenContents[3] = juce::String::repeatedString (" ", 8 * 9);
@@ -604,15 +596,15 @@ void NovationRemoteSl::clearAllLights()
 {
     if (online)
     {
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x4C, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x50, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x51, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x52, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x53, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x54, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x55, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x56, 0));
-        sendMidiCommandToController (juce::MidiMessage::controllerEvent (1, 0x57, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x4C, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x50, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x51, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x52, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x53, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x54, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x55, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x56, 0));
+        sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (1, 0x57, 0));
     }
 }
 
@@ -816,7 +808,7 @@ void NovationRemoteSl::drawString (const juce::String& s, int panel)
 
     buffer[len - 1] = 0xF7;
 
-    sendMidiCommandToController (buffer, (int) len);
+    sendMidiCommandToController (0, buffer, (int) len);
 
     screenContents[panel - 1] = s;
 }
@@ -841,7 +833,4 @@ juce::String NovationRemoteSl::padAndLimit (const juce::String& s, int max)
     return {};
 }
 
-void NovationRemoteSl::markerChanged (int, const MarkerSetting&) {}
-void NovationRemoteSl::clearMarker (int) {}
-
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct RackConnection
@@ -47,7 +47,7 @@ public:
     void initialisePluginsIfNeeded (const PluginInitialisationInfo&) const;
     void deregisterInstance (RackInstance*);
 
-    void updateAutomatableParamPositions (double time);
+    void updateAutomatableParamPositions (TimePosition);
 
     double getLatencySeconds (double sampleRate, int blockSize);
 
@@ -72,10 +72,10 @@ public:
     //==============================================================================
     juce::Array<const RackConnection*> getConnections() const noexcept;
 
-    void addConnection (EditItemID source, int sourcePin,
+    bool addConnection (EditItemID source, int sourcePin,
                         EditItemID dest, int destPin);
 
-    void removeConnection (EditItemID source, int sourcePin,
+    bool removeConnection (EditItemID source, int sourcePin,
                            EditItemID dest, int destPin);
 
     // check that this doesn't create loops, etc
@@ -218,4 +218,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RackTypeList)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

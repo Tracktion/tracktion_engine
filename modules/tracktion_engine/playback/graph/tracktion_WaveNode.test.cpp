@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if GRAPH_UNIT_TESTS_WAVENODE
@@ -25,12 +25,23 @@ public:
     
     void runTest() override
     {
-        for (auto ts : tracktion_graph::test_utilities::getTestSetups (*this))
+        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
         {
-            runBasicTests (ts, true);
-            runBasicTests (ts, false);
-            runLoopedTimelineTests (ts);
+            runBasicTests<WaveNode> ("WaveNode", ts, true);
+            runBasicTests<WaveNode> ("WaveNode", ts, false);
+            runLoopedTimelineTests<WaveNode> ("WaveNode", ts);
         }
+
+       #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+        logMessage ("WaveNodeRealTime");
+
+        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
+        {
+            runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, true);
+            runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
+            runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
+        }
+       #endif
     }
 
 private:
@@ -46,18 +57,19 @@ private:
     
     //==============================================================================
     //==============================================================================
-    void runBasicTests (test_utilities::TestSetup ts, bool playSyncedToRange)
+    template<typename NodeType>
+    void runBasicTests (juce::String nodeTypeName, test_utilities::TestSetup ts, bool playSyncedToRange)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 5.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
-        tracktion_graph::PlayHead playHead;
-        playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHead playHead;
+        playHead.setScrubbingBlockLength (toSamples (0.08_tp, ts.sampleRate));
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
         if (playSyncedToRange)
@@ -65,12 +77,12 @@ private:
         else
             playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
         
-        beginTest ("WaveNode at time 0s");
+        beginTest (nodeTypeName + " at time 0s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -82,17 +94,17 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
             
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
-        beginTest ("WaveNode at time 0s, dragging");
+        beginTest (nodeTypeName + " at time 0s, dragging");
         {
             // If the user is dragging the playhead doesn't move so the whole buffer will be 0.08s of the start of the clip
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -108,15 +120,15 @@ private:
 
             playHead.setUserIsDragging (false);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
         }
 
-        beginTest ("WaveNode at time 1s - 4s");
+        beginTest (nodeTypeName + " at time 1s - 4s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 4.0),
-                                            0.0,
-                                            EditTimeRange(),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (1.0s, TimePosition (4.0s)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -128,17 +140,17 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
-        beginTest ("WaveNode at time 1s - 4s, loop every 1s");
+        beginTest (nodeTypeName + " at time 1s - 4s, loop every 1s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 4.0),
-                                            0.0,
-                                            EditTimeRange (0.0, 1.0),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (1.0s, TimePosition (4.0s)),
+                                            TimeDuration(),
+                                            TimeRange (0.0s, TimePosition (1.0s)),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -150,32 +162,33 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
     }
 
-    void runLoopedTimelineTests (test_utilities::TestSetup ts)
+    template<typename NodeType>
+    void runLoopedTimelineTests (juce::String nodeTypeName, test_utilities::TestSetup ts)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 1.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
-        beginTest ("Loop 0s-1s");
+        beginTest (nodeTypeName + " Loop 0s-1s");
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -189,16 +202,16 @@ private:
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
 
-        beginTest ("Loop 1s-2s");
+        beginTest (nodeTypeName + " Loop 1s-2s");
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
-            auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 1.0 + fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+            auto node = makeNode<NodeType> (sinAudioFile,
+                                            TimeRange (1.0s, TimeDuration::fromSeconds (fileLengthSeconds) + 1.0s),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -213,7 +226,7 @@ private:
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
     }
 };
@@ -222,4 +235,4 @@ static WaveNodeTests waveNodeTests;
 
 #endif
 
-}
+}} // namespace tracktion { inline namespace engine

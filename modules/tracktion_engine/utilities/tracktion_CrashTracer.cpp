@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct CrashStackTracer::CrashTraceThreads
@@ -227,4 +227,4 @@ juce::File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage& property
     return folder.getChildFile ("deadMansPedal");
 }
 
-}
+}} // namespace tracktion { inline namespace engine

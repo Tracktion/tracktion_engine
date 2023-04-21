@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** */
@@ -24,7 +24,7 @@ public:
     virtual MidiOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
     //==============================================================================
-    juce::String prepareToPlay (Edit*, double start);
+    juce::String prepareToPlay (Edit*, TimePosition);
     bool start();
     void stop();
 
@@ -52,7 +52,7 @@ public:
     void fireMessage (const juce::MidiMessage&);
     void sendNoteOffMessages();
 
-    double getDeviceDelay() const noexcept;
+    TimeDuration getDeviceDelay() const noexcept;
 
     int getPreDelayMs() const noexcept                  { return preDelayMillisecs; }
     void setPreDelayMs (int);
@@ -129,20 +129,20 @@ public:
     MidiOutputDeviceInstance (MidiOutputDevice&, EditPlaybackContext&);
     ~MidiOutputDeviceInstance();
 
-    juce::String prepareToPlay (double start, bool shouldSendMidiTC);
+    juce::String prepareToPlay (TimePosition start, bool shouldSendMidiTC);
     bool start();
     void stop();
 
     MidiOutputDevice& getMidiOutput() const noexcept     { return static_cast<MidiOutputDevice&> (owner); }
 
-    void mergeInMidiMessages (const MidiMessageArray&, double editTime);
-    void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, EditTimeRange streamTime);
+    void mergeInMidiMessages (const MidiMessageArray&, TimePosition editTime);
+    void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, TimeRange streamTime);
     MidiMessageArray& getPendingMessages() { return midiMessages; }
 
     // For MidiOutputDevices that aren't connected to a physical piece of hardware,
     // they should handle sending midi messages to their logical device now
     // and clear the input buffer
-    virtual bool sendMessages (MidiMessageArray&, double /*editTime*/) { return false; }
+    virtual bool sendMessages (MidiMessageArray&, TimePosition /*editTime*/) { return false; }
 
 private:
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;
@@ -156,4 +156,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiOutputDeviceInstance)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

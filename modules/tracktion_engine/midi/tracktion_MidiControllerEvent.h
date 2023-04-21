@@ -8,15 +8,15 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class MidiControllerEvent
 {
 public:
-    static juce::ValueTree createControllerEvent (double beat, int controllerType, int controllerValue);
-    static juce::ValueTree createControllerEvent (double beat, int controllerType, int controllerValue, int metadata);
-    static juce::ValueTree createControllerEvent (const MidiControllerEvent&, double beat);
+    static juce::ValueTree createControllerEvent (BeatPosition, int controllerType, int controllerValue);
+    static juce::ValueTree createControllerEvent (BeatPosition, int controllerType, int controllerValue, int metadata);
+    static juce::ValueTree createControllerEvent (const MidiControllerEvent&, BeatPosition);
 
     MidiControllerEvent (const juce::ValueTree&);
     MidiControllerEvent (MidiControllerEvent&&) = default;
@@ -31,11 +31,12 @@ public:
     void setMetadata (int metaValue, juce::UndoManager*);
 
     //==============================================================================
-    double getBeatPosition() const noexcept                         { return beatNumber; }
-    void setBeatPosition (double newBeatNumber, juce::UndoManager*);
+    BeatPosition getBeatPosition() const noexcept                         { return beatNumber; }
+    void setBeatPosition (BeatPosition, juce::UndoManager*);
 
     /** This takes into account quantising, groove templates, clip offset, etc */
-    double getEditTime (const MidiClip&) const;
+    BeatPosition getEditBeats (const MidiClip&) const;
+    TimePosition getEditTime (const MidiClip&) const;
 
     juce::String getLevelDescription (MidiClip*) const;
 
@@ -67,7 +68,7 @@ private:
     //==============================================================================
     friend class MidiList;
 
-    double beatNumber;
+    BeatPosition beatNumber;
     int type, value, metadata;
 
     void updatePropertiesFromState() noexcept;
@@ -78,4 +79,4 @@ private:
     JUCE_LEAK_DETECTOR (MidiControllerEvent)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

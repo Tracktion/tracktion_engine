@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MackieMCU::MackieMCU (ExternalControllerManager& ecm)  : ControlSurface (ecm)
@@ -299,12 +299,12 @@ void MackieMCU::auxTimerCallback()
     }
 }
 
-void MackieMCU::acceptMidiMessage (const juce::MidiMessage& m)
+void MackieMCU::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
-    acceptMidiMessage (deviceIdx, m);
+    acceptMidiMessageInt (deviceIdx, m);
 }
 
-void MackieMCU::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
+void MackieMCU::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& m)
 {
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];
@@ -1049,6 +1049,8 @@ void MackieMCU::moveFaderInt (int dev, int channelNum, float newSliderPos)
 
 void MackieMCU::moveFader (int channelNum_, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum_, newSliderPos);
+
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1063,6 +1065,8 @@ void MackieMCU::moveFader (int channelNum_, float newSliderPos)
 
 void MackieMCU::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
 {
+    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    
     moveFaderInt (deviceIdx, 8, (newLeftSliderPos + newRightSliderPos) * 0.5f);
 }
 
@@ -1077,6 +1081,8 @@ void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
 
 void MackieMCU::movePanPot (int channelNum_, float newPan)
 {
+    ControlSurface::movePanPot (channelNum_, newPan);
+    
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1093,6 +1099,8 @@ juce::String MackieMCU::auxString (int chan) const
 
 void MackieMCU::moveAux (int channelNum_, const char* bus, float newPos)
 {
+    ControlSurface::moveAux (channelNum_, bus, newPos);
+    
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1207,6 +1215,8 @@ void MackieMCU::automationWriteModeChanged (bool isWriting)
 
 void MackieMCU::parameterChanged (int parameterNumber_, const ParameterSetting& newValue)
 {
+    ControlSurface::parameterChanged (parameterNumber_, newValue);
+    
     int parameterNumber = parameterNumber_ % 8;
     int dev             = parameterNumber_ / 8;
 
@@ -1269,14 +1279,14 @@ void MackieMCU::faderBankChanged (int newStartChannelNumber, const juce::StringA
     }
 }
 
-void MackieMCU::channelLevelChanged (int channelNum_, float level)
+void MackieMCU::channelLevelChanged (int channelNum_, float l , float r)
 {
     int channel = channelNum_ % 8;
     int dev     = channelNum_ / 8;
 
     if (assignmentMode == PanMode)
     {
-        auto newValue = (uint8_t) juce::jlimit (0, 13, juce::roundToInt (13.0f * level));
+        auto newValue = (uint8_t) juce::jlimit (0, 13, juce::roundToInt (13.0f * std::max (l, r)));
 
         if (lastChannelLevels[channelNum_] != newValue)
         {
@@ -1385,7 +1395,7 @@ void MackieMCU::sendMidiCommandToController (int devIdx, const unsigned char* mi
 {
     if (devIdx == deviceIdx)
     {
-        ControlSurface::sendMidiCommandToController (midiData, numBytes);
+        ControlSurface::sendMidiCommandToController (0, midiData, numBytes);
     }
     else
     {
@@ -1393,7 +1403,7 @@ void MackieMCU::sendMidiCommandToController (int devIdx, const unsigned char* mi
         {
             if (extenders[i]->getDeviceIndex() == devIdx)
             {
-                extenders[i]->sendMidiCommandToController (midiData, numBytes);
+                extenders[i]->sendMidiCommandToController (0, midiData, numBytes);
                 break;
             }
         }
@@ -1462,4 +1472,4 @@ void MackieMCU::undoStatusChanged (bool undo, bool redo)
     lightUpButton (deviceIdx, 0x4f, redo);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

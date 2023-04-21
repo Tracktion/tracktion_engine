@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -69,6 +69,8 @@ public:
     bool deleteFile() const;
     static bool deleteFiles (Engine&, const juce::Array<juce::File>& files);
 
+    bool moveToTrash() const;
+
     //==============================================================================
     bool isNull() const noexcept                { return hash == 0; }
     bool isValid() const;
@@ -99,4 +101,4 @@ private:
     HashCode hash = 0;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

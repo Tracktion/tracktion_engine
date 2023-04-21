@@ -8,14 +8,14 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
     class Node;
     class PlayHead;
     class PlayHeadState;
-}
+}}
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class NodeRenderContext;
@@ -50,8 +50,8 @@ public:
         int blockSizeForAudio = 44100;
         double sampleRateForAudio = 44100.0;
 
-        EditTimeRange time;
-        double endAllowance = 0;
+        TimeRange time;
+        TimeDuration endAllowance;
 
         bool createMidiFile = false;
         bool trimSilenceAtEnds = false;
@@ -91,9 +91,9 @@ public:
         
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
-                    std::unique_ptr<tracktion_graph::Node>,
-                    std::unique_ptr<tracktion_graph::PlayHead>,
-                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                    std::unique_ptr<tracktion::graph::Node>,
+                    std::unique_ptr<tracktion::graph::PlayHead>,
+                    std::unique_ptr<tracktion::graph::PlayHeadState>,
                     std::unique_ptr<ProcessState>,
                     std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
@@ -115,9 +115,9 @@ public:
 
     private:
         //==============================================================================
-        std::unique_ptr<tracktion_graph::Node> graphNode;
-        std::unique_ptr<tracktion_graph::PlayHead> playHead;
-        std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+        std::unique_ptr<tracktion::graph::Node> graphNode;
+        std::unique_ptr<tracktion::graph::PlayHead> playHead;
+        std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
         std::unique_ptr<ProcessState> processState;
         std::unique_ptr<NodeRenderContext> nodeRenderContext;
 
@@ -152,7 +152,7 @@ public:
     static bool renderToFile (const juce::String& taskDescription,
                               const juce::File& outputFile,
                               Edit& edit,
-                              EditTimeRange range,
+                              TimeRange range,
                               const juce::BigInteger& tracksToDo,
                               bool usePlugins = true,
                               juce::Array<Clip*> clips = {},
@@ -170,9 +170,9 @@ public:
 
     /** Renders a section of an edit to measure various details about its audio content */
     static Statistics measureStatistics (const juce::String& taskDescription,
-                                         Edit& edit, EditTimeRange range,
+                                         Edit& edit, TimeRange range,
                                          const juce::BigInteger& tracksToDo,
-                                         int blockSizeForAudio);
+                                         int blockSizeForAudio, double sampleRateForAudio = 44100.0);
 
     //==============================================================================
     struct RenderResult
@@ -200,4 +200,4 @@ public:
     };
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static Engine* instance = nullptr;
@@ -113,7 +113,7 @@ Engine::~Engine()
 
 juce::String Engine::getVersion()
 {
-    return "Tracktion Engine v1.2.0";
+    return "Tracktion Engine v2.0.0";
 }
 
 juce::Array<Engine*> Engine::getEngines()
@@ -310,4 +310,9 @@ void Engine::destroyFifoBundle(const juce::Uuid& p_FifoID)
 }
 // BEATCONNECT MODIFICATION END
 
+bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
+{
+    return p.edit.shouldLoadPlugins();
 }
+
+}} // namespace tracktion { inline namespace engine

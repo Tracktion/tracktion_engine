@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -25,14 +25,14 @@ public:
     void checkForDuplicates (MarkerClip&, bool changeOthers);
 
     /** Creates a MarkerClip with using getNewMarkerMode(). */
-    MarkerClip::Ptr createMarker (int number, double pos, double length, SelectionManager*);
-    MarkerClip::Ptr createMarker (int number, double pos, double length, Clip::SyncType, SelectionManager*);
+    MarkerClip::Ptr createMarker (int number, TimePosition, TimeDuration, SelectionManager*);
+    MarkerClip::Ptr createMarker (int number, TimePosition, TimeDuration, Clip::SyncType, SelectionManager*);
 
     Clip::SyncType getNewMarkerMode() const;
 
     MarkerClip* getMarkerByID (int);
-    MarkerClip* getNextMarker (double time);
-    MarkerClip* getPrevMarker (double time);
+    MarkerClip* getNextMarker (TimePosition);
+    MarkerClip* getPrevMarker (TimePosition);
 
     juce::ReferenceCountedArray<MarkerClip> getMarkers() const;
 
@@ -50,4 +50,4 @@ private:
     void valueTreeRedirected (juce::ValueTree&) override {}
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

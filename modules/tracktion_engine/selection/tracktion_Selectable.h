@@ -9,7 +9,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class SelectableClass;
@@ -237,4 +237,4 @@ private:
     mutable juce::Array<SelectableClass*> classes;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

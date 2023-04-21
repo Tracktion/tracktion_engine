@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Holds a sequence of plugins.
@@ -29,6 +29,7 @@ public:
     void releaseObjects();
 
     void setTrackAndClip (Track*, Clip*);
+    void updateTrackProperties();
 
     //==============================================================================
     Plugin** begin() const;
@@ -90,4 +91,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginList)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

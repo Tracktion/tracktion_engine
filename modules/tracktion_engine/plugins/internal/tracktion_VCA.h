@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -30,7 +30,7 @@ public:
     void setSliderPos (float position);
     void muteOrUnmute();
 
-    float updateAutomationStreamAndGetVolumeDb (double time);
+    float updateAutomationStreamAndGetVolumeDb (TimePosition);
 
     //==============================================================================
     static const char* xmlTypeName;
@@ -59,4 +59,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VCAPlugin)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct MidiMessageArray
@@ -136,10 +136,11 @@ struct MidiMessageArray
 
         messages.ensureStorageAllocated (messages.size() + source.size());
 
-        for (auto& m : source)
+        for (const auto& m : source)
         {
-            messages.add (m);
-            messages.getReference (messages.size() - 1).addToTimeStamp (delta);
+            auto copy = MidiMessageWithSource (m);
+            copy.addToTimeStamp (delta);
+            messages.add (std::move (copy));
         }
     }
 
@@ -237,7 +238,7 @@ struct MidiMessageArray
 
     void sortByTimestamp()
     {
-        std::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
+        choc::sorting::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
         {
             auto t1 = a.getTimeStamp();
             auto t2 = b.getTimeStamp();
@@ -263,4 +264,4 @@ private:
     juce::Array<MidiMessageWithSource> messages;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion

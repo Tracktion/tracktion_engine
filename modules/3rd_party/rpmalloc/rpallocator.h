@@ -94,9 +94,9 @@ namespace details
         ScopedRPMallocInitialiser scopedRPMallocInitialiser;
     
     private:
-        static tracktion_graph::RealTimeSpinLock& getFinaliseMutex()
+        static tracktion::graph::RealTimeSpinLock& getFinaliseMutex()
         {
-            static tracktion_graph::RealTimeSpinLock m;
+            static tracktion::graph::RealTimeSpinLock m;
             return m;
         }
     };
@@ -170,3 +170,8 @@ private:
         thread_local details::ScopedRPThreadFinaliser init;
     }
 };
+
+template <typename T, typename U>
+bool operator== (const rpallocator <T>&, const rpallocator <U>&) { return true; }
+template <typename T, typename U>
+bool operator!= (const rpallocator <T>&, const rpallocator <U>&) { return false; }

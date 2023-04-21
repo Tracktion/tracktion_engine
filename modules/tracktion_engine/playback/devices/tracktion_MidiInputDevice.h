@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** */
@@ -70,7 +70,7 @@ public:
     enum class MergeMode { always, never, optional };
 
     Clip* addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack&, juce::MidiMessageSequence&,
-                                       EditTimeRange position, MergeMode, MidiChannel, SelectionManager*);
+                                       TimeRange position, MergeMode, MidiChannel, SelectionManager*);
 
     juce::MidiKeyboardState keyboardState;
 
@@ -145,4 +145,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDevice)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

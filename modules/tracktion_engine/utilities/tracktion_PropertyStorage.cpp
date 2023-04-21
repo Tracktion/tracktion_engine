@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static juce::File getApplicationSettingsFile()
@@ -73,6 +73,8 @@ juce::String PropertyStorage::settingToString (SettingID setting)
         case SettingID::defaultWaveInDevice:           return "defaultWaveInDevice";
         case SettingID::externControlIn:               return "externControlIn";
         case SettingID::externControlOut:              return "externControlOut";
+        case SettingID::externControlNum:              return "externControlNum";
+        case SettingID::externControlMain:             return "externControlMain";
         case SettingID::externControlShowSelection:    return "externControlShowSelection";
         case SettingID::externControlSelectionColour:  return "externControlSelectionColour";
         case SettingID::externControlEnable:           return "externControlEnable";
@@ -267,4 +269,4 @@ juce::File PropertyStorage::getDefaultLoadSaveDirectory (ProjectItem::Category)
     return juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

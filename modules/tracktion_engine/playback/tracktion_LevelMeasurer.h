@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct DbTimePair
@@ -94,14 +94,15 @@ public:
     void addClient (Client&);
     void removeClient (Client&);
 
-    void setLevelCache (float dB) noexcept              { levelCache = dB; }
-    float getLevelCache() const noexcept                { return levelCache; }
+    void setLevelCache (float dBL, float dBR) noexcept      { levelCacheL = dBL; levelCacheR = dBR; }
+    std::pair<float, float> getLevelCache() const noexcept  { return { levelCacheL, levelCacheR }; }
 
 private:
     Mode mode = peakMode;
     int numActiveChannels = 1;
     bool showMidi = false;
-    float levelCache = -100.0f;
+    float levelCacheL = -100.0f;
+    float levelCacheR = -100.0f;
 
     juce::Array<Client*> clients;
     juce::CriticalSection clientsMutex;
@@ -129,4 +130,4 @@ public:
     juce::AudioBuffer<float> sumBuffer;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

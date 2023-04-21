@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AutomationCurve
@@ -29,18 +29,18 @@ public:
     //==============================================================================
     struct AutomationPoint
     {
-        AutomationPoint() noexcept  {}
+        AutomationPoint() noexcept = default;
 
-        AutomationPoint (double t, float v, float c) noexcept
+        AutomationPoint (TimePosition t, float v, float c) noexcept
             : time (t), value (v), curve (c)
         {
             jassert (c >= -1.0 && c <= 1.0);
-            jassert (t >= 0);
+            jassert (t.inSeconds() >= 0);
         }
 
         juce::ValueTree toValueTree() const;
 
-        double time = 0;
+        TimePosition time;
         float value = 0, curve = 0;
 
         bool operator< (const AutomationPoint& other) const     { return time < other.time; }
@@ -48,11 +48,11 @@ public:
 
     //==============================================================================
     int getNumPoints() const noexcept;
-    double getLength() const;
+    TimeDuration getLength() const;
     juce::Range<float> getValueLimits() const;
 
     AutomationPoint getPoint (int index) const noexcept;
-    double getPointTime (int index) const noexcept;
+    TimePosition getPointTime (int index) const noexcept;
     float getPointValue (int index) const noexcept;
     float getPointCurve (int index) const noexcept;
 
@@ -60,48 +60,48 @@ public:
     CurvePoint getBezierPoint (int index) const noexcept;
     void getBezierEnds (int index, double& x1, float& y1, double& x2, float& y2) const noexcept;
 
-    float getValueAt (double time) const;
+    float getValueAt (TimePosition) const;
 
-    int indexBefore (double time) const;
-    int nextIndexAfter (double time) const;
+    int indexBefore (TimePosition) const;
+    int nextIndexAfter (TimePosition) const;
 
     // returns the index of the next index after this point, xToYRatio is 1 scren unit in value / 1 screen unit in time
-    int getNearestPoint (double& t, float& v, double xToYRatio) const;
+    int getNearestPoint (TimePosition&, float& v, double xToYRatio) const;
 
-    int countPointsInRegion (EditTimeRange) const;
+    int countPointsInRegion (TimeRange) const;
 
     //==============================================================================
     void clear();
 
     // returns index of new point
-    int addPoint (double time, float value, float curve);
+    int addPoint (TimePosition, float value, float curve);
     void removePoint (int index);
-    void removePointsInRegion (EditTimeRange);
-    void removeRegionAndCloseGap (EditTimeRange);
-    void removeRedundantPoints (EditTimeRange);
+    void removePointsInRegion (TimeRange);
+    void removeRegionAndCloseGap (TimeRange);
+    void removeRedundantPoints (TimeRange);
 
-    juce::Array<AutomationPoint> getPointsInRegion (EditTimeRange range) const;
+    juce::Array<AutomationPoint> getPointsInRegion (TimeRange) const;
 
     // returns the new index of the point, which may have changed
-    int movePoint (int index, double newTime, float newValue, bool removeInterveningPoints);
+    int movePoint (int index, TimePosition, float newValue, bool removeInterveningPoints);
 
-    void setPointTime (int index, double newTime);
+    void setPointTime (int index, TimePosition);
     void setPointValue (int index, float newValue);
     void setCurveValue (int index, float newCurve);
 
     //==============================================================================
     void mergeOtherCurve (const AutomationCurve& source,
-                          EditTimeRange destRange,
-                          double sourceStartTime,
-                          double fadeLength,
+                          TimeRange destRange,
+                          TimePosition sourceStartTime,
+                          TimeDuration fadeLength,
                           bool leaveOpenAtStart,
                           bool leaveOpenEnded);
 
-    void simplify (EditTimeRange range, double minTimeDifference, float minValueDifference);
+    void simplify (TimeRange, double minTimeDifference, float minValueDifference);
     void rescaleAllTimes (double factor);
-    void addToAllTimes (double delta);
-    void rescaleValues (float factor, EditTimeRange range);
-    void addToValues (float valueDelta, EditTimeRange range);
+    void addToAllTimes (TimeDuration delta);
+    void rescaleValues (float factor, TimeRange);
+    void addToValues (float valueDelta, TimeRange);
 
     static double getBezierXfromT (double t, double x1, double xb, double x2);
     static float getBezierYFromX (double t, double x1, float y1, double xb, float yb, double x2, float y2);
@@ -114,7 +114,7 @@ private:
     AutomatableParameter* ownerParam = nullptr;
 
     juce::UndoManager* getUndoManager() const;
-    void addPointAtIndex (int index, double t, float v, float c);
+    void addPointAtIndex (int index, TimePosition, float v, float c);
     void checkParenthoodStatus();
 
     JUCE_LEAK_DETECTOR (AutomationCurve)
@@ -122,6 +122,6 @@ private:
 
 //==============================================================================
 /** Removes points from the curve to simplfy it and returns the number of points removed. */
-int simplify (AutomationCurve&, int strength, EditTimeRange range);
+int simplify (AutomationCurve&, int strength, TimeRange);
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

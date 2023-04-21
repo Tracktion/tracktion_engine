@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class C4Translator;
@@ -26,17 +26,16 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void currentSelectionChanged (juce::String) override;
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
     void moveAux (int channelNum, const char* bus, float newPos) override;
     void clearAux (int channel) override;
-    void channelLevelChanged (int channel, float level) override;
+    void channelLevelChanged (int channel, float l, float r) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
     void trackSelectionChanged (int channel, bool isSelected) override;
@@ -104,4 +103,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MackieC4)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

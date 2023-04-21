@@ -51,13 +51,17 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
         fields->setProperty ("benchmark_name",              juce::String (r.description.name).quoted ('\''));
         fields->setProperty ("benchmark_description",       juce::String (r.description.description).quoted ('\''));
         fields->setProperty ("benchmark_platform",          juce::String (r.description.platform).quoted ('\''));
-        fields->setProperty ("benchmark_ticks_per_s",       static_cast<int64> (r.ticksPerSecond));
-        fields->setProperty ("benchmark_duration",          r.duration);
-        fields->setProperty ("benchmark_duration_min",      r.min);
-        fields->setProperty ("benchmark_duration_max",      r.max);
-        fields->setProperty ("benchmark_duration_mean",     r.mean);
-        fields->setProperty ("benchmark_duration_variance", r.variance);
         fields->setProperty ("benchmark_time",              r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
+        fields->setProperty ("benchmark_duration",          r.totalSeconds);
+        fields->setProperty ("benchmark_duration_min",      r.minSeconds);
+        fields->setProperty ("benchmark_duration_max",      r.maxSeconds);
+        fields->setProperty ("benchmark_duration_mean",     r.meanSeconds);
+        fields->setProperty ("benchmark_duration_variance", r.varianceSeconds);
+        fields->setProperty ("benchmark_cycles_total",      (juce::int64) r.totalCycles);
+        fields->setProperty ("benchmark_cycles_min",        (juce::int64) r.minCycles);
+        fields->setProperty ("benchmark_cycles_max",        (juce::int64) r.maxCycles);
+        fields->setProperty ("benchmark_cycles_mean",       (juce::int64) r.meanCycles);
+        fields->setProperty ("benchmark_cycles_variance",   r.varianceCycles);
 
         records.add (fields.get());
     }
@@ -95,7 +99,8 @@ int main (int, char**)
     for (const auto& r : results)
         std::cout << r.description.name << ", " << r.description.category
                   << "\n\t" << r.description.description
-                  << "\n\t" << r.duration << "\t(min:" << r.min << ", max: " << r.max  << ", mean: " << r.mean << ", var: " << r.variance << ")\n";
+                  << "\n\t[seconds]\t" << r.totalSeconds << "\t(min: " << r.minSeconds << ", max: " << r.maxSeconds  << ", mean: " << r.meanSeconds << ", var: " << r.varianceSeconds << ")"
+                  << "\n\t[cycles]\t" << r.totalCycles << "\t(min: " << r.minCycles << ", max: " << r.maxCycles  << ", mean: " << r.meanCycles << ", var: " << r.varianceCycles << ")\n\n";
 
     if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
                                std::move (results)))

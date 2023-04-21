@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct VolAutomatableParameter : public AutomatableParameter
@@ -168,7 +168,7 @@ void VolumeAndPanPlugin::deinitialise()
 }
 
 //==============================================================================
-static float getParentVcaDb (Track& track, double time)
+static float getParentVcaDb (Track& track, TimePosition time)
 {
     float posOffset = 0.0f;
 
@@ -196,7 +196,7 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             const int numChansIn = fc.destBuffer->getNumChannels();
             const float vcaPosDelta = vcaTrack != nullptr
-                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))
+                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime.getStart()))
                                         - decibelsToVolumeFaderPosition (0.0f)
                                     : 0.0f;
 
@@ -306,4 +306,4 @@ void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree&
         p->updateFromAttachedValue();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

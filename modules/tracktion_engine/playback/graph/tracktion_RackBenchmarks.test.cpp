@@ -15,10 +15,10 @@
 #include "tracktion_BenchmarkUtilities.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -33,12 +33,12 @@ public:
     void runTest() override
     {
         using namespace benchmark_utilities;
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
 
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         runRackMixBusTest (engine, ts);
     }
@@ -46,7 +46,7 @@ public:
     void runRackMixBusTest (Engine& engine, test_utilities::TestSetup ts)
     {
         using namespace benchmark_utilities;
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         
         static constexpr unsigned char RackMixBus_zip[] =
         { 120,156,237,157,207,115,220,70,118,199,135,146,70,178,189,187,149,181,55,169,178,47,217,57,165,188,135,213,162,127,162,145,67,74,20,73,123,89,22,127,132,164,180,155,75,92,35,114,36,77,76,114,88,195,161,108,237,41,247,61,228,156,115,170,146,75,170,82,
@@ -194,9 +194,9 @@ public:
             expectGreaterOrEqual (audioTracks.size(), 8);
             
             for (int i = 0; i < 8; ++i)
-                audioTracks[i]->insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);
+                audioTracks[i]->insertMIDIClip (TimeRange (0.0s, TimeDuration::fromSeconds (fileLength)), nullptr);
 
-            expectEquals (edit->getLength(), fileLength);
+            expectEquals (edit->getLength().inSeconds(), fileLength);
         }
 
         // Render single threaded first
@@ -239,6 +239,6 @@ public:
 
 static RackBenchmarks rackBenchmarks;
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 juce::File getNonExistentSiblingWithIncrementedNumberSuffix (const juce::File& file, bool addHashSymbol)
@@ -83,4 +83,4 @@ juce::var FileDragList::create (const juce::File& file, PreferredLayout peferred
     return create (files, peferredLayout);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

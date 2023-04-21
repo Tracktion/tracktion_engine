@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class CurveEditor;
@@ -20,10 +20,10 @@ struct TransparentToMouseInTrackItemComp {};
 
 struct CurvePoint
 {
-    CurvePoint() noexcept {}
-    CurvePoint (double t, float val) noexcept : time (t), value (val) {}
+    CurvePoint() = default;
+    CurvePoint (EditTime t, float val) : time (t), value (val) {}
 
-    double time = 0;
+    EditTime time;
     float value = 0;
 };
 
@@ -40,7 +40,7 @@ public:
     static bool arePointsConsecutive (const SelectableList&);
     static bool arePointsOnSameCurve (const SelectableList&);
 
-    static EditTimeRange getPointTimeRange (const SelectableList&);
+    static TimeRange getPointTimeRange (const SelectableList&);
 
     int index = 0;
     juce::Component::SafePointer<CurveEditor> editor;
@@ -74,10 +74,10 @@ public:
 
     juce::MouseCursor getMouseCursor() override;
 
-    void setTimes (double leftTime, double rightTime);
+    void setTimes (TimePosition leftTime, TimePosition rightTime);
 
-    float timeToX (double t) const;
-    double xToTime (double x) const;
+    float timeToX (TimePosition) const;
+    TimePosition xToTime (double x) const;
     float valueToY (float val) const;
     float yToValue (double y) const;
     juce::Point<float> getPosition (CurvePoint) const;
@@ -92,20 +92,20 @@ public:
     Edit& getEdit() const;
     virtual Track* getTrack()      { return {}; }
 
-    virtual double snapTime (double time, juce::ModifierKeys);
+    virtual TimePosition snapTime (TimePosition, juce::ModifierKeys);
 
-    virtual float getValueAt (double time) = 0;
-    virtual double getPointTime (int idx) = 0;
+    virtual float getValueAt (TimePosition) = 0;
+    virtual TimePosition getPointTime (int idx) = 0;
     virtual float getPointValue (int idx) = 0;
     virtual float getPointCurve (int idx) = 0;
     virtual void removePoint (int index) = 0;
-    virtual int addPoint (double time, float value, float curve) = 0;
+    virtual int addPoint (TimePosition time, float value, float curve) = 0;
     virtual int getNumPoints() = 0;
     virtual CurvePoint getBezierHandle (int idx) = 0;
     virtual CurvePoint getBezierPoint (int idx) = 0;
-    virtual int nextIndexAfter (double t) = 0;
+    virtual int nextIndexAfter (TimePosition) = 0;
     virtual void getBezierEnds (int index, double& x1out, float& y1out, double& x2out, float& y2out) = 0;
-    virtual int movePoint (int index, double newTime, float newValue, bool removeInterveningPoints) = 0;
+    virtual int movePoint (int index, TimePosition newTime, float newValue, bool removeInterveningPoints) = 0;
     virtual void setValueWhenNoPoints (float value) = 0;
     virtual CurveEditorPoint* createPoint (int idx) = 0;
     virtual int curvePoint (int index, float newCurve) = 0;
@@ -142,12 +142,12 @@ protected:
     juce::UndoManager& undoManager;
     SelectionManager& selectionManager;
     float parameterMinValue = 0, parameterRange = 1.0f;
-    double leftTime = 0, rightTime = 0;
+    TimePosition leftTime, rightTime;
     int firstIndexOnScreen = 0;
     int pointUnderMouse = -1, pointBeingMoved = -1;
     int curveUnderMouse = -1, lineUnderMouse = -1;
     bool dragged = false, movingAllPoints = false;
-    double mouseDownTime = 0;
+    TimePosition mouseDownTime;
     float mouseDownValue = 0;
     bool isCurveSelected = false;
     float mouseDownCurve = 0;
@@ -159,4 +159,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CurveEditor)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

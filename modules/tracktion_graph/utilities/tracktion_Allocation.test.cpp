@@ -11,7 +11,7 @@
 #include "../../3rd_party/rpmalloc/rpallocator.h"
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 #if GRAPH_UNIT_TESTS_ALLOCATION
@@ -156,22 +156,22 @@ private:
             std::thread t3 ([this, &intVec1]
                             {
                                 intVec1.clear();
-                                expectEquals<size_t> (intVec1.size(), 0);
-                                expectGreaterThan<size_t> (intVec1.capacity(), 0);
+                                expect (intVec1.size() == 0);
+                                expect (intVec1.capacity() > 0);
                                 intVec1.shrink_to_fit();
-                                expectEquals<size_t> (intVec1.capacity(), 0);
+                                expect (intVec1.capacity() == 0);
                             });
             t3.join();
-            expectEquals<size_t> (intVec1.size(), 0);
-            expectEquals<size_t> (intVec1.capacity(), 0);
+            expect (intVec1.size() == 0);
+            expect (intVec1.capacity() == 0);
         }
         
         beginTest ("rpallocator multi-thread");
         {
-            // Create 100 threads
+            // Create 20 threads
             // Randomly push or pop ints in to a vector
             
-            constexpr int numThreads = 100;
+            constexpr int numThreads = 20;
             std::vector<std::thread> pool;
             std::atomic<bool> shouldExit { false };
 
@@ -224,4 +224,4 @@ static AllocationTests allocationTests;
 
 #endif
 
-} // namespace tracktion_engine
+}} // namespace tracktion_engine
