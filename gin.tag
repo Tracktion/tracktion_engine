@@ -2052,6 +2052,7 @@
     <name>tracktion_AudioFileCache.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
     <filename>tracktion__AudioFileCache_8h.html</filename>
+    <class kind="struct">tracktion::engine::FallbackReader</class>
     <class kind="class">tracktion::engine::AudioFileCache</class>
     <class kind="class">tracktion::engine::AudioFileCache::Reader</class>
     <namespace>tracktion</namespace>
@@ -2070,6 +2071,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
     <filename>tracktion__AudioFileUtils_8h.html</filename>
     <class kind="struct">tracktion::engine::AudioFileUtils</class>
+    <class kind="struct">tracktion::engine::AudioFileUtils::MappedFileAndReader</class>
     <class kind="class">tracktion::engine::AudioFileUtils::EnvelopeFollower</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -2801,6 +2803,14 @@
     <class kind="class">tracktion::engine::BreakpointOscillatorModifier</class>
     <class kind="struct">tracktion::engine::BreakpointOscillatorModifier::Assignment</class>
     <class kind="struct">tracktion::engine::BreakpointOscillatorModifier::Stage</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_BufferedFileReader.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__BufferedFileReader_8h.html</filename>
+    <class kind="class">tracktion::engine::BufferedFileReader</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -6425,6 +6435,13 @@
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::graph::test_utilities</namespace>
     <member kind="function">
+      <type>void</type>
+      <name>writeToFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a5d40f4397abaca6c0c186e0962bc960c</anchor>
+      <arglist>(juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
@@ -6456,15 +6473,15 @@
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>getSinFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>a600a65c056f0e4fdea6d2a6bada3a296</anchor>
-      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+      <anchor>aff3e7fc61eb18acfe550afcf7e31fe3d</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>getSquareFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>ad4815c2a3fef14a8e008e87be8a2dc0d</anchor>
-      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+      <anchor>a13bb65070355467aebecb665ea51a28b</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -10984,6 +11001,13 @@
       <arglist>(const AudioFile &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>Reader::Ptr</type>
+      <name>createReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
+      <anchor>a94dd65def675401e6981423cbbda8f85</anchor>
+      <arglist>(const AudioFile &amp;, const std::function&lt; std::unique_ptr&lt; FallbackReader &gt;(juce::AudioFormatReader *sourceReader, juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;createFallbackReader)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>setCacheSizeSamples</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
@@ -11427,6 +11451,7 @@
     <name>tracktion::engine::AudioFileUtils</name>
     <filename>structtracktion_1_1engine_1_1AudioFileUtils.html</filename>
     <class kind="class">tracktion::engine::AudioFileUtils::EnvelopeFollower</class>
+    <class kind="struct">tracktion::engine::AudioFileUtils::MappedFileAndReader</class>
     <member kind="function" static="yes">
       <type>static juce::AudioFormatReader *</type>
       <name>createReaderFor</name>
@@ -11447,6 +11472,13 @@
       <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils.html</anchorfile>
       <anchor>a4b3f366f74b8a0a5bd646dc31325ba6e</anchor>
       <arglist>(Engine &amp;, const juce::File &amp;, juce::AudioFormat *&amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::unique_ptr&lt; MappedFileAndReader &gt;</type>
+      <name>createMappedFileAndReaderFor</name>
+      <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils.html</anchorfile>
+      <anchor>ae8b05ddbab0848a4cce8e24cbdf81aee</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::AudioFormatWriter *</type>
@@ -15727,6 +15759,45 @@
       <anchorfile>classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html</anchorfile>
       <anchor>a69a5e7264eb925dc9d2dfcb87f8691dd</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::BufferedFileReader</name>
+    <filename>classtracktion_1_1engine_1_1BufferedFileReader.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>BufferedFileReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
+      <anchor>ae5a149c8d1df85687ea63c11ebb55af8</anchor>
+      <arglist>(juce::AudioFormatReader *sourceReader, juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~BufferedFileReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
+      <anchor>a01fd5d31146a97ad9f409effebe0f43c</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setReadTimeout</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
+      <anchor>ae2ef39ca28d7b57a5cf6fddb10bb17a6</anchor>
+      <arglist>(int timeoutMilliseconds) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFullyBuffered</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
+      <anchor>a9e456ead5902e35591999b52a963d80c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readSamples</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
+      <anchor>a8cb94bae57ac65e6d9aa6f500db38fd2</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -34225,6 +34296,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::FallbackReader</name>
+    <filename>structtracktion_1_1engine_1_1FallbackReader.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>FallbackReader</name>
+      <anchorfile>structtracktion_1_1engine_1_1FallbackReader.html</anchorfile>
+      <anchor>a63f141811f4c57feef742b81445a1898</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setReadTimeout</name>
+      <anchorfile>structtracktion_1_1engine_1_1FallbackReader.html</anchorfile>
+      <anchor>a05b20663a112fce66eea9ed078bb9291</anchor>
+      <arglist>(int timeoutMilliseconds)=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::FileDragList</name>
     <filename>structtracktion_1_1engine_1_1FileDragList.html</filename>
     <member kind="enumeration">
@@ -42380,6 +42469,24 @@
       <name>channels</name>
       <anchorfile>structtracktion_1_1engine_1_1MakeMonoEffect.html</anchorfile>
       <anchor>ae67f6715feb52598d46425745a4126ce</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::AudioFileUtils::MappedFileAndReader</name>
+    <filename>structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html</filename>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; juce::MemoryMappedFile &gt;</type>
+      <name>mappedFile</name>
+      <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html</anchorfile>
+      <anchor>ac1e2d805baf42e2f6d9f63530507e4f3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; juce::AudioFormatReader &gt;</type>
+      <name>reader</name>
+      <anchorfile>structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html</anchorfile>
+      <anchor>a679eb73e132860364042ca8ef35ea0b1</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -79472,12 +79579,14 @@
     <class kind="class">tracktion::AudioFifo</class>
     <class kind="struct">tracktion::AudioFileInfo</class>
     <class kind="class">tracktion::AudioFile</class>
+    <class kind="struct">tracktion::FallbackReader</class>
     <class kind="class">tracktion::AudioFileCache</class>
     <class kind="class">tracktion::AudioFileManager</class>
     <class kind="struct">tracktion::AudioFileUtils</class>
     <class kind="class">tracktion::AudioFileWriter</class>
     <class kind="class">tracktion::AudioFileFormatManager</class>
     <class kind="class">tracktion::AudioProxyGenerator</class>
+    <class kind="class">tracktion::BufferedFileReader</class>
     <class kind="class">tracktion::LoopInfo</class>
     <class kind="class">tracktion::RecordingThumbnailManager</class>
     <class kind="class">tracktion::SmartThumbnail</class>
@@ -79885,12 +79994,14 @@
     <class kind="class">tracktion::engine::AudioFifo</class>
     <class kind="struct">tracktion::engine::AudioFileInfo</class>
     <class kind="class">tracktion::engine::AudioFile</class>
+    <class kind="struct">tracktion::engine::FallbackReader</class>
     <class kind="class">tracktion::engine::AudioFileCache</class>
     <class kind="class">tracktion::engine::AudioFileManager</class>
     <class kind="struct">tracktion::engine::AudioFileUtils</class>
     <class kind="class">tracktion::engine::AudioFileWriter</class>
     <class kind="class">tracktion::engine::AudioFileFormatManager</class>
     <class kind="class">tracktion::engine::AudioProxyGenerator</class>
+    <class kind="class">tracktion::engine::BufferedFileReader</class>
     <class kind="class">tracktion::engine::LoopInfo</class>
     <class kind="class">tracktion::engine::RecordingThumbnailManager</class>
     <class kind="class">tracktion::engine::SmartThumbnail</class>
@@ -84656,6 +84767,13 @@
     <class kind="struct">tracktion::graph::test_utilities::TestContext</class>
     <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
     <member kind="function">
+      <type>void</type>
+      <name>writeToFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a5d40f4397abaca6c0c186e0962bc960c</anchor>
+      <arglist>(juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
@@ -84687,15 +84805,15 @@
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>getSinFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>a600a65c056f0e4fdea6d2a6bada3a296</anchor>
-      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+      <anchor>aff3e7fc61eb18acfe550afcf7e31fe3d</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>getSquareFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>ad4815c2a3fef14a8e008e87be8a2dc0d</anchor>
-      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</arglist>
+      <anchor>a13bb65070355467aebecb665ea51a28b</anchor>
+      <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
     </member>
   </compound>
   <compound kind="group">

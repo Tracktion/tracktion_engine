@@ -86,6 +86,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a5d40f4397abaca6c0c186e0962bc960c"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:a5d40f4397abaca6c0c186e0962bc960c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a5d40f4397abaca6c0c186e0962bc960c">writeToFile</a> (juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</td></tr>
+<tr class="memdesc:a5d40f4397abaca6c0c186e0962bc960c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes an audio buffer to a file.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#a5d40f4397abaca6c0c186e0962bc960c">More...</a><br /></td></tr>
+<tr class="separator:a5d40f4397abaca6c0c186e0962bc960c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd4e10a5038e7f09625e88384d7f97b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#abfd4e10a5038e7f09625e88384d7f97b">getName</a> (<a class="el" href="namespacetracktion_1_1graph.html#a269844fbe17f2d681b0a3df8ae112f96">ThreadPoolStrategy</a> type)</td></tr>
 <tr class="memdesc:abfd4e10a5038e7f09625e88384d7f97b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ammount of internal memory allocated for buffers.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#abfd4e10a5038e7f09625e88384d7f97b">More...</a><br /></td></tr>
 <tr class="separator:abfd4e10a5038e7f09625e88384d7f97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,14 +101,60 @@ Functions</h2></td></tr>
 <tr class="memitem:ad087d37360b2bd70408bcf191fa37bab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#ad087d37360b2bd70408bcf191fa37bab">createGraphDescription</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;)</td></tr>
 <tr class="memdesc:ad087d37360b2bd70408bcf191fa37bab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the graph structure in a dot textual description.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#ad087d37360b2bd70408bcf191fa37bab">More...</a><br /></td></tr>
 <tr class="separator:ad087d37360b2bd70408bcf191fa37bab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a600a65c056f0e4fdea6d2a6bada3a296"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
-<tr class="memitem:a600a65c056f0e4fdea6d2a6bada3a296"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a600a65c056f0e4fdea6d2a6bada3a296">getSinFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</td></tr>
-<tr class="separator:a600a65c056f0e4fdea6d2a6bada3a296"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4815c2a3fef14a8e008e87be8a2dc0d"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
-<tr class="memitem:ad4815c2a3fef14a8e008e87be8a2dc0d"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#ad4815c2a3fef14a8e008e87be8a2dc0d">getSquareFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f)</td></tr>
-<tr class="separator:ad4815c2a3fef14a8e008e87be8a2dc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3e7fc61eb18acfe550afcf7e31fe3d"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:aff3e7fc61eb18acfe550afcf7e31fe3d"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#aff3e7fc61eb18acfe550afcf7e31fe3d">getSinFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</td></tr>
+<tr class="separator:aff3e7fc61eb18acfe550afcf7e31fe3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13bb65070355467aebecb665ea51a28b"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:a13bb65070355467aebecb665ea51a28b"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a13bb65070355467aebecb665ea51a28b">getSquareFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</td></tr>
+<tr class="separator:a13bb65070355467aebecb665ea51a28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a5d40f4397abaca6c0c186e0962bc960c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d40f4397abaca6c0c186e0962bc960c">&#9670;&nbsp;</a></span>writeToFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AudioFormatType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::graph::test_utilities::writeToFile </td>
+          <td>(</td>
+          <td class="paramtype">juce::File&#160;</td>
+          <td class="paramname"><em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes an audio buffer to a file. </p>
+
+<p class="reference">References <a class="el" href="namespacetracktion_1_1graph.html#a514ef258c89b58227b3f6ad2d8b3ee1f">tracktion::graph::toAudioBuffer()</a>.</p>
+
+</div>
+</div>
 <a id="abfd4e10a5038e7f09625e88384d7f97b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abfd4e10a5038e7f09625e88384d7f97b">&#9670;&nbsp;</a></span>getName()</h2>
 
@@ -191,8 +241,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a600a65c056f0e4fdea6d2a6bada3a296"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a600a65c056f0e4fdea6d2a6bada3a296">&#9670;&nbsp;</a></span>getSinFile()</h2>
+<a id="aff3e7fc61eb18acfe550afcf7e31fe3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff3e7fc61eb18acfe550afcf7e31fe3d">&#9670;&nbsp;</a></span>getSinFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +271,13 @@ template&lt;typename AudioFormatType &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>frequency</em> = <code>220.0f</code>&#160;</td>
+          <td class="paramname"><em>frequency</em> = <code>220.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em> = <code>-1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -233,8 +289,8 @@ template&lt;typename AudioFormatType &gt; </div>
 
 </div>
 </div>
-<a id="ad4815c2a3fef14a8e008e87be8a2dc0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4815c2a3fef14a8e008e87be8a2dc0d">&#9670;&nbsp;</a></span>getSquareFile()</h2>
+<a id="a13bb65070355467aebecb665ea51a28b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13bb65070355467aebecb665ea51a28b">&#9670;&nbsp;</a></span>getSquareFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +319,13 @@ template&lt;typename AudioFormatType &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>frequency</em> = <code>220.0f</code>&#160;</td>
+          <td class="paramname"><em>frequency</em> = <code>220.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em> = <code>-1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -278,7 +340,7 @@ template&lt;typename AudioFormatType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 19 2023 11:22:44 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Apr 21 2023 12:36:02 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

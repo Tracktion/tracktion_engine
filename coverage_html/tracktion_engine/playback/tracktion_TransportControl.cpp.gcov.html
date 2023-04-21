@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-19 11:40:22</td>
+            <td class="headerValue">2023-04-21 12:52:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -696,9 +696,9 @@
 <a name="634"><span class="lineNum">     634 </span><span class="lineCov">        197 :     return controls;</span></a>
 <a name="635"><span class="lineNum">     635 </span>            : }</a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1220 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1179 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
 <a name="638"><span class="lineNum">     638 </span>            : {</a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1220 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1179 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : }</a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
 <a name="642"><span class="lineNum">     642 </span><span class="lineCov">        197 : void TransportControl::stopAllTransports (Engine&amp; engine, bool discardRecordings, bool clearDevices)</span></a>
@@ -746,17 +746,17 @@
 <a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 : TransportControl::PlayingFlag::~PlayingFlag() noexcept                          { --engine.getActiveEdits().numTransportsPlaying; }</span></a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
 <a name="686"><span class="lineNum">     686 </span>            : //==============================================================================</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        199 : void TransportControl::editHasChanged()</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        197 : void TransportControl::editHasChanged()</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : {</a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        199 :     if (transportState-&gt;reallocationInhibitors &gt; 0)</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        197 :     if (transportState-&gt;reallocationInhibitors &gt; 0)</span></a>
 <a name="690"><span class="lineNum">     690 </span>            :     {</a>
 <a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :         isDelayedChangePending = true;</span></a>
 <a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :     }</a>
 <a name="694"><span class="lineNum">     694 </span>            : </a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        199 :     isDelayedChangePending = false;</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        197 :     isDelayedChangePending = false;</span></a>
 <a name="696"><span class="lineNum">     696 </span>            : </a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        199 :     if (playbackContext == nullptr)</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        197 :     if (playbackContext == nullptr)</span></a>
 <a name="698"><span class="lineNum">     698 </span>            :         return;</a>
 <a name="699"><span class="lineNum">     699 </span>            : </a>
 <a name="700"><span class="lineNum">     700 </span><span class="lineCov">          1 :     ensureContextAllocated (true);</span></a>
@@ -1017,11 +1017,11 @@
 <a name="955"><span class="lineNum">     955 </span><span class="lineCov">        366 : }</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : </a>
 <a name="957"><span class="lineNum">     957 </span>            : //==============================================================================</a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2595 : void TransportControl::timerCallback()</span></a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2556 : void TransportControl::timerCallback()</span></a>
 <a name="959"><span class="lineNum">     959 </span>            : {</a>
-<a name="960"><span class="lineNum">     960 </span><span class="lineCov">       2595 :     CRASH_TRACER</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">       2556 :     CRASH_TRACER</span></a>
 <a name="961"><span class="lineNum">     961 </span>            : </a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineCov">       2595 :     if (playbackContext == nullptr)</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineCov">       2556 :     if (playbackContext == nullptr)</span></a>
 <a name="963"><span class="lineNum">     963 </span>            :         return;</a>
 <a name="964"><span class="lineNum">     964 </span>            : </a>
 <a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :     if (isDelayedChangePending)</span></a>
@@ -1069,7 +1069,7 @@
 <a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :             if (looping)</span></a>
 <a name="1008"><span class="lineNum">    1008 </span>            :             {</a>
 <a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 :                 auto lr = getLoopRange();</span></a>
-<a name="1010"><span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + TimeDuration::fromSeconds (0.001)));</span></a>
+<a name="1010"><span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));</span></a>
 <a name="1011"><span class="lineNum">    1011 </span><span class="lineNoCov">          0 :                 playHeadWrapper-&gt;setLoopTimes (true, lr);</span></a>
 <a name="1012"><span class="lineNum">    1012 </span>            :             }</a>
 <a name="1013"><span class="lineNum">    1013 </span>            :             else</a>
@@ -1078,7 +1078,7 @@
 <a name="1016"><span class="lineNum">    1016 </span>            :             }</a>
 <a name="1017"><span class="lineNum">    1017 </span>            :         }</a>
 <a name="1018"><span class="lineNum">    1018 </span>            :     }</a>
-<a name="1019"><span class="lineNum">    1019 </span><span class="lineCov">       2595 : }</span></a>
+<a name="1019"><span class="lineNum">    1019 </span><span class="lineCov">       2556 : }</span></a>
 <a name="1020"><span class="lineNum">    1020 </span>            : </a>
 <a name="1021"><span class="lineNum">    1021 </span>            : </a>
 <a name="1022"><span class="lineNum">    1022 </span>            : //==============================================================================</a>

@@ -78,6 +78,8 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileUtils_1_1EnvelopeFollower.html">EnvelopeFollower</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html">MappedFileAndReader</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -87,6 +89,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ade775e9c80775bc7fc93ac4108dc34dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b3f366f74b8a0a5bd646dc31325ba6e"><td class="memItemLeft" align="right" valign="top">static juce::MemoryMappedAudioFormatReader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a4b3f366f74b8a0a5bd646dc31325ba6e">createMemoryMappedReader</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, juce::AudioFormat *&amp;)</td></tr>
 <tr class="separator:a4b3f366f74b8a0a5bd646dc31325ba6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8b05ddbab0848a4cce8e24cbdf81aee"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html">MappedFileAndReader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ae8b05ddbab0848a4cce8e24cbdf81aee">createMappedFileAndReaderFor</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
+<tr class="separator:ae8b05ddbab0848a4cce8e24cbdf81aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcd6fb67ce5cedbd1b86efdfa6e6a109"><td class="memItemLeft" align="right" valign="top">static juce::AudioFormatWriter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#afcd6fb67ce5cedbd1b86efdfa6e6a109">createWriterFor</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadata, int quality)</td></tr>
 <tr class="separator:afcd6fb67ce5cedbd1b86efdfa6e6a109"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7f231f557de9969e85aa68792cc1bef"><td class="memItemLeft" align="right" valign="top">static juce::AudioFormatWriter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#ac7f231f557de9969e85aa68792cc1bef">createWriterFor</a> (juce::AudioFormat *, const juce::File &amp;, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadata, int quality)</td></tr>
@@ -224,6 +228,42 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">juce::AudioFormat *&amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae8b05ddbab0848a4cce8e24cbdf81aee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8b05ddbab0848a4cce8e24cbdf81aee">&#9670;&nbsp;</a></span>createMappedFileAndReaderFor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::unique_ptr&lt;<a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils_1_1MappedFileAndReader.html">MappedFileAndReader</a>&gt; tracktion::engine::AudioFileUtils::createMappedFileAndReaderFor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -967,7 +1007,7 @@ template&lt;typename SourceFormat &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 19 2023 11:22:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Apr 21 2023 12:36:00 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

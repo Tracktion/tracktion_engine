@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">53</td>
+            <td class="headerCovTableEntry">55</td>
             <td class="headerCovTableEntry">120</td>
-            <td class="headerCovTableEntryLo">44.2 %</td>
+            <td class="headerCovTableEntryLo">45.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-19 11:40:22</td>
+            <td class="headerValue">2023-04-21 12:52:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -80,12 +80,12 @@
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 : class FloatAudioFormatReader  : public juce::AudioFormatReader</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          2 :     FloatAudioFormatReader (juce::InputStream* in)</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          2 :         : AudioFormatReader (in, TRANS(&quot;Tracktion audio file&quot;))</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          5 :     FloatAudioFormatReader (juce::InputStream* in)</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          5 :         : AudioFormatReader (in, TRANS(&quot;Tracktion audio file&quot;))</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     {</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          2 :         usesFloatingPointData = true;</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          5 :         usesFloatingPointData = true;</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          2 :         if (in-&gt;readInt() == getFloatFileHeaderInt())</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          5 :         if (in-&gt;readInt() == getFloatFileHeaderInt())</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :         {</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineCov">          2 :             dataStartOffset = in-&gt;readInt();</span></a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineCov">          2 :             sampleRate      = in-&gt;readInt();</span></a>
@@ -97,7 +97,7 @@
 <a name="35"><span class="lineNum">      35 </span><span class="lineCov">          2 :             if (sampleRate &lt; 32000 || sampleRate &gt; 192000 || numChannels &lt; 1 || numChannels &gt; 16)</span></a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :                 sampleRate = 0;</span></a>
 <a name="37"><span class="lineNum">      37 </span>            :         }</a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          2 :     }</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          5 :     }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,</span></a>
 <a name="41"><span class="lineNum">      41 </span>            :                       juce::int64 startSampleInFile, int numSamples)</a>
@@ -330,24 +330,24 @@
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoStereo()    { return true; }</span></a>
 <a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoMono()      { return true; }</span></a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         10 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         17 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
 <a name="272"><span class="lineNum">     272 </span>            : {</a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">         10 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">         17 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :        #if JUCE_WINDOWS</a>
 <a name="275"><span class="lineNum">     275 </span>            :         || f.hasFileExtension ({})</a>
 <a name="276"><span class="lineNum">     276 </span>            :        #endif</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">         10 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">         17 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
 <a name="278"><span class="lineNum">     278 </span>            : }</a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">          2 : juce::AudioFormatReader* FloatAudioFormat::createReaderFor (juce::InputStream* in, bool deleteStreamIfOpeningFails)</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">          5 : juce::AudioFormatReader* FloatAudioFormat::createReaderFor (juce::InputStream* in, bool deleteStreamIfOpeningFails)</span></a>
 <a name="281"><span class="lineNum">     281 </span>            : {</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">          2 :     std::unique_ptr&lt;FloatAudioFormatReader&gt; r (new FloatAudioFormatReader (in));</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">          5 :     std::unique_ptr&lt;FloatAudioFormatReader&gt; r (new FloatAudioFormatReader (in));</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          2 :     if (r-&gt;sampleRate &gt; 0)</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          5 :     if (r-&gt;sampleRate &gt; 0)</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :         return r.release();</a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     if (! deleteStreamIfOpeningFails)</span></a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         r-&gt;input = nullptr;</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          3 :     if (! deleteStreamIfOpeningFails)</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          3 :         r-&gt;input = nullptr;</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     return {};</a>
 <a name="291"><span class="lineNum">     291 </span>            : }</a>

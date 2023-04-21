@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-19 11:40:22</td>
+            <td class="headerValue">2023-04-21 12:52:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -261,11 +261,11 @@
 <a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     SelectionManager::refreshAllPropertyPanels();</span></a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        200 : void ParameterControlMappings::checkForDeletedParams()</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        198 : void ParameterControlMappings::checkForDeletedParams()</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : {</a>
 <a name="204"><span class="lineNum">     204 </span>            :     juce::Array&lt;AutomatableParameter*&gt; allParams;</a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">        200 :     for (int j = parameters.size(); --j &gt;= 0;)</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">        198 :     for (int j = parameters.size(); --j &gt;= 0;)</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :     {</a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :         auto param = parameters[j];</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
@@ -292,7 +292,7 @@
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :             parameters.set (j, param.get());</span></a>
 <a name="231"><span class="lineNum">     231 </span>            :         }</a>
 <a name="232"><span class="lineNum">     232 </span>            :     }</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">        200 : }</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">        198 : }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span>            : //==============================================================================</a>
 <a name="236"><span class="lineNum">     236 </span><span class="lineCov">        546 : void ParameterControlMappings::loadFrom (const juce::ValueTree&amp; state)</span></a>
@@ -489,7 +489,7 @@
 <a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : </a>
 <a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     if (masterPluginsSubMenu.getNumItems())</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         m.addSubMenu (&quot;master plugins&quot;, masterPluginsSubMenu);</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         m.addSubMenu (TRANS(&quot;Master Plugins&quot;), masterPluginsSubMenu);</span></a>
 <a name="431"><span class="lineNum">     431 </span>            : </a>
 <a name="432"><span class="lineNum">     432 </span>            :     // Build the menu for the rack parameters</a>
 <a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :     auto&amp; rackTypes = edit.getRackList();</span></a>
@@ -524,7 +524,7 @@
 <a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="463"><span class="lineNum">     463 </span>            : </a>
 <a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :         if (racksSubMenu.getNumItems())</span></a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :             m.addSubMenu (&quot;rack filters&quot;, racksSubMenu);</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :             m.addSubMenu (TRANS(&quot;Plugin Racks&quot;), racksSubMenu);</span></a>
 <a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
 <a name="468"><span class="lineNum">     468 </span>            :     // Build the menu for each track</a>
