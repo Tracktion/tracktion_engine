@@ -9,17 +9,17 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
-LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion_graph::Node> inputNode, LevelMeasurer& measurer)
+LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeasurer& measurer)
     : input (std::move (inputNode)), levelMeasurer (measurer)
 {
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::no });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::no });
 }
 
-void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
+void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     jassert (pc.buffers.audio.getSize() == sourceBuffers.audio.getSize());
@@ -36,11 +36,11 @@ void LevelMeasuringNode::process (tracktion_graph::Node::ProcessContext& pc)
     // Then update the levels
     if (sourceBuffers.audio.getNumChannels() > 0)
     {
-        auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
+        auto buffer = tracktion::graph::toAudioBuffer (sourceBuffers.audio);
         levelMeasurer.processBuffer (buffer, 0, buffer.getNumSamples());
     }
 
     levelMeasurer.processMidi (pc.buffers.midi, nullptr);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -70,12 +70,12 @@ public:
         This is useful when finding out what edges to drag etc. If no section is found
         then -1 is returned.
     */
-    int findSectionWithEndTime (EditTimeRange range, int takeIndex, bool& timeFoundAtStartOfSection) const;
+    int findSectionWithEndTime (juce::Range<double> range, int takeIndex, bool& timeFoundAtStartOfSection) const;
 
     /** Returns the time range a given section occupies for a given take.
         If there is no segment at the indexes this will return an empty range.
     */
-    EditTimeRange getSectionTimes (const juce::ValueTree&) const;
+    juce::Range<double> getSectionTimes (const juce::ValueTree&) const;
 
     //==============================================================================
     juce::ValueTree getTakesTree()                      { return takesTree; }
@@ -120,7 +120,7 @@ public:
     double getMaxCompLength() const                 { return maxCompLength; }
 
     /** Returns the time range available for comping i.e. taking into account any offset or looped regions. */
-    EditTimeRange getCompRange() const;
+    juce::Range<double> getCompRange() const;
 
     /** Returns the effective speed ratio used for displaying waveforms.
         If the source is using auto-tempo with tempo changes this will use an averaged version of this.
@@ -178,7 +178,7 @@ public:
     /** Removes all sections which lie within the given time range. Useful when performing drag operations.
         @returns the number of sections removed removed.
     */
-    void removeSectionsWithinRange (EditTimeRange timeRange, const juce::ValueTree& sectionToKeep);
+    void removeSectionsWithinRange (juce::Range<double> timeRange, const juce::ValueTree& sectionToKeep);
 
 protected:
     juce::ValueTree takesTree;
@@ -349,4 +349,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiCompManager)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

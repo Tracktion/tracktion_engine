@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class IconProG2  : public MackieMCU
@@ -17,7 +17,7 @@ public:
     IconProG2 (ExternalControllerManager&);
     ~IconProG2();
 
-    void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&) override;
+    void acceptMidiMessageInt (int deviceIdx, const juce::MidiMessage&) override;
     
     void loopOnOffChanged (bool isLoopOn) override;
     void punchOnOffChanged (bool isPunching) override;
@@ -31,4 +31,4 @@ public:
     void setAssignmentMode (AssignmentMode newMode) override;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

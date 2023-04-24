@@ -15,7 +15,9 @@
  #include <sys/kdebug_signpost.h>
 #endif
 
-namespace tracktion_graph
+#include "../../tracktion_core/utilities/tracktion_CPU.h"
+
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -115,17 +117,26 @@ public:
         Statistics() noexcept = default;
 
         void clear() noexcept;
-        double getVariance() const;
+        double getVarianceSeconds() const;
+        double getVarianceCycles() const;
         std::string toString() const;
 
-        void addResult (double elapsed) noexcept;
+        void addResult (double secondsElapsed, uint64_t cyclesElapsed) noexcept;
 
         std::string name;
-        double meanSeconds = 0.0;
-        double m2 = 0.0;
-        double maximumSeconds = 0.0;
-        double minimumSeconds = 0.0;
-        double totalSeconds = 0.0;
+
+        double meanSeconds      = 0.0;
+        double m2Seconds        = 0.0;
+        double maximumSeconds   = 0.0;
+        double minimumSeconds   = 0.0;
+        double totalSeconds     = 0.0;
+
+        double meanCycles       = 0.0;
+        double m2Cycles         = 0.0;
+        uint64_t maximumCycles  = 0;
+        uint64_t minimumCycles  = 0;
+        uint64_t totalCycles    = 0;
+
         int64_t numRuns = 0;
     };
 
@@ -141,6 +152,7 @@ private:
     int64_t runsPerPrint;
     bool printOnDestruction;
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
+    uint64_t startCycles;
 };
 
 //==============================================================================
@@ -197,35 +209,60 @@ inline PerformanceMeasurement::~PerformanceMeasurement()
 
 inline void PerformanceMeasurement::Statistics::clear() noexcept
 {
-    meanSeconds = m2 = maximumSeconds = minimumSeconds = totalSeconds = 0;
+    meanSeconds = m2Seconds = maximumSeconds = minimumSeconds = totalSeconds = 0;
+    meanCycles = m2Cycles = 0.0;
+    maximumCycles = minimumCycles = totalCycles = 0;
     numRuns = 0;
 }
 
-inline void PerformanceMeasurement::Statistics::addResult (double elapsed) noexcept
+inline void PerformanceMeasurement::Statistics::addResult (double secondsElapsed, uint64_t cyclesElapsed) noexcept
 {
     if (numRuns == 0)
     {
-        maximumSeconds = elapsed;
-        minimumSeconds = elapsed;
+        maximumSeconds = secondsElapsed;
+        minimumSeconds = secondsElapsed;
+
+        maximumCycles = cyclesElapsed;
+        minimumCycles = cyclesElapsed;
     }
     else
     {
-        maximumSeconds = std::max (maximumSeconds, elapsed);
-        minimumSeconds = std::min (minimumSeconds, elapsed);
+        maximumSeconds = std::max (maximumSeconds, secondsElapsed);
+        minimumSeconds = std::min (minimumSeconds, secondsElapsed);
+
+        maximumCycles = std::max (maximumCycles, cyclesElapsed);
+        minimumCycles = std::min (minimumCycles, cyclesElapsed);
     }
 
     ++numRuns;
-    totalSeconds += elapsed;
-    
-    const double delta = elapsed - meanSeconds;
-    meanSeconds += delta / (double) numRuns;
-    const double delta2 = elapsed - meanSeconds;
-    m2 += delta * delta2;
+    totalSeconds += secondsElapsed;
+    totalCycles += cyclesElapsed;
+
+    // Seconds
+    {
+        const double delta = secondsElapsed - meanSeconds;
+        meanSeconds += delta / (double) numRuns;
+        const double delta2 = secondsElapsed - meanSeconds;
+        m2Seconds += delta * delta2;
+    }
+
+    // Cycles
+    {
+        const auto delta = cyclesElapsed - meanCycles;
+        meanCycles += delta / (double) numRuns;
+        const double delta2 = cyclesElapsed - meanCycles;
+        m2Cycles += delta * delta2;
+    }
 }
 
-inline double PerformanceMeasurement::Statistics::getVariance() const
+inline double PerformanceMeasurement::Statistics::getVarianceSeconds() const
 {
-    return numRuns > 0 ? (m2 / (double) numRuns) : 0.0;
+    return numRuns > 0 ? (m2Seconds / (double) numRuns) : 0.0;
+}
+
+inline double PerformanceMeasurement::Statistics::getVarianceCycles() const
+{
+    return numRuns > 0 ? (m2Cycles / (double) numRuns) : 0.0;
 }
 
 inline std::string PerformanceMeasurement::Statistics::toString() const
@@ -237,11 +274,16 @@ inline std::string PerformanceMeasurement::Statistics::toString() const
     };
 
     std::string s = "Performance count for \"" + name + "\" over " + std::to_string (numRuns) + " run(s)\n"
-                    + "Mean = "     + timeToString (meanSeconds)
-                    + ", min = "    + timeToString (minimumSeconds)
-                    + ", max = "    + timeToString (maximumSeconds)
-                    + ", SD = "     + timeToString (std::sqrt (getVariance()))
-                    + ", total = "  + timeToString (totalSeconds) + "\n";
+                    + "\t Seconds: Mean = " + timeToString (meanSeconds)
+                    + ", min = "            + timeToString (minimumSeconds)
+                    + ", max = "            + timeToString (maximumSeconds)
+                    + ", SD = "             + timeToString (std::sqrt (getVarianceSeconds()))
+                    + ", total = "          + timeToString (totalSeconds) + "\n"
+                    + "\t Cycles: Mean = "  + std::to_string (meanCycles)
+                    + ", min = "            + std::to_string (minimumCycles)
+                    + ", max = "            + std::to_string (maximumCycles)
+                    + ", SD = "             + std::to_string (std::sqrt (getVarianceCycles()))
+                    + ", total = "          + std::to_string (totalCycles) + "\n";
 
     return s;
 }
@@ -249,12 +291,15 @@ inline std::string PerformanceMeasurement::Statistics::toString() const
 inline void PerformanceMeasurement::start() noexcept
 {
     startTime = std::chrono::high_resolution_clock::now();
+    startCycles = rdtsc();
 }
 
 inline bool PerformanceMeasurement::stop()
 {
-    const auto elapsed = std::chrono::high_resolution_clock::now() - startTime;
-    stats.addResult (std::chrono::duration<double, std::ratio<1, 1>> (elapsed).count());
+    const auto elapsedSeconds = std::chrono::high_resolution_clock::now() - startTime;
+    const auto elapsedCycles = rdtsc() - startCycles;
+    stats.addResult (std::chrono::duration<double, std::ratio<1, 1>> (elapsedSeconds).count(),
+                     elapsedCycles);
 
     if (runsPerPrint < 0)
         return false;
@@ -285,4 +330,4 @@ inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatisticsA
     return s;
 }
 
-}
+}}

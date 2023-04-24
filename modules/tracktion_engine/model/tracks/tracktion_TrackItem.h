@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -80,30 +80,30 @@ public:
     virtual ClipPosition getPosition() const = 0;
 
     /** Returns the time range of this item. */
-    EditTimeRange getEditTimeRange() const              { return getPosition().time; }
+    TimeRange getEditTimeRange() const                  { return getPosition().time; }
 
     /** Returns the start beat in the Edit of this item. */
-    double getStartBeat() const;
+    BeatPosition getStartBeat() const;
 
     /** Returns the start beat of the content in the Edit of this item.
         I.e. the beat index of (start - offset)
     */
-    double getContentStartBeat() const;
+    BeatPosition getContentStartBeat() const;
 
     /** Returns the end beat in the Edit of this item. */
-    double getEndBeat() const;
+    BeatPosition getEndBeat() const;
 
     /** Returns the duration in beats the of this item. */
-    double getLengthInBeats() const;
+    BeatDuration getLengthInBeats() const;
 
     /** Returns an Edit time point for a given number of beats from the start of this item. */
-    double getTimeOfRelativeBeat (double beat) const;
+    TimePosition getTimeOfRelativeBeat (BeatDuration) const;
 
     /** Returns an Edit beat point for a given number of seconds from the start of this item. */
-    double getBeatOfRelativeTime (double t) const;
+    BeatPosition getBeatOfRelativeTime (TimeDuration) const;
 
     /** Returns an the offset of this item in beats. */
-    double getOffsetInBeats() const;
+    BeatDuration getOffsetInBeats() const;
 
     //==============================================================================
     /** Returns the ID of the Track this item lives on. */
@@ -117,7 +117,7 @@ public:
     static void sortByTime (ArrayType& items)
     {
         std::sort (items.begin(), items.end(),
-                   [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.start < b->getPosition().time.start; });
+                   [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.getStart() < b->getPosition().time.getStart(); });
     }
 
     /** Helper function to sort an array of TrackItem[s] by their start time without
@@ -127,7 +127,7 @@ public:
     static void stableSortByTime (ArrayType& items)
     {
         std::stable_sort (items.begin(), items.end(),
-                          [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.start < b->getPosition().time.start; });
+                          [] (const TrackItem* a, const TrackItem* b) { return a->getPosition().time.getStart() < b->getPosition().time.getStart(); });
     }
 
 private:
@@ -135,4 +135,4 @@ private:
 };
 
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -16,33 +16,33 @@ namespace tracktion_engine
 /**
     A Node that fades in and out given time regions.
 */
-class FadeInOutNode final : public tracktion_graph::Node
+class FadeInOutNode final : public Node,
+                            public TracktionEngineNode
 {
 public:
-    FadeInOutNode (std::unique_ptr<tracktion_graph::Node> input,
-                   tracktion_graph::PlayHeadState&,
-                   EditTimeRange fadeIn, EditTimeRange fadeOut,
+    FadeInOutNode (std::unique_ptr<tracktion::graph::Node> input,
+                   ProcessState&,
+                   TimeRange fadeIn, TimeRange fadeOut,
                    AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType,
                    bool clearSamplesOutsideFade);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
-    std::unique_ptr<tracktion_graph::Node> input;
-    tracktion_graph::PlayHeadState& playHeadState;
-    EditTimeRange fadeIn, fadeOut;
+    std::unique_ptr<tracktion::graph::Node> input;
+    TimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
-    juce::Range<int64_t> fadeInSampleRange, fadeOutSampleRange;
     bool clearExtraSamples = true;
 
     //==============================================================================
-    bool renderingNeeded (const juce::Range<int64_t>&) const;
+    bool renderingNeeded (TimeRange);
+    void processSection (choc::buffer::ChannelArrayView<float>, TimeRange);
+    static int timeToSample (int numSamples, TimeRange editTime, TimePosition);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

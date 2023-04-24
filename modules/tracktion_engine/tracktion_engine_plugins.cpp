@@ -21,18 +21,21 @@
 
 #include <atomic>
 #include <numeric>
+#include <chrono>
+using namespace std::literals;
 
 #if TRACKTION_UNIT_TESTS
- #include <tracktion_graph/tracktion_graph_TestConfig.h>
+ #include <tracktion_core/tracktion_TestConfig.h>
 #endif
 
 #include <tracktion_graph/tracktion_graph.h>
 
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestUtilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
 
 #include "tracktion_engine.h"
 
+#include "playback/graph/tracktion_TracktionEngineNode.h"
 #include "playback/graph/tracktion_PluginNode.h"
 #include "playback/graph/tracktion_TrackMutingNode.h"
 #include "playback/graph/tracktion_RackNode.h"

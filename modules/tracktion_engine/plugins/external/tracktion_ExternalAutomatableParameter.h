@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class ExternalAutomatableParameter   : public AutomatableParameter,
@@ -63,12 +63,12 @@ public:
             p->removeListener (this);
     }
 
-    float getDefaultValue() const override
+    std::optional<float> getDefaultValue() const override
     {
         if (auto p = getParam())
             return p->getDefaultValue();
 
-        return 0.0f;
+        return {};
     }
 
     void parameterChanged (float newValue, bool byAutomation) override
@@ -337,4 +337,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalAutomatableParameter)
 };
 
-}
+}} // namespace tracktion { inline namespace engine

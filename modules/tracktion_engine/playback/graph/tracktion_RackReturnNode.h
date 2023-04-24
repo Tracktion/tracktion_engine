@@ -8,13 +8,13 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
     Sends an input Node to a Rack bus handling the channel mapping and channel gain levels.
 */
-class RackReturnNode final  : public tracktion_graph::Node
+class RackReturnNode final  : public tracktion::graph::Node
 {
 public:
     /** Creates a RackInstanceNode that maps an input node channel to an output channel
@@ -26,9 +26,9 @@ public:
                     std::function<float()> dryGainFunc);
 
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     bool transform (Node&) override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
@@ -41,4 +41,4 @@ private:
     bool hasTransformed = false;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

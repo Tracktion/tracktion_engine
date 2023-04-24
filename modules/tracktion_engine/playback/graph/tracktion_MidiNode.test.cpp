@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if GRAPH_UNIT_TESTS_MIDINODE
@@ -25,7 +25,7 @@ public:
     
     void runTest() override
     {
-        for (auto setup : tracktion_graph::test_utilities::getTestSetups (*this))
+        for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))
         {
             logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
                         .replace ("SR", juce::String (setup.sampleRate))
@@ -52,9 +52,9 @@ private:
 
     //==============================================================================
     //==============================================================================
-    void runMidiTests (tracktion_graph::test_utilities::TestSetup ts, bool playSyncedToRange)
+    void runMidiTests (tracktion::graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         
         const double sampleRate = 44100.0;
         const double duration = 5.0;
@@ -62,9 +62,9 @@ private:
         // Avoid creating events at the end of the duration as they'll get lost after latency is applied
         const auto masterSequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, ts.random);
         
-        tracktion_graph::PlayHead playHead;
+        tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
         if (playSyncedToRange)
@@ -75,14 +75,15 @@ private:
         beginTest ("Basic MIDI");
         {
             auto sequence = masterSequence;
-            auto node = std::make_unique<tracktion_engine::MidiNode> (sequence,
-                                                                      juce::Range<int>::withStartAndLength (1, 1),
-                                                                      false,
-                                                                      EditTimeRange (0.0, duration),
-                                                                      LiveClipLevel(),
-                                                                      processState,
-                                                                      EditItemID());
-            
+            auto node = std::make_unique<tracktion::engine::MidiNode> (std::vector<juce::MidiMessageSequence> ({ sequence }),
+                                                                       MidiList::TimeBase::seconds,
+                                                                       juce::Range<int>::withStartAndLength (1, 1),
+                                                                       false,
+                                                                       juce::Range<double> (0.0, duration),
+                                                                       LiveClipLevel(),
+                                                                       processState,
+                                                                       EditItemID());
+
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
@@ -91,15 +92,16 @@ private:
         
         beginTest ("Offset MIDI");
         {
-            const auto editTimeRange = EditTimeRange::withStartAndLength (1.0, duration);
-            auto node = std::make_unique<tracktion_engine::MidiNode> (masterSequence,
-                                                                      juce::Range<int>::withStartAndLength (1, 1),
-                                                                      false,
-                                                                      editTimeRange,
-                                                                      LiveClipLevel(),
-                                                                      processState,
-                                                                      EditItemID());
-            
+            const auto editTimeRange = juce::Range<double>::withStartAndLength (1.0, duration);
+            auto node = std::make_unique<tracktion::engine::MidiNode> (std::vector<juce::MidiMessageSequence> ({ masterSequence }),
+                                                                       MidiList::TimeBase::seconds,
+                                                                       juce::Range<int>::withStartAndLength (1, 1),
+                                                                       false,
+                                                                       editTimeRange,
+                                                                       LiveClipLevel(),
+                                                                       processState,
+                                                                       EditItemID());
+
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd());
 
             juce::MidiMessageSequence expectedSequence;
@@ -119,4 +121,4 @@ static MidiNodeTests midiNodeTests;
 
 #endif //TRACKTION_UNIT_TESTS
 
-}
+}} // namespace tracktion { inline namespace engine

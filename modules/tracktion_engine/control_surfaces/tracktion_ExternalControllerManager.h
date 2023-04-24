@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Keeps a list of external controllers and keeps them connected to the
@@ -66,6 +66,7 @@ public:
     };
 
     bool createCustomController (const juce::String& name, Protocol);
+    ExternalController* addController (ControlSurface*);
     void deleteController (ExternalController*);
 
     //==============================================================================
@@ -79,11 +80,11 @@ public:
     void playStateChanged (bool isPlaying);
     void recordStateChanged (bool isRecording);
     void automationModeChanged (bool isReading, bool isWriting);
-    void channelLevelChanged (int channel, float level);
+    void channelLevelChanged (int channel, float l, float r);
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames);
-    void editPositionChanged (Edit*, double newCursorPosition);
+    void editPositionChanged (Edit*, TimePosition newCursorPosition);
     void updateVolumePlugin (VolumeAndPanPlugin&);
     void updateVCAPlugin (VCAPlugin& vca);
     void snapChanged (bool isOn);
@@ -121,10 +122,10 @@ public:
 
     //==============================================================================
     // these are called back by the controller to make the app respond
-    void userMovedFader (int channelNum, float newSliderPos);
-    void userMovedMasterFader (Edit*, float newLevel);
+    void userMovedFader (int channelNum, float newSliderPos, bool delta);
+    void userMovedMasterFader (Edit*, float newLevel, bool delta);
     void userMovedMasterPanPot (Edit*, float newLevel);
-    void userMovedPanPot (int channelNum, float newPan);
+    void userMovedPanPot (int channelNum, float newPan, bool delta);
     void userPressedSolo (int channelNum);
     void userPressedSoloIsolate (int channelNum);
     void userPressedMute (int channelNum, bool muteVolumeControl);
@@ -178,4 +179,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalControllerManager)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -16,17 +16,17 @@ namespace tracktion_engine
 /**
     Plays back a Melodyne plugin.
 */
-class MelodyneNode final  : public tracktion_graph::Node,
+class MelodyneNode final  : public tracktion::graph::Node,
                             private juce::Timer
 {
 public:
-    MelodyneNode (AudioClipBase&, tracktion_graph::PlayHead&, bool isOfflineRender);
+    MelodyneNode (AudioClipBase&, tracktion::graph::PlayHead&, bool isOfflineRender);
     ~MelodyneNode() override;
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
@@ -35,7 +35,7 @@ private:
     class MelodynePlayhead;
     
     AudioClipBase& clip;
-    tracktion_graph::PlayHead& playHead;
+    tracktion::graph::PlayHead& playHead;
     LiveClipLevel clipLevel;
     Clip::Ptr clipPtr;
     MelodyneFileReader::Ptr melodyneProxy;
@@ -51,4 +51,4 @@ private:
     void timerCallback() override;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

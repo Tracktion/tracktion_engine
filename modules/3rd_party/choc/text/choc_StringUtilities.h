@@ -26,6 +26,7 @@
 #include <chrono>
 #include <memory>
 #include <algorithm>
+#include <cwctype>
 #include "../platform/choc_Assert.h"
 
 namespace choc::text
@@ -138,6 +139,9 @@ std::string getDurationDescription (std::chrono::duration<double, std::micro>);
 /// Returns an easy-to-read description of a size in bytes. Depending on the magnitude,
 /// it might choose different units such as GB, MB, KB or just bytes.
 std::string getByteSizeDescription (uint64_t sizeInBytes);
+
+/// Encodes a string as a legal URI, using percent-encoding (aka URL encoding)
+std::string percentEncodeURI (std::string_view text);
 
 
 //==============================================================================
@@ -551,6 +555,29 @@ inline std::string getByteSizeDescription (uint64_t size)
 
     return "1 byte";
 }
+
+inline std::string percentEncodeURI (std::string_view text)
+{
+    std::string result;
+    result.reserve (text.length());
+
+    for (auto c : text)
+    {
+        if (std::string_view ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.~").find (c) != std::string_view::npos)
+        {
+            result += c;
+        }
+        else
+        {
+            result += '%';
+            result += "0123456789abcdef"[static_cast<uint8_t> (c) >> 4];
+            result += "0123456789abcdef"[static_cast<uint8_t> (c) & 15u];
+        }
+    }
+
+    return result;
+}
+
 
 } // namespace choc::text
 

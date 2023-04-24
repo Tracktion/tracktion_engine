@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 PhaserPlugin::PhaserPlugin (PluginCreationInfo info)  : Plugin (info)
@@ -124,4 +124,4 @@ void PhaserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         p->updateFromAttachedValue();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

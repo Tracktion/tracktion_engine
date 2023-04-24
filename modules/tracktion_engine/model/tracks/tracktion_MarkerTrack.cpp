@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MarkerTrack::MarkerTrack (Edit& e, const juce::ValueTree& v)  : ClipTrack (e, v, 40, 13, 60)
@@ -25,4 +25,4 @@ juce::String MarkerTrack::getSelectableDescription()     { return getName(); }
 juce::String MarkerTrack::getName()                      { return TRANS("Marker"); }
 bool MarkerTrack::canContainPlugin (Plugin*) const       { return false; }
 
-}
+}} // namespace tracktion { inline namespace engine

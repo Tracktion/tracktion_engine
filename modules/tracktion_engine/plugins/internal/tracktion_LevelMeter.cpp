@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 LevelMeterPlugin::LevelMeterPlugin (PluginCreationInfo info)  : Plugin (info)
@@ -78,7 +78,10 @@ void LevelMeterPlugin::timerCallback()
         auto& ecm = engine.getExternalControllerManager();
 
         if (ecm.isAttachedToEdit (edit))
-            ecm.channelLevelChanged (controllerTrack, dbToGain (measurer.getLevelCache()));
+        {
+            auto l = measurer.getLevelCache();
+            ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));
+        }
     }
 }
 
@@ -91,4 +94,4 @@ void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
         p->updateFromAttachedValue();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

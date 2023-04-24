@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class EqualiserPlugin::EQAutomatableParameter : public AutomatableParameter
@@ -342,4 +342,4 @@ float EqualiserPlugin::getDBGainAtFrequency (float f)
     return curve.getY (f / (lastSampleRate / 2));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

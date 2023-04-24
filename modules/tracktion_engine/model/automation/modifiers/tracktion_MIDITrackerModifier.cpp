@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -102,7 +102,7 @@ juce::StringArray MIDITrackerModifier::getMidiInputNames()
 
 void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    setEditTime (pc.editTime);
+    setEditTime (pc.editTime.getStart());
     
     if (pc.bufferForMidiMessages != nullptr)
         for (auto& m : *pc.bufferForMidiMessages)
@@ -282,4 +282,4 @@ void MIDITrackerModifier::valueTreePropertyChanged (juce::ValueTree& v, const ju
     ValueTreeAllEventListener::valueTreePropertyChanged (v, i);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

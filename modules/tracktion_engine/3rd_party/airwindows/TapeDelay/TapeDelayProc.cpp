@@ -129,7 +129,7 @@ void TapeDelay::processReplacing(float **inputs, float **outputs, VstInt32 sampl
         if (leanfat < 0) {storedelayL = sumL-floattotalL; storedelayR = sumR-floattotalR;}
         else {storedelayL = (sumL * (1-fatwet))+floattotalL; storedelayR = (sumR * (1-fatwet))+floattotalR;}
 
-        chase += abs(maxdelay - targetdelay);
+        chase += std::abs(maxdelay - targetdelay);
         if (chase > 9000)
         {
             if (maxdelay > targetdelay) {
@@ -296,7 +296,7 @@ void TapeDelay::processDoubleReplacing(double **inputs, double **outputs, VstInt
         if (leanfat < 0) {storedelayL = sumL-floattotalL; storedelayR = sumR-floattotalR;}
         else {storedelayL = (sumL * (1-fatwet))+floattotalL; storedelayR = (sumR * (1-fatwet))+floattotalR;}
 
-        chase += abs(maxdelay - targetdelay);
+        chase += std::abs(maxdelay - targetdelay);
         if (chase > 9000)
         {
             if (maxdelay > targetdelay) {

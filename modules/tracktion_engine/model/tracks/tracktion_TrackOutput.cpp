@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackOutput::TrackOutput (Track& t)
@@ -355,4 +355,4 @@ void TrackOutput::valueTreePropertyChanged (juce::ValueTree& v, const juce::Iden
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

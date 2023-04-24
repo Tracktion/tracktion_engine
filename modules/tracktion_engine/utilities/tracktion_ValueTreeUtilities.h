@@ -18,7 +18,7 @@ namespace juce
     };
 }
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -231,6 +231,7 @@ public:
     {
         int index1 = parent.indexOf (first->state);
         int index2 = parent.indexOf (second->state);
+        jassert (index1 >= 0 && index2 >= 0);
         return index1 - index2;
     }
 
@@ -618,4 +619,4 @@ inline void renamePropertyRecursive (juce::ValueTree& tree,
         renamePropertyRecursive (child, oldName, newName, um);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

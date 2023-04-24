@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct AudioFadeCurve
@@ -158,15 +158,15 @@ struct AudioFadeCurve
                                float x1, float x2, float top, float bottom, juce::Rectangle<int> clip);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::AudioFadeCurve::Type>
+    struct VariantConverter<tracktion::engine::AudioFadeCurve::Type>
     {
-        static tracktion_engine::AudioFadeCurve::Type fromVar (const var& v)   { return (tracktion_engine::AudioFadeCurve::Type) static_cast<int> (v); }
-        static var toVar (tracktion_engine::AudioFadeCurve::Type v)            { return static_cast<int> (v); }
+        static tracktion::engine::AudioFadeCurve::Type fromVar (const var& v)   { return (tracktion::engine::AudioFadeCurve::Type) static_cast<int> (v); }
+        static var toVar (tracktion::engine::AudioFadeCurve::Type v)            { return static_cast<int> (v); }
     };
 }

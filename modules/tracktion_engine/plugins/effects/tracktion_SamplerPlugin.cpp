@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 // this must be high enough for low freq sounds not to click
@@ -710,4 +710,4 @@ void SamplerPlugin::SamplerSound::refreshFile()
     setExcerpt (startTime, length);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

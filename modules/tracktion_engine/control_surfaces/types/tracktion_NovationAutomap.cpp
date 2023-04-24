@@ -38,7 +38,7 @@
  #pragma warning (pop)
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //=============================================================================
@@ -1073,16 +1073,6 @@ void NovationAutomap::load (Edit& edit)
         hostAutomap->getConnection()->LoadInstanceGUID (getGUID (edit));
 }
 
-void NovationAutomap::shutDownDevice()                             {}
-void NovationAutomap::updateMiscFeatures()                         {}
-void NovationAutomap::acceptMidiMessage (const juce::MidiMessage&) {}
-void NovationAutomap::moveFader (int, float)                       {}
-void NovationAutomap::moveMasterLevelFader (float, float)          {}
-void NovationAutomap::movePanPot (int, float)                      {}
-void NovationAutomap::moveAux (int, const char*, float)            {}
-void NovationAutomap::clearAux (int)                               {}
-void NovationAutomap::soloCountChanged (bool)                      {}
-
 void NovationAutomap::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
 {
     if (hostAutomap != nullptr)
@@ -1101,17 +1091,11 @@ void NovationAutomap::recordStateChanged (bool isRecording)
         hostAutomap->recordChanged(isRecording);
 }
 
-void NovationAutomap::automationReadModeChanged (bool)          {}
-void NovationAutomap::automationWriteModeChanged (bool)         {}
-
 void NovationAutomap::faderBankChanged (int, const juce::StringArray& trackNames)
 {
     if (hostAutomap != nullptr)
         hostAutomap->faderBankChanged (trackNames);
 }
-
-void NovationAutomap::channelLevelChanged (int, float)          {}
-void NovationAutomap::trackSelectionChanged (int, bool)         {}
 
 void NovationAutomap::trackRecordEnabled (int channel, bool)
 {
@@ -1119,37 +1103,21 @@ void NovationAutomap::trackRecordEnabled (int channel, bool)
         hostAutomap->armChanged (channel);
 }
 
-void NovationAutomap::masterLevelsChanged (float, float)        {}
-
 void NovationAutomap::timecodeChanged (int, int, int, int, bool, bool)
 {
     if (hostAutomap != nullptr)
         hostAutomap->timeChanged();
 }
 
-void NovationAutomap::clickOnOffChanged (bool)                  {}
-void NovationAutomap::snapOnOffChanged (bool)                   {}
-void NovationAutomap::loopOnOffChanged (bool)                   {}
-void NovationAutomap::slaveOnOffChanged (bool)                  {}
-void NovationAutomap::punchOnOffChanged (bool)                  {}
-void NovationAutomap::undoStatusChanged (bool, bool)            {}
-void NovationAutomap::parameterChanged (int, const ParameterSetting&)   {}
-void NovationAutomap::clearParameter (int)                      {}
-void NovationAutomap::markerChanged (int, const MarkerSetting&) {}
-void NovationAutomap::clearMarker (int)                         {}
-void NovationAutomap::auxBankChanged (int)                      {}
-bool NovationAutomap::wantsMessage (const juce::MidiMessage&)   { return false; }
-bool NovationAutomap::eatsAllMessages()                         { return false; }
-bool NovationAutomap::canSetEatsAllMessages()                   { return false; }
-void NovationAutomap::setEatsAllMessages (bool)                 {}
-bool NovationAutomap::canChangeSelectedPlugin()                 { return true; }
-void NovationAutomap::currentSelectionChanged (juce::String)    {}
-bool NovationAutomap::showingPluginParams()                     { return true; }
-bool NovationAutomap::showingMarkers()                          { return false; }
-bool NovationAutomap::showingTracks()                           { return true; }
-void NovationAutomap::pluginBypass (bool)                       {}
-bool NovationAutomap::isPluginSelected (Plugin*)                { return false; }
+bool NovationAutomap::wantsMessage (int, const juce::MidiMessage&)  { return false; }
+bool NovationAutomap::eatsAllMessages()                             { return false; }
+bool NovationAutomap::canSetEatsAllMessages()                       { return false; }
+bool NovationAutomap::canChangeSelectedPlugin()                     { return true; }
+bool NovationAutomap::showingPluginParams()                         { return true; }
+bool NovationAutomap::showingMarkers()                              { return false; }
+bool NovationAutomap::showingTracks()                               { return true; }
+bool NovationAutomap::isPluginSelected (Plugin*)                    { return false; }
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif

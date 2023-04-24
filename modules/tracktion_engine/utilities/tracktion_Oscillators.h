@@ -7,7 +7,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -109,4 +109,4 @@ private:
     float detune = 0, spread = 0, gain = 1.0f, note = 69.0f, pan = 0.0f;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

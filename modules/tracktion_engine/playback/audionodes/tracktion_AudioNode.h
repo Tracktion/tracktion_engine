@@ -11,9 +11,9 @@
 #pragma once
 
 #include "tracktion_PlayHead.h"
+#include "tracktion_EditTimeRange.h"
 
-
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AudioNode;
@@ -70,7 +70,7 @@ struct CreateAudioNodeParams
 struct AudioRenderContext
 {
     //==============================================================================
-    inline AudioRenderContext (PlayHead& ph, EditTimeRange stream,
+    inline AudioRenderContext (PlayHead& ph, legacy::EditTimeRange stream,
                                juce::AudioBuffer<float>* buffer,
                                const juce::AudioChannelSet& bufferChannels,
                                int bufferStart, int bufferSize,
@@ -99,7 +99,7 @@ struct AudioRenderContext
         out what section of the edit needs to be rendered, Playhead provides conversion
         methods such as Playhead::streamTimeToEditWindow() or getEditTime()
     */
-    EditTimeRange streamTime;
+    legacy::EditTimeRange streamTime;
 
     /** The target audio buffer which needs to be filled.
         This may be nullptr if no audio is being processed.
@@ -309,4 +309,4 @@ struct MuteAudioNode  : public SingleInputAudioNode
     }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

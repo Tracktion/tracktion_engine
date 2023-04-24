@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 void CustomControlSurface::CustomControlSurfaceManager::registerSurface (CustomControlSurface* item)
@@ -183,7 +183,8 @@ juce::Array<ControlSurface*> CustomControlSurface::getCustomSurfaces (ExternalCo
 
     if (auto n = ecm.engine.getPropertyStorage().getXmlProperty (SettingID::customMidiControllers))
         for (auto controllerXml : n->getChildIterator())
-            surfaces.add (new CustomControlSurface (ecm, *controllerXml));
+            if (controllerXml->hasTagName ("MIDICUSTOMCONTROLSURFACE"))
+                surfaces.add (new CustomControlSurface (ecm, *controllerXml));
 
     return surfaces;
 }
@@ -213,6 +214,7 @@ juce::XmlElement* CustomControlSurface::createXml()
     element->setAttribute ("eatsMidi", eatsAllMidi);
     element->setAttribute ("channels", numberOfFaderChannels);
     element->setAttribute ("parameters", numParameterControls);
+    element->setAttribute ("pickUpMode", pickUpMode);
 
     for (auto m : mappings)
     {
@@ -232,6 +234,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     eatsAllMidi                 = xml.getBoolAttribute ("eatsMidi", false);
     numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
+    pickUpMode                  = xml.getBoolAttribute ("pickUpMode", false);
 
     mappings.clear();
 
@@ -351,7 +354,7 @@ void CustomControlSurface::updateMiscFeatures()
 {
 }
 
-bool CustomControlSurface::wantsMessage (const juce::MidiMessage& m)
+bool CustomControlSurface::wantsMessage (int, const juce::MidiMessage& m)
 {
     // in T5 there will always be a current list box so we don't wan't to eat all the time
     if (eatsAllMidi || listeningOnRow != -1 || ((m.isNoteOn() || m.isController())
@@ -609,7 +612,7 @@ bool CustomControlSurface::isTextAction (ActionID id)
     }
 }
 
-void CustomControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
+void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     if (! m.isController() && ! m.isNoteOn())
         return;
@@ -666,6 +669,8 @@ void CustomControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
 
 void CustomControlSurface::moveFader (int faderIndex, float v)
 {
+    ControlSurface::moveFader (faderIndex, v);
+
     sendCommandToControllerForActionID (volTrackId + faderIndex, v);
 
     auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (v));
@@ -674,6 +679,8 @@ void CustomControlSurface::moveFader (int faderIndex, float v)
 
 void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
 {
+    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    
     const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
     sendCommandToControllerForActionID (masterPanId, panApproximation);
     sendCommandToControllerForActionID (masterVolumeId, std::max (newLeftSliderPos, newRightSliderPos));
@@ -684,6 +691,7 @@ void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float n
 
 void CustomControlSurface::movePanPot (int faderIndex, float v)
 {
+    ControlSurface::movePanPot (faderIndex, v);
     sendCommandToControllerForActionID (panTrackId + faderIndex, (v * 0.5f) + 0.5f);
 
     juce::String panText;
@@ -699,8 +707,10 @@ void CustomControlSurface::movePanPot (int faderIndex, float v)
     sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
-void CustomControlSurface::moveAux (int faderIndex, const char*, float v)
+void CustomControlSurface::moveAux (int faderIndex, const char* bus, float v)
 {
+    ControlSurface::moveAux (faderIndex, bus, v);
+
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
 
     auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (v));
@@ -754,7 +764,7 @@ void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const ju
     }
 }
 
-void CustomControlSurface::channelLevelChanged (int, float) {}
+void CustomControlSurface::channelLevelChanged (int, float, float) {}
 
 void CustomControlSurface::trackSelectionChanged (int faderIndex, bool isSelected)
 {
@@ -816,6 +826,8 @@ void CustomControlSurface::scrollOnOffChanged (bool enabled)
 
 void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
 {
+    ControlSurface::parameterChanged (paramIndex, setting);
+
     if (paramIndex >= 0)
     {
         sendCommandToControllerForActionID (paramTrackId + paramIndex, setting.value);
@@ -897,12 +909,12 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
             {
                 if (midiNote != -1)
                 {
-                    if (value <= 0.0f)  sendMidiCommandToController (juce::MidiMessage::noteOff (midiChannel, midiNote, value));
-                    else                sendMidiCommandToController (juce::MidiMessage::noteOn (midiChannel, midiNote, value));
+                    if (value <= 0.0f)  sendMidiCommandToController (0, juce::MidiMessage::noteOff (midiChannel, midiNote, value));
+                    else                sendMidiCommandToController (0, juce::MidiMessage::noteOn (midiChannel, midiNote, value));
                 }
 
                 if (midiController != -1)
-                    sendMidiCommandToController (juce::MidiMessage::controllerEvent (midiChannel, midiController,
+                    sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (midiChannel, midiController,
                                                                                      juce::MidiMessage::floatValueToMidiByte (value)));
             }
         }
@@ -962,7 +974,7 @@ bool CustomControlSurface::removeMapping (ActionID id, int controllerID, int not
 void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions& o)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    if (needsMidiChannel && owner->getMidiInputDevice().isEmpty())
+    if (needsMidiChannel && owner->getMidiInputDevice (0).isEmpty())
     {
         engine.getUIBehaviour().showWarningAlert (TRANS("Error"),
                                                   TRANS("You must set a MIDI input device!"));
@@ -1601,7 +1613,7 @@ void CustomControlSurface::addMarker (float val, int)
 {
     if (shouldActOnValue (val))
         if (auto e = getEdit())
-            e->getMarkerManager().createMarker (-1, e->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
+            e->getMarkerManager().createMarker (-1, e->getTransport().getPosition(), {}, externalControllerManager.getSelectionManager());
 }
 
 void CustomControlSurface::prevMarker (float val, int)  { if (shouldActOnValue (val)) userPressedPreviousMarker(); }
@@ -1656,4 +1668,4 @@ void CustomControlSurface::clearMarker (int)
 {
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class MouseHoverDetector
@@ -145,4 +145,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE (MouseHoverDetector)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

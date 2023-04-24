@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static inline HashCode getAudioFileHash (const juce::File& file) noexcept
@@ -96,6 +96,17 @@ int AudioFile::getBitsPerSample() const                 { return getInfo().bitsP
 bool AudioFile::isFloatingPoint() const                 { return getInfo().isFloatingPoint; }
 juce::StringPairArray AudioFile::getMetadata() const    { return getInfo().metadata; }
 juce::AudioFormat* AudioFile::getFormat() const         { return getInfo().format; }
+
+bool AudioFile::moveToTrash() const
+{
+    CRASH_TRACER
+
+    auto& afm = engine->getAudioFileManager();
+    afm.checkFileForChangesAsync (*this);
+    afm.releaseFile (*this);
+
+    return file.moveToTrash();
+}
 
 bool AudioFile::deleteFile() const
 {
@@ -807,4 +818,4 @@ void AudioFileManager::handleAsyncUpdate()
         checkFileForChanges (fileToCheck);
 }
 
-}
+}} // namespace tracktion { inline namespace engine
