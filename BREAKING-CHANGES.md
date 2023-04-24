@@ -4,6 +4,20 @@
 
 
 ### Change
+Removed the TRACKTION_ENABLE_REALTIME_TIMESTRETCHING option.
+
+#### Possible Issues
+Most code should be unaffected as it was enabled by default anyway. Along with this are the `setUsesTimestretchedPreview`/`usesTimestretchedPreview` `AudioClipBase` functions. Use `setUsesProxy` instead now for the same effect.
+
+#### Workaround
+None.
+
+#### Rationale
+This was always a temporary flag used to transition to this new feature.
+
+---
+
+### Change
 Added a new ContainerClip type. To facilitate this, a new ClipOwner class has been created.
 
 #### Possible Issues

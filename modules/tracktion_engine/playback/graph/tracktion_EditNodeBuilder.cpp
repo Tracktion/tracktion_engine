@@ -88,20 +88,6 @@ namespace
         return true;
     }
 
-    std::vector<std::pair<int, int>> makeChannelMapRepeatingLastChannel (const juce::AudioChannelSet& source,
-                                                                         const juce::AudioChannelSet& dest)
-    {
-        std::vector<std::pair<int, int>> map;
-        
-        for (int destNum = 0; destNum < dest.size(); ++destNum)
-        {
-            const int sourceNum = std::min (destNum, source.size() - 1);
-            map.push_back ({ sourceNum, destNum });
-        }
-        
-        return map;
-    }
-
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
         for (auto t : getAudioTracks (edit))
@@ -218,7 +204,6 @@ namespace
         return tracks;
     }
 
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     SpeedFadeDescription getSpeedFadeDescription (const AudioClipBase& clip)
     {
         if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
@@ -347,7 +332,6 @@ namespace
 
         return {};
     }
-   #endif
 
 //==============================================================================
 //==============================================================================
@@ -428,31 +412,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         speed = clip.getSpeedRatio();
     }
 
-    if (clip.usesTimestretchedPreview())
-    {
-        auto& li = clip.getLoopInfo();
-
-        if (li.getNumBeats() > 0.0 || li.getRootNote() != -1)
-        {
-            auto node = makeNode<TimeStretchingWaveNode> (clip, playHeadState);
-
-            const auto sourceChannels = juce::AudioChannelSet::canonicalChannelSet (clip.getAudioFile().getNumChannels());
-            const auto destChannels = juce::AudioChannelSet::canonicalChannelSet (std::max (2, sourceChannels.size()));
-
-            if (sourceChannels.size() != destChannels.size())
-                node = makeNode<ChannelRemappingNode> (std::move (node),
-                                                       makeChannelMapRepeatingLastChannel (sourceChannels, destChannels),
-                                                       false);
-            
-            return node;
-        }
-    }
-
     std::unique_ptr<Node> node;
 
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     if (clip.canUseProxy())
-   #endif
     {
         if ((clip.getFadeInBehaviour() == AudioClipBase::speedRamp && clip.getFadeIn() != 0_td)
             || (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && clip.getFadeOut() != 0_td))
@@ -508,7 +470,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          params.forRendering);
         }
     }
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
         const auto timeStretcherMode = clip.getActualTimeStretchMode();
@@ -589,7 +550,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getPitchChange());
         }
     }
-   #endif
 
     // Plugins
     if (params.includePlugins)

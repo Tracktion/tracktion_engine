@@ -178,14 +178,6 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH 0
 #endif
 
-/** Config: TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
-    Enables real-time time-stretching without having to generate proxy files.
-    N.B. This is experimental and not ready for production yet.
-*/
-#ifndef TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
- #define TRACKTION_ENABLE_REALTIME_TIMESTRETCHING 1
-#endif
-
 /** Config: TRACKTION_BUILD_LIBSAMPLERATE
     Enables building of the libsamplerate sources.
     For simplicity these are included but if you are using these elsewhere in your

@@ -187,14 +187,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
     void setSpeedCompensation (double phaseProportion)
     {
         if (auto epc = transport.getCurrentPlaybackContext())
-        {
-           #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
             epc->setTempoAdjustment (phaseProportion * 10.0);
-           #else
-            const double speedComp = juce::jlimit (-10.0, 10.0, phaseProportion * 1000.0);
-            epc->setSpeedCompensation (speedComp);
-           #endif
-        }
     }
 
     TransportControl& transport;

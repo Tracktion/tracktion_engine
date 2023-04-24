@@ -483,12 +483,6 @@ public:
     /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();
 
-    /** Can be enabled to use a simpler playback node for time-stretched previews. */
-    void setUsesTimestretchedPreview (bool shouldUsePreview) noexcept   { useTimestretchedPreview = shouldUsePreview; }
-
-    /** Returns true if this clp should use a time-stretched preview. */
-    bool usesTimestretchedPreview() const noexcept                      { return useTimestretchedPreview; }
-
     /** Returns an AudioSegmentList describing this file if it is using auto-tempo.
         This can be useful for drawing waveforms.
         [[ message_thread ]]
@@ -645,7 +639,6 @@ protected:
     juce::AudioChannelSet activeChannels;
     void updateLeftRightChannelActivenessFlags();
 
-    bool useTimestretchedPreview = false;
     PluginList pluginList;
 
     bool lastRenderJobFailed = false;

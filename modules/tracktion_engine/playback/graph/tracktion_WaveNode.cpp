@@ -465,122 +465,6 @@ public:
 };
 
 
-#if USE_RESET_TIMESTRETCH
-//==============================================================================
-class TimeStretchReader : public SingleInputAudioReader
-{
-public:
-    TimeStretchReader (std::unique_ptr<AudioReader> input)
-        : SingleInputAudioReader (std::move (input)), numChannels ((int) source->getNumChannels())
-    {
-        timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
-                                  TimeStretcher::defaultMode, {}, true);
-        inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
-        outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
-    }
-
-    SampleCount getPosition() override
-    {
-        return getReadPosition();
-    }
-
-    void setPosition (SampleCount t) override
-    {
-        nextReadPos = t;
-    }
-
-    void setPosition (TimePosition t) override
-    {
-        setPosition (toSamples (t, getSampleRate()));
-    }
-
-    void reset() override
-    {
-        source->setPosition (nextReadPos);
-        timeStretcher.reset();
-        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
-        inputFifo.reset();
-        outputFifo.reset();
-    }
-
-    void setSpeed (double speedRatio)
-    {
-        if (playbackSpeedRatio == speedRatio)
-            return;
-
-        playbackSpeedRatio = speedRatio;
-        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
-    }
-
-    void setPitch (double semitones)
-    {
-        if (semitonesShift == semitones)
-            return;
-
-        semitonesShift = semitones;
-        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
-    }
-
-    void setSpeedAndPitch (double speedRatio, double semitones)
-    {
-        playbackSpeedRatio = speedRatio;
-        semitonesShift = semitones;
-        [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) (1.0 / speedRatio), (float) semitonesShift);
-        assert (ok);
-    }
-
-    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
-    {
-        assert (numChannels == (int) destBuffer.getNumChannels());
-        const auto numFramesToDo = destBuffer.getNumFrames();
-
-        for (;;)
-        {
-            // If there are enough output samples in the fifo, read them out
-            if (outputFifo.getNumReady() >= int (numFramesToDo))
-            {
-                auto destAudioBuffer = toAudioBuffer (destBuffer);
-                outputFifo.read (destAudioBuffer, 0);
-                break;
-            }
-
-            const auto numThisTime = timeStretcher.getFramesNeeded();
-
-            if (numThisTime > 0)
-            {
-                // Read samples from source and push to fifo
-                AudioScratchBuffer scratchBuffer (numChannels, numThisTime);
-                scratchBuffer.buffer.clear();
-                auto scratchView = toBufferView (scratchBuffer.buffer);
-                source->readSamples (scratchView);
-                inputFifo.write (scratchBuffer.buffer);
-            }
-
-            // Push into time-stretcher and read output samples to out fifo
-            assert (inputFifo.getNumReady() >= numThisTime);
-            assert (outputFifo.getFreeSpace() >= numThisTime);
-            assert (outputFifo.getFreeSpace() >= chunkSize);
-            timeStretcher.processData (inputFifo, numThisTime, outputFifo);
-        }
-
-        readPosition += numFramesToDo * playbackSpeedRatio;
-
-        return true;
-    }
-
-    static constexpr int chunkSize = 1024;
-    const int numChannels;
-    TimeStretcher timeStretcher;
-    AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize };
-    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
-    SampleCount nextReadPos = 0;
-
-    SampleCount getReadPosition() const
-    {
-        return static_cast<SampleCount> (std::llround (readPosition));
-    }
-};
-#else
 class TimeStretchReader final   : public SingleInputAudioReader
 {
 public:
@@ -700,7 +584,6 @@ public:
         return static_cast<SampleCount> (readPosition + 0.5);
     }
 };
-#endif
 
 struct WarpedTime
 {

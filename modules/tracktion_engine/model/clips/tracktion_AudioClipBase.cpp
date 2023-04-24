@@ -1846,10 +1846,8 @@ void AudioClipBase::setUsesProxy (bool canUseProxy) noexcept
 
 bool AudioClipBase::usesTimeStretchedProxy() const
 {
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     if (! proxyAllowed)
         return false;
-   #endif
 
     return getAutoTempo() || getAutoPitch()
            || getPitchChange() != 0.0f

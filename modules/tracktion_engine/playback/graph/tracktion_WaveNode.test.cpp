@@ -32,7 +32,6 @@ public:
             runLoopedTimelineTests<WaveNode> ("WaveNode", ts);
         }
 
-       #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
         logMessage ("WaveNodeRealTime");
 
         for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -41,7 +40,6 @@ public:
             runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
             runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
         }
-       #endif
     }
 
 private:
