@@ -1305,8 +1305,10 @@ void TransportControl::performPlay()
         {
             playHeadWrapper->play ({ transportState->startTime, transportState->endTime }, looping);
 
-            if (looping)
-                playHeadWrapper->setPosition (position);
+            // Post the position change to be dispatched otherwise what we're effectively doing is setting
+            // the position for "this" block and it will get incremented the next block, actually starting
+            // playback 1 block from the start
+            playHeadWrapper->setPosition (position);
         }
         else
         {
