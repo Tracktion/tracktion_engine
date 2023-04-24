@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-21 12:52:56</td>
+            <td class="headerValue">2023-04-24 11:32:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -249,407 +249,400 @@
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     void setSpeedCompensation (double phaseProportion)</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :     {</a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         if (auto epc = transport.getCurrentPlaybackContext())</span></a>
-<a name="190"><span class="lineNum">     190 </span>            :         {</a>
-<a name="191"><span class="lineNum">     191 </span>            :            #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :             epc-&gt;setTempoAdjustment (phaseProportion * 10.0);</span></a>
-<a name="193"><span class="lineNum">     193 </span>            :            #else</a>
-<a name="194"><span class="lineNum">     194 </span>            :             const double speedComp = juce::jlimit (-10.0, 10.0, phaseProportion * 1000.0);</a>
-<a name="195"><span class="lineNum">     195 </span>            :             epc-&gt;setSpeedCompensation (speedComp);</a>
-<a name="196"><span class="lineNum">     196 </span>            :            #endif</a>
-<a name="197"><span class="lineNum">     197 </span>            :         }</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :             epc-&gt;setTempoAdjustment (phaseProportion * 10.0);</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="192"><span class="lineNum">     192 </span>            : </a>
+<a name="193"><span class="lineNum">     193 </span>            :     TransportControl&amp; transport;</a>
+<a name="194"><span class="lineNum">     194 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
+<a name="195"><span class="lineNum">     195 </span>            :     std::atomic&lt;size_t&gt; numPeers { 0 };</a>
+<a name="196"><span class="lineNum">     196 </span>            :     std::atomic&lt;int&gt; customOffsetMs { 0 };</a>
+<a name="197"><span class="lineNum">     197 </span>            :     uint32_t inhibitTimer = 0;</a>
+<a name="198"><span class="lineNum">     198 </span>            :     std::atomic&lt;double&gt; linkBarPhase { 0.0 }, chaseProportion { 0.0 };</a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            :     TransportControl&amp; transport;</a>
-<a name="201"><span class="lineNum">     201 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
-<a name="202"><span class="lineNum">     202 </span>            :     std::atomic&lt;size_t&gt; numPeers { 0 };</a>
-<a name="203"><span class="lineNum">     203 </span>            :     std::atomic&lt;int&gt; customOffsetMs { 0 };</a>
-<a name="204"><span class="lineNum">     204 </span>            :     uint32_t inhibitTimer = 0;</a>
-<a name="205"><span class="lineNum">     205 </span>            :     std::atomic&lt;double&gt; linkBarPhase { 0.0 }, chaseProportion { 0.0 };</a>
-<a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span>            :     juce::Range&lt;double&gt; allowedTempos { 0.0, 999.0 };</a>
-<a name="208"><span class="lineNum">     208 </span>            : };</a>
-<a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span>            : #if TRACKTION_ENABLE_ABLETON_LINK</a>
-<a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span>            : #if (JUCE_WINDOWS || JUCE_MAC || JUCE_LINUX || JUCE_ANDROID)</a>
-<a name="213"><span class="lineNum">     213 </span>            :     //==========================================================================</a>
-<a name="214"><span class="lineNum">     214 </span>            :     struct LinkImpl  : public AbletonLink::ImplBase</a>
-<a name="215"><span class="lineNum">     215 </span>            :     {</a>
-<a name="216"><span class="lineNum">     216 </span>            :         LinkImpl (TransportControl&amp; t)</a>
-<a name="217"><span class="lineNum">     217 </span>            :             : AbletonLink::ImplBase (t)</a>
+<a name="200"><span class="lineNum">     200 </span>            :     juce::Range&lt;double&gt; allowedTempos { 0.0, 999.0 };</a>
+<a name="201"><span class="lineNum">     201 </span>            : };</a>
+<a name="202"><span class="lineNum">     202 </span>            : </a>
+<a name="203"><span class="lineNum">     203 </span>            : #if TRACKTION_ENABLE_ABLETON_LINK</a>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<a name="205"><span class="lineNum">     205 </span>            : #if (JUCE_WINDOWS || JUCE_MAC || JUCE_LINUX || JUCE_ANDROID)</a>
+<a name="206"><span class="lineNum">     206 </span>            :     //==========================================================================</a>
+<a name="207"><span class="lineNum">     207 </span>            :     struct LinkImpl  : public AbletonLink::ImplBase</a>
+<a name="208"><span class="lineNum">     208 </span>            :     {</a>
+<a name="209"><span class="lineNum">     209 </span>            :         LinkImpl (TransportControl&amp; t)</a>
+<a name="210"><span class="lineNum">     210 </span>            :             : AbletonLink::ImplBase (t)</a>
+<a name="211"><span class="lineNum">     211 </span>            :         {</a>
+<a name="212"><span class="lineNum">     212 </span>            :             link.setNumPeersCallback ([this] (std::size_t n) { numPeersCallback (n); });</a>
+<a name="213"><span class="lineNum">     213 </span>            :             link.setTempoCallback ([this] (double bpm) { setTempoFromLink (bpm); });</a>
+<a name="214"><span class="lineNum">     214 </span>            :             link.setStartStopCallback ([this] (bool isPlaying) { setStartStopFromLink (isPlaying); });</a>
+<a name="215"><span class="lineNum">     215 </span>            :         }</a>
+<a name="216"><span class="lineNum">     216 </span>            : </a>
+<a name="217"><span class="lineNum">     217 </span>            :         ~LinkImpl() override</a>
 <a name="218"><span class="lineNum">     218 </span>            :         {</a>
-<a name="219"><span class="lineNum">     219 </span>            :             link.setNumPeersCallback ([this] (std::size_t n) { numPeersCallback (n); });</a>
-<a name="220"><span class="lineNum">     220 </span>            :             link.setTempoCallback ([this] (double bpm) { setTempoFromLink (bpm); });</a>
-<a name="221"><span class="lineNum">     221 </span>            :             link.setStartStopCallback ([this] (bool isPlaying) { setStartStopFromLink (isPlaying); });</a>
+<a name="219"><span class="lineNum">     219 </span>            :             link.setNumPeersCallback ([] (std::size_t) {});</a>
+<a name="220"><span class="lineNum">     220 </span>            :             link.setTempoCallback ([] (double) {});</a>
+<a name="221"><span class="lineNum">     221 </span>            :             link.setStartStopCallback ([] (bool) {});</a>
 <a name="222"><span class="lineNum">     222 </span>            :         }</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span>            :         ~LinkImpl() override</a>
+<a name="224"><span class="lineNum">     224 </span>            :         bool isEnabled() const override</a>
 <a name="225"><span class="lineNum">     225 </span>            :         {</a>
-<a name="226"><span class="lineNum">     226 </span>            :             link.setNumPeersCallback ([] (std::size_t) {});</a>
-<a name="227"><span class="lineNum">     227 </span>            :             link.setTempoCallback ([] (double) {});</a>
-<a name="228"><span class="lineNum">     228 </span>            :             link.setStartStopCallback ([] (bool) {});</a>
-<a name="229"><span class="lineNum">     229 </span>            :         }</a>
-<a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span>            :         bool isEnabled() const override</a>
-<a name="232"><span class="lineNum">     232 </span>            :         {</a>
-<a name="233"><span class="lineNum">     233 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="234"><span class="lineNum">     234 </span>            :             return link.isEnabled();</a>
-<a name="235"><span class="lineNum">     235 </span>            :         }</a>
-<a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span>            :         void setEnabled (bool isEnabled) override</a>
-<a name="238"><span class="lineNum">     238 </span>            :         {</a>
-<a name="239"><span class="lineNum">     239 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="240"><span class="lineNum">     240 </span>            :             link.enable (isEnabled);</a>
-<a name="241"><span class="lineNum">     241 </span>            :             activateTimer (isEnabled);</a>
-<a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span>            :             if (isEnabled)</a>
-<a name="244"><span class="lineNum">     244 </span>            :                 setTempoFromLink (link.captureAppSessionState().tempo());</a>
-<a name="245"><span class="lineNum">     245 </span>            :         }</a>
-<a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span>            :         bool isPlaying() const override</a>
-<a name="248"><span class="lineNum">     248 </span>            :         {</a>
-<a name="249"><span class="lineNum">     249 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="250"><span class="lineNum">     250 </span>            :             return link.captureAppSessionState().isPlaying();</a>
-<a name="251"><span class="lineNum">     251 </span>            :         }</a>
-<a name="252"><span class="lineNum">     252 </span>            : </a>
-<a name="253"><span class="lineNum">     253 </span>            :         void enableStartStopSync (bool enable) override</a>
-<a name="254"><span class="lineNum">     254 </span>            :         {</a>
-<a name="255"><span class="lineNum">     255 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="256"><span class="lineNum">     256 </span>            :             link.enableStartStopSync (enable);</a>
-<a name="257"><span class="lineNum">     257 </span>            :         }</a>
-<a name="258"><span class="lineNum">     258 </span>            : </a>
-<a name="259"><span class="lineNum">     259 </span>            :         bool getStartStopSyncEnabledFromLink() const override</a>
-<a name="260"><span class="lineNum">     260 </span>            :         {</a>
-<a name="261"><span class="lineNum">     261 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="262"><span class="lineNum">     262 </span>            :             return link.isStartStopSyncEnabled();</a>
-<a name="263"><span class="lineNum">     263 </span>            :         }</a>
-<a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span>            :         void numPeersCallback (std::size_t newNumPeers)</a>
-<a name="266"><span class="lineNum">     266 </span>            :         {</a>
-<a name="267"><span class="lineNum">     267 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
-<a name="268"><span class="lineNum">     268 </span>            :             numPeers = newNumPeers;</a>
-<a name="269"><span class="lineNum">     269 </span>            :             callConnectionChanged();</a>
-<a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span>            :             if (isConnected())</a>
-<a name="272"><span class="lineNum">     272 </span>            :                 setTempoFromLink (link.captureAudioSessionState().tempo());</a>
-<a name="273"><span class="lineNum">     273 </span>            :         }</a>
-<a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span>            :         void setStartStopToLink (bool isPlaying) override</a>
-<a name="276"><span class="lineNum">     276 </span>            :         {</a>
-<a name="277"><span class="lineNum">     277 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="278"><span class="lineNum">     278 </span>            :             auto state = link.captureAppSessionState();</a>
-<a name="279"><span class="lineNum">     279 </span>            :             state.setIsPlaying (isPlaying, clock.micros());</a>
-<a name="280"><span class="lineNum">     280 </span>            :             link.commitAppSessionState (state);</a>
-<a name="281"><span class="lineNum">     281 </span>            :         }</a>
-<a name="282"><span class="lineNum">     282 </span>            : </a>
-<a name="283"><span class="lineNum">     283 </span>            :         void setTempoToLink (double bpm) override</a>
-<a name="284"><span class="lineNum">     284 </span>            :         {</a>
-<a name="285"><span class="lineNum">     285 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="286"><span class="lineNum">     286 </span>            :             auto state = link.captureAppSessionState();</a>
-<a name="287"><span class="lineNum">     287 </span>            :             state.setTempo (bpm, clock.micros());</a>
-<a name="288"><span class="lineNum">     288 </span>            :             link.commitAppSessionState (state);</a>
-<a name="289"><span class="lineNum">     289 </span>            :         }</a>
-<a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span>            :         double getTempoFromLink() override</a>
-<a name="292"><span class="lineNum">     292 </span>            :         {</a>
-<a name="293"><span class="lineNum">     293 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
-<a name="294"><span class="lineNum">     294 </span>            :             return link.captureAudioSessionState().tempo();</a>
-<a name="295"><span class="lineNum">     295 </span>            :         }</a>
-<a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span>            :         double getBeatNow (double quantum) override</a>
-<a name="298"><span class="lineNum">     298 </span>            :         {</a>
-<a name="299"><span class="lineNum">     299 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
-<a name="300"><span class="lineNum">     300 </span>            :             return link.captureAudioSessionState().beatAtTime (clock.micros(), quantum);</a>
-<a name="301"><span class="lineNum">     301 </span>            :         }</a>
-<a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span>            :         double getBarPhase (double quantum) override</a>
-<a name="304"><span class="lineNum">     304 </span>            :         {</a>
-<a name="305"><span class="lineNum">     305 </span>            :             if (juce::MessageManager::existsAndIsCurrentThread())</a>
-<a name="306"><span class="lineNum">     306 </span>            :                 return link.captureAppSessionState().phaseAtTime (clock.micros(), quantum);</a>
+<a name="226"><span class="lineNum">     226 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="227"><span class="lineNum">     227 </span>            :             return link.isEnabled();</a>
+<a name="228"><span class="lineNum">     228 </span>            :         }</a>
+<a name="229"><span class="lineNum">     229 </span>            : </a>
+<a name="230"><span class="lineNum">     230 </span>            :         void setEnabled (bool isEnabled) override</a>
+<a name="231"><span class="lineNum">     231 </span>            :         {</a>
+<a name="232"><span class="lineNum">     232 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="233"><span class="lineNum">     233 </span>            :             link.enable (isEnabled);</a>
+<a name="234"><span class="lineNum">     234 </span>            :             activateTimer (isEnabled);</a>
+<a name="235"><span class="lineNum">     235 </span>            : </a>
+<a name="236"><span class="lineNum">     236 </span>            :             if (isEnabled)</a>
+<a name="237"><span class="lineNum">     237 </span>            :                 setTempoFromLink (link.captureAppSessionState().tempo());</a>
+<a name="238"><span class="lineNum">     238 </span>            :         }</a>
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<a name="240"><span class="lineNum">     240 </span>            :         bool isPlaying() const override</a>
+<a name="241"><span class="lineNum">     241 </span>            :         {</a>
+<a name="242"><span class="lineNum">     242 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="243"><span class="lineNum">     243 </span>            :             return link.captureAppSessionState().isPlaying();</a>
+<a name="244"><span class="lineNum">     244 </span>            :         }</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span>            :         void enableStartStopSync (bool enable) override</a>
+<a name="247"><span class="lineNum">     247 </span>            :         {</a>
+<a name="248"><span class="lineNum">     248 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="249"><span class="lineNum">     249 </span>            :             link.enableStartStopSync (enable);</a>
+<a name="250"><span class="lineNum">     250 </span>            :         }</a>
+<a name="251"><span class="lineNum">     251 </span>            : </a>
+<a name="252"><span class="lineNum">     252 </span>            :         bool getStartStopSyncEnabledFromLink() const override</a>
+<a name="253"><span class="lineNum">     253 </span>            :         {</a>
+<a name="254"><span class="lineNum">     254 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="255"><span class="lineNum">     255 </span>            :             return link.isStartStopSyncEnabled();</a>
+<a name="256"><span class="lineNum">     256 </span>            :         }</a>
+<a name="257"><span class="lineNum">     257 </span>            : </a>
+<a name="258"><span class="lineNum">     258 </span>            :         void numPeersCallback (std::size_t newNumPeers)</a>
+<a name="259"><span class="lineNum">     259 </span>            :         {</a>
+<a name="260"><span class="lineNum">     260 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
+<a name="261"><span class="lineNum">     261 </span>            :             numPeers = newNumPeers;</a>
+<a name="262"><span class="lineNum">     262 </span>            :             callConnectionChanged();</a>
+<a name="263"><span class="lineNum">     263 </span>            : </a>
+<a name="264"><span class="lineNum">     264 </span>            :             if (isConnected())</a>
+<a name="265"><span class="lineNum">     265 </span>            :                 setTempoFromLink (link.captureAudioSessionState().tempo());</a>
+<a name="266"><span class="lineNum">     266 </span>            :         }</a>
+<a name="267"><span class="lineNum">     267 </span>            : </a>
+<a name="268"><span class="lineNum">     268 </span>            :         void setStartStopToLink (bool isPlaying) override</a>
+<a name="269"><span class="lineNum">     269 </span>            :         {</a>
+<a name="270"><span class="lineNum">     270 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="271"><span class="lineNum">     271 </span>            :             auto state = link.captureAppSessionState();</a>
+<a name="272"><span class="lineNum">     272 </span>            :             state.setIsPlaying (isPlaying, clock.micros());</a>
+<a name="273"><span class="lineNum">     273 </span>            :             link.commitAppSessionState (state);</a>
+<a name="274"><span class="lineNum">     274 </span>            :         }</a>
+<a name="275"><span class="lineNum">     275 </span>            : </a>
+<a name="276"><span class="lineNum">     276 </span>            :         void setTempoToLink (double bpm) override</a>
+<a name="277"><span class="lineNum">     277 </span>            :         {</a>
+<a name="278"><span class="lineNum">     278 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="279"><span class="lineNum">     279 </span>            :             auto state = link.captureAppSessionState();</a>
+<a name="280"><span class="lineNum">     280 </span>            :             state.setTempo (bpm, clock.micros());</a>
+<a name="281"><span class="lineNum">     281 </span>            :             link.commitAppSessionState (state);</a>
+<a name="282"><span class="lineNum">     282 </span>            :         }</a>
+<a name="283"><span class="lineNum">     283 </span>            : </a>
+<a name="284"><span class="lineNum">     284 </span>            :         double getTempoFromLink() override</a>
+<a name="285"><span class="lineNum">     285 </span>            :         {</a>
+<a name="286"><span class="lineNum">     286 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
+<a name="287"><span class="lineNum">     287 </span>            :             return link.captureAudioSessionState().tempo();</a>
+<a name="288"><span class="lineNum">     288 </span>            :         }</a>
+<a name="289"><span class="lineNum">     289 </span>            : </a>
+<a name="290"><span class="lineNum">     290 </span>            :         double getBeatNow (double quantum) override</a>
+<a name="291"><span class="lineNum">     291 </span>            :         {</a>
+<a name="292"><span class="lineNum">     292 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
+<a name="293"><span class="lineNum">     293 </span>            :             return link.captureAudioSessionState().beatAtTime (clock.micros(), quantum);</a>
+<a name="294"><span class="lineNum">     294 </span>            :         }</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span>            :         double getBarPhase (double quantum) override</a>
+<a name="297"><span class="lineNum">     297 </span>            :         {</a>
+<a name="298"><span class="lineNum">     298 </span>            :             if (juce::MessageManager::existsAndIsCurrentThread())</a>
+<a name="299"><span class="lineNum">     299 </span>            :                 return link.captureAppSessionState().phaseAtTime (clock.micros(), quantum);</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            :             return link.captureAudioSessionState().phaseAtTime (clock.micros(), quantum);</a>
+<a name="302"><span class="lineNum">     302 </span>            :         }</a>
+<a name="303"><span class="lineNum">     303 </span>            : </a>
+<a name="304"><span class="lineNum">     304 </span>            :         ableton::Link::Clock clock;</a>
+<a name="305"><span class="lineNum">     305 </span>            :         ableton::Link link { 120 };</a>
+<a name="306"><span class="lineNum">     306 </span>            :     };</a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
-<a name="308"><span class="lineNum">     308 </span>            :             return link.captureAudioSessionState().phaseAtTime (clock.micros(), quantum);</a>
-<a name="309"><span class="lineNum">     309 </span>            :         }</a>
-<a name="310"><span class="lineNum">     310 </span>            : </a>
-<a name="311"><span class="lineNum">     311 </span>            :         ableton::Link::Clock clock;</a>
-<a name="312"><span class="lineNum">     312 </span>            :         ableton::Link link { 120 };</a>
-<a name="313"><span class="lineNum">     313 </span>            :     };</a>
+<a name="308"><span class="lineNum">     308 </span>            : #elif JUCE_IOS</a>
+<a name="309"><span class="lineNum">     309 </span>            : </a>
+<a name="310"><span class="lineNum">     310 </span>            :     // To use Link on iOS you need to get access to the LinkKit repo from</a>
+<a name="311"><span class="lineNum">     311 </span>            :     // Ableton, add its include folder to your header search paths, and link to</a>
+<a name="312"><span class="lineNum">     312 </span>            :     // the libABLLink.a static library.</a>
+<a name="313"><span class="lineNum">     313 </span>            :     #include &quot;ABLLink.h&quot;</a>
 <a name="314"><span class="lineNum">     314 </span>            : </a>
-<a name="315"><span class="lineNum">     315 </span>            : #elif JUCE_IOS</a>
-<a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span>            :     // To use Link on iOS you need to get access to the LinkKit repo from</a>
-<a name="318"><span class="lineNum">     318 </span>            :     // Ableton, add its include folder to your header search paths, and link to</a>
-<a name="319"><span class="lineNum">     319 </span>            :     // the libABLLink.a static library.</a>
-<a name="320"><span class="lineNum">     320 </span>            :     #include &quot;ABLLink.h&quot;</a>
-<a name="321"><span class="lineNum">     321 </span>            : </a>
-<a name="322"><span class="lineNum">     322 </span>            :     struct LinkImpl  : public AbletonLink::ImplBase</a>
-<a name="323"><span class="lineNum">     323 </span>            :     {</a>
-<a name="324"><span class="lineNum">     324 </span>            :         LinkImpl (TransportControl&amp; t)</a>
-<a name="325"><span class="lineNum">     325 </span>            :             : AbletonLink::ImplBase (t),</a>
-<a name="326"><span class="lineNum">     326 </span>            :               link (ABLLinkNew (120))</a>
-<a name="327"><span class="lineNum">     327 </span>            :         {</a>
-<a name="328"><span class="lineNum">     328 </span>            :             ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);</a>
-<a name="329"><span class="lineNum">     329 </span>            :             ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);</a>
-<a name="330"><span class="lineNum">     330 </span>            :             ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);</a>
-<a name="331"><span class="lineNum">     331 </span>            :             ABLLinkSetStartStopCallback (link, startStopCallback, this);</a>
-<a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span>            :             setEnabled (isActive);</a>
-<a name="334"><span class="lineNum">     334 </span>            :         }</a>
-<a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span>            :         ~LinkImpl() override</a>
-<a name="337"><span class="lineNum">     337 </span>            :         {</a>
-<a name="338"><span class="lineNum">     338 </span>            :              ABLLinkDelete (link);</a>
-<a name="339"><span class="lineNum">     339 </span>            :         }</a>
-<a name="340"><span class="lineNum">     340 </span>            : </a>
-<a name="341"><span class="lineNum">     341 </span>            :         bool isEnabled() const override</a>
-<a name="342"><span class="lineNum">     342 </span>            :         {</a>
-<a name="343"><span class="lineNum">     343 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="344"><span class="lineNum">     344 </span>            :             return ABLLinkIsEnabled (link) &amp;&amp; isActive;</a>
-<a name="345"><span class="lineNum">     345 </span>            :         }</a>
-<a name="346"><span class="lineNum">     346 </span>            : </a>
-<a name="347"><span class="lineNum">     347 </span>            :         void setEnabled (bool isEnabled) override</a>
-<a name="348"><span class="lineNum">     348 </span>            :         {</a>
-<a name="349"><span class="lineNum">     349 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="350"><span class="lineNum">     350 </span>            :             isActive = isEnabled;</a>
-<a name="351"><span class="lineNum">     351 </span>            :             ABLLinkSetActive (link, isEnabled);</a>
-<a name="352"><span class="lineNum">     352 </span>            : </a>
-<a name="353"><span class="lineNum">     353 </span>            :             // We don't necessarily get an isConnectedCallback callback after</a>
-<a name="354"><span class="lineNum">     354 </span>            :             // enabling, make sure everything is up to date.</a>
-<a name="355"><span class="lineNum">     355 </span>            :             Edit::WeakRef bailOut (&amp;transport.edit);</a>
+<a name="315"><span class="lineNum">     315 </span>            :     struct LinkImpl  : public AbletonLink::ImplBase</a>
+<a name="316"><span class="lineNum">     316 </span>            :     {</a>
+<a name="317"><span class="lineNum">     317 </span>            :         LinkImpl (TransportControl&amp; t)</a>
+<a name="318"><span class="lineNum">     318 </span>            :             : AbletonLink::ImplBase (t),</a>
+<a name="319"><span class="lineNum">     319 </span>            :               link (ABLLinkNew (120))</a>
+<a name="320"><span class="lineNum">     320 </span>            :         {</a>
+<a name="321"><span class="lineNum">     321 </span>            :             ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);</a>
+<a name="322"><span class="lineNum">     322 </span>            :             ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);</a>
+<a name="323"><span class="lineNum">     323 </span>            :             ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);</a>
+<a name="324"><span class="lineNum">     324 </span>            :             ABLLinkSetStartStopCallback (link, startStopCallback, this);</a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span>            :             setEnabled (isActive);</a>
+<a name="327"><span class="lineNum">     327 </span>            :         }</a>
+<a name="328"><span class="lineNum">     328 </span>            : </a>
+<a name="329"><span class="lineNum">     329 </span>            :         ~LinkImpl() override</a>
+<a name="330"><span class="lineNum">     330 </span>            :         {</a>
+<a name="331"><span class="lineNum">     331 </span>            :              ABLLinkDelete (link);</a>
+<a name="332"><span class="lineNum">     332 </span>            :         }</a>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<a name="334"><span class="lineNum">     334 </span>            :         bool isEnabled() const override</a>
+<a name="335"><span class="lineNum">     335 </span>            :         {</a>
+<a name="336"><span class="lineNum">     336 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="337"><span class="lineNum">     337 </span>            :             return ABLLinkIsEnabled (link) &amp;&amp; isActive;</a>
+<a name="338"><span class="lineNum">     338 </span>            :         }</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span>            :         void setEnabled (bool isEnabled) override</a>
+<a name="341"><span class="lineNum">     341 </span>            :         {</a>
+<a name="342"><span class="lineNum">     342 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="343"><span class="lineNum">     343 </span>            :             isActive = isEnabled;</a>
+<a name="344"><span class="lineNum">     344 </span>            :             ABLLinkSetActive (link, isEnabled);</a>
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<a name="346"><span class="lineNum">     346 </span>            :             // We don't necessarily get an isConnectedCallback callback after</a>
+<a name="347"><span class="lineNum">     347 </span>            :             // enabling, make sure everything is up to date.</a>
+<a name="348"><span class="lineNum">     348 </span>            :             Edit::WeakRef bailOut (&amp;transport.edit);</a>
+<a name="349"><span class="lineNum">     349 </span>            : </a>
+<a name="350"><span class="lineNum">     350 </span>            :             Timer::callAfterDelay (500, [this, bailOut]</a>
+<a name="351"><span class="lineNum">     351 </span>            :             {</a>
+<a name="352"><span class="lineNum">     352 </span>            :                 if (bailOut != nullptr)</a>
+<a name="353"><span class="lineNum">     353 </span>            :                     isConnectedCallback (ABLLinkIsConnected (link), this);</a>
+<a name="354"><span class="lineNum">     354 </span>            :             });</a>
+<a name="355"><span class="lineNum">     355 </span>            :         }</a>
 <a name="356"><span class="lineNum">     356 </span>            : </a>
-<a name="357"><span class="lineNum">     357 </span>            :             Timer::callAfterDelay (500, [this, bailOut]</a>
-<a name="358"><span class="lineNum">     358 </span>            :             {</a>
-<a name="359"><span class="lineNum">     359 </span>            :                 if (bailOut != nullptr)</a>
-<a name="360"><span class="lineNum">     360 </span>            :                     isConnectedCallback (ABLLinkIsConnected (link), this);</a>
-<a name="361"><span class="lineNum">     361 </span>            :             });</a>
-<a name="362"><span class="lineNum">     362 </span>            :         }</a>
-<a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span>            :         bool isPlaying() const override</a>
-<a name="365"><span class="lineNum">     365 </span>            :         {</a>
-<a name="366"><span class="lineNum">     366 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="367"><span class="lineNum">     367 </span>            :             return ABLLinkIsPlaying (ABLLinkCaptureAppSessionState (link));</a>
-<a name="368"><span class="lineNum">     368 </span>            :         }</a>
-<a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span>            :         void enableStartStopSync (bool) override</a>
-<a name="371"><span class="lineNum">     371 </span>            :         {</a>
-<a name="372"><span class="lineNum">     372 </span>            :             jassertfalse; // This is only settable via the system prefs</a>
-<a name="373"><span class="lineNum">     373 </span>            :         }</a>
-<a name="374"><span class="lineNum">     374 </span>            : </a>
-<a name="375"><span class="lineNum">     375 </span>            :         bool getStartStopSyncEnabledFromLink() const override</a>
-<a name="376"><span class="lineNum">     376 </span>            :         {</a>
-<a name="377"><span class="lineNum">     377 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="378"><span class="lineNum">     378 </span>            :             return ABLLinkIsStartStopSyncEnabled (link);</a>
-<a name="379"><span class="lineNum">     379 </span>            :         }</a>
-<a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span>            :         void setStartStopToLink (bool isPlaying) override</a>
-<a name="382"><span class="lineNum">     382 </span>            :         {</a>
-<a name="383"><span class="lineNum">     383 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="384"><span class="lineNum">     384 </span>            :             auto state = ABLLinkCaptureAppSessionState (link);</a>
-<a name="385"><span class="lineNum">     385 </span>            :             ABLLinkSetIsPlaying (state, isPlaying, (std::uint64_t) juce::Time::getHighResolutionTicks());</a>
-<a name="386"><span class="lineNum">     386 </span>            :             ABLLinkCommitAppSessionState (link, state);</a>
-<a name="387"><span class="lineNum">     387 </span>            :         }</a>
-<a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span>            :         void setTempoToLink (double bpm) override</a>
-<a name="390"><span class="lineNum">     390 </span>            :         {</a>
-<a name="391"><span class="lineNum">     391 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="392"><span class="lineNum">     392 </span>            :             auto state = ABLLinkCaptureAppSessionState (link);</a>
-<a name="393"><span class="lineNum">     393 </span>            :             ABLLinkSetTempo (state, bpm, (std::uint64_t) juce::Time::getHighResolutionTicks());</a>
-<a name="394"><span class="lineNum">     394 </span>            :             ABLLinkCommitAppSessionState (link, state);</a>
-<a name="395"><span class="lineNum">     395 </span>            :         }</a>
-<a name="396"><span class="lineNum">     396 </span>            : </a>
-<a name="397"><span class="lineNum">     397 </span>            :         double getTempoFromLink() override</a>
-<a name="398"><span class="lineNum">     398 </span>            :         {</a>
-<a name="399"><span class="lineNum">     399 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
-<a name="400"><span class="lineNum">     400 </span>            :             return ABLLinkGetTempo (ABLLinkCaptureAudioSessionState (link));</a>
+<a name="357"><span class="lineNum">     357 </span>            :         bool isPlaying() const override</a>
+<a name="358"><span class="lineNum">     358 </span>            :         {</a>
+<a name="359"><span class="lineNum">     359 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="360"><span class="lineNum">     360 </span>            :             return ABLLinkIsPlaying (ABLLinkCaptureAppSessionState (link));</a>
+<a name="361"><span class="lineNum">     361 </span>            :         }</a>
+<a name="362"><span class="lineNum">     362 </span>            : </a>
+<a name="363"><span class="lineNum">     363 </span>            :         void enableStartStopSync (bool) override</a>
+<a name="364"><span class="lineNum">     364 </span>            :         {</a>
+<a name="365"><span class="lineNum">     365 </span>            :             jassertfalse; // This is only settable via the system prefs</a>
+<a name="366"><span class="lineNum">     366 </span>            :         }</a>
+<a name="367"><span class="lineNum">     367 </span>            : </a>
+<a name="368"><span class="lineNum">     368 </span>            :         bool getStartStopSyncEnabledFromLink() const override</a>
+<a name="369"><span class="lineNum">     369 </span>            :         {</a>
+<a name="370"><span class="lineNum">     370 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="371"><span class="lineNum">     371 </span>            :             return ABLLinkIsStartStopSyncEnabled (link);</a>
+<a name="372"><span class="lineNum">     372 </span>            :         }</a>
+<a name="373"><span class="lineNum">     373 </span>            : </a>
+<a name="374"><span class="lineNum">     374 </span>            :         void setStartStopToLink (bool isPlaying) override</a>
+<a name="375"><span class="lineNum">     375 </span>            :         {</a>
+<a name="376"><span class="lineNum">     376 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="377"><span class="lineNum">     377 </span>            :             auto state = ABLLinkCaptureAppSessionState (link);</a>
+<a name="378"><span class="lineNum">     378 </span>            :             ABLLinkSetIsPlaying (state, isPlaying, (std::uint64_t) juce::Time::getHighResolutionTicks());</a>
+<a name="379"><span class="lineNum">     379 </span>            :             ABLLinkCommitAppSessionState (link, state);</a>
+<a name="380"><span class="lineNum">     380 </span>            :         }</a>
+<a name="381"><span class="lineNum">     381 </span>            : </a>
+<a name="382"><span class="lineNum">     382 </span>            :         void setTempoToLink (double bpm) override</a>
+<a name="383"><span class="lineNum">     383 </span>            :         {</a>
+<a name="384"><span class="lineNum">     384 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="385"><span class="lineNum">     385 </span>            :             auto state = ABLLinkCaptureAppSessionState (link);</a>
+<a name="386"><span class="lineNum">     386 </span>            :             ABLLinkSetTempo (state, bpm, (std::uint64_t) juce::Time::getHighResolutionTicks());</a>
+<a name="387"><span class="lineNum">     387 </span>            :             ABLLinkCommitAppSessionState (link, state);</a>
+<a name="388"><span class="lineNum">     388 </span>            :         }</a>
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<a name="390"><span class="lineNum">     390 </span>            :         double getTempoFromLink() override</a>
+<a name="391"><span class="lineNum">     391 </span>            :         {</a>
+<a name="392"><span class="lineNum">     392 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
+<a name="393"><span class="lineNum">     393 </span>            :             return ABLLinkGetTempo (ABLLinkCaptureAudioSessionState (link));</a>
+<a name="394"><span class="lineNum">     394 </span>            :         }</a>
+<a name="395"><span class="lineNum">     395 </span>            : </a>
+<a name="396"><span class="lineNum">     396 </span>            :         double getBeatNow (double quantum) override</a>
+<a name="397"><span class="lineNum">     397 </span>            :         {</a>
+<a name="398"><span class="lineNum">     398 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
+<a name="399"><span class="lineNum">     399 </span>            :             auto state = ABLLinkCaptureAudioSessionState (link);</a>
+<a name="400"><span class="lineNum">     400 </span>            :             return ABLLinkBeatAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);</a>
 <a name="401"><span class="lineNum">     401 </span>            :         }</a>
 <a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span>            :         double getBeatNow (double quantum) override</a>
+<a name="403"><span class="lineNum">     403 </span>            :         double getBarPhase (double quantum) override</a>
 <a name="404"><span class="lineNum">     404 </span>            :         {</a>
-<a name="405"><span class="lineNum">     405 </span>            :             jassert (! juce::MessageManager::existsAndIsCurrentThread());</a>
-<a name="406"><span class="lineNum">     406 </span>            :             auto state = ABLLinkCaptureAudioSessionState (link);</a>
-<a name="407"><span class="lineNum">     407 </span>            :             return ABLLinkBeatAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);</a>
-<a name="408"><span class="lineNum">     408 </span>            :         }</a>
-<a name="409"><span class="lineNum">     409 </span>            : </a>
-<a name="410"><span class="lineNum">     410 </span>            :         double getBarPhase (double quantum) override</a>
-<a name="411"><span class="lineNum">     411 </span>            :         {</a>
-<a name="412"><span class="lineNum">     412 </span>            :             auto state = juce::MessageManager::existsAndIsCurrentThread()</a>
-<a name="413"><span class="lineNum">     413 </span>            :                             ? ABLLinkCaptureAppSessionState (link)</a>
-<a name="414"><span class="lineNum">     414 </span>            :                             : ABLLinkCaptureAudioSessionState (link);</a>
-<a name="415"><span class="lineNum">     415 </span>            : </a>
-<a name="416"><span class="lineNum">     416 </span>            :             return ABLLinkPhaseAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);</a>
-<a name="417"><span class="lineNum">     417 </span>            :         }</a>
-<a name="418"><span class="lineNum">     418 </span>            : </a>
-<a name="419"><span class="lineNum">     419 </span>            :         static void tempoChangedCallback (double bpm, void *context)</a>
-<a name="420"><span class="lineNum">     420 </span>            :         {</a>
-<a name="421"><span class="lineNum">     421 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
-<a name="422"><span class="lineNum">     422 </span>            :             thisPtr-&gt;setTempoFromLink (bpm);</a>
-<a name="423"><span class="lineNum">     423 </span>            :         }</a>
+<a name="405"><span class="lineNum">     405 </span>            :             auto state = juce::MessageManager::existsAndIsCurrentThread()</a>
+<a name="406"><span class="lineNum">     406 </span>            :                             ? ABLLinkCaptureAppSessionState (link)</a>
+<a name="407"><span class="lineNum">     407 </span>            :                             : ABLLinkCaptureAudioSessionState (link);</a>
+<a name="408"><span class="lineNum">     408 </span>            : </a>
+<a name="409"><span class="lineNum">     409 </span>            :             return ABLLinkPhaseAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);</a>
+<a name="410"><span class="lineNum">     410 </span>            :         }</a>
+<a name="411"><span class="lineNum">     411 </span>            : </a>
+<a name="412"><span class="lineNum">     412 </span>            :         static void tempoChangedCallback (double bpm, void *context)</a>
+<a name="413"><span class="lineNum">     413 </span>            :         {</a>
+<a name="414"><span class="lineNum">     414 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
+<a name="415"><span class="lineNum">     415 </span>            :             thisPtr-&gt;setTempoFromLink (bpm);</a>
+<a name="416"><span class="lineNum">     416 </span>            :         }</a>
+<a name="417"><span class="lineNum">     417 </span>            : </a>
+<a name="418"><span class="lineNum">     418 </span>            :         static void isConnectedCallback (bool isConnected, void *context)</a>
+<a name="419"><span class="lineNum">     419 </span>            :         {</a>
+<a name="420"><span class="lineNum">     420 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
+<a name="421"><span class="lineNum">     421 </span>            : </a>
+<a name="422"><span class="lineNum">     422 </span>            :             thisPtr-&gt;numPeers = (size_t) (isConnected ? 1 : 0);</a>
+<a name="423"><span class="lineNum">     423 </span>            :             thisPtr-&gt;activateTimer (isConnected);</a>
 <a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span>            :         static void isConnectedCallback (bool isConnected, void *context)</a>
-<a name="426"><span class="lineNum">     426 </span>            :         {</a>
-<a name="427"><span class="lineNum">     427 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
-<a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span>            :             thisPtr-&gt;numPeers = (size_t) (isConnected ? 1 : 0);</a>
-<a name="430"><span class="lineNum">     430 </span>            :             thisPtr-&gt;activateTimer (isConnected);</a>
+<a name="425"><span class="lineNum">     425 </span>            :             isEnabledCallback (isConnected, context);</a>
+<a name="426"><span class="lineNum">     426 </span>            :         }</a>
+<a name="427"><span class="lineNum">     427 </span>            : </a>
+<a name="428"><span class="lineNum">     428 </span>            :         static void isEnabledCallback (bool isEnabled, void *context)</a>
+<a name="429"><span class="lineNum">     429 </span>            :         {</a>
+<a name="430"><span class="lineNum">     430 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
 <a name="431"><span class="lineNum">     431 </span>            : </a>
-<a name="432"><span class="lineNum">     432 </span>            :             isEnabledCallback (isConnected, context);</a>
-<a name="433"><span class="lineNum">     433 </span>            :         }</a>
+<a name="432"><span class="lineNum">     432 </span>            :             if (! isEnabled)</a>
+<a name="433"><span class="lineNum">     433 </span>            :                 thisPtr-&gt;numPeers = (size_t) 0;</a>
 <a name="434"><span class="lineNum">     434 </span>            : </a>
-<a name="435"><span class="lineNum">     435 </span>            :         static void isEnabledCallback (bool isEnabled, void *context)</a>
-<a name="436"><span class="lineNum">     436 </span>            :         {</a>
-<a name="437"><span class="lineNum">     437 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
-<a name="438"><span class="lineNum">     438 </span>            : </a>
-<a name="439"><span class="lineNum">     439 </span>            :             if (! isEnabled)</a>
-<a name="440"><span class="lineNum">     440 </span>            :                 thisPtr-&gt;numPeers = (size_t) 0;</a>
-<a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span>            :             thisPtr-&gt;callConnectionChanged();</a>
-<a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span>            :             if (isEnabled)</a>
-<a name="445"><span class="lineNum">     445 </span>            :                 broadcastTempo (thisPtr);</a>
-<a name="446"><span class="lineNum">     446 </span>            :         }</a>
-<a name="447"><span class="lineNum">     447 </span>            : </a>
-<a name="448"><span class="lineNum">     448 </span>            :         static void startStopCallback (bool isPlaying, void *context)</a>
-<a name="449"><span class="lineNum">     449 </span>            :         {</a>
-<a name="450"><span class="lineNum">     450 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
-<a name="451"><span class="lineNum">     451 </span>            :             thisPtr-&gt;setStartStopFromLink (isPlaying);</a>
-<a name="452"><span class="lineNum">     452 </span>            :         }</a>
-<a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span>            :         static void broadcastTempo (LinkImpl* context)</a>
-<a name="455"><span class="lineNum">     455 </span>            :         {</a>
-<a name="456"><span class="lineNum">     456 </span>            :             context-&gt;setTempoFromLink (context-&gt;getTempoFromLink());</a>
-<a name="457"><span class="lineNum">     457 </span>            :         }</a>
-<a name="458"><span class="lineNum">     458 </span>            : </a>
-<a name="459"><span class="lineNum">     459 </span>            :         ABLLinkRef link;</a>
-<a name="460"><span class="lineNum">     460 </span>            :         static bool isActive; // Multiple edits may exist, Link is global</a>
-<a name="461"><span class="lineNum">     461 </span>            :     };</a>
-<a name="462"><span class="lineNum">     462 </span>            : </a>
-<a name="463"><span class="lineNum">     463 </span>            :     bool LinkImpl::isActive = true;</a>
-<a name="464"><span class="lineNum">     464 </span>            : </a>
-<a name="465"><span class="lineNum">     465 </span>            : #endif</a>
-<a name="466"><span class="lineNum">     466 </span>            : #endif // TRACKTION_ENABLE_ABLETON_LINK</a>
-<a name="467"><span class="lineNum">     467 </span>            : </a>
+<a name="435"><span class="lineNum">     435 </span>            :             thisPtr-&gt;callConnectionChanged();</a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span>            :             if (isEnabled)</a>
+<a name="438"><span class="lineNum">     438 </span>            :                 broadcastTempo (thisPtr);</a>
+<a name="439"><span class="lineNum">     439 </span>            :         }</a>
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<a name="441"><span class="lineNum">     441 </span>            :         static void startStopCallback (bool isPlaying, void *context)</a>
+<a name="442"><span class="lineNum">     442 </span>            :         {</a>
+<a name="443"><span class="lineNum">     443 </span>            :             auto* thisPtr = static_cast&lt;LinkImpl*&gt; (context);</a>
+<a name="444"><span class="lineNum">     444 </span>            :             thisPtr-&gt;setStartStopFromLink (isPlaying);</a>
+<a name="445"><span class="lineNum">     445 </span>            :         }</a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span>            :         static void broadcastTempo (LinkImpl* context)</a>
+<a name="448"><span class="lineNum">     448 </span>            :         {</a>
+<a name="449"><span class="lineNum">     449 </span>            :             context-&gt;setTempoFromLink (context-&gt;getTempoFromLink());</a>
+<a name="450"><span class="lineNum">     450 </span>            :         }</a>
+<a name="451"><span class="lineNum">     451 </span>            : </a>
+<a name="452"><span class="lineNum">     452 </span>            :         ABLLinkRef link;</a>
+<a name="453"><span class="lineNum">     453 </span>            :         static bool isActive; // Multiple edits may exist, Link is global</a>
+<a name="454"><span class="lineNum">     454 </span>            :     };</a>
+<a name="455"><span class="lineNum">     455 </span>            : </a>
+<a name="456"><span class="lineNum">     456 </span>            :     bool LinkImpl::isActive = true;</a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span>            : #endif</a>
+<a name="459"><span class="lineNum">     459 </span>            : #endif // TRACKTION_ENABLE_ABLETON_LINK</a>
+<a name="460"><span class="lineNum">     460 </span>            : </a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span>            : //==============================================================================</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">        273 : AbletonLink::AbletonLink (TransportControl&amp; t)</span></a>
+<a name="464"><span class="lineNum">     464 </span>            : {</a>
+<a name="465"><span class="lineNum">     465 </span>            :    #if TRACKTION_ENABLE_ABLETON_LINK</a>
+<a name="466"><span class="lineNum">     466 </span>            :     implementation.reset (new LinkImpl (t));</a>
+<a name="467"><span class="lineNum">     467 </span>            :    #endif</a>
 <a name="468"><span class="lineNum">     468 </span>            : </a>
-<a name="469"><span class="lineNum">     469 </span>            : //==============================================================================</a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        273 : AbletonLink::AbletonLink (TransportControl&amp; t)</span></a>
-<a name="471"><span class="lineNum">     471 </span>            : {</a>
-<a name="472"><span class="lineNum">     472 </span>            :    #if TRACKTION_ENABLE_ABLETON_LINK</a>
-<a name="473"><span class="lineNum">     473 </span>            :     implementation.reset (new LinkImpl (t));</a>
-<a name="474"><span class="lineNum">     474 </span>            :    #endif</a>
-<a name="475"><span class="lineNum">     475 </span>            : </a>
-<a name="476"><span class="lineNum">     476 </span>            :     juce::ignoreUnused (t);</a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineCov">        273 : }</span></a>
-<a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineCov">        273 : AbletonLink::~AbletonLink() {}</span></a>
-<a name="480"><span class="lineNum">     480 </span>            : </a>
-<a name="481"><span class="lineNum">     481 </span>            : #if TRACKTION_ENABLE_ABLETON_LINK &amp;&amp; JUCE_IOS</a>
-<a name="482"><span class="lineNum">     482 </span>            :  ABLLink* AbletonLink::getLinkInstanceForIOS()  { return static_cast&lt;LinkImpl*&gt;(implementation.get())-&gt;link; }</a>
-<a name="483"><span class="lineNum">     483 </span>            : #endif</a>
-<a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 : void AbletonLink::setEnabled (bool isEnabled)</span></a>
-<a name="486"><span class="lineNum">     486 </span>            : {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :         implementation-&gt;setEnabled (isEnabled);</span></a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="490"><span class="lineNum">     490 </span>            : </a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 : bool AbletonLink::isEnabled() const</span></a>
-<a name="492"><span class="lineNum">     492 </span>            : {</a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isEnabled();</span></a>
-<a name="494"><span class="lineNum">     494 </span>            : }</a>
-<a name="495"><span class="lineNum">     495 </span>            : </a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 : bool AbletonLink::isConnected() const</span></a>
-<a name="497"><span class="lineNum">     497 </span>            : {</a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isConnected();</span></a>
-<a name="499"><span class="lineNum">     499 </span>            : }</a>
-<a name="500"><span class="lineNum">     500 </span>            : </a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 : size_t AbletonLink::getNumPeers() const</span></a>
-<a name="502"><span class="lineNum">     502 </span>            : {</a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;numPeers.load() : 0;</span></a>
-<a name="504"><span class="lineNum">     504 </span>            : }</a>
-<a name="505"><span class="lineNum">     505 </span>            : </a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 : bool AbletonLink::isPlaying() const</span></a>
-<a name="507"><span class="lineNum">     507 </span>            : {</a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isPlaying();</span></a>
-<a name="509"><span class="lineNum">     509 </span>            : }</a>
-<a name="510"><span class="lineNum">     510 </span>            : </a>
-<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 : void AbletonLink::enableStartStopSync (bool enable)</span></a>
-<a name="512"><span class="lineNum">     512 </span>            : {</a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         implementation-&gt;enableStartStopSync (enable);</span></a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="516"><span class="lineNum">     516 </span>            : </a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 : bool AbletonLink::isStartStopSyncEnabled() const</span></a>
-<a name="518"><span class="lineNum">     518 </span>            : {</a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;getStartStopSyncEnabledFromLink();</span></a>
-<a name="520"><span class="lineNum">     520 </span>            : }</a>
-<a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 : double AbletonLink::getBeatsUntilNextCycle (double quantum) const</span></a>
-<a name="523"><span class="lineNum">     523 </span>            : {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :         return implementation-&gt;getBeatsUntilNextCycle (quantum);</span></a>
-<a name="526"><span class="lineNum">     526 </span>            : </a>
-<a name="527"><span class="lineNum">     527 </span>            :     return 0.0;</a>
-<a name="528"><span class="lineNum">     528 </span>            : }</a>
-<a name="529"><span class="lineNum">     529 </span>            : </a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 : void AbletonLink::requestStartStopChange (bool isPlaying)</span></a>
-<a name="531"><span class="lineNum">     531 </span>            : {</a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :         implementation-&gt;setStartStopToLink (isPlaying);</span></a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="535"><span class="lineNum">     535 </span>            : </a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 : void AbletonLink::requestTempoChange (double newBpm)</span></a>
-<a name="537"><span class="lineNum">     537 </span>            : {</a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :         implementation-&gt;setTempoToLink (newBpm);</span></a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="541"><span class="lineNum">     541 </span>            : </a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 : void AbletonLink::setTempoConstraint (juce::Range&lt;double&gt; minMaxTempo)</span></a>
-<a name="543"><span class="lineNum">     543 </span>            : {</a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :         implementation-&gt;setTempoConstraint (minMaxTempo);</span></a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="547"><span class="lineNum">     547 </span>            : </a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 : double AbletonLink::getBarPhase() const</span></a>
-<a name="549"><span class="lineNum">     549 </span>            : {</a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;linkBarPhase.load() : 0.0;</span></a>
-<a name="551"><span class="lineNum">     551 </span>            : }</a>
-<a name="552"><span class="lineNum">     552 </span>            : </a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 : double AbletonLink::getChaseProportion() const</span></a>
-<a name="554"><span class="lineNum">     554 </span>            : {</a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;chaseProportion.load() : 0.0;</span></a>
-<a name="556"><span class="lineNum">     556 </span>            : }</a>
-<a name="557"><span class="lineNum">     557 </span>            : </a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 : double AbletonLink::getSessionTempo() const</span></a>
-<a name="559"><span class="lineNum">     559 </span>            : {</a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :         return implementation-&gt;getTempoFromLink();</span></a>
-<a name="562"><span class="lineNum">     562 </span>            : </a>
-<a name="563"><span class="lineNum">     563 </span>            :     return 120.0;</a>
-<a name="564"><span class="lineNum">     564 </span>            : }</a>
-<a name="565"><span class="lineNum">     565 </span>            : </a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 : void AbletonLink::setCustomOffset (int offsetMs)</span></a>
-<a name="567"><span class="lineNum">     567 </span>            : {</a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="569"><span class="lineNum">     569 </span>            :         implementation-&gt;setCustomOffset (offsetMs);</a>
-<a name="570"><span class="lineNum">     570 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="571"><span class="lineNum">     571 </span>            : </a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 : void AbletonLink::syncronise (TimePosition pos)</span></a>
-<a name="573"><span class="lineNum">     573 </span>            : {</a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="575"><span class="lineNum">     575 </span><span class="lineNoCov">          0 :         implementation-&gt;syncronise (pos);</span></a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 : void AbletonLink::addListener (Listener* l)</span></a>
-<a name="579"><span class="lineNum">     579 </span>            : {</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="581"><span class="lineNum">     581 </span>            :         implementation-&gt;addListener (l);</a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="583"><span class="lineNum">     583 </span>            : </a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 : void AbletonLink::removeListener (Listener* l)</span></a>
-<a name="585"><span class="lineNum">     585 </span>            : {</a>
-<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
-<a name="587"><span class="lineNum">     587 </span>            :         implementation-&gt;removeListener (l);</a>
-<a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="589"><span class="lineNum">     589 </span>            : </a>
-<a name="590"><span class="lineNum">     590 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="469"><span class="lineNum">     469 </span>            :     juce::ignoreUnused (t);</a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        273 : }</span></a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">        273 : AbletonLink::~AbletonLink() {}</span></a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span>            : #if TRACKTION_ENABLE_ABLETON_LINK &amp;&amp; JUCE_IOS</a>
+<a name="475"><span class="lineNum">     475 </span>            :  ABLLink* AbletonLink::getLinkInstanceForIOS()  { return static_cast&lt;LinkImpl*&gt;(implementation.get())-&gt;link; }</a>
+<a name="476"><span class="lineNum">     476 </span>            : #endif</a>
+<a name="477"><span class="lineNum">     477 </span>            : </a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 : void AbletonLink::setEnabled (bool isEnabled)</span></a>
+<a name="479"><span class="lineNum">     479 </span>            : {</a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :         implementation-&gt;setEnabled (isEnabled);</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="483"><span class="lineNum">     483 </span>            : </a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 : bool AbletonLink::isEnabled() const</span></a>
+<a name="485"><span class="lineNum">     485 </span>            : {</a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isEnabled();</span></a>
+<a name="487"><span class="lineNum">     487 </span>            : }</a>
+<a name="488"><span class="lineNum">     488 </span>            : </a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 : bool AbletonLink::isConnected() const</span></a>
+<a name="490"><span class="lineNum">     490 </span>            : {</a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isConnected();</span></a>
+<a name="492"><span class="lineNum">     492 </span>            : }</a>
+<a name="493"><span class="lineNum">     493 </span>            : </a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 : size_t AbletonLink::getNumPeers() const</span></a>
+<a name="495"><span class="lineNum">     495 </span>            : {</a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;numPeers.load() : 0;</span></a>
+<a name="497"><span class="lineNum">     497 </span>            : }</a>
+<a name="498"><span class="lineNum">     498 </span>            : </a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : bool AbletonLink::isPlaying() const</span></a>
+<a name="500"><span class="lineNum">     500 </span>            : {</a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;isPlaying();</span></a>
+<a name="502"><span class="lineNum">     502 </span>            : }</a>
+<a name="503"><span class="lineNum">     503 </span>            : </a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 : void AbletonLink::enableStartStopSync (bool enable)</span></a>
+<a name="505"><span class="lineNum">     505 </span>            : {</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :         implementation-&gt;enableStartStopSync (enable);</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="509"><span class="lineNum">     509 </span>            : </a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 : bool AbletonLink::isStartStopSyncEnabled() const</span></a>
+<a name="511"><span class="lineNum">     511 </span>            : {</a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :     return implementation != nullptr &amp;&amp; implementation-&gt;getStartStopSyncEnabledFromLink();</span></a>
+<a name="513"><span class="lineNum">     513 </span>            : }</a>
+<a name="514"><span class="lineNum">     514 </span>            : </a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 : double AbletonLink::getBeatsUntilNextCycle (double quantum) const</span></a>
+<a name="516"><span class="lineNum">     516 </span>            : {</a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :         return implementation-&gt;getBeatsUntilNextCycle (quantum);</span></a>
+<a name="519"><span class="lineNum">     519 </span>            : </a>
+<a name="520"><span class="lineNum">     520 </span>            :     return 0.0;</a>
+<a name="521"><span class="lineNum">     521 </span>            : }</a>
+<a name="522"><span class="lineNum">     522 </span>            : </a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 : void AbletonLink::requestStartStopChange (bool isPlaying)</span></a>
+<a name="524"><span class="lineNum">     524 </span>            : {</a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :         implementation-&gt;setStartStopToLink (isPlaying);</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="528"><span class="lineNum">     528 </span>            : </a>
+<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : void AbletonLink::requestTempoChange (double newBpm)</span></a>
+<a name="530"><span class="lineNum">     530 </span>            : {</a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :         implementation-&gt;setTempoToLink (newBpm);</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="534"><span class="lineNum">     534 </span>            : </a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 : void AbletonLink::setTempoConstraint (juce::Range&lt;double&gt; minMaxTempo)</span></a>
+<a name="536"><span class="lineNum">     536 </span>            : {</a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :         implementation-&gt;setTempoConstraint (minMaxTempo);</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 : double AbletonLink::getBarPhase() const</span></a>
+<a name="542"><span class="lineNum">     542 </span>            : {</a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;linkBarPhase.load() : 0.0;</span></a>
+<a name="544"><span class="lineNum">     544 </span>            : }</a>
+<a name="545"><span class="lineNum">     545 </span>            : </a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : double AbletonLink::getChaseProportion() const</span></a>
+<a name="547"><span class="lineNum">     547 </span>            : {</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :     return implementation != nullptr ? implementation-&gt;chaseProportion.load() : 0.0;</span></a>
+<a name="549"><span class="lineNum">     549 </span>            : }</a>
+<a name="550"><span class="lineNum">     550 </span>            : </a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 : double AbletonLink::getSessionTempo() const</span></a>
+<a name="552"><span class="lineNum">     552 </span>            : {</a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :         return implementation-&gt;getTempoFromLink();</span></a>
+<a name="555"><span class="lineNum">     555 </span>            : </a>
+<a name="556"><span class="lineNum">     556 </span>            :     return 120.0;</a>
+<a name="557"><span class="lineNum">     557 </span>            : }</a>
+<a name="558"><span class="lineNum">     558 </span>            : </a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 : void AbletonLink::setCustomOffset (int offsetMs)</span></a>
+<a name="560"><span class="lineNum">     560 </span>            : {</a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="562"><span class="lineNum">     562 </span>            :         implementation-&gt;setCustomOffset (offsetMs);</a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="564"><span class="lineNum">     564 </span>            : </a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 : void AbletonLink::syncronise (TimePosition pos)</span></a>
+<a name="566"><span class="lineNum">     566 </span>            : {</a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :         implementation-&gt;syncronise (pos);</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="570"><span class="lineNum">     570 </span>            : </a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 : void AbletonLink::addListener (Listener* l)</span></a>
+<a name="572"><span class="lineNum">     572 </span>            : {</a>
+<a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="574"><span class="lineNum">     574 </span>            :         implementation-&gt;addListener (l);</a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="576"><span class="lineNum">     576 </span>            : </a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineNoCov">          0 : void AbletonLink::removeListener (Listener* l)</span></a>
+<a name="578"><span class="lineNum">     578 </span>            : {</a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :     if (implementation != nullptr)</span></a>
+<a name="580"><span class="lineNum">     580 </span>            :         implementation-&gt;removeListener (l);</a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

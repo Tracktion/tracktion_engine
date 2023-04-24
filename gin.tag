@@ -9849,20 +9849,6 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setUsesTimestretchedPreview</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>aae18f5c311acf28c70ba0e55da28f746</anchor>
-      <arglist>(bool shouldUsePreview) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>usesTimestretchedPreview</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a7143fcc6c0a6fd9f989e4acbf6fca744</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
       <type>const AudioSegmentList &amp;</type>
       <name>getAudioSegmentList</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
@@ -10385,13 +10371,6 @@
       <name>activeChannels</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
       <anchor>a5a2f75b2a19b791de8039bcff8c5379a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>useTimestretchedPreview</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a320432300b0923504c8a773758b48246</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
