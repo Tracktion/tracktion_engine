@@ -1552,7 +1552,7 @@ void TransportControl::performPositionChange()
         newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);
     }
 
-    if (playbackContext != nullptr && isPlaying())
+    if (playbackContext != nullptr)
         playHeadWrapper->setPosition (newPos);
 
     position = newPos;
