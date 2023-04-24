@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 11:40:10</td>
+            <td class="headerValue">2023-04-24 13:52:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -196,13 +196,13 @@
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         16 :             p-&gt;updateToFollowCurve (time);</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">        221 : }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">     156862 : void AutomatableEditItem::updateParameterStreams (TimePosition time)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">     157329 : void AutomatableEditItem::updateParameterStreams (TimePosition time)</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     156862 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     157329 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     239740 :     for (auto p : activeParameters)</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      82879 :         p-&gt;updateFromAutomationSources (time);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     156862 : }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     240419 :     for (auto p : activeParameters)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      83088 :         p-&gt;updateFromAutomationSources (time);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     157332 : }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">       7735 : void AutomatableEditItem::resetRecordingStatus()</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
@@ -217,10 +217,10 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         parameterTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (p));</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   27183847 : void AutomatableEditItem::updateLastPlaybackTime()</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   26865820 : void AutomatableEditItem::updateLastPlaybackTime()</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">   27183847 :     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">   27168414 : }</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">   26865820 :     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">   26804976 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : void AutomatableEditItem::clearParameterList()</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
@@ -256,21 +256,21 @@
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     return params;</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : }</a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       1947 : void AutomatableEditItem::updateActiveParameters()</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       1951 : void AutomatableEditItem::updateActiveParameters()</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : {</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       1947 :     CRASH_TRACER</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       1947 :     juce::ReferenceCountedArray&lt;AutomatableParameter&gt; nowActiveParams;</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       1951 :     CRASH_TRACER</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       1951 :     juce::ReferenceCountedArray&lt;AutomatableParameter&gt; nowActiveParams;</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       7951 :     for (auto ap : automatableParams)</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       6004 :         if (ap-&gt;isAutomationActive())</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       7963 :     for (auto ap : automatableParams)</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       6012 :         if (ap-&gt;isAutomationActive())</span></a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">         20 :             nowActiveParams.add (ap);</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">       1947 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">       1951 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :     activeParameters.swapWith (nowActiveParams);</a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       1947 :     automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       1951 :     automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">       1947 :     lastTime = TimePosition::fromSeconds (-1.0);</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">       1947 : }</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">       1951 :     lastTime = TimePosition::fromSeconds (-1.0);</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">       1951 : }</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineCov">         19 : void AutomatableEditItem::saveChangedParametersToState()</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : {</a>

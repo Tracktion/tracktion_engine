@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 11:40:10</td>
+            <td class="headerValue">2023-04-24 13:52:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -187,11 +187,11 @@
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">       3912 :         callback = std::move (newCallback);</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :     }</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">         40 :     void timerCallback() override</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">         44 :     void timerCallback() override</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :     {</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">         40 :         if (callback)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">         44 :         if (callback)</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :             callback();</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         40 :     }</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         44 :     }</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            : private:</a>
 <a name="135"><span class="lineNum">     135 </span>            :     std::function&lt;void()&gt; callback;</a>

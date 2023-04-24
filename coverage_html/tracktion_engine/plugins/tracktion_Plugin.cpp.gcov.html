@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 11:40:10</td>
+            <td class="headerValue">2023-04-24 13:52:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">27</td>
@@ -73,19 +73,19 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">   27765516 : PluginRenderContext::PluginRenderContext (juce::AudioBuffer&lt;float&gt;* buffer,</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">   27707482 : PluginRenderContext::PluginRenderContext (juce::AudioBuffer&lt;float&gt;* buffer,</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :                                           const juce::AudioChannelSet&amp; bufferChannels,</a>
 <a name="16"><span class="lineNum">      16 </span>            :                                           int bufferStart, int bufferSize,</a>
 <a name="17"><span class="lineNum">      17 </span>            :                                           MidiMessageArray* midiBuffer, double midiOffset,</a>
 <a name="18"><span class="lineNum">      18 </span>            :                                           TimeRange editTimeRange, bool playing, bool scrubbing, bool rendering,</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">   27765516 :                                           bool shouldAllowBypassedProcessing) noexcept</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">   27765516 :     : destBuffer (buffer), destBufferChannels (bufferChannels),</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   28113827 :       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">   28113827 :       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   28113827 :       editTime (editTimeRange),</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   28113827 :       isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   28113827 :       allowBypassedProcessing (shouldAllowBypassedProcessing)</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">   28113827 : {}</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">   27707482 :                                           bool shouldAllowBypassedProcessing) noexcept</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">   27707482 :     : destBuffer (buffer), destBufferChannels (bufferChannels),</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   27733294 :       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">   27733294 :       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   27733294 :       editTime (editTimeRange),</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   27733294 :       isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   27733294 :       allowBypassedProcessing (shouldAllowBypassedProcessing)</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">   27733294 : {}</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span>            : //==============================================================================</a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 : Plugin::Wire::Wire (const juce::ValueTree&amp; v, juce::UndoManager* um)  : state (v)</span></a>
@@ -435,18 +435,18 @@
 <a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     return isClipEffect;</span></a>
 <a name="374"><span class="lineNum">     374 </span>            : }</a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">        727 : void Plugin::valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp; i)</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">        731 : void Plugin::valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp; i)</span></a>
 <a name="377"><span class="lineNum">     377 </span>            : {</a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineCov">        783 :     if (i == IDs::process)</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineCov">        787 :     if (i == IDs::process)</span></a>
 <a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :         processingChanged();</span></a>
 <a name="380"><span class="lineNum">     380 </span>            :     else</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">        783 :         valueTreeChanged();</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">        727 : }</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">        787 :         valueTreeChanged();</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">        731 : }</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       1860 : void Plugin::valueTreeChanged()</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       1864 : void Plugin::valueTreeChanged()</span></a>
 <a name="385"><span class="lineNum">     385 </span>            : {</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1876 :     changed();</span></a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">       1860 : }</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1880 :     changed();</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineCov">       1864 : }</span></a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
 <a name="389"><span class="lineNum">     389 </span><span class="lineCov">       1093 : void Plugin::valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; c)</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : {</a>
@@ -473,12 +473,12 @@
 <a name="411"><span class="lineNum">     411 </span><span class="lineCov">       2037 : }</span></a>
 <a name="412"><span class="lineNum">     412 </span>            : </a>
 <a name="413"><span class="lineNum">     413 </span>            : //==============================================================================</a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineCov">       1876 : void Plugin::changed()</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineCov">       1880 : void Plugin::changed()</span></a>
 <a name="415"><span class="lineNum">     415 </span>            : {</a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineCov">       1876 :     Selectable::changed();</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineCov">       1880 :     Selectable::changed();</span></a>
 <a name="417"><span class="lineNum">     417 </span>            :     jassert (Selectable::isSelectableValid (&amp;edit));</a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineCov">       1876 :     edit.updateMirroredPlugin (*this);</span></a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineCov">       1876 : }</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineCov">       1880 :     edit.updateMirroredPlugin (*this);</span></a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineCov">       1880 : }</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
 <a name="421"><span class="lineNum">     421 </span>            : //==============================================================================</a>
 <a name="422"><span class="lineNum">     422 </span><span class="lineCov">         12 : void Plugin::setEnabled (bool b)</span></a>
@@ -722,31 +722,31 @@
 <a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :         quickParamName = param-&gt;paramID;</span></a>
 <a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="662"><span class="lineNum">     662 </span>            : </a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineCov">   27181333 : void Plugin::applyToBufferWithAutomation (const PluginRenderContext&amp; pc)</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineCov">   26808013 : void Plugin::applyToBufferWithAutomation (const PluginRenderContext&amp; pc)</span></a>
 <a name="664"><span class="lineNum">     664 </span>            : {</a>
 <a name="665"><span class="lineNum">     665 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   27181333 :     const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   26808013 :     const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);</span></a>
 <a name="668"><span class="lineNum">     668 </span>            : </a>
-<a name="669"><span class="lineNum">     669 </span><span class="lineCov">   27185100 :     auto&amp; arm = edit.getAutomationRecordManager();</span></a>
+<a name="669"><span class="lineNum">     669 </span><span class="lineCov">   26883374 :     auto&amp; arm = edit.getAutomationRecordManager();</span></a>
 <a name="670"><span class="lineNum">     670 </span>            :     jassert (initialiseCount &gt; 0);</a>
 <a name="671"><span class="lineNum">     671 </span>            :    #if JUCE_DEBUG</a>
 <a name="672"><span class="lineNum">     672 </span>            :     jassert (! isInitialisingFlag);</a>
 <a name="673"><span class="lineNum">     673 </span>            :    #endif</a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">   27185100 :     updateLastPlaybackTime();</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineCov">   26883374 :     updateLastPlaybackTime();</span></a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
 <a name="677"><span class="lineNum">     677 </span>            :     if (isAutomationNeeded()</a>
-<a name="678"><span class="lineNum">     678 </span><span class="lineCov">   27158471 :         &amp;&amp; (arm.isReadingAutomation() || isClipEffect.load()))</span></a>
+<a name="678"><span class="lineNum">     678 </span><span class="lineCov">   26802030 :         &amp;&amp; (arm.isReadingAutomation() || isClipEffect.load()))</span></a>
 <a name="679"><span class="lineNum">     679 </span>            :     {</a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineCov">      82878 :         if (pc.isScrubbing || ! pc.isPlaying)</span></a>
+<a name="680"><span class="lineNum">     680 </span><span class="lineCov">      83088 :         if (pc.isScrubbing || ! pc.isPlaying)</span></a>
 <a name="681"><span class="lineNum">     681 </span>            :         {</a>
 <a name="682"><span class="lineNum">     682 </span>            :             SCOPED_REALTIME_CHECK</a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineCov">      82878 :             auto&amp; tc = edit.getTransport();</span></a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">     165756 :             updateParameterStreams (tc.isPlayContextActive() &amp;&amp; ! pc.isRendering</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">      83088 :             auto&amp; tc = edit.getTransport();</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">     166176 :             updateParameterStreams (tc.isPlayContextActive() &amp;&amp; ! pc.isRendering</span></a>
 <a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 :                                         ? tc.getPosition()</span></a>
 <a name="686"><span class="lineNum">     686 </span>            :                                         : pc.editTime.getStart());</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">      82878 :             applyToBuffer (pc);</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">      83088 :             applyToBuffer (pc);</span></a>
 <a name="688"><span class="lineNum">     688 </span>            :         }</a>
 <a name="689"><span class="lineNum">     689 </span>            :         else</a>
 <a name="690"><span class="lineNum">     690 </span>            :         {</a>
@@ -758,9 +758,9 @@
 <a name="696"><span class="lineNum">     696 </span>            :     else</a>
 <a name="697"><span class="lineNum">     697 </span>            :     {</a>
 <a name="698"><span class="lineNum">     698 </span>            :         SCOPED_REALTIME_CHECK</a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineCov">   27075593 :         applyToBuffer (pc);</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineCov">   26718942 :         applyToBuffer (pc);</span></a>
 <a name="700"><span class="lineNum">     700 </span>            :     }</a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   27240384 : }</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   26898397 : }</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : </a>
 <a name="703"><span class="lineNum">     703 </span>            : //==============================================================================</a>
 <a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 : bool Plugin::hasNameForMidiNoteNumber (int, int midiChannel, juce::String&amp;)</span></a>
