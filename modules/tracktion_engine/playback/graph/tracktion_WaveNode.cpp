@@ -327,14 +327,14 @@ public:
 
         readPosition = (double) t;
 
-        setPosition (TimePosition::fromSamples (t, destSampleRate));
+        source->setPosition (TimePosition::fromSamples (t, destSampleRate));
 
         src_reset (src_state);
     }
 
     void setPosition (TimePosition t) override
     {
-        source->setPosition (t);
+        setPosition (toSamples (t, destSampleRate));
     }
 
     double getSampleRate() override
@@ -458,7 +458,7 @@ public:
         }
 
         choc::buffer::copy (destBuffer, interleavedOutputScratchBuffer.getStart (numFramesToDo));
-        readPosition += numFramesToDo * ratio;
+        readPosition += numFramesToDo;
 
         return true;
     }
@@ -1817,8 +1817,8 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     }
 
     // If we've just created a new reader, this will be the first
-    // block with it in so we need to fade the block in
-    isFirstBlock = true;
+    // block with it in so we need to fade the block in (unless we're rendering)
+    isFirstBlock = ! isOfflineRender;
 
     return true;
 }

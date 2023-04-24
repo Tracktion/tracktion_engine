@@ -198,6 +198,7 @@ private:
 
         auto& engine = *Engine::getEngines()[0];
         auto edit = Edit::createSingleTrackEdit (engine);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
         edit->ensureNumberOfAudioTracks (1);
         auto t = getAudioTracks (*edit)[0];
 

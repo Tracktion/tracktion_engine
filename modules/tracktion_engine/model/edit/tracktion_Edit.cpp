@@ -269,6 +269,14 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                      || i == IDs::fadeInType || i == IDs::fadeOutType)
                     restart();
             }
+            else if (v.hasType (IDs::LOOPINFO))
+            {
+                if (i == IDs::numBeats || i == IDs::rootNote
+                    || i == IDs::numerator || i == IDs::denominator)
+                {
+                    restart();
+                }
+            }
         }
     }
 
