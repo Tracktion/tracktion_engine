@@ -41,7 +41,7 @@ public:
 
     void setPosition (TimePosition t) override
     {
-        reader->setReadPosition (toSamples (t, getSampleRate()));
+        setPosition (toSamples (t, getSampleRate()));
     }
 
     void setLoopRange (TimeRange loopRange)
@@ -327,14 +327,14 @@ public:
 
         readPosition = (double) t;
 
-        source->setPosition (t);
+        setPosition (TimePosition::fromSamples (t, destSampleRate));
 
         src_reset (src_state);
     }
 
     void setPosition (TimePosition t) override
     {
-        setPosition (toSamples (t, source->getSampleRate()));
+        source->setPosition (t);
     }
 
     double getSampleRate() override
