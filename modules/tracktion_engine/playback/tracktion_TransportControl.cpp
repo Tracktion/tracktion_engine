@@ -985,35 +985,37 @@ void TransportControl::timerCallback()
             clearPlayingFlags();
             startedOrStopped();
         }
-
-        if ((! transportState->userDragging)
-             && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
-            playHeadWrapper->setPosition (position);
     }
-    else
+    else if (! isPlaying())
     {
-        if ((! transportState->userDragging)
-             && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
+        // Playhead is playing but transport state is stopped so start playing
+        play (false);
+    }
+
+    // Update the transport state from the playhead if we have one
+    if (isPlayContextActive()
+         && (! transportState->userDragging)
+         && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
+    {
+        const auto currentTime = playHeadWrapper->getLiveTransportPosition();
+        transportState->setVideoPosition (currentTime, false);
+        transportState->updatePositionFromPlayhead (currentTime);
+    }
+
+    // Periodically update the loop times from the transport state
+    if (--loopUpdateCounter == 0)
+    {
+        loopUpdateCounter = 10;
+
+        if (looping)
         {
-            const auto currentTime = playHeadWrapper->getLiveTransportPosition();
-            transportState->setVideoPosition (currentTime, false);
-            transportState->updatePositionFromPlayhead (currentTime);
+            auto lr = getLoopRange();
+            lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
+            playHeadWrapper->setLoopTimes (true, lr);
         }
-
-        if (--loopUpdateCounter == 0)
+        else
         {
-            loopUpdateCounter = 10;
-
-            if (looping)
-            {
-                auto lr = getLoopRange();
-                lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
-                playHeadWrapper->setLoopTimes (true, lr);
-            }
-            else
-            {
-                playHeadWrapper->setLoopTimes (false, {});
-            }
+            playHeadWrapper->setLoopTimes (false, {});
         }
     }
 }
@@ -1550,7 +1552,7 @@ void TransportControl::performPositionChange()
         newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);
     }
 
-    if (playbackContext != nullptr && isPlaying())
+    if (playbackContext != nullptr)
         playHeadWrapper->setPosition (newPos);
 
     position = newPos;
