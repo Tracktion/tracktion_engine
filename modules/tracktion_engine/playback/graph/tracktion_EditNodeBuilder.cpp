@@ -605,13 +605,16 @@ std::unique_ptr<tracktion_graph::Node> createClipsNode (const juce::Array<Clip*>
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))
         nodes.push_back (std::move (araNode));
     
-    /* BC CHANGE
+    // BEATCONNECT MODIFICATION START
+    /* 
     * Change to allow for injecting midi notes into tracks with empty clips
     * Might need to revert this if swe find a better way to do it, as this does
     * 
     if (nodes.empty())
         return {};
     */
+    // BEATCONNECT MODIFICATION END
+
     if (nodes.size() == 1)
         return std::move (nodes.front());
     
