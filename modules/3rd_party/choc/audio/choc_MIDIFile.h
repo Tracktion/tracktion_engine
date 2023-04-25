@@ -19,6 +19,7 @@
 #ifndef CHOC_MIDIFILE_HEADER_INCLUDED
 #define CHOC_MIDIFILE_HEADER_INCLUDED
 
+#include <stdexcept>
 #include <functional>
 #include "choc_MIDISequence.h"
 
@@ -41,7 +42,10 @@ struct File
     void load (const void* midiFileData, size_t dataSize);
 
     /// Exception which is thrown by load() if errors occur
-    struct ReadError {};
+    struct ReadError : public std::runtime_error
+    {
+        ReadError (const char* error) : std::runtime_error (error) {}
+    };
 
     struct Event
     {
@@ -91,7 +95,7 @@ namespace
         void expectSize (size_t num)
         {
             if (size < num)
-                throw File::ReadError();
+                throw File::ReadError ("Unexpected end-of-file");
         }
 
         void skip (size_t num)
@@ -134,7 +138,7 @@ namespace
                     return n;
 
                 if (++numUsed == 4)
-                    throw File::ReadError();
+                    throw File::ReadError ("Error in variable-length integer");
             }
         }
     };
@@ -161,7 +165,7 @@ namespace
         }
 
         if (chunkName != "MThd")
-            throw File::ReadError();
+            throw File::ReadError ("Unknown chunk type");
 
         auto length = reader.read<uint32_t>();
         reader.expectSize (length);
@@ -172,10 +176,10 @@ namespace
         header.timeFormat = reader.read<uint16_t>();
 
         if (header.fileType > 2)
-            throw File::ReadError();
+            throw File::ReadError ("Unknown file type");
 
         if (header.fileType == 0 && header.numTracks != 1)
-            throw File::ReadError();
+            throw File::ReadError ("Unsupported number of tracks");
 
         return header;
     }
@@ -199,7 +203,7 @@ namespace
             }
 
             if (statusByte < 0x80)
-                throw File::ReadError();
+                throw File::ReadError ("Error in MIDI bytes");
 
             if (statusByte == 0xff) // meta-event
             {
@@ -252,7 +256,7 @@ inline void File::load (const void* midiFileData, size_t dataSize)
         return;
 
     if (midiFileData == nullptr)
-        throw ReadError();
+        throw ReadError ("No data supplied");
 
     Reader reader { static_cast<const uint8_t*> (midiFileData), dataSize };
 
@@ -303,7 +307,7 @@ inline void File::iterateEvents (const std::function<void(const Message&, double
             auto content = event.message.getMetaEventData();
 
             if (content.length() != 3)
-                throw File::ReadError();
+                throw File::ReadError ("Error in meta-event data");
 
             uint32_t microsecondsPerQuarterNote = (uint8_t) content[0];
             microsecondsPerQuarterNote = (microsecondsPerQuarterNote << 8) | (uint8_t) content[1];

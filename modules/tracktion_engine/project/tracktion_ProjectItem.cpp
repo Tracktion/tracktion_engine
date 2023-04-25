@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static const char* slashEscapeSeq = "[[slash]]";
@@ -573,9 +573,9 @@ void ProjectItem::setNamedProperty (const juce::String& name, const juce::String
     }
 }
 
-juce::Array<double> ProjectItem::getMarkedPoints() const
+juce::Array<TimePosition> ProjectItem::getMarkedPoints() const
 {
-    juce::Array<double> marks;
+    juce::Array<TimePosition> marks;
     auto m = getNamedProperty ("marks");
 
     if (m.isNotEmpty())
@@ -584,13 +584,13 @@ juce::Array<double> ProjectItem::getMarkedPoints() const
         toks.addTokens (m, true);
 
         for (auto& t : toks)
-            marks.add (t.getDoubleValue());
+            marks.add (TimePosition::fromSeconds (t.getDoubleValue()));
     }
 
     return marks;
 }
 
-void ProjectItem::setMarkedPoints (const juce::Array<double>& points)
+void ProjectItem::setMarkedPoints (const juce::Array<TimePosition>& points)
 {
     if (auto pp = getProject())
     {
@@ -599,7 +599,7 @@ void ProjectItem::setMarkedPoints (const juce::Array<double>& points)
             juce::String m;
 
             for (auto& p : points)
-                m << p << " ";
+                m << p.inSeconds() << " ";
 
             setNamedProperty ("marks", m.trim());
 
@@ -718,7 +718,7 @@ bool ProjectItem::copySectionToNewFile (const juce::File& destFile,
         actualFileCreated = destFile;
         return AudioFileUtils::copySectionToNewFile (engine,
                                                      getSourceFile(), actualFileCreated,
-                                                     EditTimeRange (startTime, startTime + lengthToCopy)) > 0;
+                                                     { TimePosition::fromSeconds (startTime), TimeDuration::fromSeconds (lengthToCopy) }) > 0;
     }
 
     if (isEdit())
@@ -901,4 +901,4 @@ juce::StringArray ProjectItem::getSearchTokens() const
     return toks;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

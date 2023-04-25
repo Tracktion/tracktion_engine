@@ -84,6 +84,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     TRACKTION_LOG_DEVICES=0)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+    tracktion::tracktion_core
     tracktion::tracktion_engine
     tracktion::tracktion_graph
     juce::juce_audio_devices

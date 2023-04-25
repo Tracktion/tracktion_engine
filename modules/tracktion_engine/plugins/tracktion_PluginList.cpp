@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace
@@ -44,6 +44,7 @@ struct PluginList::ObjectList  : public ValueTreeObjectList<Plugin>
         if (auto p = list.edit.getPluginCache().getOrCreatePluginFor (v))
         {
             p->incReferenceCount();
+            p->trackPropertiesChanged();
             return p.get();
         }
 
@@ -159,6 +160,12 @@ void PluginList::setTrackAndClip (Track* track, Clip* clip)
 {
     ownerTrack = track;
     ownerClip = clip;
+}
+
+void PluginList::updateTrackProperties()
+{
+    for (auto p : *this)
+        p->trackPropertiesChanged();
 }
 
 void PluginList::sendMirrorUpdateToAllPlugins (Plugin& plugin) const
@@ -320,4 +327,4 @@ void PluginList::addDefaultTrackPlugins (bool useVCA)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

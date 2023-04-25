@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -107,8 +107,8 @@ public:
     void setDescription (const juce::String& newDesc);
 
     /** optional set of interesting time markers, for wave files */
-    juce::Array<double> getMarkedPoints() const;
-    void setMarkedPoints (const juce::Array<double>& points);
+    juce::Array<TimePosition> getMarkedPoints() const;
+    void setMarkedPoints (const juce::Array<TimePosition>& points);
 
     /** copies the full description, categories, properties, etc. */
     void copyAllPropertiesFrom (const ProjectItem& other);
@@ -167,11 +167,12 @@ public:
     */
     juce::StringArray getSearchTokens() const;
 
+    Engine& engine; /**< The Engine instance this belongs to. */
+
 private:
     friend class ProjectManager;
     friend class Project;
 
-    Engine& engine;
     ProjectItemID itemID;
     juce::String type, objectName, description, file;
     double length = 0;
@@ -185,4 +186,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectItem)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

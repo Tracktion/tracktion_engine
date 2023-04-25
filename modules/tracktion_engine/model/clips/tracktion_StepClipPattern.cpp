@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 StepClip::Pattern::Pattern (StepClip& c, const juce::ValueTree& v) noexcept
@@ -21,14 +21,14 @@ StepClip::Pattern::Pattern (const Pattern& other) noexcept
 {
 }
 
-juce::String StepClip::Pattern::getName() const               { return state[IDs::name]; }
-void StepClip::Pattern::setName (const juce::String& name)    { state.setProperty (IDs::name, name, clip.getUndoManager()); }
+juce::String StepClip::Pattern::getName() const                 { return state[IDs::name]; }
+void StepClip::Pattern::setName (const juce::String& name)      { state.setProperty (IDs::name, name, clip.getUndoManager()); }
 
-int StepClip::Pattern::getNumNotes() const              { return state[IDs::numNotes]; }
-void StepClip::Pattern::setNumNotes (int n)             { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }
+int StepClip::Pattern::getNumNotes() const                      { return state[IDs::numNotes]; }
+void StepClip::Pattern::setNumNotes (int n)                     { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }
 
-double StepClip::Pattern::getNoteLength() const         { return state[IDs::noteLength]; }
-void StepClip::Pattern::setNoteLength (double n)        { state.setProperty (IDs::noteLength, n, clip.getUndoManager()); }
+BeatDuration StepClip::Pattern::getNoteLength() const           { return BeatDuration::fromBeats (static_cast<double> (state[IDs::noteLength])); }
+void StepClip::Pattern::setNoteLength (BeatDuration n)          { state.setProperty (IDs::noteLength, n.inBeats(), clip.getUndoManager()); }
 
 juce::BigInteger StepClip::Pattern::getChannel (int channel) const
 {
@@ -405,4 +405,4 @@ juce::String StepClip::PatternInstance::getSelectableDescription()
          + TRANS("Variation 123").replace ("123", juce::String (patternIndex + 1)) + ")";
 }
 
-}
+}} // namespace tracktion { inline namespace engine

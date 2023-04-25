@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -853,4 +853,4 @@ private:
 juce::ValueTree updateLegacyEdit (const juce::ValueTree& v)   { return OldEditConversion::convert (v); }
 void updateLegacyEdit (juce::XmlElement& editXML)             { OldEditConversion::convert (editXML); }
 
-}
+}} // namespace tracktion { inline namespace engine

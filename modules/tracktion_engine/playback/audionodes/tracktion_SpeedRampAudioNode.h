@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class SubSampleWaveAudioNode    : public AudioNode
@@ -18,9 +18,9 @@ class SubSampleWaveAudioNode    : public AudioNode
 public:
     SubSampleWaveAudioNode (Engine& e,
                             const AudioFile& af,
-                            EditTimeRange editTime,
+                            legacy::EditTimeRange editTime,
                             double off,
-                            EditTimeRange loop,
+                            legacy::EditTimeRange loop,
                             LiveClipLevel level,
                             double speed,
                             const juce::AudioChannelSet& channels)
@@ -101,7 +101,7 @@ public:
             localReader->setReadPosition (static_cast<SampleCount> (editTimeToFileSample (rc.getEditTime().editRange1.getStart()) + 0.5) - 5);
     }
 
-    void renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
+    void renderSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime)
     {
         // keep a local copy, because releaseAudioNodeResources may remove the reader halfway through..
         const auto localReader (reader);
@@ -212,7 +212,7 @@ public:
 
 private:
     //==============================================================================
-    EditTimeRange editPosition, loopSection;
+    legacy::EditTimeRange editPosition, loopSection;
     double offset;
     double originalSpeedRatio, outputSampleRate = 44100.0;
 
@@ -267,8 +267,8 @@ class SpeedRampAudioNode : public SingleInputAudioNode
 {
 public:
     SpeedRampAudioNode (AudioNode* source,
-                        EditTimeRange in,
-                        EditTimeRange out,
+                        legacy::EditTimeRange in,
+                        legacy::EditTimeRange out,
                         AudioFadeCurve::Type fadeInType_,
                         AudioFadeCurve::Type fadeOutType_)
         : SingleInputAudioNode (source),
@@ -296,7 +296,7 @@ public:
             input->renderAdding (rc);
     }
 
-    void renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
+    void renderSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime)
     {
         const bool intersectsFadeIn  = fadeIn.getLength()  > 0.0 && editTime.overlaps (fadeIn);
         const bool intersectsFadeOut = fadeOut.getLength() > 0.0 && editTime.overlaps (fadeOut);
@@ -309,7 +309,7 @@ public:
             auto streamTime = rc.streamTime;
 
             {
-                EditTimeRange fadeInSection (editTime.getStart(), fadeOut.getStart());
+                legacy::EditTimeRange fadeInSection (editTime.getStart(), fadeOut.getStart());
                 auto fadeInTime = fadeInSection.getLength();
 
                 AudioRenderContext rc2 (rc);
@@ -347,7 +347,7 @@ public:
 
 private:
     //==============================================================================
-    EditTimeRange fadeIn, fadeOut;
+    legacy::EditTimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
 
     bool renderingNeeded (const AudioRenderContext& rc) const
@@ -367,8 +367,8 @@ private:
                 || fadeOut.overlaps (editTime.editRange1);
     }
 
-    void renderRampSection (const AudioRenderContext& rc, EditTimeRange editTime,
-                            EditTimeRange fade, bool rampUp)
+    void renderRampSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime,
+                            legacy::EditTimeRange fade, bool rampUp)
     {
         auto startSample = rc.bufferStartSample;
         auto sampleRate = rc.bufferNumSamples / editTime.getLength();
@@ -403,7 +403,7 @@ private:
             jassert (juce::isPositiveAndNotGreaterThan (startProp, 1.0)
                       && juce::isPositiveAndNotGreaterThan (endProp, 1.0));
 
-            EditTimeRange newEditTime (fade.getStart() + fade.getLength() * startProp,
+            legacy::EditTimeRange newEditTime (fade.getStart() + fade.getLength() * startProp,
                                        fade.getStart() + fade.getLength() * endProp);
 
             auto numSamples = juce::roundToInt (editTimeIntersection.getLength() * sampleRate);
@@ -465,4 +465,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpeedRampAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -52,18 +52,18 @@ public:
     bool isAutomationNeeded() const noexcept                    { return automationActive.load (std::memory_order_relaxed); }
 
     // updates any automatables to their state at this time
-    void setAutomatableParamPosition (double t);
+    void setAutomatableParamPosition (TimePosition);
 
     // true if it's not been more than a few hundred ms since a block was processed
     bool isBeingActivelyPlayed() const;
 
     /** Updates all the auto params to their positions at this time. */
-    virtual void updateAutomatableParamPosition (double time);
+    virtual void updateAutomatableParamPosition (TimePosition);
 
     /** Updates all the parameter streams to their positions at this time.
         This should be used during real time processing as it's a lot quicker than the above method.
     */
-    void updateParameterStreams (double time);
+    void updateParameterStreams (TimePosition);
 
     /** Iterates all the parameters to find out which ones need to be automated. */
     void updateActiveParameters();
@@ -97,7 +97,7 @@ private:
     mutable bool parameterTreeBuilt = false;
     std::atomic<bool> automationActive { false };
     uint32_t systemTimeOfLastPlayedBlock = 0;
-    double lastTime = 0.0;
+    TimePosition lastTime;
 
     struct ParameterChangeListeners  : public juce::AsyncUpdater
     {
@@ -116,4 +116,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableEditItem)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

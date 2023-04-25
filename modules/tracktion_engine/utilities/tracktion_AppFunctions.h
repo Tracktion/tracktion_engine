@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace AppFunctions
@@ -87,7 +87,7 @@ namespace AppFunctions
     void showHideVideo();
     void showHideMixer (bool fs);
     void showHideMidiEditor (bool fs);
-    void showHideTrackEditor();
+    void showHideTrackEditor (bool zoom);
     void showHideBrowser();
     void showHideActions();
     void performUserAction (int);
@@ -111,4 +111,4 @@ namespace AppFunctions
     void toggleTrackFreeze();
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

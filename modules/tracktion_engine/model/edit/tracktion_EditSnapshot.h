@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -28,7 +28,7 @@ public:
     {
         juce::String name;
         juce::Colour colour;
-        EditTimeRange time;
+        TimeRange time;
     };
 
     //==============================================================================
@@ -53,7 +53,7 @@ public:
         temp Edit files work so we need to follow this. It means that this will hold up-to-date
         Xml but only cached properties of the last save which can be used in things like EditClips.
     */
-    void setState (juce::ValueTree, double editLength);
+    void setState (juce::ValueTree, TimeDuration editLength);
 
     /** Returns true if the current source is a valid Edit. */
     bool isValid() const;
@@ -81,10 +81,10 @@ public:
     bool isTrackSoloIsolated (int trackIndex) const                     { return soloIsolatedTracks[trackIndex]; }
     int audioToGlobalTrackIndex (int audioIndex) const;
 
-    double getLength() const                                            { return length; }
-    double getMarkIn() const                                            { return markIn; }
-    double getMarkOut() const                                           { return markOut; }
-    bool areMarksActive() const                                         { return marksActive; }
+    TimeDuration getLength() const                                       { return TimeDuration::fromSeconds (length); }
+    TimePosition getMarkIn() const                                       { return TimePosition::fromSeconds (markIn); }
+    TimePosition getMarkOut() const                                      { return TimePosition::fromSeconds (markOut); }
+    bool areMarksActive() const                                          { return marksActive; }
 
     double getTempo() const                                             { return tempo; }
     int getTimeSigNumerator() const                                     { return timeSigNumerator; }
@@ -147,4 +147,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditSnapshot)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

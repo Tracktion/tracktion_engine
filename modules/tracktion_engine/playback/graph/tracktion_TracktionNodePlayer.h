@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -24,7 +24,7 @@ class TracktionNodePlayer
 public:
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (ProcessState& processStateToUse,
-                         tracktion_graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
+                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
         : playHeadState (processStateToUse.playHeadState),
           processState (processStateToUse),
           nodePlayer (std::move (poolCreator))
@@ -32,10 +32,10 @@ public:
     }
 
     /** Creates an NodePlayer to process a Node. */
-    TracktionNodePlayer (std::unique_ptr<tracktion_graph::Node> node,
+    TracktionNodePlayer (std::unique_ptr<tracktion::graph::Node> node,
                          ProcessState& processStateToUse,
                          double sampleRate, int blockSize,
-                         tracktion_graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
+                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
         : TracktionNodePlayer (processStateToUse, std::move (poolCreator))
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
@@ -50,17 +50,17 @@ public:
         nodePlayer.setNumThreads (numThreads);
     }
 
-    tracktion_graph::Node* getNode()
+    tracktion::graph::Node* getNode()
     {
         return nodePlayer.getNode();
     }
 
-    void setNode (std::unique_ptr<tracktion_graph::Node> newNode)
+    void setNode (std::unique_ptr<tracktion::graph::Node> newNode)
     {
         nodePlayer.setNode (std::move (newNode));
     }
 
-    void setNode (std::unique_ptr<tracktion_graph::Node> newNode, double sampleRateToUse, int blockSizeToUse)
+    void setNode (std::unique_ptr<tracktion::graph::Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
         nodePlayer.setNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
     }
@@ -73,50 +73,26 @@ public:
     /** Processes a block of audio and MIDI data.
         Returns the number of times a node was checked but unable to be processed.
     */
-    int process (const tracktion_graph::Node::ProcessContext& pc)
+    int process (const tracktion::graph::Node::ProcessContext& pc)
     {
         int numMisses = 0;
         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);
-        
+
         // Check to see if the timeline needs to be processed in two halves due to looping
         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
-        
+
         if (splitTimelineRange.isSplit)
         {
-            const auto firstNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange1.getLength();
-            const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
+            const auto firstRangeLength = splitTimelineRange.timelineRange1.getLength();
 
-            {
-                auto destAudio = pc.buffers.audio.getStart (firstNumSamples);
-                auto& destMidi = pc.buffers.midi;
-                
-                processState.update (nodePlayer.getSampleRate(), firstRange);
-                tracktion_graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
-                numMisses += nodePlayer.process (pc1);
-            }
-            
-            {
-                const double firstDuration = processState.editTimeRange.getLength();
-                const auto secondNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange2.getLength();
-                const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
-                
-                auto destAudio = pc.buffers.audio.getFrameRange ({ firstNumSamples, firstNumSamples + secondNumSamples });
-                scratchMidi.clear();
-                
-                tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio, scratchMidi } };
-                processState.update (nodePlayer.getSampleRate(), secondRange);
-                numMisses += nodePlayer.process (pc2);
-
-                // Merge back MIDI from end of block
-                pc.buffers.midi.mergeFromWithOffset (scratchMidi, firstDuration);
-            }
+            numMisses += processReferenceRange (pc, pc.referenceSampleRange.withLength (firstRangeLength));
+            numMisses += processReferenceRange (pc, pc.referenceSampleRange.withStart (pc.referenceSampleRange.getStart() + firstRangeLength));
         }
         else
         {
-            processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange);
-            numMisses += nodePlayer.process (pc);
+            numMisses += processReferenceRange (pc, pc.referenceSampleRange);
         }
-        
+
         return numMisses;
     }
     
@@ -139,10 +115,110 @@ public:
     }
     
 private:
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;
     MidiMessageArray scratchMidi;
-    tracktion_graph::LockFreeMultiThreadedNodePlayer nodePlayer;
+    tracktion::graph::LockFreeMultiThreadedNodePlayer nodePlayer;
+
+    tracktion::graph::Node::ProcessContext getSubProcessContext (const tracktion::graph::Node::ProcessContext& pc, juce::Range<int64_t> subReferenceSampleRange)
+    {
+        jassert (! pc.referenceSampleRange.isEmpty());
+        jassert (pc.referenceSampleRange.contains (subReferenceSampleRange));
+
+        const auto originalReferenceLength = (double) pc.referenceSampleRange.getLength();
+        const juce::Range<double> proportion ((subReferenceSampleRange.getStart() - pc.referenceSampleRange.getStart()) / originalReferenceLength,
+                                              (subReferenceSampleRange.getEnd() - pc.referenceSampleRange.getStart()) / originalReferenceLength);
+
+        const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
+        const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
+        const choc::buffer::FrameRange sampleRange { startSample, endSample };
+
+        auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);
+
+        return { sampleRange.size(), subReferenceSampleRange, { destAudio, pc.buffers.midi } };
+    }
+
+    int processReferenceRange (const tracktion::graph::Node::ProcessContext& pc, juce::Range<int64_t> referenceSampleRange)
+    {
+        return processTempoChanges (getSubProcessContext (pc, referenceSampleRange));
+    }
+
+    int processTempoChanges (const tracktion::graph::Node::ProcessContext& pc)
+    {
+        int numMisses = 0;
+        playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);
+
+        const auto sampleRate = nodePlayer.getSampleRate();
+        processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
+        const auto timeRange = processState.editTimeRange;
+
+        if (processState.tempoPosition)
+        {
+            double startProportion = 0.0;
+            auto lastEventPosition = timeRange.getStart();
+
+            for (;;)
+            {
+                const auto nextTempoChangePosition = processState.tempoPosition->getTimeOfNextChange();
+
+                if (nextTempoChangePosition == lastEventPosition)
+                    break;
+
+                if (! timeRange.contains (nextTempoChangePosition))
+                    break;
+
+                const double proportion = (nextTempoChangePosition - timeRange.getStart()) / timeRange.getLength();
+                const auto numSamples = static_cast<decltype(pc.numSamples)> (std::llround (pc.numSamples * proportion));
+                lastEventPosition = nextTempoChangePosition;
+
+                // Min chunk size of 128 samples to avoid large jitter
+                if (numSamples < 128)
+                    continue;
+
+                processSubRange (pc, { startProportion, proportion });
+                startProportion = proportion;
+            }
+
+            // Process any remaining buffer proportion
+            if (startProportion < 1.0)
+                processSubRange (pc, { startProportion, 1.0 });
+        }
+        else
+        {
+            processSubRange (pc, { 0.0, 1.0 });
+        }
+
+        return numMisses;
+    }
+
+    int processSubRange (const tracktion::graph::Node::ProcessContext& pc, juce::Range<double> proportion)
+    {
+        assert (pc.numSamples > 0);
+        assert (proportion.getStart() >= 0.0);
+        assert (proportion.getEnd() <= 1.0);
+        const auto sampleRate = nodePlayer.getSampleRate();
+
+        const auto startReferenceSample = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * pc.referenceSampleRange.getLength());
+        const auto endReferenceSample   = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * pc.referenceSampleRange.getLength());
+        const juce::Range<int64_t> referenceRange (startReferenceSample, endReferenceSample);
+
+        const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
+        const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
+        const choc::buffer::FrameRange sampleRange { startSample, endSample };
+
+        auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);
+        scratchMidi.clear();
+
+        tracktion::graph::Node::ProcessContext pc2 { sampleRange.size(), referenceRange, { destAudio, scratchMidi } };
+        processState.update (sampleRate, referenceRange, ProcessState::UpdateContinuityFlags::yes);
+        const auto numMisses = nodePlayer.process (pc2);
+
+        // Merge back MIDI from end of block
+        const auto offset = TimeDuration::fromSamples (startReferenceSample - pc.referenceSampleRange.getStart(), sampleRate);
+        pc.buffers.midi.mergeFromWithOffset (scratchMidi, offset.inSeconds());
+
+        return numMisses;
+    }
 };
 
-}
+}} // namespace tracktion { inline namespace engine

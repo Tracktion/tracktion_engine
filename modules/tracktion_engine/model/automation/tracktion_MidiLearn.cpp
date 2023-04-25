@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MidiLearnState::MidiLearnState (Engine& e)  : engine (e) {}
@@ -236,4 +236,4 @@ int MidiAssignable::getFaderIndex()
     return -1;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

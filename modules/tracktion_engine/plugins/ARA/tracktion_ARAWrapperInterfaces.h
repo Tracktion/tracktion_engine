@@ -495,8 +495,8 @@ private:
             
             if (range) 
             {
-                beginTimeSig = ed.tempoSequence.indexOfTimeSigAt (range->start);
-                endTimeSig = ed.tempoSequence.indexOfTimeSigAt (range->start + range->duration) + 1;
+                beginTimeSig = ed.tempoSequence.indexOfTimeSigAt (TimePosition::fromSeconds (range->start));
+                endTimeSig = ed.tempoSequence.indexOfTimeSigAt (TimePosition::fromSeconds (range->start + range->duration)) + 1;
             }
             else 
             {
@@ -507,7 +507,7 @@ private:
             for (int t = beginTimeSig; t < endTimeSig; t++)
             {
                 auto timeSig = ed.tempoSequence.getTimeSig (t);
-                ARAContentBarSignature item = { timeSig->numerator, timeSig->denominator, (ARAQuarterPosition)timeSig->getStartBeat() };
+                ARAContentBarSignature item = { timeSig->numerator, timeSig->denominator, (ARAQuarterPosition)timeSig->getStartBeat().inBeats() };
                 items.add (item);
             }
         }
@@ -519,74 +519,43 @@ private:
     {
         TempoReader (Edit& ed, const ARAContentTimeRange* range)
         {
+            TRACKTION_ASSERT_MESSAGE_THREAD
             jassert (ed.tempoSequence.getNumTempos() > 0);
 
-            // find the range of indices enclosing the desired range
-            int beginTempo, endTempo;
-            if (range)
-            {
-                beginTempo = ed.tempoSequence.indexOfTempoAt (range->start);
-                endTempo = ed.tempoSequence.indexOfTempoAt (range->start + range->duration) + 1;
+            tempo::Sequence::Position tempoPosition (ed.tempoSequence.getInternalSequence());
+            tempoPosition.set (range ? TimePosition::fromSeconds (range->start) : 0_tp);
 
-                // include the entry after the end of our range, if it exists,
-                // so that plug-ins can calculate tempo at the range boundary
-                if (endTempo < ed.tempoSequence.getNumTempos())
-                    ++endTempo;
-            }
-            else
+            // Add first item
             {
-                beginTempo = 0;
-                endTempo = ed.tempoSequence.getNumTempos();
+                ARAContentTempoEntry item = { tempoPosition.getTime().inSeconds(), tempoPosition.getBeats().inBeats() };
+                items.add (item);
             }
 
-            // handle curves between entries using tempoSections and a running index
-            int tS = 0;
-            auto tempoSections = ed.tempoSequence.getTempoSections();
+            bool foundLastTempo = false;
 
-            for (int t = beginTempo; t < endTempo; t++) 
+            for (;;)
             {
-                auto tempoSetting = ed.tempoSequence.getTempo (t);
+                foundLastTempo = ! tempoPosition.next();
 
-                // check for a curve, but only if this isn't the last entry
-                // TODO ARA2 should we skip values of -1?
-                float C = tempoSetting->getCurve();
+                if (foundLastTempo)
+                    break;
 
-                if ((t != (endTempo - 1)) && (C < 1.0f))
-                {
-                    int nextTempo = t + 1;
-                    jassert (nextTempo < ed.tempoSequence.getNumTempos());
-                    auto nextTempoSetting = ed.tempoSequence.getTempo (nextTempo);
+                const auto time = tempoPosition.getTime();
 
-                    for (; tS < tempoSections.size(); tS++)
-                    {
-                        // search for the first entry after the curve start
-                        auto tempoSection = tempoSections.getReference (tS);
-                        if (tempoSection.startBeatInEdit < tempoSetting->getStartBeat())
-                            continue;
+                ARAContentTempoEntry item = { time.inSeconds(), tempoPosition.getBeats().inBeats() };
+                items.add (item);
 
-                        // end iteration at nextTempoSeting's corresponding section
-                        auto beatDiff = nextTempoSetting->getStartBeat() - tempoSection.startBeatInEdit;
-                        if (beatDiff < 0 || juce::isWithin (beatDiff, 0.0, 0.001)) // constant from TempoSequence::updateTempoData
-                            break;
-
-                        ARAContentTempoEntry item = { tempoSection.startTime, tempoSection.startBeatInEdit };
-                        items.add (item);
-                    }
-                }
-                else 
-                {
-                    ARAContentTempoEntry item = { tempoSetting->getStartTime(), tempoSetting->getStartBeat() };
-                    items.add (item);
-                }
+                if (range && time >= TimePosition::fromSeconds (range->start + range->duration))
+                    break;
             }
 
             // if the last tempo setting is included, extrapolate a new entry 
             // so that plug-ins can calculate tempo at the range boundary
-            if (endTempo == ed.tempoSequence.getNumTempos())
+            if (foundLastTempo)
             {
                 auto extrapolatedTempoEntry = items.getLast();
                 extrapolatedTempoEntry.timePosition += 60;
-                extrapolatedTempoEntry.quarterPosition += ed.tempoSequence.getBpmAt (items.getLast().timePosition);
+                extrapolatedTempoEntry.quarterPosition += ed.tempoSequence.getBpmAt (TimePosition::fromSeconds (items.getLast().timePosition));
                 items.add (extrapolatedTempoEntry);
             }
         }
@@ -605,9 +574,9 @@ private:
             auto chordTrack = ed.getChordTrack();
             jassert (! chordTrack->getClips().isEmpty());
 
-            double rangeStartBeat = range ? ed.tempoSequence.beatsToTime (range->start) : -std::numeric_limits<float>::max();
-            double rangeEndBeat = range ? ed.tempoSequence.beatsToTime (range->start + range->duration) : std::numeric_limits<float>::max();
-            double endBeatOfPreviousClip = -std::numeric_limits<float>::max();
+            auto rangeStartBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start)) : BeatPosition::fromBeats (-std::numeric_limits<float>::max());
+            auto rangeEndBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start + range->duration)) : BeatPosition::fromBeats (std::numeric_limits<float>::max());
+            auto endBeatOfPreviousClip = BeatPosition::fromBeats (-std::numeric_limits<float>::max());
 
             // construct a "no chord" for representing gaps in the chord track
             ARAContentChord noChord{};
@@ -616,8 +585,8 @@ private:
             for (auto chordClip : chordTrack->getClips())
             {
                 // auto position = chordClip->getPosition();
-                double chordStartBeat = chordClip->getStartBeat();
-                double chordEndBeat = chordClip->getEndBeat();
+                auto chordStartBeat = chordClip->getStartBeat();
+                auto chordEndBeat = chordClip->getEndBeat();
 
                 if (range == nullptr || (chordStartBeat < rangeEndBeat && rangeStartBeat < chordEndBeat))
                 {
@@ -625,19 +594,19 @@ private:
                     if (endBeatOfPreviousClip < chordStartBeat)
                     {
                         ARAContentChord noChordCopy = noChord;
-                        noChordCopy.position = endBeatOfPreviousClip;
+                        noChordCopy.position = endBeatOfPreviousClip.inBeats();
                         items.add (noChordCopy);
                     }
 
                     endBeatOfPreviousClip = chordEndBeat;
-                    double patternBeat = 0;
+                    BeatPosition patternBeat;
                     auto ptnGen = chordClip->getPatternGenerator();
                     jassert (ptnGen);
 
                     for (auto itm : ptnGen->getChordProgression())
                     {
                         ARAContentChord item{};
-                        double timelineBeat = patternBeat + chordStartBeat;
+                        auto timelineBeat = patternBeat + toDuration (chordStartBeat);
 
                         bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
                         Scale scale = ptnGen->getScaleAtBeat (patternBeat);
@@ -650,10 +619,10 @@ private:
 
                         item.name = chordNames.insert (itm->getChordSymbol()).first->toRawUTF8();
 
-                        item.position = timelineBeat;
+                        item.position = timelineBeat.inBeats();
                         items.add (item);
 
-                        patternBeat += itm->lengthInBeats;
+                        patternBeat = patternBeat + itm->lengthInBeats;
                     }
                 }
             }
@@ -662,7 +631,7 @@ private:
             // add the no chord here
             if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
             {
-                noChord.position = endBeatOfPreviousClip;
+                noChord.position = endBeatOfPreviousClip.inBeats();
                 items.add (noChord);
             }
         }
@@ -686,8 +655,8 @@ private:
             if (range)
             {
                 // TODO ARA2: if indexOfPitchAt() was public, we could use that instead
-                beginKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (range->start));
-                endKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (range->start + range->duration)) + 1;
+                beginKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (TimePosition::fromSeconds (range->start)));
+                endKeySig = ed.pitchSequence.indexOfPitch (&ed.pitchSequence.getPitchAt (TimePosition::fromSeconds (range->start + range->duration))) + 1;
             }
             else
             {
@@ -713,7 +682,7 @@ private:
 
                 item.name = scaleNames.insert (scaleName).first->toRawUTF8();
 
-                item.position = pitchSetting->getStartBeatNumber();
+                item.position = pitchSetting->getStartBeatNumber().inBeats();
                 items.add (item);
             }
         }
@@ -1041,10 +1010,10 @@ public:
         return
         {
             flags,
-            pos.getOffset() * clip.getSpeedRatio(),   // Start in modification time
-            pos.getLength() * clip.getSpeedRatio(),   // Duration in modification time
-            pos.getStart(),                           // Start in playback time
-            pos.getLength(),                          // Duration in playback time
+            pos.getOffset().inSeconds() * clip.getSpeedRatio(),   // Start in modification time
+            pos.getLength().inSeconds() * clip.getSpeedRatio(),   // Duration in modification time
+            pos.getStart().inSeconds(),                           // Start in playback time
+            pos.getLength().inSeconds(),                          // Duration in playback time
             doc.musicalContext->musicalContextRef,
             regionSequenceRef,
             name.toRawUTF8(),

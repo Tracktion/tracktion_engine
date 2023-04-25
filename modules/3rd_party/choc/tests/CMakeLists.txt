@@ -48,7 +48,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX /wd4068 /wd4996 /std:c++17 -DWIN32 /bigobj -DNOMINMAX")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /W4 /WX /wd4068 /wd4996 /std:c++17 -DWIN32 /bigobj -DNOMINMAX")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996 /wd4267 /wd5281 /wd5293 /wd5313 /wd4305 /wd4018")
 
 endif()

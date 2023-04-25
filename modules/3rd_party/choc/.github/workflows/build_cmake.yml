@@ -1,0 +1,74 @@
+name: CHOC Unit Tests
+
+on: [push, pull_request]
+
+env:
+  CMAKE_VERSION: 3.18.3
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Windows Latest MSVC", artifact: "Windows-MSVC.7z",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            build_type: "Release",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            generators: "Visual Studio 17 2022",
+            exe: "./Release/choc_tests.exe"
+          }
+        - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW.7z",
+            os: windows-latest,
+            build_type: "Release",
+            cc: "gcc", cxx: "g++",
+            generators: "Unix Makefiles",
+            exe: "./choc_tests"
+          }
+        - {
+            name: "Ubuntu Latest GCC", artifact: "Linux.7z",
+            os: ubuntu-latest,
+            build_type: "Release",
+            cc: "gcc", cxx: "g++",
+            generators: "Unix Makefiles",
+            exe: "./choc_tests"
+          }
+        - {
+            name: "macOS Latest Clang", artifact: "macOS.7z",
+            os: macos-latest,
+            build_type: "Release",
+            cc: "clang", cxx: "clang++",
+            generators: "Unix Makefiles",
+            exe: "./choc_tests"
+          }
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Configure
+      shell: bash
+      working-directory: ./tests
+      run: |
+        mkdir build
+        cd build
+        cmake \
+          -S .. \
+          -B . \
+          -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+          -G "${{ matrix.config.generators }}"
+
+    - name: Build
+      shell: bash
+      working-directory: ./tests/build
+      run: cmake --build . --config ${{ matrix.config.build_type }}
+
+    - name: Run tests
+      shell: bash
+      working-directory: ./tests/build
+      run: ${{ matrix.config.exe }}

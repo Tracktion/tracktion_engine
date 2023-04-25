@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -46,11 +46,11 @@ public:
         juce::ValueTree state;
 
         EditItemID getTrack() const      { return track; }
-        double getEnd() const            { return end; }
+        double getEnd() const      { return end; }
 
     private:
         EditItemID track;
-        double end;
+        double end = 0.0;
 
         void updateTrack();
         void updateEnd();
@@ -80,11 +80,11 @@ public:
 
         TimeFormat getTimeFormat() const noexcept       { return timeFormat; }
 
-        void setTimeFormat (TimeFormat t);
+        void setTimeFormat (TimeFormat);
 
-        static juce::Array<EditTimeRange> getMuteTimes (const juce::Array<EditTimeRange>& nonMuteTimes);
-        juce::Array<EditTimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
-        EditTimeRange getTimeRange() const;
+        static juce::Array<TimeRange> getMuteTimes (const juce::Array<TimeRange>& nonMuteTimes);
+        juce::Array<TimeRange> getNonMuteTimes (Track&, TimeDuration crossfadeTime) const;
+        TimeRange getTimeRange() const;
 
         void setName (const juce::String&);
 
@@ -98,18 +98,18 @@ public:
         CompSection* moveSection (CompSection*, double timeDelta);
         CompSection* moveSectionEndTime (CompSection*, double newTime);
 
-        int removeSectionsWithinRange (EditTimeRange timeRange, CompSection* sectionToKeep);
+        int removeSectionsWithinRange (juce::Range<double>, CompSection* sectionToKeep);
         juce::ValueTree addSection (EditItemID trackID, double endTime, juce::UndoManager*);
         CompSection* addSection (Track::Ptr, double endTime);
-        CompSection* splitSectionAtTime (double time);
+        CompSection* splitSectionAtTime (double);
 
-        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, EditTimeRange timeRange, bool& startEdge) const;
-        CompSection* findSectionAtTime (const Track::Ptr&, double time) const;
+        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, juce::Range<double>, bool& startEdge) const;
+        CompSection* findSectionAtTime (const Track::Ptr&, double) const;
 
         struct Section
         {
             CompSection* compSection;
-            EditTimeRange timeRange;
+            juce::Range<double> timeRange;
         };
 
         juce::Array<Section> getSectionsForTrack (const Track::Ptr&) const;
@@ -150,14 +150,14 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackCompManager)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::TrackCompManager::TrackComp::TimeFormat>
+    struct VariantConverter<tracktion::engine::TrackCompManager::TrackComp::TimeFormat>
     {
-        static tracktion_engine::TrackCompManager::TrackComp::TimeFormat fromVar (const var& v)   { return (tracktion_engine::TrackCompManager::TrackComp::TimeFormat) static_cast<int> (v); }
-        static var toVar (tracktion_engine::TrackCompManager::TrackComp::TimeFormat v)            { return static_cast<int> (v); }
+        static tracktion::engine::TrackCompManager::TrackComp::TimeFormat fromVar (const var& v)   { return (tracktion::engine::TrackCompManager::TrackComp::TimeFormat) static_cast<int> (v); }
+        static var toVar (tracktion::engine::TrackCompManager::TrackComp::TimeFormat v)            { return static_cast<int> (v); }
     };
 }

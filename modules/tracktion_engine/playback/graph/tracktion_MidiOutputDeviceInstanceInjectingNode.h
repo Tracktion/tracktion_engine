@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -16,26 +16,26 @@ namespace tracktion_engine
 /**
     A Node that injects the MIDI buffer of its input to the MidiOutputDevice.
 */
-class MidiOutputDeviceInstanceInjectingNode final   : public tracktion_graph::Node
+class MidiOutputDeviceInstanceInjectingNode final   : public tracktion::graph::Node
 {
 public:
     MidiOutputDeviceInstanceInjectingNode (MidiOutputDeviceInstance&,
-                                           std::unique_ptr<tracktion_graph::Node>,
-                                           tracktion_graph::PlayHead&);
+                                           std::unique_ptr<tracktion::graph::Node>,
+                                           tracktion::graph::PlayHead&);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
     MidiOutputDeviceInstance& deviceInstance;
-    std::unique_ptr<tracktion_graph::Node> input;
-    tracktion_graph::PlayHead& playHead;
+    std::unique_ptr<tracktion::graph::Node> input;
+    tracktion::graph::PlayHead& playHead;
     double sampleRate = 44100.0;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

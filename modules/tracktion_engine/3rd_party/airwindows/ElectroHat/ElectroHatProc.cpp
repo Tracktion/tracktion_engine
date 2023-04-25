@@ -80,14 +80,14 @@ void ElectroHat::processReplacing(float **inputs, float **outputs, VstInt32 samp
             tok *= tok; tok = tok % posA;
 
             inputSampleL = tok*inputSampleL;
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 1)) {inputSampleL = -tok*inputSampleL;}
-            if ((abs(lok-tok)>abs(lok+tok))&&(deSyn == 2)) {inputSampleL = -tok*inputSampleL;}
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 3)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 1)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)>std::abs(lok+tok))&&(deSyn == 2)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 3)) {inputSampleL = -tok*inputSampleL;}
 
             inputSampleR = tok*inputSampleR;
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 1)) {inputSampleR = -tok*inputSampleR;}
-            if ((abs(lok-tok)>abs(lok+tok))&&(deSyn == 2)) {inputSampleR = -tok*inputSampleR;}
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 3)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 1)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)>std::abs(lok+tok))&&(deSyn == 2)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 3)) {inputSampleR = -tok*inputSampleR;}
 
             lok = tok;
 
@@ -215,14 +215,14 @@ void ElectroHat::processDoubleReplacing(double **inputs, double **outputs, VstIn
             tok *= tok; tok = tok % posA;
 
             inputSampleL = tok*inputSampleL;
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 1)) {inputSampleL = -tok*inputSampleL;}
-            if ((abs(lok-tok)>abs(lok+tok))&&(deSyn == 2)) {inputSampleL = -tok*inputSampleL;}
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 3)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 1)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)>std::abs(lok+tok))&&(deSyn == 2)) {inputSampleL = -tok*inputSampleL;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 3)) {inputSampleL = -tok*inputSampleL;}
 
             inputSampleR = tok*inputSampleR;
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 1)) {inputSampleR = -tok*inputSampleR;}
-            if ((abs(lok-tok)>abs(lok+tok))&&(deSyn == 2)) {inputSampleR = -tok*inputSampleR;}
-            if ((abs(lok-tok)<abs(lok+tok))&&(deSyn == 3)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 1)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)>std::abs(lok+tok))&&(deSyn == 2)) {inputSampleR = -tok*inputSampleR;}
+            if ((std::abs(lok-tok)<std::abs(lok+tok))&&(deSyn == 3)) {inputSampleR = -tok*inputSampleR;}
 
             lok = tok;
 

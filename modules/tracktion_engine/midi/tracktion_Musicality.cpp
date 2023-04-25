@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static const juce::String flat = "b";
@@ -63,7 +63,7 @@ static juce::String chordSymbol (const juce::String& name)
     return name.substring (1);
 }
 
-juce::String fixLegacyChordNames (const juce::String& oldName)
+inline juce::String fixLegacyChordNames (const juce::String& oldName)
 {
     if (chordNameHasSymbol (oldName, "maj"))        return chordNote (oldName) + Chord (Chord::majorTriad).getSymbol();
     if (chordNameHasSymbol (oldName, "min"))        return chordNote (oldName) + Chord (Chord::minorTriad).getSymbol();
@@ -601,7 +601,7 @@ PatternGenerator::ProgressionItem::ProgressionItem (PatternGenerator& g, const j
 
     chordName.referTo (state, IDs::chordName, um);
     pitches.referTo (state, IDs::pitches, um);
-    lengthInBeats.referTo (state, IDs::length, um, 4);
+    lengthInBeats.referTo (state, IDs::length, um, BeatDuration::fromBeats (4));
     octave.referTo (state, IDs::octave, um);
     inversion.referTo (state, IDs::inversion, um);
 
@@ -696,20 +696,20 @@ bool PatternGenerator::ProgressionItem::isRomanNumeral() const
 
 juce::String PatternGenerator::ProgressionItem::getChordSymbol()
 {
-    double beat = 0;
+    BeatPosition beat;
 
     for (auto itm : generator.getChordProgression())
     {
         if (itm == this)
             break;
 
-        beat += itm->lengthInBeats;
+        beat = beat + itm->lengthInBeats;
     }
 
     Scale scale = generator.getScaleAtBeat (beat);
     const int root = getRootNote (generator.getNoteAtBeat (beat), scale);
     Chord chord = getChord (scale);
-    bool sharp = generator.clip.edit.pitchSequence.getPitchAtBeat (generator.clip.getStartBeat() + beat).accidentalsSharp;
+    bool sharp = generator.clip.edit.pitchSequence.getPitchAtBeat (generator.clip.getStartBeat() + toDuration (beat)).accidentalsSharp;
 
     return juce::MidiMessage::getMidiNoteName (root, sharp, false, 0) + chord.getSymbol();
 }
@@ -804,7 +804,7 @@ PatternGenerator::PatternGenerator (Clip& c, juce::ValueTree v) : clip (c), stat
     arpPatternLength.referTo (state, IDs::arpPatternLength, um, 4.0f);
     arpStyle.referTo (state, IDs::arpStle, um, "0123");
     arpSteps.referTo (state, IDs::arpSteps, um, 4);
-    melodyNoteLength.referTo (state, IDs::melodyNoteLength, um, 1.0/4.0f);
+    melodyNoteLength.referTo (state, IDs::melodyNoteLength, um, BeatDuration::fromBeats (1.0 / 4.0f));
     gate.referTo (state, IDs::gate, um, 100.0f);
     scaleType.referTo (state, IDs::scaleType, um, Scale::major);
     scaleRoot.referTo (state, IDs::scaleRoot, um, -1);
@@ -835,12 +835,12 @@ void PatternGenerator::editFinishedLoading()
         autoUpdateManager = std::make_unique<AutoUpdateManager> (*this);
 }
 
-double PatternGenerator::getMinimumChordLength() const
+BeatDuration PatternGenerator::getMinimumChordLength() const
 {
-    return 1.0;
+    return BeatDuration::fromBeats (1.0);
 }
 
-double PatternGenerator::getMaximumChordLength() const
+BeatDuration PatternGenerator::getMaximumChordLength() const
 {
     switch (mode)
     {
@@ -850,7 +850,7 @@ double PatternGenerator::getMaximumChordLength() const
         case Mode::melody:
         case Mode::off:
         default:
-            return 1024.0;
+            return BeatDuration::fromBeats (1024.0);
     }
 }
 
@@ -865,7 +865,7 @@ void PatternGenerator::validateChordLengths()
         case Mode::melody:
         {
             for (auto itm : getChordProgression())
-                if (itm->lengthInBeats > getMaximumChordLength())
+                if (itm->lengthInBeats.get() > getMaximumChordLength())
                     itm->lengthInBeats = getMaximumChordLength();
 
             break;
@@ -949,7 +949,7 @@ void PatternGenerator::valueTreePropertyChanged (juce::ValueTree&, const juce::I
     }
 }
 
-ChordClip* PatternGenerator::getChordClipAt (double t) const
+ChordClip* PatternGenerator::getChordClipAt (TimePosition t) const
 {
     for (auto c : clip.edit.getChordTrack()->getClips())
         if (c->getPosition().time.contains (t))
@@ -959,7 +959,7 @@ ChordClip* PatternGenerator::getChordClipAt (double t) const
     return {};
 }
 
-Scale PatternGenerator::getScaleAtBeat (double beat) const
+Scale PatternGenerator::getScaleAtBeat (BeatPosition beat) const
 {
     Scale scale;
 
@@ -967,7 +967,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     {
         if (scaleRoot == scaleRootGlobalTrack)
         {
-            auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
+            auto t = clip.getTimeOfContentBeat (beat) + TimeDuration::fromSeconds (0.0001);
             scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
         }
         else
@@ -977,11 +977,11 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
+        auto t = clip.getTimeOfContentBeat (beat) + TimeDuration::fromSeconds (0.0001);
 
         if (auto cc = getChordClipAt (t))
         {
-            const double b = cc->getContentBeatAtTime (t);
+            const auto b = cc->getContentBeatAtTime (t);
             return cc->getPatternGenerator()->getScaleAtBeat (b);
         }
 
@@ -989,7 +989,7 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     }
     else if (scaleRoot == scaleRootGlobalTrack)
     {
-        const double t = clip.getTimeOfContentBeat (beat) + 0.0001;
+        const auto t = clip.getTimeOfContentBeat (beat) + TimeDuration::fromSeconds (0.0001);
         scale = Scale (clip.edit.pitchSequence.getPitchAt (t).getScale());
     }
     else
@@ -1000,19 +1000,19 @@ Scale PatternGenerator::getScaleAtBeat (double beat) const
     return scale;
 }
 
-int PatternGenerator::getNoteAtBeat (double beat) const
+int PatternGenerator::getNoteAtBeat (BeatPosition beat) const
 {
     if (dynamic_cast<ChordClip*>(&clip) != nullptr)
     {
         if (scaleRoot == scaleRootGlobalTrack)
-            return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + beat).getPitch() % 12;
+            return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + toDuration (beat)).getPitch() % 12;
 
         return scaleRoot;
     }
 
     if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        auto t = clip.getTimeOfContentBeat (beat) + 0.0001;
+        auto t = clip.getTimeOfContentBeat (beat) + TimeDuration::fromSeconds (0.0001);
 
         if (auto cc = getChordClipAt (t))
         {
@@ -1020,11 +1020,11 @@ int PatternGenerator::getNoteAtBeat (double beat) const
             return cc->getPatternGenerator()->getNoteAtBeat (b);
         }
 
-        return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + beat).getPitch() % 12;
+        return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + toDuration (beat)).getPitch() % 12;
     }
 
     if (scaleRoot == scaleRootGlobalTrack)
-        return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + beat).getPitch() % 12;
+        return clip.edit.pitchSequence.getPitchAtBeat (clip.getStartBeat() + toDuration (beat)).getPitch() % 12;
 
     return scaleRoot;
 }
@@ -1033,7 +1033,7 @@ juce::StringArray PatternGenerator::getPossibleTriadNames() const
 {
     juce::StringArray res;
 
-    auto scale = getScaleAtBeat (0);
+    auto scale = getScaleAtBeat (BeatPosition());
 
     for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
         res.add (scale.getIntervalName ((Scale::Intervals) interval));
@@ -1044,7 +1044,7 @@ juce::StringArray PatternGenerator::getPossibleTriadNames() const
 juce::StringArray PatternGenerator::getPossibleSeventhNames() const
 {
     juce::StringArray res;
-    auto scale = getScaleAtBeat (0);
+    auto scale = getScaleAtBeat (BeatPosition());
 
     for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
         res.add (scale.getIntervalName ((Scale::Intervals) interval) + "7");
@@ -1057,7 +1057,7 @@ juce::String PatternGenerator::formatChordName (juce::String simplifiedChordName
     if (isRoman (simplifiedChordName))
     {
         auto interval = (Scale::Intervals) Scale::getIntervalNames().indexOf (simplifiedChordName.retainCharacters ("iv"));
-        auto scale = getScaleAtBeat (0);
+        auto scale = getScaleAtBeat (BeatPosition());
         auto intervalStr = scale.getIntervalName (interval);
 
         if (simplifiedChordName.contains ("7"))
@@ -1147,29 +1147,29 @@ void PatternGenerator::removeRangeFromProgression (int startIndex, int numberToR
     }
 }
 
-MidiNote* PatternGenerator::addNote (MidiList& sequence, int pitch, double startBeat, double lengthInBeats,
+MidiNote* PatternGenerator::addNote (MidiList& sequence, int pitch, BeatPosition startBeat, BeatDuration lengthInBeats,
                                      int vel, int colourIndex, juce::UndoManager* um)
 {
     if (pitch < 0 || pitch >= 128)
         return {};
 
-    if (startBeat + lengthInBeats <= 0)
+    if (startBeat + lengthInBeats <= BeatPosition())
         return {};
 
-    if (startBeat >= clip.getLengthInBeats())
+    if (startBeat >= toPosition (clip.getLengthInBeats()))
         return {};
 
-    if (lengthInBeats < 0.00001)
+    if (lengthInBeats < BeatDuration::fromBeats (0.00001))
         return {};
 
-    if (startBeat < 0)
+    if (startBeat < BeatPosition())
     {
-        lengthInBeats += startBeat;
-        startBeat = 0;
+        lengthInBeats = lengthInBeats + toDuration (startBeat);
+        startBeat = BeatPosition();
     }
 
-    if (startBeat + lengthInBeats > clip.getLengthInBeats())
-        lengthInBeats -= startBeat + lengthInBeats - clip.getLengthInBeats();
+    if (startBeat + lengthInBeats > toPosition (clip.getLengthInBeats()))
+        lengthInBeats = lengthInBeats - (toDuration (startBeat) + lengthInBeats - clip.getLengthInBeats());
 
     return sequence.addNote (pitch, startBeat, lengthInBeats, vel, colourIndex, um);
 }
@@ -1184,21 +1184,24 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
     inKey = s.getSteps().contains ((note.getNoteNumber() - root) % 12);
 
     juce::OwnedArray<ProgressionItem> progressionItems;
-    double progressionOffset = getFlattenedChordProgression (progressionItems);
+    auto progressionOffset = getFlattenedChordProgression (progressionItems);
 
-    double curBeat = -progressionOffset;
+    auto curBeat = BeatPosition::fromBeats (-progressionOffset.inBeats());
     int panic = 1000;
     int progressionCur = 0;
-    const double clipLength = mc.isLooping() ?  mc.getLoopLengthBeats() :  mc.getLengthInBeats() +  mc.getOffsetInBeats();
+    const auto clipLength = toPosition (mc.isLooping() ?  mc.getLoopLengthBeats() : mc.getLengthInBeats() + mc.getOffsetInBeats());
+
     while (curBeat < clipLength)
     {
-        if (panic-- == 0) break;
+        if (panic-- == 0)
+            break;
 
         if (auto item = progressionItems[progressionCur])
         {
-            const double len = item->lengthInBeats;
+            const auto len = item->lengthInBeats.get();
 
-            if (note.getBeatPosition() + 0.0001 >= curBeat && note.getBeatPosition() + 0.0001 < curBeat + len)
+            if (note.getBeatPosition() + BeatDuration::fromBeats (0.0001) >= curBeat
+                && note.getBeatPosition() + BeatDuration::fromBeats (0.0001) < curBeat + len)
             {
                 if (item->getChord (s).isValid())
                 {
@@ -1214,7 +1217,7 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
                 break;
             }
 
-            curBeat += len;
+            curBeat = curBeat + len;
         }
 
         progressionCur++;
@@ -1235,11 +1238,11 @@ PatternGenerator::NoteType PatternGenerator::getTypeForNote (const MidiClip& mc,
     return NotInKeyNote;
 }
 
-double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime)
+BeatDuration PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime)
 {
     if (mode == Mode::off || scaleRoot == scaleRootChordTrack)
     {
-        double pos = 0;
+        BeatPosition pos;
 
         // Get all the chord clips
         juce::Array<ChordClip*> chordClips;
@@ -1269,7 +1272,7 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
         }
 
         // Find the starts of chord clips
-        juce::Array<double> clipStarts;
+        juce::Array<BeatPosition> clipStarts;
 
         for (auto cc : chordClips)
             clipStarts.add (cc->getStartBeat());
@@ -1281,32 +1284,35 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
             // If there is a gap before this chord, insert empty space
             if (cc->getStartBeat() > pos)
             {
-                double length = cc->getStartBeat() - pos;
+                auto length = cc->getStartBeat() - pos;
                 juce::ValueTree s (IDs::PROGRESSIONITEM);
                 auto newItem = new ProgressionItem (*this, s, true);
                 newItem->lengthInBeats = length;
                 progression.add (newItem);
-                pos += cc->getStartBeat() - pos;
+                pos = cc->getStartBeat();
             }
 
-            double amountToDrop = 0.0;
+            BeatDuration amountToDrop;
+            
             if (cc->getStartBeat() < pos)
                 amountToDrop = pos - cc->getStartBeat();
 
             auto& src = cc->getPatternGenerator()->getChordProgression();
             if (src.size() > 0)
             {
-                double avaliableLength = cc->getLengthInBeats();
+                auto avaliableLength = cc->getLengthInBeats();
 
                 // check if following clip is overlapping, and truncate this clip
                 for (auto start : clipStarts)
                 {
-                    double len = start - cc->getStartBeat();
-                    if (len > 0 && len < avaliableLength)
+                    auto len = start - cc->getStartBeat();
+
+                    if (len > BeatDuration() && len < avaliableLength)
                         avaliableLength = len;
                 }
 
-                double progressionLength = 0;
+                BeatDuration progressionLength;
+
                 while (progressionLength < avaliableLength)
                 {
                     for (auto itm : src)
@@ -1314,8 +1320,8 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
                         auto s = itm->state.createCopy();
                         std::unique_ptr<ProgressionItem> newItm (new ProgressionItem (*this, s, true));
 
-                        double len = std::min (newItm->lengthInBeats.get(), avaliableLength - progressionLength);
-                        progressionLength += len;
+                        auto len = std::min (newItm->lengthInBeats.get(), avaliableLength - progressionLength);
+                        progressionLength = progressionLength + len;
 
                         // this item is covered by another chord clip,
                         // either drop it or shorten it
@@ -1324,13 +1330,13 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
                             if (progressionLength >= avaliableLength)
                                 break;
 
-                            amountToDrop -= len;
+                            amountToDrop = amountToDrop - len;
                             continue;
                         }
-                        if (len > amountToDrop && amountToDrop > 0.0)
+                        if (len > amountToDrop && amountToDrop > BeatDuration())
                         {
-                            len -= amountToDrop;
-                            amountToDrop = 0;
+                            len = len- amountToDrop;
+                            amountToDrop = BeatDuration();
                         }
 
                         newItm->lengthInBeats = len;
@@ -1341,24 +1347,26 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
                             break;
                     }
                 }
-                pos += progressionLength;
+                pos = pos + progressionLength;
             }
         }
 
         juce::ValueTree s (IDs::PROGRESSIONITEM);
         auto newItem = new ProgressionItem (*this, s, true);
-        newItem->lengthInBeats = 100000;
+        newItem->lengthInBeats = BeatDuration::fromBeats (100000);
         progression.add (newItem);
 
         if (! globalTime)
         {
-            double toChop = clip.getStartBeat();
-            while (toChop > 0)
+            BeatDuration toChop = toDuration (clip.getStartBeat());
+
+            while (toChop > BeatDuration())
             {
                 auto itm = progression[0];
+
                 if (itm->lengthInBeats <= toChop)
                 {
-                    toChop -= itm->lengthInBeats;
+                    toChop = toChop - itm->lengthInBeats;
                     progression.remove (0);
                 }
                 else
@@ -1367,14 +1375,15 @@ double PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Progress
                 }
             }
         }
-        return 0;
+
+        return {};
     }
     else
     {
         for (auto itm : getChordProgression())
             progression.add (new ProgressionItem (*this, itm->state, true));
 
-        return 0;
+        return {};
     }
 }
 
@@ -1507,7 +1516,7 @@ void PatternGenerator::generateArpPattern()
     CRASH_TRACER
 
     juce::OwnedArray<ProgressionItem> progressionItems;
-    double progressionOffset = getFlattenedChordProgression (progressionItems);
+    auto progressionOffset = getFlattenedChordProgression (progressionItems);
 
     auto progressionLength = progressionItems.size();
 
@@ -1527,20 +1536,22 @@ void PatternGenerator::generateArpPattern()
         styleValues.add (arpStyle.get().substring (i, i + 1).getIntValue());
 
     const float lengthFactor = gate / 100.0f;
-    const double noteLengthBeat = arpPatternLength / styleValues.size();
+    const auto noteLengthBeat = BeatDuration::fromBeats (arpPatternLength / styleValues.size());
 
     // clear offset before generating clip
-    mc->setOffset (0);
+    mc->setOffset ({});
 
     // Loop over the length of the clip in increments of note length
-    double stepLengthLeft = progressionItems.getFirst()->lengthInBeats;
-    const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
-    double curBeat = -progressionOffset;
+    auto stepLengthLeft = progressionItems.getFirst()->lengthInBeats.get();
+    const auto clipLength = toPosition (mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats());
+    auto curBeat = BeatPosition::fromBeats (-progressionOffset.inBeats());
     bool stepStart = true;
     int panic = 1000;
+
     while (curBeat < clipLength)
     {
-        if (panic-- == 0) break;
+        if (panic-- == 0)
+            break;
 
         auto stepLength = std::min (stepLengthLeft, noteLengthBeat);
 
@@ -1579,23 +1590,25 @@ void PatternGenerator::generateArpPattern()
             }
 
             // increment current note in chord, then incremeent position in progression
-            stepLengthLeft -= stepLength;
+            stepLengthLeft = stepLengthLeft - stepLength;
             stepCur++;
+
             if (stepCur >= styleValues.size())
                 stepCur = 0;
 
-            if (stepLengthLeft < 0.0001)
+            if (stepLengthLeft < 0.0001_bd)
             {
                 stepCur = 0;
                 stepStart = true;
                 progressionCur++;
+
                 if (progressionCur >= progressionLength)
                     progressionCur = 0;
 
                 stepLengthLeft = progressionItems[progressionCur]->lengthInBeats;
             }
 
-            curBeat += stepLength;
+            curBeat = curBeat + stepLength;
         }
         else
         {
@@ -1607,10 +1620,11 @@ void PatternGenerator::generateArpPattern()
 
 struct ChordNote
 {
-    ChordNote (float start_, float length_, float velocity_) : start (start_), length (length_), velocity (velocity_) {}
+    ChordNote (BeatPosition start_, BeatDuration length_, float velocity_)
+        : start (start_), length (length_), velocity (velocity_) {}
 
-    float start = 0;
-    float length = 0;
+    BeatPosition start;
+    BeatDuration length;
     float velocity = 0;
 };
 
@@ -1625,7 +1639,7 @@ void PatternGenerator::generateChordPattern()
     CRASH_TRACER
 
     juce::OwnedArray<ProgressionItem> progressionItems;
-    double progressionOffset = getFlattenedChordProgression (progressionItems);
+    auto progressionOffset = getFlattenedChordProgression (progressionItems);
 
     const int progressionLength = progressionItems.size();
     if (progressionLength == 0)
@@ -1644,14 +1658,15 @@ void PatternGenerator::generateChordPattern()
 
             auto bar = pattern.getChild (i);
             const int barLen = std::max (1, int (bar.getProperty (IDs::length, 4)));
+            const int end = static_cast<int> (getMaximumChordLength().inBeats() / barLen);
 
             for (int j = 0; j < bar.getNumChildren(); j++)
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
-                    notes.getReference (i).add (ChordNote (float (c.getProperty (IDs::start)) + barLen * k,
-                                                           c.getProperty (IDs::length),
+                for (int k = 0; k < end; k++)
+                    notes.getReference (i).add (ChordNote (BeatPosition::fromBeats (static_cast<double> (c.getProperty (IDs::start)) + barLen * k),
+                                                           BeatDuration::fromBeats (static_cast<double> (c.getProperty (IDs::length))),
                                                            c.getProperty (IDs::velocity)));
             }
         }
@@ -1659,7 +1674,7 @@ void PatternGenerator::generateChordPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add (ChordNote (0.0f, float (getMaximumChordLength()), 127.0f));
+        notes.getReference (0).add (ChordNote ({}, getMaximumChordLength(), 127.0f));
     }
 
     auto um = mc->getUndoManager();
@@ -1671,11 +1686,12 @@ void PatternGenerator::generateChordPattern()
     const float lengthFactor = gate / 100.0f;
 
     // clear offset before generating clip
-    mc->setOffset (0);
+    mc->setOffset ({});
 
     // Loop over the length of the clip in increments of pattern length
-    double curBeat = -progressionOffset;
-    const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
+    auto curBeat = BeatPosition::fromBeats (-progressionOffset.inBeats());
+    const auto clipLength = toPosition (mc->isLooping() ? mc->getLoopLengthBeats()
+                                                        : mc->getLengthInBeats() + mc->getOffsetInBeats());
     int panic = 1000;
 
     while (curBeat < clipLength)
@@ -1687,7 +1703,8 @@ void PatternGenerator::generateChordPattern()
 
         if (auto progressionItem = progressionItems[progressionCur])
         {
-            const double patternLength = progressionItem->lengthInBeats;
+            const auto patternLength = progressionItem->lengthInBeats.get();
+
             if (progressionItem->isValid())
             {
                 const int chordRoot = progressionItem->getRootNote (getNoteAtBeat (curBeat), scale);
@@ -1715,10 +1732,11 @@ void PatternGenerator::generateChordPattern()
                     for (const ChordNote& chordNote : notes[patternCur])
                     {
                         const int note = rootNote + step;
-                        if (chordNote.start < patternLength)
+
+                        if (chordNote.start < toPosition (patternLength))
                         {
-                            addNote (sequence, note, curBeat + chordNote.start,
-                                     std::min (chordNote.length * lengthFactor, float (patternLength) - chordNote.start),
+                            addNote (sequence, note, curBeat + toDuration (chordNote.start),
+                                     std::min (chordNote.length * lengthFactor, patternLength - toDuration (chordNote.start)),
                                      int (velocity / 100.0f * chordNote.velocity),
                                      mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
@@ -1726,7 +1744,7 @@ void PatternGenerator::generateChordPattern()
                 }
             }
 
-            curBeat += patternLength;
+            curBeat = curBeat + patternLength;
 
             progressionCur++;
             if (progressionCur >= progressionLength)
@@ -1767,25 +1785,25 @@ void PatternGenerator::generateMelodyPattern()
     auto& tempoSequence = edit.tempoSequence;
 
     auto beatsPerWhole = tempoSequence.getTimeSigAt (mc->getPosition().getStart()).denominator.get();
-    auto noteLengthBeat = beatsPerWhole * melodyNoteLength;
+    auto noteLengthBeat = melodyNoteLength.get() * beatsPerWhole;
 
     juce::Array<ChordNote> notes;
 
     for (int i = 0; i < std::ceil (getMaximumChordLength() / noteLengthBeat) * 4; i++)
-        notes.add (ChordNote (i * noteLengthBeat,
-                              std::min (noteLengthBeat, float (getMaximumChordLength()) - i * noteLengthBeat), 127.0f));
+        notes.add (ChordNote (toPosition (noteLengthBeat * i),
+                              std::min (noteLengthBeat, getMaximumChordLength() - (noteLengthBeat * i)), 127.0f));
 
     int progressionCur = 0; // Current step in the chord progression
 
     auto lengthFactor = gate / 100.0f;
 
     // clear offset before generating clip
-    mc->setOffset (0);
+    mc->setOffset ({});
 
     // Loop over the length of the clip in increments of bar length
-    auto curBeat = -progressionOffset;
-    auto clipLength = mc->isLooping() ? mc->getLoopLengthBeats()
-                                      : mc->getLengthInBeats() + mc->getOffsetInBeats();
+    auto curBeat = BeatPosition::fromBeats (-progressionOffset.inBeats());
+    const auto clipLength = toPosition (mc->isLooping() ? mc->getLoopLengthBeats()
+                                                        : mc->getLengthInBeats() + mc->getOffsetInBeats());
     int panic = 1000;
 
     while (curBeat < clipLength)
@@ -1798,7 +1816,7 @@ void PatternGenerator::generateMelodyPattern()
 
         if (auto progressionItem = progressionItems[progressionCur])
         {
-            auto patternLength = progressionItem->lengthInBeats.get();
+            const auto patternLength = progressionItem->lengthInBeats.get();
 
             if (progressionItem->isValid())
             {
@@ -1830,11 +1848,11 @@ void PatternGenerator::generateMelodyPattern()
                             {
                                 for (auto& chordNote : notes)
                                 {
-                                    if (chordNote.start < patternLength)
+                                    if (chordNote.start < toPosition (patternLength))
                                     {
-                                        if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
+                                        if (auto newNote = addNote (sequence, note1, curBeat + toDuration (chordNote.start),
                                                                      std::min (chordNote.length * lengthFactor,
-                                                                               float (patternLength) - chordNote.start),
+                                                                               patternLength - toDuration (chordNote.start)),
                                                                      (int) (velocity / 100.0f * chordNote.velocity),
                                                                      mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                         {
@@ -1857,10 +1875,10 @@ void PatternGenerator::generateMelodyPattern()
                         {
                             auto note1 = rootNote + step;
 
-                            if (chordNote.start < patternLength)
-                                if (auto newNote = addNote (sequence, note1, curBeat + chordNote.start,
+                            if (chordNote.start < toPosition (patternLength))
+                                if (auto newNote = addNote (sequence, note1, curBeat + toDuration (chordNote.start),
                                                              std::min (chordNote.length * lengthFactor,
-                                                                       float (patternLength) - chordNote.start),
+                                                                       patternLength - toDuration (chordNote.start)),
                                                              (int) (velocity / 100.0f * chordNote.velocity),
                                                              mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
@@ -1868,10 +1886,10 @@ void PatternGenerator::generateMelodyPattern()
 
                             auto note2 = rootNote + step + 12;
 
-                            if (chordNote.start < patternLength)
-                                if (auto newNote = addNote (sequence, note2, curBeat + chordNote.start,
+                            if (chordNote.start < toPosition (patternLength))
+                                if (auto newNote = addNote (sequence, note2, curBeat + toDuration (chordNote.start),
                                                              std::min (chordNote.length * lengthFactor,
-                                                                       float (patternLength) - chordNote.start),
+                                                                       patternLength - toDuration (chordNote.start)),
                                                              (int) (velocity / 100.0f * chordNote.velocity),
                                                              mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um))
                                     newNote->setMute (true, um);
@@ -1881,7 +1899,7 @@ void PatternGenerator::generateMelodyPattern()
                 }
             }
 
-            curBeat += patternLength;
+            curBeat = curBeat + patternLength;
 
             if (++progressionCur >= progressionLength)
                 progressionCur = 0;
@@ -1896,8 +1914,8 @@ void PatternGenerator::generateMelodyPattern()
 
 struct BassNote
 {
-    float start = 0;
-    float length = 0;
+    BeatPosition start;
+    BeatDuration length;
     float velocity = 0;
     int pitch = 0;
     int octave = 0;
@@ -1933,15 +1951,16 @@ void PatternGenerator::generateBassPattern()
 
             auto bar = pattern.getChild (i);
             auto barLen = std::max (1, int (bar.getProperty (IDs::length, 4)));
+            const int end = static_cast<int> (getMaximumChordLength().inBeats() / barLen);
 
             for (int j = 0; j < bar.getNumChildren(); j++)
             {
                 auto c = bar.getChild (j);
 
-                for (int k = 0; k < getMaximumChordLength() / barLen; k++)
+                for (int k = 0; k < end; k++)
                 {
-                    notes.getReference (i).add ({ float (c.getProperty (IDs::start)) + barLen * k,
-                                                  c.getProperty (IDs::length),
+                    notes.getReference (i).add ({ BeatPosition::fromBeats (static_cast<double> (c.getProperty (IDs::start)) + barLen * k),
+                                                  BeatDuration::fromBeats (static_cast<double> (c.getProperty (IDs::length))),
                                                   c.getProperty (IDs::velocity),
                                                   c.getProperty (IDs::pitch),
                                                   c.getProperty (IDs::octave) });
@@ -1952,7 +1971,7 @@ void PatternGenerator::generateBassPattern()
     else
     {
         notes.add ({});
-        notes.getReference (0).add ({ 0.0f, float (getMaximumChordLength()), 127.0f, 0, 0 });
+        notes.getReference (0).add ({ {}, getMaximumChordLength(), 127.0f, 0, 0 });
     }
 
     auto um = mc->getUndoManager();
@@ -1964,11 +1983,12 @@ void PatternGenerator::generateBassPattern()
     const float lengthFactor = gate / 100.0f;
 
     // clear offset before generating clip
-    mc->setOffset (0);
+    mc->setOffset ({});
 
     // Loop over the length of the clip in increments of pattern length
-    double curBeat = -progressionOffset;
-    const double clipLength = mc->isLooping() ? mc->getLoopLengthBeats() : mc->getLengthInBeats() + mc->getOffsetInBeats();
+    auto curBeat = BeatPosition::fromBeats (-progressionOffset.inBeats());
+    const auto clipLength = toPosition (mc->isLooping() ? mc->getLoopLengthBeats()
+                                                        : mc->getLengthInBeats() + mc->getOffsetInBeats());
     int panic = 1000;
 
     while (curBeat < clipLength)
@@ -1981,7 +2001,7 @@ void PatternGenerator::generateBassPattern()
 
         if (auto progressionItem = progressionItems[progressionCur])
         {
-            const double patternLength = progressionItem->lengthInBeats;
+            const auto patternLength = progressionItem->lengthInBeats.get();
 
             if (progressionItem->isValid())
             {
@@ -1999,11 +2019,11 @@ void PatternGenerator::generateBassPattern()
                         const int rootNoteIndex = steps.indexOf (chordRoot);
                         const int note = rootNote + steps[rootNoteIndex + pos] - steps[rootNoteIndex] + off;
 
-                        if (bassNote.start < patternLength)
+                        if (bassNote.start < toPosition (patternLength))
                         {
-                            addNote (sequence, note, curBeat + bassNote.start,
+                            addNote (sequence, note, curBeat + toDuration (bassNote.start),
                                      std::min (bassNote.length * lengthFactor,
-                                               float (patternLength) - bassNote.start),
+                                               patternLength - toDuration (bassNote.start)),
                                      (int) (velocity / 100.0f * bassNote.velocity),
                                      mc->edit.engine.getEngineBehaviour().getDefaultNoteColour(), um);
                         }
@@ -2011,7 +2031,7 @@ void PatternGenerator::generateBassPattern()
                 }
             }
 
-            curBeat += patternLength;
+            curBeat = curBeat + patternLength;
 
             progressionCur++;
             if (progressionCur >= progressionItems.size())
@@ -2041,10 +2061,10 @@ void PatternGenerator::playGuideChord (int idx) const
             return;
         }
 
-        double curBeat = 0;
+        BeatPosition curBeat;
 
         for (int i = 0; i < idx; i++)
-            curBeat += progressionItems[i]->lengthInBeats;
+            curBeat = curBeat + progressionItems[i]->lengthInBeats;
 
         auto scale = getScaleAtBeat (curBeat);
         auto steps = scale.getSteps (3);
@@ -2099,8 +2119,8 @@ HashCode PatternGenerator::hashNotes (MidiList& sequence, int version)
     for (auto note : sequence.getNotes())
     {
         hash ^= static_cast<HashCode> (note->getNoteNumber() * 31)
-              ^ static_cast<HashCode> (note->getStartBeat()  * 73)
-              ^ static_cast<HashCode> (note->getLengthBeats() * 233)
+              ^ static_cast<HashCode> (note->getStartBeat().inBeats()  * 73)
+              ^ static_cast<HashCode> (note->getLengthBeats().inBeats() * 233)
               ^ static_cast<HashCode> (note->getColour() * 467)
               ^ static_cast<HashCode> (note->isMute() ? 877 : 947)
               ^ static_cast<HashCode> (note->getVelocity() * 3083);
@@ -2149,7 +2169,7 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
     double durations[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     for (auto n : notes)
-        durations[n->getNoteNumber() % 12] += n->getLengthBeats();
+        durations[n->getNoteNumber() % 12] += n->getLengthBeats().inBeats();
 
     double major[12] = { 6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88 };
     double minor[12] = { 6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17 };
@@ -2201,4 +2221,4 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
     return results;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

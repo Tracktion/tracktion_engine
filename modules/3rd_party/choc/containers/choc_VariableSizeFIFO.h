@@ -49,45 +49,49 @@ struct VariableSizeFIFO
     VariableSizeFIFO();
     ~VariableSizeFIFO();
 
-    /** Resets the FIFO with a given capacity in bytes.
-        Note that this is not thread-safe with respect to the other methods - it must
-        only be called when nothing else is pushing or popping to the FIFO.
-    */
+    /// Resets the FIFO with a given capacity in bytes.
+    /// Note that this is not thread-safe with respect to the other methods - it must
+    /// only be called when nothing else is pushing or popping to the FIFO.
     void reset (uint32_t totalFIFOSizeBytes);
 
-    /** Pushes a chunk of data onto the FIFO.
-        If there is space in the FIFO for the given chunk, it will be added, and the
-        function will return true.
-        If the function returns false, then the FIFO didn't have space, and its state
-        will not have been modified by the call, so a caller can try again.
-        If numBytes is 0, nothing will be done, and the function will return false.
-        Note that because the FIFO stores each item's data as contiguous block, then
-        if the free space is split across the end of the circular buffer, then items
-        are not always guaranteed to fit, even if they are smaller than the space
-        returned by getFreeSpace().
-    */
+    /// Pushes a chunk of data onto the FIFO.
+    /// If there is space in the FIFO for the given chunk, it will be added, and the
+    /// function will return true.
+    /// If the function returns false, then the FIFO didn't have space, and its state
+    /// will not have been modified by the call, so a caller can try again.
+    /// If numBytes is 0, nothing will be done, and the function will return false.
+    /// Note that because the FIFO stores each item's data as contiguous block, then
+    /// if the free space is split across the end of the circular buffer, then items
+    /// are not always guaranteed to fit, even if they are smaller than the space
+    /// returned by getFreeSpace().
     bool push (const void* sourceData, uint32_t numBytes);
 
-    /** Retrieves the first item's data chunk via a callback.
-        If there are any pending items in the FIFO, the handleItem function
-        provided will be called - it must be a functor or lambda with parameters which can
-        accept being called as handleItem (const void* data, uint32_t size).
-        The function returns true if a callback was made, or false if the FIFO was empty.
-    */
+    /// Pushes data into the FIFO, using a callback to provide the data.
+    /// This does the same job as the other version of push(), but by taking a functor
+    /// to copy the data to its target location, it allows more complex writes or
+    /// data generation to take place inside a single transaction.
+    /// The functor provided must be a function that takes a void* parameter, and writes
+    /// exactly the number of bytes specified by totalBytes to that location.
+    template <typename DataProvider>
+    bool push (uint32_t totalBytes, DataProvider&&);
+
+    /// Retrieves the first item's data chunk via a callback.
+    /// If there are any pending items in the FIFO, the handleItem function
+    /// provided will be called - it must be a functor or lambda with parameters which can
+    /// accept being called as handleItem (const void* data, uint32_t size).
+    /// The function returns true if a callback was made, or false if the FIFO was empty.
     template <typename HandleItem>
     bool pop (HandleItem&& handleItem);
 
-    /** Allows access to all the available item in the FIFO via a callback.
-        If there are any pending items in the FIFO, the handleItem function will be called
-        for each of them. HandleItem must be a functor or lambda which can be called as
-        handleItems (const void* data, uint32_t size).
-    */
+    /// Allows access to all the available item in the FIFO via a callback.
+    /// If there are any pending items in the FIFO, the handleItem function will be called
+    /// for each of them. HandleItem must be a functor or lambda which can be called as
+    /// handleItems (const void* data, uint32_t size).
     template <typename HandleItem>
     void popAllAvailable (HandleItem&&);
 
-    /** Allows multiple items to be read from the FIFO without releasing their slots
-        until the BatchReadOperation object is deleted.
-    */
+    /// Allows multiple items to be read from the FIFO without releasing their slots
+    /// until the BatchReadOperation object is deleted.
     struct BatchReadOperation
     {
         explicit BatchReadOperation (VariableSizeFIFO&) noexcept;
@@ -108,14 +112,13 @@ struct VariableSizeFIFO
         uint32_t newReadPos = 0;
     };
 
-    /** Returns the number of used bytes in the FIFO. */
+    /// Returns the number of used bytes in the FIFO.
     uint32_t getUsedSpace() const;
 
-    /** Returns the number of bytes free in the FIFO.
-        Bear in mind that because each item needs some header bytes, and because items
-        are stored contiguously, then the number of free bytes does not mean that an
-        item of this size can definitely be added.
-    */
+    /// Returns the number of bytes free in the FIFO.
+    /// Bear in mind that because each item needs some header bytes, and because items
+    /// are stored contiguously, then the number of free bytes does not mean that an
+    /// item of this size can definitely be added.
     uint32_t getFreeSpace() const;
 
 private:
@@ -155,7 +158,8 @@ inline void VariableSizeFIFO::reset (uint32_t totalFIFOSizeBytes)
     buffer.resize (capacity + 1u);
 }
 
-inline bool VariableSizeFIFO::push (const void* sourceData, uint32_t numBytes)
+template <typename DataProvider>
+bool VariableSizeFIFO::push (uint32_t numBytes, DataProvider&& writeSourceData)
 {
     if (numBytes == 0)
         return false;
@@ -188,10 +192,14 @@ inline bool VariableSizeFIFO::push (const void* sourceData, uint32_t numBytes)
 
     auto header = static_cast<ItemHeader> (numBytes);
     std::memcpy (dest, std::addressof (header), headerSize);
-    std::memcpy (dest + headerSize, sourceData, numBytes);
+    writeSourceData (dest + headerSize);
     writePos = (destOffset + bytesNeeded) % capacity;
-
     return true;
+}
+
+inline bool VariableSizeFIFO::push (const void* sourceData, uint32_t numBytes)
+{
+    return push (numBytes, [=] (void* dest) { std::memcpy (dest, sourceData, numBytes); });
 }
 
 template <typename HandleItem>

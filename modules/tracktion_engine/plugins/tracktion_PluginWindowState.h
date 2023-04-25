@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct PluginWindowState  : private juce::Timer
@@ -49,4 +49,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE (PluginWindowState)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

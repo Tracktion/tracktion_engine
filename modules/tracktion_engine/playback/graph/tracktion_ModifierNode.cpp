@@ -11,14 +11,14 @@
 #pragma once
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
-                            tracktion_engine::Modifier::Ptr modifierToProcess,
+                            tracktion::engine::Modifier::Ptr modifierToProcess,
                             double sampleRateToUse, int blockSizeToUse,
                             const TrackMuteState* trackMuteStateToUse,
-                            tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
+                            tracktion::graph::PlayHeadState& playHeadStateToUse, bool rendering)
     : input (std::move (inputNode)),
       modifier (std::move (modifierToProcess)),
       trackMuteState (trackMuteStateToUse),
@@ -31,7 +31,7 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
 }
 
 ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
-                            tracktion_engine::Modifier::Ptr modifierToProcess,
+                            tracktion::engine::Modifier::Ptr modifierToProcess,
                             double sampleRateToUse, int blockSizeToUse,
                             std::shared_ptr<InputProvider> contextProvider)
     : input (std::move (inputNode)),
@@ -50,7 +50,7 @@ ModifierNode::~ModifierNode()
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties ModifierNode::getNodeProperties()
+tracktion::graph::NodeProperties ModifierNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
 
@@ -62,7 +62,7 @@ tracktion_graph::NodeProperties ModifierNode::getNodeProperties()
     return props;
 }
 
-void ModifierNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void ModifierNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
@@ -70,7 +70,7 @@ void ModifierNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationI
     auto props = getNodeProperties();
 
     if (props.latencyNumSamples > 0)
-        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
+        automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
 }
 
 void ModifierNode::process (ProcessContext& pc)
@@ -92,7 +92,7 @@ void ModifierNode::process (ProcessContext& pc)
     }
 
     // Setup audio buffers
-    auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioBlock);
+    auto outputAudioBuffer = tracktion::graph::toAudioBuffer (outputAudioBlock);
 
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);
@@ -114,7 +114,7 @@ void ModifierNode::process (ProcessContext& pc)
 
     // Process the plugin
     if (shouldProcess)
-        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
+        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange, outputAudioBuffer));
     
     // Then copy the buffers to the outputs
     outputBuffers.midi.copyFrom (midiMessageArray);
@@ -128,11 +128,11 @@ void ModifierNode::initialiseModifier (double sampleRateToUse, int blockSizeToUs
     isInitialised = true;
 }
 
-PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
+PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> referenceSampleRange, juce::AudioBuffer<float>& destBuffer)
 {
     if (audioRenderContextProvider != nullptr)
     {
-        tracktion_engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
+        tracktion::engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
         rc.destBuffer = &destBuffer;
         rc.bufferStartSample = 0;
         rc.bufferNumSamples = destBuffer.getNumSamples();
@@ -144,13 +144,16 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
 
     jassert (playHeadState != nullptr);
     auto& playHead = playHeadState->playHead;
+
+    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHead, referenceSampleRange);
+    jassert (! timelineRange.isSplit);
     
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
+             timeRangeFromSamples (timelineRange.timelineRange1, sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 
-}
+}} // namespace tracktion { inline namespace engine

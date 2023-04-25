@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Tracktion Benchmarks</title>
+  <style>
+    body      { background-color: white; }
+    #charts   { max-width: 1000px; }
+    select    { max-width: 250px; margin-right: 20px; }
+    .tickboxes  { padding-right: 30px; }
+
+  .loader {
+      border: 10px solid #f3f3f3; /* Light grey */
+      border-top: 10px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+      margin: auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<script>
+  var startDate, endDate;
+
+  function updateStartEndDates()
+  {
+    const startDateValue = document.getElementById ("start_date").value;
+    const endDateValue = document.getElementById ("end_date").value;
+
+    if (startDateValue)
+    {
+      const startDateString = (new Date (startDateValue)).toISOString();
+      startDate = startDateString;
+    }
+
+    if (endDateValue)
+    {
+      const endDateString = (new Date (endDateValue)).toISOString();
+      endDate = endDateString;
+    }
+
+    return false;
+  }
+</script>
+<body onload="buildMenus()">
+  <h1>Tracktion Benchmarks</h1>
+
+  <label for="categories_list">Categories:</label>
+  <select id="categories_list"></select>
+
+  <label for="names_list">Name:</label>
+  <select id="names_list"></select>
+
+  <label for="descriptions_list">Description:</label>
+  <select id="descriptions_list"></select>
+
+  <label for="platforms_list">Platform:</label>
+  <select id="platforms_list"></select>
+
+  <br/><br/>
+  <label for="start_date">Start Date:</label>
+  <input type="date" id="start_date" oninput="updateStartEndDates()"></input>
+
+  <label for="end_date">End Date:</label>
+  <input type="date" id="end_date" oninput="updateStartEndDates()"></input>
+
+  <label>Time
+    <input type="radio" checked="checked" name="time/cycles" id="time_results">
+  </label>
+  <label >Cycles
+    <input type="radio" name="time/cycles" id="cycles_results">
+  </label>
+  
+  <br/><br/>
+  <input type="checkbox" id="show_total_button" name="total_name" checked oninput="updateGraphs();">
+  <label class="tickboxes" for="total_name">Show total</label>
+
+  <input type="checkbox" id="show_minmax_button" name="minmax_name" checked oninput="updateGraphs();">
+  <label class="tickboxes" for="minmax_name">Show min/max</label>
+
+  <input type="checkbox" id="show_variance_button" name="variance_name" oninput="updateGraphs();">
+  <label class="tickboxes"for="variance_name">Show variance</label>
+
+  <input type="checkbox" id="normalise_button" name="normalise_name" oninput="updateGraphs();">
+  <label class="tickboxes"for="normalise_name">Normalise results</label>
+
+  <br/><br/>
+  <button id="fetch_results_button" type="button" onclick="fetchResults();">Update Results</button>
+
+  <br/><br/>
+  <hr/>
+  <br/>
+  <div id="loader" class="loader" style="display:none"></div>
+  <div id="charts"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+  <!-- <script type="text/javascript" src="benchmarks.js"></script> -->
+  <script>
+    var getJSON = function (url, paramString, callback)
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open ('POST', url, true);
+        xhr.setRequestHeader ("Content-Type", "application/x-www-form-urlencoded");
+        xhr.responseType = 'json';
+
+        xhr.onload = function()
+        {
+          var status = xhr.status;
+
+          if (status === 200)
+            callback (null, xhr.response);
+          else
+            callback (status, xhr.response);
+        };
+
+        xhr.send (paramString);
+    };
+
+    var showTotal;
+    var showMinMaxMean;
+    var showVariances;
+    var normalise;
+
+    var hashes = new Set();
+    var categories = new Set();
+    var names = new Set();
+    var descriptions = new Set();
+    var platforms = new Set();
+
+    var currentResults = new Map();
+    var currentMin, currentMax;
+
+    function updateMenus()
+    {
+      categories_list.innerHTML = "";
+      names_list.innerHTML = "";
+      descriptions_list.innerHTML = "";
+      platforms_list.innerHTML = "";
+
+      function populateOptions (list, menuItems)
+      {
+        list.innerHTML = "";
+
+        var option = document.createElement ('option');
+        option.value = "All";
+        option.innerHTML = option.value;
+        list.appendChild (option);
+
+        menuItems.forEach (menuItem =>
+        {
+          var option = document.createElement ('option');
+          option.value = menuItem;
+          option.innerHTML = option.value;
+          list.appendChild (option);
+        });
+      };
+
+      populateOptions (categories_list, categories);
+      populateOptions (names_list, names);
+      populateOptions (descriptions_list, descriptions);
+      populateOptions (platforms_list, platforms);
+    }
+
+    function buildMenus()
+    {
+      var filterString = "";
+
+      if (categories_list.value != "All")     filterString += '&benchmark_category=' + categories_list.value;
+      if (names_list.value != "All")          filterString += '&benchmark_name=' + names_list.value;
+      if (descriptions_list.value != "All")   filterString += '&benchmark_description=' + descriptions_list.value;
+      if (platforms_list.value != "All")      filterString += '&benchmark_platform=' + platforms_list.value;
+
+      document.getElementById ("loader").style.display = "block";
+      getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_menus" + filterString, function (status, res)
+      {
+        document.getElementById ("loader").style.display = "none";
+        hashes        = res["benchmark_hash"];
+        categories    = res["benchmark_category"];
+        names         = res["benchmark_name"];
+        descriptions  = res["benchmark_description"];
+        platforms     = res["benchmark_platform"];
+
+        updateMenus();
+      });
+    }
+
+    function addChart (hash, values)
+    {
+      const title = values.name + ' (' + values.platform + ')';
+      const subtitle = values.description;
+
+      var canvas = document.createElement ('canvas');
+      canvas.id = hash;
+      canvas.style="width:100%";
+      charts.appendChild (canvas);
+
+      const red     = 'rgb(255, 99, 132)';
+      const orange  = 'rgb(255, 159, 64)';
+      const yellow  = 'rgb(255, 205, 86)';
+      const green   = 'rgb(75, 192, 192)';
+      const blue    = 'rgb(54, 162, 235)';
+      const purple  = 'rgb(153, 102, 255)';
+      const grey    = 'rgb(201, 203, 207)';
+      const transparent         = '#00000000';
+      const translucentYellow   = '#ffcd5644';
+      const translucentBlue     = '#36a2eb11';
+      const lightBlue           = '#36a2ebaa';
+
+      var scales = {
+          y: {
+            min: normalise ? currentMin : undefined,
+            max: normalise ? currentMax : undefined
+          }
+        };
+
+      var datasets = [];
+
+      if (showTotal)
+      {
+        datasets.push ({ label: cycles_results.checked ? 'Cycles' : 'Duration', data: values.durations, lineTension: 0, backgroundColor: blue, borderColor: blue  });
+      }
+
+      if (showMinMaxMean)
+      {
+        datasets.push ({ label: 'Min', data: values.minimums, lineTension: 0, backgroundColor: translucentBlue, borderColor: green, fill: '+1' });
+        datasets.push ({ label: 'Max', data: values.maximums, lineTension: 0, backgroundColor: translucentBlue, borderColor: red });
+        datasets.push ({ label: 'Mean', data: values.means, lineTension: 0, backgroundColor: translucentBlue, borderColor: lightBlue });
+      }
+
+      if (showVariances)
+      {
+        datasets.push ({ label: 'Var', data: values.variances, lineTension: 0, backgroundColor: purple, borderColor: purple, yAxisID: 'varianceScale' });
+        scales.varianceScale =
+          {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            grid: {
+              drawOnChartArea: false, // only want the grid lines for one axis to show up
+            },
+          };
+      }
+
+      var chart = new Chart (canvas.id, {
+        type: "line",
+        data: {
+          labels: values.dateTimes,
+          datasets
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: [ title ]
+          },
+          scales,
+          interaction: {
+            intersect: false,
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: title,
+            },
+            subtitle: {
+              display: true,
+              text: subtitle,
+              font: {
+                size: 12,
+                style: 'italic'
+              },
+              padding: {
+                bottom: 10
+              }
+            },
+            filler: {
+              propagate: false
+            },
+            'samples-filler-analyser': {
+              target: 'chart-analyser'
+            }
+          },
+        }
+      });
+    }
+
+    function fetchResults()
+    {
+      let categoryToShow    = categories_list.value;
+      let nameToShow        = names_list.value;
+      let descriptionToShow = descriptions_list.value;
+      let platformToShow    = platforms_list.value;
+
+      if (categoryToShow == "All"
+          && nameToShow == "All"
+          && descriptionToShow == "All"
+          && platformToShow == "All")
+      {
+        window.alert ("Please set at least one filter!");
+        return;
+      }
+
+      charts.innerHTML = "";
+
+      var filterString = "";
+
+      if (categoryToShow != "All")      filterString += '&benchmark_category=' + categoryToShow;
+      if (nameToShow != "All")          filterString += '&benchmark_name=' + nameToShow;
+      if (descriptionToShow != "All")   filterString += '&benchmark_description=' + descriptionToShow;
+      if (platformToShow != "All")      filterString += '&benchmark_platform=' + platformToShow;
+      if (startDate)                    filterString += '&start_date=' + startDate;
+      if (endDate)                      filterString += '&end_date=' + endDate;
+
+      document.getElementById ("loader").style.display = "block";
+      getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_results_grouped" + filterString, function (status, results)
+        {
+          document.getElementById ("loader").style.display = "none";
+          currentResults.clear();
+          currentMax = Number.MIN_VALUE;
+          currentMin = Number.MAX_VALUE;
+          const displayCycles = cycles_results.checked;
+
+          results.forEach (result =>
+                          {
+                            var values = {};
+                            values.name         = result.benchmark_name;
+                            values.category     = result.benchmark_category;
+                            values.description  = result.benchmark_description;
+                            values.platform     = result.benchmark_platform;
+
+                            values.dateTimes  = result.benchmark_time;
+
+                            if (displayCycles)
+                            {
+                              values.durations  = result.benchmark_cycles_total;
+                              values.minimums   = result.benchmark_cycles_min;
+                              values.maximums   = result.benchmark_cycles_max;
+                              values.means      = result.benchmark_cycles_mean;       
+                              values.variances  = result.benchmark_cycles_variance;
+                            }
+                            else
+                            {
+                              values.durations  = result.benchmark_duration;
+                              values.minimums   = result.benchmark_duration_min;
+                              values.maximums   = result.benchmark_duration_max;
+                              values.means      = result.benchmark_duration_mean;       
+                              values.variances  = result.benchmark_duration_variance;
+                            }
+
+                            currentMax = Math.max (currentMax, ...values.durations, ...values.maximums);
+                            currentMin = Math.min (currentMin, ...values.durations, ...values.minimums);
+
+                            currentResults.set (result.benchmark_hash, values);
+                          });
+
+          updateGraphs();
+        });
+    }
+
+    function updateGraphs()
+    {
+      showTotal         = show_total_button.checked;
+      showMinMaxMean    = show_minmax_button.checked;
+      showVariances     = show_variance_button.checked;
+      normalise         = normalise_button.checked;
+
+      currentMax = Number.MIN_VALUE;
+      currentMin = Number.MAX_VALUE;
+
+      console.log (currentResults);
+      currentResults.forEach (result =>
+                             {
+                               if (showTotal)
+                               {
+                                 currentMax = Math.max (currentMax, ...result.durations);
+                                 currentMin = Math.min (currentMin, ...result.durations);
+                               }
+
+                               if (showMinMaxMean)
+                               {
+                                 currentMax = Math.max (currentMax, ...result.maximums);
+                                 currentMin = Math.min (currentMin, ...result.minimums);
+                               }
+                             });
+
+      charts.innerHTML = "";
+      
+      if (currentResults.size == 0)
+        charts.innerHTML = "No results";
+      else
+        currentResults.forEach ((valueObj, hash) => { addChart (hash, valueObj); });
+    }
+  </script>
+</body>
+</html>

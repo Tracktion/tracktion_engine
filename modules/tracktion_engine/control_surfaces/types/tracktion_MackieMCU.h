@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class MackieMCU  : public ControlSurface,
@@ -24,8 +24,8 @@ public:
     void updateMiscFeatures() override;
     void cpuTimerCallback();
     void auxTimerCallback();
-    void acceptMidiMessage (const juce::MidiMessage&) override;
-    virtual void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&);
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
+    virtual void acceptMidiMessageInt (int deviceIdx, const juce::MidiMessage&);
     void flip();
     void setAssignmentText (const juce::String&);
     void setDisplay (int devIdx, const char* topLine, const char* bottomLine);
@@ -71,7 +71,7 @@ public:
     void parameterChanged (int parameterNumber, const ParameterSetting&) override;
     void clearParameter (int parameterNumber) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float level) override;
+    void channelLevelChanged (int channel, float l, float r) override;
     void masterLevelsChanged (float leftLevel, float rightLevel) override;
     void updateTCDisplay (const char* newDigits);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
@@ -158,4 +158,4 @@ protected:
     bool isEditValidAndNotSafeRecording() const;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

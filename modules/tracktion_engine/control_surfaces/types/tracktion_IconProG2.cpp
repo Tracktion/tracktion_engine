@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 IconProG2::IconProG2 (ExternalControllerManager& ecm)  : MackieMCU (ecm)
@@ -20,13 +20,11 @@ IconProG2::~IconProG2()
 {
 }
 
-void IconProG2::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
+void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& m)
 {
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];
     
-    DBG (juce::String::formatted ("d: %x %x %x", d[0], d[1], d[2]));
-
     if (d[0] == 0xb0)
     {
         if (d1 == 0x3c)
@@ -249,7 +247,7 @@ void IconProG2::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
             }
             else if (d1 == 0x46)
             {
-                userToggledTrackEditorWindow();
+                userToggledTrackEditorWindow (shiftKeysDown != 0);
             }
             else if (d1 == 0x47)
             {
@@ -526,4 +524,4 @@ void IconProG2::setAssignmentMode (AssignmentMode newMode)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

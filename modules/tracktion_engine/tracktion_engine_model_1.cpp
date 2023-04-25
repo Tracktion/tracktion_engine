@@ -11,12 +11,16 @@
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
 #include <future>
+#include <chrono>
+
+using namespace std::literals;
+
 #include "../../modules/tracktion_graph/tracktion_graph.h"
+#include "../../modules/tracktion_core/utilities/tracktion_Benchmark.h"
 #include "tracktion_engine.h"
 
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
-#include "utilities/tracktion_Benchmark.h"
 
 #include "model/edit/tracktion_OldEditConversion.h"
 #include "model/edit/tracktion_EditItem.cpp"
@@ -52,6 +56,7 @@
 #include "model/clips/tracktion_MarkerClip.cpp"
 #include "model/clips/tracktion_CollectionClip.cpp"
 #include "model/clips/tracktion_MidiClip.cpp"
+#include "model/clips/tracktion_MidiClip.test.cpp"
 #include "model/clips/tracktion_StepClipChannel.cpp"
 #include "model/clips/tracktion_StepClipPattern.cpp"
 #include "model/clips/tracktion_StepClip.cpp"

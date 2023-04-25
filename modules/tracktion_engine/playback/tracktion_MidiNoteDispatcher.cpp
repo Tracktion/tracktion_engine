@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MidiNoteDispatcher::MidiNoteDispatcher()
@@ -20,7 +20,7 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
     stopTimer();
 }
 
-void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
+void MidiNoteDispatcher::dispatchPendingMessagesForDevices (TimePosition editTime)
 {
     juce::ScopedLock s (deviceLock);
 
@@ -28,30 +28,30 @@ void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
         dispatchPendingMessages (*state, editTime);
 }
 
-void MidiNoteDispatcher::masterTimeUpdate (double editTime)
+void MidiNoteDispatcher::masterTimeUpdate (TimePosition editTime)
 {
     const juce::ScopedLock s (timeLock);
     masterTime = editTime;
     hiResClockOfMasterTime = juce::Time::getMillisecondCounterHiRes();
 }
 
-void MidiNoteDispatcher::prepareToPlay (double editTime)
+void MidiNoteDispatcher::prepareToPlay (TimePosition editTime)
 {
     masterTimeUpdate (editTime);
 }
 
-double MidiNoteDispatcher::getCurrentTime() const
+TimePosition MidiNoteDispatcher::getCurrentTime() const
 {
     const juce::ScopedLock s (timeLock);
-    return masterTime + (juce::Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001;
+    return masterTime + TimeDuration::fromSeconds ((juce::Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001);
 }
 
-void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, double editTime)
+void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, TimePosition editTime)
 {
     // N.B. This should only be called under a deviceLock
     auto& pendingBuffer = state.device.getPendingMessages();
     state.device.context.masterLevels.processMidi (pendingBuffer, nullptr);
-    const double delay = state.device.getMidiOutput().getDeviceDelay();
+    const auto delay = state.device.getMidiOutput().getDeviceDelay();
     
     if (! state.device.sendMessages (pendingBuffer, editTime - delay))
         state.buffer.mergeFromAndClear (pendingBuffer);
@@ -111,10 +111,10 @@ void MidiNoteDispatcher::hiResTimerCallback()
                 {
                     auto& message = buffer[0];
 
-                    auto noteTime = message.getTimeStamp();
+                    auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());
                     auto currentTime = getCurrentTime();
 
-                    if (noteTime > currentTime + 0.25)
+                    if (noteTime > currentTime + TimeDuration::fromSeconds (0.25))
                     {
                         buffer.remove (0);
                     }
@@ -136,4 +136,4 @@ void MidiNoteDispatcher::hiResTimerCallback()
         m.device->getMidiOutput().fireMessage (m.message);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

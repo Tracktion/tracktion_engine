@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace AlphaTrack
@@ -65,11 +65,11 @@ AlphaTrackControlSurface::~AlphaTrackControlSurface()
 void AlphaTrackControlSurface::initialiseDevice (bool)
 {
     CRASH_TRACER
-    sendMidiArray (AlphaTrack::cmdInitNativeMode);
-    sendMidiArray (AlphaTrack::cmdInquiry);
+    sendMidiArray (0, AlphaTrack::cmdInitNativeMode);
+    sendMidiArray (0, AlphaTrack::cmdInquiry);
 
-    displayPrint(0, 0, "                ");
-    displayPrint(1, 0, "                ");
+    displayPrint (0, 0, "                ");
+    displayPrint (1, 0, "                ");
 
     clearAllLeds();
 }
@@ -101,7 +101,7 @@ bool AlphaTrackControlSurface::isOnEditScreen() const
     return getEditIfOnEditScreen() != nullptr;
 }
 
-void AlphaTrackControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
+void AlphaTrackControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     auto data = m.getRawData();
     auto datasize = m.getRawDataSize();
@@ -487,6 +487,8 @@ void AlphaTrackControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
 
 void AlphaTrackControlSurface::moveFader(int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
+
     if (channelNum == 0)
         faderPos = newSliderPos;
 
@@ -508,30 +510,20 @@ void AlphaTrackControlSurface::moveFaderInt (float newSliderPos)
         data[1] = (uint8_t) (((unsigned int) newPos & 3) << 4);
         data[2] = (uint8_t) (((unsigned int) newPos & 0x3F8) >> 3);
 
-        sendMidiArray (data);
+        sendMidiArray (0, data);
         physicalFaderPos = newPos;
     }
 }
 
-void AlphaTrackControlSurface::moveMasterLevelFader (float, float)
-{
-}
-
 void AlphaTrackControlSurface::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
+    
     if (channelNum == 0)
         pan = newPan;
 
     if (mode == Pan)
         updateDisplay();
-}
-
-void AlphaTrackControlSurface::moveAux (int, const char*, float)
-{
-}
-
-void AlphaTrackControlSurface::clearAux (int)
-{
 }
 
 void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightState state, bool isBright)
@@ -543,10 +535,6 @@ void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightSt
 void AlphaTrackControlSurface::soloCountChanged (bool anySoloTracks)
 {
     setLed (0x73, anySoloTracks);
-}
-
-void AlphaTrackControlSurface::playStateChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::recordStateChanged (bool isRecording)
@@ -585,33 +573,9 @@ void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, cons
     updateDisplay();
 }
 
-void AlphaTrackControlSurface::channelLevelChanged (int, float)
-{
-}
-
-void AlphaTrackControlSurface::trackSelectionChanged (int, bool)
-{
-}
-
 void AlphaTrackControlSurface::trackRecordEnabled (int, bool isEnabled)
 {
     setLed (0x00, isEnabled);
-}
-
-void AlphaTrackControlSurface::masterLevelsChanged (float, float)
-{
-}
-
-void AlphaTrackControlSurface::timecodeChanged (int, int, int, int, bool, bool)
-{
-}
-
-void AlphaTrackControlSurface::clickOnOffChanged (bool)
-{
-}
-
-void AlphaTrackControlSurface::snapOnOffChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
@@ -622,36 +586,12 @@ void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
         setLed (0x56, isLoopOn);
 }
 
-void AlphaTrackControlSurface::slaveOnOffChanged (bool)
-{
-}
-
 void AlphaTrackControlSurface::punchOnOffChanged (bool isPunching_)
 {
     isPunching = isPunching_;
 
     if (shift)
         setLed (0x56, isPunching);
-}
-
-void AlphaTrackControlSurface::parameterChanged (int, const ParameterSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearParameter (int)
-{
-}
-
-void AlphaTrackControlSurface::markerChanged (int, const MarkerSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearMarker (int)
-{
-}
-
-void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
-{
 }
 
 void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const text)
@@ -662,7 +602,7 @@ void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const 
     buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8_t) (x + line * 16);
     memcpy (buffer + sizeof (AlphaTrack::cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
-    sendMidiCommandToController (buffer, (int) len + 8);
+    sendMidiCommandToController (0, buffer, (int) len + 8);
 }
 
 void AlphaTrackControlSurface::setLed (int led, bool state)
@@ -672,7 +612,7 @@ void AlphaTrackControlSurface::setLed (int led, bool state)
     data[1] = (uint8_t) led;
     data[2] = state ? 0x7f : 0x00;
 
-    sendMidiArray (data);
+    sendMidiArray (0, data);
 }
 
 static juce::String dbToString (double db, int chars)
@@ -1167,4 +1107,4 @@ void AlphaTrackControlSurface::timerCallback (int timerId)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

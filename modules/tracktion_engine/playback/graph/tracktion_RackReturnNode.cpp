@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 RackReturnNode::RackReturnNode (std::unique_ptr<Node> wetNode,
@@ -29,12 +29,12 @@ RackReturnNode::RackReturnNode (std::unique_ptr<Node> wetNode,
     lastDryGain = dryGainFunction();
 }
 
-std::vector<tracktion_graph::Node*> RackReturnNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> RackReturnNode::getDirectInputNodes()
 {
     return { wetInput.get(), dryInput };
 }
 
-tracktion_graph::NodeProperties RackReturnNode::getNodeProperties()
+tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
 {
     auto wetProps = wetInput->getNodeProperties();
     auto dryProps = dryInput->getNodeProperties();
@@ -43,12 +43,12 @@ tracktion_graph::NodeProperties RackReturnNode::getNodeProperties()
     props.hasAudio = true;
     props.numberOfChannels = std::max (wetProps.numberOfChannels, dryProps.numberOfChannels);
     props.latencyNumSamples = std::max (wetProps.latencyNumSamples, dryProps.latencyNumSamples);
-    tracktion_graph::hash_combine (props.nodeID, dryProps.nodeID);
+    hash_combine (props.nodeID, dryProps.nodeID);
 
     constexpr size_t rackReturnNodeMagicHash = 0x726b52657475726e;
     
     if (props.nodeID != 0)
-        tracktion_graph::hash_combine (props.nodeID, rackReturnNodeMagicHash);
+        hash_combine (props.nodeID, rackReturnNodeMagicHash);
 
     return props;
 }
@@ -66,7 +66,7 @@ bool RackReturnNode::transform (Node&)
     if (wetProps.latencyNumSamples > dryProps.latencyNumSamples)
     {
         const int numLatencySamples = wetProps.latencyNumSamples - dryProps.latencyNumSamples;
-        dryLatencyNode = tracktion_graph::makeNode<tracktion_graph::LatencyNode> (dryInput, numLatencySamples);
+        dryLatencyNode = tracktion::graph::makeNode<tracktion::graph::LatencyNode> (dryInput, numLatencySamples);
         dryInput = dryLatencyNode.get();
         
         return true;
@@ -75,7 +75,7 @@ bool RackReturnNode::transform (Node&)
     return false;
 }
 
-void RackReturnNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&)
+void RackReturnNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
 }
 
@@ -128,13 +128,13 @@ void RackReturnNode::process (ProcessContext& pc)
         if (dryGain == 1.0f)
             add (dryDestView, drySource.audio);
         else
-            tracktion_graph::add (dryDestView, drySource.audio, dryGain);
+            tracktion::graph::add (dryDestView, drySource.audio, dryGain);
     }
     else
     {
-        tracktion_graph::addApplyingGainRamp (dryDestView, drySource.audio, lastDryGain, dryGain);
+        tracktion::graph::addApplyingGainRamp (dryDestView, drySource.audio, lastDryGain, dryGain);
         lastDryGain = dryGain;
     }
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
