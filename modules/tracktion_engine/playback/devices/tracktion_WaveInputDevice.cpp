@@ -360,7 +360,7 @@ public:
 
                     if (params.punchRange.getStart() < loopRange.getEnd() - 0.5s)
                     {
-                        params.punchRange = params.punchRange.withEnd (params.punchRange.getEnd() + adjustSeconds + 0.8s);
+                        params.punchRange = params.punchRange.withEnd (params.punchRange.getEnd() + 0.8s);
                         muteEnd = loopRange.getEnd();
                     }
 
@@ -368,6 +368,7 @@ public:
                 }
 
                 rc->punchTimes = params.punchRange;
+                rc->recordingBlockRange = rc->punchTimes.withEnd (rc->punchTimes.getEnd() + adjustSeconds);
                 rc->hasHitThreshold = (wi.recordTriggerDb <= -50.0f);
 
                 if (edit.engine.getUIBehaviour().shouldGenerateLiveWaveformsWhenRecording())
@@ -432,6 +433,13 @@ public:
         if (recordingContext == nullptr)
             return {};
 
+        // If we didn't get as far as adding any samples, delete the header of the file that will have been written
+        if (recordingContext->punchTimes.getStart() >= context.getUnloopedPosition())
+        {
+            recordWasCancelled();
+            return {};
+        }
+
         return context.stopRecording (*this,
                                       { recordingContext->punchTimes.getStart(),
                                         context.getUnloopedPosition() },
@@ -485,7 +493,10 @@ public:
         Engine& engine;
         juce::File file;
         double sampleRate = 44100.0;
-        TimeRange punchTimes, muteTimes;
+        TimeRange punchTimes;           /**< The Edit time range that the recorded clip should start/stop. */
+        TimeRange muteTimes;            /**< The Edit time range that the destination track should be muted for. */
+        TimeRange recordingBlockRange;  /**< The Edit time range that blocks should be recorded for.
+                                             This might be different to the punch range as it accounts for device and graph latency. */
         bool hasHitThreshold = false, firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
 
@@ -1054,7 +1065,7 @@ public:
 
             muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);
 
-            if (recordingContext->punchTimes.overlaps (blockRange))
+            if (recordingContext->recordingBlockRange.overlaps (blockRange))
             {
                 if (! recordingContext->hasHitThreshold)
                 {
@@ -1074,7 +1085,7 @@ public:
                 {
                     recordingContext->firstRecCallback = false;
 
-                    auto timeDiff = blockRange.getStart() - recordingContext->punchTimes.getStart();
+                    auto timeDiff = blockRange.getStart() - recordingContext->recordingBlockRange.getStart();
                     recordingContext->adjustSamples -= (int) tracktion::toSamples (timeDiff, recordingContext->sampleRate);
                 }
 
