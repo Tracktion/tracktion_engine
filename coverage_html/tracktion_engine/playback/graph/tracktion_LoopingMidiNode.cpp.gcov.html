@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-27 14:47:51</td>
+            <td class="headerValue">2023-04-27 15:41:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">50</td>
@@ -291,19 +291,19 @@
 <a name="229"><span class="lineNum">     229 </span>            :         jassert (! loopRange.isEmpty());</a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineCov">         40 :         sourceSequence.updateMatchedPairs();</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">        872 :         for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">        920 :         for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
 <a name="233"><span class="lineNum">     233 </span>            :         {</a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">        832 :             if (auto meh = sourceSequence.getEventPointer (i))</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">        880 :             if (auto meh = sourceSequence.getEventPointer (i))</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :             {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        832 :                 if (meh-&gt;noteOffObject != nullptr</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">        832 :                     &amp;&amp; meh-&gt;message.isNoteOn())</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        880 :                 if (meh-&gt;noteOffObject != nullptr</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">        880 :                     &amp;&amp; meh-&gt;message.isNoteOn())</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :                 {</a>
 <a name="239"><span class="lineNum">     239 </span>            :                     juce::Range&lt;double&gt; noteRange (meh-&gt;message.getTimeStamp(),</a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">        416 :                                                    meh-&gt;noteOffObject-&gt;message.getTimeStamp());</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">        440 :                                                    meh-&gt;noteOffObject-&gt;message.getTimeStamp());</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span>            :                     // Note before loop start</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        416 :                     if (noteRange.getEnd() &lt; loopRange.getStart())</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">         72 :                         continue;</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        440 :                     if (noteRange.getEnd() &lt; loopRange.getStart())</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">         96 :                         continue;</span></a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
 <a name="246"><span class="lineNum">     246 </span>            :                     // Past the end of the sequence</a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">        344 :                     if (noteRange.getStart() &gt;= loopRange.getEnd())</span></a>
@@ -325,7 +325,7 @@
 <a name="263"><span class="lineNum">     263 </span><span class="lineCov">        344 :                     res.addEvent ({ meh-&gt;message, noteRange.getStart() });</span></a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineCov">        344 :                     res.addEvent ({ meh-&gt;noteOffObject-&gt;message, noteRange.getEnd() });</span></a>
 <a name="265"><span class="lineNum">     265 </span>            :                 }</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">        416 :                 else if (! meh-&gt;message.isNoteOff())</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">        440 :                 else if (! meh-&gt;message.isNoteOff())</span></a>
 <a name="267"><span class="lineNum">     267 </span>            :                 {</a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :                     if (meh-&gt;message.getTimeStamp() &gt;= loopRange.getEnd())</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :                         break;</a>
@@ -1343,7 +1343,7 @@
 <a name="1281"><span class="lineNum">    1281 </span>            : </a>
 <a name="1282"><span class="lineNum">    1282 </span>            :                 // Note-offs that are on the end boundry need to be nudged back by 1 sample so they're not lost (which leads to stuck notes)</a>
 <a name="1283"><span class="lineNum">    1283 </span><span class="lineCov">       2520 :                 if (e.isNoteOff() &amp;&amp; juce::isWithin (editBeatPosition, clipIntersection.getEnd().inBeats(), beatDurationOfOneSample))</span></a>
-<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">          2 :                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;</span></a>
+<a name="1284"><span class="lineNum">    1284 </span><span class="lineCov">         14 :                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;</span></a>
 <a name="1285"><span class="lineNum">    1285 </span>            : </a>
 <a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">       2520 :                 e.multiplyVelocity (volScale);</span></a>
 <a name="1287"><span class="lineNum">    1287 </span><span class="lineCov">       2520 :                 const auto eventTimeSeconds = blockBeatPosition * secondsPerBeat.inSeconds();</span></a>
