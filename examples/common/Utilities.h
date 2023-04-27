@@ -432,14 +432,14 @@ private:
                 if (auto pendingChange = epc->getPendingPositionChange())
                 {
                     {
-                        const auto pendingProportion = loopLength == 0.0 ? 0.0 : pendingChange->inSeconds() / loopLength;
+                        const auto pendingProportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : pendingChange->inSeconds() / loopLength;
                         const float pendingX = r.getWidth() * float (pendingProportion);
                         pendingCursorTo.setRectangle (r.withWidth (2.0f).withX (pendingX));
                         pendingCursorTo.setVisible (true);
                     }
 
                     {
-                        const auto pendingAtProportion = loopLength == 0.0 ? 0.0 : positionToJumpAt->inSeconds() / loopLength;
+                        const auto pendingAtProportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : positionToJumpAt->inSeconds() / loopLength;
                         const float pendingX = r.getWidth() * float (pendingAtProportion);
                         pendingCursorAt.setRectangle (r.withWidth (2.0f).withX (pendingX));
                         pendingCursorAt.setVisible (true);
