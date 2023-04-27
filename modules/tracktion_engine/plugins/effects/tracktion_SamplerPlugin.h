@@ -12,7 +12,10 @@ namespace tracktion { inline namespace engine
 {
 
 class SamplerPlugin  : public Plugin,
-                       private juce::AsyncUpdater
+// BEATCONNECT MODIFICATION START
+                       // private juce::AsyncUpdater
+                       public juce::AsyncUpdater
+// BEATCONNECT MODIFICATION END
 {
 public:
     SamplerPlugin (PluginCreationInfo);
