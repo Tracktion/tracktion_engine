@@ -384,6 +384,10 @@ namespace tracktion { inline namespace engine
     class BufferedFileReader;
 }} // namespace tracktion { inline namespace engine
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
@@ -647,5 +651,9 @@ namespace tracktion { inline namespace engine
 #endif
 
 #include "model/automation/tracktion_MidiLearn.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

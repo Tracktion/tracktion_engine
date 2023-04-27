@@ -24,6 +24,11 @@
 //==============================================================================
 #include "tracktion_graph.h"
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 //==============================================================================
 #include "tracktion_graph/tracktion_TestUtilities.h"
 #include "tracktion_graph/tracktion_TestNodes.h"
@@ -49,3 +54,8 @@
 // Put this last to avoid macro leakage
 #include "utilities/tracktion_Allocation.test.cpp"
 #include "../3rd_party/rpmalloc/rpallocator.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif

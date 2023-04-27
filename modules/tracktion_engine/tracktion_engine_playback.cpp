@@ -94,6 +94,10 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 //==============================================================================
@@ -352,6 +356,10 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #include "control_surfaces/types/tracktion_NovationAutomap.cpp"
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
 #endif
 
 #endif

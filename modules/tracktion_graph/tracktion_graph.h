@@ -81,6 +81,11 @@
 #include <juce_audio_basics/juce_audio_basics.h>
 #include "../tracktion_core/tracktion_core.h"
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 //==============================================================================
 #include "utilities/tracktion_MidiMessageArray.h"
 namespace tracktion_engine = tracktion::engine;
@@ -115,3 +120,7 @@ namespace tracktion_engine = tracktion::engine;
 #include "tracktion_graph/nodes/tracktion_SummingNode.h"
 
 #include "tracktion_graph/players/tracktion_SimpleNodePlayer.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif

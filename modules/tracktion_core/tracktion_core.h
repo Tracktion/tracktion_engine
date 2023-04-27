@@ -37,6 +37,10 @@
 
 //==============================================================================
 //==============================================================================
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 #include "tracktion_TestConfig.h"
@@ -48,3 +52,7 @@
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif

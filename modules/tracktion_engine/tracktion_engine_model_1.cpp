@@ -15,6 +15,11 @@
 
 using namespace std::literals;
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "../../modules/tracktion_core/utilities/tracktion_Benchmark.h"
 
@@ -66,5 +71,9 @@ using namespace std::literals;
 #include "model/clips/tracktion_ClipEffects.cpp"
 #include "model/clips/tracktion_ClipOwner.cpp"
 #include "model/clips/tracktion_WarpTimeManager.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

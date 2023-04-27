@@ -53,6 +53,11 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 }
 #endif
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 //==============================================================================
 #include "selection/tracktion_Clipboard.cpp"
 #include "selection/tracktion_Selectable.test.cpp"
@@ -72,5 +77,9 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #include "utilities/tracktion_TemporaryFileManager.cpp"
 #include "utilities/tracktion_Engine.cpp"
 #include "utilities/tracktion_BinaryData.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

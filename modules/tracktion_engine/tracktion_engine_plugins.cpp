@@ -24,6 +24,11 @@
 #include <chrono>
 using namespace std::literals;
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 #include <tracktion_core/tracktion_TestConfig.h>
 
 #include <tracktion_graph/tracktion_graph.h>
@@ -84,5 +89,10 @@ using namespace std::literals;
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 
 #include "plugins/tracktion_Plugins.test.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 #endif

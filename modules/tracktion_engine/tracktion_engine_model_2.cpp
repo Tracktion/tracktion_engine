@@ -13,6 +13,11 @@
 #include <future>
 using namespace std::literals;
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 #include "tracktion_engine.h"
 
 #include <tracktion_graph/tracktion_graph.h>
@@ -71,5 +76,9 @@ using namespace std::literals;
 #include "project/tracktion_Project.cpp"
 #include "project/tracktion_ProjectManager.cpp"
 #include "project/tracktion_ProjectSearchIndex.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif
