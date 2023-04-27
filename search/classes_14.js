@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['uibehaviour_7186',['UIBehaviour',['../classtracktion_1_1engine_1_1UIBehaviour.html',1,'tracktion::engine::UIBehaviour'],['../classtracktion_1_1engine_1_1UIBehaviour.html',1,'tracktion::UIBehaviour']]],
-  ['undotransactioninhibitor_7187',['UndoTransactionInhibitor',['../structtracktion_1_1engine_1_1Edit_1_1UndoTransactionInhibitor.html',1,'tracktion::engine::Edit']]]
+  ['uibehaviour_7187',['UIBehaviour',['../classtracktion_1_1engine_1_1UIBehaviour.html',1,'tracktion::engine::UIBehaviour'],['../classtracktion_1_1engine_1_1UIBehaviour.html',1,'tracktion::UIBehaviour']]],
+  ['undotransactioninhibitor_7188',['UndoTransactionInhibitor',['../structtracktion_1_1engine_1_1Edit_1_1UndoTransactionInhibitor.html',1,'tracktion::engine::Edit']]]
 ];

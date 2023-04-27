@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 15:47:49</td>
+            <td class="headerValue">2023-04-27 12:50:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -76,15 +76,15 @@
 <a name="14"><span class="lineNum">      14 </span>            : struct ScopedCpuMeter</a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     ScopedCpuMeter (std::atomic&lt;double&gt;&amp; valueToUpdate_, double filterAmount_) noexcept</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">   26729389 :         : valueToUpdate (valueToUpdate_), filterAmount (filterAmount_)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">   26679890 :         : valueToUpdate (valueToUpdate_), filterAmount (filterAmount_)</span></a>
 <a name="18"><span class="lineNum">      18 </span>            :     {</a>
 <a name="19"><span class="lineNum">      19 </span>            :     }</a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   26882994 :     ~ScopedCpuMeter() noexcept</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   26941063 :     ~ScopedCpuMeter() noexcept</span></a>
 <a name="22"><span class="lineNum">      22 </span>            :     {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   26882994 :         const double msTaken = juce::Time::getMillisecondCounterHiRes() - callbackStartTime;</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   26901142 :         valueToUpdate.store (filterAmount * (msTaken - valueToUpdate));</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   26901142 :     }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   26941063 :         const double msTaken = juce::Time::getMillisecondCounterHiRes() - callbackStartTime;</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   27060965 :         valueToUpdate.store (filterAmount * (msTaken - valueToUpdate));</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   27060965 :     }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            : private:</a>
 <a name="28"><span class="lineNum">      28 </span>            :     std::atomic&lt;double&gt;&amp; valueToUpdate;</a>

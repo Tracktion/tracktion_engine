@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">114</td>
-            <td class="headerCovTableEntry">717</td>
+            <td class="headerCovTableEntry">716</td>
             <td class="headerCovTableEntryLo">15.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 15:47:49</td>
+            <td class="headerValue">2023-04-27 12:50:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -388,14 +388,14 @@
 <a name="326"><span class="lineNum">     326 </span><span class="lineCov">        273 :         startTimer (500);</span></a>
 <a name="327"><span class="lineNum">     327 </span>            :     }</a>
 <a name="328"><span class="lineNum">     328 </span>            : </a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineCov">         95 :     void timerCallback() override</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineCov">         97 :     void timerCallback() override</span></a>
 <a name="330"><span class="lineNum">     330 </span>            :     {</a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         95 :         if (owner.edit.isLoading())</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         97 :         if (owner.edit.isLoading())</span></a>
 <a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :             return;</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : </a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         95 :         bool active = juce::Process::isForegroundProcess();</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         97 :         bool active = juce::Process::isForegroundProcess();</span></a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         95 :         if (active &amp;&amp; forcePurge)</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         97 :         if (active &amp;&amp; forcePurge)</span></a>
 <a name="337"><span class="lineNum">     337 </span>            :         {</a>
 <a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :             hasBeenDeactivated = true;</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :             active = false;</a>
@@ -407,10 +407,10 @@
 <a name="345"><span class="lineNum">     345 </span>            :                 return false;</a>
 <a name="346"><span class="lineNum">     346 </span>            :             </a>
 <a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :             return SmartThumbnail::areThumbnailsFullyLoaded (owner.engine);</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         95 :         };</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">         97 :         };</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">         95 :         if (active != hasBeenDeactivated</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         95 :             &amp;&amp; canPurge())</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">         97 :         if (active != hasBeenDeactivated</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         97 :             &amp;&amp; canPurge())</span></a>
 <a name="352"><span class="lineNum">     352 </span>            :         {</a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :             hasBeenDeactivated = active;</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
@@ -696,9 +696,9 @@
 <a name="634"><span class="lineNum">     634 </span><span class="lineCov">        197 :     return controls;</span></a>
 <a name="635"><span class="lineNum">     635 </span>            : }</a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1293 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1310 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
 <a name="638"><span class="lineNum">     638 </span>            : {</a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1293 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1310 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : }</a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
 <a name="642"><span class="lineNum">     642 </span><span class="lineCov">        197 : void TransportControl::stopAllTransports (Engine&amp; engine, bool discardRecordings, bool clearDevices)</span></a>
@@ -746,26 +746,26 @@
 <a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 : TransportControl::PlayingFlag::~PlayingFlag() noexcept                          { --engine.getActiveEdits().numTransportsPlaying; }</span></a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
 <a name="686"><span class="lineNum">     686 </span>            : //==============================================================================</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        197 : void TransportControl::editHasChanged()</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">        198 : void TransportControl::editHasChanged()</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : {</a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        197 :     if (transportState-&gt;reallocationInhibitors &gt; 0)</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        198 :     if (transportState-&gt;reallocationInhibitors &gt; 0)</span></a>
 <a name="690"><span class="lineNum">     690 </span>            :     {</a>
 <a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :         isDelayedChangePending = true;</span></a>
 <a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :     }</a>
 <a name="694"><span class="lineNum">     694 </span>            : </a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        197 :     isDelayedChangePending = false;</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">        198 :     isDelayedChangePending = false;</span></a>
 <a name="696"><span class="lineNum">     696 </span>            : </a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        197 :     if (playbackContext == nullptr)</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        198 :     if (playbackContext == nullptr)</span></a>
 <a name="698"><span class="lineNum">     698 </span>            :         return;</a>
 <a name="699"><span class="lineNum">     699 </span>            : </a>
 <a name="700"><span class="lineNum">     700 </span><span class="lineCov">          1 :     ensureContextAllocated (true);</span></a>
 <a name="701"><span class="lineNum">     701 </span><span class="lineCov">          1 :     engine.getExternalControllerManager().updateAllDevices();</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : }</a>
 <a name="703"><span class="lineNum">     703 </span>            : </a>
-<a name="704"><span class="lineNum">     704 </span><span class="lineCov">         19 : bool TransportControl::isAllowedToReallocate() const noexcept</span></a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineCov">         20 : bool TransportControl::isAllowedToReallocate() const noexcept</span></a>
 <a name="705"><span class="lineNum">     705 </span>            : {</a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">         19 :     return transportState-&gt;reallocationInhibitors &lt;= 0;</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">         20 :     return transportState-&gt;reallocationInhibitors &lt;= 0;</span></a>
 <a name="707"><span class="lineNum">     707 </span>            : }</a>
 <a name="708"><span class="lineNum">     708 </span>            : </a>
 <a name="709"><span class="lineNum">     709 </span>            : //==============================================================================</a>
@@ -1017,11 +1017,11 @@
 <a name="955"><span class="lineNum">     955 </span><span class="lineCov">        366 : }</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : </a>
 <a name="957"><span class="lineNum">     957 </span>            : //==============================================================================</a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2584 : void TransportControl::timerCallback()</span></a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2626 : void TransportControl::timerCallback()</span></a>
 <a name="959"><span class="lineNum">     959 </span>            : {</a>
-<a name="960"><span class="lineNum">     960 </span><span class="lineCov">       2584 :     CRASH_TRACER</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">       2626 :     CRASH_TRACER</span></a>
 <a name="961"><span class="lineNum">     961 </span>            : </a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineCov">       2584 :     if (playbackContext == nullptr)</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineCov">       2626 :     if (playbackContext == nullptr)</span></a>
 <a name="963"><span class="lineNum">     963 </span>            :         return;</a>
 <a name="964"><span class="lineNum">     964 </span>            : </a>
 <a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :     if (isDelayedChangePending)</span></a>
@@ -1080,7 +1080,7 @@
 <a name="1018"><span class="lineNum">    1018 </span><span class="lineNoCov">          0 :             playHeadWrapper-&gt;setLoopTimes (false, {});</span></a>
 <a name="1019"><span class="lineNum">    1019 </span>            :         }</a>
 <a name="1020"><span class="lineNum">    1020 </span>            :     }</a>
-<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">       2584 : }</span></a>
+<a name="1021"><span class="lineNum">    1021 </span><span class="lineCov">       2626 : }</span></a>
 <a name="1022"><span class="lineNum">    1022 </span>            : </a>
 <a name="1023"><span class="lineNum">    1023 </span>            : </a>
 <a name="1024"><span class="lineNum">    1024 </span>            : //==============================================================================</a>
@@ -1367,369 +1367,371 @@
 <a name="1305"><span class="lineNum">    1305 </span>            :         {</a>
 <a name="1306"><span class="lineNum">    1306 </span><span class="lineNoCov">          0 :             playHeadWrapper-&gt;play ({ transportState-&gt;startTime, transportState-&gt;endTime }, looping);</span></a>
 <a name="1307"><span class="lineNum">    1307 </span>            : </a>
-<a name="1308"><span class="lineNum">    1308 </span><span class="lineNoCov">          0 :             if (looping)</span></a>
-<a name="1309"><span class="lineNum">    1309 </span><span class="lineNoCov">          0 :                 playHeadWrapper-&gt;setPosition (position);</span></a>
-<a name="1310"><span class="lineNum">    1310 </span>            :         }</a>
-<a name="1311"><span class="lineNum">    1311 </span>            :         else</a>
-<a name="1312"><span class="lineNum">    1312 </span>            :         {</a>
-<a name="1313"><span class="lineNum">    1313 </span><span class="lineNoCov">          0 :             clearPlayingFlags();</span></a>
-<a name="1314"><span class="lineNum">    1314 </span>            :         }</a>
-<a name="1315"><span class="lineNum">    1315 </span>            : </a>
-<a name="1316"><span class="lineNum">    1316 </span><span class="lineNoCov">          0 :         edit.setClickTrackRange ({});</span></a>
-<a name="1317"><span class="lineNum">    1317 </span>            :     }</a>
-<a name="1318"><span class="lineNum">    1318 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1319"><span class="lineNum">    1319 </span>            : </a>
-<a name="1320"><span class="lineNum">    1320 </span><span class="lineNoCov">          0 : bool TransportControl::performRecord()</span></a>
-<a name="1321"><span class="lineNum">    1321 </span>            : {</a>
-<a name="1322"><span class="lineNum">    1322 </span><span class="lineNoCov">          0 :     if (! edit.shouldPlay())</span></a>
-<a name="1323"><span class="lineNum">    1323 </span>            :         return true;</a>
-<a name="1324"><span class="lineNum">    1324 </span>            : </a>
-<a name="1325"><span class="lineNum">    1325 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1326"><span class="lineNum">    1326 </span>            :     sectionPlayer.reset();</a>
-<a name="1327"><span class="lineNum">    1327 </span>            : </a>
-<a name="1328"><span class="lineNum">    1328 </span>            :     stop (false, false);</a>
+<a name="1308"><span class="lineNum">    1308 </span>            :             // Post the position change to be dispatched otherwise what we're effectively doing is setting</a>
+<a name="1309"><span class="lineNum">    1309 </span>            :             // the position for &quot;this&quot; block and it will get incremented the next block, actually starting</a>
+<a name="1310"><span class="lineNum">    1310 </span>            :             // playback 1 block from the start</a>
+<a name="1311"><span class="lineNum">    1311 </span><span class="lineNoCov">          0 :             playHeadWrapper-&gt;setPosition (position);</span></a>
+<a name="1312"><span class="lineNum">    1312 </span>            :         }</a>
+<a name="1313"><span class="lineNum">    1313 </span>            :         else</a>
+<a name="1314"><span class="lineNum">    1314 </span>            :         {</a>
+<a name="1315"><span class="lineNum">    1315 </span><span class="lineNoCov">          0 :             clearPlayingFlags();</span></a>
+<a name="1316"><span class="lineNum">    1316 </span>            :         }</a>
+<a name="1317"><span class="lineNum">    1317 </span>            : </a>
+<a name="1318"><span class="lineNum">    1318 </span><span class="lineNoCov">          0 :         edit.setClickTrackRange ({});</span></a>
+<a name="1319"><span class="lineNum">    1319 </span>            :     }</a>
+<a name="1320"><span class="lineNum">    1320 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1321"><span class="lineNum">    1321 </span>            : </a>
+<a name="1322"><span class="lineNum">    1322 </span><span class="lineNoCov">          0 : bool TransportControl::performRecord()</span></a>
+<a name="1323"><span class="lineNum">    1323 </span>            : {</a>
+<a name="1324"><span class="lineNum">    1324 </span><span class="lineNoCov">          0 :     if (! edit.shouldPlay())</span></a>
+<a name="1325"><span class="lineNum">    1325 </span>            :         return true;</a>
+<a name="1326"><span class="lineNum">    1326 </span>            : </a>
+<a name="1327"><span class="lineNum">    1327 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="1328"><span class="lineNum">    1328 </span>            :     sectionPlayer.reset();</a>
 <a name="1329"><span class="lineNum">    1329 </span>            : </a>
-<a name="1330"><span class="lineNum">    1330 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;userDragging)</span></a>
-<a name="1331"><span class="lineNum">    1331 </span>            :     {</a>
-<a name="1332"><span class="lineNum">    1332 </span><span class="lineNoCov">          0 :         if (transportState-&gt;justSendMMCIfEnabled &amp;&amp; sendMMCStartRecord())</span></a>
-<a name="1333"><span class="lineNum">    1333 </span>            :             return true;</a>
-<a name="1334"><span class="lineNum">    1334 </span>            : </a>
-<a name="1335"><span class="lineNum">    1335 </span><span class="lineNoCov">          0 :         if (transportState-&gt;allowRecordingIfNoInputsArmed || areAnyInputsRecording())</span></a>
-<a name="1336"><span class="lineNum">    1336 </span>            :         {</a>
-<a name="1337"><span class="lineNum">    1337 </span>            :             const auto loopRange = getLoopRange();</a>
-<a name="1338"><span class="lineNum">    1338 </span><span class="lineNoCov">          0 :             transportState-&gt;startTime   = position.get();</span></a>
-<a name="1339"><span class="lineNum">    1339 </span><span class="lineNoCov">          0 :             transportState-&gt;endTime     = Edit::getMaximumEditEnd();</span></a>
-<a name="1340"><span class="lineNum">    1340 </span>            : </a>
-<a name="1341"><span class="lineNum">    1341 </span><span class="lineNoCov">          0 :             if (looping)</span></a>
-<a name="1342"><span class="lineNum">    1342 </span>            :             {</a>
-<a name="1343"><span class="lineNum">    1343 </span><span class="lineNoCov">          0 :                 if (loopRange.getLength() &lt; 2.0s)</span></a>
-<a name="1344"><span class="lineNum">    1344 </span>            :                 {</a>
-<a name="1345"><span class="lineNum">    1345 </span><span class="lineNoCov">          0 :                     engine.getUIBehaviour().showWarningMessage (TRANS(&quot;To record in loop mode, the length of loop must be greater than 2 seconds.&quot;));</span></a>
-<a name="1346"><span class="lineNum">    1346 </span><span class="lineNoCov">          0 :                     return false;</span></a>
-<a name="1347"><span class="lineNum">    1347 </span>            :                 }</a>
-<a name="1348"><span class="lineNum">    1348 </span>            : </a>
-<a name="1349"><span class="lineNum">    1349 </span><span class="lineNoCov">          0 :                 if (edit.recordingPunchInOut)</span></a>
-<a name="1350"><span class="lineNum">    1350 </span>            :                 {</a>
-<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :                     engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Recording can be done in either loop mode or punch in/out mode, but not both at the same time!&quot;));</span></a>
-<a name="1352"><span class="lineNum">    1352 </span><span class="lineNoCov">          0 :                     return false;</span></a>
-<a name="1353"><span class="lineNum">    1353 </span>            :                 }</a>
-<a name="1354"><span class="lineNum">    1354 </span>            : </a>
-<a name="1355"><span class="lineNum">    1355 </span><span class="lineNoCov">          0 :                 transportState-&gt;startTime = loopRange.getStart();</span></a>
-<a name="1356"><span class="lineNum">    1356 </span>            :             }</a>
-<a name="1357"><span class="lineNum">    1357 </span><span class="lineNoCov">          0 :             else if (edit.recordingPunchInOut)</span></a>
-<a name="1358"><span class="lineNum">    1358 </span>            :             {</a>
-<a name="1359"><span class="lineNum">    1359 </span><span class="lineNoCov">          0 :                 if ((loopRange.getEnd() + 0.1s) &lt;= transportState-&gt;startTime)</span></a>
-<a name="1360"><span class="lineNum">    1360 </span><span class="lineNoCov">          0 :                     transportState-&gt;startTime = (loopRange.getStart() - 1.0s);</span></a>
-<a name="1361"><span class="lineNum">    1361 </span>            :             }</a>
-<a name="1362"><span class="lineNum">    1362 </span>            :             else</a>
-<a name="1363"><span class="lineNum">    1363 </span>            :             {</a>
-<a name="1364"><span class="lineNum">    1364 </span><span class="lineNoCov">          0 :                 if (abs (transportState-&gt;startTime) &lt; 0.005s)</span></a>
-<a name="1365"><span class="lineNum">    1365 </span><span class="lineNoCov">          0 :                     transportState-&gt;startTime = 0s;</span></a>
-<a name="1366"><span class="lineNum">    1366 </span>            :             }</a>
-<a name="1367"><span class="lineNum">    1367 </span>            : </a>
-<a name="1368"><span class="lineNum">    1368 </span><span class="lineNoCov">          0 :             auto prerollStart = transportState-&gt;startTime.get();</span></a>
-<a name="1369"><span class="lineNum">    1369 </span><span class="lineNoCov">          0 :             double numCountInBeats = edit.getNumCountInBeats();</span></a>
-<a name="1370"><span class="lineNum">    1370 </span><span class="lineNoCov">          0 :             const auto&amp; ts = edit.tempoSequence;</span></a>
-<a name="1371"><span class="lineNum">    1371 </span>            : </a>
-<a name="1372"><span class="lineNum">    1372 </span><span class="lineNoCov">          0 :             if (numCountInBeats &gt; 0)</span></a>
-<a name="1373"><span class="lineNum">    1373 </span>            :             {</a>
-<a name="1374"><span class="lineNum">    1374 </span><span class="lineNoCov">          0 :                 auto currentBeat = ts.toBeats (transportState-&gt;startTime);</span></a>
-<a name="1375"><span class="lineNum">    1375 </span><span class="lineNoCov">          0 :                 prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));</span></a>
-<a name="1376"><span class="lineNum">    1376 </span>            :                 // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.</a>
-<a name="1377"><span class="lineNum">    1377 </span>            :                 // If this changes, that will also need to change.</a>
-<a name="1378"><span class="lineNum">    1378 </span>            :             }</a>
-<a name="1379"><span class="lineNum">    1379 </span>            : </a>
-<a name="1380"><span class="lineNum">    1380 </span><span class="lineNoCov">          0 :             if (edit.getAbletonLink().isConnected())</span></a>
-<a name="1381"><span class="lineNum">    1381 </span>            :             {</a>
-<a name="1382"><span class="lineNum">    1382 </span><span class="lineNoCov">          0 :                 double barLength = ts.getTimeSig (0)-&gt;numerator;</span></a>
-<a name="1383"><span class="lineNum">    1383 </span><span class="lineNoCov">          0 :                 double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);</span></a>
-<a name="1384"><span class="lineNum">    1384 </span>            : </a>
-<a name="1385"><span class="lineNum">    1385 </span><span class="lineNoCov">          0 :                 if (numCountInBeats &gt; 0)</span></a>
-<a name="1386"><span class="lineNum">    1386 </span><span class="lineNoCov">          0 :                     beatsUntilNextLinkCycle -= 0.5;</span></a>
-<a name="1387"><span class="lineNum">    1387 </span>            : </a>
-<a name="1388"><span class="lineNum">    1388 </span><span class="lineNoCov">          0 :                 prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));</span></a>
-<a name="1389"><span class="lineNum">    1389 </span>            :             }</a>
-<a name="1390"><span class="lineNum">    1390 </span>            : </a>
-<a name="1391"><span class="lineNum">    1391 </span><span class="lineNoCov">          0 :             transportState-&gt;cursorPosAtPlayStart = position.get();</span></a>
+<a name="1330"><span class="lineNum">    1330 </span>            :     stop (false, false);</a>
+<a name="1331"><span class="lineNum">    1331 </span>            : </a>
+<a name="1332"><span class="lineNum">    1332 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;userDragging)</span></a>
+<a name="1333"><span class="lineNum">    1333 </span>            :     {</a>
+<a name="1334"><span class="lineNum">    1334 </span><span class="lineNoCov">          0 :         if (transportState-&gt;justSendMMCIfEnabled &amp;&amp; sendMMCStartRecord())</span></a>
+<a name="1335"><span class="lineNum">    1335 </span>            :             return true;</a>
+<a name="1336"><span class="lineNum">    1336 </span>            : </a>
+<a name="1337"><span class="lineNum">    1337 </span><span class="lineNoCov">          0 :         if (transportState-&gt;allowRecordingIfNoInputsArmed || areAnyInputsRecording())</span></a>
+<a name="1338"><span class="lineNum">    1338 </span>            :         {</a>
+<a name="1339"><span class="lineNum">    1339 </span>            :             const auto loopRange = getLoopRange();</a>
+<a name="1340"><span class="lineNum">    1340 </span><span class="lineNoCov">          0 :             transportState-&gt;startTime   = position.get();</span></a>
+<a name="1341"><span class="lineNum">    1341 </span><span class="lineNoCov">          0 :             transportState-&gt;endTime     = Edit::getMaximumEditEnd();</span></a>
+<a name="1342"><span class="lineNum">    1342 </span>            : </a>
+<a name="1343"><span class="lineNum">    1343 </span><span class="lineNoCov">          0 :             if (looping)</span></a>
+<a name="1344"><span class="lineNum">    1344 </span>            :             {</a>
+<a name="1345"><span class="lineNum">    1345 </span><span class="lineNoCov">          0 :                 if (loopRange.getLength() &lt; 2.0s)</span></a>
+<a name="1346"><span class="lineNum">    1346 </span>            :                 {</a>
+<a name="1347"><span class="lineNum">    1347 </span><span class="lineNoCov">          0 :                     engine.getUIBehaviour().showWarningMessage (TRANS(&quot;To record in loop mode, the length of loop must be greater than 2 seconds.&quot;));</span></a>
+<a name="1348"><span class="lineNum">    1348 </span><span class="lineNoCov">          0 :                     return false;</span></a>
+<a name="1349"><span class="lineNum">    1349 </span>            :                 }</a>
+<a name="1350"><span class="lineNum">    1350 </span>            : </a>
+<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :                 if (edit.recordingPunchInOut)</span></a>
+<a name="1352"><span class="lineNum">    1352 </span>            :                 {</a>
+<a name="1353"><span class="lineNum">    1353 </span><span class="lineNoCov">          0 :                     engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Recording can be done in either loop mode or punch in/out mode, but not both at the same time!&quot;));</span></a>
+<a name="1354"><span class="lineNum">    1354 </span><span class="lineNoCov">          0 :                     return false;</span></a>
+<a name="1355"><span class="lineNum">    1355 </span>            :                 }</a>
+<a name="1356"><span class="lineNum">    1356 </span>            : </a>
+<a name="1357"><span class="lineNum">    1357 </span><span class="lineNoCov">          0 :                 transportState-&gt;startTime = loopRange.getStart();</span></a>
+<a name="1358"><span class="lineNum">    1358 </span>            :             }</a>
+<a name="1359"><span class="lineNum">    1359 </span><span class="lineNoCov">          0 :             else if (edit.recordingPunchInOut)</span></a>
+<a name="1360"><span class="lineNum">    1360 </span>            :             {</a>
+<a name="1361"><span class="lineNum">    1361 </span><span class="lineNoCov">          0 :                 if ((loopRange.getEnd() + 0.1s) &lt;= transportState-&gt;startTime)</span></a>
+<a name="1362"><span class="lineNum">    1362 </span><span class="lineNoCov">          0 :                     transportState-&gt;startTime = (loopRange.getStart() - 1.0s);</span></a>
+<a name="1363"><span class="lineNum">    1363 </span>            :             }</a>
+<a name="1364"><span class="lineNum">    1364 </span>            :             else</a>
+<a name="1365"><span class="lineNum">    1365 </span>            :             {</a>
+<a name="1366"><span class="lineNum">    1366 </span><span class="lineNoCov">          0 :                 if (abs (transportState-&gt;startTime) &lt; 0.005s)</span></a>
+<a name="1367"><span class="lineNum">    1367 </span><span class="lineNoCov">          0 :                     transportState-&gt;startTime = 0s;</span></a>
+<a name="1368"><span class="lineNum">    1368 </span>            :             }</a>
+<a name="1369"><span class="lineNum">    1369 </span>            : </a>
+<a name="1370"><span class="lineNum">    1370 </span><span class="lineNoCov">          0 :             auto prerollStart = transportState-&gt;startTime.get();</span></a>
+<a name="1371"><span class="lineNum">    1371 </span><span class="lineNoCov">          0 :             double numCountInBeats = edit.getNumCountInBeats();</span></a>
+<a name="1372"><span class="lineNum">    1372 </span><span class="lineNoCov">          0 :             const auto&amp; ts = edit.tempoSequence;</span></a>
+<a name="1373"><span class="lineNum">    1373 </span>            : </a>
+<a name="1374"><span class="lineNum">    1374 </span><span class="lineNoCov">          0 :             if (numCountInBeats &gt; 0)</span></a>
+<a name="1375"><span class="lineNum">    1375 </span>            :             {</a>
+<a name="1376"><span class="lineNum">    1376 </span><span class="lineNoCov">          0 :                 auto currentBeat = ts.toBeats (transportState-&gt;startTime);</span></a>
+<a name="1377"><span class="lineNum">    1377 </span><span class="lineNoCov">          0 :                 prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));</span></a>
+<a name="1378"><span class="lineNum">    1378 </span>            :                 // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.</a>
+<a name="1379"><span class="lineNum">    1379 </span>            :                 // If this changes, that will also need to change.</a>
+<a name="1380"><span class="lineNum">    1380 </span>            :             }</a>
+<a name="1381"><span class="lineNum">    1381 </span>            : </a>
+<a name="1382"><span class="lineNum">    1382 </span><span class="lineNoCov">          0 :             if (edit.getAbletonLink().isConnected())</span></a>
+<a name="1383"><span class="lineNum">    1383 </span>            :             {</a>
+<a name="1384"><span class="lineNum">    1384 </span><span class="lineNoCov">          0 :                 double barLength = ts.getTimeSig (0)-&gt;numerator;</span></a>
+<a name="1385"><span class="lineNum">    1385 </span><span class="lineNoCov">          0 :                 double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);</span></a>
+<a name="1386"><span class="lineNum">    1386 </span>            : </a>
+<a name="1387"><span class="lineNum">    1387 </span><span class="lineNoCov">          0 :                 if (numCountInBeats &gt; 0)</span></a>
+<a name="1388"><span class="lineNum">    1388 </span><span class="lineNoCov">          0 :                     beatsUntilNextLinkCycle -= 0.5;</span></a>
+<a name="1389"><span class="lineNum">    1389 </span>            : </a>
+<a name="1390"><span class="lineNum">    1390 </span><span class="lineNoCov">          0 :                 prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));</span></a>
+<a name="1391"><span class="lineNum">    1391 </span>            :             }</a>
 <a name="1392"><span class="lineNum">    1392 </span>            : </a>
-<a name="1393"><span class="lineNum">    1393 </span><span class="lineNoCov">          0 :             playingFlag = std::make_unique&lt;PlayingFlag&gt; (engine);</span></a>
-<a name="1394"><span class="lineNum">    1394 </span><span class="lineNoCov">          0 :             transportState-&gt;safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);</span></a>
-<a name="1395"><span class="lineNum">    1395 </span>            : </a>
-<a name="1396"><span class="lineNum">    1396 </span><span class="lineNoCov">          0 :             edit.updateMidiTimecodeDevices();</span></a>
+<a name="1393"><span class="lineNum">    1393 </span><span class="lineNoCov">          0 :             transportState-&gt;cursorPosAtPlayStart = position.get();</span></a>
+<a name="1394"><span class="lineNum">    1394 </span>            : </a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineNoCov">          0 :             playingFlag = std::make_unique&lt;PlayingFlag&gt; (engine);</span></a>
+<a name="1396"><span class="lineNum">    1396 </span><span class="lineNoCov">          0 :             transportState-&gt;safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);</span></a>
 <a name="1397"><span class="lineNum">    1397 </span>            : </a>
-<a name="1398"><span class="lineNum">    1398 </span><span class="lineNoCov">          0 :             ensureContextAllocated();</span></a>
+<a name="1398"><span class="lineNum">    1398 </span><span class="lineNoCov">          0 :             edit.updateMidiTimecodeDevices();</span></a>
 <a name="1399"><span class="lineNum">    1399 </span>            : </a>
-<a name="1400"><span class="lineNum">    1400 </span><span class="lineNoCov">          0 :             if (playbackContext)</span></a>
-<a name="1401"><span class="lineNum">    1401 </span>            :             {</a>
-<a name="1402"><span class="lineNum">    1402 </span><span class="lineNoCov">          0 :                 if (edit.getNumCountInBeats() &gt; 0)</span></a>
-<a name="1403"><span class="lineNum">    1403 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (true, { transportState-&gt;startTime.get(), Edit::getMaximumEditEnd() });</span></a>
-<a name="1404"><span class="lineNum">    1404 </span>            : </a>
-<a name="1405"><span class="lineNum">    1405 </span>            :                 // if we're playing from near time = 0, roll back a fraction so we</a>
-<a name="1406"><span class="lineNum">    1406 </span>            :                 // don't miss the first block - this won't be noticable further along</a>
-<a name="1407"><span class="lineNum">    1407 </span>            :                 // in the edit.</a>
-<a name="1408"><span class="lineNum">    1408 </span><span class="lineNoCov">          0 :                 if (prerollStart &lt; 0.2s)</span></a>
-<a name="1409"><span class="lineNum">    1409 </span><span class="lineNoCov">          0 :                     prerollStart = prerollStart - 0.2s;</span></a>
-<a name="1410"><span class="lineNum">    1410 </span>            : </a>
-<a name="1411"><span class="lineNum">    1411 </span><span class="lineNoCov">          0 :                 if (looping)</span></a>
-<a name="1412"><span class="lineNum">    1412 </span>            :                 {</a>
-<a name="1413"><span class="lineNum">    1413 </span>            :                     // The order of this is critical as the audio thread might jump in and reset the</a>
-<a name="1414"><span class="lineNum">    1414 </span>            :                     // roll-in-to-loop status of the loop-range is not set first</a>
-<a name="1415"><span class="lineNum">    1415 </span><span class="lineNoCov">          0 :                     auto lr = getLoopRange();</span></a>
-<a name="1416"><span class="lineNum">    1416 </span><span class="lineNoCov">          0 :                     lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));</span></a>
-<a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (true, lr);</span></a>
-<a name="1418"><span class="lineNum">    1418 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setRollInToLoop (prerollStart);</span></a>
-<a name="1419"><span class="lineNum">    1419 </span>            :                     playHeadWrapper-&gt;play();</a>
-<a name="1420"><span class="lineNum">    1420 </span>            :                 }</a>
-<a name="1421"><span class="lineNum">    1421 </span>            :                 else</a>
-<a name="1422"><span class="lineNum">    1422 </span>            :                 {</a>
-<a name="1423"><span class="lineNum">    1423 </span>            :                     // Set the playhead loop times before preparing the context as this will be used by</a>
-<a name="1424"><span class="lineNum">    1424 </span>            :                     // the RecordingContext to initialise itself</a>
-<a name="1425"><span class="lineNum">    1425 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (false, { prerollStart, transportState-&gt;endTime.get() });</span></a>
-<a name="1426"><span class="lineNum">    1426 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;play ({ prerollStart, transportState-&gt;endTime.get() }, false);</span></a>
-<a name="1427"><span class="lineNum">    1427 </span>            :                 }</a>
-<a name="1428"><span class="lineNum">    1428 </span>            :                 </a>
-<a name="1429"><span class="lineNum">    1429 </span><span class="lineNoCov">          0 :                 playHeadWrapper-&gt;setPosition (prerollStart);</span></a>
-<a name="1430"><span class="lineNum">    1430 </span><span class="lineNoCov">          0 :                 position = prerollStart;</span></a>
-<a name="1431"><span class="lineNum">    1431 </span>            : </a>
-<a name="1432"><span class="lineNum">    1432 </span>            :                 // Prepare the recordings after the playhead has been setup to avoid synchronisation problems</a>
-<a name="1433"><span class="lineNum">    1433 </span><span class="lineNoCov">          0 :                 playbackContext-&gt;prepareForRecording (prerollStart, transportState-&gt;startTime.get());</span></a>
-<a name="1434"><span class="lineNum">    1434 </span>            : </a>
-<a name="1435"><span class="lineNum">    1435 </span><span class="lineNoCov">          0 :                 if (edit.getNumCountInBeats() &gt; 0)</span></a>
-<a name="1436"><span class="lineNum">    1436 </span>            :                 {</a>
-<a name="1437"><span class="lineNum">    1437 </span>            :                     // As the pre-roll will be &quot;num count in beats - 0.5&quot; we have to add that back on before our calculation</a>
-<a name="1438"><span class="lineNum">    1438 </span>            :                     // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat</a>
-<a name="1439"><span class="lineNum">    1439 </span><span class="lineNoCov">          0 :                     const auto clickStartBeat = ts.toBeats (prerollStart);</span></a>
-<a name="1440"><span class="lineNum">    1440 </span><span class="lineNoCov">          0 :                     const auto clickEndBeat = ts.toBeats (transportState-&gt;startTime.get());</span></a>
-<a name="1441"><span class="lineNum">    1441 </span>            : </a>
-<a name="1442"><span class="lineNum">    1442 </span><span class="lineNoCov">          0 :                     edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),</span></a>
-<a name="1443"><span class="lineNum">    1443 </span><span class="lineNoCov">          0 :                                                           BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));</span></a>
-<a name="1444"><span class="lineNum">    1444 </span>            :                 }</a>
-<a name="1445"><span class="lineNum">    1445 </span>            :                 else</a>
-<a name="1446"><span class="lineNum">    1446 </span>            :                 {</a>
-<a name="1447"><span class="lineNum">    1447 </span><span class="lineNoCov">          0 :                     edit.setClickTrackRange ({});</span></a>
-<a name="1448"><span class="lineNum">    1448 </span>            :                 }</a>
-<a name="1449"><span class="lineNum">    1449 </span>            :                 </a>
-<a name="1450"><span class="lineNum">    1450 </span><span class="lineNoCov">          0 :                 transportState-&gt;playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set</span></a>
-<a name="1451"><span class="lineNum">    1451 </span><span class="lineNoCov">          0 :                 screenSaverDefeater = std::make_unique&lt;ScreenSaverDefeater&gt;();</span></a>
-<a name="1452"><span class="lineNum">    1452 </span>            :             }</a>
-<a name="1453"><span class="lineNum">    1453 </span>            :         }</a>
-<a name="1454"><span class="lineNum">    1454 </span>            :         else</a>
-<a name="1455"><span class="lineNum">    1455 </span>            :         {</a>
-<a name="1456"><span class="lineNum">    1456 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (</span></a>
-<a name="1457"><span class="lineNum">    1457 </span><span class="lineNoCov">          0 :                 TRANS(&quot;Recording is only possible  when at least one active input device is assigned to a track&quot;));</span></a>
-<a name="1458"><span class="lineNum">    1458 </span>            : </a>
-<a name="1459"><span class="lineNum">    1459 </span><span class="lineNoCov">          0 :             return false;</span></a>
-<a name="1460"><span class="lineNum">    1460 </span>            :         }</a>
-<a name="1461"><span class="lineNum">    1461 </span>            :     }</a>
-<a name="1462"><span class="lineNum">    1462 </span>            : </a>
-<a name="1463"><span class="lineNum">    1463 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;justSendMMCIfEnabled)</span></a>
-<a name="1464"><span class="lineNum">    1464 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_recordStart);</span></a>
-<a name="1465"><span class="lineNum">    1465 </span>            : </a>
-<a name="1466"><span class="lineNum">    1466 </span><span class="lineNoCov">          0 :     if (transportState-&gt;safeRecording)</span></a>
-<a name="1467"><span class="lineNum">    1467 </span><span class="lineNoCov">          0 :         engine.getUIBehaviour().showSafeRecordDialog (*this);</span></a>
-<a name="1468"><span class="lineNum">    1468 </span>            : </a>
-<a name="1469"><span class="lineNum">    1469 </span>            :     return true;</a>
-<a name="1470"><span class="lineNum">    1470 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1471"><span class="lineNum">    1471 </span>            : </a>
-<a name="1472"><span class="lineNum">    1472 </span><span class="lineNoCov">          0 : void TransportControl::performStop()</span></a>
-<a name="1473"><span class="lineNum">    1473 </span>            : {</a>
-<a name="1474"><span class="lineNum">    1474 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1475"><span class="lineNum">    1475 </span>            : </a>
-<a name="1476"><span class="lineNum">    1476 </span><span class="lineNoCov">          0 :     const juce::ScopedValueSetter&lt;bool&gt; svs (isStopInProgress, true);</span></a>
-<a name="1477"><span class="lineNum">    1477 </span>            :     screenSaverDefeater.reset();</a>
-<a name="1478"><span class="lineNum">    1478 </span>            :     sectionPlayer.reset();</a>
-<a name="1479"><span class="lineNum">    1479 </span>            : </a>
-<a name="1480"><span class="lineNum">    1480 </span><span class="lineNoCov">          0 :     engine.getUIBehaviour().hideSafeRecordDialog (*this);</span></a>
+<a name="1400"><span class="lineNum">    1400 </span><span class="lineNoCov">          0 :             ensureContextAllocated();</span></a>
+<a name="1401"><span class="lineNum">    1401 </span>            : </a>
+<a name="1402"><span class="lineNum">    1402 </span><span class="lineNoCov">          0 :             if (playbackContext)</span></a>
+<a name="1403"><span class="lineNum">    1403 </span>            :             {</a>
+<a name="1404"><span class="lineNum">    1404 </span><span class="lineNoCov">          0 :                 if (edit.getNumCountInBeats() &gt; 0)</span></a>
+<a name="1405"><span class="lineNum">    1405 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (true, { transportState-&gt;startTime.get(), Edit::getMaximumEditEnd() });</span></a>
+<a name="1406"><span class="lineNum">    1406 </span>            : </a>
+<a name="1407"><span class="lineNum">    1407 </span>            :                 // if we're playing from near time = 0, roll back a fraction so we</a>
+<a name="1408"><span class="lineNum">    1408 </span>            :                 // don't miss the first block - this won't be noticable further along</a>
+<a name="1409"><span class="lineNum">    1409 </span>            :                 // in the edit.</a>
+<a name="1410"><span class="lineNum">    1410 </span><span class="lineNoCov">          0 :                 if (prerollStart &lt; 0.2s)</span></a>
+<a name="1411"><span class="lineNum">    1411 </span><span class="lineNoCov">          0 :                     prerollStart = prerollStart - 0.2s;</span></a>
+<a name="1412"><span class="lineNum">    1412 </span>            : </a>
+<a name="1413"><span class="lineNum">    1413 </span><span class="lineNoCov">          0 :                 if (looping)</span></a>
+<a name="1414"><span class="lineNum">    1414 </span>            :                 {</a>
+<a name="1415"><span class="lineNum">    1415 </span>            :                     // The order of this is critical as the audio thread might jump in and reset the</a>
+<a name="1416"><span class="lineNum">    1416 </span>            :                     // roll-in-to-loop status of the loop-range is not set first</a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :                     auto lr = getLoopRange();</span></a>
+<a name="1418"><span class="lineNum">    1418 </span><span class="lineNoCov">          0 :                     lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));</span></a>
+<a name="1419"><span class="lineNum">    1419 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (true, lr);</span></a>
+<a name="1420"><span class="lineNum">    1420 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setRollInToLoop (prerollStart);</span></a>
+<a name="1421"><span class="lineNum">    1421 </span>            :                     playHeadWrapper-&gt;play();</a>
+<a name="1422"><span class="lineNum">    1422 </span>            :                 }</a>
+<a name="1423"><span class="lineNum">    1423 </span>            :                 else</a>
+<a name="1424"><span class="lineNum">    1424 </span>            :                 {</a>
+<a name="1425"><span class="lineNum">    1425 </span>            :                     // Set the playhead loop times before preparing the context as this will be used by</a>
+<a name="1426"><span class="lineNum">    1426 </span>            :                     // the RecordingContext to initialise itself</a>
+<a name="1427"><span class="lineNum">    1427 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;setLoopTimes (false, { prerollStart, transportState-&gt;endTime.get() });</span></a>
+<a name="1428"><span class="lineNum">    1428 </span><span class="lineNoCov">          0 :                     playHeadWrapper-&gt;play ({ prerollStart, transportState-&gt;endTime.get() }, false);</span></a>
+<a name="1429"><span class="lineNum">    1429 </span>            :                 }</a>
+<a name="1430"><span class="lineNum">    1430 </span>            :                 </a>
+<a name="1431"><span class="lineNum">    1431 </span><span class="lineNoCov">          0 :                 playHeadWrapper-&gt;setPosition (prerollStart);</span></a>
+<a name="1432"><span class="lineNum">    1432 </span><span class="lineNoCov">          0 :                 position = prerollStart;</span></a>
+<a name="1433"><span class="lineNum">    1433 </span>            : </a>
+<a name="1434"><span class="lineNum">    1434 </span>            :                 // Prepare the recordings after the playhead has been setup to avoid synchronisation problems</a>
+<a name="1435"><span class="lineNum">    1435 </span><span class="lineNoCov">          0 :                 playbackContext-&gt;prepareForRecording (prerollStart, transportState-&gt;startTime.get());</span></a>
+<a name="1436"><span class="lineNum">    1436 </span>            : </a>
+<a name="1437"><span class="lineNum">    1437 </span><span class="lineNoCov">          0 :                 if (edit.getNumCountInBeats() &gt; 0)</span></a>
+<a name="1438"><span class="lineNum">    1438 </span>            :                 {</a>
+<a name="1439"><span class="lineNum">    1439 </span>            :                     // As the pre-roll will be &quot;num count in beats - 0.5&quot; we have to add that back on before our calculation</a>
+<a name="1440"><span class="lineNum">    1440 </span>            :                     // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat</a>
+<a name="1441"><span class="lineNum">    1441 </span><span class="lineNoCov">          0 :                     const auto clickStartBeat = ts.toBeats (prerollStart);</span></a>
+<a name="1442"><span class="lineNum">    1442 </span><span class="lineNoCov">          0 :                     const auto clickEndBeat = ts.toBeats (transportState-&gt;startTime.get());</span></a>
+<a name="1443"><span class="lineNum">    1443 </span>            : </a>
+<a name="1444"><span class="lineNum">    1444 </span><span class="lineNoCov">          0 :                     edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),</span></a>
+<a name="1445"><span class="lineNum">    1445 </span><span class="lineNoCov">          0 :                                                           BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));</span></a>
+<a name="1446"><span class="lineNum">    1446 </span>            :                 }</a>
+<a name="1447"><span class="lineNum">    1447 </span>            :                 else</a>
+<a name="1448"><span class="lineNum">    1448 </span>            :                 {</a>
+<a name="1449"><span class="lineNum">    1449 </span><span class="lineNoCov">          0 :                     edit.setClickTrackRange ({});</span></a>
+<a name="1450"><span class="lineNum">    1450 </span>            :                 }</a>
+<a name="1451"><span class="lineNum">    1451 </span>            :                 </a>
+<a name="1452"><span class="lineNum">    1452 </span><span class="lineNoCov">          0 :                 transportState-&gt;playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set</span></a>
+<a name="1453"><span class="lineNum">    1453 </span><span class="lineNoCov">          0 :                 screenSaverDefeater = std::make_unique&lt;ScreenSaverDefeater&gt;();</span></a>
+<a name="1454"><span class="lineNum">    1454 </span>            :             }</a>
+<a name="1455"><span class="lineNum">    1455 </span>            :         }</a>
+<a name="1456"><span class="lineNum">    1456 </span>            :         else</a>
+<a name="1457"><span class="lineNum">    1457 </span>            :         {</a>
+<a name="1458"><span class="lineNum">    1458 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (</span></a>
+<a name="1459"><span class="lineNum">    1459 </span><span class="lineNoCov">          0 :                 TRANS(&quot;Recording is only possible  when at least one active input device is assigned to a track&quot;));</span></a>
+<a name="1460"><span class="lineNum">    1460 </span>            : </a>
+<a name="1461"><span class="lineNum">    1461 </span><span class="lineNoCov">          0 :             return false;</span></a>
+<a name="1462"><span class="lineNum">    1462 </span>            :         }</a>
+<a name="1463"><span class="lineNum">    1463 </span>            :     }</a>
+<a name="1464"><span class="lineNum">    1464 </span>            : </a>
+<a name="1465"><span class="lineNum">    1465 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;justSendMMCIfEnabled)</span></a>
+<a name="1466"><span class="lineNum">    1466 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_recordStart);</span></a>
+<a name="1467"><span class="lineNum">    1467 </span>            : </a>
+<a name="1468"><span class="lineNum">    1468 </span><span class="lineNoCov">          0 :     if (transportState-&gt;safeRecording)</span></a>
+<a name="1469"><span class="lineNum">    1469 </span><span class="lineNoCov">          0 :         engine.getUIBehaviour().showSafeRecordDialog (*this);</span></a>
+<a name="1470"><span class="lineNum">    1470 </span>            : </a>
+<a name="1471"><span class="lineNum">    1471 </span>            :     return true;</a>
+<a name="1472"><span class="lineNum">    1472 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1473"><span class="lineNum">    1473 </span>            : </a>
+<a name="1474"><span class="lineNum">    1474 </span><span class="lineNoCov">          0 : void TransportControl::performStop()</span></a>
+<a name="1475"><span class="lineNum">    1475 </span>            : {</a>
+<a name="1476"><span class="lineNum">    1476 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="1477"><span class="lineNum">    1477 </span>            : </a>
+<a name="1478"><span class="lineNum">    1478 </span><span class="lineNoCov">          0 :     const juce::ScopedValueSetter&lt;bool&gt; svs (isStopInProgress, true);</span></a>
+<a name="1479"><span class="lineNum">    1479 </span>            :     screenSaverDefeater.reset();</a>
+<a name="1480"><span class="lineNum">    1480 </span>            :     sectionPlayer.reset();</a>
 <a name="1481"><span class="lineNum">    1481 </span>            : </a>
-<a name="1482"><span class="lineNum">    1482 </span><span class="lineNoCov">          0 :     if (playbackContext == nullptr)</span></a>
-<a name="1483"><span class="lineNum">    1483 </span>            :     {</a>
-<a name="1484"><span class="lineNum">    1484 </span>            :         jassert (! (isPlaying() || isRecording()));</a>
-<a name="1485"><span class="lineNum">    1485 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
-<a name="1486"><span class="lineNum">    1486 </span>            :         return;</a>
-<a name="1487"><span class="lineNum">    1487 </span>            :     }</a>
-<a name="1488"><span class="lineNum">    1488 </span>            : </a>
-<a name="1489"><span class="lineNum">    1489 </span><span class="lineNoCov">          0 :     if (! juce::Component::isMouseButtonDownAnywhere())</span></a>
-<a name="1490"><span class="lineNum">    1490 </span><span class="lineNoCov">          0 :         setUserDragging (false); // in case it gets stuck</span></a>
-<a name="1491"><span class="lineNum">    1491 </span>            : </a>
-<a name="1492"><span class="lineNum">    1492 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
-<a name="1493"><span class="lineNum">    1493 </span>            :     {</a>
-<a name="1494"><span class="lineNum">    1494 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="1495"><span class="lineNum">    1495 </span>            : </a>
-<a name="1496"><span class="lineNum">    1496 </span>            :         // grab this before stopping the playhead</a>
-<a name="1497"><span class="lineNum">    1497 </span><span class="lineNoCov">          0 :         auto recEndTime = playHeadWrapper-&gt;getUnloopedPosition();</span></a>
-<a name="1498"><span class="lineNum">    1498 </span><span class="lineNoCov">          0 :         auto recEndPos  = playHeadWrapper-&gt;getPosition();</span></a>
-<a name="1499"><span class="lineNum">    1499 </span>            : </a>
-<a name="1500"><span class="lineNum">    1500 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
-<a name="1501"><span class="lineNum">    1501 </span>            :         playHeadWrapper-&gt;stop();</a>
-<a name="1502"><span class="lineNum">    1502 </span><span class="lineNoCov">          0 :         playbackContext-&gt;recordingFinished ({ transportState-&gt;startTime, recEndTime },</span></a>
-<a name="1503"><span class="lineNum">    1503 </span>            :                                             transportState-&gt;discardRecordings);</a>
-<a name="1504"><span class="lineNum">    1504 </span>            : </a>
-<a name="1505"><span class="lineNum">    1505 </span><span class="lineNoCov">          0 :         position = transportState-&gt;discardRecordings ? transportState-&gt;startTime.get()</span></a>
-<a name="1506"><span class="lineNum">    1506 </span><span class="lineNoCov">          0 :                                                      : (looping ? recEndPos</span></a>
-<a name="1507"><span class="lineNum">    1507 </span><span class="lineNoCov">          0 :                                                                 : recEndTime);</span></a>
-<a name="1508"><span class="lineNum">    1508 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="1509"><span class="lineNum">    1509 </span>            :     else</a>
-<a name="1510"><span class="lineNum">    1510 </span>            :     {</a>
-<a name="1511"><span class="lineNum">    1511 </span><span class="lineNoCov">          0 :         if (transportState-&gt;discardRecordings)</span></a>
-<a name="1512"><span class="lineNum">    1512 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Can only abort a recording when something's actually recording.&quot;));</span></a>
-<a name="1513"><span class="lineNum">    1513 </span>            : </a>
-<a name="1514"><span class="lineNum">    1514 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
-<a name="1515"><span class="lineNum">    1515 </span>            :         playHeadWrapper-&gt;stop();</a>
-<a name="1516"><span class="lineNum">    1516 </span>            :     }</a>
-<a name="1517"><span class="lineNum">    1517 </span>            : </a>
-<a name="1518"><span class="lineNum">    1518 </span><span class="lineNoCov">          0 :     if (transportState-&gt;clearDevices || ! edit.playInStopEnabled || transportState-&gt;clearDevicesOnStop)</span></a>
-<a name="1519"><span class="lineNum">    1519 </span>            :         releaseAudioNodes();</a>
-<a name="1520"><span class="lineNum">    1520 </span>            :     else</a>
-<a name="1521"><span class="lineNum">    1521 </span><span class="lineNoCov">          0 :         ensureContextAllocated();</span></a>
-<a name="1522"><span class="lineNum">    1522 </span>            : </a>
-<a name="1523"><span class="lineNum">    1523 </span><span class="lineNoCov">          0 :     transportState-&gt;clearDevicesOnStop = false;</span></a>
+<a name="1482"><span class="lineNum">    1482 </span><span class="lineNoCov">          0 :     engine.getUIBehaviour().hideSafeRecordDialog (*this);</span></a>
+<a name="1483"><span class="lineNum">    1483 </span>            : </a>
+<a name="1484"><span class="lineNum">    1484 </span><span class="lineNoCov">          0 :     if (playbackContext == nullptr)</span></a>
+<a name="1485"><span class="lineNum">    1485 </span>            :     {</a>
+<a name="1486"><span class="lineNum">    1486 </span>            :         jassert (! (isPlaying() || isRecording()));</a>
+<a name="1487"><span class="lineNum">    1487 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
+<a name="1488"><span class="lineNum">    1488 </span>            :         return;</a>
+<a name="1489"><span class="lineNum">    1489 </span>            :     }</a>
+<a name="1490"><span class="lineNum">    1490 </span>            : </a>
+<a name="1491"><span class="lineNum">    1491 </span><span class="lineNoCov">          0 :     if (! juce::Component::isMouseButtonDownAnywhere())</span></a>
+<a name="1492"><span class="lineNum">    1492 </span><span class="lineNoCov">          0 :         setUserDragging (false); // in case it gets stuck</span></a>
+<a name="1493"><span class="lineNum">    1493 </span>            : </a>
+<a name="1494"><span class="lineNum">    1494 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
+<a name="1495"><span class="lineNum">    1495 </span>            :     {</a>
+<a name="1496"><span class="lineNum">    1496 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
+<a name="1497"><span class="lineNum">    1497 </span>            : </a>
+<a name="1498"><span class="lineNum">    1498 </span>            :         // grab this before stopping the playhead</a>
+<a name="1499"><span class="lineNum">    1499 </span><span class="lineNoCov">          0 :         auto recEndTime = playHeadWrapper-&gt;getUnloopedPosition();</span></a>
+<a name="1500"><span class="lineNum">    1500 </span><span class="lineNoCov">          0 :         auto recEndPos  = playHeadWrapper-&gt;getPosition();</span></a>
+<a name="1501"><span class="lineNum">    1501 </span>            : </a>
+<a name="1502"><span class="lineNum">    1502 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
+<a name="1503"><span class="lineNum">    1503 </span>            :         playHeadWrapper-&gt;stop();</a>
+<a name="1504"><span class="lineNum">    1504 </span><span class="lineNoCov">          0 :         playbackContext-&gt;recordingFinished ({ transportState-&gt;startTime, recEndTime },</span></a>
+<a name="1505"><span class="lineNum">    1505 </span>            :                                             transportState-&gt;discardRecordings);</a>
+<a name="1506"><span class="lineNum">    1506 </span>            : </a>
+<a name="1507"><span class="lineNum">    1507 </span><span class="lineNoCov">          0 :         position = transportState-&gt;discardRecordings ? transportState-&gt;startTime.get()</span></a>
+<a name="1508"><span class="lineNum">    1508 </span><span class="lineNoCov">          0 :                                                      : (looping ? recEndPos</span></a>
+<a name="1509"><span class="lineNum">    1509 </span><span class="lineNoCov">          0 :                                                                 : recEndTime);</span></a>
+<a name="1510"><span class="lineNum">    1510 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1511"><span class="lineNum">    1511 </span>            :     else</a>
+<a name="1512"><span class="lineNum">    1512 </span>            :     {</a>
+<a name="1513"><span class="lineNum">    1513 </span><span class="lineNoCov">          0 :         if (transportState-&gt;discardRecordings)</span></a>
+<a name="1514"><span class="lineNum">    1514 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Can only abort a recording when something's actually recording.&quot;));</span></a>
+<a name="1515"><span class="lineNum">    1515 </span>            : </a>
+<a name="1516"><span class="lineNum">    1516 </span><span class="lineNoCov">          0 :         clearPlayingFlags();</span></a>
+<a name="1517"><span class="lineNum">    1517 </span>            :         playHeadWrapper-&gt;stop();</a>
+<a name="1518"><span class="lineNum">    1518 </span>            :     }</a>
+<a name="1519"><span class="lineNum">    1519 </span>            : </a>
+<a name="1520"><span class="lineNum">    1520 </span><span class="lineNoCov">          0 :     if (transportState-&gt;clearDevices || ! edit.playInStopEnabled || transportState-&gt;clearDevicesOnStop)</span></a>
+<a name="1521"><span class="lineNum">    1521 </span>            :         releaseAudioNodes();</a>
+<a name="1522"><span class="lineNum">    1522 </span>            :     else</a>
+<a name="1523"><span class="lineNum">    1523 </span><span class="lineNoCov">          0 :         ensureContextAllocated();</span></a>
 <a name="1524"><span class="lineNum">    1524 </span>            : </a>
-<a name="1525"><span class="lineNum">    1525 </span><span class="lineNoCov">          0 :     if ((transportState-&gt;invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))</span></a>
-<a name="1526"><span class="lineNum">    1526 </span><span class="lineNoCov">          0 :          &amp;&amp; transportState-&gt;cursorPosAtPlayStart &gt;= 0_tp)</span></a>
-<a name="1527"><span class="lineNum">    1527 </span><span class="lineNoCov">          0 :         setPosition (transportState-&gt;cursorPosAtPlayStart);</span></a>
-<a name="1528"><span class="lineNum">    1528 </span>            : </a>
-<a name="1529"><span class="lineNum">    1529 </span><span class="lineNoCov">          0 :     if (transportState-&gt;canSendMMCStop)</span></a>
-<a name="1530"><span class="lineNum">    1530 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_stop);</span></a>
-<a name="1531"><span class="lineNum">    1531 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1532"><span class="lineNum">    1532 </span>            : </a>
-<a name="1533"><span class="lineNum">    1533 </span><span class="lineNoCov">          0 : void TransportControl::performPositionChange()</span></a>
-<a name="1534"><span class="lineNum">    1534 </span>            : {</a>
-<a name="1535"><span class="lineNum">    1535 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1536"><span class="lineNum">    1536 </span>            : </a>
-<a name="1537"><span class="lineNum">    1537 </span>            :     sectionPlayer.reset();</a>
-<a name="1538"><span class="lineNum">    1538 </span><span class="lineNoCov">          0 :     edit.getAutomationRecordManager().punchOut (false);</span></a>
-<a name="1539"><span class="lineNum">    1539 </span>            : </a>
-<a name="1540"><span class="lineNum">    1540 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
-<a name="1541"><span class="lineNum">    1541 </span>            :         stop (false, false);</a>
-<a name="1542"><span class="lineNum">    1542 </span>            : </a>
-<a name="1543"><span class="lineNum">    1543 </span><span class="lineNoCov">          0 :     auto newPos = TimePosition::fromSeconds (static_cast&lt;double&gt; (state[IDs::position]));</span></a>
+<a name="1525"><span class="lineNum">    1525 </span><span class="lineNoCov">          0 :     transportState-&gt;clearDevicesOnStop = false;</span></a>
+<a name="1526"><span class="lineNum">    1526 </span>            : </a>
+<a name="1527"><span class="lineNum">    1527 </span><span class="lineNoCov">          0 :     if ((transportState-&gt;invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))</span></a>
+<a name="1528"><span class="lineNum">    1528 </span><span class="lineNoCov">          0 :          &amp;&amp; transportState-&gt;cursorPosAtPlayStart &gt;= 0_tp)</span></a>
+<a name="1529"><span class="lineNum">    1529 </span><span class="lineNoCov">          0 :         setPosition (transportState-&gt;cursorPosAtPlayStart);</span></a>
+<a name="1530"><span class="lineNum">    1530 </span>            : </a>
+<a name="1531"><span class="lineNum">    1531 </span><span class="lineNoCov">          0 :     if (transportState-&gt;canSendMMCStop)</span></a>
+<a name="1532"><span class="lineNum">    1532 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_stop);</span></a>
+<a name="1533"><span class="lineNum">    1533 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1534"><span class="lineNum">    1534 </span>            : </a>
+<a name="1535"><span class="lineNum">    1535 </span><span class="lineNoCov">          0 : void TransportControl::performPositionChange()</span></a>
+<a name="1536"><span class="lineNum">    1536 </span>            : {</a>
+<a name="1537"><span class="lineNum">    1537 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="1538"><span class="lineNum">    1538 </span>            : </a>
+<a name="1539"><span class="lineNum">    1539 </span>            :     sectionPlayer.reset();</a>
+<a name="1540"><span class="lineNum">    1540 </span><span class="lineNoCov">          0 :     edit.getAutomationRecordManager().punchOut (false);</span></a>
+<a name="1541"><span class="lineNum">    1541 </span>            : </a>
+<a name="1542"><span class="lineNum">    1542 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
+<a name="1543"><span class="lineNum">    1543 </span>            :         stop (false, false);</a>
 <a name="1544"><span class="lineNum">    1544 </span>            : </a>
-<a name="1545"><span class="lineNum">    1545 </span><span class="lineNoCov">          0 :     if (isPlaying() &amp;&amp; looping)</span></a>
-<a name="1546"><span class="lineNum">    1546 </span>            :     {</a>
-<a name="1547"><span class="lineNum">    1547 </span>            :         auto range = getLoopRange();</a>
-<a name="1548"><span class="lineNum">    1548 </span><span class="lineNoCov">          0 :         newPos = juce::jlimit (range.getStart(), range.getEnd(), newPos);</span></a>
-<a name="1549"><span class="lineNum">    1549 </span>            :     }</a>
-<a name="1550"><span class="lineNum">    1550 </span>            :     else</a>
-<a name="1551"><span class="lineNum">    1551 </span>            :     {</a>
-<a name="1552"><span class="lineNum">    1552 </span><span class="lineNoCov">          0 :         newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);</span></a>
-<a name="1553"><span class="lineNum">    1553 </span>            :     }</a>
-<a name="1554"><span class="lineNum">    1554 </span>            : </a>
-<a name="1555"><span class="lineNum">    1555 </span><span class="lineNoCov">          0 :     if (playbackContext != nullptr)</span></a>
-<a name="1556"><span class="lineNum">    1556 </span><span class="lineNoCov">          0 :         playHeadWrapper-&gt;setPosition (newPos);</span></a>
-<a name="1557"><span class="lineNum">    1557 </span>            : </a>
-<a name="1558"><span class="lineNum">    1558 </span><span class="lineNoCov">          0 :     position = newPos;</span></a>
+<a name="1545"><span class="lineNum">    1545 </span><span class="lineNoCov">          0 :     auto newPos = TimePosition::fromSeconds (static_cast&lt;double&gt; (state[IDs::position]));</span></a>
+<a name="1546"><span class="lineNum">    1546 </span>            : </a>
+<a name="1547"><span class="lineNum">    1547 </span><span class="lineNoCov">          0 :     if (isPlaying() &amp;&amp; looping)</span></a>
+<a name="1548"><span class="lineNum">    1548 </span>            :     {</a>
+<a name="1549"><span class="lineNum">    1549 </span>            :         auto range = getLoopRange();</a>
+<a name="1550"><span class="lineNum">    1550 </span><span class="lineNoCov">          0 :         newPos = juce::jlimit (range.getStart(), range.getEnd(), newPos);</span></a>
+<a name="1551"><span class="lineNum">    1551 </span>            :     }</a>
+<a name="1552"><span class="lineNum">    1552 </span>            :     else</a>
+<a name="1553"><span class="lineNum">    1553 </span>            :     {</a>
+<a name="1554"><span class="lineNum">    1554 </span><span class="lineNoCov">          0 :         newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);</span></a>
+<a name="1555"><span class="lineNum">    1555 </span>            :     }</a>
+<a name="1556"><span class="lineNum">    1556 </span>            : </a>
+<a name="1557"><span class="lineNum">    1557 </span><span class="lineNoCov">          0 :     if (playbackContext != nullptr)</span></a>
+<a name="1558"><span class="lineNum">    1558 </span><span class="lineNoCov">          0 :         playHeadWrapper-&gt;setPosition (newPos);</span></a>
 <a name="1559"><span class="lineNum">    1559 </span>            : </a>
-<a name="1560"><span class="lineNum">    1560 </span>            :     yieldGUIThread();</a>
+<a name="1560"><span class="lineNum">    1560 </span><span class="lineNoCov">          0 :     position = newPos;</span></a>
 <a name="1561"><span class="lineNum">    1561 </span>            : </a>
-<a name="1562"><span class="lineNum">    1562 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;userDragging)</span></a>
-<a name="1563"><span class="lineNum">    1563 </span><span class="lineNoCov">          0 :         transportState-&gt;lastUserDragTime = juce::Time::getMillisecondCounter();</span></a>
-<a name="1564"><span class="lineNum">    1564 </span>            : </a>
-<a name="1565"><span class="lineNum">    1565 </span><span class="lineNoCov">          0 :     transportState-&gt;setVideoPosition (newPos, true);</span></a>
+<a name="1562"><span class="lineNum">    1562 </span>            :     yieldGUIThread();</a>
+<a name="1563"><span class="lineNum">    1563 </span>            : </a>
+<a name="1564"><span class="lineNum">    1564 </span><span class="lineNoCov">          0 :     if (! transportState-&gt;userDragging)</span></a>
+<a name="1565"><span class="lineNum">    1565 </span><span class="lineNoCov">          0 :         transportState-&gt;lastUserDragTime = juce::Time::getMillisecondCounter();</span></a>
 <a name="1566"><span class="lineNum">    1566 </span>            : </a>
-<a name="1567"><span class="lineNum">    1567 </span>            :     // MMC</a>
-<a name="1568"><span class="lineNum">    1568 </span>            :     const double nudge = 0.05 / 96000.0;</a>
-<a name="1569"><span class="lineNum">    1569 </span><span class="lineNoCov">          0 :     const double mmcTime = std::max (0_tp, newPos + edit.getTimecodeOffset()).inSeconds() + nudge;</span></a>
-<a name="1570"><span class="lineNum">    1570 </span><span class="lineNoCov">          0 :     const int framesPerSecond = edit.getTimecodeFormat().getFPS();</span></a>
-<a name="1571"><span class="lineNum">    1571 </span><span class="lineNoCov">          0 :     const int frames  = ((int) (mmcTime * framesPerSecond)) % framesPerSecond;</span></a>
-<a name="1572"><span class="lineNum">    1572 </span><span class="lineNoCov">          0 :     const int hours   = (int) (mmcTime * (1.0 / 3600.0));</span></a>
-<a name="1573"><span class="lineNum">    1573 </span><span class="lineNoCov">          0 :     const int minutes = (((int) mmcTime) / 60) % 60;</span></a>
-<a name="1574"><span class="lineNum">    1574 </span><span class="lineNoCov">          0 :     const int seconds = (((int) mmcTime) % 60);</span></a>
-<a name="1575"><span class="lineNum">    1575 </span>            : </a>
-<a name="1576"><span class="lineNum">    1576 </span><span class="lineNoCov">          0 :     sendMMC (juce::MidiMessage::midiMachineControlGoto (hours, minutes, seconds, frames));</span></a>
-<a name="1577"><span class="lineNum">    1577 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1578"><span class="lineNum">    1578 </span>            : </a>
-<a name="1579"><span class="lineNum">    1579 </span><span class="lineNoCov">          0 : void TransportControl::performRewindButtonChanged()</span></a>
-<a name="1580"><span class="lineNum">    1580 </span>            : {</a>
-<a name="1581"><span class="lineNum">    1581 </span>            :     const bool isDown = transportState-&gt;rewindButtonDown;</a>
-<a name="1582"><span class="lineNum">    1582 </span><span class="lineNoCov">          0 :     rwRepeater-&gt;setDown (isDown);</span></a>
-<a name="1583"><span class="lineNum">    1583 </span>            : </a>
-<a name="1584"><span class="lineNum">    1584 </span><span class="lineNoCov">          0 :     if (isDown)</span></a>
-<a name="1585"><span class="lineNum">    1585 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_rewind);</span></a>
-<a name="1586"><span class="lineNum">    1586 </span>            :     else</a>
-<a name="1587"><span class="lineNum">    1587 </span><span class="lineNoCov">          0 :         sendMMCCommand (isPlaying() ? juce::MidiMessage::mmc_play</span></a>
-<a name="1588"><span class="lineNum">    1588 </span>            :                                     : juce::MidiMessage::mmc_stop);</a>
-<a name="1589"><span class="lineNum">    1589 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1590"><span class="lineNum">    1590 </span>            : </a>
-<a name="1591"><span class="lineNum">    1591 </span><span class="lineNoCov">          0 : void TransportControl::performFastForwardButtonChanged()</span></a>
-<a name="1592"><span class="lineNum">    1592 </span>            : {</a>
-<a name="1593"><span class="lineNum">    1593 </span>            :     const bool isDown = transportState-&gt;fastForwardButtonDown;</a>
-<a name="1594"><span class="lineNum">    1594 </span><span class="lineNoCov">          0 :     ffRepeater-&gt;setDown (isDown);</span></a>
-<a name="1595"><span class="lineNum">    1595 </span>            : </a>
-<a name="1596"><span class="lineNum">    1596 </span><span class="lineNoCov">          0 :     if (isDown)</span></a>
-<a name="1597"><span class="lineNum">    1597 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_fastforward);</span></a>
-<a name="1598"><span class="lineNum">    1598 </span>            :     else</a>
-<a name="1599"><span class="lineNum">    1599 </span><span class="lineNoCov">          0 :         sendMMCCommand (isPlaying() ? juce::MidiMessage::mmc_play</span></a>
-<a name="1600"><span class="lineNum">    1600 </span>            :                                     : juce::MidiMessage::mmc_stop);</a>
-<a name="1601"><span class="lineNum">    1601 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1602"><span class="lineNum">    1602 </span>            : </a>
-<a name="1603"><span class="lineNum">    1603 </span><span class="lineNoCov">          0 : void TransportControl::performNudgeLeft()</span></a>
-<a name="1604"><span class="lineNum">    1604 </span>            : {</a>
-<a name="1605"><span class="lineNum">    1605 </span><span class="lineNoCov">          0 :     rwRepeater-&gt;nudge();</span></a>
-<a name="1606"><span class="lineNum">    1606 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1607"><span class="lineNum">    1607 </span>            : </a>
-<a name="1608"><span class="lineNum">    1608 </span><span class="lineNoCov">          0 : void TransportControl::performNudgeRight()</span></a>
-<a name="1609"><span class="lineNum">    1609 </span>            : {</a>
-<a name="1610"><span class="lineNum">    1610 </span><span class="lineNoCov">          0 :     ffRepeater-&gt;nudge();</span></a>
-<a name="1611"><span class="lineNum">    1611 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1612"><span class="lineNum">    1612 </span>            : </a>
-<a name="1613"><span class="lineNum">    1613 </span>            : </a>
-<a name="1614"><span class="lineNum">    1614 </span>            : //==============================================================================</a>
-<a name="1615"><span class="lineNum">    1615 </span><span class="lineNoCov">          0 : static TimeRange getLimitsOfSelectedClips (Edit&amp; edit, const SelectableList&amp; items)</span></a>
-<a name="1616"><span class="lineNum">    1616 </span>            : {</a>
-<a name="1617"><span class="lineNum">    1617 </span><span class="lineNoCov">          0 :     auto range = getTimeRangeForSelectedItems (items);</span></a>
-<a name="1618"><span class="lineNum">    1618 </span>            : </a>
-<a name="1619"><span class="lineNum">    1619 </span><span class="lineNoCov">          0 :     if (range.isEmpty())</span></a>
-<a name="1620"><span class="lineNum">    1620 </span><span class="lineNoCov">          0 :         return { {}, edit.getLength() };</span></a>
-<a name="1621"><span class="lineNum">    1621 </span>            : </a>
-<a name="1622"><span class="lineNum">    1622 </span><span class="lineNoCov">          0 :     return range;</span></a>
-<a name="1623"><span class="lineNum">    1623 </span>            : }</a>
-<a name="1624"><span class="lineNum">    1624 </span>            : </a>
-<a name="1625"><span class="lineNum">    1625 </span><span class="lineNoCov">          0 : void toStart (TransportControl&amp; tc, const SelectableList&amp; items)</span></a>
-<a name="1626"><span class="lineNum">    1626 </span>            : {</a>
-<a name="1627"><span class="lineNum">    1627 </span><span class="lineNoCov">          0 :     auto selectionStart = getLimitsOfSelectedClips (tc.edit, items).getStart();</span></a>
-<a name="1628"><span class="lineNum">    1628 </span><span class="lineNoCov">          0 :     tc.setPosition (tc.getPosition() &lt; selectionStart + 0.001s ? TimePosition() : selectionStart);</span></a>
-<a name="1629"><span class="lineNum">    1629 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1630"><span class="lineNum">    1630 </span>            : </a>
-<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 : void toEnd (TransportControl&amp; tc, const SelectableList&amp; items)</span></a>
-<a name="1632"><span class="lineNum">    1632 </span>            : {</a>
-<a name="1633"><span class="lineNum">    1633 </span><span class="lineNoCov">          0 :     auto selectionEnd = getLimitsOfSelectedClips (tc.edit, items).getEnd();</span></a>
-<a name="1634"><span class="lineNum">    1634 </span><span class="lineNoCov">          0 :     tc.setPosition (tc.getPosition() &gt; selectionEnd - 0.001s ? toPosition (tc.edit.getLength()) : selectionEnd);</span></a>
-<a name="1635"><span class="lineNum">    1635 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1636"><span class="lineNum">    1636 </span>            : </a>
-<a name="1637"><span class="lineNum">    1637 </span><span class="lineNoCov">          0 : void tabBack (TransportControl&amp; tc)     { tc.setPosition (tc.edit.getPreviousTimeOfInterest (tc.getPosition() - 0.001s)); }</span></a>
-<a name="1638"><span class="lineNum">    1638 </span><span class="lineNoCov">          0 : void tabForward (TransportControl&amp; tc)  { tc.setPosition (tc.edit.getNextTimeOfInterest     (tc.getPosition() + 0.001s)); }</span></a>
-<a name="1639"><span class="lineNum">    1639 </span>            : </a>
-<a name="1640"><span class="lineNum">    1640 </span><span class="lineNoCov">          0 : void markIn (TransportControl&amp; tc)      { tc.setLoopIn  (tc.getPosition()); }</span></a>
-<a name="1641"><span class="lineNum">    1641 </span><span class="lineNoCov">          0 : void markOut (TransportControl&amp; tc)     { tc.setLoopOut (tc.getPosition()); }</span></a>
-<a name="1642"><span class="lineNum">    1642 </span>            : </a>
-<a name="1643"><span class="lineNum">    1643 </span><span class="lineNoCov">          0 : void scrub (TransportControl&amp; tc, double units)</span></a>
-<a name="1644"><span class="lineNum">    1644 </span>            : {</a>
-<a name="1645"><span class="lineNum">    1645 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="1646"><span class="lineNum">    1646 </span>            :     const auto unitSize = tc.scrubInterval.get();</a>
-<a name="1647"><span class="lineNum">    1647 </span>            :     auto timeToMove = unitSize * units;</a>
-<a name="1648"><span class="lineNum">    1648 </span>            :     auto t = tc.getPosition() + timeToMove;</a>
-<a name="1649"><span class="lineNum">    1649 </span>            : </a>
-<a name="1650"><span class="lineNum">    1650 </span><span class="lineNoCov">          0 :     if (tc.snapToTimecode)</span></a>
-<a name="1651"><span class="lineNum">    1651 </span>            :     {</a>
-<a name="1652"><span class="lineNum">    1652 </span><span class="lineNoCov">          0 :         if (timeToMove &gt; 0s)</span></a>
-<a name="1653"><span class="lineNum">    1653 </span><span class="lineNoCov">          0 :             t = TransportHelpers::snapTimeUp (tc, t, false);</span></a>
-<a name="1654"><span class="lineNum">    1654 </span>            :         else</a>
-<a name="1655"><span class="lineNum">    1655 </span><span class="lineNoCov">          0 :             t = TransportHelpers::snapTimeDown (tc, t, false);</span></a>
-<a name="1656"><span class="lineNum">    1656 </span>            :     }</a>
-<a name="1657"><span class="lineNum">    1657 </span>            : </a>
-<a name="1658"><span class="lineNum">    1658 </span><span class="lineNoCov">          0 :     if (tc.isUserDragging() &amp;&amp; tc.engine.getPropertyStorage().getProperty (SettingID::snapCursor, false))</span></a>
-<a name="1659"><span class="lineNum">    1659 </span><span class="lineNoCov">          0 :         t = TransportHelpers::snapTimeDown (tc, t, false);</span></a>
-<a name="1660"><span class="lineNum">    1660 </span>            : </a>
-<a name="1661"><span class="lineNum">    1661 </span><span class="lineNoCov">          0 :     tc.setPosition (t);</span></a>
-<a name="1662"><span class="lineNum">    1662 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1663"><span class="lineNum">    1663 </span>            : </a>
-<a name="1664"><span class="lineNum">    1664 </span><span class="lineNoCov">          0 : void freePlaybackContextIfNotRecording (TransportControl&amp; tc)</span></a>
-<a name="1665"><span class="lineNum">    1665 </span>            : {</a>
-<a name="1666"><span class="lineNum">    1666 </span><span class="lineNoCov">          0 :     if (tc.isPlayContextActive() &amp;&amp; ! tc.isRecording())</span></a>
-<a name="1667"><span class="lineNum">    1667 </span><span class="lineNoCov">          0 :         tc.freePlaybackContext();</span></a>
-<a name="1668"><span class="lineNum">    1668 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1669"><span class="lineNum">    1669 </span>            : </a>
-<a name="1670"><span class="lineNum">    1670 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="1567"><span class="lineNum">    1567 </span><span class="lineNoCov">          0 :     transportState-&gt;setVideoPosition (newPos, true);</span></a>
+<a name="1568"><span class="lineNum">    1568 </span>            : </a>
+<a name="1569"><span class="lineNum">    1569 </span>            :     // MMC</a>
+<a name="1570"><span class="lineNum">    1570 </span>            :     const double nudge = 0.05 / 96000.0;</a>
+<a name="1571"><span class="lineNum">    1571 </span><span class="lineNoCov">          0 :     const double mmcTime = std::max (0_tp, newPos + edit.getTimecodeOffset()).inSeconds() + nudge;</span></a>
+<a name="1572"><span class="lineNum">    1572 </span><span class="lineNoCov">          0 :     const int framesPerSecond = edit.getTimecodeFormat().getFPS();</span></a>
+<a name="1573"><span class="lineNum">    1573 </span><span class="lineNoCov">          0 :     const int frames  = ((int) (mmcTime * framesPerSecond)) % framesPerSecond;</span></a>
+<a name="1574"><span class="lineNum">    1574 </span><span class="lineNoCov">          0 :     const int hours   = (int) (mmcTime * (1.0 / 3600.0));</span></a>
+<a name="1575"><span class="lineNum">    1575 </span><span class="lineNoCov">          0 :     const int minutes = (((int) mmcTime) / 60) % 60;</span></a>
+<a name="1576"><span class="lineNum">    1576 </span><span class="lineNoCov">          0 :     const int seconds = (((int) mmcTime) % 60);</span></a>
+<a name="1577"><span class="lineNum">    1577 </span>            : </a>
+<a name="1578"><span class="lineNum">    1578 </span><span class="lineNoCov">          0 :     sendMMC (juce::MidiMessage::midiMachineControlGoto (hours, minutes, seconds, frames));</span></a>
+<a name="1579"><span class="lineNum">    1579 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1580"><span class="lineNum">    1580 </span>            : </a>
+<a name="1581"><span class="lineNum">    1581 </span><span class="lineNoCov">          0 : void TransportControl::performRewindButtonChanged()</span></a>
+<a name="1582"><span class="lineNum">    1582 </span>            : {</a>
+<a name="1583"><span class="lineNum">    1583 </span>            :     const bool isDown = transportState-&gt;rewindButtonDown;</a>
+<a name="1584"><span class="lineNum">    1584 </span><span class="lineNoCov">          0 :     rwRepeater-&gt;setDown (isDown);</span></a>
+<a name="1585"><span class="lineNum">    1585 </span>            : </a>
+<a name="1586"><span class="lineNum">    1586 </span><span class="lineNoCov">          0 :     if (isDown)</span></a>
+<a name="1587"><span class="lineNum">    1587 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_rewind);</span></a>
+<a name="1588"><span class="lineNum">    1588 </span>            :     else</a>
+<a name="1589"><span class="lineNum">    1589 </span><span class="lineNoCov">          0 :         sendMMCCommand (isPlaying() ? juce::MidiMessage::mmc_play</span></a>
+<a name="1590"><span class="lineNum">    1590 </span>            :                                     : juce::MidiMessage::mmc_stop);</a>
+<a name="1591"><span class="lineNum">    1591 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1592"><span class="lineNum">    1592 </span>            : </a>
+<a name="1593"><span class="lineNum">    1593 </span><span class="lineNoCov">          0 : void TransportControl::performFastForwardButtonChanged()</span></a>
+<a name="1594"><span class="lineNum">    1594 </span>            : {</a>
+<a name="1595"><span class="lineNum">    1595 </span>            :     const bool isDown = transportState-&gt;fastForwardButtonDown;</a>
+<a name="1596"><span class="lineNum">    1596 </span><span class="lineNoCov">          0 :     ffRepeater-&gt;setDown (isDown);</span></a>
+<a name="1597"><span class="lineNum">    1597 </span>            : </a>
+<a name="1598"><span class="lineNum">    1598 </span><span class="lineNoCov">          0 :     if (isDown)</span></a>
+<a name="1599"><span class="lineNum">    1599 </span><span class="lineNoCov">          0 :         sendMMCCommand (juce::MidiMessage::mmc_fastforward);</span></a>
+<a name="1600"><span class="lineNum">    1600 </span>            :     else</a>
+<a name="1601"><span class="lineNum">    1601 </span><span class="lineNoCov">          0 :         sendMMCCommand (isPlaying() ? juce::MidiMessage::mmc_play</span></a>
+<a name="1602"><span class="lineNum">    1602 </span>            :                                     : juce::MidiMessage::mmc_stop);</a>
+<a name="1603"><span class="lineNum">    1603 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1604"><span class="lineNum">    1604 </span>            : </a>
+<a name="1605"><span class="lineNum">    1605 </span><span class="lineNoCov">          0 : void TransportControl::performNudgeLeft()</span></a>
+<a name="1606"><span class="lineNum">    1606 </span>            : {</a>
+<a name="1607"><span class="lineNum">    1607 </span><span class="lineNoCov">          0 :     rwRepeater-&gt;nudge();</span></a>
+<a name="1608"><span class="lineNum">    1608 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1609"><span class="lineNum">    1609 </span>            : </a>
+<a name="1610"><span class="lineNum">    1610 </span><span class="lineNoCov">          0 : void TransportControl::performNudgeRight()</span></a>
+<a name="1611"><span class="lineNum">    1611 </span>            : {</a>
+<a name="1612"><span class="lineNum">    1612 </span><span class="lineNoCov">          0 :     ffRepeater-&gt;nudge();</span></a>
+<a name="1613"><span class="lineNum">    1613 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1614"><span class="lineNum">    1614 </span>            : </a>
+<a name="1615"><span class="lineNum">    1615 </span>            : </a>
+<a name="1616"><span class="lineNum">    1616 </span>            : //==============================================================================</a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineNoCov">          0 : static TimeRange getLimitsOfSelectedClips (Edit&amp; edit, const SelectableList&amp; items)</span></a>
+<a name="1618"><span class="lineNum">    1618 </span>            : {</a>
+<a name="1619"><span class="lineNum">    1619 </span><span class="lineNoCov">          0 :     auto range = getTimeRangeForSelectedItems (items);</span></a>
+<a name="1620"><span class="lineNum">    1620 </span>            : </a>
+<a name="1621"><span class="lineNum">    1621 </span><span class="lineNoCov">          0 :     if (range.isEmpty())</span></a>
+<a name="1622"><span class="lineNum">    1622 </span><span class="lineNoCov">          0 :         return { {}, edit.getLength() };</span></a>
+<a name="1623"><span class="lineNum">    1623 </span>            : </a>
+<a name="1624"><span class="lineNum">    1624 </span><span class="lineNoCov">          0 :     return range;</span></a>
+<a name="1625"><span class="lineNum">    1625 </span>            : }</a>
+<a name="1626"><span class="lineNum">    1626 </span>            : </a>
+<a name="1627"><span class="lineNum">    1627 </span><span class="lineNoCov">          0 : void toStart (TransportControl&amp; tc, const SelectableList&amp; items)</span></a>
+<a name="1628"><span class="lineNum">    1628 </span>            : {</a>
+<a name="1629"><span class="lineNum">    1629 </span><span class="lineNoCov">          0 :     auto selectionStart = getLimitsOfSelectedClips (tc.edit, items).getStart();</span></a>
+<a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :     tc.setPosition (tc.getPosition() &lt; selectionStart + 0.001s ? TimePosition() : selectionStart);</span></a>
+<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1632"><span class="lineNum">    1632 </span>            : </a>
+<a name="1633"><span class="lineNum">    1633 </span><span class="lineNoCov">          0 : void toEnd (TransportControl&amp; tc, const SelectableList&amp; items)</span></a>
+<a name="1634"><span class="lineNum">    1634 </span>            : {</a>
+<a name="1635"><span class="lineNum">    1635 </span><span class="lineNoCov">          0 :     auto selectionEnd = getLimitsOfSelectedClips (tc.edit, items).getEnd();</span></a>
+<a name="1636"><span class="lineNum">    1636 </span><span class="lineNoCov">          0 :     tc.setPosition (tc.getPosition() &gt; selectionEnd - 0.001s ? toPosition (tc.edit.getLength()) : selectionEnd);</span></a>
+<a name="1637"><span class="lineNum">    1637 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1638"><span class="lineNum">    1638 </span>            : </a>
+<a name="1639"><span class="lineNum">    1639 </span><span class="lineNoCov">          0 : void tabBack (TransportControl&amp; tc)     { tc.setPosition (tc.edit.getPreviousTimeOfInterest (tc.getPosition() - 0.001s)); }</span></a>
+<a name="1640"><span class="lineNum">    1640 </span><span class="lineNoCov">          0 : void tabForward (TransportControl&amp; tc)  { tc.setPosition (tc.edit.getNextTimeOfInterest     (tc.getPosition() + 0.001s)); }</span></a>
+<a name="1641"><span class="lineNum">    1641 </span>            : </a>
+<a name="1642"><span class="lineNum">    1642 </span><span class="lineNoCov">          0 : void markIn (TransportControl&amp; tc)      { tc.setLoopIn  (tc.getPosition()); }</span></a>
+<a name="1643"><span class="lineNum">    1643 </span><span class="lineNoCov">          0 : void markOut (TransportControl&amp; tc)     { tc.setLoopOut (tc.getPosition()); }</span></a>
+<a name="1644"><span class="lineNum">    1644 </span>            : </a>
+<a name="1645"><span class="lineNum">    1645 </span><span class="lineNoCov">          0 : void scrub (TransportControl&amp; tc, double units)</span></a>
+<a name="1646"><span class="lineNum">    1646 </span>            : {</a>
+<a name="1647"><span class="lineNum">    1647 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="1648"><span class="lineNum">    1648 </span>            :     const auto unitSize = tc.scrubInterval.get();</a>
+<a name="1649"><span class="lineNum">    1649 </span>            :     auto timeToMove = unitSize * units;</a>
+<a name="1650"><span class="lineNum">    1650 </span>            :     auto t = tc.getPosition() + timeToMove;</a>
+<a name="1651"><span class="lineNum">    1651 </span>            : </a>
+<a name="1652"><span class="lineNum">    1652 </span><span class="lineNoCov">          0 :     if (tc.snapToTimecode)</span></a>
+<a name="1653"><span class="lineNum">    1653 </span>            :     {</a>
+<a name="1654"><span class="lineNum">    1654 </span><span class="lineNoCov">          0 :         if (timeToMove &gt; 0s)</span></a>
+<a name="1655"><span class="lineNum">    1655 </span><span class="lineNoCov">          0 :             t = TransportHelpers::snapTimeUp (tc, t, false);</span></a>
+<a name="1656"><span class="lineNum">    1656 </span>            :         else</a>
+<a name="1657"><span class="lineNum">    1657 </span><span class="lineNoCov">          0 :             t = TransportHelpers::snapTimeDown (tc, t, false);</span></a>
+<a name="1658"><span class="lineNum">    1658 </span>            :     }</a>
+<a name="1659"><span class="lineNum">    1659 </span>            : </a>
+<a name="1660"><span class="lineNum">    1660 </span><span class="lineNoCov">          0 :     if (tc.isUserDragging() &amp;&amp; tc.engine.getPropertyStorage().getProperty (SettingID::snapCursor, false))</span></a>
+<a name="1661"><span class="lineNum">    1661 </span><span class="lineNoCov">          0 :         t = TransportHelpers::snapTimeDown (tc, t, false);</span></a>
+<a name="1662"><span class="lineNum">    1662 </span>            : </a>
+<a name="1663"><span class="lineNum">    1663 </span><span class="lineNoCov">          0 :     tc.setPosition (t);</span></a>
+<a name="1664"><span class="lineNum">    1664 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1665"><span class="lineNum">    1665 </span>            : </a>
+<a name="1666"><span class="lineNum">    1666 </span><span class="lineNoCov">          0 : void freePlaybackContextIfNotRecording (TransportControl&amp; tc)</span></a>
+<a name="1667"><span class="lineNum">    1667 </span>            : {</a>
+<a name="1668"><span class="lineNum">    1668 </span><span class="lineNoCov">          0 :     if (tc.isPlayContextActive() &amp;&amp; ! tc.isRecording())</span></a>
+<a name="1669"><span class="lineNum">    1669 </span><span class="lineNoCov">          0 :         tc.freePlaybackContext();</span></a>
+<a name="1670"><span class="lineNum">    1670 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1671"><span class="lineNum">    1671 </span>            : </a>
+<a name="1672"><span class="lineNum">    1672 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

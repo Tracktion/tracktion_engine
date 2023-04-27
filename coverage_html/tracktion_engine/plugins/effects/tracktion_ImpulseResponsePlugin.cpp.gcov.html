@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">127</td>
+            <td class="headerCovTableEntry">139</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-04-24 15:47:49</td>
+            <td class="headerValue">2023-04-27 12:50:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -211,14 +211,14 @@
 <a name="149"><span class="lineNum">     149 </span>            :     processorChain.prepare (processSpec);</a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :     // Update smoothers</a>
-<a name="152"><span class="lineNum">     152 </span>            :     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam-&gt;getCurrentValue()));</a>
-<a name="153"><span class="lineNum">     153 </span>            :     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam-&gt;getCurrentValue()));</a>
-<a name="154"><span class="lineNum">     154 </span>            :     gainSmoother.setTargetValue (gainParam-&gt;getCurrentValue());</a>
-<a name="155"><span class="lineNum">     155 </span>            :     qSmoother.setTargetValue (filterQParam-&gt;getCurrentValue());</a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam-&gt;getCurrentValue()));</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam-&gt;getCurrentValue()));</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     gainSmoother.setTargetValue (gainParam-&gt;getCurrentValue());</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     qSmoother.setTargetValue (filterQParam-&gt;getCurrentValue());</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :     const auto wetDry = getWetDryLevels (mixParam-&gt;getCurrentValue());</a>
-<a name="158"><span class="lineNum">     158 </span>            :     wetGainSmoother.setTargetValue (wetDry.wet);</a>
-<a name="159"><span class="lineNum">     159 </span>            :     dryGainSmoother.setTargetValue (wetDry.dry);</a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     wetGainSmoother.setTargetValue (wetDry.wet);</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :     dryGainSmoother.setTargetValue (wetDry.dry);</span></a>
 <a name="160"><span class="lineNum">     160 </span>            :     </a>
 <a name="161"><span class="lineNum">     161 </span>            :     const double smoothTime = 0.01;</a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     lowFreqSmoother.reset (info.sampleRate, smoothTime);</span></a>
@@ -240,14 +240,14 @@
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 : void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : {</a>
 <a name="180"><span class="lineNum">     180 </span>            :     // Update smoothers</a>
-<a name="181"><span class="lineNum">     181 </span>            :     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam-&gt;getCurrentValue()));</a>
-<a name="182"><span class="lineNum">     182 </span>            :     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam-&gt;getCurrentValue()));</a>
-<a name="183"><span class="lineNum">     183 </span>            :     gainSmoother.setTargetValue (gainParam-&gt;getCurrentValue());</a>
-<a name="184"><span class="lineNum">     184 </span>            :     qSmoother.setTargetValue (filterQParam-&gt;getCurrentValue());</a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam-&gt;getCurrentValue()));</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam-&gt;getCurrentValue()));</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     gainSmoother.setTargetValue (gainParam-&gt;getCurrentValue());</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     qSmoother.setTargetValue (filterQParam-&gt;getCurrentValue());</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
 <a name="186"><span class="lineNum">     186 </span>            :     const auto wetDryGain = getWetDryLevels (mixParam-&gt;getCurrentValue());</a>
-<a name="187"><span class="lineNum">     187 </span>            :     wetGainSmoother.setTargetValue (wetDryGain.wet);</a>
-<a name="188"><span class="lineNum">     188 </span>            :     dryGainSmoother.setTargetValue (wetDryGain.dry);</a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     wetGainSmoother.setTargetValue (wetDryGain.wet);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :     dryGainSmoother.setTargetValue (wetDryGain.dry);</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span>            :     // Update gains and filter params</a>
 <a name="191"><span class="lineNum">     191 </span>            :     auto hpf = processorChain.get&lt;HPFIndex&gt;().state;</a>
