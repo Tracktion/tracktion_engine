@@ -415,7 +415,7 @@ private:
     void updateCursorPosition()
     {
         const auto loopLength = transport.getLoopRange().getLength().inSeconds();
-        const auto proportion = loopLength == 0.0 ? 0.0 : transport.getPosition().inSeconds() / loopLength;
+        const auto proportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : transport.getPosition().inSeconds() / loopLength;
 
         auto r = getLocalBounds().toFloat();
         const float x = r.getWidth() * float (proportion);
