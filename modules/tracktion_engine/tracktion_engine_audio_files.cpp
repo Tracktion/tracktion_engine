@@ -27,6 +27,7 @@ extern "C"
 #include "tracktion_engine.h"
 
 #include <string>
+#include <bitset>
 
 #ifdef __GNUC__
  #pragma GCC diagnostic push
