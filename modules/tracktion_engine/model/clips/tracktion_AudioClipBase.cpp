@@ -605,8 +605,7 @@ void AudioClipBase::reverseLoopPoints()
     AudioFileInfo wi = getWaveInfo();
 
     if (isReversed)
-        if (auto sourceItem = sourceFileReference.getSourceProjectItem())
-            wi = AudioFile (edit.engine, sourceItem->getSourceFile()).getInfo();
+        wi = AudioFile (edit.engine, sourceFileReference.getFile()).getInfo();
 
     if (wi.lengthInSamples == 0)
         return;
