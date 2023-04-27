@@ -32,8 +32,10 @@ extern "C"
 #include "audio_files/formats/tracktion_RexFileFormat.cpp"
 #include "audio_files/formats/tracktion_LAMEManager.cpp"
 
-#include "audio_files/tracktion_BufferedFileReader.h"
-#include "audio_files/tracktion_BufferedFileReader.cpp"
+#if ! JUCE_WASM
+ #include "audio_files/tracktion_BufferedFileReader.h"
+ #include "audio_files/tracktion_BufferedFileReader.cpp"
+#endif
 
 #include "audio_files/tracktion_AudioFileCache.cpp"
 #include "audio_files/tracktion_AudioFileCache.test.cpp"

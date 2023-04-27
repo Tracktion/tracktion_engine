@@ -15,13 +15,17 @@
 #elif defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
  // Use clang built-in
 #else
- #include <x86intrin.h>
+ #if ! defined (__wasm__)
+  #include <x86intrin.h>
+ #endif
 #endif
 
 #if defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
  // Use asm yield
 #elif __has_include(<emmintrin.h>)
- #include <emmintrin.h>
+ #if ! defined (__wasm__)
+   #include <emmintrin.h>
+ #endif
 #endif
 
 namespace tracktion { inline namespace core
@@ -30,7 +34,9 @@ namespace tracktion { inline namespace core
 /** Returns the CPU cycle count, useful for benchmarking. */
 inline std::uint64_t rdtsc()
 {
-   #if defined (__arm64__) && defined (__APPLE__)
+   #if defined (__wasm__)
+    return static_cast<std::uint64_t> (std::chrono::high_resolution_clock::now().time_since_epoch().count());
+   #elif defined (__arm64__) && defined (__APPLE__)
     std::uint64_t result;
     __asm __volatile("mrs %0, CNTVCT_EL0" : "=&r" (result));
     return result;
@@ -50,7 +56,9 @@ inline std::uint64_t rdtsc()
 */
 inline void pause()
 {
-   #if defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
+   #if defined (__wasm__)
+    // No equivalent for WASM yet?
+   #elif defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
     __asm__ __volatile__ ("yield");
    #elif __has_include(<emmintrin.h>)
     _mm_pause();

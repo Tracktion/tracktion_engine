@@ -34,11 +34,7 @@ public:
 
             for (int i = 0; i < 10; ++i)
             {
-                #if JUCE_INTEL
-                 _mm_pause();
-                #else
-                 __asm__ __volatile__ ("yield");
-                #endif
+                core::pause();
 
                 if (try_lock())
                     return;

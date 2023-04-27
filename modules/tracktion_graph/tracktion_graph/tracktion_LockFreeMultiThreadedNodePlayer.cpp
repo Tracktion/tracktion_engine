@@ -203,13 +203,8 @@ void LockFreeMultiThreadedNodePlayer::createThreads()
 
 inline void LockFreeMultiThreadedNodePlayer::pause()
 {
-   #if JUCE_INTEL
-    _mm_pause();
-    _mm_pause();
-   #else
-    __asm__ __volatile__ ("yield");
-    __asm__ __volatile__ ("yield");
-   #endif
+    core::pause();
+    core::pause();
 }
 
 //==============================================================================
