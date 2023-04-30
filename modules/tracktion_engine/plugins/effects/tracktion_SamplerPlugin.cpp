@@ -463,7 +463,8 @@ double SamplerPlugin::getSoundLength (int index) const
 }
 
 juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
-                                      double startTime, double length, float gainDb)
+                                      double startTime, double length, float gainDb,
+                                      int keyNote, int minNote, int maxNote)
 {
     const int maxNumSamples = 64;
 
@@ -475,9 +476,9 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::name, name,
                               IDs::startTime, startTime,
                               IDs::length, length,
-                              IDs::keyNote, 72,
-                              IDs::minNote, 72 - 24,
-                              IDs::maxNote, 72 + 24,
+                              IDs::keyNote, keyNote,
+                              IDs::minNote, minNote,
+                              IDs::maxNote, maxNote,
                               IDs::gainDb, gainDb,
                               IDs::pan, (double) 0);
 
