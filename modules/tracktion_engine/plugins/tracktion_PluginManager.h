@@ -43,6 +43,8 @@ public:
     Plugin::Ptr createNewPlugin (Edit&, const juce::ValueTree&);
     Plugin::Ptr createNewPlugin (Edit&, const juce::String& type, const juce::PluginDescription&);
 
+    void addInitialSamplerDrumPadValueTree(juce::ValueTree&);
+
     juce::Array<juce::PluginDescription> getARACompatiblePlugDescriptions();
 
     juce::AudioPluginFormatManager pluginFormatManager;

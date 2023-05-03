@@ -645,6 +645,14 @@ namespace IDs
     DECLARE_ID (proxyAllowed)
     DECLARE_ID (resamplingQuality)
 
+    // BEATCONNECT MODIFICATIONS START HERE
+    DECLARE_ID(SamplerDrumPad)
+    DECLARE_ID(Tambourine)
+    DECLARE_ID(Cymbol)
+    DECLARE_ID(Snare)
+    DECLARE_ID(Kick)
+    // BEATCONNECT MODIFICATIONS END HERE
+
     #undef DECLARE_ID
 }
 

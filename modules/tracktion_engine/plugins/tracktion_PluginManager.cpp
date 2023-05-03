@@ -714,12 +714,55 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
+            // BEATCONNECT MODIFICATIONS START
+            if (type == "sampler")
+            {
+                addInitialSamplerDrumPadValueTree(v);
+            }
+            // BEATCONNECT MODIFICATIONS END
+
             if (auto p = builtIn->create (PluginCreationInfo (ed, v, true)))
                 return p;
         }
     }
 
     return {};
+}
+
+void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
+{
+    auto getIcon = [](int i) {
+        if (i >= 0 && i <= 3) {
+            return IDs::Tambourine.toString();
+        }
+        else if (i >= 4 && i <= 7) {
+            return IDs::Cymbol.toString();
+        }
+        else if (i >= 8 && i <= 11) {
+            return IDs::Snare.toString();
+        }
+        else if (i >= 12 && i <= 15) {
+            return IDs::Kick.toString();
+        }
+        return IDs::shownOn.toString(); // This should not be reached, but is here as a fallback
+    };
+
+    const juce::String c = "#FFFFFF";
+    const juce::String pad = "Pad";
+
+    // Add drum pads meta data
+    for (int i = 0; i < 16; i++)
+    {
+        auto icon = getIcon(i);
+
+        juce::ValueTree d(IDs::SamplerDrumPad);
+        d.setProperty(IDs::colour, "#FFFFFF", nullptr);
+        d.setProperty(IDs::name, "Pad", nullptr);
+        d.setProperty(IDs::icon, icon, nullptr);
+        d.setProperty(IDs::note, juce::String(i + 1), nullptr);
+
+        v.addChild(d, -1, nullptr);
+    }
 }
 
 juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescriptions()
