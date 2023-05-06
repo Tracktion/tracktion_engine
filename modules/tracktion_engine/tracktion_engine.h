@@ -230,9 +230,9 @@
 /** Config: TRACKTION_AIR_WINDOWS
     Adds AirWindows effect plugins. Requires compliance with AirWindows MIT license.
  */
-#ifndef TRACKTION_AIR_WINDOWS
- #define TRACKTION_AIR_WINDOWS 0
-#endif
+
+#define TRACKTION_AIR_WINDOWS 1
+
 
 /** Config: TRACKTION_LOG_DEVICES
     If enabled, all found devices will be logged (by default to the console).

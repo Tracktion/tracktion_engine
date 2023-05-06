@@ -6,6 +6,7 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+#define M_PI 3.14159265358979323846
 
 namespace tracktion { inline namespace engine
 {

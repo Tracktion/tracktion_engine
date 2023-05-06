@@ -7,9 +7,6 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
-
 #define __audioeffect__
 #define VstInt32                int32_t
 #define AudioEffect             AirWindowsBase
@@ -22,6 +19,10 @@ namespace tracktion { inline namespace engine
 #define kVstMaxProductStrLen    64
 #define kVstMaxVendorStrLen     64
 #define vst_strncpy             strncpy
+
+namespace tracktion { inline namespace engine
+{
+
 
 void float2string (float f, char* text, int len)
 {

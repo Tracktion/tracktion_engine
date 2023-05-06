@@ -3,9 +3,7 @@
  *  Copyright (c) 2016 airwindows, All rights reserved
  * ======================================== */
 
-#ifndef __Biquad_H
 #include "Biquad.h"
-#endif
 
 void Biquad::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
