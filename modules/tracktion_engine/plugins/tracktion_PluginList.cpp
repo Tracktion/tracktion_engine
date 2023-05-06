@@ -205,6 +205,25 @@ void PluginList::insertPlugin (const Plugin::Ptr& plugin, int index, SelectionMa
             return;
         }
 
+        // BEATCONNECT MODIFICATIONS START
+        auto& pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
+        if (pluginParameters.getNumChildren() == 0)
+        {
+            for (auto param : plugin->getAutomatableParameters())
+            {
+                juce::ValueTree v(IDs::PluginParameter.toString());
+
+                v.setProperty(IDs::paramId, juce::String(param->paramID).replaceCharacters(" ", "_"), nullptr);
+                v.setProperty(IDs::value, param->getCurrentValue(), nullptr);
+                v.setProperty(IDs::defaultValue, param->getDefaultValue().has_value() ? param->getDefaultValue().value() : 0, nullptr);
+                v.setProperty(IDs::minimumValue, param->getValueRange().getStart(), nullptr);
+                v.setProperty(IDs::maximumValue, param->getValueRange().getEnd(), nullptr);
+
+                pluginParameters.addChild(v, -1, nullptr);
+            }
+        }
+        // BEATCONNECT MODIFICATIONS END
+
         if (auto newPlugin = insertPlugin (plugin->state, index))
         {
             jassert (plugin == newPlugin); // maybe caused by adding a plugin that wasn't created by this edit's pluginCache?

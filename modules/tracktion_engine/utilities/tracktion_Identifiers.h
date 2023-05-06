@@ -651,6 +651,12 @@ namespace IDs
     DECLARE_ID(Cymbol)
     DECLARE_ID(Snare)
     DECLARE_ID(Kick)
+    DECLARE_ID(PluginParameters)
+    DECLARE_ID(PluginParameter)
+    DECLARE_ID(paramId)
+    DECLARE_ID(defaultValue)
+    DECLARE_ID(minimumValue)
+    DECLARE_ID(maximumValue)
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID

@@ -77,10 +77,6 @@ Plugin::Plugin (PluginCreationInfo info)
     jassert (state.isValid());
 
     auto um = getUndoManager();
-    //BC MODIFICATION START
-    state.getOrCreateChildWithName("BCPLUGINPARAMETERS", um);
-    //BC MODIFICATION END
-
     auto wires = state.getChildWithName (IDs::SIDECHAINCONNECTIONS);
 
     if (wires.isValid())
