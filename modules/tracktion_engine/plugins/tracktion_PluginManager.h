@@ -44,6 +44,7 @@ public:
     Plugin::Ptr createNewPlugin (Edit&, const juce::String& type, const juce::PluginDescription&);
 
     void addInitialSamplerDrumPadValueTree(juce::ValueTree&);
+    void addPluginParametersToValueTree(Plugin::Ptr plugin);
 
     juce::Array<juce::PluginDescription> getARACompatiblePlugDescriptions();
 

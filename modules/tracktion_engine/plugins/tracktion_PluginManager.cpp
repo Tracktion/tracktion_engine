@@ -676,8 +676,12 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
     jassert (initialised); // must call PluginManager::initialise() before this!
     jassert ((type == ExternalPlugin::xmlTypeName) == type.equalsIgnoreCase (ExternalPlugin::xmlTypeName));
 
-    if (type.equalsIgnoreCase (ExternalPlugin::xmlTypeName))
-        return new ExternalPlugin (PluginCreationInfo (ed, ExternalPlugin::create (ed.engine, desc), true));
+    if (type.equalsIgnoreCase(ExternalPlugin::xmlTypeName))
+    {
+        Plugin::Ptr external = new ExternalPlugin(PluginCreationInfo(ed, ExternalPlugin::create(ed.engine, desc), true));
+        addPluginParametersToValueTree(external);
+        return external;
+    }
 
     if (type.equalsIgnoreCase (RackInstance::xmlTypeName))
     {
@@ -700,7 +704,11 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
         }
 
         if (rackType != nullptr)
-            return new RackInstance (PluginCreationInfo (ed, RackInstance::create (*rackType), true));
+        {
+            Plugin::Ptr rackInstance = new RackInstance(PluginCreationInfo(ed, RackInstance::create(*rackType), true));
+            addPluginParametersToValueTree(rackInstance);
+            return rackInstance;
+        }
     }
 
     for (auto builtIn : builtInTypes)
@@ -721,12 +729,37 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             }
             // BEATCONNECT MODIFICATIONS END
 
-            if (auto p = builtIn->create (PluginCreationInfo (ed, v, true)))
+            if (auto p = builtIn->create(PluginCreationInfo(ed, v, true)))
+            {
+                addPluginParametersToValueTree(p);
                 return p;
+            }
         }
     }
 
     return {};
+}
+
+void PluginManager::addPluginParametersToValueTree(Plugin::Ptr plugin)
+{
+    // BEATCONNECT MODIFICATIONS START
+    auto& pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
+    if (pluginParameters.getNumChildren() == 0)
+    {
+        for (const auto& param : plugin->getAutomatableParameters())
+        {
+            juce::ValueTree v(IDs::PluginParameter.toString());
+
+            v.setProperty(IDs::paramId, juce::String(param->paramID).replaceCharacters(" ", "_"), nullptr);
+            v.setProperty(IDs::value, param->getCurrentValue(), nullptr);
+            v.setProperty(IDs::defaultValue, param->getDefaultValue().has_value() ? param->getDefaultValue().value() : 0, nullptr);
+            v.setProperty(IDs::minimumValue, param->getValueRange().getStart(), nullptr);
+            v.setProperty(IDs::maximumValue, param->getValueRange().getEnd(), nullptr);
+
+            pluginParameters.addChild(v, -1, nullptr);
+        }
+    }
+    // BEATCONNECT MODIFICATIONS END
 }
 
 void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
