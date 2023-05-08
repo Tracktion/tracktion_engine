@@ -657,6 +657,7 @@ namespace IDs
     DECLARE_ID(defaultValue)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
+    DECLARE_ID(Faceplate)
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID
