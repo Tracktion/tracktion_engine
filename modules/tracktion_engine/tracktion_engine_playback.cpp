@@ -128,13 +128,16 @@ extern "C"
  #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
-namespace src
+namespace tracktion
 {
-    #include "../3rd_party/libsamplerate/samplerate.h"
-    #include "../3rd_party/libsamplerate/src_linear.c"
-    #include "../3rd_party/libsamplerate/src_sinc.c"
-    #include "../3rd_party/libsamplerate/src_zoh.c"
-    #include "../3rd_party/libsamplerate/samplerate.c"
+    namespace src
+    {
+        #include "../3rd_party/libsamplerate/samplerate.h"
+        #include "../3rd_party/libsamplerate/src_linear.c"
+        #include "../3rd_party/libsamplerate/src_sinc.c"
+        #include "../3rd_party/libsamplerate/src_zoh.c"
+        #include "../3rd_party/libsamplerate/samplerate.c"
+    }
 }
 
 #undef PACKAGE
