@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-10 15:09:34</td>
+            <td class="headerValue">2023-05-10 15:46:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -95,7 +95,7 @@
 <a name="33"><span class="lineNum">      33 </span>            :     tracktion::graph::Node::AudioAndMidiBuffer getInputs()</a>
 <a name="34"><span class="lineNum">      34 </span>            :     {</a>
 <a name="35"><span class="lineNum">      35 </span>            :         tracktion::graph::sanityCheckView (audio);</a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     173166 :         return { audio, midi };</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     172292 :         return { audio, midi };</span></a>
 <a name="37"><span class="lineNum">      37 </span>            :     }</a>
 <a name="38"><span class="lineNum">      38 </span>            :     </a>
 <a name="39"><span class="lineNum">      39 </span>            :     void setContext (tracktion::engine::PluginRenderContext* pc)</a>
@@ -161,22 +161,22 @@
 <a name="99"><span class="lineNum">      99 </span>            :     */</a>
 <a name="100"><span class="lineNum">     100 </span>            :     int process (const tracktion::graph::Node::ProcessContext&amp; pc)</a>
 <a name="101"><span class="lineNum">     101 </span>            :     {</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     770334 :         return process (pc, {}, true, false, false);</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     762468 :         return process (pc, {}, true, false, false);</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :     }</a>
 <a name="104"><span class="lineNum">     104 </span>            :     </a>
 <a name="105"><span class="lineNum">     105 </span>            :     /** Processes a block of audio and MIDI data with a given PlayHead and EditTimeRange.</a>
 <a name="106"><span class="lineNum">     106 </span>            :         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.</a>
 <a name="107"><span class="lineNum">     107 </span>            :     */</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     770334 :     int process (const tracktion::graph::Node::ProcessContext&amp; pc,</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     762468 :     int process (const tracktion::graph::Node::ProcessContext&amp; pc,</span></a>
 <a name="109"><span class="lineNum">     109 </span>            :                  TimeRange editTime, bool isPlaying, bool isScrubbing, bool isRendering)</a>
 <a name="110"><span class="lineNum">     110 </span>            :     {</a>
 <a name="111"><span class="lineNum">     111 </span>            :         // The internal nodes won't be interested in the top level audio/midi inputs</a>
 <a name="112"><span class="lineNum">     112 </span>            :         // They should only be referencing this for time and continuity</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     770334 :         tracktion::engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     762468 :         tracktion::engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :                                                    nullptr, 0.0,</a>
 <a name="115"><span class="lineNum">     115 </span>            :                                                    editTime, isPlaying, isScrubbing, isRendering, true);</a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">     770334 :         return nodePlayer.process (pc);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">     762468 :         return nodePlayer.process (pc);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :     }</a>
 <a name="119"><span class="lineNum">     119 </span>            :     </a>
 <a name="120"><span class="lineNum">     120 </span>            : private:</a>
