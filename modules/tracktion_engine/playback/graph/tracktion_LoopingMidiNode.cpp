@@ -552,7 +552,8 @@ namespace MidiHelpers
 
             controllerMessagesScratchBuffer.clearQuick();
 
-            for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+            // -1 from the channel numbers end here as Range end is exclusive
+            for (int i = channelNumbers.getStart(); i <= (channelNumbers.getEnd() - 1); ++i)
                 MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, sourceSequence, indexOfTime, i);
 
             for (auto& m : controllerMessagesScratchBuffer)
@@ -563,7 +564,8 @@ namespace MidiHelpers
             {
                 controllerMessagesScratchBuffer.clearQuick();
 
-                for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+                // -1 from the channel numbers end here as Range end is exclusive
+                for (int i = channelNumbers.getStart(); i <= (channelNumbers.getEnd() - 1); ++i)
                     chocMidiHelpers::createControllerUpdatesForTime (sourceSequence, (uint8_t) i, time, controllerMessagesScratchBuffer);
 
                 for (auto& m : controllerMessagesScratchBuffer)
@@ -1382,7 +1384,8 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
       wasMute (liveClipLevel.isMute())
 {
     jassert (! sequences.empty());
-    jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
+    // -1 from the channel numbers end here as Range end is exclusive
+    jassert (channelNumbers.getStart() > 0 && (channelNumbers.getEnd() - 1) <= 16);
 
     // Create this now but don't initialise it until we know if we have to
     // steal an old node's ActiveNoteList, this happens in prepareToPlay
