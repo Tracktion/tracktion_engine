@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-10 15:46:39</td>
+            <td class="headerValue">2023-05-10 15:56:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -101,18 +101,18 @@
 <a name="39"><span class="lineNum">      39 </span>            :             {</a>
 <a name="40"><span class="lineNum">      40 </span>            :                 controllerMessagesScratchBuffer.clearQuick();</a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        798 :                 for (int i = channelNumbers.getStart(); i &lt;= channelNumbers.getEnd(); ++i)</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        532 :                     sourceSequence.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        796 :                 for (int i = channelNumbers.getStart(); i &lt;= channelNumbers.getEnd(); ++i)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        531 :                     sourceSequence.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">        266 :                 for (auto&amp; m : controllerMessagesScratchBuffer)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">        265 :                 for (auto&amp; m : controllerMessagesScratchBuffer)</span></a>
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :                     destBuffer.addMidiMessage (m, 0.0001, midiSourceID);</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :             }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        266 :             if (! clipLevel.isMute())</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">        265 :             if (! clipLevel.isMute())</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :             {</a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">        266 :                 auto volScale = clipLevel.getGain();</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        266 :                 for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        265 :                 for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :                 {</a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">         90 :                     if (auto meh = sourceSequence.getEventPointer (i))</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :                     {</a>
@@ -136,7 +136,7 @@
 <a name="74"><span class="lineNum">      74 </span>            :                 }</a>
 <a name="75"><span class="lineNum">      75 </span>            :             }</a>
 <a name="76"><span class="lineNum">      76 </span>            :         }</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        264 :     }</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        265 :     }</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     inline void createNoteOffs (MidiMessageArray&amp; destination, const juce::MidiMessageSequence&amp; sourceSequence,</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :                                 MidiMessageArray::MPESourceID midiSourceID,</a>
