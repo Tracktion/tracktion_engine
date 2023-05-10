@@ -14,11 +14,6 @@
 #ifndef SAMPLERATE_H
 #define SAMPLERATE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
-
-
 /* Opaque data type SRC_STATE. */
 typedef struct SRC_STATE_tag SRC_STATE ;
 
@@ -179,10 +174,5 @@ void src_float_to_short_array (const float *in, short *out, int len) ;
 
 void src_int_to_float_array (const int *in, float *out, int len) ;
 void src_float_to_int_array (const float *in, int *out, int len) ;
-
-
-#ifdef __cplusplus
-}       /* extern "C" */
-#endif  /* __cplusplus */
 
 #endif  /* SAMPLERATE_H */

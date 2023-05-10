@@ -296,17 +296,17 @@ public:
             {
                 switch (resamplingQuality)
                 {
-                    case ResamplingQuality::sincFast:   return SRC_SINC_FASTEST;
-                    case ResamplingQuality::sincMedium: return SRC_SINC_MEDIUM_QUALITY;
-                    case ResamplingQuality::sincBest:   return SRC_SINC_BEST_QUALITY;
+                    case ResamplingQuality::sincFast:   return src::SRC_SINC_FASTEST;
+                    case ResamplingQuality::sincMedium: return src::SRC_SINC_MEDIUM_QUALITY;
+                    case ResamplingQuality::sincBest:   return src::SRC_SINC_BEST_QUALITY;
                     case ResamplingQuality::lagrange:   [[ fallthrough ]];
-                    default: assert (false); return SRC_SINC_FASTEST;
+                    default: assert (false); return src::SRC_SINC_FASTEST;
                 };
             }();
 
         int error = 0;
-        src_state = src_callback_new (srcReadCallback,
-                                      converterType, numChannels, &error, this);
+        src_state = src::src_callback_new (srcReadCallback,
+                                           converterType, numChannels, &error, this);
         assert (error == 0);
     }
 
@@ -397,7 +397,7 @@ public:
     const double sourceSampleRate { source->getSampleRate() };
     const double sampleRatio { sourceSampleRate / destSampleRate  };
 
-    SRC_STATE* src_state = nullptr;
+    src::SRC_STATE* src_state = nullptr;
 
     choc::buffer::ChannelArrayBuffer<float> scratchBuffer                   { choc::buffer::createChannelArrayBuffer (numChannels, chunkSize, [] { return 0.0f; }) };
     choc::buffer::InterleavedBuffer<float> interleavedInputScratchBuffer    { choc::buffer::createInterleavedBuffer (numChannels, chunkSize, [] { return 0.0f; }) };

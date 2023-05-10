@@ -116,10 +116,6 @@ extern "C"
 
 //==============================================================================
 //==============================================================================
-#if __has_include(<samplerate.h>)
- #include <samplerate.h>
-#else
-
 #undef VERSION
 #define PACKAGE ""
 #define VERSION "0.1.9"
@@ -132,20 +128,14 @@ extern "C"
  #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
-extern "C"
+namespace src
 {
     #include "../3rd_party/libsamplerate/samplerate.h"
+    #include "../3rd_party/libsamplerate/src_linear.c"
+    #include "../3rd_party/libsamplerate/src_sinc.c"
+    #include "../3rd_party/libsamplerate/src_zoh.c"
+    #include "../3rd_party/libsamplerate/samplerate.c"
 }
-
-#if TRACKTION_BUILD_LIBSAMPLERATE
- extern "C"
- {
-     #include "../3rd_party/libsamplerate/src_linear.c"
-     #include "../3rd_party/libsamplerate/src_sinc.c"
-     #include "../3rd_party/libsamplerate/src_zoh.c"
-     #include "../3rd_party/libsamplerate/samplerate.c"
- }
-#endif //TRACKTION_BUILD_LIBSAMPLERATE
 
 #undef PACKAGE
 #undef VERSION
@@ -153,9 +143,6 @@ extern "C"
 #undef CPU_CLIPS_POSITIVE
 
 #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
-
-#endif //__has_include(<samplerate.h>)
-
 
 //==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS

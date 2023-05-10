@@ -178,16 +178,6 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH 0
 #endif
 
-/** Config: TRACKTION_BUILD_LIBSAMPLERATE
-    Enables building of the libsamplerate sources.
-    For simplicity these are included but if you are using these elsewhere in your
-    code you can disable building them. If you disable building them, you should
-    link them yourself and include samplerate.h in the header search paths.
-*/
-#ifndef TRACKTION_BUILD_LIBSAMPLERATE
- #define TRACKTION_BUILD_LIBSAMPLERATE 1
-#endif
-
 /** Config: TRACKTION_ENABLE_ABLETON_LINK
     Enables Ableton Link support.
     You must have Link in your search path if you enable this.
