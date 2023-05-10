@@ -118,7 +118,7 @@ extern "C"
 //==============================================================================
 #undef VERSION
 #define PACKAGE ""
-#define VERSION "0.1.9"
+#define VERSION "0.2.2"
 #define CPU_CLIPS_NEGATIVE 0
 #define CPU_CLIPS_POSITIVE 0
 
