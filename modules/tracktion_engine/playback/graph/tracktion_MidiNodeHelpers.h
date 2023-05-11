@@ -28,8 +28,7 @@ namespace MidiNodeHelpers
 
             controllerMessagesScratchBuffer.clearQuick();
 
-            // -1 from the channel numbers end here as Range end is exclusive
-            for (int i = channelNumbers.getStart(); i <= (channelNumbers.getEnd() - 1); ++i)
+            for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                 MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, sourceSequence, indexOfTime, i);
 
             for (auto& m : controllerMessagesScratchBuffer)
@@ -40,8 +39,7 @@ namespace MidiNodeHelpers
             {
                 controllerMessagesScratchBuffer.clearQuick();
 
-                // -1 from the channel numbers end here as Range end is exclusive
-                for (int i = channelNumbers.getStart(); i <= (channelNumbers.getEnd() - 1); ++i)
+                for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                     sourceSequence.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
 
                 for (auto& m : controllerMessagesScratchBuffer)
