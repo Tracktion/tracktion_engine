@@ -122,6 +122,10 @@ extern "C"
 #define CPU_CLIPS_NEGATIVE 0
 #define CPU_CLIPS_POSITIVE 0
 
+#define ENABLE_SINC_BEST_CONVERTER
+#define ENABLE_SINC_MEDIUM_CONVERTER
+#define ENABLE_SINC_FAST_CONVERTER
+
 #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
 
 #if __GNUC__
@@ -144,6 +148,10 @@ namespace tracktion
 #undef VERSION
 #undef CPU_CLIPS_NEGATIVE
 #undef CPU_CLIPS_POSITIVE
+
+#undef ENABLE_SINC_BEST_CONVERTER
+#undef ENABLE_SINC_MEDIUM_CONVERTER
+#undef ENABLE_SINC_FAST_CONVERTER
 
 #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
 
