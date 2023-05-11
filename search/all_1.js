@@ -90,8 +90,8 @@ var searchData=
   ['addprojecttolist_88',['addProjectToList',['../classtracktion_1_1engine_1_1ProjectManager.html#a54ae4d2fa14e1398f6a23771789456f3',1,'tracktion::engine::ProjectManager']]],
   ['addr_89',['addr',['../structtracktion_1_1engine_1_1CustomControlSurface_1_1MappingSet.html#a5be1222850de765bb77d0a36ca52c4df',1,'tracktion::engine::CustomControlSurface::MappingSet::addr()'],['../structtracktion_1_1engine_1_1CustomControlSurface_1_1Mapping.html#a89a3dfc5207da6917402dec59deb1ec0',1,'tracktion::engine::CustomControlSurface::Mapping::addr()']]],
   ['addracktypefrom_90',['addRackTypeFrom',['../classtracktion_1_1engine_1_1RackTypeList.html#ad41cd4262e7593d12e7697c039dbaad8',1,'tracktion::engine::RackTypeList']]],
-  ['addrenderoptions_91',['addRenderOptions',['../classtracktion_1_1engine_1_1RenderOptions.html#a3c021fef7aa7cebab9a5258269dfbe01',1,'tracktion::engine::RenderOptions']]],
-  ['addrenderoptions_92',['AddRenderOptions',['../classtracktion_1_1engine_1_1RenderOptions.html#a5ed169799828b58c73a471a6b7026a78',1,'tracktion::engine::RenderOptions']]],
+  ['addrenderoptions_91',['AddRenderOptions',['../classtracktion_1_1engine_1_1RenderOptions.html#a5ed169799828b58c73a471a6b7026a78',1,'tracktion::engine::RenderOptions']]],
+  ['addrenderoptions_92',['addRenderOptions',['../classtracktion_1_1engine_1_1RenderOptions.html#a3c021fef7aa7cebab9a5258269dfbe01',1,'tracktion::engine::RenderOptions']]],
   ['addrendertolibrary_93',['addRenderToLibrary',['../classtracktion_1_1engine_1_1RenderOptions.html#aa86cfe8590c38eb3c174d5fcacc3d5fb',1,'tracktion::engine::RenderOptions']]],
   ['addresult_94',['addResult',['../structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a6c263057b69a7baa7ece4a0f1e88b467',1,'tracktion::graph::PerformanceMeasurement::Statistics']]],
   ['addsection_95',['addSection',['../classtracktion_1_1engine_1_1CompManager.html#ad46ee97d96158491911e9edfd67efab4',1,'tracktion::engine::CompManager::addSection()'],['../structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#ab7ce86d2cb29d8137f65f3ab593501ac',1,'tracktion::engine::TrackCompManager::TrackComp::addSection(EditItemID trackID, double endTime, juce::UndoManager *)'],['../structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#ab27ad7861a5c9703ff136d53f04972df',1,'tracktion::engine::TrackCompManager::TrackComp::addSection(Track::Ptr, double endTime)']]],
@@ -349,11 +349,10 @@ var searchData=
   ['auxsendplugin_347',['AuxSendPlugin',['../classtracktion_1_1engine_1_1AuxSendPlugin.html#a330b0dc7b25e55d860bd0fe2ca5e4653',1,'tracktion::engine::AuxSendPlugin::AuxSendPlugin()'],['../classtracktion_1_1engine_1_1AuxSendPlugin.html',1,'tracktion::AuxSendPlugin'],['../classtracktion_1_1engine_1_1AuxSendPlugin.html',1,'tracktion::engine::AuxSendPlugin']]],
   ['auxstring_348',['auxString',['../classtracktion_1_1engine_1_1MackieMCU.html#a537b562891dbb70aa4544bde3b47a781',1,'tracktion::engine::MackieMCU']]],
   ['auxtexttrackid_349',['auxTextTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cda47300f43c721504b91cefb1c76ea28b8',1,'tracktion::engine::CustomControlSurface']]],
-  ['auxtimer_350',['AuxTimer',['../structtracktion_1_1engine_1_1MackieMCU_1_1AuxTimer.html#aedf2002e936d2c94a8df5c2691bccb9e',1,'tracktion::engine::MackieMCU::AuxTimer']]],
-  ['auxtimer_351',['auxTimer',['../classtracktion_1_1engine_1_1MackieMCU.html#a6b62f81b52939a92adc119a9508d404d',1,'tracktion::engine::MackieMCU']]],
-  ['auxtimer_352',['AuxTimer',['../structtracktion_1_1engine_1_1MackieMCU_1_1AuxTimer.html',1,'tracktion::engine::MackieMCU']]],
-  ['auxtimercallback_353',['auxTimerCallback',['../classtracktion_1_1engine_1_1MackieMCU.html#a0da3de110cb2bc006aa61ed675d4b1f4',1,'tracktion::engine::MackieMCU']]],
-  ['auxtrack_354',['auxTrack',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a23a2549e919e50cba5ef4128489a64a4',1,'tracktion::engine::CustomControlSurface']]],
-  ['auxtrackid_355',['auxTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdaab4cccd29ce77c009573dc4080ff0f14',1,'tracktion::engine::CustomControlSurface']]],
-  ['average_356',['average',['../structtracktion_1_1engine_1_1Renderer_1_1Statistics.html#adb0fa2ac4b21c2e4c838d8d295788030',1,'tracktion::engine::Renderer::Statistics']]]
+  ['auxtimer_350',['auxTimer',['../classtracktion_1_1engine_1_1MackieMCU.html#a6b62f81b52939a92adc119a9508d404d',1,'tracktion::engine::MackieMCU']]],
+  ['auxtimer_351',['AuxTimer',['../structtracktion_1_1engine_1_1MackieMCU_1_1AuxTimer.html#aedf2002e936d2c94a8df5c2691bccb9e',1,'tracktion::engine::MackieMCU::AuxTimer::AuxTimer()'],['../structtracktion_1_1engine_1_1MackieMCU_1_1AuxTimer.html',1,'tracktion::engine::MackieMCU::AuxTimer']]],
+  ['auxtimercallback_352',['auxTimerCallback',['../classtracktion_1_1engine_1_1MackieMCU.html#a0da3de110cb2bc006aa61ed675d4b1f4',1,'tracktion::engine::MackieMCU']]],
+  ['auxtrack_353',['auxTrack',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a23a2549e919e50cba5ef4128489a64a4',1,'tracktion::engine::CustomControlSurface']]],
+  ['auxtrackid_354',['auxTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdaab4cccd29ce77c009573dc4080ff0f14',1,'tracktion::engine::CustomControlSurface']]],
+  ['average_355',['average',['../structtracktion_1_1engine_1_1Renderer_1_1Statistics.html#adb0fa2ac4b21c2e4c838d8d295788030',1,'tracktion::engine::Renderer::Statistics']]]
 ];

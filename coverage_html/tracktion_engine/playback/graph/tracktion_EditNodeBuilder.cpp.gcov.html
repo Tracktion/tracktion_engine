@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">417</td>
-            <td class="headerCovTableEntry">715</td>
-            <td class="headerCovTableEntryLo">58.3 %</td>
+            <td class="headerCovTableEntry">418</td>
+            <td class="headerCovTableEntry">722</td>
+            <td class="headerCovTableEntryLo">57.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-11 11:52:56</td>
+            <td class="headerValue">2023-05-11 12:06:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">39</td>
@@ -682,7 +682,7 @@
 <a name="620"><span class="lineNum">     620 </span><span class="lineCov">        468 :                                       clip.getLiveClipLevel(),</span></a>
 <a name="621"><span class="lineNum">     621 </span>            :                                       params.processState,</a>
 <a name="622"><span class="lineNum">     622 </span><span class="lineCov">        234 :                                       clip.itemID,</span></a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineCov">    2467003 :                                       [&amp;trackMuteState]</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineCov">    2466841 :                                       [&amp;trackMuteState]</span></a>
 <a name="624"><span class="lineNum">     624 </span>            :                                       {</a>
 <a name="625"><span class="lineNum">     625 </span>            :                                           if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :                                               return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -1640,115 +1640,133 @@
 <a name="1578"><span class="lineNum">    1578 </span>            :         }</a>
 <a name="1579"><span class="lineNum">    1579 </span>            :     }</a>
 <a name="1580"><span class="lineNum">    1580 </span>            : </a>
-<a name="1581"><span class="lineNum">    1581 </span>            : </a>
-<a name="1582"><span class="lineNum">    1582 </span><span class="lineCov">         94 :     auto outputNode = std::make_unique&lt;tracktion::graph::SummingNode&gt;();</span></a>
-<a name="1583"><span class="lineNum">    1583 </span>            :         </a>
-<a name="1584"><span class="lineNum">    1584 </span><span class="lineCov">         94 :     for (auto&amp; deviceAndTrackNode : deviceNodes)</span></a>
-<a name="1585"><span class="lineNum">    1585 </span>            :     {</a>
-<a name="1586"><span class="lineNum">    1586 </span><span class="lineNoCov">          0 :         auto device = deviceAndTrackNode.first;</span></a>
-<a name="1587"><span class="lineNum">    1587 </span>            :         jassert (device != nullptr);</a>
-<a name="1588"><span class="lineNum">    1588 </span>            :         auto tracksVector = std::move (deviceAndTrackNode.second);</a>
-<a name="1589"><span class="lineNum">    1589 </span>            :         </a>
-<a name="1590"><span class="lineNum">    1590 </span><span class="lineNoCov">          0 :         auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (tracksVector));</span></a>
-<a name="1591"><span class="lineNum">    1591 </span><span class="lineNoCov">          0 :         sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1581"><span class="lineNum">    1581 </span>            :     // Add deviceNodes for any devices only being used by the MIDI clock or MTC</a>
+<a name="1582"><span class="lineNum">    1582 </span><span class="lineCov">         94 :     for (int i = edit.engine.getDeviceManager().getNumMidiOutDevices(); --i &gt;= 0;)</span></a>
+<a name="1583"><span class="lineNum">    1583 </span>            :     {</a>
+<a name="1584"><span class="lineNum">    1584 </span><span class="lineNoCov">          0 :         if (auto device = edit.engine.getDeviceManager().getMidiOutDevice (i))</span></a>
+<a name="1585"><span class="lineNum">    1585 </span>            :         {</a>
+<a name="1586"><span class="lineNum">    1586 </span>            :             const bool isSendingMidi = device-&gt;isSendingClock()</a>
+<a name="1587"><span class="lineNum">    1587 </span><span class="lineNoCov">          0 :                                         || device-&gt;isSendingTimecode()</span></a>
+<a name="1588"><span class="lineNum">    1588 </span><span class="lineNoCov">          0 :                                         || device-&gt;isSendingControllerMidiClock();</span></a>
+<a name="1589"><span class="lineNum">    1589 </span>            : </a>
+<a name="1590"><span class="lineNum">    1590 </span><span class="lineNoCov">          0 :             if (! isSendingMidi)</span></a>
+<a name="1591"><span class="lineNum">    1591 </span><span class="lineNoCov">          0 :                 continue;</span></a>
 <a name="1592"><span class="lineNum">    1592 </span>            : </a>
-<a name="1593"><span class="lineNum">    1593 </span>            :         // Create nodes for any insert plugins</a>
-<a name="1594"><span class="lineNum">    1594 </span>            :         bool deviceIsBeingUsedAsInsert = false;</a>
-<a name="1595"><span class="lineNum">    1595 </span>            : </a>
-<a name="1596"><span class="lineNum">    1596 </span><span class="lineNoCov">          0 :         for (auto ins : insertPlugins)</span></a>
-<a name="1597"><span class="lineNum">    1597 </span>            :         {</a>
-<a name="1598"><span class="lineNum">    1598 </span><span class="lineNoCov">          0 :             if (ins-&gt;isFrozen())</span></a>
-<a name="1599"><span class="lineNum">    1599 </span><span class="lineNoCov">          0 :                 continue;</span></a>
-<a name="1600"><span class="lineNum">    1600 </span>            :             </a>
-<a name="1601"><span class="lineNum">    1601 </span><span class="lineNoCov">          0 :             if (ins-&gt;outputDevice != device-&gt;getName())</span></a>
-<a name="1602"><span class="lineNum">    1602 </span><span class="lineNoCov">          0 :                 continue;</span></a>
-<a name="1603"><span class="lineNum">    1603 </span>            : </a>
-<a name="1604"><span class="lineNum">    1604 </span><span class="lineNoCov">          0 :             if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))</span></a>
-<a name="1605"><span class="lineNum">    1605 </span>            :             {</a>
-<a name="1606"><span class="lineNum">    1606 </span><span class="lineNoCov">          0 :                 sumNode-&gt;addInput (std::move (sendNode));</span></a>
-<a name="1607"><span class="lineNum">    1607 </span>            :                 deviceIsBeingUsedAsInsert = true;</a>
-<a name="1608"><span class="lineNum">    1608 </span>            :             }</a>
-<a name="1609"><span class="lineNum">    1609 </span>            :         }</a>
-<a name="1610"><span class="lineNum">    1610 </span>            :         </a>
-<a name="1611"><span class="lineNum">    1611 </span>            :         std::unique_ptr&lt;Node&gt; node = std::move (sumNode);</a>
-<a name="1612"><span class="lineNum">    1612 </span>            : </a>
-<a name="1613"><span class="lineNum">    1613 </span><span class="lineNoCov">          0 :         if (! deviceIsBeingUsedAsInsert)</span></a>
-<a name="1614"><span class="lineNum">    1614 </span>            :         {</a>
-<a name="1615"><span class="lineNum">    1615 </span><span class="lineNoCov">          0 :             if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)</span></a>
-<a name="1616"><span class="lineNum">    1616 </span><span class="lineNoCov">          0 :                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
-<a name="1617"><span class="lineNum">    1617 </span>            :             </a>
-<a name="1618"><span class="lineNum">    1618 </span><span class="lineNoCov">          0 :             node = createMasterFadeInOutNode (edit, std::move (node), params);</span></a>
-<a name="1619"><span class="lineNum">    1619 </span><span class="lineNoCov">          0 :             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));</span></a>
-<a name="1620"><span class="lineNum">    1620 </span>            : </a>
-<a name="1621"><span class="lineNum">    1621 </span><span class="lineNoCov">          0 :             if (edit.getIsPreviewEdit() &amp;&amp; node != nullptr)</span></a>
-<a name="1622"><span class="lineNum">    1622 </span><span class="lineNoCov">          0 :                 if (auto previewMeasurer = edit.getPreviewLevelMeasurer())</span></a>
-<a name="1623"><span class="lineNum">    1623 </span><span class="lineNoCov">          0 :                     node = makeNode&lt;SharedLevelMeasuringNode&gt; (std::move (previewMeasurer), std::move (node));</span></a>
-<a name="1624"><span class="lineNum">    1624 </span>            :         }</a>
-<a name="1625"><span class="lineNum">    1625 </span>            :         </a>
-<a name="1626"><span class="lineNum">    1626 </span><span class="lineNoCov">          0 :         if (edit.isClickTrackDevice (*device))</span></a>
-<a name="1627"><span class="lineNum">    1627 </span>            :         {</a>
-<a name="1628"><span class="lineNum">    1628 </span>            :             auto clickAndTracksNode = makeSummingNode ({ node.release(),</a>
-<a name="1629"><span class="lineNum">    1629 </span><span class="lineNoCov">          0 :                                                          makeNode&lt;ClickNode&gt; (edit, getNumChannelsFromDevice (*device),</span></a>
-<a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :                                                                               device-&gt;isMidi(), playHeadState.playHead).release() });</span></a>
-<a name="1631"><span class="lineNum">    1631 </span>            :             node = std::move (clickAndTracksNode);</a>
-<a name="1632"><span class="lineNum">    1632 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="1633"><span class="lineNum">    1633 </span>            : </a>
-<a name="1634"><span class="lineNum">    1634 </span><span class="lineNoCov">          0 :         if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))</span></a>
-<a name="1635"><span class="lineNum">    1635 </span><span class="lineNoCov">          0 :             outputNode-&gt;addInput (std::move (outputDeviceNode));</span></a>
-<a name="1636"><span class="lineNum">    1636 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="1637"><span class="lineNum">    1637 </span>            :     </a>
-<a name="1638"><span class="lineNum">    1638 </span>            :     std::unique_ptr&lt;Node&gt; finalNode (std::move (outputNode));</a>
-<a name="1639"><span class="lineNum">    1639 </span><span class="lineCov">        188 :     finalNode = makeNode&lt;LevelMeasuringNode&gt; (std::move (finalNode), epc.masterLevels);</span></a>
-<a name="1640"><span class="lineNum">    1640 </span><span class="lineCov">        188 :     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);</span></a>
-<a name="1641"><span class="lineNum">    1641 </span><span class="lineCov">         94 :     finalNode = makeNode&lt;PlayHeadPositionNode&gt; (params.processState, std::move (finalNode), audibleTimeToUpdate);</span></a>
-<a name="1642"><span class="lineNum">    1642 </span>            :     </a>
-<a name="1643"><span class="lineNum">    1643 </span><span class="lineCov">         94 :     return finalNode;</span></a>
-<a name="1644"><span class="lineNum">    1644 </span><span class="lineCov">         94 : }</span></a>
-<a name="1645"><span class="lineNum">    1645 </span>            : </a>
-<a name="1646"><span class="lineNum">    1646 </span><span class="lineCov">        241 : std::unique_ptr&lt;tracktion::graph::Node&gt; createNodeForEdit (Edit&amp; edit, const CreateNodeParams&amp; originalParams)</span></a>
-<a name="1647"><span class="lineNum">    1647 </span>            : {</a>
-<a name="1648"><span class="lineNum">    1648 </span>            :     std::vector&lt;std::unique_ptr&lt;tracktion::graph::Node&gt;&gt; trackNodes;</a>
-<a name="1649"><span class="lineNum">    1649 </span><span class="lineCov">        241 :     auto params = originalParams;</span></a>
-<a name="1650"><span class="lineNum">    1650 </span><span class="lineCov">        241 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
-<a name="1651"><span class="lineNum">    1651 </span>            :     </a>
-<a name="1652"><span class="lineNum">    1652 </span><span class="lineCov">        241 :     if (params.implicitlyIncludeSubmixChildTracks &amp;&amp; params.allowedTracks != nullptr)</span></a>
-<a name="1653"><span class="lineNum">    1653 </span><span class="lineCov">        394 :         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);</span></a>
-<a name="1654"><span class="lineNum">    1654 </span>            : </a>
-<a name="1655"><span class="lineNum">    1655 </span><span class="lineCov">       4220 :     for (auto t : getAllTracks (edit))</span></a>
-<a name="1656"><span class="lineNum">    1656 </span>            :     {</a>
-<a name="1657"><span class="lineNum">    1657 </span><span class="lineCov">       5288 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
-<a name="1658"><span class="lineNum">    1658 </span><span class="lineCov">        648 :             continue;</span></a>
-<a name="1659"><span class="lineNum">    1659 </span>            : </a>
-<a name="1660"><span class="lineNum">    1660 </span>            :         // Skip tracks that don't output to a device or feed in to other tracks</a>
-<a name="1661"><span class="lineNum">    1661 </span><span class="lineCov">       3331 :         if (auto output = getTrackOutput (*t))</span></a>
-<a name="1662"><span class="lineNum">    1662 </span>            :         {</a>
-<a name="1663"><span class="lineNum">    1663 </span><span class="lineCov">       2482 :             if (output-&gt;getDestinationTrack() != nullptr)</span></a>
-<a name="1664"><span class="lineNum">    1664 </span><span class="lineCov">       1434 :                 continue;</span></a>
-<a name="1665"><span class="lineNum">    1665 </span>            :         }</a>
-<a name="1666"><span class="lineNum">    1666 </span>            :         else</a>
-<a name="1667"><span class="lineNum">    1667 </span>            :         {</a>
-<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">        849 :             continue;</span></a>
-<a name="1669"><span class="lineNum">    1669 </span>            :         }</a>
-<a name="1670"><span class="lineNum">    1670 </span>            : </a>
-<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">       1048 :         if (auto node = createNodeForTrack (*t, params))</span></a>
-<a name="1672"><span class="lineNum">    1672 </span>            :             trackNodes.push_back (std::move (node));</a>
-<a name="1673"><span class="lineNum">    1673 </span>            :     }</a>
-<a name="1674"><span class="lineNum">    1674 </span>            : </a>
-<a name="1675"><span class="lineNum">    1675 </span><span class="lineCov">        241 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (trackNodes));</span></a>
-<a name="1676"><span class="lineNum">    1676 </span><span class="lineCov">        241 :     sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1593"><span class="lineNum">    1593 </span><span class="lineNoCov">          0 :             auto&amp; trackNodeVector = deviceNodes[device];</span></a>
+<a name="1594"><span class="lineNum">    1594 </span>            :             juce::ignoreUnused (trackNodeVector);</a>
+<a name="1595"><span class="lineNum">    1595 </span>            :             // We don't need to add anything to the vector, just ensure the device is in the map</a>
+<a name="1596"><span class="lineNum">    1596 </span>            :         }</a>
+<a name="1597"><span class="lineNum">    1597 </span>            :     }</a>
+<a name="1598"><span class="lineNum">    1598 </span>            : </a>
+<a name="1599"><span class="lineNum">    1599 </span>            : </a>
+<a name="1600"><span class="lineNum">    1600 </span><span class="lineCov">         94 :     auto outputNode = std::make_unique&lt;tracktion::graph::SummingNode&gt;();</span></a>
+<a name="1601"><span class="lineNum">    1601 </span>            :         </a>
+<a name="1602"><span class="lineNum">    1602 </span><span class="lineCov">         94 :     for (auto&amp; deviceAndTrackNode : deviceNodes)</span></a>
+<a name="1603"><span class="lineNum">    1603 </span>            :     {</a>
+<a name="1604"><span class="lineNum">    1604 </span><span class="lineNoCov">          0 :         auto device = deviceAndTrackNode.first;</span></a>
+<a name="1605"><span class="lineNum">    1605 </span>            :         jassert (device != nullptr);</a>
+<a name="1606"><span class="lineNum">    1606 </span>            :         auto tracksVector = std::move (deviceAndTrackNode.second);</a>
+<a name="1607"><span class="lineNum">    1607 </span>            :         </a>
+<a name="1608"><span class="lineNum">    1608 </span><span class="lineNoCov">          0 :         auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (tracksVector));</span></a>
+<a name="1609"><span class="lineNum">    1609 </span><span class="lineNoCov">          0 :         sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1610"><span class="lineNum">    1610 </span>            : </a>
+<a name="1611"><span class="lineNum">    1611 </span>            :         // Create nodes for any insert plugins</a>
+<a name="1612"><span class="lineNum">    1612 </span>            :         bool deviceIsBeingUsedAsInsert = false;</a>
+<a name="1613"><span class="lineNum">    1613 </span>            : </a>
+<a name="1614"><span class="lineNum">    1614 </span><span class="lineNoCov">          0 :         for (auto ins : insertPlugins)</span></a>
+<a name="1615"><span class="lineNum">    1615 </span>            :         {</a>
+<a name="1616"><span class="lineNum">    1616 </span><span class="lineNoCov">          0 :             if (ins-&gt;isFrozen())</span></a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="1618"><span class="lineNum">    1618 </span>            :             </a>
+<a name="1619"><span class="lineNum">    1619 </span><span class="lineNoCov">          0 :             if (ins-&gt;outputDevice != device-&gt;getName())</span></a>
+<a name="1620"><span class="lineNum">    1620 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="1621"><span class="lineNum">    1621 </span>            : </a>
+<a name="1622"><span class="lineNum">    1622 </span><span class="lineNoCov">          0 :             if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))</span></a>
+<a name="1623"><span class="lineNum">    1623 </span>            :             {</a>
+<a name="1624"><span class="lineNum">    1624 </span><span class="lineNoCov">          0 :                 sumNode-&gt;addInput (std::move (sendNode));</span></a>
+<a name="1625"><span class="lineNum">    1625 </span>            :                 deviceIsBeingUsedAsInsert = true;</a>
+<a name="1626"><span class="lineNum">    1626 </span>            :             }</a>
+<a name="1627"><span class="lineNum">    1627 </span>            :         }</a>
+<a name="1628"><span class="lineNum">    1628 </span>            :         </a>
+<a name="1629"><span class="lineNum">    1629 </span>            :         std::unique_ptr&lt;Node&gt; node = std::move (sumNode);</a>
+<a name="1630"><span class="lineNum">    1630 </span>            : </a>
+<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 :         if (! deviceIsBeingUsedAsInsert)</span></a>
+<a name="1632"><span class="lineNum">    1632 </span>            :         {</a>
+<a name="1633"><span class="lineNum">    1633 </span><span class="lineNoCov">          0 :             if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)</span></a>
+<a name="1634"><span class="lineNum">    1634 </span><span class="lineNoCov">          0 :                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
+<a name="1635"><span class="lineNum">    1635 </span>            :             </a>
+<a name="1636"><span class="lineNum">    1636 </span><span class="lineNoCov">          0 :             node = createMasterFadeInOutNode (edit, std::move (node), params);</span></a>
+<a name="1637"><span class="lineNum">    1637 </span><span class="lineNoCov">          0 :             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));</span></a>
+<a name="1638"><span class="lineNum">    1638 </span>            : </a>
+<a name="1639"><span class="lineNum">    1639 </span><span class="lineNoCov">          0 :             if (edit.getIsPreviewEdit() &amp;&amp; node != nullptr)</span></a>
+<a name="1640"><span class="lineNum">    1640 </span><span class="lineNoCov">          0 :                 if (auto previewMeasurer = edit.getPreviewLevelMeasurer())</span></a>
+<a name="1641"><span class="lineNum">    1641 </span><span class="lineNoCov">          0 :                     node = makeNode&lt;SharedLevelMeasuringNode&gt; (std::move (previewMeasurer), std::move (node));</span></a>
+<a name="1642"><span class="lineNum">    1642 </span>            :         }</a>
+<a name="1643"><span class="lineNum">    1643 </span>            :         </a>
+<a name="1644"><span class="lineNum">    1644 </span><span class="lineNoCov">          0 :         if (edit.isClickTrackDevice (*device))</span></a>
+<a name="1645"><span class="lineNum">    1645 </span>            :         {</a>
+<a name="1646"><span class="lineNum">    1646 </span>            :             auto clickAndTracksNode = makeSummingNode ({ node.release(),</a>
+<a name="1647"><span class="lineNum">    1647 </span><span class="lineNoCov">          0 :                                                          makeNode&lt;ClickNode&gt; (edit, getNumChannelsFromDevice (*device),</span></a>
+<a name="1648"><span class="lineNum">    1648 </span><span class="lineNoCov">          0 :                                                                               device-&gt;isMidi(), playHeadState.playHead).release() });</span></a>
+<a name="1649"><span class="lineNum">    1649 </span>            :             node = std::move (clickAndTracksNode);</a>
+<a name="1650"><span class="lineNum">    1650 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="1651"><span class="lineNum">    1651 </span>            : </a>
+<a name="1652"><span class="lineNum">    1652 </span><span class="lineNoCov">          0 :         if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))</span></a>
+<a name="1653"><span class="lineNum">    1653 </span><span class="lineNoCov">          0 :             outputNode-&gt;addInput (std::move (outputDeviceNode));</span></a>
+<a name="1654"><span class="lineNum">    1654 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1655"><span class="lineNum">    1655 </span>            :     </a>
+<a name="1656"><span class="lineNum">    1656 </span>            :     std::unique_ptr&lt;Node&gt; finalNode (std::move (outputNode));</a>
+<a name="1657"><span class="lineNum">    1657 </span><span class="lineCov">        188 :     finalNode = makeNode&lt;LevelMeasuringNode&gt; (std::move (finalNode), epc.masterLevels);</span></a>
+<a name="1658"><span class="lineNum">    1658 </span><span class="lineCov">        188 :     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);</span></a>
+<a name="1659"><span class="lineNum">    1659 </span><span class="lineCov">         94 :     finalNode = makeNode&lt;PlayHeadPositionNode&gt; (params.processState, std::move (finalNode), audibleTimeToUpdate);</span></a>
+<a name="1660"><span class="lineNum">    1660 </span>            :     </a>
+<a name="1661"><span class="lineNum">    1661 </span><span class="lineCov">         94 :     return finalNode;</span></a>
+<a name="1662"><span class="lineNum">    1662 </span><span class="lineCov">         94 : }</span></a>
+<a name="1663"><span class="lineNum">    1663 </span>            : </a>
+<a name="1664"><span class="lineNum">    1664 </span><span class="lineCov">        241 : std::unique_ptr&lt;tracktion::graph::Node&gt; createNodeForEdit (Edit&amp; edit, const CreateNodeParams&amp; originalParams)</span></a>
+<a name="1665"><span class="lineNum">    1665 </span>            : {</a>
+<a name="1666"><span class="lineNum">    1666 </span>            :     std::vector&lt;std::unique_ptr&lt;tracktion::graph::Node&gt;&gt; trackNodes;</a>
+<a name="1667"><span class="lineNum">    1667 </span><span class="lineCov">        241 :     auto params = originalParams;</span></a>
+<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">        241 :     auto&amp; playHeadState = params.processState.playHeadState;</span></a>
+<a name="1669"><span class="lineNum">    1669 </span>            :     </a>
+<a name="1670"><span class="lineNum">    1670 </span><span class="lineCov">        241 :     if (params.implicitlyIncludeSubmixChildTracks &amp;&amp; params.allowedTracks != nullptr)</span></a>
+<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">        394 :         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);</span></a>
+<a name="1672"><span class="lineNum">    1672 </span>            : </a>
+<a name="1673"><span class="lineNum">    1673 </span><span class="lineCov">       4220 :     for (auto t : getAllTracks (edit))</span></a>
+<a name="1674"><span class="lineNum">    1674 </span>            :     {</a>
+<a name="1675"><span class="lineNum">    1675 </span><span class="lineCov">       5288 :         if (params.allowedTracks != nullptr &amp;&amp; ! params.allowedTracks-&gt;contains (t))</span></a>
+<a name="1676"><span class="lineNum">    1676 </span><span class="lineCov">        648 :             continue;</span></a>
 <a name="1677"><span class="lineNum">    1677 </span>            : </a>
-<a name="1678"><span class="lineNum">    1678 </span>            :     auto node = std::unique_ptr&lt;Node&gt; (std::move (sumNode));</a>
-<a name="1679"><span class="lineNum">    1679 </span><span class="lineCov">        482 :     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
-<a name="1680"><span class="lineNum">    1680 </span><span class="lineCov">        482 :     node = createMasterFadeInOutNode (edit, std::move (node), params);</span></a>
-<a name="1681"><span class="lineNum">    1681 </span><span class="lineCov">        482 :     node = createRackNode (std::move (node), edit.getRackList(), params);</span></a>
-<a name="1682"><span class="lineNum">    1682 </span>            : </a>
-<a name="1683"><span class="lineNum">    1683 </span><span class="lineCov">        241 :     return node;</span></a>
-<a name="1684"><span class="lineNum">    1684 </span><span class="lineCov">        241 : }</span></a>
-<a name="1685"><span class="lineNum">    1685 </span>            : </a>
-<a name="1686"><span class="lineNum">    1686 </span>            : std::function&lt;std::unique_ptr&lt;tracktion::graph::Node&gt; (std::unique_ptr&lt;tracktion::graph::Node&gt;)&gt; EditNodeBuilder::insertOptionalLastStageNode</a>
-<a name="1687"><span class="lineNum">    1687 </span>            :     = [] (std::unique_ptr&lt;tracktion::graph::Node&gt; input) { return input; };</a>
+<a name="1678"><span class="lineNum">    1678 </span>            :         // Skip tracks that don't output to a device or feed in to other tracks</a>
+<a name="1679"><span class="lineNum">    1679 </span><span class="lineCov">       3331 :         if (auto output = getTrackOutput (*t))</span></a>
+<a name="1680"><span class="lineNum">    1680 </span>            :         {</a>
+<a name="1681"><span class="lineNum">    1681 </span><span class="lineCov">       2482 :             if (output-&gt;getDestinationTrack() != nullptr)</span></a>
+<a name="1682"><span class="lineNum">    1682 </span><span class="lineCov">       1434 :                 continue;</span></a>
+<a name="1683"><span class="lineNum">    1683 </span>            :         }</a>
+<a name="1684"><span class="lineNum">    1684 </span>            :         else</a>
+<a name="1685"><span class="lineNum">    1685 </span>            :         {</a>
+<a name="1686"><span class="lineNum">    1686 </span><span class="lineCov">        849 :             continue;</span></a>
+<a name="1687"><span class="lineNum">    1687 </span>            :         }</a>
 <a name="1688"><span class="lineNum">    1688 </span>            : </a>
-<a name="1689"><span class="lineNum">    1689 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="1689"><span class="lineNum">    1689 </span><span class="lineCov">       1048 :         if (auto node = createNodeForTrack (*t, params))</span></a>
+<a name="1690"><span class="lineNum">    1690 </span>            :             trackNodes.push_back (std::move (node));</a>
+<a name="1691"><span class="lineNum">    1691 </span>            :     }</a>
+<a name="1692"><span class="lineNum">    1692 </span>            : </a>
+<a name="1693"><span class="lineNum">    1693 </span><span class="lineCov">        241 :     auto sumNode = std::make_unique&lt;SummingNode&gt; (std::move (trackNodes));</span></a>
+<a name="1694"><span class="lineNum">    1694 </span><span class="lineCov">        241 :     sumNode-&gt;setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));</span></a>
+<a name="1695"><span class="lineNum">    1695 </span>            : </a>
+<a name="1696"><span class="lineNum">    1696 </span>            :     auto node = std::unique_ptr&lt;Node&gt; (std::move (sumNode));</a>
+<a name="1697"><span class="lineNum">    1697 </span><span class="lineCov">        482 :     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);</span></a>
+<a name="1698"><span class="lineNum">    1698 </span><span class="lineCov">        482 :     node = createMasterFadeInOutNode (edit, std::move (node), params);</span></a>
+<a name="1699"><span class="lineNum">    1699 </span><span class="lineCov">        482 :     node = createRackNode (std::move (node), edit.getRackList(), params);</span></a>
+<a name="1700"><span class="lineNum">    1700 </span>            : </a>
+<a name="1701"><span class="lineNum">    1701 </span><span class="lineCov">        241 :     return node;</span></a>
+<a name="1702"><span class="lineNum">    1702 </span><span class="lineCov">        241 : }</span></a>
+<a name="1703"><span class="lineNum">    1703 </span>            : </a>
+<a name="1704"><span class="lineNum">    1704 </span>            : std::function&lt;std::unique_ptr&lt;tracktion::graph::Node&gt; (std::unique_ptr&lt;tracktion::graph::Node&gt;)&gt; EditNodeBuilder::insertOptionalLastStageNode</a>
+<a name="1705"><span class="lineNum">    1705 </span>            :     = [] (std::unique_ptr&lt;tracktion::graph::Node&gt; input) { return input; };</a>
+<a name="1706"><span class="lineNum">    1706 </span>            : </a>
+<a name="1707"><span class="lineNum">    1707 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -46685,6 +46685,13 @@
       <arglist>(bool b) noexcept</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isSendingControllerMidiClock</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>aa3836994eca22016cf624eed6c3bf88b</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>fireMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
