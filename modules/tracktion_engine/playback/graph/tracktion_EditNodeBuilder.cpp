@@ -1578,6 +1578,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         }
     }
 
+    // Add deviceNodes for any devices only being used by the MIDI clock or MTC
+    for (int i = edit.engine.getDeviceManager().getNumMidiOutDevices(); --i >= 0;)
+    {
+        if (auto device = edit.engine.getDeviceManager().getMidiOutDevice (i))
+        {
+            const bool isSendingMidi = device->isSendingClock()
+                                        || device->isSendingTimecode()
+                                        || device->isSendingControllerMidiClock();
+
+            if (! isSendingMidi)
+                continue;
+
+            auto& trackNodeVector = deviceNodes[device];
+            juce::ignoreUnused (trackNodeVector);
+            // We don't need to add anything to the vector, just ensure the device is in the map
+        }
+    }
+
 
     auto outputNode = std::make_unique<tracktion::graph::SummingNode>();
         
