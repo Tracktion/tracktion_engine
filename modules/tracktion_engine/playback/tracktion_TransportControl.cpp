@@ -1557,7 +1557,8 @@ void TransportControl::performPositionChange()
     }
     else
     {
-        newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);
+        const auto minStartTime = edit.tempoSequence.toTime (-BeatPosition::fromBeats (edit.getNumCountInBeats())) - 0.5s;
+        newPos = juce::jlimit (minStartTime, Edit::getMaximumEditEnd(), newPos);
     }
 
     if (playbackContext != nullptr)
