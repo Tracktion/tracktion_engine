@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-11 12:06:21</td>
+            <td class="headerValue">2023-05-16 10:54:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -118,7 +118,7 @@
 <a name="56"><span class="lineNum">      56 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      13920 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      13922 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="62"><span class="lineNum">      62 </span>            :         original source or a proxy.</a>
@@ -741,7 +741,7 @@
 <a name="679"><span class="lineNum">     679 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="680"><span class="lineNum">     680 </span>            :     */</a>
 <a name="681"><span class="lineNum">     681 </span>            :     void renderSource();</a>
-<a name="682"><span class="lineNum">     682 </span><span class="lineCov">       3483 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">       3484 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="683"><span class="lineNum">     683 </span>            : </a>
 <a name="684"><span class="lineNum">     684 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
