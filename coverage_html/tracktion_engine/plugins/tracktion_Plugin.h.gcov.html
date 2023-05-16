@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-16 10:54:29</td>
+            <td class="headerValue">2023-05-16 11:17:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57394250 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57324253 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -269,7 +269,7 @@
 <a name="207"><span class="lineNum">     207 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">   27510151 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">   27508903 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="213"><span class="lineNum">     213 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -402,7 +402,7 @@
 <a name="340"><span class="lineNum">     340 </span>            :     //==============================================================================</a>
 <a name="341"><span class="lineNum">     341 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="342"><span class="lineNum">     342 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">        377 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">        373 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="344"><span class="lineNum">     344 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span>            :     //==============================================================================</a>
