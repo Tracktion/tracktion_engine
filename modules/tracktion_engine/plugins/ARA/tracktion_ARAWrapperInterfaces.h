@@ -112,10 +112,10 @@ public:
 
         if (data.isNotEmpty())
         {
+            beginEditing (true);
+
             lastArchiveState = std::make_unique<juce::MemoryBlock>();
             lastArchiveState->fromBase64Encoding (data);
-
-            beginEditing (true);
         }
         else
         {
@@ -131,10 +131,10 @@ public:
         if (lastArchiveState)
         {
             dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
+            lastArchiveState = nullptr; // Make sure this is deleted before the call to endEditing or it won't get passed to the document
+
             endEditing (true);
         }
-
-        lastArchiveState = nullptr;
     }
 
     void willCreatePlaybackRegionOnTrack (Track* track) 
