@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-16 11:17:33</td>
+            <td class="headerValue">2023-05-16 11:55:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -393,13 +393,22 @@
 <a name="331"><span class="lineNum">     331 </span>            : </a>
 <a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :     void handleAsyncUpdate() override</span></a>
 <a name="333"><span class="lineNum">     333 </span>            :     {</a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :         valueChangedByPlugin();</span></a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="336"><span class="lineNum">     336 </span>            : </a>
-<a name="337"><span class="lineNum">     337 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalAutomatableParameter)</a>
-<a name="338"><span class="lineNum">     338 </span>            : };</a>
-<a name="339"><span class="lineNum">     339 </span>            : </a>
-<a name="340"><span class="lineNum">     340 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="334"><span class="lineNum">     334 </span>            :         // Some plugins send spurious parameter value changes (e.g. when their UI is opened)</a>
+<a name="335"><span class="lineNum">     335 </span>            :         // which can reset modifier base values so disable these from coming through if there</a>
+<a name="336"><span class="lineNum">     336 </span>            :         // are active modifiers etc.</a>
+<a name="337"><span class="lineNum">     337 </span>            :         // It would be nice to be able to rely on the begin/end gestures to figure out if the user</a>
+<a name="338"><span class="lineNum">     338 </span>            :         // is actively changing the parameter but as this isn't mandated by the plguin APIs, we can't</a>
+<a name="339"><span class="lineNum">     339 </span>            :         // do this and we just have to disable control from the plugin UI when there are active Modifiers</a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         if (hasActiveModifierAssignments())</span></a>
+<a name="341"><span class="lineNum">     341 </span>            :             return;</a>
+<a name="342"><span class="lineNum">     342 </span>            : </a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         valueChangedByPlugin();</span></a>
+<a name="344"><span class="lineNum">     344 </span>            :     }</a>
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<a name="346"><span class="lineNum">     346 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalAutomatableParameter)</a>
+<a name="347"><span class="lineNum">     347 </span>            : };</a>
+<a name="348"><span class="lineNum">     348 </span>            : </a>
+<a name="349"><span class="lineNum">     349 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

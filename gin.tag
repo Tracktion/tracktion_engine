@@ -13377,6 +13377,13 @@
       <arglist>(ModifierSource &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>hasActiveModifierAssignments</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>a550a57d07dec0398cce3fda9ec2bcd52</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>juce::ReferenceCountedArray&lt; ModifierAssignment &gt;</type>
       <name>getAssignments</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-16 11:17:33</td>
+            <td class="headerValue">2023-05-16 11:55:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -194,291 +194,294 @@
 <a name="132"><span class="lineNum">     132 </span>            :     /** Removes assignments for a ModifierSource. */</a>
 <a name="133"><span class="lineNum">     133 </span>            :     void removeModifier (ModifierSource&amp;);</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span>            :     /** Returns all the current ModifierAssignments. */</a>
-<a name="136"><span class="lineNum">     136 </span>            :     juce::ReferenceCountedArray&lt;ModifierAssignment&gt; getAssignments() const;</a>
+<a name="135"><span class="lineNum">     135 </span>            :     /** Returns true if any ModifierSources are currently in use by assignments. */</a>
+<a name="136"><span class="lineNum">     136 </span>            :     bool hasActiveModifierAssignments() const;</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span>            :     /** Returns all the current ModifierSources currently in use by assignments. */</a>
-<a name="139"><span class="lineNum">     139 </span>            :     juce::Array&lt;ModifierSource*&gt; getModifiers() const;</a>
+<a name="138"><span class="lineNum">     138 </span>            :     /** Returns all the current ModifierAssignments. */</a>
+<a name="139"><span class="lineNum">     139 </span>            :     juce::ReferenceCountedArray&lt;ModifierAssignment&gt; getAssignments() const;</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span>            :     //==============================================================================</a>
-<a name="142"><span class="lineNum">     142 </span>            :     /** This is the value that has been set explicity, either by calling setParameter</a>
-<a name="143"><span class="lineNum">     143 </span>            :         or the plugin telling us one if its parameters has changed.</a>
-<a name="144"><span class="lineNum">     144 </span>            :     */</a>
-<a name="145"><span class="lineNum">     145 </span>            :     float getCurrentExplicitValue() const                       { return currentParameterValue; }</a>
-<a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span>            :     /** This is the current base value of the parameter i.e. either the explicit value or</a>
-<a name="148"><span class="lineNum">     148 </span>            :         the automation curve value.</a>
-<a name="149"><span class="lineNum">     149 </span>            :     */</a>
-<a name="150"><span class="lineNum">     150 </span>            :     float getCurrentBaseValue() const                           { return currentBaseValue; }</a>
-<a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span>            :     /** This is the ammount of the modifier that has been applied to the base value to</a>
-<a name="153"><span class="lineNum">     153 </span>            :         give the current parameter value.</a>
-<a name="154"><span class="lineNum">     154 </span>            :     */</a>
-<a name="155"><span class="lineNum">     155 </span>            :     float getCurrentModifierValue() const                       { return currentModifierValue; }</a>
-<a name="156"><span class="lineNum">     156 </span>            : </a>
-<a name="157"><span class="lineNum">     157 </span>            :     //==============================================================================</a>
-<a name="158"><span class="lineNum">     158 </span>            :     /** Returns true if the parameter is being dynamically changed somehow, either</a>
-<a name="159"><span class="lineNum">     159 </span>            :         through automation or a ModifierAssignment.</a>
-<a name="160"><span class="lineNum">     160 </span>            :     */</a>
-<a name="161"><span class="lineNum">     161 </span>            :     bool isAutomationActive() const;</a>
-<a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span>            :     /**  Forces the parameter to update its automation stream for reading automation. */</a>
-<a name="164"><span class="lineNum">     164 </span>            :     void updateStream();</a>
+<a name="141"><span class="lineNum">     141 </span>            :     /** Returns all the current ModifierSources currently in use by assignments. */</a>
+<a name="142"><span class="lineNum">     142 </span>            :     juce::Array&lt;ModifierSource*&gt; getModifiers() const;</a>
+<a name="143"><span class="lineNum">     143 </span>            : </a>
+<a name="144"><span class="lineNum">     144 </span>            :     //==============================================================================</a>
+<a name="145"><span class="lineNum">     145 </span>            :     /** This is the value that has been set explicity, either by calling setParameter</a>
+<a name="146"><span class="lineNum">     146 </span>            :         or the plugin telling us one if its parameters has changed.</a>
+<a name="147"><span class="lineNum">     147 </span>            :     */</a>
+<a name="148"><span class="lineNum">     148 </span>            :     float getCurrentExplicitValue() const                       { return currentParameterValue; }</a>
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<a name="150"><span class="lineNum">     150 </span>            :     /** This is the current base value of the parameter i.e. either the explicit value or</a>
+<a name="151"><span class="lineNum">     151 </span>            :         the automation curve value.</a>
+<a name="152"><span class="lineNum">     152 </span>            :     */</a>
+<a name="153"><span class="lineNum">     153 </span>            :     float getCurrentBaseValue() const                           { return currentBaseValue; }</a>
+<a name="154"><span class="lineNum">     154 </span>            : </a>
+<a name="155"><span class="lineNum">     155 </span>            :     /** This is the ammount of the modifier that has been applied to the base value to</a>
+<a name="156"><span class="lineNum">     156 </span>            :         give the current parameter value.</a>
+<a name="157"><span class="lineNum">     157 </span>            :     */</a>
+<a name="158"><span class="lineNum">     158 </span>            :     float getCurrentModifierValue() const                       { return currentModifierValue; }</a>
+<a name="159"><span class="lineNum">     159 </span>            : </a>
+<a name="160"><span class="lineNum">     160 </span>            :     //==============================================================================</a>
+<a name="161"><span class="lineNum">     161 </span>            :     /** Returns true if the parameter is being dynamically changed somehow, either</a>
+<a name="162"><span class="lineNum">     162 </span>            :         through automation or a ModifierAssignment.</a>
+<a name="163"><span class="lineNum">     163 </span>            :     */</a>
+<a name="164"><span class="lineNum">     164 </span>            :     bool isAutomationActive() const;</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span>            :     /** Updates the parameter and modifier values from its current automation sources. */</a>
-<a name="167"><span class="lineNum">     167 </span>            :     void updateFromAutomationSources (TimePosition);</a>
+<a name="166"><span class="lineNum">     166 </span>            :     /**  Forces the parameter to update its automation stream for reading automation. */</a>
+<a name="167"><span class="lineNum">     167 </span>            :     void updateStream();</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
-<a name="169"><span class="lineNum">     169 </span>            :     //==============================================================================</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     virtual bool isParameterActive() const                          { return true; }</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     virtual bool isDiscrete() const                                 { return false; }</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     virtual int getNumberOfStates() const                           { return 0; }</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual float getValueForState (int) const                      { return 0; }</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     virtual int getStateForValue (float) const                      { return 0; }</span></a>
-<a name="175"><span class="lineNum">     175 </span>            :     virtual std::optional&lt;float&gt; getDefaultValue() const;</a>
-<a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     virtual bool hasLabels()  const                                 { return false; }</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     virtual juce::String getLabelForValue (float) const             { return {}; }</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">     171065 :     virtual float snapToState (float val) const                     { return val; }</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     virtual juce::StringArray getAllLabels() const                  { return {}; }</span></a>
-<a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span>            :     //==============================================================================</a>
-<a name="183"><span class="lineNum">     183 </span>            :     /** true if the parameter been moved while in an automation record mode. */</a>
-<a name="184"><span class="lineNum">     184 </span>            :     bool isCurrentlyRecording() const                               { return isRecording; }</a>
-<a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span>            :     /** this is called before and after playback or recording. */</a>
-<a name="187"><span class="lineNum">     187 </span>            :     void resetRecordingStatus();</a>
+<a name="169"><span class="lineNum">     169 </span>            :     /** Updates the parameter and modifier values from its current automation sources. */</a>
+<a name="170"><span class="lineNum">     170 </span>            :     void updateFromAutomationSources (TimePosition);</a>
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<a name="172"><span class="lineNum">     172 </span>            :     //==============================================================================</a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual bool isParameterActive() const                          { return true; }</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     virtual bool isDiscrete() const                                 { return false; }</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     virtual int getNumberOfStates() const                           { return 0; }</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     virtual float getValueForState (int) const                      { return 0; }</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     virtual int getStateForValue (float) const                      { return 0; }</span></a>
+<a name="178"><span class="lineNum">     178 </span>            :     virtual std::optional&lt;float&gt; getDefaultValue() const;</a>
+<a name="179"><span class="lineNum">     179 </span>            : </a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     virtual bool hasLabels()  const                                 { return false; }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     virtual juce::String getLabelForValue (float) const             { return {}; }</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     171001 :     virtual float snapToState (float val) const                     { return val; }</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     virtual juce::StringArray getAllLabels() const                  { return {}; }</span></a>
+<a name="184"><span class="lineNum">     184 </span>            : </a>
+<a name="185"><span class="lineNum">     185 </span>            :     //==============================================================================</a>
+<a name="186"><span class="lineNum">     186 </span>            :     /** true if the parameter been moved while in an automation record mode. */</a>
+<a name="187"><span class="lineNum">     187 </span>            :     bool isCurrentlyRecording() const                               { return isRecording; }</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span>            :     //==============================================================================</a>
-<a name="190"><span class="lineNum">     190 </span>            :     // called by ParameterControlMappings</a>
-<a name="191"><span class="lineNum">     191 </span>            :     void midiControllerMoved (float newPosition);</a>
-<a name="192"><span class="lineNum">     192 </span>            :     void midiControllerPressed();</a>
-<a name="193"><span class="lineNum">     193 </span>            : </a>
-<a name="194"><span class="lineNum">     194 </span>            :     //==============================================================================</a>
-<a name="195"><span class="lineNum">     195 </span>            :     void curveHasChanged();</a>
+<a name="189"><span class="lineNum">     189 </span>            :     /** this is called before and after playback or recording. */</a>
+<a name="190"><span class="lineNum">     190 </span>            :     void resetRecordingStatus();</a>
+<a name="191"><span class="lineNum">     191 </span>            : </a>
+<a name="192"><span class="lineNum">     192 </span>            :     //==============================================================================</a>
+<a name="193"><span class="lineNum">     193 </span>            :     // called by ParameterControlMappings</a>
+<a name="194"><span class="lineNum">     194 </span>            :     void midiControllerMoved (float newPosition);</a>
+<a name="195"><span class="lineNum">     195 </span>            :     void midiControllerPressed();</a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
 <a name="197"><span class="lineNum">     197 </span>            :     //==============================================================================</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     juce::String getSelectableDescription() override    { return TRANS(&quot;Automation Parameter&quot;); }</span></a>
+<a name="198"><span class="lineNum">     198 </span>            :     void curveHasChanged();</a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            :     const juce::String paramName;</a>
-<a name="201"><span class="lineNum">     201 </span>            :     juce::ValueTree parentState;</a>
+<a name="200"><span class="lineNum">     200 </span>            :     //==============================================================================</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     juce::String getSelectableDescription() override    { return TRANS(&quot;Automation Parameter&quot;); }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
-<a name="203"><span class="lineNum">     203 </span>            :     //==============================================================================</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     struct Listener</span></a>
-<a name="205"><span class="lineNum">     205 </span>            :     {</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :         virtual ~Listener() {}</span></a>
-<a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span>            :         /** Called when the automation curve has changed, point time, value or curve. */</a>
-<a name="209"><span class="lineNum">     209 </span>            :         virtual void curveHasChanged (AutomatableParameter&amp;) = 0;</a>
+<a name="203"><span class="lineNum">     203 </span>            :     const juce::String paramName;</a>
+<a name="204"><span class="lineNum">     204 </span>            :     juce::ValueTree parentState;</a>
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<a name="206"><span class="lineNum">     206 </span>            :     //==============================================================================</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     struct Listener</span></a>
+<a name="208"><span class="lineNum">     208 </span>            :     {</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :         virtual ~Listener() {}</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span>            :         /** Called when the current value of the parameter changed, either from setting the parameter,</a>
-<a name="212"><span class="lineNum">     212 </span>            :             automation, a macro or modifier.</a>
-<a name="213"><span class="lineNum">     213 </span>            :             This will be called on the audio thread so make sure you don't do anything time consuming or block etc.</a>
-<a name="214"><span class="lineNum">     214 </span>            :         */</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         virtual void currentValueChanged (AutomatableParameter&amp;, float /*newValue*/) {}</span></a>
-<a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span>            :         /** Called when the parameter is changed by the plugin or host, not from automation. */</a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         virtual void parameterChanged (AutomatableParameter&amp;, float /*newValue*/) {}</span></a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :         virtual void parameterChangeGestureBegin (AutomatableParameter&amp;) {}</span></a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :         virtual void parameterChangeGestureEnd (AutomatableParameter&amp;) {}</span></a>
-<a name="221"><span class="lineNum">     221 </span>            :     };</a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span>            :     void addListener (Listener* l)              { listeners.add (l); }</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :     void removeListener (Listener* l)           { listeners.remove (l); }</span></a>
+<a name="211"><span class="lineNum">     211 </span>            :         /** Called when the automation curve has changed, point time, value or curve. */</a>
+<a name="212"><span class="lineNum">     212 </span>            :         virtual void curveHasChanged (AutomatableParameter&amp;) = 0;</a>
+<a name="213"><span class="lineNum">     213 </span>            : </a>
+<a name="214"><span class="lineNum">     214 </span>            :         /** Called when the current value of the parameter changed, either from setting the parameter,</a>
+<a name="215"><span class="lineNum">     215 </span>            :             automation, a macro or modifier.</a>
+<a name="216"><span class="lineNum">     216 </span>            :             This will be called on the audio thread so make sure you don't do anything time consuming or block etc.</a>
+<a name="217"><span class="lineNum">     217 </span>            :         */</a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         virtual void currentValueChanged (AutomatableParameter&amp;, float /*newValue*/) {}</span></a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span>            :         /** Called when the parameter is changed by the plugin or host, not from automation. */</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :         virtual void parameterChanged (AutomatableParameter&amp;, float /*newValue*/) {}</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :         virtual void parameterChangeGestureBegin (AutomatableParameter&amp;) {}</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :         virtual void parameterChangeGestureEnd (AutomatableParameter&amp;) {}</span></a>
+<a name="224"><span class="lineNum">     224 </span>            :     };</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            : protected:</a>
-<a name="227"><span class="lineNum">     227 </span>            :     struct AttachedValue;</a>
-<a name="228"><span class="lineNum">     228 </span>            :     struct AttachedFloatValue;</a>
-<a name="229"><span class="lineNum">     229 </span>            :     struct AttachedIntValue;</a>
-<a name="230"><span class="lineNum">     230 </span>            :     struct AttachedBoolValue;</a>
-<a name="231"><span class="lineNum">     231 </span>            :     std::unique_ptr&lt;AttachedValue&gt; attachedValue;</a>
-<a name="232"><span class="lineNum">     232 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
-<a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span>            :     juce::WeakReference&lt;Selectable&gt; editRef;</a>
-<a name="235"><span class="lineNum">     235 </span>            :     Plugin* plugin = nullptr;</a>
-<a name="236"><span class="lineNum">     236 </span>            :     Modifier* modifierOwner = nullptr;</a>
-<a name="237"><span class="lineNum">     237 </span>            :     MacroParameterList* macroOwner = nullptr;</a>
-<a name="238"><span class="lineNum">     238 </span>            :     std::unique_ptr&lt;AutomationCurveSource&gt; curveSource;</a>
-<a name="239"><span class="lineNum">     239 </span>            :     std::atomic&lt;float&gt; currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };</a>
-<a name="240"><span class="lineNum">     240 </span>            :     std::atomic&lt;bool&gt; isRecording { false };</a>
-<a name="241"><span class="lineNum">     241 </span>            :     bool updateParametersRecursionCheck = false;</a>
-<a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span>            :     juce::ValueTree modifiersState;</a>
-<a name="244"><span class="lineNum">     244 </span>            :     struct AutomationSourceList;</a>
-<a name="245"><span class="lineNum">     245 </span>            :     mutable std::unique_ptr&lt;AutomationSourceList&gt; automationSourceList;</a>
-<a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span>            :     AutomationSourceList&amp; getAutomationSourceList() const;</a>
-<a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span>            :     void setParameterValue (float value, bool isFollowingCurve);</a>
-<a name="250"><span class="lineNum">     250 </span>            : </a>
-<a name="251"><span class="lineNum">     251 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
-<a name="252"><span class="lineNum">     252 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override;</a>
-<a name="253"><span class="lineNum">     253 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override;</a>
-<a name="254"><span class="lineNum">     254 </span>            :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override;</a>
-<a name="255"><span class="lineNum">     255 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
-<a name="256"><span class="lineNum">     256 </span>            :     void valueTreeRedirected (juce::ValueTree&amp;) override;</a>
-<a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">      49959 :     virtual void parameterChanged (float, bool /*byAutomation*/) {}</span></a>
-<a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableParameter)</a>
-<a name="261"><span class="lineNum">     261 </span>            : };</a>
+<a name="226"><span class="lineNum">     226 </span>            :     void addListener (Listener* l)              { listeners.add (l); }</a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     void removeListener (Listener* l)           { listeners.remove (l); }</span></a>
+<a name="228"><span class="lineNum">     228 </span>            : </a>
+<a name="229"><span class="lineNum">     229 </span>            : protected:</a>
+<a name="230"><span class="lineNum">     230 </span>            :     struct AttachedValue;</a>
+<a name="231"><span class="lineNum">     231 </span>            :     struct AttachedFloatValue;</a>
+<a name="232"><span class="lineNum">     232 </span>            :     struct AttachedIntValue;</a>
+<a name="233"><span class="lineNum">     233 </span>            :     struct AttachedBoolValue;</a>
+<a name="234"><span class="lineNum">     234 </span>            :     std::unique_ptr&lt;AttachedValue&gt; attachedValue;</a>
+<a name="235"><span class="lineNum">     235 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
+<a name="236"><span class="lineNum">     236 </span>            : </a>
+<a name="237"><span class="lineNum">     237 </span>            :     juce::WeakReference&lt;Selectable&gt; editRef;</a>
+<a name="238"><span class="lineNum">     238 </span>            :     Plugin* plugin = nullptr;</a>
+<a name="239"><span class="lineNum">     239 </span>            :     Modifier* modifierOwner = nullptr;</a>
+<a name="240"><span class="lineNum">     240 </span>            :     MacroParameterList* macroOwner = nullptr;</a>
+<a name="241"><span class="lineNum">     241 </span>            :     std::unique_ptr&lt;AutomationCurveSource&gt; curveSource;</a>
+<a name="242"><span class="lineNum">     242 </span>            :     std::atomic&lt;float&gt; currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };</a>
+<a name="243"><span class="lineNum">     243 </span>            :     std::atomic&lt;bool&gt; isRecording { false };</a>
+<a name="244"><span class="lineNum">     244 </span>            :     bool updateParametersRecursionCheck = false;</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span>            :     juce::ValueTree modifiersState;</a>
+<a name="247"><span class="lineNum">     247 </span>            :     struct AutomationSourceList;</a>
+<a name="248"><span class="lineNum">     248 </span>            :     mutable std::unique_ptr&lt;AutomationSourceList&gt; automationSourceList;</a>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<a name="250"><span class="lineNum">     250 </span>            :     AutomationSourceList&amp; getAutomationSourceList() const;</a>
+<a name="251"><span class="lineNum">     251 </span>            : </a>
+<a name="252"><span class="lineNum">     252 </span>            :     void setParameterValue (float value, bool isFollowingCurve);</a>
+<a name="253"><span class="lineNum">     253 </span>            : </a>
+<a name="254"><span class="lineNum">     254 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="255"><span class="lineNum">     255 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override;</a>
+<a name="256"><span class="lineNum">     256 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override;</a>
+<a name="257"><span class="lineNum">     257 </span>            :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override;</a>
+<a name="258"><span class="lineNum">     258 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
+<a name="259"><span class="lineNum">     259 </span>            :     void valueTreeRedirected (juce::ValueTree&amp;) override;</a>
+<a name="260"><span class="lineNum">     260 </span>            : </a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      49906 :     virtual void parameterChanged (float, bool /*byAutomation*/) {}</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span>            : </a>
-<a name="264"><span class="lineNum">     264 </span>            : //==============================================================================</a>
-<a name="265"><span class="lineNum">     265 </span>            : /** Returns all the Assignments of a specific type. */</a>
-<a name="266"><span class="lineNum">     266 </span>            : template&lt;typename AssignmentType&gt;</a>
-<a name="267"><span class="lineNum">     267 </span>            : juce::ReferenceCountedArray&lt;AssignmentType&gt; getAssignmentsOfType (const AutomatableParameter&amp; ap)</a>
-<a name="268"><span class="lineNum">     268 </span>            : {</a>
-<a name="269"><span class="lineNum">     269 </span>            :     juce::ReferenceCountedArray&lt;AssignmentType&gt; assignments;</a>
-<a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span>            :     for (auto ass : ap.getAssignments())</a>
-<a name="272"><span class="lineNum">     272 </span>            :         if (auto type = dynamic_cast&lt;AssignmentType*&gt; (ass))</a>
-<a name="273"><span class="lineNum">     273 </span>            :             assignments.add (type);</a>
-<a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span>            :     return assignments;</a>
-<a name="276"><span class="lineNum">     276 </span>            : }</a>
+<a name="263"><span class="lineNum">     263 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableParameter)</a>
+<a name="264"><span class="lineNum">     264 </span>            : };</a>
+<a name="265"><span class="lineNum">     265 </span>            : </a>
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<a name="267"><span class="lineNum">     267 </span>            : //==============================================================================</a>
+<a name="268"><span class="lineNum">     268 </span>            : /** Returns all the Assignments of a specific type. */</a>
+<a name="269"><span class="lineNum">     269 </span>            : template&lt;typename AssignmentType&gt;</a>
+<a name="270"><span class="lineNum">     270 </span>            : juce::ReferenceCountedArray&lt;AssignmentType&gt; getAssignmentsOfType (const AutomatableParameter&amp; ap)</a>
+<a name="271"><span class="lineNum">     271 </span>            : {</a>
+<a name="272"><span class="lineNum">     272 </span>            :     juce::ReferenceCountedArray&lt;AssignmentType&gt; assignments;</a>
+<a name="273"><span class="lineNum">     273 </span>            : </a>
+<a name="274"><span class="lineNum">     274 </span>            :     for (auto ass : ap.getAssignments())</a>
+<a name="275"><span class="lineNum">     275 </span>            :         if (auto type = dynamic_cast&lt;AssignmentType*&gt; (ass))</a>
+<a name="276"><span class="lineNum">     276 </span>            :             assignments.add (type);</a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span>            : /** Returns all the modifers in use of a specific type. */</a>
-<a name="279"><span class="lineNum">     279 </span>            : template&lt;typename ModifierType&gt;</a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 : juce::Array&lt;ModifierType*&gt; getModifiersOfType (const AutomatableParameter&amp; ap)</span></a>
-<a name="281"><span class="lineNum">     281 </span>            : {</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :     juce::Array&lt;ModifierType*&gt; mods;</span></a>
-<a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     for (auto mod : ap.getModifiers())</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :         if (auto type = dynamic_cast&lt;ModifierType*&gt; (mod))</span></a>
-<a name="286"><span class="lineNum">     286 </span>            :             mods.add (type);</a>
-<a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     return mods;</span></a>
-<a name="289"><span class="lineNum">     289 </span>            : }</a>
+<a name="278"><span class="lineNum">     278 </span>            :     return assignments;</a>
+<a name="279"><span class="lineNum">     279 </span>            : }</a>
+<a name="280"><span class="lineNum">     280 </span>            : </a>
+<a name="281"><span class="lineNum">     281 </span>            : /** Returns all the modifers in use of a specific type. */</a>
+<a name="282"><span class="lineNum">     282 </span>            : template&lt;typename ModifierType&gt;</a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 : juce::Array&lt;ModifierType*&gt; getModifiersOfType (const AutomatableParameter&amp; ap)</span></a>
+<a name="284"><span class="lineNum">     284 </span>            : {</a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     juce::Array&lt;ModifierType*&gt; mods;</span></a>
+<a name="286"><span class="lineNum">     286 </span>            : </a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     for (auto mod : ap.getModifiers())</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         if (auto type = dynamic_cast&lt;ModifierType*&gt; (mod))</span></a>
+<a name="289"><span class="lineNum">     289 </span>            :             mods.add (type);</a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span>            : /** Returns all the automatable parameters in an Edit. */</a>
-<a name="292"><span class="lineNum">     292 </span>            : juce::Array&lt;AutomatableParameter*&gt; getAllAutomatableParameter (Edit&amp;);</a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     return mods;</span></a>
+<a name="292"><span class="lineNum">     292 </span>            : }</a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
-<a name="294"><span class="lineNum">     294 </span>            : /** Iterates an Edit looking for all parameters that assigned to a given parameter. */</a>
-<a name="295"><span class="lineNum">     295 </span>            : template&lt;typename AssignmentType, typename ModifierSourceType&gt;</a>
-<a name="296"><span class="lineNum">     296 </span>            : juce::ReferenceCountedArray&lt;AssignmentType&gt; getAssignmentsForSource (Edit&amp; edit, const ModifierSourceType&amp; source)</a>
-<a name="297"><span class="lineNum">     297 </span>            : {</a>
-<a name="298"><span class="lineNum">     298 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="299"><span class="lineNum">     299 </span>            :     juce::ReferenceCountedArray&lt;AssignmentType&gt; assignments;</a>
-<a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span>            :     for (auto* ap : getAllAutomatableParameter (edit))</a>
-<a name="302"><span class="lineNum">     302 </span>            :         for (auto* ass : ap-&gt;getAssignments())</a>
-<a name="303"><span class="lineNum">     303 </span>            :             if (auto* m = dynamic_cast&lt;AssignmentType*&gt; (ass))</a>
-<a name="304"><span class="lineNum">     304 </span>            :                 if (m-&gt;isForModifierSource (source))</a>
-<a name="305"><span class="lineNum">     305 </span>            :                     assignments.add (m);</a>
-<a name="306"><span class="lineNum">     306 </span>            : </a>
-<a name="307"><span class="lineNum">     307 </span>            :     return assignments;</a>
-<a name="308"><span class="lineNum">     308 </span>            : }</a>
+<a name="294"><span class="lineNum">     294 </span>            : /** Returns all the automatable parameters in an Edit. */</a>
+<a name="295"><span class="lineNum">     295 </span>            : juce::Array&lt;AutomatableParameter*&gt; getAllAutomatableParameter (Edit&amp;);</a>
+<a name="296"><span class="lineNum">     296 </span>            : </a>
+<a name="297"><span class="lineNum">     297 </span>            : /** Iterates an Edit looking for all parameters that assigned to a given parameter. */</a>
+<a name="298"><span class="lineNum">     298 </span>            : template&lt;typename AssignmentType, typename ModifierSourceType&gt;</a>
+<a name="299"><span class="lineNum">     299 </span>            : juce::ReferenceCountedArray&lt;AssignmentType&gt; getAssignmentsForSource (Edit&amp; edit, const ModifierSourceType&amp; source)</a>
+<a name="300"><span class="lineNum">     300 </span>            : {</a>
+<a name="301"><span class="lineNum">     301 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="302"><span class="lineNum">     302 </span>            :     juce::ReferenceCountedArray&lt;AssignmentType&gt; assignments;</a>
+<a name="303"><span class="lineNum">     303 </span>            : </a>
+<a name="304"><span class="lineNum">     304 </span>            :     for (auto* ap : getAllAutomatableParameter (edit))</a>
+<a name="305"><span class="lineNum">     305 </span>            :         for (auto* ass : ap-&gt;getAssignments())</a>
+<a name="306"><span class="lineNum">     306 </span>            :             if (auto* m = dynamic_cast&lt;AssignmentType*&gt; (ass))</a>
+<a name="307"><span class="lineNum">     307 </span>            :                 if (m-&gt;isForModifierSource (source))</a>
+<a name="308"><span class="lineNum">     308 </span>            :                     assignments.add (m);</a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
-<a name="310"><span class="lineNum">     310 </span>            : /** Iterates an Edit looking for the source of this assignment. */</a>
-<a name="311"><span class="lineNum">     311 </span>            : AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableParameter::ModifierAssignment&amp;);</a>
+<a name="310"><span class="lineNum">     310 </span>            :     return assignments;</a>
+<a name="311"><span class="lineNum">     311 </span>            : }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            : /** Iterates an Edit looking for all parameters that are being modified by the given ModifierSource. */</a>
-<a name="314"><span class="lineNum">     314 </span>            : juce::ReferenceCountedArray&lt;AutomatableParameter&gt; getAllParametersBeingModifiedBy (Edit&amp;, AutomatableParameter::ModifierSource&amp;);</a>
+<a name="313"><span class="lineNum">     313 </span>            : /** Iterates an Edit looking for the source of this assignment. */</a>
+<a name="314"><span class="lineNum">     314 </span>            : AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableParameter::ModifierAssignment&amp;);</a>
 <a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span>            : /** Iterates an Edit looking for the parameter that this ModifierAssignment has been made from. */</a>
-<a name="317"><span class="lineNum">     317 </span>            : AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment&amp;);</a>
+<a name="316"><span class="lineNum">     316 </span>            : /** Iterates an Edit looking for all parameters that are being modified by the given ModifierSource. */</a>
+<a name="317"><span class="lineNum">     317 </span>            : juce::ReferenceCountedArray&lt;AutomatableParameter&gt; getAllParametersBeingModifiedBy (Edit&amp;, AutomatableParameter::ModifierSource&amp;);</a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
-<a name="319"><span class="lineNum">     319 </span>            : //==============================================================================</a>
-<a name="320"><span class="lineNum">     320 </span>            : /** Returns an int version of an AutomatableParameter. */</a>
-<a name="321"><span class="lineNum">     321 </span>            : inline int getIntParamValue (const AutomatableParameter&amp; ap)</a>
-<a name="322"><span class="lineNum">     322 </span>            : {</a>
-<a name="323"><span class="lineNum">     323 </span>            :     return juce::roundToInt (ap.getCurrentValue());</a>
-<a name="324"><span class="lineNum">     324 </span>            : }</a>
-<a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span>            : /** Returns a bool version of an AutomatableParameter. */</a>
-<a name="327"><span class="lineNum">     327 </span>            : inline bool getBoolParamValue (const AutomatableParameter&amp; ap)</a>
-<a name="328"><span class="lineNum">     328 </span>            : {</a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineCov">     893734 :     return getIntParamValue (ap) == 1;</span></a>
-<a name="330"><span class="lineNum">     330 </span>            : }</a>
-<a name="331"><span class="lineNum">     331 </span>            : </a>
-<a name="332"><span class="lineNum">     332 </span>            : /** Returns an int version of an AutomatableParameter cast to a enum type. */</a>
-<a name="333"><span class="lineNum">     333 </span>            : template&lt;typename Type&gt;</a>
-<a name="334"><span class="lineNum">     334 </span>            : inline Type getTypedParamValue (const AutomatableParameter&amp; ap)</a>
-<a name="335"><span class="lineNum">     335 </span>            : {</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         16 :     return static_cast&lt;Type&gt; (getIntParamValue (ap));</span></a>
-<a name="337"><span class="lineNum">     337 </span>            : }</a>
-<a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span>            : //==============================================================================</a>
-<a name="340"><span class="lineNum">     340 </span>            : /**</a>
-<a name="341"><span class="lineNum">     341 </span>            :     Components can implement this to let things know which automatable parameter</a>
-<a name="342"><span class="lineNum">     342 </span>            :     they control.</a>
-<a name="343"><span class="lineNum">     343 </span>            : */</a>
-<a name="344"><span class="lineNum">     344 </span>            : class AutomationDragDropTarget   : public juce::DragAndDropTarget</a>
-<a name="345"><span class="lineNum">     345 </span>            : {</a>
-<a name="346"><span class="lineNum">     346 </span>            : public:</a>
-<a name="347"><span class="lineNum">     347 </span>            :     AutomationDragDropTarget();</a>
-<a name="348"><span class="lineNum">     348 </span>            :     ~AutomationDragDropTarget() override;</a>
-<a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span>            :     //==============================================================================</a>
-<a name="351"><span class="lineNum">     351 </span>            :     virtual bool hasAnAutomatableParameter() = 0;</a>
-<a name="352"><span class="lineNum">     352 </span>            :     // this will only be called when actually dropped, so if</a>
-<a name="353"><span class="lineNum">     353 </span>            :     // there is more than one possible param, it can show UI to choose one at this point</a>
-<a name="354"><span class="lineNum">     354 </span>            :     virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter() = 0;</a>
-<a name="355"><span class="lineNum">     355 </span>            : </a>
-<a name="356"><span class="lineNum">     356 </span>            :     // if the user chooses learn mode instead of a specific parameter, this will return</a>
-<a name="357"><span class="lineNum">     357 </span>            :     // nullptr and set learn flag to true. the default implementation never returns a true</a>
-<a name="358"><span class="lineNum">     358 </span>            :     // learn flag</a>
-<a name="359"><span class="lineNum">     359 </span>            :     virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter (bool* learn);</a>
-<a name="360"><span class="lineNum">     360 </span>            : </a>
-<a name="361"><span class="lineNum">     361 </span>            :     // start the process for learning a parameter</a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     virtual void startParameterLearn (ParameterisableDragDropSource*) {}</span></a>
+<a name="319"><span class="lineNum">     319 </span>            : /** Iterates an Edit looking for the parameter that this ModifierAssignment has been made from. */</a>
+<a name="320"><span class="lineNum">     320 </span>            : AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment&amp;);</a>
+<a name="321"><span class="lineNum">     321 </span>            : </a>
+<a name="322"><span class="lineNum">     322 </span>            : //==============================================================================</a>
+<a name="323"><span class="lineNum">     323 </span>            : /** Returns an int version of an AutomatableParameter. */</a>
+<a name="324"><span class="lineNum">     324 </span>            : inline int getIntParamValue (const AutomatableParameter&amp; ap)</a>
+<a name="325"><span class="lineNum">     325 </span>            : {</a>
+<a name="326"><span class="lineNum">     326 </span>            :     return juce::roundToInt (ap.getCurrentValue());</a>
+<a name="327"><span class="lineNum">     327 </span>            : }</a>
+<a name="328"><span class="lineNum">     328 </span>            : </a>
+<a name="329"><span class="lineNum">     329 </span>            : /** Returns a bool version of an AutomatableParameter. */</a>
+<a name="330"><span class="lineNum">     330 </span>            : inline bool getBoolParamValue (const AutomatableParameter&amp; ap)</a>
+<a name="331"><span class="lineNum">     331 </span>            : {</a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">     893099 :     return getIntParamValue (ap) == 1;</span></a>
+<a name="333"><span class="lineNum">     333 </span>            : }</a>
+<a name="334"><span class="lineNum">     334 </span>            : </a>
+<a name="335"><span class="lineNum">     335 </span>            : /** Returns an int version of an AutomatableParameter cast to a enum type. */</a>
+<a name="336"><span class="lineNum">     336 </span>            : template&lt;typename Type&gt;</a>
+<a name="337"><span class="lineNum">     337 </span>            : inline Type getTypedParamValue (const AutomatableParameter&amp; ap)</a>
+<a name="338"><span class="lineNum">     338 </span>            : {</a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineCov">         16 :     return static_cast&lt;Type&gt; (getIntParamValue (ap));</span></a>
+<a name="340"><span class="lineNum">     340 </span>            : }</a>
+<a name="341"><span class="lineNum">     341 </span>            : </a>
+<a name="342"><span class="lineNum">     342 </span>            : //==============================================================================</a>
+<a name="343"><span class="lineNum">     343 </span>            : /**</a>
+<a name="344"><span class="lineNum">     344 </span>            :     Components can implement this to let things know which automatable parameter</a>
+<a name="345"><span class="lineNum">     345 </span>            :     they control.</a>
+<a name="346"><span class="lineNum">     346 </span>            : */</a>
+<a name="347"><span class="lineNum">     347 </span>            : class AutomationDragDropTarget   : public juce::DragAndDropTarget</a>
+<a name="348"><span class="lineNum">     348 </span>            : {</a>
+<a name="349"><span class="lineNum">     349 </span>            : public:</a>
+<a name="350"><span class="lineNum">     350 </span>            :     AutomationDragDropTarget();</a>
+<a name="351"><span class="lineNum">     351 </span>            :     ~AutomationDragDropTarget() override;</a>
+<a name="352"><span class="lineNum">     352 </span>            : </a>
+<a name="353"><span class="lineNum">     353 </span>            :     //==============================================================================</a>
+<a name="354"><span class="lineNum">     354 </span>            :     virtual bool hasAnAutomatableParameter() = 0;</a>
+<a name="355"><span class="lineNum">     355 </span>            :     // this will only be called when actually dropped, so if</a>
+<a name="356"><span class="lineNum">     356 </span>            :     // there is more than one possible param, it can show UI to choose one at this point</a>
+<a name="357"><span class="lineNum">     357 </span>            :     virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter() = 0;</a>
+<a name="358"><span class="lineNum">     358 </span>            : </a>
+<a name="359"><span class="lineNum">     359 </span>            :     // if the user chooses learn mode instead of a specific parameter, this will return</a>
+<a name="360"><span class="lineNum">     360 </span>            :     // nullptr and set learn flag to true. the default implementation never returns a true</a>
+<a name="361"><span class="lineNum">     361 </span>            :     // learn flag</a>
+<a name="362"><span class="lineNum">     362 </span>            :     virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter (bool* learn);</a>
 <a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span>            :     // the subclass can call this so it knows to draw itself differently when dragging over</a>
-<a name="365"><span class="lineNum">     365 </span>            :     bool isAutomatableParameterBeingDraggedOver() const;</a>
+<a name="364"><span class="lineNum">     364 </span>            :     // start the process for learning a parameter</a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :     virtual void startParameterLearn (ParameterisableDragDropSource*) {}</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
-<a name="367"><span class="lineNum">     367 </span>            :     bool isInterestedInDragSource (const SourceDetails&amp; details) override;</a>
-<a name="368"><span class="lineNum">     368 </span>            :     void itemDragEnter (const SourceDetails&amp; dragSourceDetails) override;</a>
-<a name="369"><span class="lineNum">     369 </span>            :     void itemDragExit (const SourceDetails&amp; dragSourceDetails) override;</a>
-<a name="370"><span class="lineNum">     370 </span>            :     void itemDropped (const SourceDetails&amp; dragSourceDetails) override;</a>
-<a name="371"><span class="lineNum">     371 </span>            : </a>
-<a name="372"><span class="lineNum">     372 </span>            :     static const char* automatableDragString;</a>
-<a name="373"><span class="lineNum">     373 </span>            : </a>
-<a name="374"><span class="lineNum">     374 </span>            : private:</a>
-<a name="375"><span class="lineNum">     375 </span>            :     bool isAutoParamCurrentlyOver = false;</a>
-<a name="376"><span class="lineNum">     376 </span>            : };</a>
-<a name="377"><span class="lineNum">     377 </span>            : </a>
-<a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span>            : //==============================================================================</a>
-<a name="380"><span class="lineNum">     380 </span>            : class ParameterisableDragDropSource</a>
-<a name="381"><span class="lineNum">     381 </span>            : {</a>
-<a name="382"><span class="lineNum">     382 </span>            : public:</a>
-<a name="383"><span class="lineNum">     383 </span>            :     ParameterisableDragDropSource() {}</a>
-<a name="384"><span class="lineNum">     384 </span>            :     virtual ~ParameterisableDragDropSource() {}</a>
-<a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span>            :     // just to say that the user has used the drag function</a>
-<a name="387"><span class="lineNum">     387 </span>            :     virtual void draggedOntoAutomatableParameterTargetBeforeParamSelection() = 0;</a>
+<a name="367"><span class="lineNum">     367 </span>            :     // the subclass can call this so it knows to draw itself differently when dragging over</a>
+<a name="368"><span class="lineNum">     368 </span>            :     bool isAutomatableParameterBeingDraggedOver() const;</a>
+<a name="369"><span class="lineNum">     369 </span>            : </a>
+<a name="370"><span class="lineNum">     370 </span>            :     bool isInterestedInDragSource (const SourceDetails&amp; details) override;</a>
+<a name="371"><span class="lineNum">     371 </span>            :     void itemDragEnter (const SourceDetails&amp; dragSourceDetails) override;</a>
+<a name="372"><span class="lineNum">     372 </span>            :     void itemDragExit (const SourceDetails&amp; dragSourceDetails) override;</a>
+<a name="373"><span class="lineNum">     373 </span>            :     void itemDropped (const SourceDetails&amp; dragSourceDetails) override;</a>
+<a name="374"><span class="lineNum">     374 </span>            : </a>
+<a name="375"><span class="lineNum">     375 </span>            :     static const char* automatableDragString;</a>
+<a name="376"><span class="lineNum">     376 </span>            : </a>
+<a name="377"><span class="lineNum">     377 </span>            : private:</a>
+<a name="378"><span class="lineNum">     378 </span>            :     bool isAutoParamCurrentlyOver = false;</a>
+<a name="379"><span class="lineNum">     379 </span>            : };</a>
+<a name="380"><span class="lineNum">     380 </span>            : </a>
+<a name="381"><span class="lineNum">     381 </span>            : </a>
+<a name="382"><span class="lineNum">     382 </span>            : //==============================================================================</a>
+<a name="383"><span class="lineNum">     383 </span>            : class ParameterisableDragDropSource</a>
+<a name="384"><span class="lineNum">     384 </span>            : {</a>
+<a name="385"><span class="lineNum">     385 </span>            : public:</a>
+<a name="386"><span class="lineNum">     386 </span>            :     ParameterisableDragDropSource() {}</a>
+<a name="387"><span class="lineNum">     387 </span>            :     virtual ~ParameterisableDragDropSource() {}</a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span>            :     // this is called if they actually choose a param</a>
-<a name="390"><span class="lineNum">     390 </span>            :     virtual void draggedOntoAutomatableParameterTarget (const AutomatableParameter::Ptr&amp; param) = 0;</a>
-<a name="391"><span class="lineNum">     391 </span>            : };</a>
-<a name="392"><span class="lineNum">     392 </span>            : </a>
-<a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span>            : //==============================================================================</a>
-<a name="395"><span class="lineNum">     395 </span>            : // A pre-rendered set of interpolated points along a curve, with a cursor which moves through it.</a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 : struct AutomationIterator</span></a>
-<a name="397"><span class="lineNum">     397 </span>            : {</a>
-<a name="398"><span class="lineNum">     398 </span>            :     AutomationIterator (const AutomatableParameter&amp;);</a>
-<a name="399"><span class="lineNum">     399 </span>            : </a>
-<a name="400"><span class="lineNum">     400 </span>            :     bool isEmpty() const noexcept               { return points.size() &lt;= 1; }</a>
-<a name="401"><span class="lineNum">     401 </span>            : </a>
-<a name="402"><span class="lineNum">     402 </span>            :     void setPosition (TimePosition) noexcept;</a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     float getCurrentValue() noexcept            { return currentValue; }</span></a>
+<a name="389"><span class="lineNum">     389 </span>            :     // just to say that the user has used the drag function</a>
+<a name="390"><span class="lineNum">     390 </span>            :     virtual void draggedOntoAutomatableParameterTargetBeforeParamSelection() = 0;</a>
+<a name="391"><span class="lineNum">     391 </span>            : </a>
+<a name="392"><span class="lineNum">     392 </span>            :     // this is called if they actually choose a param</a>
+<a name="393"><span class="lineNum">     393 </span>            :     virtual void draggedOntoAutomatableParameterTarget (const AutomatableParameter::Ptr&amp; param) = 0;</a>
+<a name="394"><span class="lineNum">     394 </span>            : };</a>
+<a name="395"><span class="lineNum">     395 </span>            : </a>
+<a name="396"><span class="lineNum">     396 </span>            : </a>
+<a name="397"><span class="lineNum">     397 </span>            : //==============================================================================</a>
+<a name="398"><span class="lineNum">     398 </span>            : // A pre-rendered set of interpolated points along a curve, with a cursor which moves through it.</a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 : struct AutomationIterator</span></a>
+<a name="400"><span class="lineNum">     400 </span>            : {</a>
+<a name="401"><span class="lineNum">     401 </span>            :     AutomationIterator (const AutomatableParameter&amp;);</a>
+<a name="402"><span class="lineNum">     402 </span>            : </a>
+<a name="403"><span class="lineNum">     403 </span>            :     bool isEmpty() const noexcept               { return points.size() &lt;= 1; }</a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span>            : private:</a>
-<a name="406"><span class="lineNum">     406 </span>            :     struct AutoPoint</a>
-<a name="407"><span class="lineNum">     407 </span>            :     {</a>
-<a name="408"><span class="lineNum">     408 </span>            :         TimePosition time;</a>
-<a name="409"><span class="lineNum">     409 </span>            :         float value;</a>
-<a name="410"><span class="lineNum">     410 </span>            :     };</a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span>            :     juce::Array&lt;AutoPoint&gt; points;</a>
-<a name="413"><span class="lineNum">     413 </span>            :     int currentIndex = -1;</a>
-<a name="414"><span class="lineNum">     414 </span>            :     float currentValue = 0.0f;</a>
-<a name="415"><span class="lineNum">     415 </span>            : </a>
-<a name="416"><span class="lineNum">     416 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)</a>
-<a name="417"><span class="lineNum">     417 </span>            : };</a>
+<a name="405"><span class="lineNum">     405 </span>            :     void setPosition (TimePosition) noexcept;</a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :     float getCurrentValue() noexcept            { return currentValue; }</span></a>
+<a name="407"><span class="lineNum">     407 </span>            : </a>
+<a name="408"><span class="lineNum">     408 </span>            : private:</a>
+<a name="409"><span class="lineNum">     409 </span>            :     struct AutoPoint</a>
+<a name="410"><span class="lineNum">     410 </span>            :     {</a>
+<a name="411"><span class="lineNum">     411 </span>            :         TimePosition time;</a>
+<a name="412"><span class="lineNum">     412 </span>            :         float value;</a>
+<a name="413"><span class="lineNum">     413 </span>            :     };</a>
+<a name="414"><span class="lineNum">     414 </span>            : </a>
+<a name="415"><span class="lineNum">     415 </span>            :     juce::Array&lt;AutoPoint&gt; points;</a>
+<a name="416"><span class="lineNum">     416 </span>            :     int currentIndex = -1;</a>
+<a name="417"><span class="lineNum">     417 </span>            :     float currentValue = 0.0f;</a>
 <a name="418"><span class="lineNum">     418 </span>            : </a>
-<a name="419"><span class="lineNum">     419 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="419"><span class="lineNum">     419 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)</a>
+<a name="420"><span class="lineNum">     420 </span>            : };</a>
+<a name="421"><span class="lineNum">     421 </span>            : </a>
+<a name="422"><span class="lineNum">     422 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>
