@@ -84,9 +84,9 @@ Inheritance diagram for tracktion::engine::AuxSendNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1941c136b1f2a418fea3832050cf7cf2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#a1941c136b1f2a418fea3832050cf7cf2">AuxSendNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, int busIDToUse, <a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1TrackMuteState.html">TrackMuteState</a> *)</td></tr>
-<tr class="memdesc:a1941c136b1f2a418fea3832050cf7cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send.">AuxSendNode</a> to process an aux send.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#a1941c136b1f2a418fea3832050cf7cf2">More...</a><br /></td></tr>
-<tr class="separator:a1941c136b1f2a418fea3832050cf7cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99fd63e9ee28577e5372efcc266f9e1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#a99fd63e9ee28577e5372efcc266f9e1d">AuxSendNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, int busIDToUse, <a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1TrackMuteState.html">TrackMuteState</a> *, bool processAuxSendsWhenTrackIsMuted)</td></tr>
+<tr class="memdesc:a99fd63e9ee28577e5372efcc266f9e1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send.">AuxSendNode</a> to process an aux send.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#a99fd63e9ee28577e5372efcc266f9e1d">More...</a><br /></td></tr>
+<tr class="separator:a99fd63e9ee28577e5372efcc266f9e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add8263ddb4760f5d935c343cee2c52a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#add8263ddb4760f5d935c343cee2c52a6">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;) override</td></tr>
 <tr class="memdesc:add8263ddb4760f5d935c343cee2c52a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#add8263ddb4760f5d935c343cee2c52a6">More...</a><br /></td></tr>
 <tr class="separator:add8263ddb4760f5d935c343cee2c52a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,8 +169,8 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p><a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> for an aux send. </p>
 <p>This is a <a class="el" href="classtracktion_1_1graph_1_1SendNode.html">SendNode</a> but needs to update automation with the correct latency. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a1941c136b1f2a418fea3832050cf7cf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1941c136b1f2a418fea3832050cf7cf2">&#9670;&nbsp;</a></span>AuxSendNode()</h2>
+<a id="a99fd63e9ee28577e5372efcc266f9e1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99fd63e9ee28577e5372efcc266f9e1d">&#9670;&nbsp;</a></span>AuxSendNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,7 +203,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1TrackMuteState.html">TrackMuteState</a> *&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>processAuxSendsWhenTrackIsMuted</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -286,7 +292,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 16 2023 11:37:54 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue May 23 2023 12:16:32 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

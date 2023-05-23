@@ -14756,8 +14756,8 @@
       <type></type>
       <name>AuxSendNode</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendNode.html</anchorfile>
-      <anchor>a1941c136b1f2a418fea3832050cf7cf2</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, AuxSendPlugin &amp;, tracktion::graph::PlayHeadState &amp;, const TrackMuteState *)</arglist>
+      <anchor>a99fd63e9ee28577e5372efcc266f9e1d</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, AuxSendPlugin &amp;, tracktion::graph::PlayHeadState &amp;, const TrackMuteState *, bool processAuxSendsWhenTrackIsMuted)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -31012,6 +31012,13 @@
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>ae1671d970928e6e411b0907759982d9a</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldProcessAuxSendWhenTrackIsMuted</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a4d8cd2b6b227cfa74104b096891418ba</anchor>
+      <arglist>(AuxSendPlugin &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>

@@ -122,6 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1671d970928e6e411b0907759982d9a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">shouldBypassedPluginsBeRemovedFromPlaybackGraph</a> ()</td></tr>
 <tr class="memdesc:ae1671d970928e6e411b0907759982d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if plugins which have been bypassed should be included in the playback graph.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">More...</a><br /></td></tr>
 <tr class="separator:ae1671d970928e6e411b0907759982d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8cd2b6b227cfa74104b096891418ba"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">shouldProcessAuxSendWhenTrackIsMuted</a> (<a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a4d8cd2b6b227cfa74104b096891418ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not to include muted track contents in aux send plugins.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">More...</a><br /></td></tr>
+<tr class="separator:a4d8cd2b6b227cfa74104b096891418ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa963929141512658b6b282594a9818e5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa963929141512658b6b282594a9818e5">saveCustomPluginProperties</a> (juce::ValueTree &amp;, juce::AudioPluginInstance &amp;, juce::UndoManager *)</td></tr>
 <tr class="memdesc:aa963929141512658b6b282594a9818e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives plugins an opportunity to save custom data when the plugin state gets flushed.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa963929141512658b6b282594a9818e5">More...</a><br /></td></tr>
 <tr class="separator:aa963929141512658b6b282594a9818e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -590,6 +593,35 @@ Public Member Functions</h2></td></tr>
 
 <p>Should return if plugins which have been bypassed should be included in the playback graph. </p>
 <p>By default this is false and bypassed plugins will still call processBypassed and introduce the same latency as if they weren't. But by returning false here, you can opt to remove them from the playback graph entirely which means they won't introduce latency which can be useful for tracking. </p>
+
+</div>
+</div>
+<a id="a4d8cd2b6b227cfa74104b096891418ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d8cd2b6b227cfa74104b096891418ba">&#9670;&nbsp;</a></span>shouldProcessAuxSendWhenTrackIsMuted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldProcessAuxSendWhenTrackIsMuted </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether or not to include muted track contents in aux send plugins. </p>
+<p>Returning true here enables you to still listen to return busses when send tracks are muted or other tracks are soloed. </p>
 
 </div>
 </div>
@@ -1651,7 +1683,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue May 16 2023 11:37:54 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue May 23 2023 12:16:33 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

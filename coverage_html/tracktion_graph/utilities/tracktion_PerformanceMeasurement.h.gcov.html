@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-16 11:55:55</td>
+            <td class="headerValue">2023-05-23 12:34:25</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -239,7 +239,7 @@
 <a name="177"><span class="lineNum">     177 </span>            :     */</a>
 <a name="178"><span class="lineNum">     178 </span>            :     ~ScopedPerformanceMeasurement()</a>
 <a name="179"><span class="lineNum">     179 </span>            :     {</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">    3261120 :         performanceMeasurement.stop();</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">    3274434 :         performanceMeasurement.stop();</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :     }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     PerformanceMeasurement&amp; performanceMeasurement;</a>
@@ -277,9 +277,9 @@
 <a name="215"><span class="lineNum">     215 </span><span class="lineCov">        260 :     numRuns = 0;</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3879709 : inline void PerformanceMeasurement::Statistics::addResult (double secondsElapsed, uint64_t cyclesElapsed) noexcept</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3893023 : inline void PerformanceMeasurement::Statistics::addResult (double secondsElapsed, uint64_t cyclesElapsed) noexcept</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3879709 :     if (numRuns == 0)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3893023 :     if (numRuns == 0)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     {</a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineCov">        737 :         maximumSeconds = secondsElapsed;</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">        737 :         minimumSeconds = secondsElapsed;</span></a>
@@ -289,33 +289,33 @@
 <a name="227"><span class="lineNum">     227 </span>            :     }</a>
 <a name="228"><span class="lineNum">     228 </span>            :     else</a>
 <a name="229"><span class="lineNum">     229 </span>            :     {</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    3878972 :         maximumSeconds = std::max (maximumSeconds, secondsElapsed);</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">    3878972 :         minimumSeconds = std::min (minimumSeconds, secondsElapsed);</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    3892286 :         maximumSeconds = std::max (maximumSeconds, secondsElapsed);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">    3892286 :         minimumSeconds = std::min (minimumSeconds, secondsElapsed);</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">    3878972 :         maximumCycles = std::max (maximumCycles, cyclesElapsed);</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">    3889042 :         minimumCycles = std::min (minimumCycles, cyclesElapsed);</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">    3892286 :         maximumCycles = std::max (maximumCycles, cyclesElapsed);</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">    3901497 :         minimumCycles = std::min (minimumCycles, cyclesElapsed);</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :     }</a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">    3879709 :     ++numRuns;</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">    3879709 :     totalSeconds += secondsElapsed;</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">    3879709 :     totalCycles += cyclesElapsed;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">    3893023 :     ++numRuns;</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">    3893023 :     totalSeconds += secondsElapsed;</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">    3893023 :     totalCycles += cyclesElapsed;</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
 <a name="241"><span class="lineNum">     241 </span>            :     // Seconds</a>
 <a name="242"><span class="lineNum">     242 </span>            :     {</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">    3879709 :         const double delta = secondsElapsed - meanSeconds;</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">    3879709 :         meanSeconds += delta / (double) numRuns;</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">    3879709 :         const double delta2 = secondsElapsed - meanSeconds;</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">    3879709 :         m2Seconds += delta * delta2;</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">    3893023 :         const double delta = secondsElapsed - meanSeconds;</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">    3893023 :         meanSeconds += delta / (double) numRuns;</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">    3893023 :         const double delta2 = secondsElapsed - meanSeconds;</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">    3893023 :         m2Seconds += delta * delta2;</span></a>
 <a name="247"><span class="lineNum">     247 </span>            :     }</a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
 <a name="249"><span class="lineNum">     249 </span>            :     // Cycles</a>
 <a name="250"><span class="lineNum">     250 </span>            :     {</a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">    3879709 :         const auto delta = cyclesElapsed - meanCycles;</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">    3879709 :         meanCycles += delta / (double) numRuns;</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">    3879709 :         const double delta2 = cyclesElapsed - meanCycles;</span></a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">    3879709 :         m2Cycles += delta * delta2;</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">    3893023 :         const auto delta = cyclesElapsed - meanCycles;</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">    3893023 :         meanCycles += delta / (double) numRuns;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">    3893023 :         const double delta2 = cyclesElapsed - meanCycles;</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">    3893023 :         m2Cycles += delta * delta2;</span></a>
 <a name="255"><span class="lineNum">     255 </span>            :     }</a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">    3879709 : }</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">    3893023 : }</span></a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
 <a name="258"><span class="lineNum">     258 </span>            : inline double PerformanceMeasurement::Statistics::getVarianceSeconds() const</a>
 <a name="259"><span class="lineNum">     259 </span>            : {</a>
@@ -331,7 +331,7 @@
 <a name="269"><span class="lineNum">     269 </span>            : {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineCov">       3180 :     auto timeToString = [] (double secs)</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :     {</a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">       3608 :         return std::to_string ((int64_t) (secs * (secs &lt; 0.01 ? 1000000.0 : 1000.0) + 0.5))</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">       3603 :         return std::to_string ((int64_t) (secs * (secs &lt; 0.01 ? 1000000.0 : 1000.0) + 0.5))</span></a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">       9540 :                 + (secs &lt; 0.01 ? &quot; us&quot; : &quot; ms&quot;);</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :     };</a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
@@ -352,18 +352,18 @@
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span>            : inline void PerformanceMeasurement::start() noexcept</a>
 <a name="292"><span class="lineNum">     292 </span>            : {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    3879709 :     startTime = std::chrono::high_resolution_clock::now();</span></a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">    3879709 :     startCycles = rdtsc();</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    3893023 :     startTime = std::chrono::high_resolution_clock::now();</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">    3893023 :     startCycles = rdtsc();</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : }</a>
 <a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">    3879709 : inline bool PerformanceMeasurement::stop()</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">    3893023 : inline bool PerformanceMeasurement::stop()</span></a>
 <a name="298"><span class="lineNum">     298 </span>            : {</a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">    3879709 :     const auto elapsedSeconds = std::chrono::high_resolution_clock::now() - startTime;</span></a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">    3879709 :     const auto elapsedCycles = rdtsc() - startCycles;</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">    3879709 :     stats.addResult (std::chrono::duration&lt;double, std::ratio&lt;1, 1&gt;&gt; (elapsedSeconds).count(),</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">    3893023 :     const auto elapsedSeconds = std::chrono::high_resolution_clock::now() - startTime;</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">    3893023 :     const auto elapsedCycles = rdtsc() - startCycles;</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">    3893023 :     stats.addResult (std::chrono::duration&lt;double, std::ratio&lt;1, 1&gt;&gt; (elapsedSeconds).count(),</span></a>
 <a name="302"><span class="lineNum">     302 </span>            :                      elapsedCycles);</a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineCov">    3879709 :     if (runsPerPrint &lt; 0)</span></a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineCov">    3893023 :     if (runsPerPrint &lt; 0)</span></a>
 <a name="305"><span class="lineNum">     305 </span>            :         return false;</a>
 <a name="306"><span class="lineNum">     306 </span>            :     </a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :     if (stats.numRuns &lt; runsPerPrint)</span></a>
