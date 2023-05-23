@@ -1011,7 +1011,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
 }
 
 std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
-                                                                tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+                                                                 tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     for (auto p : list)
     {
@@ -1026,7 +1026,8 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         {
             if (sendPlugin->isEnabled())
                 node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber, *sendPlugin,
-                                              playHeadState, trackMuteState);
+                                              playHeadState, trackMuteState,
+                                              list.getEdit().engine.getEngineBehaviour().shouldProcessAuxSendWhenTrackIsMuted (*sendPlugin));
         }
         else if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (p))
         {

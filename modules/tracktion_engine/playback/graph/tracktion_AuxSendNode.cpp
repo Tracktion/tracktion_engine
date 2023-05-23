@@ -15,14 +15,24 @@ namespace tracktion { inline namespace engine
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
                           AuxSendPlugin& sourceSendPlugin, tracktion::graph::PlayHeadState& phs,
-                          const TrackMuteState* trackMuteState)
+                          const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)
     : SendNode (std::move (inputNode), busIDToUse,
-                [&sourceSendPlugin, trackMuteState]
+                [&sourceSendPlugin, trackMuteState, processAuxSendsWhenTrackIsMuted]
                 {
-                    if (trackMuteState
-                        && ! trackMuteState->shouldTrackBeAudible()
-                        && ! trackMuteState->shouldTrackContentsBeProcessed())
-                       return 0.0f;
+                    if (processAuxSendsWhenTrackIsMuted)
+                    {
+                        if (trackMuteState
+                            && ! trackMuteState->shouldTrackBeAudible()
+                            && ! trackMuteState->shouldTrackContentsBeProcessed())
+                           return 0.0f;
+                    }
+                    else
+                    {
+                        if (trackMuteState
+                            && (! trackMuteState->shouldTrackBeAudible()
+                                || ! trackMuteState->shouldTrackContentsBeProcessed()))
+                           return 0.0f;
+                    }
 
                     auto gain = volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
                     if (sourceSendPlugin.invertPhase)

@@ -25,7 +25,8 @@ public:
     //==============================================================================
     /** Creates a AuxSendNode to process an aux send. */
     AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-                 AuxSendPlugin&, tracktion::graph::PlayHeadState&, const TrackMuteState*);
+                 AuxSendPlugin&, tracktion::graph::PlayHeadState&, const TrackMuteState*,
+                 bool processAuxSendsWhenTrackIsMuted);
 
     //==============================================================================
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
