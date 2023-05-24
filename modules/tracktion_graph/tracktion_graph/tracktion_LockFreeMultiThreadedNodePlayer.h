@@ -275,7 +275,7 @@ private:
     /** Prepares a specific Node to be played and returns all the Nodes. */
     std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph,
                                               double sampleRateToUse, int blockSizeToUse,
-                                              AudioBufferPool*);
+                                              bool useCurrentAudioBufferPool);
 
     //==============================================================================
     void clearThreads();
