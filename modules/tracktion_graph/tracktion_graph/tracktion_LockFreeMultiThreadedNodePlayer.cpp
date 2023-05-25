@@ -58,17 +58,13 @@ void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, do
 void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
     std::unique_ptr<NodeGraph> currentGraph;
-    AudioBufferPool* currentAudioBufferPool = nullptr;
 
     // Ensure we've flushed any pending Node to the current prepared Node
     {
         const auto scopedAccess = preparedNodeObject.getScopedAccess();
 
         if (auto pn = scopedAccess.get())
-        {
             currentGraph = std::move (pn->graph);
-            currentAudioBufferPool = pn->audioBufferPool.get();
-        }
     }
     
     clearNode();
