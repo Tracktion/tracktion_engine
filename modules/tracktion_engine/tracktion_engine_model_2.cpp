@@ -70,6 +70,7 @@ using namespace std::literals;
 #include "model/clips/tracktion_EditClipRenderJob.cpp"
 #include "model/clips/tracktion_AudioSegmentList.cpp"
 #include "audio_files/tracktion_LoopInfo.cpp"
+#include "audio_files/tracktion_LoopInfo.test.cpp"
 
 #include "project/tracktion_ProjectItemID.cpp"
 #include "project/tracktion_ProjectItem.cpp"
