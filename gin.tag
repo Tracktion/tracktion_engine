@@ -40751,15 +40751,15 @@
       <type>void</type>
       <name>setInMarker</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopInfo.html</anchorfile>
-      <anchor>aa685bf20c2a5e5b6ca229c9041f676a5</anchor>
-      <arglist>(SampleCount newPos)</arglist>
+      <anchor>a075c93c3fb7a67557364d18e2687637a</anchor>
+      <arglist>(SampleCount)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setOutMarker</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopInfo.html</anchorfile>
-      <anchor>ae175765acd9140bd5ba822f40ebf3bc7</anchor>
-      <arglist>(SampleCount newPos)</arglist>
+      <anchor>ad4280d775fe08d82a56d959fa813b54f</anchor>
+      <arglist>(SampleCount)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -40779,15 +40779,15 @@
       <type>void</type>
       <name>addLoopPoint</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopInfo.html</anchorfile>
-      <anchor>a7709640621fbe55521de6e62206c30c6</anchor>
-      <arglist>(SampleCount pos, LoopPointType type)</arglist>
+      <anchor>a22d9c71beb7321f2fccd0c37bde3cea5</anchor>
+      <arglist>(SampleCount, LoopPointType)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>changeLoopPoint</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopInfo.html</anchorfile>
-      <anchor>afc99a43fb1febd58cf64454ea3f87209</anchor>
-      <arglist>(int index, SampleCount pos, LoopPointType type)</arglist>
+      <anchor>a7a61ea63a481c18a307a75f64684b766</anchor>
+      <arglist>(int index, SampleCount, LoopPointType)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

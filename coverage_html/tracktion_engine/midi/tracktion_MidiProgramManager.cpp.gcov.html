@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">37</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">281</td>
-            <td class="headerCovTableEntryLo">13.2 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">35</td>
-            <td class="headerCovTableEntryLo">14.3 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -253,30 +253,30 @@
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span>            : //==============================================================================</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">         17 : MidiProgramManager::MidiProgramSet::MidiProgramSet()</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 : MidiProgramManager::MidiProgramSet::MidiProgramSet()</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : {</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">         17 :     for (int i = 0; i &lt; 16; ++i)</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; 16; ++i)</span></a>
 <a name="197"><span class="lineNum">     197 </span>            :     {</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">         16 :         midiBanks[i].id = i &lt;&lt; 8;</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">         16 :         midiBanks[i].name = TRANS(&quot;Bank&quot;) + &quot; &quot; + juce::String (i + 1);</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :         midiBanks[i].id = i &lt;&lt; 8;</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :         midiBanks[i].name = TRANS(&quot;Bank&quot;) + &quot; &quot; + juce::String (i + 1);</span></a>
 <a name="200"><span class="lineNum">     200 </span>            :     }</a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">          1 : }</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">         16 : juce::XmlElement* MidiProgramManager::MidiBank::createXml()</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 : juce::XmlElement* MidiProgramManager::MidiBank::createXml()</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : {</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">         16 :     auto n = new juce::XmlElement (&quot;bank&quot;);</span></a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">         16 :     n-&gt;setAttribute (&quot;name&quot;, name);</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">         16 :     n-&gt;setAttribute (&quot;low&quot;, id % 256);</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">         16 :     n-&gt;setAttribute (&quot;high&quot;, id / 256);</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :     auto n = new juce::XmlElement (&quot;bank&quot;);</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     n-&gt;setAttribute (&quot;name&quot;, name);</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     n-&gt;setAttribute (&quot;low&quot;, id % 256);</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :     n-&gt;setAttribute (&quot;high&quot;, id / 256);</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">         16 :     for (auto&amp; p : programNames)</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     for (auto&amp; p : programNames)</span></a>
 <a name="211"><span class="lineNum">     211 </span>            :     {</a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         auto currentProgramXml = n-&gt;createNewChildElement (&quot;program&quot;);</span></a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :         currentProgramXml-&gt;setAttribute (&quot;number&quot;, p.first);</span></a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :         currentProgramXml-&gt;setAttribute (&quot;name&quot;, p.second);</span></a>
 <a name="215"><span class="lineNum">     215 </span>            :     }</a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">         16 :     return n;</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     return n;</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : void MidiProgramManager::MidiBank::updateFromXml (const juce::XmlElement&amp; n)</span></a>
@@ -292,16 +292,16 @@
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span>            : //==============================================================================</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">          1 : juce::XmlElement* MidiProgramManager::MidiProgramSet::createXml()</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : juce::XmlElement* MidiProgramManager::MidiProgramSet::createXml()</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : {</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          1 :     auto n = new juce::XmlElement (&quot;ProgramSet&quot;);</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          1 :     n-&gt;setAttribute (&quot;name&quot;, name);</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">          1 :     n-&gt;setAttribute (&quot;zeroBased&quot;, zeroBased);</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     auto n = new juce::XmlElement (&quot;ProgramSet&quot;);</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     n-&gt;setAttribute (&quot;name&quot;, name);</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     n-&gt;setAttribute (&quot;zeroBased&quot;, zeroBased);</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">         17 :     for (int i = 0; i &lt; 16; ++i)</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">         16 :         n-&gt;addChildElement (midiBanks[i].createXml());</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; 16; ++i)</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :         n-&gt;addChildElement (midiBanks[i].createXml());</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          1 :     return n;</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     return n;</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : }</a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void MidiProgramManager::MidiProgramSet::updateFromXml (const juce::XmlElement&amp; n)</span></a>
@@ -322,12 +322,12 @@
 <a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : </a>
 <a name="262"><span class="lineNum">     262 </span>            : //==============================================================================</a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">          1 : MidiProgramManager::MidiProgramManager (Engine&amp; e)</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">          1 :     : engine (e)</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 : MidiProgramManager::MidiProgramManager (Engine&amp; e)</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :     : engine (e)</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : {</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">          1 :     auto xml = e.getPropertyStorage().getXmlProperty (SettingID::midiProgramManager);</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :     auto xml = e.getPropertyStorage().getXmlProperty (SettingID::midiProgramManager);</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">          1 :     if (xml != nullptr)</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     if (xml != nullptr)</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :     {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :         for (auto currentSetXml : xml-&gt;getChildIterator())</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :         {</a>
@@ -337,30 +337,30 @@
 <a name="275"><span class="lineNum">     275 </span>            :         }</a>
 <a name="276"><span class="lineNum">     276 </span>            :     }</a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">          1 :     if (xml == nullptr || ! xml-&gt;getBoolAttribute (&quot;createdRootGroup&quot;, false))</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     if (xml == nullptr || ! xml-&gt;getBoolAttribute (&quot;createdRootGroup&quot;, false))</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     {</a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">          1 :         auto* defaultSet = new MidiProgramSet();</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">          1 :         defaultSet-&gt;name = TRANS(&quot;Custom&quot;);</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">          1 :         programSets.add (defaultSet);</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         auto* defaultSet = new MidiProgramSet();</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :         defaultSet-&gt;name = TRANS(&quot;Custom&quot;);</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :         programSets.add (defaultSet);</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          1 :         saveAll();</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :         saveAll();</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :     }</a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">          1 : }</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          1 : void MidiProgramManager::saveAll()</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 : void MidiProgramManager::saveAll()</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : {</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">          1 :     juce::XmlElement xml (&quot;MidiProgramManager&quot;);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          1 :     xml.setAttribute (&quot;createdRootGroup&quot;, true);</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :     juce::XmlElement xml (&quot;MidiProgramManager&quot;);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     xml.setAttribute (&quot;createdRootGroup&quot;, true);</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          2 :     for (int i = 0; i &lt; programSets.size(); ++i)</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; programSets.size(); ++i)</span></a>
 <a name="294"><span class="lineNum">     294 </span>            :     {</a>
 <a name="295"><span class="lineNum">     295 </span>            :         auto* currentSet = programSets[i];</a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">          1 :         auto* currentSetXml = currentSet-&gt;createXml();</span></a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">          1 :         xml.addChildElement (currentSetXml);</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :         auto* currentSetXml = currentSet-&gt;createXml();</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :         xml.addChildElement (currentSetXml);</span></a>
 <a name="298"><span class="lineNum">     298 </span>            :     }</a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">          1 :     engine.getPropertyStorage().setXmlProperty (SettingID::midiProgramManager, xml);</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">          1 : }</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlProperty (SettingID::midiProgramManager, xml);</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : juce::StringArray MidiProgramManager::getMidiProgramSetNames()</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : {</a>

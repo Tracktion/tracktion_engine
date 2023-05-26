@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">125</td>
-            <td class="headerCovTableEntryLo">8.8 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">25</td>
-            <td class="headerCovTableEntryLo">16.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -223,34 +223,34 @@
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span>            : //==============================================================================</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">          1 : RenderManager::RenderManager (Engine&amp; e) : engine (e)</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 : RenderManager::RenderManager (Engine&amp; e) : engine (e)</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : {</a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">          1 : }</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">          2 : RenderManager::~RenderManager()</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 : RenderManager::~RenderManager()</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : {</a>
 <a name="170"><span class="lineNum">     170 </span>            :     jassert (danglingJobs.isEmpty());</a>
 <a name="171"><span class="lineNum">     171 </span>            :     jassert (jobs.isEmpty());</a>
 <a name="172"><span class="lineNum">     172 </span>            :     jassert (jobsToDelete.isEmpty());</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          2 : }</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          1 : void RenderManager::cleanUp()</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 : void RenderManager::cleanUp()</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : {</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">          1 :     auto&amp; pool = engine.getBackgroundJobs();</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     auto&amp; pool = engine.getBackgroundJobs();</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">          1 :     for (int i = jobs.size(); --i &gt;= 0;)</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     for (int i = jobs.size(); --i &gt;= 0;)</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :         pool.removeJob (jobs.getUnchecked (i), true, 10000);</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 :     for (int i = danglingJobs.size(); --i &gt;= 0;)</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     for (int i = danglingJobs.size(); --i &gt;= 0;)</span></a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :         if (auto j = danglingJobs.getUnchecked (i))</span></a>
 <a name="185"><span class="lineNum">     185 </span>            :             j-&gt;cleanUpDanglingJob();</a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
 <a name="187"><span class="lineNum">     187 </span>            :     jassert (danglingJobs.isEmpty());</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :     jobs.clear();</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">          1 :     jobsToDelete.clear();</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">          1 : }</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :     jobsToDelete.clear();</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span>            : //==============================================================================</a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 : AudioFile RenderManager::getAudioFileForHash (Engine&amp; engine, const juce::File&amp; directory, HashCode hash)</span></a>

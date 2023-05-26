@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntry">12</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -270,29 +270,29 @@
 <a name="208"><span class="lineNum">     208 </span>            : //==============================================================================</a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span>            : template&lt;typename ClipType&gt;</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         19 : inline juce::Array&lt;ClipType*&gt; getClipsOfType (const ClipOwner&amp; parent)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 : inline juce::Array&lt;ClipType*&gt; getClipsOfType (const ClipOwner&amp; parent)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : {</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">         19 :     juce::Array&lt;ClipType*&gt; clips;</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     juce::Array&lt;ClipType*&gt; clips;</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         49 :     for (auto clip : parent.getClips())</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">         30 :         if (auto typedClip = dynamic_cast&lt;ClipType*&gt; (clip))</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     for (auto clip : parent.getClips())</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         if (auto typedClip = dynamic_cast&lt;ClipType*&gt; (clip))</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :             clips.add (typedClip);</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         19 :     return clips;</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :     return clips;</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : }</a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span>            : template&lt;typename ClipType&gt;</a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">         16 : inline juce::Array&lt;ClipType*&gt; getClipsOfTypeRecursive (const ClipOwner&amp; parent)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 : inline juce::Array&lt;ClipType*&gt; getClipsOfTypeRecursive (const ClipOwner&amp; parent)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         16 :     juce::Array&lt;ClipType*&gt; results;</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     juce::Array&lt;ClipType*&gt; results;</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         32 :     results.addArray (getClipsOfType&lt;ClipType&gt; (parent));</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     results.addArray (getClipsOfType&lt;ClipType&gt; (parent));</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">         40 :     for (auto clip : parent.getClips())</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">         24 :         if (auto clipOwner = dynamic_cast&lt;ClipOwner*&gt; (clip))</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">         16 :             results.addArray (getClipsOfTypeRecursive&lt;ClipType&gt; (*clipOwner));</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :     for (auto clip : parent.getClips())</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         if (auto clipOwner = dynamic_cast&lt;ClipOwner*&gt; (clip))</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :             results.addArray (getClipsOfTypeRecursive&lt;ClipType&gt; (*clipOwner));</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         16 :     return results;</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     return results;</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : }</a>
 <a name="235"><span class="lineNum">     235 </span>            : </a>
 <a name="236"><span class="lineNum">     236 </span>            : }} // namespace tracktion { inline namespace engine</a>

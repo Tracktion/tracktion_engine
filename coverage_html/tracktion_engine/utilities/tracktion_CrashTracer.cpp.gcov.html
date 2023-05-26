@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">95</td>
-            <td class="headerCovTableEntryLo">12.6 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">18</td>
-            <td class="headerCovTableEntryLo">16.7 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -75,19 +75,19 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : struct CrashStackTracer::CrashTraceThreads</a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">          1 :     CrashTraceThreads()</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">          1 :     {</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          1 :         entries.ensureStorageAllocated (64);</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">          1 :     }</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :     CrashTraceThreads()</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     {</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :         entries.ensureStorageAllocated (64);</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            :     inline void push (CrashStackTracer* c)</a>
 <a name="22"><span class="lineNum">      22 </span>            :     {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     703796 :         entries.add (c);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :         entries.add (c);</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     }</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :     inline void pop (CrashStackTracer* c)</a>
 <a name="27"><span class="lineNum">      27 </span>            :     {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        274 :         entries.removeFirstMatchingValue (c);</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :         entries.removeFirstMatchingValue (c);</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     }</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     void dump() const</span></a>
@@ -205,20 +205,20 @@
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            : static CrashStackTracer::CrashTraceThreads crashStack;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     703797 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     703797 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : {</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        274 :     crashStack.push (this);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :     crashStack.push (this);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :    #if ! TRACKTION_LOG_ENABLED</a>
 <a name="152"><span class="lineNum">     152 </span>            :     juce::ignoreUnused (file, function, pluginName, line);</a>
 <a name="153"><span class="lineNum">     153 </span>            :    #endif</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     703524 : }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     703524 : CrashStackTracer::~CrashStackTracer()</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : CrashStackTracer::~CrashStackTracer()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
 <a name="158"><span class="lineNum">     158 </span>            :     crashStack.pop (this);</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        274 : }</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : juce::StringArray CrashStackTracer::getCrashedPlugins()</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : {</a>

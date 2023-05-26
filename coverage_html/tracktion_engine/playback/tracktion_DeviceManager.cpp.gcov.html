@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">59</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">635</td>
-            <td class="headerCovTableEntryLo">9.3 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">75</td>
-            <td class="headerCovTableEntryLo">17.3 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -144,8 +144,8 @@
 <a name="82"><span class="lineNum">      82 </span>            : }</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            : //==============================================================================</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          1 : TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine&amp; e)</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          1 :     : engine (e)</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine&amp; e)</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     : engine (e)</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : {</a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
@@ -227,13 +227,13 @@
 <a name="165"><span class="lineNum">     165 </span>            : struct DeviceManager::ContextDeviceClearer : private juce::AsyncUpdater</a>
 <a name="166"><span class="lineNum">     166 </span>            : {</a>
 <a name="167"><span class="lineNum">     167 </span>            :     ContextDeviceClearer (DeviceManager&amp; owner)</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">          1 :         : deviceManager (owner)</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :         : deviceManager (owner)</span></a>
 <a name="169"><span class="lineNum">     169 </span>            :     {}</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">          1 :     ~ContextDeviceClearer() override</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          1 :     {</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          1 :         handleUpdateNowIfNeeded();</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          1 :     }</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     ~ContextDeviceClearer() override</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     {</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         handleUpdateNowIfNeeded();</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     void triggerClearDevices()</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :     {</a>
@@ -266,24 +266,24 @@
 <a name="204"><span class="lineNum">     204 </span>            : </a>
 <a name="205"><span class="lineNum">     205 </span>            : //==============================================================================</a>
 <a name="206"><span class="lineNum">     206 </span>            : //==============================================================================</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 : DeviceManager::DeviceManager (Engine&amp; e) : engine (e)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 : DeviceManager::DeviceManager (Engine&amp; e) : engine (e)</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : {</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          1 :     contextDeviceClearer = std::make_unique&lt;ContextDeviceClearer&gt; (*this);</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     contextDeviceClearer = std::make_unique&lt;ContextDeviceClearer&gt; (*this);</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">          1 :     deviceManager.addChangeListener (this);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     deviceManager.addChangeListener (this);</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          1 :     gDeviceManager = &amp;deviceManager;</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          1 : }</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     gDeviceManager = &amp;deviceManager;</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">          2 : DeviceManager::~DeviceManager()</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 : DeviceManager::~DeviceManager()</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          1 :     gDeviceManager = nullptr;</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     gDeviceManager = nullptr;</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          1 :     deviceManager.removeChangeListener (this);</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">          6 : }</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     deviceManager.removeChangeListener (this);</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 : HostedAudioDeviceInterface&amp; DeviceManager::getHostedAudioDeviceInterface()</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : {</a>
@@ -313,16 +313,16 @@
 <a name="251"><span class="lineNum">     251 </span>            :     hostedAudioDeviceInterface.reset();</a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">       1049 : juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 : juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)</span></a>
 <a name="255"><span class="lineNum">     255 </span>            : {</a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       1049 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default audio output&quot;) + &quot;)&quot;)</span></a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">       2098 :                       : &quot;(default audio output)&quot;;</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default audio output&quot;) + &quot;)&quot;)</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :                       : &quot;(default audio output)&quot;;</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : }</a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">         24 : juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 : juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : {</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">         24 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default MIDI output&quot;) + &quot;)&quot;)</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">         48 :                       : &quot;(default MIDI output)&quot;;</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default MIDI output&quot;) + &quot;)&quot;)</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :                       : &quot;(default MIDI output)&quot;;</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : }</a>
 <a name="265"><span class="lineNum">     265 </span>            : </a>
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 : juce::String DeviceManager::getDefaultAudioInDeviceName (bool translated)</span></a>
@@ -338,21 +338,21 @@
 <a name="276"><span class="lineNum">     276 </span>            : }</a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">          1 : void DeviceManager::closeDevices()</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 : void DeviceManager::closeDevices()</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : {</a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="282"><span class="lineNum">     282 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span>            :     jassert (activeContexts.isEmpty());</a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">          1 :     clearAllContextDevices();</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     clearAllContextDevices();</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          1 :     deviceManager.removeAudioCallback (this);</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     deviceManager.removeAudioCallback (this);</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">          1 :     midiOutputs.clear();</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">          1 :     midiInputs.clear();</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          1 :     waveInputs.clear();</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">          1 :     waveOutputs.clear();</span></a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          1 : }</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :     midiOutputs.clear();</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :     midiInputs.clear();</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     waveInputs.clear();</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     waveOutputs.clear();</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
 <a name="295"><span class="lineNum">     295 </span>            : static bool isMicrosoftGSSynth (MidiOutputDevice&amp; mo)</a>
 <a name="296"><span class="lineNum">     296 </span>            : {</a>
@@ -882,9 +882,9 @@
 <a name="820"><span class="lineNum">     820 </span>            :     }</a>
 <a name="821"><span class="lineNum">     821 </span>            : }</a>
 <a name="822"><span class="lineNum">     822 </span>            : </a>
-<a name="823"><span class="lineNum">     823 </span><span class="lineCov">         83 : double DeviceManager::getSampleRate() const</span></a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 : double DeviceManager::getSampleRate() const</span></a>
 <a name="824"><span class="lineNum">     824 </span>            : {</a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">        364 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
 <a name="826"><span class="lineNum">     826 </span><span class="lineNoCov">          0 :         return device-&gt;getCurrentSampleRate();</span></a>
 <a name="827"><span class="lineNum">     827 </span>            : </a>
 <a name="828"><span class="lineNum">     828 </span>            :     return 44100;</a>
@@ -898,9 +898,9 @@
 <a name="836"><span class="lineNum">     836 </span>            :     return 16;</a>
 <a name="837"><span class="lineNum">     837 </span>            : }</a>
 <a name="838"><span class="lineNum">     838 </span>            : </a>
-<a name="839"><span class="lineNum">     839 </span><span class="lineCov">         87 : int DeviceManager::getBlockSize() const</span></a>
+<a name="839"><span class="lineNum">     839 </span><span class="lineNoCov">          0 : int DeviceManager::getBlockSize() const</span></a>
 <a name="840"><span class="lineNum">     840 </span>            : {</a>
-<a name="841"><span class="lineNum">     841 </span><span class="lineCov">        442 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="841"><span class="lineNum">     841 </span><span class="lineNoCov">          0 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
 <a name="842"><span class="lineNum">     842 </span><span class="lineNoCov">          0 :         return device-&gt;getCurrentBufferSizeSamples();</span></a>
 <a name="843"><span class="lineNum">     843 </span>            : </a>
 <a name="844"><span class="lineNum">     844 </span>            :     return 256;</a>
@@ -1081,7 +1081,7 @@
 <a name="1019"><span class="lineNum">    1019 </span>            : </a>
 <a name="1020"><span class="lineNum">    1020 </span><span class="lineNoCov">          0 : int DeviceManager::getNumOutputDevices() const</span></a>
 <a name="1021"><span class="lineNum">    1021 </span>            : {</a>
-<a name="1022"><span class="lineNum">    1022 </span><span class="lineCov">         94 :     return getNumWaveOutDevices() + getNumMidiOutDevices();</span></a>
+<a name="1022"><span class="lineNum">    1022 </span><span class="lineNoCov">          0 :     return getNumWaveOutDevices() + getNumMidiOutDevices();</span></a>
 <a name="1023"><span class="lineNum">    1023 </span>            : }</a>
 <a name="1024"><span class="lineNum">    1024 </span>            : </a>
 <a name="1025"><span class="lineNum">    1025 </span><span class="lineNoCov">          0 : OutputDevice* DeviceManager::getOutputDeviceAt (int index) const</span></a>
@@ -1105,16 +1105,16 @@
 <a name="1043"><span class="lineNum">    1043 </span>            :     return {};</a>
 <a name="1044"><span class="lineNum">    1044 </span>            : }</a>
 <a name="1045"><span class="lineNum">    1045 </span>            : </a>
-<a name="1046"><span class="lineNum">    1046 </span><span class="lineCov">        225 : OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String&amp; name) const</span></a>
+<a name="1046"><span class="lineNum">    1046 </span><span class="lineNoCov">          0 : OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String&amp; name) const</span></a>
 <a name="1047"><span class="lineNum">    1047 </span>            : {</a>
-<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">        225 :     if (name == getDefaultAudioOutDeviceName (false))     return getDefaultWaveOutDevice();</span></a>
-<a name="1049"><span class="lineNum">    1049 </span><span class="lineCov">         24 :     if (name == getDefaultMidiOutDeviceName (false))      return getDefaultMidiOutDevice();</span></a>
+<a name="1048"><span class="lineNum">    1048 </span><span class="lineNoCov">          0 :     if (name == getDefaultAudioOutDeviceName (false))     return getDefaultWaveOutDevice();</span></a>
+<a name="1049"><span class="lineNum">    1049 </span><span class="lineNoCov">          0 :     if (name == getDefaultMidiOutDeviceName (false))      return getDefaultMidiOutDevice();</span></a>
 <a name="1050"><span class="lineNum">    1050 </span>            : </a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">         24 :     for (auto d : waveOutputs)</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 :     for (auto d : waveOutputs)</span></a>
 <a name="1052"><span class="lineNum">    1052 </span><span class="lineNoCov">          0 :         if (d-&gt;getName() == name)</span></a>
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineNoCov">          0 :             return d;</span></a>
 <a name="1054"><span class="lineNum">    1054 </span>            : </a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">         24 :     for (auto d : midiOutputs)</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :     for (auto d : midiOutputs)</span></a>
 <a name="1056"><span class="lineNum">    1056 </span><span class="lineNoCov">          0 :         if (d-&gt;getName() == name)</span></a>
 <a name="1057"><span class="lineNum">    1057 </span><span class="lineNoCov">          0 :             return d;</span></a>
 <a name="1058"><span class="lineNum">    1058 </span>            : </a>
@@ -1335,40 +1335,40 @@
 <a name="1273"><span class="lineNum">    1273 </span><span class="lineNoCov">          0 :         c-&gt;updateNumCPUs();</span></a>
 <a name="1274"><span class="lineNum">    1274 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1275"><span class="lineNum">    1275 </span>            : </a>
-<a name="1276"><span class="lineNum">    1276 </span><span class="lineCov">         93 : void DeviceManager::addContext (EditPlaybackContext* c)</span></a>
+<a name="1276"><span class="lineNum">    1276 </span><span class="lineNoCov">          0 : void DeviceManager::addContext (EditPlaybackContext* c)</span></a>
 <a name="1277"><span class="lineNum">    1277 </span>            : {</a>
 <a name="1278"><span class="lineNum">    1278 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="1279"><span class="lineNum">    1279 </span>            : </a>
 <a name="1280"><span class="lineNum">    1280 </span>            :     double lastStreamTime;</a>
 <a name="1281"><span class="lineNum">    1281 </span>            : </a>
 <a name="1282"><span class="lineNum">    1282 </span>            :     {</a>
-<a name="1283"><span class="lineNum">    1283 </span><span class="lineCov">         93 :         const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1283"><span class="lineNum">    1283 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (contextLock);</span></a>
 <a name="1284"><span class="lineNum">    1284 </span>            :         lastStreamTime = streamTime;</a>
-<a name="1285"><span class="lineNum">    1285 </span><span class="lineCov">         93 :         c-&gt;resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate }, currentSampleRate);</span></a>
-<a name="1286"><span class="lineNum">    1286 </span><span class="lineCov">         93 :         activeContexts.addIfNotAlreadyThere (c);</span></a>
+<a name="1285"><span class="lineNum">    1285 </span><span class="lineNoCov">          0 :         c-&gt;resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate }, currentSampleRate);</span></a>
+<a name="1286"><span class="lineNum">    1286 </span><span class="lineNoCov">          0 :         activeContexts.addIfNotAlreadyThere (c);</span></a>
 <a name="1287"><span class="lineNum">    1287 </span>            :     }</a>
 <a name="1288"><span class="lineNum">    1288 </span>            : </a>
-<a name="1289"><span class="lineNum">    1289 </span><span class="lineCov">      18693 :     for (int i = 200; --i &gt;= 0;)</span></a>
+<a name="1289"><span class="lineNum">    1289 </span><span class="lineNoCov">          0 :     for (int i = 200; --i &gt;= 0;)</span></a>
 <a name="1290"><span class="lineNum">    1290 </span>            :     {</a>
-<a name="1291"><span class="lineNum">    1291 </span><span class="lineCov">      18600 :         juce::Thread::sleep (1);</span></a>
-<a name="1292"><span class="lineNum">    1292 </span><span class="lineCov">      18600 :         if (lastStreamTime != streamTime)</span></a>
+<a name="1291"><span class="lineNum">    1291 </span><span class="lineNoCov">          0 :         juce::Thread::sleep (1);</span></a>
+<a name="1292"><span class="lineNum">    1292 </span><span class="lineNoCov">          0 :         if (lastStreamTime != streamTime)</span></a>
 <a name="1293"><span class="lineNum">    1293 </span>            :             break;</a>
 <a name="1294"><span class="lineNum">    1294 </span>            :     }</a>
-<a name="1295"><span class="lineNum">    1295 </span><span class="lineCov">         93 : }</span></a>
+<a name="1295"><span class="lineNum">    1295 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1296"><span class="lineNum">    1296 </span>            : </a>
-<a name="1297"><span class="lineNum">    1297 </span><span class="lineCov">         93 : void DeviceManager::removeContext (EditPlaybackContext* c)</span></a>
+<a name="1297"><span class="lineNum">    1297 </span><span class="lineNoCov">          0 : void DeviceManager::removeContext (EditPlaybackContext* c)</span></a>
 <a name="1298"><span class="lineNum">    1298 </span>            : {</a>
-<a name="1299"><span class="lineNum">    1299 </span><span class="lineCov">         93 :     const juce::ScopedLock sl (contextLock);</span></a>
-<a name="1300"><span class="lineNum">    1300 </span><span class="lineCov">         93 :     activeContexts.removeAllInstancesOf (c);</span></a>
-<a name="1301"><span class="lineNum">    1301 </span><span class="lineCov">         93 : }</span></a>
+<a name="1299"><span class="lineNum">    1299 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1300"><span class="lineNum">    1300 </span><span class="lineNoCov">          0 :     activeContexts.removeAllInstancesOf (c);</span></a>
+<a name="1301"><span class="lineNum">    1301 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1302"><span class="lineNum">    1302 </span>            : </a>
-<a name="1303"><span class="lineNum">    1303 </span><span class="lineCov">          1 : void DeviceManager::clearAllContextDevices()</span></a>
+<a name="1303"><span class="lineNum">    1303 </span><span class="lineNoCov">          0 : void DeviceManager::clearAllContextDevices()</span></a>
 <a name="1304"><span class="lineNum">    1304 </span>            : {</a>
-<a name="1305"><span class="lineNum">    1305 </span><span class="lineCov">          1 :     const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1305"><span class="lineNum">    1305 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (contextLock);</span></a>
 <a name="1306"><span class="lineNum">    1306 </span>            : </a>
-<a name="1307"><span class="lineNum">    1307 </span><span class="lineCov">          1 :     for (auto c : activeContexts)</span></a>
+<a name="1307"><span class="lineNum">    1307 </span><span class="lineNoCov">          0 :     for (auto c : activeContexts)</span></a>
 <a name="1308"><span class="lineNum">    1308 </span>            :         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, false);</a>
-<a name="1309"><span class="lineNum">    1309 </span><span class="lineCov">          1 : }</span></a>
+<a name="1309"><span class="lineNum">    1309 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1310"><span class="lineNum">    1310 </span>            : </a>
 <a name="1311"><span class="lineNum">    1311 </span><span class="lineNoCov">          0 : void DeviceManager::reloadAllContextDevices()</span></a>
 <a name="1312"><span class="lineNum">    1312 </span>            : {</a>

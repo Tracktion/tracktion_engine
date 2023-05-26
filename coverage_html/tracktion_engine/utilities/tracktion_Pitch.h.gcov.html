@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntryLo">7.4 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -140,11 +140,11 @@
 <a name="78"><span class="lineNum">      78 </span>            :     // Converts a relative number of semitones up or down into a speed ratio where 0 semitones = 1.0</a>
 <a name="79"><span class="lineNum">      79 </span>            :     static float semitonesToRatio (float semitonesUp) noexcept</a>
 <a name="80"><span class="lineNum">      80 </span>            :     {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          9 :         if (semitonesUp == 0.0f)</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :         if (semitonesUp == 0.0f)</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :             return 1.0f;</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            :         auto oneSemitone = std::pow (2.0, 1.0 / 12.0);</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          5 :         return (float) std::pow (oneSemitone, (double) semitonesUp);</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :         return (float) std::pow (oneSemitone, (double) semitonesUp);</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :     }</a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span>            : };</a>

@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">38</td>
-            <td class="headerCovTableEntryLo">21.1 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">19</td>
-            <td class="headerCovTableEntryLo">21.1 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :     /** Called just before the selectable is about to be deleted so any subclasses</a>
 <a name="60"><span class="lineNum">      60 </span>            :         should still be valid at this point.</a>
 <a name="61"><span class="lineNum">      61 </span>            :     */</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">      32800 :     virtual void selectableAboutToBeDeleted() {}</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     virtual void selectableAboutToBeDeleted() {}</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            :     void addSelectableListener (SelectableListener*);</a>
@@ -170,7 +170,7 @@
 <a name="108"><span class="lineNum">     108 </span>            :     A list of Selectables, similar to a juce::Array but contains a cached list</a>
 <a name="109"><span class="lineNum">     109 </span>            :     of the SelectableClasses for each entry.</a>
 <a name="110"><span class="lineNum">     110 </span>            : */</a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          1 : struct SelectableList</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 : struct SelectableList</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>
 <a name="113"><span class="lineNum">     113 </span>            :     SelectableList() = default;</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
@@ -310,14 +310,14 @@
 <a name="248"><span class="lineNum">     248 </span>            :     @see SelectablegetWeakRef()</a>
 <a name="249"><span class="lineNum">     249 </span>            : */</a>
 <a name="250"><span class="lineNum">     250 </span>            : template&lt;typename SelectableType&gt;</a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">          1 : class SafeSelectable</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 : class SafeSelectable</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : {</a>
 <a name="253"><span class="lineNum">     253 </span>            : public:</a>
 <a name="254"><span class="lineNum">     254 </span>            :     /** Creates a null SafeSelectable. */</a>
 <a name="255"><span class="lineNum">     255 </span>            :     SafeSelectable() = default;</a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span>            :     /** Creates a SafeSelectable that points at the given selectable. */</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">          3 :     SafeSelectable (SelectableType&amp; selectable)                     : weakRef (&amp;selectable) {}</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :     SafeSelectable (SelectableType&amp; selectable)                     : weakRef (&amp;selectable) {}</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
 <a name="260"><span class="lineNum">     260 </span>            :     /** Creates a copy of another SafeSelectable. */</a>
 <a name="261"><span class="lineNum">     261 </span>            :     SafeSelectable (const SafeSelectable&amp; other) noexcept           : weakRef (other.weakRef) {}</a>
@@ -329,15 +329,15 @@
 <a name="267"><span class="lineNum">     267 </span>            :     SafeSelectable&amp; operator= (SelectableType* newSelectable)       { weakRef = newSelectable; return *this; }</a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
 <a name="269"><span class="lineNum">     269 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">          6 :     SelectableType* get() const noexcept                            { return dynamic_cast&lt;SelectableType*&gt; (weakRef.get()); }</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     SelectableType* get() const noexcept                            { return dynamic_cast&lt;SelectableType*&gt; (weakRef.get()); }</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
 <a name="272"><span class="lineNum">     272 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">          1 :     operator SelectableType*() const noexcept                       { return get(); }</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :     operator SelectableType*() const noexcept                       { return get(); }</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
 <a name="275"><span class="lineNum">     275 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
 <a name="276"><span class="lineNum">     276 </span>            :     SelectableType* operator-&gt;() const noexcept                     { return get(); }</a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">          6 :     bool operator== (SelectableType* selectable) const noexcept     { return weakRef == selectable; }</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     bool operator== (SelectableType* selectable) const noexcept     { return weakRef == selectable; }</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     bool operator!= (SelectableType* selectable) const noexcept     { return weakRef != selectable; }</a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
 <a name="281"><span class="lineNum">     281 </span>            : private:</a>
@@ -348,7 +348,7 @@
 <a name="286"><span class="lineNum">     286 </span>            : template&lt;typename SelectableType&gt;</a>
 <a name="287"><span class="lineNum">     287 </span>            : SafeSelectable&lt;SelectableType&gt; makeSafeRef (SelectableType&amp; selectable)</a>
 <a name="288"><span class="lineNum">     288 </span>            : {</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">          3 :     return SafeSelectable&lt;SelectableType&gt; (selectable);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :     return SafeSelectable&lt;SelectableType&gt; (selectable);</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : }</a>
 <a name="291"><span class="lineNum">     291 </span>            : </a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>

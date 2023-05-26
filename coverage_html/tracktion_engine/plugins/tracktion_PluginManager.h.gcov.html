@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-23 12:34:25</td>
+            <td class="headerValue">2023-05-26 19:19:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">60</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">69</td>
-            <td class="headerCovTableEntryMed">87.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -127,12 +127,12 @@
 <a name="65"><span class="lineNum">      65 </span>            :     template &lt;typename Type&gt;</a>
 <a name="66"><span class="lineNum">      66 </span>            :     struct BuiltInTypeBase  : public PluginManager::BuiltInType</a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">         46 :         BuiltInTypeBase() : BuiltInType (Type::xmlTypeName) {}</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       3782 :         Plugin::Ptr create (PluginCreationInfo info) override   { return new Type (info); }</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :         BuiltInTypeBase() : BuiltInType (Type::xmlTypeName) {}</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :         Plugin::Ptr create (PluginCreationInfo info) override   { return new Type (info); }</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :     };</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :     template &lt;typename Type&gt;</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         48 :     void createBuiltInType()  { registerBuiltInType (std::make_unique&lt;BuiltInTypeBase&lt;Type&gt;&gt;()); }</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :     void createBuiltInType()  { registerBuiltInType (std::make_unique&lt;BuiltInTypeBase&lt;Type&gt;&gt;()); }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     //==============================================================================</a>
 <a name="76"><span class="lineNum">      76 </span>            :     /** Callback that is used to create plugin instances from a PluginDescription.</a>
