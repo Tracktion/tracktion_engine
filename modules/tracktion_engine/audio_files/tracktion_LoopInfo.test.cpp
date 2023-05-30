@@ -28,6 +28,8 @@ public:
 
     void runTest() override
     {
+        runJUCEUndoTest();
+
         beginTest ("Undo behaviour");
 
         using namespace tracktion::graph::test_utilities;
@@ -48,14 +50,12 @@ public:
                 { IDs::loopLengthBeats, 4.0 },
             },
             { { IDs::LOOPINFO,
-                { { IDs::numBeats, 2.0 },
-                  { IDs::numerator, 4.0 },
-                  { IDs::denominator, 4.0 },
-                }
+                { { IDs::numBeats, 3.0 } }
             } }
         };
 
         auto& um = edit->getUndoManager();
+        um.setMaxNumberOfStoredUnits (30000, 30); // Ensure this isn't the default "single transaction"
         um.clearUndoHistory();
 
         // Starting new undo transaction
@@ -65,11 +65,12 @@ public:
 
         // Adding a clip with numBeats = 2 in LOOPINFO
         track->insertClipWithState (newClipState);
+        expect (um.canUndo());
 
         if (auto acb = dynamic_cast<AudioClipBase*> (track->getClips().getFirst()))
         {
             LoopInfo& li = acb->getLoopInfo();
-            expectEquals (li.getNumBeats(), 2.0);
+            expectEquals (li.getNumBeats(), 3.0);
 
             // Starting new undo transaction
             um.beginNewTransaction();
@@ -81,10 +82,19 @@ public:
         // Calling undo() twice
         expect (um.canUndo());
         um.undo();
+
+        // Check setting num beats was undone
+        if (auto acb = dynamic_cast<AudioClipBase*> (track->getClips().getFirst()))
+        {
+            LoopInfo& li = acb->getLoopInfo();
+            expectEquals (li.getNumBeats(), 3.0);
+        }
+
+        expectEquals (um.getNumActionsInCurrentTransaction(), 0);
         expect (um.canUndo());
         um.undo();
         expect (! um.canUndo());
-        expect (dynamic_cast<AudioClipBase*>(track->getClips().getFirst()) == nullptr);
+        expect (dynamic_cast<AudioClipBase*> (track->getClips().getFirst()) == nullptr);
 
         // Calling redo() twice
         expect (um.canRedo());
@@ -102,6 +112,51 @@ public:
         {
             expect (false, "No audio clip on track!");
         }
+    }
+
+    void runJUCEUndoTest()
+    {
+        juce::UndoManager um;
+        juce::ValueTree v ("ROOT"), c ("CHILD");
+
+        um.beginNewTransaction();
+        expect (! um.canUndo());
+        expect (! um.canRedo());
+
+        v.setProperty ("prop1", 42, &um);
+        expect (um.canUndo());
+        expect (! um.canRedo());
+
+        um.beginNewTransaction();
+        v.appendChild (c, &um);
+
+        expectEquals (static_cast<int> (v["prop1"]), 42);
+        expectEquals (v.getNumChildren(), 1);
+
+        um.undo();
+        expectEquals (static_cast<int> (v["prop1"]), 42);
+        expectEquals (v.getNumChildren(), 0);
+        expect (um.canUndo());
+        expect (um.canRedo());
+
+        um.undo();
+        expect (! v.hasProperty ("prop1"));
+        expectEquals (static_cast<int> (v["prop1"]), 0);
+        expectEquals (v.getNumChildren(), 0);
+        expect (! um.canUndo());
+        expect (um.canRedo());
+
+        um.redo();
+        expectEquals (static_cast<int> (v["prop1"]), 42);
+        expectEquals (v.getNumChildren(), 0);
+        expect (um.canUndo());
+        expect (um.canRedo());
+
+        um.redo();
+        expectEquals (static_cast<int> (v["prop1"]), 42);
+        expectEquals (v.getNumChildren(), 1);
+        expect (um.canUndo());
+        expect (! um.canRedo());
     }
 };
 

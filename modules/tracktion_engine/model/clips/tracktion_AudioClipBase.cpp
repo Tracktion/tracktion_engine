@@ -2392,7 +2392,7 @@ void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parentState, juce::Val
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator.reset (new PatternGenerator (*this, child));
-        else if (child.hasType (IDs::LOOPINFO))
+        else if (child.hasType (IDs::LOOPINFO) && isInitialised)
             loopInfo.state = child;
     }
     else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
@@ -2415,7 +2415,7 @@ void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parentState, juce::V
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator = nullptr;
-        else if (child.hasType (IDs::LOOPINFO))
+        else if (child.hasType (IDs::LOOPINFO) && isInitialised)
             copyValueTree (loopInfo.state, LoopInfo (edit.engine).state, nullptr); // Resets to default
     }
     else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
