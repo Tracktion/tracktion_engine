@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">15</td>
             <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">46.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">12</td>
             <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">44.4 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -73,14 +73,14 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : struct PluginCreationInfo</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       8095 : struct PluginCreationInfo</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       5854 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
 <a name="17"><span class="lineNum">      17 </span>            :     PluginCreationInfo (PluginCreationInfo&amp;&amp;) = default;</a>
 <a name="18"><span class="lineNum">      18 </span>            :     PluginCreationInfo&amp; operator= (PluginCreationInfo&amp;&amp;) = delete;</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span>            :     PluginCreationInfo (Edit&amp; ed, const juce::ValueTree&amp; s, bool isNew) noexcept</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       2241 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     PluginCreationInfo() = delete;</a>
 <a name="24"><span class="lineNum">      24 </span>            :     PluginCreationInfo&amp; operator= (const PluginCreationInfo&amp;) = delete;</a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57397568 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -254,7 +254,7 @@
 <a name="192"><span class="lineNum">     192 </span>            :     virtual void reset();</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span>            :     /** Track name or colour has changed. */</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     virtual void trackPropertiesChanged()                    {}</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       2624 :     virtual void trackPropertiesChanged()                    {}</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
 <a name="197"><span class="lineNum">     197 </span>            :     //==============================================================================</a>
 <a name="198"><span class="lineNum">     198 </span>            :     /** Process the next block of data.</a>
@@ -269,7 +269,7 @@
 <a name="207"><span class="lineNum">     207 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">   27515351 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="213"><span class="lineNum">     213 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -286,15 +286,15 @@
 <a name="224"><span class="lineNum">     224 </span>            :     */</a>
 <a name="225"><span class="lineNum">     225 </span>            :     virtual int getNumOutputChannelsGivenInputs (int numInputChannels);</a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15933534 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
 <a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     virtual bool noTail()                               { return true; }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            :     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);</a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :     virtual bool takesAudioInput()                      { return ! isSynth(); }</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     virtual bool takesMidiInput()                       { return false; }</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">       2111 :     virtual bool takesMidiInput()                       { return false; }</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     virtual bool isSynth()                              { return false; }</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :     virtual double getLatencySeconds()                  { return 0.0; }</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     virtual double getTailLength() const                { return 0.0; }</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       2616 :     virtual double getLatencySeconds()                  { return 0.0; }</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        156 :     virtual double getTailLength() const                { return 0.0; }</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :     virtual bool canSidechain();</a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
 <a name="238"><span class="lineNum">     238 </span>            :     juce::StringArray getInputChannelNames();</a>
@@ -333,18 +333,18 @@
 <a name="271"><span class="lineNum">     271 </span>            : </a>
 <a name="272"><span class="lineNum">     272 </span>            :     //==============================================================================</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :     virtual bool canBeAddedToClip()                                     { return true; }</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     virtual bool canBeAddedToRack()                                     { return true; }</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">        184 :     virtual bool canBeAddedToRack()                                     { return true; }</span></a>
 <a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :     virtual bool canBeAddedToFolderTrack()                              { return false; }</span></a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :     virtual bool canBeAddedToMaster()                                   { return true; }</span></a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :     virtual bool canBeDisabled()                                        { return true; }</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">          2 :     virtual bool canBeDisabled()                                        { return true; }</span></a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     virtual bool canBeMoved()                                           { return true; }</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     virtual bool needsConstantBufferSize() = 0;</a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
 <a name="281"><span class="lineNum">     281 </span>            :     /** for things like VSTs where the DLL is missing.    */</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :     virtual bool isMissing()                                            { return false; }</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        969 :     virtual bool isMissing()                                            { return false; }</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span>            :     /** Plugins can be disabled to avoid them crashing Edits. */</a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     virtual bool isDisabled()                                           { return false; }</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">        971 :     virtual bool isDisabled()                                           { return false; }</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span>            :     bool isInRack() const;</a>
 <a name="288"><span class="lineNum">     288 </span>            :     juce::ReferenceCountedObjectPtr&lt;RackType&gt; getOwnerRackType() const;</a>
@@ -402,7 +402,7 @@
 <a name="340"><span class="lineNum">     340 </span>            :     //==============================================================================</a>
 <a name="341"><span class="lineNum">     341 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="342"><span class="lineNum">     342 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">        377 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="344"><span class="lineNum">     344 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span>            :     //==============================================================================</a>

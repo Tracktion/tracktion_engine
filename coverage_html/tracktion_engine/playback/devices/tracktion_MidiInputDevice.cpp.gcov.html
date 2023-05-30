@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">30</td>
             <td class="headerCovTableEntry">525</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">5.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">4</td>
             <td class="headerCovTableEntry">62</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">6.5 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -247,28 +247,28 @@
 <a name="185"><span class="lineNum">     185 </span>            : };</a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
 <a name="187"><span class="lineNum">     187 </span>            : //==============================================================================</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 : MidiInputDevice::MidiInputDevice (Engine&amp; e, const juce::String&amp; deviceType, const juce::String&amp; deviceName)</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :    : InputDevice (e, deviceType, deviceName)</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        842 : MidiInputDevice::MidiInputDevice (Engine&amp; e, const juce::String&amp; deviceType, const juce::String&amp; deviceName)</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">       1684 :    : InputDevice (e, deviceType, deviceName)</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : {</a>
 <a name="191"><span class="lineNum">     191 </span>            :     levelMeasurer.setShowMidi (true);</a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     endToEndEnabled = true;</span></a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     std::memset (keysDown, 0, sizeof (keysDown));</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     std::memset (keysUp, 0, sizeof (keysUp));</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     std::memset (keyDownVelocities, 0, sizeof (keyDownVelocities));</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">        842 :     endToEndEnabled = true;</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">        842 :     std::memset (keysDown, 0, sizeof (keysDown));</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">        842 :     std::memset (keysUp, 0, sizeof (keysUp));</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">        842 :     std::memset (keyDownVelocities, 0, sizeof (keyDownVelocities));</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     keyboardState.addListener (this);</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        842 :     keyboardState.addListener (this);</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">        842 : }</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 : MidiInputDevice::~MidiInputDevice()</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">        842 : MidiInputDevice::~MidiInputDevice()</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : {</a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :     keyboardState.removeListener (this);</span></a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">        842 :     keyboardState.removeListener (this);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">        842 :     notifyListenersOfDeletion();</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">        842 : }</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 : void MidiInputDevice::setEnabled (bool b)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        842 : void MidiInputDevice::setEnabled (bool b)</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : {</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     if ((b != enabled) || (! isTrackDevice() &amp;&amp; firstSetEnabledCall))</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        842 :     if ((b != enabled) || (! isTrackDevice() &amp;&amp; firstSetEnabledCall))</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         enabled = b;</span></a>
@@ -304,24 +304,24 @@
 <a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :         if (! isTrackDevice())</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :             engine.getExternalControllerManager().midiInOutDevicesChanged();</span></a>
 <a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        842 : }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 : void MidiInputDevice::loadProps (const juce::XmlElement* n)</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        842 : void MidiInputDevice::loadProps (const juce::XmlElement* n)</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : {</a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     endToEndEnabled = true;</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     recordingEnabled = true;</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :     mergeRecordings = true;</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     replaceExistingClips = false;</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :     recordToNoteAutomation = isMPEDevice();</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">        842 :     endToEndEnabled = true;</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">        842 :     recordingEnabled = true;</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">        842 :     mergeRecordings = true;</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">        842 :     replaceExistingClips = false;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">        842 :     recordToNoteAutomation = isMPEDevice();</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :     adjustSecs = 0;</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :     manualAdjustMs = 0;</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     channelToUse = {};</span></a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :     programToUse = 0;</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :     bankToUse = 0;</span></a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :     overrideNoteVels = false;</span></a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 :     disallowedChannels.clear();</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">        842 :     manualAdjustMs = 0;</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">        842 :     channelToUse = {};</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">        842 :     programToUse = 0;</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        842 :     bankToUse = 0;</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">        842 :     overrideNoteVels = false;</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        842 :     disallowedChannels.clear();</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : </a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     if (n != nullptr)</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">        842 :     if (n != nullptr)</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :     {</a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :         if (! isTrackDevice())</span></a>
 <a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :             enabled = n-&gt;getBoolAttribute (&quot;enabled&quot;, enabled);</span></a>
@@ -341,7 +341,7 @@
 <a name="279"><span class="lineNum">     279 </span>            : </a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         connectionStateChanged();</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :     }</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        842 : }</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 : void MidiInputDevice::saveProps (juce::XmlElement&amp; n)</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : {</a>
@@ -432,7 +432,7 @@
 <a name="370"><span class="lineNum">     370 </span>            : </a>
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 : bool MidiInputDevice::isMPEDevice() const</span></a>
 <a name="372"><span class="lineNum">     372 </span>            : {</a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     return getName().contains (&quot;Seaboard&quot;);</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">        842 :     return getName().contains (&quot;Seaboard&quot;);</span></a>
 <a name="374"><span class="lineNum">     374 </span>            : }</a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
 <a name="376"><span class="lineNum">     376 </span>            : //==============================================================================</a>

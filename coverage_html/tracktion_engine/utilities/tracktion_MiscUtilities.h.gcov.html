@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntry">30</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">10.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -155,7 +155,7 @@
 <a name="93"><span class="lineNum">      93 </span>            : template &lt;typename FloatingPointType&gt;</a>
 <a name="94"><span class="lineNum">      94 </span>            : inline bool almostEqual (FloatingPointType firstValue, FloatingPointType secondValue, FloatingPointType precision = (FloatingPointType) 0.00001)</a>
 <a name="95"><span class="lineNum">      95 </span>            : {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :     return std::abs (firstValue - secondValue) &lt; precision;</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">      11575 :     return std::abs (firstValue - secondValue) &lt; precision;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : }</a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
 <a name="99"><span class="lineNum">      99 </span>            : //==============================================================================</a>
@@ -172,14 +172,14 @@
 <a name="110"><span class="lineNum">     110 </span>            :     /** Shows the wait cursor. */</a>
 <a name="111"><span class="lineNum">     111 </span>            :     ScopedWaitCursor()</a>
 <a name="112"><span class="lineNum">     112 </span>            :     {</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :         if (juce::JUCEApplicationBase::getInstance() != nullptr)</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">          1 :         if (juce::JUCEApplicationBase::getInstance() != nullptr)</span></a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :             juce::MouseCursor::showWaitCursor();</span></a>
 <a name="115"><span class="lineNum">     115 </span>            :     }</a>
 <a name="116"><span class="lineNum">     116 </span>            :     </a>
 <a name="117"><span class="lineNum">     117 </span>            :     /** Hides the wait cursor. */</a>
 <a name="118"><span class="lineNum">     118 </span>            :     ~ScopedWaitCursor()</a>
 <a name="119"><span class="lineNum">     119 </span>            :     {</a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         if (juce::JUCEApplicationBase::getInstance() != nullptr)</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">          1 :         if (juce::JUCEApplicationBase::getInstance() != nullptr)</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :             juce::MouseCursor::hideWaitCursor();</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     }</a>
 <a name="123"><span class="lineNum">     123 </span>            : };</a>

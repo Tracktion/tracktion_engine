@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -76,7 +76,7 @@
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
 <a name="15"><span class="lineNum">      15 </span>            :     Holds the state of a Track and if its contents/plugins should be played or not.</a>
 <a name="16"><span class="lineNum">      16 </span>            : */</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 : class TrackMuteState</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       4910 : class TrackMuteState</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
 <a name="20"><span class="lineNum">      20 </span>            :     /** Creates a TrackMuteState for a Track. */</a>
@@ -142,7 +142,7 @@
 <a name="80"><span class="lineNum">      80 </span>            :     //==============================================================================</a>
 <a name="81"><span class="lineNum">      81 </span>            :     tracktion::graph::NodeProperties getNodeProperties() override;</a>
 <a name="82"><span class="lineNum">      82 </span>            :     std::vector&lt;Node*&gt; getDirectInputNodes() override;</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override {}</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">      10472 :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override {}</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :     bool isReadyToProcess() override;</a>
 <a name="85"><span class="lineNum">      85 </span>            :     void prefetchBlock (juce::Range&lt;int64_t&gt;) override;</a>
 <a name="86"><span class="lineNum">      86 </span>            :     void process (ProcessContext&amp;) override;</a>

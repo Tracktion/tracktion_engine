@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">40.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -143,7 +143,7 @@
 <a name="81"><span class="lineNum">      81 </span>            :     virtual ClipPosition getPosition() const = 0;</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span>            :     /** Returns the time range of this item. */</a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     TimeRange getEditTimeRange() const                  { return getPosition().time; }</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">      17138 :     TimeRange getEditTimeRange() const                  { return getPosition().time; }</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            :     /** Returns the start beat in the Edit of this item. */</a>
 <a name="87"><span class="lineNum">      87 </span>            :     BeatPosition getStartBeat() const;</a>
@@ -181,7 +181,7 @@
 <a name="119"><span class="lineNum">     119 </span>            :     {</a>
 <a name="120"><span class="lineNum">     120 </span>            :         std::sort (items.begin(), items.end(),</a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                    [] (const TrackItem* a, const TrackItem* b) { return a-&gt;getPosition().time.getStart() &lt; b-&gt;getPosition().time.getStart(); });</span></a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">          6 :     }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span>            :     /** Helper function to sort an array of TrackItem[s] by their start time without</a>
 <a name="125"><span class="lineNum">     125 </span>            :         changing the order of items at the same time.</a>

@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -80,11 +80,11 @@
 <a name="18"><span class="lineNum">      18 </span>            : class EditItemIDBenchmarks  : public juce::UnitTest</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     EditItemIDBenchmarks()</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :         : juce::UnitTest (&quot;EditItemID&quot;, &quot;tracktion_benchmarks&quot;)</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :     {}</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 :     EditItemIDBenchmarks()</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          1 :         : juce::UnitTest (&quot;EditItemID&quot;, &quot;tracktion_benchmarks&quot;)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          1 :     {}</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     void runTest() override</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     {</a>
 <a name="27"><span class="lineNum">      27 </span>            :         // Create an empty edit</a>
 <a name="28"><span class="lineNum">      28 </span>            :         // Add a MIDI clip with some random data</a>
@@ -93,22 +93,22 @@
 <a name="31"><span class="lineNum">      31 </span>            :         // Copy/paste all clips (10,000 clips)</a>
 <a name="32"><span class="lineNum">      32 </span>            :         // Load edit again from tree and see how long it takes to load</a>
 <a name="33"><span class="lineNum">      33 </span>            :         </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :         auto&amp; engine = *tracktion::engine::Engine::getEngines()[0];</span></a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :         Clipboard clipboard;</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">          1 :         auto&amp; engine = *tracktion::engine::Engine::getEngines()[0];</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          1 :         Clipboard clipboard;</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">          1 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
 <a name="37"><span class="lineNum">      37 </span>            :         </a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :         beginTest (&quot;Benchmark: Copy/paste&quot;);</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          1 :         beginTest (&quot;Benchmark: Copy/paste&quot;);</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span>            :         {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :             auto c = getAudioTracks (*edit)[0]-&gt;insertMIDIClip ({ 0.0s, TimePosition (1.0s) }, nullptr);</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :             auto t1 = c-&gt;getTrack();</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          1 :             auto c = getAudioTracks (*edit)[0]-&gt;insertMIDIClip ({ 0.0s, TimePosition (1.0s) }, nullptr);</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :             auto t1 = c-&gt;getTrack();</span></a>
 <a name="43"><span class="lineNum">      43 </span>            :             </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste clip 49 times&quot;));</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste clip 49 times&quot;));</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :             </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :             for (int i = 1; i &lt; 50; ++i)</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         50 :             for (int i = 1; i &lt; 50; ++i)</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :             {</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :                 auto clipState = c-&gt;state.createCopy();</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :                 EditItemID::remapIDs (clipState, nullptr, c-&gt;edit);</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         49 :                 auto clipState = c-&gt;state.createCopy();</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         49 :                 EditItemID::remapIDs (clipState, nullptr, c-&gt;edit);</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :                 </a>
 <a name="51"><span class="lineNum">      51 </span>            :                #if JUCE_DEBUG</a>
 <a name="52"><span class="lineNum">      52 </span>            :                 auto newClipID = EditItemID::fromID (clipState);</a>
@@ -119,25 +119,25 @@
 <a name="57"><span class="lineNum">      57 </span>            :                 jassert (! t1-&gt;state.getChildWithProperty (IDs::id, newClipID).isValid());</a>
 <a name="58"><span class="lineNum">      58 </span>            :                #endif</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :                 t1-&gt;state.appendChild (clipState, c-&gt;getUndoManager());</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         49 :                 t1-&gt;state.appendChild (clipState, c-&gt;getUndoManager());</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            :                #if JUCE_DEBUG</a>
 <a name="63"><span class="lineNum">      63 </span>            :                 jassert (t1-&gt;findClipForID (newClipID) != nullptr);</a>
 <a name="64"><span class="lineNum">      64 </span>            :                #endif</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :             }</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">         49 :             }</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :         }</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span>            :         {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :             auto t1 = getAudioTracks (*edit)[0];</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :             auto t1 = getAudioTracks (*edit)[0];</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :             jassert (t1-&gt;getNumTrackItems() == 50);</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :             auto preceeding = t1-&gt;state;</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          1 :             auto preceeding = t1-&gt;state;</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :             </a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste track 99 times&quot;));</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          2 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste track 99 times&quot;));</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :             </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :             for (int i = 1; i &lt; 100; ++i)</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">        100 :             for (int i = 1; i &lt; 100; ++i)</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :             {</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :                 auto trackState = t1-&gt;state.createCopy();</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :                 EditItemID::remapIDs (trackState, nullptr, *edit);</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">         99 :                 auto trackState = t1-&gt;state.createCopy();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         99 :                 EditItemID::remapIDs (trackState, nullptr, *edit);</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
 <a name="80"><span class="lineNum">      80 </span>            :                #if JUCE_DEBUG</a>
 <a name="81"><span class="lineNum">      81 </span>            :                 auto newTrackID = EditItemID::fromID (trackState);</a>
@@ -148,59 +148,59 @@
 <a name="86"><span class="lineNum">      86 </span>            :                 jassert (! t1-&gt;state.getChildWithProperty (IDs::id, newTrackID).isValid());</a>
 <a name="87"><span class="lineNum">      87 </span>            :                #endif</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :                 edit-&gt;insertTrack (trackState, {}, preceeding, nullptr);</span></a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :                 preceeding = trackState;</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">        198 :                 edit-&gt;insertTrack (trackState, {}, preceeding, nullptr);</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">         99 :                 preceeding = trackState;</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :                 </a>
 <a name="92"><span class="lineNum">      92 </span>            :                #if JUCE_DEBUG</a>
 <a name="93"><span class="lineNum">      93 </span>            :                 jassert (findTrackForID (*edit, newTrackID) != nullptr);</a>
 <a name="94"><span class="lineNum">      94 </span>            :                #endif</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :             }</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">         99 :             }</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">          1 :         }</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :         </a>
 <a name="98"><span class="lineNum">      98 </span>            :         {</a>
 <a name="99"><span class="lineNum">      99 </span>            :             auto allAudioTracks = getAudioTracks (*edit);</a>
 <a name="100"><span class="lineNum">     100 </span>            :             jassert (allAudioTracks.size() == 100);</a>
 <a name="101"><span class="lineNum">     101 </span>            :             </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste all 5,000 clips using Clipboard&quot;));</span></a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :             Clipboard::Clips content;</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">          2 :             ScopedBenchmark sb (getDescription (&quot;Copy/paste all 5,000 clips using Clipboard&quot;));</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          1 :             Clipboard::Clips content;</span></a>
 <a name="104"><span class="lineNum">     104 </span>            :             int trackOffset = 0;</a>
 <a name="105"><span class="lineNum">     105 </span>            :             </a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :             for (auto at : allAudioTracks)</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">        101 :             for (auto at : allAudioTracks)</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :             {</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :                 for (auto c : at-&gt;getClips())</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :                     if (auto mc = dynamic_cast&lt;MidiClip*&gt; (c))</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :                         content.addClip (trackOffset, mc-&gt;state);</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">       5100 :                 for (auto c : at-&gt;getClips())</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">       5000 :                     if (auto mc = dynamic_cast&lt;MidiClip*&gt; (c))</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       5000 :                         content.addClip (trackOffset, mc-&gt;state);</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :                 </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :                 ++trackOffset;</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        100 :                 ++trackOffset;</span></a>
 <a name="113"><span class="lineNum">     113 </span>            :             }</a>
 <a name="114"><span class="lineNum">     114 </span>            :             </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :             EditInsertPoint insertPoint (*edit);</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :             content.pasteIntoEdit (*edit, insertPoint, nullptr);</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          1 :             EditInsertPoint insertPoint (*edit);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          1 :             content.pasteIntoEdit (*edit, insertPoint, nullptr);</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :             </a>
 <a name="118"><span class="lineNum">     118 </span>            :            #if JUCE_DEBUG</a>
 <a name="119"><span class="lineNum">     119 </span>            :             const int numClips = std::accumulate (allAudioTracks.begin(), allAudioTracks.end(), 0,</a>
 <a name="120"><span class="lineNum">     120 </span>            :                                                   [] (int total, auto t) { return total + t-&gt;getNumTrackItems(); });</a>
 <a name="121"><span class="lineNum">     121 </span>            :             jassert (numClips == 10'000);</a>
 <a name="122"><span class="lineNum">     122 </span>            :            #endif</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">          1 :         }</span></a>
 <a name="124"><span class="lineNum">     124 </span>            :         </a>
 <a name="125"><span class="lineNum">     125 </span>            :         {</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :             auto editStateCopy = edit-&gt;state.createCopy();</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 :             auto editStateCopy = edit-&gt;state.createCopy();</span></a>
 <a name="127"><span class="lineNum">     127 </span>            :             </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :             ScopedBenchmark sb (getDescription (&quot;Load Edit from state&quot;));</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :             Edit editCopy ({ engine, editStateCopy, ProjectItemID::createNewID (0) });</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">          2 :             ScopedBenchmark sb (getDescription (&quot;Load Edit from state&quot;));</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          1 :             Edit editCopy ({ engine, editStateCopy, ProjectItemID::createNewID (0) });</span></a>
 <a name="130"><span class="lineNum">     130 </span>            :             jassert (getAudioTracks (editCopy).size() == 100);</a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">          1 :         }</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">          1 :     }</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            : private:</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     BenchmarkDescription getDescription (std::string bmName)</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">          4 :     BenchmarkDescription getDescription (std::string bmName)</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     {</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         const auto bmCategory = (getName() + &quot;/&quot; + getCategory()).toStdString();</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          8 :         const auto bmCategory = (getName() + &quot;/&quot; + getCategory()).toStdString();</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :         const auto bmDescription = bmName;</a>
 <a name="139"><span class="lineNum">     139 </span>            :         </a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         return { std::hash&lt;std::string&gt;{} (bmName + bmCategory + bmDescription),</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :                  bmCategory, bmName, bmDescription };</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          8 :         return { std::hash&lt;std::string&gt;{} (bmName + bmCategory + bmDescription),</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         20 :                  bmCategory, bmName, bmDescription };</span></a>
 <a name="142"><span class="lineNum">     142 </span>            :     }</a>
 <a name="143"><span class="lineNum">     143 </span>            : };</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>

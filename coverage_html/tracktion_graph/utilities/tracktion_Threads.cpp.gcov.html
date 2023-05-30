@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
             <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryHi">90.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -96,30 +96,30 @@
 <a name="34"><span class="lineNum">      34 </span>            :     }</a>
 <a name="35"><span class="lineNum">      35 </span>            : #else</a>
 <a name="36"><span class="lineNum">      36 </span>            :     template&lt;typename HandleType&gt;</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :     bool setThreadPriority (HandleType handle, int priority)</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">       1109 :     bool setThreadPriority (HandleType handle, int priority)</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     {</a>
 <a name="39"><span class="lineNum">      39 </span>            :         assert (handle != HandleType());</a>
 <a name="40"><span class="lineNum">      40 </span>            :         </a>
 <a name="41"><span class="lineNum">      41 </span>            :         struct sched_param param;</a>
 <a name="42"><span class="lineNum">      42 </span>            :         int policy;</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :         priority = std::max (0, std::min (10, priority));</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       1109 :         priority = std::max (0, std::min (10, priority));</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :         if (pthread_getschedparam ((pthread_t) handle, &amp;policy, &amp;param) != 0)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       1109 :         if (pthread_getschedparam ((pthread_t) handle, &amp;policy, &amp;param) != 0)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :             return false;</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :         policy = priority == 0 ? SCHED_OTHER : SCHED_RR;</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       1109 :         policy = priority == 0 ? SCHED_OTHER : SCHED_RR;</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         const int minPriority = sched_get_priority_min (policy);</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         const int maxPriority = sched_get_priority_max (policy);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1109 :         const int minPriority = sched_get_priority_min (policy);</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">       1109 :         const int maxPriority = sched_get_priority_max (policy);</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :         param.sched_priority = ((maxPriority - minPriority) * priority) / 10 + minPriority;</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :         return pthread_setschedparam ((pthread_t) handle, policy, &amp;param) == 0;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1109 :         param.sched_priority = ((maxPriority - minPriority) * priority) / 10 + minPriority;</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       1109 :         return pthread_setschedparam ((pthread_t) handle, policy, &amp;param) == 0;</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :     }</a>
 <a name="56"><span class="lineNum">      56 </span>            : #endif</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 : bool setThreadPriority (std::thread&amp; t, int priority)</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : {</a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :     return setThreadPriority (t.native_handle(), priority);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       1109 :     return setThreadPriority (t.native_handle(), priority);</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : }</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            : }} // namespace tracktion_engine</a>

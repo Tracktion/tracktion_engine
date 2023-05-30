@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">22</td>
             <td class="headerCovTableEntry">79</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">27.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -77,9 +77,9 @@
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     static constexpr int samplesPerBlock = 512;</a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     Pimpl (PitchShiftPlugin&amp; p) : owner (p)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          2 :     Pimpl (PitchShiftPlugin&amp; p) : owner (p)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :     {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">          2 :     }</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     void initialise (double sr, float semitonesUp, TimeStretcher::Mode newMode, TimeStretcher::ElastiqueProOptions newOptions)</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     {</a>
@@ -182,38 +182,38 @@
 <a name="120"><span class="lineNum">     120 </span>            : };</a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span>            : //==============================================================================</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 : PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">          8 : PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : {</a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :     pimpl.reset (new Pimpl (*this));</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          2 :     pimpl.reset (new Pimpl (*this));</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
 <a name="127"><span class="lineNum">     127 </span>            :     auto um = getUndoManager();</a>
 <a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :     semitones = addParam (&quot;semitones up&quot;, TRANS(&quot;Semitones&quot;),</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          2 :     semitones = addParam (&quot;semitones up&quot;, TRANS(&quot;Semitones&quot;),</span></a>
 <a name="130"><span class="lineNum">     130 </span>            :                           { -PitchShiftPlugin::getMaximumSemitones(), PitchShiftPlugin::getMaximumSemitones() },</a>
 <a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                           [] (float value)            { return std::abs (value) &lt; 0.01f ? &quot;(&quot; + TRANS(&quot;Original pitch&quot;) + &quot;)&quot;</span></a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                                                                                         : getSemitonesAsString (value); },</span></a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :                           [] (const juce::String&amp; s)  { return juce::jlimit (-PitchShiftPlugin::getMaximumSemitones(),</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :                                                                              PitchShiftPlugin::getMaximumSemitones(),</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :                                                                              s.getFloatValue()); });</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">          4 :                                                                              s.getFloatValue()); });</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :     semitonesValue.referTo (state, IDs::semitonesUp, um);</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :     semitonesValue.referTo (state, IDs::semitonesUp, um);</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          4 :     mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     elastiqueOptions.referTo (state, IDs::elastiqueOptions, um);</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     semitones-&gt;attachToCurrentValue (semitonesValue);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          2 :     semitones-&gt;attachToCurrentValue (semitonesValue);</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 : }</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 : PitchShiftPlugin::PitchShiftPlugin (Edit&amp; ed, const juce::ValueTree&amp; v)</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     : PitchShiftPlugin (PluginCreationInfo (ed, v, false))</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 : PitchShiftPlugin::~PitchShiftPlugin()</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          4 : PitchShiftPlugin::~PitchShiftPlugin()</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : {</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          2 :     notifyListenersOfDeletion();</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     semitones-&gt;detachFromCurrentValue();</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">          2 :     semitones-&gt;detachFromCurrentValue();</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          6 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : juce::ValueTree PitchShiftPlugin::create()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
@@ -251,16 +251,16 @@
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Pitch Shifter Plugin&quot;);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">          2 : void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;semitonesValue, nullptr };</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;int&gt;* cvsInt[]      = { &amp;mode, nullptr };</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          2 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;semitonesValue, nullptr };</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          2 :     juce::CachedValue&lt;int&gt;* cvsInt[]      = { &amp;mode, nullptr };</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          2 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          2 :     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">          4 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">          2 :         p-&gt;updateFromAttachedValue();</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">          2 : }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
 <a name="203"><span class="lineNum">     203 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

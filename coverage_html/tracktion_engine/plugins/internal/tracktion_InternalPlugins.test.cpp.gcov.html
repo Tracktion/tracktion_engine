@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -80,23 +80,23 @@
 <a name="18"><span class="lineNum">      18 </span>            : class InternalPluginTests : public juce::UnitTest</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     InternalPluginTests() : juce::UnitTest (&quot;Internal Plugins&quot;, &quot;Tracktion&quot;) {}</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 :     InternalPluginTests() : juce::UnitTest (&quot;Internal Plugins&quot;, &quot;Tracktion&quot;) {}</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     //==============================================================================</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :     void runTest() override</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     {</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :         runRestoreStateTests();</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          1 :         runRestoreStateTests();</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          1 :     }</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
 <a name="29"><span class="lineNum">      29 </span>            : private:</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :     void runRestoreStateTests()</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          1 :     void runRestoreStateTests()</span></a>
 <a name="31"><span class="lineNum">      31 </span>            :     {</a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 :         testPreset (DelayPlugin::xmlTypeName,</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">          3 :         testPreset (DelayPlugin::xmlTypeName,</span></a>
 <a name="33"><span class="lineNum">      33 </span>            :                     {</a>
 <a name="34"><span class="lineNum">      34 </span>            :                         { &quot;feedback&quot;,       -30.0f,     IDs::feedback },</a>
 <a name="35"><span class="lineNum">      35 </span>            :                         { &quot;mix proportion&quot;, 0.5f,       IDs::mix }</a>
 <a name="36"><span class="lineNum">      36 </span>            :                     });</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :         testPreset (CompressorPlugin::xmlTypeName,</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">          7 :         testPreset (CompressorPlugin::xmlTypeName,</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :                     {</a>
 <a name="39"><span class="lineNum">      39 </span>            :                         { &quot;threshold&quot;,      0.9f,       IDs::threshold },</a>
 <a name="40"><span class="lineNum">      40 </span>            :                         { &quot;ratio&quot;,          0.6f,       IDs::ratio },</a>
@@ -105,7 +105,7 @@
 <a name="43"><span class="lineNum">      43 </span>            :                         { &quot;output gain&quot;,    10.0f,      IDs::outputDb },</a>
 <a name="44"><span class="lineNum">      44 </span>            :                         { &quot;input gain&quot;,     6.0f,       IDs::inputDb }</a>
 <a name="45"><span class="lineNum">      45 </span>            :                     });</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :         testPreset (EqualiserPlugin::xmlTypeName,</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         13 :         testPreset (EqualiserPlugin::xmlTypeName,</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :                     {</a>
 <a name="48"><span class="lineNum">      48 </span>            :                         { &quot;Low-pass freq&quot;,  30.0f,      IDs::loFreq },</a>
 <a name="49"><span class="lineNum">      49 </span>            :                         { &quot;Low-pass gain&quot;,  -10.0f,     IDs::loGain },</a>
@@ -120,15 +120,15 @@
 <a name="58"><span class="lineNum">      58 </span>            :                         { &quot;High-pass gain&quot;, -6.0f,      IDs::hiGain },</a>
 <a name="59"><span class="lineNum">      59 </span>            :                         { &quot;High-pass Q&quot;,    0.1f,       IDs::hiQ }</a>
 <a name="60"><span class="lineNum">      60 </span>            :                     });</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :         testPreset (PitchShiftPlugin::xmlTypeName,</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          2 :         testPreset (PitchShiftPlugin::xmlTypeName,</span></a>
 <a name="62"><span class="lineNum">      62 </span>            :                     {</a>
 <a name="63"><span class="lineNum">      63 </span>            :                         { &quot;semitones up&quot;,   -12.0f,     IDs::semitonesUp },</a>
 <a name="64"><span class="lineNum">      64 </span>            :                     });</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         testPreset (PitchShiftPlugin::xmlTypeName,</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">          2 :         testPreset (PitchShiftPlugin::xmlTypeName,</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :                     {</a>
 <a name="67"><span class="lineNum">      67 </span>            :                         { &quot;semitones up&quot;,   6.0f,       IDs::semitonesUp },</a>
 <a name="68"><span class="lineNum">      68 </span>            :                     });</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :         testPreset (ReverbPlugin::xmlTypeName,</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          7 :         testPreset (ReverbPlugin::xmlTypeName,</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :                     {</a>
 <a name="71"><span class="lineNum">      71 </span>            :                         { &quot;room size&quot;,      0.2f,       IDs::roomSize },</a>
 <a name="72"><span class="lineNum">      72 </span>            :                         { &quot;damping&quot;,        0.3f,       IDs::damp },</a>
@@ -137,57 +137,57 @@
 <a name="75"><span class="lineNum">      75 </span>            :                         { &quot;width&quot;,          0.7f,       IDs::width },</a>
 <a name="76"><span class="lineNum">      76 </span>            :                         { &quot;mode&quot;,           0.0f,       IDs::mode },</a>
 <a name="77"><span class="lineNum">      77 </span>            :                     });</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :         testPreset (VolumeAndPanPlugin::xmlTypeName,</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">          3 :         testPreset (VolumeAndPanPlugin::xmlTypeName,</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :                     {</a>
 <a name="80"><span class="lineNum">      80 </span>            :                         { &quot;volume&quot;,         0.5f,       IDs::volume },</a>
 <a name="81"><span class="lineNum">      81 </span>            :                         { &quot;pan&quot;,            -0.25f,     IDs::pan }</a>
 <a name="82"><span class="lineNum">      82 </span>            :                     });</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :     }</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     struct ParamTest</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        120 :     struct ParamTest</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :     {</a>
 <a name="87"><span class="lineNum">      87 </span>            :         const char* paramID;</a>
 <a name="88"><span class="lineNum">      88 </span>            :         float desiredValue;</a>
 <a name="89"><span class="lineNum">      89 </span>            :         const juce::Identifier valueProperty;</a>
 <a name="90"><span class="lineNum">      90 </span>            :     };</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     void testPreset (const juce::String&amp; pluginName, std::initializer_list&lt;ParamTest&gt; params)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          7 :     void testPreset (const juce::String&amp; pluginName, std::initializer_list&lt;ParamTest&gt; params)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            :     {</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :         beginTest (&quot;Testing plugin parameters: &quot; + pluginName);</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          7 :         beginTest (&quot;Testing plugin parameters: &quot; + pluginName);</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            :         // Create Edit for testing and a plugin instance</a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">         14 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);</span></a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :         Plugin::Ptr pluginPtr = edit-&gt;getPluginCache().createNewPlugin (pluginName, {});</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 :         expect (pluginPtr != nullptr);</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          7 :         Plugin::Ptr pluginPtr = edit-&gt;getPluginCache().createNewPlugin (pluginName, {});</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">          7 :         expect (pluginPtr != nullptr);</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span>            :         // Create a state for restoration</a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :         juce::ValueTree preset (IDs::PLUGIN);</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :         preset.setProperty (IDs::type, pluginName, nullptr);</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          7 :         juce::ValueTree preset (IDs::PLUGIN);</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">          7 :         preset.setProperty (IDs::type, pluginName, nullptr);</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :         for (auto param : params)</span></a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :             preset.setProperty (param.valueProperty, param.desiredValue, nullptr);</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         37 :         for (auto param : params)</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">         30 :             preset.setProperty (param.valueProperty, param.desiredValue, nullptr);</span></a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :         // Test loading this state and then saving the plugin back tot he value tree</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :         pluginPtr-&gt;restorePluginStateFromValueTree (preset);</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         pluginPtr-&gt;flushPluginStateToValueTree();</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">          7 :         pluginPtr-&gt;restorePluginStateFromValueTree (preset);</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          7 :         pluginPtr-&gt;flushPluginStateToValueTree();</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            :         // Ensure the parameters have the correct value from the preset</a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :         for (auto param : params)</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">         37 :         for (auto param : params)</span></a>
 <a name="115"><span class="lineNum">     115 </span>            :         {</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :             auto parameter = pluginPtr-&gt;getAutomatableParameterByID (param.paramID);</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :             expect (parameter-&gt;getValueRange().contains (param.desiredValue));</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         30 :             auto parameter = pluginPtr-&gt;getAutomatableParameterByID (param.paramID);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         90 :             expect (parameter-&gt;getValueRange().contains (param.desiredValue));</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :             expect (parameter != nullptr);</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :             expectWithinAbsoluteError ((float) pluginPtr-&gt;state[param.valueProperty],</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                                        (float) preset[param.valueProperty],</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">         30 :             expect (parameter != nullptr);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">         60 :             expectWithinAbsoluteError ((float) pluginPtr-&gt;state[param.valueProperty],</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         30 :                                        (float) preset[param.valueProperty],</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :                                        0.0001f);</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :             expectWithinAbsoluteError (parameter-&gt;getCurrentExplicitValue(), param.desiredValue, 0.0001f);</span></a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :             expectWithinAbsoluteError (parameter-&gt;getCurrentValue(), param.desiredValue, 0.0001f);</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             expectWithinAbsoluteError (parameter-&gt;getCurrentValue(), parameter-&gt;getCurrentExplicitValue(), 0.0001f);</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :             expect (! pluginPtr-&gt;state.hasProperty (IDs::parameters), &quot;State has erroneous parameters property&quot;);</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         30 :             expectWithinAbsoluteError (parameter-&gt;getCurrentExplicitValue(), param.desiredValue, 0.0001f);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         30 :             expectWithinAbsoluteError (parameter-&gt;getCurrentValue(), param.desiredValue, 0.0001f);</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">         30 :             expectWithinAbsoluteError (parameter-&gt;getCurrentValue(), parameter-&gt;getCurrentExplicitValue(), 0.0001f);</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">         30 :             expect (! pluginPtr-&gt;state.hasProperty (IDs::parameters), &quot;State has erroneous parameters property&quot;);</span></a>
 <a name="127"><span class="lineNum">     127 </span>            :         }</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">         14 :     }</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : };</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            : static InternalPluginTests internalPluginTests;</a>

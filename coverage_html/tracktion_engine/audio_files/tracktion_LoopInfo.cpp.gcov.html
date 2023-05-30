@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">231</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntry">232</td>
+            <td class="headerCovTableEntryLo">39.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">20</td>
             <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">43.5 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -73,11 +73,11 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : LoopInfo::LoopInfo (Engine&amp; e)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 :     : engine (e), state (IDs::LOOPINFO)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">      10175 : LoopInfo::LoopInfo (Engine&amp; e)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      10175 :     : engine (e), state (IDs::LOOPINFO)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     initialiseMissingProps();</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">      10175 :     initialiseMissingProps();</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">      10175 : }</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 : LoopInfo::LoopInfo (Engine&amp; e, const juce::File&amp; f)</span></a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     : engine (e), state (IDs::LOOPINFO)</span></a>
@@ -94,33 +94,33 @@
 <a name="32"><span class="lineNum">      32 </span>            :     }</a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 : LoopInfo::LoopInfo (Engine&amp; e, const juce::AudioFormatReader* afr, const juce::AudioFormat* af)</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     : engine (e), state (IDs::LOOPINFO)</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">       3535 : LoopInfo::LoopInfo (Engine&amp; e, const juce::AudioFormatReader* afr, const juce::AudioFormat* af)</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">       3535 :     : engine (e), state (IDs::LOOPINFO)</span></a>
 <a name="37"><span class="lineNum">      37 </span>            : {</a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :     init (afr, af);</span></a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">       3535 :     init (afr, af);</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">       3535 : }</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 : LoopInfo::LoopInfo (Engine&amp; e, const juce::ValueTree&amp; v, juce::UndoManager* u)</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :     : engine (e), state (v), um (u), maintainParent (v.getParent().isValid())</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">       3392 : LoopInfo::LoopInfo (Engine&amp; e, const juce::ValueTree&amp; v, juce::UndoManager* u)</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">       3392 :     : engine (e), state (v), um (u), maintainParent (v.getParent().isValid())</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : {</a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :     initialiseMissingProps();</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">       3392 :     initialiseMissingProps();</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       3392 : }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 : LoopInfo::LoopInfo (const LoopInfo&amp; other)</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :     : engine (other.engine)</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">      19114 : LoopInfo::LoopInfo (const LoopInfo&amp; other)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">      19114 :     : engine (other.engine)</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : {</a>
 <a name="50"><span class="lineNum">      50 </span>            :     *this = other;</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">      19114 : }</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 : LoopInfo&amp; LoopInfo::operator= (const LoopInfo&amp; o)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1767 : LoopInfo&amp; LoopInfo::operator= (const LoopInfo&amp; o)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     return copyFrom (o.state);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      20881 :     return copyFrom (o.state);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : }</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            : //==============================================================================</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 : double LoopInfo::getBpm (const AudioFileInfo&amp; wi) const</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         18 : double LoopInfo::getBpm (const AudioFileInfo&amp; wi) const</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : {</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     return getBeatsPerSecond (wi) * 60.0;</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">         18 :     return getBeatsPerSecond (wi) * 60.0;</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : }</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : void LoopInfo::setBpm (double newBpm, double currentBpm)</span></a>
@@ -161,49 +161,49 @@
 <a name="99"><span class="lineNum">      99 </span>            :     }</a>
 <a name="100"><span class="lineNum">     100 </span>            : }</a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 : double LoopInfo::getBeatsPerSecond (const AudioFileInfo&amp; wi) const</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">         18 : double LoopInfo::getBeatsPerSecond (const AudioFileInfo&amp; wi) const</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : {</a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         18 :     CRASH_TRACER</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :     if (wi.sampleRate == 0.0)</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         18 :     if (wi.sampleRate == 0.0)</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :         return 2.0;</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :     auto in  = getInMarker();</a>
 <a name="110"><span class="lineNum">     110 </span>            :     auto out = getOutMarker();</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :     if (out == -1 || out &gt; wi.lengthInSamples)</span></a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :         out = wi.lengthInSamples;</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         18 :     if (out == -1 || out &gt; wi.lengthInSamples)</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         18 :         out = wi.lengthInSamples;</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     if (out &lt;= 0)</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">         18 :     if (out &lt;= 0)</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :         return 2.0;</a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :     auto length = (out - in) / wi.sampleRate;</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">         18 :     auto length = (out - in) / wi.sampleRate;</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     if (length &lt;= 0)</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">         18 :     if (length &lt;= 0)</span></a>
 <a name="121"><span class="lineNum">     121 </span>            :         return 2.0;</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     return getNumBeats() / length;</span></a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         18 :     return getNumBeats() / length;</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         18 : }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span>            : //==============================================================================</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 : int LoopInfo::getDenominator() const              { return getProp&lt;int&gt; (IDs::denominator); }</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 : int LoopInfo::getNumerator() const                { return getProp&lt;int&gt; (IDs::numerator); }</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 : void LoopInfo::setDenominator (int dem)           { setProp (IDs::denominator, dem); }</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 : void LoopInfo::setNumerator (int num)             { setProp (IDs::numerator, num); }</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 : double LoopInfo::getNumBeats() const              { return getProp&lt;double&gt; (IDs::numBeats); }</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 : void LoopInfo::setNumBeats (double b)             { setProp (IDs::numBeats, b); }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">       3409 : int LoopInfo::getDenominator() const              { return getProp&lt;int&gt; (IDs::denominator); }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">       3409 : int LoopInfo::getNumerator() const                { return getProp&lt;int&gt; (IDs::numerator); }</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">       6919 : void LoopInfo::setDenominator (int dem)           { setProp (IDs::denominator, dem); }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">       6919 : void LoopInfo::setNumerator (int num)             { setProp (IDs::numerator, num); }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">       6820 : double LoopInfo::getNumBeats() const              { return getProp&lt;double&gt; (IDs::numBeats); }</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      10447 : void LoopInfo::setNumBeats (double b)             { setProp (IDs::numBeats, b); }</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            : //==============================================================================</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 : bool LoopInfo::isLoopable() const                  { const juce::ScopedLock sl (lock); return ! isOneShot() &amp;&amp; getNumBeats() &gt; 0.0 &amp;&amp; getDenominator() &gt; 0 &amp;&amp; getNumerator() &gt; 0; }</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : bool LoopInfo::isOneShot() const                   { return getProp&lt;bool&gt; (IDs::oneShot); }</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">      10167 : bool LoopInfo::isLoopable() const                  { const juce::ScopedLock sl (lock); return ! isOneShot() &amp;&amp; getNumBeats() &gt; 0.0 &amp;&amp; getDenominator() &gt; 0 &amp;&amp; getNumerator() &gt; 0; }</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">       3389 : bool LoopInfo::isOneShot() const                   { return getProp&lt;bool&gt; (IDs::oneShot); }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            : //==============================================================================</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 : int LoopInfo::getRootNote() const                  { return getProp&lt;int&gt; (IDs::rootNote); }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       3389 : int LoopInfo::getRootNote() const                  { return getProp&lt;int&gt; (IDs::rootNote); }</span></a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 : void LoopInfo::setRootNote (int note)              { setProp&lt;int&gt; (IDs::rootNote, note); }</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            : //==============================================================================</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 : SampleCount LoopInfo::getInMarker() const          { return getProp&lt;juce::int64&gt; (IDs::inMarker); }</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 : SampleCount LoopInfo::getOutMarker() const         { return getProp&lt;juce::int64&gt; (IDs::outMarker); }</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         18 : SampleCount LoopInfo::getInMarker() const          { return getProp&lt;juce::int64&gt; (IDs::inMarker); }</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">         18 : SampleCount LoopInfo::getOutMarker() const         { return getProp&lt;juce::int64&gt; (IDs::outMarker); }</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 : void LoopInfo::setInMarker (SampleCount in)        { setProp&lt;juce::int64&gt; (IDs::inMarker, in); }</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 : void LoopInfo::setOutMarker (SampleCount out)      { setProp&lt;juce::int64&gt; (IDs::outMarker, out); }</span></a>
@@ -294,24 +294,24 @@
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         addTag (t);</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 : void LoopInfo::initialiseMissingProps()</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">      17099 : void LoopInfo::initialiseMissingProps()</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (lock);</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::numBeats, 0.0, um);</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::denominator, 0, um);</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::numerator, 0, um);</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::oneShot, 0, um);</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::bpm, 0, um);</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::rootNote, -1, um);</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::inMarker, 0, um);</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     setPropertyIfMissing (state, IDs::outMarker, -1, um);</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      17099 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::numBeats, 0.0, um);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::denominator, 0, um);</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::numerator, 0, um);</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::oneShot, 0, um);</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::bpm, 0, um);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::rootNote, -1, um);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::inMarker, 0, um);</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      17099 :     setPropertyIfMissing (state, IDs::outMarker, -1, um);</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">      17099 : }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : LoopInfo&amp; LoopInfo::copyFrom (const juce::ValueTree&amp; o)</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">      20881 : LoopInfo&amp; LoopInfo::copyFrom (const juce::ValueTree&amp; o)</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : {</a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (lock);</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :     copyValueTree (state, o, um);</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     return *this;</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">      20881 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">      20881 :     copyValueTree (state, o, um);</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">      20881 :     return *this;</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : }</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 : void LoopInfo::removeChildIfEmpty (const juce::Identifier&amp; i)</span></a>
@@ -328,183 +328,185 @@
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 : juce::ValueTree LoopInfo::getTags() const             { const juce::ScopedLock sl (lock); return state.getChildWithName (IDs::TAGS); }</span></a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 : juce::ValueTree LoopInfo::getOrCreateTags()           { const juce::ScopedLock sl (lock); return state.getOrCreateChildWithName (IDs::TAGS, um); }</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : void LoopInfo::duplicateIfShared()</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">      34869 : void LoopInfo::duplicateIfShared()</span></a>
 <a name="270"><span class="lineNum">     270 </span>            : {</a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">      34869 :     const juce::ScopedLock sl (lock);</span></a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :     if (state.getReferenceCount() &lt;= 1)</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      34869 :     if (state.getReferenceCount() &lt;= 1)</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :         return;</a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :     if (maintainParent)</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">      10173 :     if (maintainParent)</span></a>
 <a name="277"><span class="lineNum">     277 </span>            :     {</a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :         auto parent = state.getParent();</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">      10173 :         auto parent = state.getParent();</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :         int index = -1;</a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :         if (parent.isValid())</span></a>
-<a name="282"><span class="lineNum">     282 </span>            :         {</a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :             index = parent.indexOf (state);</span></a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :             parent.removeChild (index, um);</span></a>
-<a name="285"><span class="lineNum">     285 </span>            :         }</a>
-<a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :         state = state.createCopy();</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">      10173 :         auto stateCopy = state.createCopy();</span></a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">      10173 :         if (parent.isValid())</span></a>
+<a name="284"><span class="lineNum">     284 </span>            :         {</a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      10173 :             index = parent.indexOf (state);</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">      10173 :             parent.removeChild (index, um);</span></a>
+<a name="287"><span class="lineNum">     287 </span>            :         }</a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         if (parent.isValid())</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :             parent.addChild (state, index, um);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="292"><span class="lineNum">     292 </span>            :     else</a>
-<a name="293"><span class="lineNum">     293 </span>            :     {</a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :         state = state.createCopy();</span></a>
-<a name="295"><span class="lineNum">     295 </span>            :     }</a>
-<a name="296"><span class="lineNum">     296 </span>            : }</a>
-<a name="297"><span class="lineNum">     297 </span>            : </a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 : static bool isSameFormat (const juce::AudioFormat* af1, const juce::AudioFormat* af2)</span></a>
-<a name="299"><span class="lineNum">     299 </span>            : {</a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     return af1 == af2 || (af1 != nullptr &amp;&amp; af2 != nullptr</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :                            &amp;&amp; af1-&gt;getFormatName() == af2-&gt;getFormatName());</span></a>
-<a name="302"><span class="lineNum">     302 </span>            : }</a>
-<a name="303"><span class="lineNum">     303 </span>            : </a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat* af)</span></a>
-<a name="305"><span class="lineNum">     305 </span>            : {</a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     if (afr == nullptr || af == nullptr)</span></a>
-<a name="307"><span class="lineNum">     307 </span>            :         return;</a>
-<a name="308"><span class="lineNum">     308 </span>            : </a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :     auto&amp; formatManager = engine.getAudioFileFormatManager();</span></a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (lock);</span></a>
-<a name="311"><span class="lineNum">     311 </span>            : </a>
-<a name="312"><span class="lineNum">     312 </span>            :    #if TRACKTION_ENABLE_REX</a>
-<a name="313"><span class="lineNum">     313 </span>            :     if (isSameFormat (af, formatManager.getRexFormat()))</a>
-<a name="314"><span class="lineNum">     314 </span>            :     {</a>
-<a name="315"><span class="lineNum">     315 </span>            :         setDenominator (afr-&gt;metadataValues[RexAudioFormat::rexDenominator].getIntValue());</a>
-<a name="316"><span class="lineNum">     316 </span>            :         setNumerator (afr-&gt;metadataValues[RexAudioFormat::rexDenominator].getIntValue());</a>
-<a name="317"><span class="lineNum">     317 </span>            :         const double bpm = afr-&gt;metadataValues[RexAudioFormat::rexTempo].getDoubleValue();</a>
-<a name="318"><span class="lineNum">     318 </span>            :         setProp (IDs::bpm, bpm);</a>
-<a name="319"><span class="lineNum">     319 </span>            :         setProp (IDs::numBeats, bpm * ((afr-&gt;lengthInSamples / afr-&gt;sampleRate) / 60.0));</a>
-<a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span>            :         juce::StringArray beatPoints;</a>
-<a name="322"><span class="lineNum">     322 </span>            :         beatPoints.addTokens (afr-&gt;metadataValues[RexAudioFormat::rexBeatPoints], &quot;;&quot;, {});</a>
-<a name="323"><span class="lineNum">     323 </span>            :         beatPoints.removeEmptyStrings();</a>
-<a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span>            :         for (int i = 0; i &lt; beatPoints.size(); ++i)</a>
-<a name="326"><span class="lineNum">     326 </span>            :             addLoopPoint (beatPoints[i].getIntValue(), LoopInfo::LoopPointType::manual);</a>
-<a name="327"><span class="lineNum">     327 </span>            :     }</a>
-<a name="328"><span class="lineNum">     328 </span>            :     else</a>
-<a name="329"><span class="lineNum">     329 </span>            :    #endif</a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     if (isSameFormat (af, formatManager.getAiffFormat()))</span></a>
-<a name="331"><span class="lineNum">     331 </span>            :     {</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :         const int rootNote = afr-&gt;metadataValues[juce::AiffAudioFormat::appleRootSet] == &quot;1&quot;</span></a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :                                 ? afr-&gt;metadataValues[juce::AiffAudioFormat::appleRootNote].getIntValue() : -1;</span></a>
-<a name="334"><span class="lineNum">     334 </span>            : </a>
-<a name="335"><span class="lineNum">     335 </span>            :         setRootNote (rootNote);</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :         setProp (IDs::oneShot, afr-&gt;metadataValues[juce::AiffAudioFormat::appleOneShot] == &quot;1&quot;);</span></a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :         setDenominator (afr-&gt;metadataValues[juce::AiffAudioFormat::appleDenominator].getIntValue());</span></a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :         setNumerator (afr-&gt;metadataValues[juce::AiffAudioFormat::appleNumerator].getIntValue());</span></a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :         const double numBeats = afr-&gt;metadataValues[juce::AiffAudioFormat::appleBeats].getDoubleValue();</span></a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         setProp (IDs::numBeats, numBeats);</span></a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :         setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
-<a name="342"><span class="lineNum">     342 </span>            : </a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         juce::StringArray t;</span></a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :         t.addTokens (afr-&gt;metadataValues[juce::AiffAudioFormat::appleTag], &quot;;&quot;, {});</span></a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         t.add (afr-&gt;metadataValues[juce::AiffAudioFormat::appleKey]);</span></a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :         t.removeEmptyStrings();</span></a>
-<a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; t.size(); ++i)</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :             addTag (t[i]);</span></a>
-<a name="350"><span class="lineNum">     350 </span>            :     }</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     else if (isSameFormat (af, formatManager.getWavFormat()))</span></a>
-<a name="352"><span class="lineNum">     352 </span>            :     {</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :         auto s = afr-&gt;metadataValues[juce::WavAudioFormat::tracktionLoopInfo];</span></a>
-<a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :         if (s.isNotEmpty())</span></a>
-<a name="356"><span class="lineNum">     356 </span>            :         {</a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :             if (auto n = juce::parseXML (s))</span></a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :                 copyFrom (juce::ValueTree::fromXml (*n));</span></a>
-<a name="359"><span class="lineNum">     359 </span>            :         }</a>
-<a name="360"><span class="lineNum">     360 </span>            :         else</a>
-<a name="361"><span class="lineNum">     361 </span>            :         {</a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :             const int rootNote = afr-&gt;metadataValues[juce::WavAudioFormat::acidRootSet] == &quot;1&quot;</span></a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :                                     ? afr-&gt;metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;</span></a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :             const double numBeats = afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();</span></a>
-<a name="365"><span class="lineNum">     365 </span>            : </a>
-<a name="366"><span class="lineNum">     366 </span>            :             setRootNote (rootNote);</a>
-<a name="367"><span class="lineNum">     367 </span>            :             setNumBeats (numBeats);</a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :             setProp (IDs::oneShot, afr-&gt;metadataValues[juce::WavAudioFormat::acidOneShot] == &quot;1&quot;);</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :             setDenominator (afr-&gt;metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());</span></a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :             setNumerator (afr-&gt;metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :             setNumBeats (afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 :             setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
-<a name="373"><span class="lineNum">     373 </span>            :         }</a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :     else if (isSameFormat (af, formatManager.getNativeAudioFormat()))</span></a>
-<a name="376"><span class="lineNum">     376 </span>            :     {</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :         juce::String s = afr-&gt;metadataValues[juce::WavAudioFormat::tracktionLoopInfo];</span></a>
-<a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :         if (s.isNotEmpty())</span></a>
-<a name="380"><span class="lineNum">     380 </span>            :         {</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :             if (auto n = juce::parseXML (s))</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                 copyFrom (juce::ValueTree::fromXml (*n));</span></a>
-<a name="383"><span class="lineNum">     383 </span>            :         }</a>
-<a name="384"><span class="lineNum">     384 </span>            :         else</a>
-<a name="385"><span class="lineNum">     385 </span>            :         {</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :             const juce::String tempoString = afr-&gt;metadataValues[&quot;tempo&quot;];</span></a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :             auto bpm = tempoString.getDoubleValue();</span></a>
-<a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :             setProp (IDs::bpm, bpm);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">      10173 :         state = stateCopy;</span></a>
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">      10173 :         if (parent.isValid())</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">      10173 :             parent.addChild (state, index, um);</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">      10173 :     }</span></a>
+<a name="294"><span class="lineNum">     294 </span>            :     else</a>
+<a name="295"><span class="lineNum">     295 </span>            :     {</a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :         state = state.createCopy();</span></a>
+<a name="297"><span class="lineNum">     297 </span>            :     }</a>
+<a name="298"><span class="lineNum">     298 </span>            : }</a>
+<a name="299"><span class="lineNum">     299 </span>            : </a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">       7068 : static bool isSameFormat (const juce::AudioFormat* af1, const juce::AudioFormat* af2)</span></a>
+<a name="301"><span class="lineNum">     301 </span>            : {</a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">       7068 :     return af1 == af2 || (af1 != nullptr &amp;&amp; af2 != nullptr</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">       7064 :                            &amp;&amp; af1-&gt;getFormatName() == af2-&gt;getFormatName());</span></a>
+<a name="304"><span class="lineNum">     304 </span>            : }</a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">       3535 : void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat* af)</span></a>
+<a name="307"><span class="lineNum">     307 </span>            : {</a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">       3535 :     if (afr == nullptr || af == nullptr)</span></a>
+<a name="309"><span class="lineNum">     309 </span>            :         return;</a>
+<a name="310"><span class="lineNum">     310 </span>            : </a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">       3532 :     auto&amp; formatManager = engine.getAudioFileFormatManager();</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">       3532 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="313"><span class="lineNum">     313 </span>            : </a>
+<a name="314"><span class="lineNum">     314 </span>            :    #if TRACKTION_ENABLE_REX</a>
+<a name="315"><span class="lineNum">     315 </span>            :     if (isSameFormat (af, formatManager.getRexFormat()))</a>
+<a name="316"><span class="lineNum">     316 </span>            :     {</a>
+<a name="317"><span class="lineNum">     317 </span>            :         setDenominator (afr-&gt;metadataValues[RexAudioFormat::rexDenominator].getIntValue());</a>
+<a name="318"><span class="lineNum">     318 </span>            :         setNumerator (afr-&gt;metadataValues[RexAudioFormat::rexDenominator].getIntValue());</a>
+<a name="319"><span class="lineNum">     319 </span>            :         const double bpm = afr-&gt;metadataValues[RexAudioFormat::rexTempo].getDoubleValue();</a>
+<a name="320"><span class="lineNum">     320 </span>            :         setProp (IDs::bpm, bpm);</a>
+<a name="321"><span class="lineNum">     321 </span>            :         setProp (IDs::numBeats, bpm * ((afr-&gt;lengthInSamples / afr-&gt;sampleRate) / 60.0));</a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span>            :         juce::StringArray beatPoints;</a>
+<a name="324"><span class="lineNum">     324 </span>            :         beatPoints.addTokens (afr-&gt;metadataValues[RexAudioFormat::rexBeatPoints], &quot;;&quot;, {});</a>
+<a name="325"><span class="lineNum">     325 </span>            :         beatPoints.removeEmptyStrings();</a>
+<a name="326"><span class="lineNum">     326 </span>            : </a>
+<a name="327"><span class="lineNum">     327 </span>            :         for (int i = 0; i &lt; beatPoints.size(); ++i)</a>
+<a name="328"><span class="lineNum">     328 </span>            :             addLoopPoint (beatPoints[i].getIntValue(), LoopInfo::LoopPointType::manual);</a>
+<a name="329"><span class="lineNum">     329 </span>            :     }</a>
+<a name="330"><span class="lineNum">     330 </span>            :     else</a>
+<a name="331"><span class="lineNum">     331 </span>            :    #endif</a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">       3532 :     if (isSameFormat (af, formatManager.getAiffFormat()))</span></a>
+<a name="333"><span class="lineNum">     333 </span>            :     {</a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :         const int rootNote = afr-&gt;metadataValues[juce::AiffAudioFormat::appleRootSet] == &quot;1&quot;</span></a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :                                 ? afr-&gt;metadataValues[juce::AiffAudioFormat::appleRootNote].getIntValue() : -1;</span></a>
+<a name="336"><span class="lineNum">     336 </span>            : </a>
+<a name="337"><span class="lineNum">     337 </span>            :         setRootNote (rootNote);</a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :         setProp (IDs::oneShot, afr-&gt;metadataValues[juce::AiffAudioFormat::appleOneShot] == &quot;1&quot;);</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :         setDenominator (afr-&gt;metadataValues[juce::AiffAudioFormat::appleDenominator].getIntValue());</span></a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         setNumerator (afr-&gt;metadataValues[juce::AiffAudioFormat::appleNumerator].getIntValue());</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :         const double numBeats = afr-&gt;metadataValues[juce::AiffAudioFormat::appleBeats].getDoubleValue();</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :         setProp (IDs::numBeats, numBeats);</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
+<a name="344"><span class="lineNum">     344 </span>            : </a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         juce::StringArray t;</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :         t.addTokens (afr-&gt;metadataValues[juce::AiffAudioFormat::appleTag], &quot;;&quot;, {});</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :         t.add (afr-&gt;metadataValues[juce::AiffAudioFormat::appleKey]);</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :         t.removeEmptyStrings();</span></a>
+<a name="349"><span class="lineNum">     349 </span>            : </a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; t.size(); ++i)</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :             addTag (t[i]);</span></a>
+<a name="352"><span class="lineNum">     352 </span>            :     }</a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">       3532 :     else if (isSameFormat (af, formatManager.getWavFormat()))</span></a>
+<a name="354"><span class="lineNum">     354 </span>            :     {</a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">       3528 :         auto s = afr-&gt;metadataValues[juce::WavAudioFormat::tracktionLoopInfo];</span></a>
+<a name="356"><span class="lineNum">     356 </span>            : </a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineCov">       3528 :         if (s.isNotEmpty())</span></a>
+<a name="358"><span class="lineNum">     358 </span>            :         {</a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :             if (auto n = juce::parseXML (s))</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :                 copyFrom (juce::ValueTree::fromXml (*n));</span></a>
+<a name="361"><span class="lineNum">     361 </span>            :         }</a>
+<a name="362"><span class="lineNum">     362 </span>            :         else</a>
+<a name="363"><span class="lineNum">     363 </span>            :         {</a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">       3528 :             const int rootNote = afr-&gt;metadataValues[juce::WavAudioFormat::acidRootSet] == &quot;1&quot;</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">       3528 :                                     ? afr-&gt;metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">       3528 :             const double numBeats = afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();</span></a>
+<a name="367"><span class="lineNum">     367 </span>            : </a>
+<a name="368"><span class="lineNum">     368 </span>            :             setRootNote (rootNote);</a>
+<a name="369"><span class="lineNum">     369 </span>            :             setNumBeats (numBeats);</a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">       3528 :             setProp (IDs::oneShot, afr-&gt;metadataValues[juce::WavAudioFormat::acidOneShot] == &quot;1&quot;);</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">       3528 :             setDenominator (afr-&gt;metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">       3528 :             setNumerator (afr-&gt;metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">       3528 :             setNumBeats (afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">       3528 :             setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
+<a name="375"><span class="lineNum">     375 </span>            :         }</a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       3528 :     }</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">          4 :     else if (isSameFormat (af, formatManager.getNativeAudioFormat()))</span></a>
+<a name="378"><span class="lineNum">     378 </span>            :     {</a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :         juce::String s = afr-&gt;metadataValues[juce::WavAudioFormat::tracktionLoopInfo];</span></a>
+<a name="380"><span class="lineNum">     380 </span>            : </a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :         if (s.isNotEmpty())</span></a>
+<a name="382"><span class="lineNum">     382 </span>            :         {</a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :             if (auto n = juce::parseXML (s))</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 copyFrom (juce::ValueTree::fromXml (*n));</span></a>
+<a name="385"><span class="lineNum">     385 </span>            :         }</a>
+<a name="386"><span class="lineNum">     386 </span>            :         else</a>
+<a name="387"><span class="lineNum">     387 </span>            :         {</a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 :             const juce::String tempoString = afr-&gt;metadataValues[&quot;tempo&quot;];</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :             auto bpm = tempoString.getDoubleValue();</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : </a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :             if (tempoString.isNotEmpty())</span></a>
-<a name="392"><span class="lineNum">     392 </span>            :             {</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :                 const double fileDuration = afr-&gt;lengthInSamples / afr-&gt;sampleRate;</span></a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :                 setNumBeats ((fileDuration / 60.0) * bpm);</span></a>
-<a name="395"><span class="lineNum">     395 </span>            :             }</a>
-<a name="396"><span class="lineNum">     396 </span>            : </a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :             const juce::String beatCount = afr-&gt;metadataValues[&quot;beat count&quot;];</span></a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :             setProp (IDs::bpm, bpm);</span></a>
+<a name="392"><span class="lineNum">     392 </span>            : </a>
+<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :             if (tempoString.isNotEmpty())</span></a>
+<a name="394"><span class="lineNum">     394 </span>            :             {</a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :                 const double fileDuration = afr-&gt;lengthInSamples / afr-&gt;sampleRate;</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :                 setNumBeats ((fileDuration / 60.0) * bpm);</span></a>
+<a name="397"><span class="lineNum">     397 </span>            :             }</a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :             if (beatCount.isNotEmpty() &amp;&amp; bpm == 0)</span></a>
-<a name="400"><span class="lineNum">     400 </span>            :             {</a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                 const double fileDuration = afr-&gt;lengthInSamples / afr-&gt;sampleRate;</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :                 const int beats = beatCount.getIntValue();</span></a>
-<a name="403"><span class="lineNum">     403 </span>            : </a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :                 setProp (IDs::bpm, beats / fileDuration / 60.0);</span></a>
-<a name="405"><span class="lineNum">     405 </span>            :                 setNumBeats (beats);</a>
-<a name="406"><span class="lineNum">     406 </span>            :             }</a>
-<a name="407"><span class="lineNum">     407 </span>            : </a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :             const juce::String timeSig (afr-&gt;metadataValues[&quot;time signature&quot;]);</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :             const juce::String beatCount = afr-&gt;metadataValues[&quot;beat count&quot;];</span></a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :             if (beatCount.isNotEmpty() &amp;&amp; bpm == 0)</span></a>
+<a name="402"><span class="lineNum">     402 </span>            :             {</a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :                 const double fileDuration = afr-&gt;lengthInSamples / afr-&gt;sampleRate;</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :                 const int beats = beatCount.getIntValue();</span></a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :                 setProp (IDs::bpm, beats / fileDuration / 60.0);</span></a>
+<a name="407"><span class="lineNum">     407 </span>            :                 setNumBeats (beats);</a>
+<a name="408"><span class="lineNum">     408 </span>            :             }</a>
 <a name="409"><span class="lineNum">     409 </span>            : </a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :             if (timeSig.isNotEmpty())</span></a>
-<a name="411"><span class="lineNum">     411 </span>            :             {</a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :                 setDenominator (timeSig.upToFirstOccurrenceOf (&quot;/&quot;, false, false).getIntValue());</span></a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :                 setNumerator (timeSig.fromFirstOccurrenceOf (&quot;/&quot;, false, false).getIntValue());</span></a>
-<a name="414"><span class="lineNum">     414 </span>            :             }</a>
-<a name="415"><span class="lineNum">     415 </span>            : </a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :             const juce::String keySig (afr-&gt;metadataValues[&quot;key signature&quot;]);</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :             const juce::String timeSig (afr-&gt;metadataValues[&quot;time signature&quot;]);</span></a>
+<a name="411"><span class="lineNum">     411 </span>            : </a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :             if (timeSig.isNotEmpty())</span></a>
+<a name="413"><span class="lineNum">     413 </span>            :             {</a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :                 setDenominator (timeSig.upToFirstOccurrenceOf (&quot;/&quot;, false, false).getIntValue());</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :                 setNumerator (timeSig.fromFirstOccurrenceOf (&quot;/&quot;, false, false).getIntValue());</span></a>
+<a name="416"><span class="lineNum">     416 </span>            :             }</a>
 <a name="417"><span class="lineNum">     417 </span>            : </a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :             if (keySig.isNotEmpty())</span></a>
-<a name="419"><span class="lineNum">     419 </span>            :             {</a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 bool sharpOrFlat = keySig[1] == '#' || keySig[1] == 'b';</span></a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :                 setRootNote (Pitch::getPitchFromString (engine, keySig.substring (0, sharpOrFlat ? 2 : 1)));</span></a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 addTag (keySig.getLastCharacter() == 'm' ? &quot;minor&quot; : &quot;major&quot;);</span></a>
-<a name="423"><span class="lineNum">     423 </span>            :             }</a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     else if (afr-&gt;metadataValues.containsKey (juce::WavAudioFormat::acidBeats)</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :               || afr-&gt;metadataValues.containsKey (juce::WavAudioFormat::acidNumerator))</span></a>
-<a name="428"><span class="lineNum">     428 </span>            :     {</a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :         const int rootNote = afr-&gt;metadataValues[juce::WavAudioFormat::acidRootSet] == &quot;1&quot;</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :                                 ? afr-&gt;metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         const double numBeats = afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();</span></a>
-<a name="432"><span class="lineNum">     432 </span>            : </a>
-<a name="433"><span class="lineNum">     433 </span>            :         setRootNote (rootNote);</a>
-<a name="434"><span class="lineNum">     434 </span>            :         setNumBeats (numBeats);</a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :         setProp (IDs::oneShot, afr-&gt;metadataValues[juce::WavAudioFormat::acidOneShot] == &quot;1&quot;);</span></a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :         setDenominator (afr-&gt;metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());</span></a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :         setNumerator (afr-&gt;metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());</span></a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :         setNumBeats (afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :         setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
-<a name="440"><span class="lineNum">     440 </span>            :     }</a>
-<a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :     initialiseMissingProps();</span></a>
-<a name="443"><span class="lineNum">     443 </span>            : }</a>
-<a name="444"><span class="lineNum">     444 </span>            : </a>
-<a name="445"><span class="lineNum">     445 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :             const juce::String keySig (afr-&gt;metadataValues[&quot;key signature&quot;]);</span></a>
+<a name="419"><span class="lineNum">     419 </span>            : </a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :             if (keySig.isNotEmpty())</span></a>
+<a name="421"><span class="lineNum">     421 </span>            :             {</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 bool sharpOrFlat = keySig[1] == '#' || keySig[1] == 'b';</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :                 setRootNote (Pitch::getPitchFromString (engine, keySig.substring (0, sharpOrFlat ? 2 : 1)));</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :                 addTag (keySig.getLastCharacter() == 'm' ? &quot;minor&quot; : &quot;major&quot;);</span></a>
+<a name="425"><span class="lineNum">     425 </span>            :             }</a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineCov">          4 :     else if (afr-&gt;metadataValues.containsKey (juce::WavAudioFormat::acidBeats)</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">          4 :               || afr-&gt;metadataValues.containsKey (juce::WavAudioFormat::acidNumerator))</span></a>
+<a name="430"><span class="lineNum">     430 </span>            :     {</a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         const int rootNote = afr-&gt;metadataValues[juce::WavAudioFormat::acidRootSet] == &quot;1&quot;</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :                                 ? afr-&gt;metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :         const double numBeats = afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();</span></a>
+<a name="434"><span class="lineNum">     434 </span>            : </a>
+<a name="435"><span class="lineNum">     435 </span>            :         setRootNote (rootNote);</a>
+<a name="436"><span class="lineNum">     436 </span>            :         setNumBeats (numBeats);</a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :         setProp (IDs::oneShot, afr-&gt;metadataValues[juce::WavAudioFormat::acidOneShot] == &quot;1&quot;);</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :         setDenominator (afr-&gt;metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :         setNumerator (afr-&gt;metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :         setNumBeats (afr-&gt;metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :         setProp (IDs::bpm, (numBeats * 60.0) / (afr-&gt;lengthInSamples / afr-&gt;sampleRate));</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :     }</a>
+<a name="443"><span class="lineNum">     443 </span>            : </a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">       3532 :     initialiseMissingProps();</span></a>
+<a name="445"><span class="lineNum">     445 </span>            : }</a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

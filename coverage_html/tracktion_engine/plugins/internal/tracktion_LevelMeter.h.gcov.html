@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">25.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">25.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -87,10 +87,10 @@
 <a name="25"><span class="lineNum">      25 </span>            :     static const char* xmlTypeName;</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     juce::String getName() const override           { return TRANS(&quot;Level Meter&quot;); }</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     juce::String getPluginType() override           { return xmlTypeName; }</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          2 :     juce::String getPluginType() override           { return xmlTypeName; }</span></a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :     juce::String getShortName (int) override        { return &quot;Meter&quot;; }</span></a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :     juce::String getTooltip() override              { return TRANS(&quot;Level meter plugin&quot;) + &quot;$levelmeterplugin&quot;; }</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     bool canBeDisabled() override                   { return false; }</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          2 :     bool canBeDisabled() override                   { return false; }</span></a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 :     bool needsConstantBufferSize() override         { return false; }</span></a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
 <a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }</span></a>

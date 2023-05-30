@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">8</td>
             <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">61.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -169,7 +169,7 @@
 <a name="107"><span class="lineNum">     107 </span>            :     bool isTrackRender() const                                  { return type == RenderType::track; }</a>
 <a name="108"><span class="lineNum">     108 </span>            :     bool isMidiRender() const                                   { return type == RenderType::midi; }</a>
 <a name="109"><span class="lineNum">     109 </span>            :     bool isExportAll() const                                    { return type == RenderType::allExport; }</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     bool isRender() const                                       { return isTrackRender() || isClipRender() || isMidiRender(); }</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">         72 :     bool isRender() const                                       { return isTrackRender() || isClipRender() || isMidiRender(); }</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     //==============================================================================</a>
 <a name="113"><span class="lineNum">     113 </span>            :     TargetFileFormat setFormat (TargetFileFormat);</a>
@@ -203,7 +203,7 @@
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            :     void setSelected (bool onlySelectedTrackAndClips);</a>
 <a name="143"><span class="lineNum">     143 </span>            :     void setMarkedRegion (bool onlyMarked)                      { markedRegion = onlyMarked; }</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     void setIncludePlugins (bool includePlugins)                { usePlugins = includePlugins; }</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">         72 :     void setIncludePlugins (bool includePlugins)                { usePlugins = includePlugins; }</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     void setAddRenderOption (AddRenderOptions options)          { addRenderOptions = options; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     void setEndAllowance (TimeDuration time)                    { endAllowance = time; }</a>
 <a name="147"><span class="lineNum">     147 </span>            :     void setFilename (juce::String, bool canPromptToOverwriteExisting);</a>
@@ -276,22 +276,22 @@
 <a name="214"><span class="lineNum">     214 </span>            :     template &lt;&gt;</a>
 <a name="215"><span class="lineNum">     215 </span>            :     struct VariantConverter&lt;tracktion::engine::RenderOptions::RenderType&gt;</a>
 <a name="216"><span class="lineNum">     216 </span>            :     {</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         static tracktion::engine::RenderOptions::RenderType fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::RenderType) static_cast&lt;int&gt; (v); }</span></a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::RenderOptions::RenderType v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        144 :         static tracktion::engine::RenderOptions::RenderType fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::RenderType) static_cast&lt;int&gt; (v); }</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">        144 :         static var toVar (tracktion::engine::RenderOptions::RenderType v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :     };</a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span>            :     template &lt;&gt;</a>
 <a name="222"><span class="lineNum">     222 </span>            :     struct VariantConverter&lt;tracktion::engine::RenderOptions::TargetFileFormat&gt;</a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         static tracktion::engine::RenderOptions::TargetFileFormat fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::TargetFileFormat) static_cast&lt;int&gt; (v); }</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::RenderOptions::TargetFileFormat v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">        144 :         static tracktion::engine::RenderOptions::TargetFileFormat fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::TargetFileFormat) static_cast&lt;int&gt; (v); }</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">        144 :         static var toVar (tracktion::engine::RenderOptions::TargetFileFormat v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :     };</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :     template &lt;&gt;</a>
 <a name="229"><span class="lineNum">     229 </span>            :     struct VariantConverter&lt;tracktion::engine::RenderOptions::AddRenderOptions&gt;</a>
 <a name="230"><span class="lineNum">     230 </span>            :     {</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :         static tracktion::engine::RenderOptions::AddRenderOptions fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::AddRenderOptions) static_cast&lt;int&gt; (v); }</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::RenderOptions::AddRenderOptions v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">        144 :         static tracktion::engine::RenderOptions::AddRenderOptions fromVar (const var&amp; v)   { return (tracktion::engine::RenderOptions::AddRenderOptions) static_cast&lt;int&gt; (v); }</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">        144 :         static var toVar (tracktion::engine::RenderOptions::AddRenderOptions v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="233"><span class="lineNum">     233 </span>            :     };</a>
 <a name="234"><span class="lineNum">     234 </span>            : }</a>
 </pre>

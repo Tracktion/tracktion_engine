@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">14</td>
             <td class="headerCovTableEntry">17</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryMed">82.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">20.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -207,16 +207,16 @@
 <a name="145"><span class="lineNum">     145 </span>            :     EditRole getEditRole() const noexcept   { return editRole; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1026 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns true if this Edit can render proxy files. */</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      47233 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :     /** Returns true if this Edit can load Plugin[s]. */</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        406 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span>            :     /** Returns true if this Edit is a temporary Edit for previewing files/clips etc. */</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     bool getIsPreviewEdit() const noexcept  { return isPreviewEdit; }</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">         93 :     bool getIsPreviewEdit() const noexcept  { return isPreviewEdit; }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span>            :     //==============================================================================</a>
 <a name="160"><span class="lineNum">     160 </span>            :     /** The maximum length an Edit can be. */</a>
@@ -351,7 +351,7 @@
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     //==============================================================================</a>
 <a name="291"><span class="lineNum">     291 </span>            :     /** Returns the juce::UndoManager used for this Edit. */</a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">     161862 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span>            :     /** Undoes the most recent changes made. */</a>
 <a name="295"><span class="lineNum">     295 </span>            :     void undo();</a>
@@ -736,7 +736,7 @@
 <a name="674"><span class="lineNum">     674 </span>            :     /** Invalidates the stored length so the next call to getLength will update form the Edit contents.</a>
 <a name="675"><span class="lineNum">     675 </span>            :         You shouldn't normally need to call this as it will happen automatically as clips are added/removed.</a>
 <a name="676"><span class="lineNum">     676 </span>            :     */</a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :     void invalidateStoredLength() noexcept              { totalEditLength = {}; }</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">      10923 :     void invalidateStoredLength() noexcept              { totalEditLength = {}; }</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : </a>
 <a name="679"><span class="lineNum">     679 </span>            :     /** If there's a change to send out to the listeners, do it now rather than</a>
 <a name="680"><span class="lineNum">     680 </span>            :         waiting for the next timer message.</a>
@@ -785,19 +785,19 @@
 <a name="723"><span class="lineNum">     723 </span>            :     template&lt;typename OwnerType&gt;</a>
 <a name="724"><span class="lineNum">     724 </span>            :     struct LoadFinishedCallback   : public Timer</a>
 <a name="725"><span class="lineNum">     725 </span>            :     {</a>
-<a name="726"><span class="lineNum">     726 </span><span class="lineNoCov">          0 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :             : owner (o), edit (e)</span></a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineCov">       1667 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">       1667 :             : owner (o), edit (e)</span></a>
 <a name="728"><span class="lineNum">     728 </span>            :         {</a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :             startTimer (10);</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">       1667 :             startTimer (10);</span></a>
 <a name="730"><span class="lineNum">     730 </span>            :         }</a>
 <a name="731"><span class="lineNum">     731 </span>            : </a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 :         void timerCallback() override</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        285 :         void timerCallback() override</span></a>
 <a name="733"><span class="lineNum">     733 </span>            :         {</a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :             if (edit.isLoading())</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        285 :             if (edit.isLoading())</span></a>
 <a name="735"><span class="lineNum">     735 </span>            :                 return;</a>
 <a name="736"><span class="lineNum">     736 </span>            : </a>
-<a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :             stopTimer();</span></a>
-<a name="738"><span class="lineNum">     738 </span><span class="lineNoCov">          0 :             owner.editFinishedLoading();</span></a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        285 :             stopTimer();</span></a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        285 :             owner.editFinishedLoading();</span></a>
 <a name="739"><span class="lineNum">     739 </span>            :         }</a>
 <a name="740"><span class="lineNum">     740 </span>            : </a>
 <a name="741"><span class="lineNum">     741 </span>            :         OwnerType&amp; owner;</a>
@@ -1004,7 +1004,7 @@
 <a name="942"><span class="lineNum">     942 </span>            : </a>
 <a name="943"><span class="lineNum">     943 </span>            : //==============================================================================</a>
 <a name="944"><span class="lineNum">     944 </span>            : /** A list of all currently open edits. @see Engine::getActiveEdits() */</a>
-<a name="945"><span class="lineNum">     945 </span><span class="lineNoCov">          0 : struct ActiveEdits</span></a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">          1 : struct ActiveEdits</span></a>
 <a name="946"><span class="lineNum">     946 </span>            : {</a>
 <a name="947"><span class="lineNum">     947 </span>            :     juce::Array&lt;Edit*&gt; getEdits() const;</a>
 <a name="948"><span class="lineNum">     948 </span>            : </a>

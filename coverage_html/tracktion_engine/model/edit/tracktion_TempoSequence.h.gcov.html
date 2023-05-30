@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-26 19:19:07</td>
+            <td class="headerValue">2023-05-30 12:11:03</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -106,7 +106,7 @@
 <a name="44"><span class="lineNum">      44 </span>            :     ~TempoSequence() override;</a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
 <a name="46"><span class="lineNum">      46 </span>            :     /** Returns the Edit this TempoSequence refers to. */</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     Edit&amp; getEdit() const                           { return edit; }</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">        599 :     Edit&amp; getEdit() const                           { return edit; }</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span>            :     /** Returns the state this TempoSequence models. */</a>
 <a name="50"><span class="lineNum">      50 </span>            :     const juce::ValueTree&amp; getState() const         { return state; }</a>
@@ -317,7 +317,7 @@
 <a name="255"><span class="lineNum">     255 </span>            :     void remapEdit (Edit&amp;);</a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span>            : private:</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :     struct ClipPos</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">         27 :     struct ClipPos</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :     {</a>
 <a name="260"><span class="lineNum">     260 </span>            :         Selectable::WeakRef clip;</a>
 <a name="261"><span class="lineNum">     261 </span>            :         BeatPosition startBeat, endBeat;</a>
