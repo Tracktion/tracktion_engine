@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-30 12:11:03</td>
+            <td class="headerValue">2023-05-30 14:10:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -177,25 +177,25 @@
 <a name="115"><span class="lineNum">     115 </span><span class="lineCov">          7 :     setCapacity (maxCapacity);</span></a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineCov">          7 : }</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">   30726094 : inline choc::buffer::ChannelArrayBuffer&lt;float&gt; AudioBufferPool::allocate (choc::buffer::Size size)</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">   30017223 : inline choc::buffer::ChannelArrayBuffer&lt;float&gt; AudioBufferPool::allocate (choc::buffer::Size size)</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : {</a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">   30726094 :     choc::buffer::ChannelArrayBuffer&lt;float&gt; buffer;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">   30017223 :     choc::buffer::ChannelArrayBuffer&lt;float&gt; buffer;</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   30726951 :     if (fifo-&gt;pop (buffer))</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   29797625 :     if (fifo-&gt;pop (buffer))</span></a>
 <a name="123"><span class="lineNum">     123 </span>            :     {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   30723588 :         if (auto bufferSize = buffer.getSize();</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">   30723588 :             bufferSize.numChannels &lt; size.numChannels</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">   30719060 :             || bufferSize.numFrames &lt; size.numFrames)</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   29795123 :         if (auto bufferSize = buffer.getSize();</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">   29795123 :             bufferSize.numChannels &lt; size.numChannels</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">   29791097 :             || bufferSize.numFrames &lt; size.numFrames)</span></a>
 <a name="127"><span class="lineNum">     127 </span>            :         {</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">       4528 :             buffer.resize (size);</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">       4026 :             buffer.resize (size);</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :         }</a>
 <a name="130"><span class="lineNum">     130 </span>            :     }</a>
 <a name="131"><span class="lineNum">     131 </span>            :     else</a>
 <a name="132"><span class="lineNum">     132 </span>            :     {</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       3363 :         buffer.resize (size);</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">       2502 :         buffer.resize (size);</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :     }</a>
 <a name="135"><span class="lineNum">     135 </span>            :         </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">   30726885 :     return buffer;</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">   29797600 :     return buffer;</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : }</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
 <a name="139"><span class="lineNum">     139 </span>            : inline bool AudioBufferPool::release (choc::buffer::ChannelArrayBuffer&lt;float&gt;&amp;&amp; buffer)</a>
