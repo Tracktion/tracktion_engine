@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-30 14:10:18</td>
+            <td class="headerValue">2023-05-30 14:32:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -241,7 +241,7 @@
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     virtual bool hasLabels()  const                                 { return false; }</span></a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     virtual juce::String getLabelForValue (float) const             { return {}; }</span></a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     170902 :     virtual float snapToState (float val) const                     { return val; }</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     171108 :     virtual float snapToState (float val) const                     { return val; }</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     virtual juce::StringArray getAllLabels() const                  { return {}; }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
 <a name="185"><span class="lineNum">     185 </span>            :     //==============================================================================</a>
@@ -320,7 +320,7 @@
 <a name="258"><span class="lineNum">     258 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
 <a name="259"><span class="lineNum">     259 </span>            :     void valueTreeRedirected (juce::ValueTree&amp;) override;</a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      49904 :     virtual void parameterChanged (float, bool /*byAutomation*/) {}</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      50002 :     virtual void parameterChanged (float, bool /*byAutomation*/) {}</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
 <a name="263"><span class="lineNum">     263 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableParameter)</a>
 <a name="264"><span class="lineNum">     264 </span>            : };</a>
@@ -391,7 +391,7 @@
 <a name="329"><span class="lineNum">     329 </span>            : /** Returns a bool version of an AutomatableParameter. */</a>
 <a name="330"><span class="lineNum">     330 </span>            : inline bool getBoolParamValue (const AutomatableParameter&amp; ap)</a>
 <a name="331"><span class="lineNum">     331 </span>            : {</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">     893162 :     return getIntParamValue (ap) == 1;</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">     894299 :     return getIntParamValue (ap) == 1;</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : }</a>
 <a name="334"><span class="lineNum">     334 </span>            : </a>
 <a name="335"><span class="lineNum">     335 </span>            : /** Returns an int version of an AutomatableParameter cast to a enum type. */</a>
