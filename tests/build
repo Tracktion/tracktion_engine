@@ -80,7 +80,7 @@ function buildExample()
 
         # Use the default Unix Makefiles cmake generator
         CMAKE_GENERATOR=""
-        CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
+        CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release --parallel `nproc`"
     elif [[ "$PLATFORM" == "mac" ]]; then
         BINARY_NAME="$PROJECT_NAME"
         APP_NAME=$BINARY_NAME
