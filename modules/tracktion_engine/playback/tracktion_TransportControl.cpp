@@ -1072,6 +1072,9 @@ void TransportControl::setCurrentPosition (double newPos)
 
 void TransportControl::setPosition (TimePosition t)
 {
+    // This drag time update is here to avoid the transport position being updated
+    // from the playhead before the position has a chance to be dispatched by it
+    transportState->lastUserDragTime = juce::Time::getMillisecondCounter();
     position = t;
 }
 
