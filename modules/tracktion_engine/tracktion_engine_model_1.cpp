@@ -25,6 +25,8 @@ using namespace std::literals;
 
 #include "tracktion_engine.h"
 
+#include "../../modules/tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
 

@@ -16,6 +16,8 @@
 #define GRAPH_UNIT_TESTS_MIDINODE          1
 #define GRAPH_UNIT_TESTS_RACKNODE          1
 #define GRAPH_UNIT_TESTS_EDITNODE          1
+
+#define ENGINE_UNIT_TESTS_EDIT             1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE  1
 #define ENGINE_UNIT_TESTS_LOOP_INFO        1
 #define ENGINE_UNIT_TESTS_CLIPS            1

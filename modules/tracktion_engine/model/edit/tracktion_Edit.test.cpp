@@ -8,6 +8,50 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_EDIT
+
+namespace tracktion { inline namespace engine
+{
+
+//==============================================================================
+//==============================================================================
+class EditTests : public juce::UnitTest
+{
+public:
+    EditTests()
+        : juce::UnitTest ("Edit", "tracktion_engine")
+    {}
+
+    void runTest() override
+    {
+        testFilePreviewing();
+    }
+
+private:
+    void testFilePreviewing()
+    {
+        beginTest ("File preview Edit");
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+
+        auto editToMatch = Edit::createSingleTrackEdit (engine);
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat>
+                        (44100.0, 10.0, 2, 220.0f);
+        bool couldMatchTempo = false;
+
+        auto edit = Edit::createEditForPreviewingFile (engine, sinFile->getFile(), editToMatch.get(),
+                                                       true, true, &couldMatchTempo, {});
+        expect (edit != nullptr);
+        expect (! couldMatchTempo);
+    }
+};
+
+static EditTests editTests;
+
+}} // namespace tracktion { inline namespace engine
+
+#endif //TRACKTION_UNIT_TESTS
+
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_EDITITEMID
 
 namespace tracktion { inline namespace engine
