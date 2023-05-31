@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-30 14:32:35</td>
+            <td class="headerValue">2023-05-31 12:04:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -522,16 +522,16 @@
 <a name="460"><span class="lineNum">     460 </span>            : </a>
 <a name="461"><span class="lineNum">     461 </span>            : </a>
 <a name="462"><span class="lineNum">     462 </span>            : //==============================================================================</a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineCov">        274 : AbletonLink::AbletonLink (TransportControl&amp; t)</span></a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">        276 : AbletonLink::AbletonLink (TransportControl&amp; t)</span></a>
 <a name="464"><span class="lineNum">     464 </span>            : {</a>
 <a name="465"><span class="lineNum">     465 </span>            :    #if TRACKTION_ENABLE_ABLETON_LINK</a>
 <a name="466"><span class="lineNum">     466 </span>            :     implementation.reset (new LinkImpl (t));</a>
 <a name="467"><span class="lineNum">     467 </span>            :    #endif</a>
 <a name="468"><span class="lineNum">     468 </span>            : </a>
 <a name="469"><span class="lineNum">     469 </span>            :     juce::ignoreUnused (t);</a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        274 : }</span></a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        276 : }</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">        274 : AbletonLink::~AbletonLink() {}</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">        276 : AbletonLink::~AbletonLink() {}</span></a>
 <a name="473"><span class="lineNum">     473 </span>            : </a>
 <a name="474"><span class="lineNum">     474 </span>            : #if TRACKTION_ENABLE_ABLETON_LINK &amp;&amp; JUCE_IOS</a>
 <a name="475"><span class="lineNum">     475 </span>            :  ABLLink* AbletonLink::getLinkInstanceForIOS()  { return static_cast&lt;LinkImpl*&gt;(implementation.get())-&gt;link; }</a>

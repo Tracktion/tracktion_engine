@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">12</td>
             <td class="headerCovTableEntry">24</td>
-            <td class="headerCovTableEntryLo">45.8 %</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-30 14:32:35</td>
+            <td class="headerValue">2023-05-31 12:04:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -118,7 +118,7 @@
 <a name="56"><span class="lineNum">      56 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      13919 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      13912 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="62"><span class="lineNum">      62 </span>            :         original source or a proxy.</a>
@@ -298,7 +298,7 @@
 <a name="236"><span class="lineNum">     236 </span>            :     /** Returns the LoopInfo being used to describe this clip. */</a>
 <a name="237"><span class="lineNum">     237 </span>            :     const LoopInfo&amp; getLoopInfo() const                 { return loopInfo; }</a>
 <a name="238"><span class="lineNum">     238 </span>            :     /** Returns the LoopInfo being used to describe this clip. */</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">         21 :     LoopInfo&amp; getLoopInfo()                             { return loopInfo; }</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">         23 :     LoopInfo&amp; getLoopInfo()                             { return loopInfo; }</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
 <a name="241"><span class="lineNum">     241 </span>            :     /** Returns the loop range in seconds. */</a>
 <a name="242"><span class="lineNum">     242 </span>            :     TimeRange getLoopRange() const;</a>
@@ -306,7 +306,7 @@
 <a name="244"><span class="lineNum">     244 </span>            :     /** @internal */</a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     bool canLoop() const override                       { return ! isUsingMelodyne(); }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     /** @internal */</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3537 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; BeatDuration()) : (loopLength &gt; TimeDuration()); }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3538 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; BeatDuration()) : (loopLength &gt; TimeDuration()); }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     /** @internal */</a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">       3534 :     bool beatBasedLooping() const override              { return isLooping() &amp;&amp; getAutoTempo(); }</span></a>
 <a name="250"><span class="lineNum">     250 </span>            :     /** @internal */</a>
@@ -382,7 +382,7 @@
 <a name="320"><span class="lineNum">     320 </span>            :     /** Enables/disables auto-pitch.</a>
 <a name="321"><span class="lineNum">     321 </span>            :         If enabled, this clip will adjust its playback pitch to stay in sync with the Edit's PitchSequence.</a>
 <a name="322"><span class="lineNum">     322 </span>            :     */</a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">          1 :     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }</span></a>
 <a name="324"><span class="lineNum">     324 </span>            : </a>
 <a name="325"><span class="lineNum">     325 </span>            :     /** Returns true if auto-pitch has been set. */</a>
 <a name="326"><span class="lineNum">     326 </span>            :     bool getAutoPitch() const                           { return autoPitch; }</a>
@@ -529,7 +529,7 @@
 <a name="467"><span class="lineNum">     467 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="468"><span class="lineNum">     468 </span>            :     </a>
 <a name="469"><span class="lineNum">     469 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineCov">      47326 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">      47334 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
 <a name="472"><span class="lineNum">     472 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="473"><span class="lineNum">     473 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -741,7 +741,7 @@
 <a name="679"><span class="lineNum">     679 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="680"><span class="lineNum">     680 </span>            :     */</a>
 <a name="681"><span class="lineNum">     681 </span>            :     void renderSource();</a>
-<a name="682"><span class="lineNum">     682 </span><span class="lineCov">       3484 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">       3480 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="683"><span class="lineNum">     683 </span>            : </a>
 <a name="684"><span class="lineNum">     684 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>

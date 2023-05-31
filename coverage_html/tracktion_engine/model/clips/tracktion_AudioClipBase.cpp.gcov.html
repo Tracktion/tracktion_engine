@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">360</td>
+            <td class="headerCovTableEntry">366</td>
             <td class="headerCovTableEntry">1160</td>
-            <td class="headerCovTableEntryLo">31.0 %</td>
+            <td class="headerCovTableEntryLo">31.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-30 14:32:35</td>
+            <td class="headerValue">2023-05-31 12:04:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">52</td>
+            <td class="headerCovTableEntry">53</td>
             <td class="headerCovTableEntry">125</td>
-            <td class="headerCovTableEntryLo">41.6 %</td>
+            <td class="headerCovTableEntryLo">42.4 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -259,31 +259,31 @@
 <a name="197"><span class="lineNum">     197 </span>            : };</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            : //==============================================================================</a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       3392 : AudioClipBase::AudioClipBase (const juce::ValueTree&amp; v, EditItemID id, Type t, ClipOwner&amp; targetParent)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       3393 : AudioClipBase::AudioClipBase (const juce::ValueTree&amp; v, EditItemID id, Type t, ClipOwner&amp; targetParent)</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     : Clip (v, targetParent, id, t),</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3392 :       loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3392 :       pluginList (edit),</span></a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">      71232 :       lastProxy (edit.engine)</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3393 :       loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3393 :       pluginList (edit),</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">      71253 :       lastProxy (edit.engine)</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : {</a>
 <a name="206"><span class="lineNum">     206 </span>            :     auto um = getUndoManager();</a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       3392 :     level-&gt;dbGain.referTo (state, IDs::gain, um);</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">       3392 :     level-&gt;pan.referTo (state, IDs::pan, um);</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">       3392 :     level-&gt;mute.referTo (state, IDs::mute, um);</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">       6784 :     channels.referTo (state, IDs::channels, um, juce::AudioChannelSet::stereo().getSpeakerArrangementAsString());</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       3393 :     level-&gt;dbGain.referTo (state, IDs::gain, um);</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">       3393 :     level-&gt;pan.referTo (state, IDs::pan, um);</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">       3393 :     level-&gt;mute.referTo (state, IDs::mute, um);</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">       6786 :     channels.referTo (state, IDs::channels, um, juce::AudioChannelSet::stereo().getSpeakerArrangementAsString());</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">       3392 :     if (channels.get().isEmpty())</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">       3393 :     if (channels.get().isEmpty())</span></a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :         channels = juce::AudioChannelSet::stereo().getSpeakerArrangementAsString();</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            :     fadeIn.referTo (state, IDs::fadeIn, um);</a>
 <a name="217"><span class="lineNum">     217 </span>            :     fadeOut.referTo (state, IDs::fadeOut, um);</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">       3392 :     fadeInType.referTo (state, IDs::fadeInType, um, AudioFadeCurve::linear);</span></a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       6784 :     fadeOutType.referTo (state, IDs::fadeOutType, um, AudioFadeCurve::linear);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">       3393 :     fadeInType.referTo (state, IDs::fadeInType, um, AudioFadeCurve::linear);</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       6786 :     fadeOutType.referTo (state, IDs::fadeOutType, um, AudioFadeCurve::linear);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     autoCrossfade.referTo (state, IDs::autoCrossfade, um);</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       3392 :     fadeInBehaviour.referTo (state, IDs::fadeInBehaviour, um, gainFade);</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       6784 :     fadeOutBehaviour.referTo (state, IDs::fadeOutBehaviour, um, gainFade);</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       3393 :     fadeInBehaviour.referTo (state, IDs::fadeInBehaviour, um, gainFade);</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       6786 :     fadeOutBehaviour.referTo (state, IDs::fadeOutBehaviour, um, gainFade);</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     loopStart.referTo (state, IDs::loopStart, um);</a>
 <a name="227"><span class="lineNum">     227 </span>            :     loopLength.referTo (state, IDs::loopLength, um);</a>
@@ -291,21 +291,21 @@
 <a name="229"><span class="lineNum">     229 </span>            :     loopStartBeats.referTo (state, IDs::loopStartBeats, um);</a>
 <a name="230"><span class="lineNum">     230 </span>            :     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um);</a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">       3392 :     resamplingQuality.referTo (state, IDs::resamplingQuality, um, ResamplingQuality::lagrange);</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">       6784 :     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">       3393 :     resamplingQuality.referTo (state, IDs::resamplingQuality, um, ResamplingQuality::lagrange);</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">       6786 :     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :     transpose.referTo (state, IDs::transpose, um);</a>
 <a name="235"><span class="lineNum">     235 </span>            :     pitchChange.referTo (state, IDs::pitchChange, um);</a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       6784 :     beatSensitivity.referTo (state, IDs::beatSensitivity, um, 0.5f);</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       6786 :     beatSensitivity.referTo (state, IDs::beatSensitivity, um, 0.5f);</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
 <a name="239"><span class="lineNum">     239 </span>            :     timeStretchMode.referTo (state, IDs::elastiqueMode, um);</a>
 <a name="240"><span class="lineNum">     240 </span>            :     elastiqueProOptions.referTo (state, IDs::elastiqueOptions, um);</a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span>            :     // Keep this in to handle old edits..</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3392 :     if (state.getProperty (IDs::timeStretch))</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3393 :     if (state.getProperty (IDs::timeStretch))</span></a>
 <a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :         timeStretchMode = juce::VariantConverter&lt;TimeStretcher::Mode&gt;::fromVar (state.getProperty (IDs::stretchMode));</span></a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">       6784 :     timeStretchMode = TimeStretcher::checkModeIsAvailable (timeStretchMode);</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">       6786 :     timeStretchMode = TimeStretcher::checkModeIsAvailable (timeStretchMode);</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span>            :     autoPitch.referTo (state, IDs::autoPitch, um);</a>
 <a name="249"><span class="lineNum">     249 </span>            :     autoPitchMode.referTo (state, IDs::autoPitchMode, um);</a>
@@ -314,42 +314,42 @@
 <a name="252"><span class="lineNum">     252 </span>            :     isReversed.referTo (state, IDs::isReversed, um);</a>
 <a name="253"><span class="lineNum">     253 </span>            :     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">       3392 :     level-&gt;pan = juce::jlimit (-1.0f, 1.0f, static_cast&lt;float&gt; (level-&gt;pan.get()));</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       3392 :     checkFadeLengthsForOverrun();</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">       3393 :     level-&gt;pan = juce::jlimit (-1.0f, 1.0f, static_cast&lt;float&gt; (level-&gt;pan.get()));</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       3393 :     checkFadeLengthsForOverrun();</span></a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
 <a name="258"><span class="lineNum">     258 </span>            :     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);</a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">       3392 :     updateClipEffectsState();</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">       3393 :     updateClipEffectsState();</span></a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">       3392 :     updateLeftRightChannelActivenessFlags();</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">       3393 :     updateLeftRightChannelActivenessFlags();</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       3392 :     pluginList.setTrackAndClip (getTrack(), this);</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">       3392 :     pluginList.initialise (state);</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       3393 :     pluginList.setTrackAndClip (getTrack(), this);</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">       3393 :     pluginList.initialise (state);</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : </a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">       6803 :     asyncFunctionCaller.addFunction (updateCrossfadesFlag, [this]           { updateAutoCrossfades (false); });</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       6786 :     asyncFunctionCaller.addFunction (updateCrossfadesOverlappedFlag, [this] { updateAutoCrossfades (true); });</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">       6805 :     asyncFunctionCaller.addFunction (updateCrossfadesFlag, [this]           { updateAutoCrossfades (false); });</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       6787 :     asyncFunctionCaller.addFunction (updateCrossfadesOverlappedFlag, [this] { updateAutoCrossfades (true); });</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">       3392 :     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">       3393 :     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);</span></a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">       3392 :     if (pgen.isValid())</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">       3393 :     if (pgen.isValid())</span></a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :         patternGenerator.reset (new PatternGenerator (*this, pgen));</span></a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       3392 : }</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       3393 : }</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       3392 : AudioClipBase::~AudioClipBase()</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       3393 : AudioClipBase::~AudioClipBase()</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : {</a>
 <a name="277"><span class="lineNum">     277 </span>            :     melodyneProxy = nullptr;</a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">       3392 :     if (renderJob != nullptr)</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">       3393 :     if (renderJob != nullptr)</span></a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         renderJob-&gt;removeListener (this);</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">      23744 : }</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">      23751 : }</span></a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
 <a name="283"><span class="lineNum">     283 </span>            : //==============================================================================</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       3392 : void AudioClipBase::initialise()</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       3393 : void AudioClipBase::initialise()</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : {</a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">       3392 :     Clip::initialise();</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">       3393 :     Clip::initialise();</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">       3392 :     setCurrentSourceFile (sourceFileReference.getFile());</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">       3393 :     setCurrentSourceFile (sourceFileReference.getFile());</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">       3392 :     stopTimer(); // prevent proxy generation unless we're actually going to be played.</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">       3393 :     stopTimer(); // prevent proxy generation unless we're actually going to be played.</span></a>
 <a name="291"><span class="lineNum">     291 </span>            : </a>
 <a name="292"><span class="lineNum">     292 </span>            :     if (shouldAttemptRender())</a>
 <a name="293"><span class="lineNum">     293 </span>            :     {</a>
@@ -359,9 +359,9 @@
 <a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :             setCurrentSourceFile (audioFile.getFile());</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">       3392 :     if (! edit.getUndoManager().isPerformingUndoRedo())</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">      10173 :         callBlocking ([this] { setLoopDefaults(); });</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">       3392 : }</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">       3393 :     if (! edit.getUndoManager().isPerformingUndoRedo())</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">      10176 :         callBlocking ([this] { setLoopDefaults(); });</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">       3393 : }</span></a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
 <a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : void AudioClipBase::cloneFrom (Clip* c)</span></a>
 <a name="305"><span class="lineNum">     305 </span>            : {</a>
@@ -411,25 +411,25 @@
 <a name="349"><span class="lineNum">     349 </span>            :     }</a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">       3392 : void AudioClipBase::updateLeftRightChannelActivenessFlags()</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">       3393 : void AudioClipBase::updateLeftRightChannelActivenessFlags()</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : {</a>
 <a name="354"><span class="lineNum">     354 </span>            :     juce::String channelMask = channels;</a>
 <a name="355"><span class="lineNum">     355 </span>            : </a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineCov">       3392 :     if (channelMask.isEmpty())</span></a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineCov">       3393 :     if (channelMask.isEmpty())</span></a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :         activeChannels = juce::AudioChannelSet::disabled();</span></a>
 <a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">       3392 :     if (channels == &quot;r&quot;)        activeChannels.addChannel (juce::AudioChannelSet::right);</span></a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       3392 :     else if (channels == &quot;l&quot;)   activeChannels.addChannel (juce::AudioChannelSet::left);</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">       6784 :     else                        activeChannels = channelSetFromSpeakerArrangmentString (channelMask);</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       3392 : }</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">       3393 :     if (channels == &quot;r&quot;)        activeChannels.addChannel (juce::AudioChannelSet::right);</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       3393 :     else if (channels == &quot;l&quot;)   activeChannels.addChannel (juce::AudioChannelSet::left);</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">       6786 :     else                        activeChannels = channelSetFromSpeakerArrangmentString (channelMask);</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       3393 : }</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">       3393 : void AudioClipBase::flushStateToValueTree()</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">       3394 : void AudioClipBase::flushStateToValueTree()</span></a>
 <a name="365"><span class="lineNum">     365 </span>            : {</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">       3393 :     Clip::flushStateToValueTree();</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">       3394 :     Clip::flushStateToValueTree();</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">       3393 :     if (clipEffects != nullptr)</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">       3394 :     if (clipEffects != nullptr)</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :         clipEffects-&gt;flushStateToValueTree();</a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">       3393 : }</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">       3394 : }</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : </a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 : PatternGenerator* AudioClipBase::getPatternGenerator()</span></a>
 <a name="373"><span class="lineNum">     373 </span>            : {</a>
@@ -441,32 +441,32 @@
 <a name="379"><span class="lineNum">     379 </span>            : }</a>
 <a name="380"><span class="lineNum">     380 </span>            : </a>
 <a name="381"><span class="lineNum">     381 </span>            : //==============================================================================</a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">       6783 : void AudioClipBase::setParent (ClipOwner* co)</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">       6785 : void AudioClipBase::setParent (ClipOwner* co)</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : {</a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       6783 :     Clip::setParent (co);</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       6785 :     Clip::setParent (co);</span></a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       6783 :     pluginList.setTrackAndClip (nullptr, this);</span></a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">       6783 : }</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       6785 :     pluginList.setTrackAndClip (nullptr, this);</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineCov">       6785 : }</span></a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
 <a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : bool AudioClipBase::canBeAddedTo (ClipOwner&amp; co)</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : {</a>
 <a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :     return canContainAudio (co);</span></a>
 <a name="392"><span class="lineNum">     392 </span>            : }</a>
 <a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineCov">      30003 : void AudioClipBase::changed()</span></a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineCov">      30014 : void AudioClipBase::changed()</span></a>
 <a name="395"><span class="lineNum">     395 </span>            : {</a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">      30003 :     clearCachedAudioSegmentList();</span></a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineCov">      30003 :     Clip::changed();</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">      30014 :     clearCachedAudioSegmentList();</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineCov">      30014 :     Clip::changed();</span></a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineCov">      30003 :     createNewProxyAsync();</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineCov">      30014 :     createNewProxyAsync();</span></a>
 <a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">      30003 :     if (melodyneProxy != nullptr)</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">      30014 :     if (melodyneProxy != nullptr)</span></a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :         melodyneProxy-&gt;sourceClipChanged();</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">      30003 : }</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">      30014 : }</span></a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">      10169 : juce::Colour AudioClipBase::getDefaultColour() const</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">      10172 : juce::Colour AudioClipBase::getDefaultColour() const</span></a>
 <a name="406"><span class="lineNum">     406 </span>            : {</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">      10169 :     return juce::Colours::red.withHue (0.0f);</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">      10172 :     return juce::Colours::red.withHue (0.0f);</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : }</a>
 <a name="409"><span class="lineNum">     409 </span>            : </a>
 <a name="410"><span class="lineNum">     410 </span>            : //==============================================================================</a>
@@ -734,12 +734,12 @@
 <a name="672"><span class="lineNum">     672 </span>            :     }</a>
 <a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">       3396 : void AudioClipBase::checkFadeLengthsForOverrun()</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineCov">       3397 : void AudioClipBase::checkFadeLengthsForOverrun()</span></a>
 <a name="676"><span class="lineNum">     676 </span>            : {</a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">       3396 :     auto len = getPosition().getLength();</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">       3397 :     auto len = getPosition().getLength();</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : </a>
 <a name="679"><span class="lineNum">     679 </span>            :     // check the fades don't overrun</a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineCov">       3396 :     if (fadeIn + fadeOut &gt; len)</span></a>
+<a name="680"><span class="lineNum">     680 </span><span class="lineCov">       3397 :     if (fadeIn + fadeOut &gt; len)</span></a>
 <a name="681"><span class="lineNum">     681 </span>            :     {</a>
 <a name="682"><span class="lineNum">     682 </span>            :         const double scale = len / (fadeIn + fadeOut);</a>
 <a name="683"><span class="lineNum">     683 </span><span class="lineNoCov">          0 :         fadeIn = fadeIn * scale;</span></a>
@@ -747,13 +747,13 @@
 <a name="685"><span class="lineNum">     685 </span>            :     }</a>
 <a name="686"><span class="lineNum">     686 </span>            : </a>
 <a name="687"><span class="lineNum">     687 </span>            :     // also check the auto fades</a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">       3396 :     if (autoFadeIn + autoFadeOut &gt; len)</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">       3397 :     if (autoFadeIn + autoFadeOut &gt; len)</span></a>
 <a name="689"><span class="lineNum">     689 </span>            :     {</a>
 <a name="690"><span class="lineNum">     690 </span>            :         const double scale = len / (autoFadeIn + autoFadeOut);</a>
 <a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :         autoFadeIn = autoFadeIn * scale;</span></a>
 <a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 :         autoFadeOut = autoFadeOut * scale;</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :     }</a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineCov">       3396 : }</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">       3397 : }</span></a>
 <a name="695"><span class="lineNum">     695 </span>            : </a>
 <a name="696"><span class="lineNum">     696 </span><span class="lineCov">       6844 : AudioClipBase* AudioClipBase::getOverlappingClip (ClipDirection direction) const</span></a>
 <a name="697"><span class="lineNum">     697 </span>            : {</a>
@@ -930,8 +930,8 @@
 <a name="868"><span class="lineNum">     868 </span>            : </a>
 <a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 : void AudioClipBase::setLoopInfo (const LoopInfo&amp; loopInfo_)</span></a>
 <a name="870"><span class="lineNum">     870 </span>            : {</a>
-<a name="871"><span class="lineNum">     871 </span><span class="lineNoCov">          0 :     loopInfo = loopInfo_;</span></a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineCov">          1 :     loopInfo = loopInfo_;</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">          1 : }</span></a>
 <a name="873"><span class="lineNum">     873 </span>            : </a>
 <a name="874"><span class="lineNum">     874 </span><span class="lineNoCov">          0 : void AudioClipBase::setNumberOfLoops (int num)</span></a>
 <a name="875"><span class="lineNum">     875 </span>            : {</a>
@@ -1090,13 +1090,13 @@
 <a name="1028"><span class="lineNum">    1028 </span><span class="lineNoCov">          0 :         melodyneProxy-&gt;sourceClipChanged();</span></a>
 <a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">         22 : }</span></a>
 <a name="1030"><span class="lineNum">    1030 </span>            : </a>
-<a name="1031"><span class="lineNum">    1031 </span><span class="lineCov">      30025 : void AudioClipBase::clearCachedAudioSegmentList()</span></a>
+<a name="1031"><span class="lineNum">    1031 </span><span class="lineCov">      30036 : void AudioClipBase::clearCachedAudioSegmentList()</span></a>
 <a name="1032"><span class="lineNum">    1032 </span>            : {</a>
-<a name="1033"><span class="lineNum">    1033 </span><span class="lineCov">      30025 :     if (! edit.isLoading())</span></a>
+<a name="1033"><span class="lineNum">    1033 </span><span class="lineCov">      30036 :     if (! edit.isLoading())</span></a>
 <a name="1034"><span class="lineNum">    1034 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="1035"><span class="lineNum">    1035 </span>            : </a>
 <a name="1036"><span class="lineNum">    1036 </span>            :     audioSegmentList.reset();</a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">      30025 : }</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">      30036 : }</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            : </a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 : const AudioSegmentList&amp; AudioClipBase::getAudioSegmentList()</span></a>
 <a name="1040"><span class="lineNum">    1040 </span>            : {</a>
@@ -1111,8 +1111,8 @@
 <a name="1049"><span class="lineNum">    1049 </span>            : </a>
 <a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">          4 : void AudioClipBase::setResamplingQuality (ResamplingQuality rq)</span></a>
 <a name="1051"><span class="lineNum">    1051 </span>            : {</a>
-<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">       3393 :     resamplingQuality = rq;</span></a>
-<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">       3389 : }</span></a>
+<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">       3394 :     resamplingQuality = rq;</span></a>
+<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">       3390 : }</span></a>
 <a name="1054"><span class="lineNum">    1054 </span>            : </a>
 <a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">         22 : ResamplingQuality AudioClipBase::getResamplingQuality() const</span></a>
 <a name="1056"><span class="lineNum">    1056 </span>            : {</a>
@@ -1135,7 +1135,7 @@
 <a name="1073"><span class="lineNum">    1073 </span>            : </a>
 <a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">       3460 : bool AudioClipBase::isUsingMelodyne() const</span></a>
 <a name="1075"><span class="lineNum">    1075 </span>            : {</a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">      17420 :     return TimeStretcher::isMelodyne (timeStretchMode);</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">      17408 :     return TimeStretcher::isMelodyne (timeStretchMode);</span></a>
 <a name="1077"><span class="lineNum">    1077 </span>            : }</a>
 <a name="1078"><span class="lineNum">    1078 </span>            : </a>
 <a name="1079"><span class="lineNum">    1079 </span><span class="lineNoCov">          0 : void AudioClipBase::loadMelodyneState()</span></a>
@@ -1151,7 +1151,7 @@
 <a name="1089"><span class="lineNum">    1089 </span>            : </a>
 <a name="1090"><span class="lineNum">    1090 </span><span class="lineNoCov">          0 : void AudioClipBase::hideMelodyneWindow()</span></a>
 <a name="1091"><span class="lineNum">    1091 </span>            : {</a>
-<a name="1092"><span class="lineNum">    1092 </span><span class="lineCov">       3389 :     if (melodyneProxy != nullptr)</span></a>
+<a name="1092"><span class="lineNum">    1092 </span><span class="lineCov">       3390 :     if (melodyneProxy != nullptr)</span></a>
 <a name="1093"><span class="lineNum">    1093 </span><span class="lineNoCov">          0 :         melodyneProxy-&gt;hidePluginWindow();</span></a>
 <a name="1094"><span class="lineNum">    1094 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1095"><span class="lineNum">    1095 </span>            : </a>
@@ -1206,13 +1206,13 @@
 <a name="1144"><span class="lineNum">    1144 </span>            :     }</a>
 <a name="1145"><span class="lineNum">    1145 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1146"><span class="lineNum">    1146 </span>            : </a>
-<a name="1147"><span class="lineNum">    1147 </span><span class="lineNoCov">          0 : void AudioClipBase::setTimeStretchMode (TimeStretcher::Mode mode)</span></a>
+<a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">          1 : void AudioClipBase::setTimeStretchMode (TimeStretcher::Mode mode)</span></a>
 <a name="1148"><span class="lineNum">    1148 </span>            : {</a>
-<a name="1149"><span class="lineNum">    1149 </span><span class="lineNoCov">          0 :     timeStretchMode = TimeStretcher::checkModeIsAvailable (mode);</span></a>
+<a name="1149"><span class="lineNum">    1149 </span><span class="lineCov">          1 :     timeStretchMode = TimeStretcher::checkModeIsAvailable (mode);</span></a>
 <a name="1150"><span class="lineNum">    1150 </span>            : </a>
-<a name="1151"><span class="lineNum">    1151 </span><span class="lineNoCov">          0 :     if (isLooping() &amp;&amp; ! canLoop())</span></a>
+<a name="1151"><span class="lineNum">    1151 </span><span class="lineCov">          1 :     if (isLooping() &amp;&amp; ! canLoop())</span></a>
 <a name="1152"><span class="lineNum">    1152 </span><span class="lineNoCov">          0 :         disableLooping();</span></a>
-<a name="1153"><span class="lineNum">    1153 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1153"><span class="lineNum">    1153 </span><span class="lineCov">          1 : }</span></a>
 <a name="1154"><span class="lineNum">    1154 </span>            : </a>
 <a name="1155"><span class="lineNum">    1155 </span><span class="lineNoCov">          0 : WarpTimeManager&amp; AudioClipBase::getWarpTimeManager() const</span></a>
 <a name="1156"><span class="lineNum">    1156 </span>            : {</a>
@@ -1619,9 +1619,9 @@
 <a name="1557"><span class="lineNum">    1557 </span>            :     return false;</a>
 <a name="1558"><span class="lineNum">    1558 </span>            : }</a>
 <a name="1559"><span class="lineNum">    1559 </span>            : </a>
-<a name="1560"><span class="lineNum">    1560 </span><span class="lineCov">       3666 : Plugin::Array AudioClipBase::getAllPlugins()</span></a>
+<a name="1560"><span class="lineNum">    1560 </span><span class="lineCov">       3667 : Plugin::Array AudioClipBase::getAllPlugins()</span></a>
 <a name="1561"><span class="lineNum">    1561 </span>            : {</a>
-<a name="1562"><span class="lineNum">    1562 </span><span class="lineCov">       3666 :     return pluginList.getPlugins();</span></a>
+<a name="1562"><span class="lineNum">    1562 </span><span class="lineCov">       3667 :     return pluginList.getPlugins();</span></a>
 <a name="1563"><span class="lineNum">    1563 </span>            : }</a>
 <a name="1564"><span class="lineNum">    1564 </span>            : </a>
 <a name="1565"><span class="lineNum">    1565 </span><span class="lineCov">         69 : void AudioClipBase::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
@@ -1681,8 +1681,8 @@
 <a name="1619"><span class="lineNum">    1619 </span>            : //==============================================================================</a>
 <a name="1620"><span class="lineNum">    1620 </span><span class="lineNoCov">          0 : void AudioClipBase::markAsDirty()</span></a>
 <a name="1621"><span class="lineNum">    1621 </span>            : {</a>
-<a name="1622"><span class="lineNum">    1622 </span><span class="lineCov">       3392 :     lastRenderJobFailed = false;</span></a>
-<a name="1623"><span class="lineNum">    1623 </span><span class="lineCov">       3392 :     createNewProxyAsync(); // Do this asyncronously to avoid recursion</span></a>
+<a name="1622"><span class="lineNum">    1622 </span><span class="lineCov">       3394 :     lastRenderJobFailed = false;</span></a>
+<a name="1623"><span class="lineNum">    1623 </span><span class="lineCov">       3394 :     createNewProxyAsync(); // Do this asyncronously to avoid recursion</span></a>
 <a name="1624"><span class="lineNum">    1624 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1625"><span class="lineNum">    1625 </span>            : </a>
 <a name="1626"><span class="lineNum">    1626 </span><span class="lineNoCov">          0 : void AudioClipBase::updateSourceFile()</span></a>
@@ -1900,21 +1900,21 @@
 <a name="1838"><span class="lineNum">    1838 </span>            :     return false;</a>
 <a name="1839"><span class="lineNum">    1839 </span>            : }</a>
 <a name="1840"><span class="lineNum">    1840 </span>            : </a>
-<a name="1841"><span class="lineNum">    1841 </span><span class="lineCov">       3394 : void AudioClipBase::setUsesProxy (bool canUseProxy) noexcept</span></a>
+<a name="1841"><span class="lineNum">    1841 </span><span class="lineCov">       3396 : void AudioClipBase::setUsesProxy (bool canUseProxy) noexcept</span></a>
 <a name="1842"><span class="lineNum">    1842 </span>            : {</a>
-<a name="1843"><span class="lineNum">    1843 </span><span class="lineCov">       3394 :     proxyAllowed = canUseProxy;</span></a>
-<a name="1844"><span class="lineNum">    1844 </span><span class="lineCov">       3394 :     stopTimer();</span></a>
-<a name="1845"><span class="lineNum">    1845 </span><span class="lineCov">       3394 : }</span></a>
+<a name="1843"><span class="lineNum">    1843 </span><span class="lineCov">       3396 :     proxyAllowed = canUseProxy;</span></a>
+<a name="1844"><span class="lineNum">    1844 </span><span class="lineCov">       3396 :     stopTimer();</span></a>
+<a name="1845"><span class="lineNum">    1845 </span><span class="lineCov">       3396 : }</span></a>
 <a name="1846"><span class="lineNum">    1846 </span>            : </a>
-<a name="1847"><span class="lineNum">    1847 </span><span class="lineCov">      10483 : bool AudioClipBase::usesTimeStretchedProxy() const</span></a>
+<a name="1847"><span class="lineNum">    1847 </span><span class="lineCov">      10473 : bool AudioClipBase::usesTimeStretchedProxy() const</span></a>
 <a name="1848"><span class="lineNum">    1848 </span>            : {</a>
-<a name="1849"><span class="lineNum">    1849 </span><span class="lineCov">      10483 :     if (! proxyAllowed)</span></a>
+<a name="1849"><span class="lineNum">    1849 </span><span class="lineCov">      10473 :     if (! proxyAllowed)</span></a>
 <a name="1850"><span class="lineNum">    1850 </span>            :         return false;</a>
 <a name="1851"><span class="lineNum">    1851 </span>            : </a>
-<a name="1852"><span class="lineNum">    1852 </span><span class="lineCov">      10461 :     return getAutoTempo() || getAutoPitch()</span></a>
-<a name="1853"><span class="lineNum">    1853 </span><span class="lineCov">      10461 :            || getPitchChange() != 0.0f</span></a>
-<a name="1854"><span class="lineNum">    1854 </span><span class="lineCov">      10461 :            || isUsingMelodyne()</span></a>
-<a name="1855"><span class="lineNum">    1855 </span><span class="lineCov">      20922 :            || (std::abs (getSpeedRatio() - 1.0) &gt; 0.00001</span></a>
+<a name="1852"><span class="lineNum">    1852 </span><span class="lineCov">      10451 :     return getAutoTempo() || getAutoPitch()</span></a>
+<a name="1853"><span class="lineNum">    1853 </span><span class="lineCov">      10451 :            || getPitchChange() != 0.0f</span></a>
+<a name="1854"><span class="lineNum">    1854 </span><span class="lineCov">      10451 :            || isUsingMelodyne()</span></a>
+<a name="1855"><span class="lineNum">    1855 </span><span class="lineCov">      20902 :            || (std::abs (getSpeedRatio() - 1.0) &gt; 0.00001</span></a>
 <a name="1856"><span class="lineNum">    1856 </span><span class="lineNoCov">          0 :                &amp;&amp; TimeStretcher::canProcessFor (timeStretchMode));</span></a>
 <a name="1857"><span class="lineNum">    1857 </span>            : }</a>
 <a name="1858"><span class="lineNum">    1858 </span>            : </a>
@@ -2188,32 +2188,32 @@
 <a name="2126"><span class="lineNum">    2126 </span>            :     return true;</a>
 <a name="2127"><span class="lineNum">    2127 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2128"><span class="lineNum">    2128 </span>            : </a>
-<a name="2129"><span class="lineNum">    2129 </span><span class="lineCov">       6950 : AudioFile AudioClipBase::getPlaybackFile() </span></a>
+<a name="2129"><span class="lineNum">    2129 </span><span class="lineCov">       6946 : AudioFile AudioClipBase::getPlaybackFile() </span></a>
 <a name="2130"><span class="lineNum">    2130 </span>            : {</a>
 <a name="2131"><span class="lineNum">    2131 </span>            :     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway</a>
-<a name="2132"><span class="lineNum">    2132 </span><span class="lineCov">       6950 :     const AudioFile af (getAudioFile());</span></a>
+<a name="2132"><span class="lineNum">    2132 </span><span class="lineCov">       6946 :     const AudioFile af (getAudioFile());</span></a>
 <a name="2133"><span class="lineNum">    2133 </span>            : </a>
-<a name="2134"><span class="lineNum">    2134 </span><span class="lineCov">       6923 :     if (canUseProxy() &amp;&amp; ! af.isNull())</span></a>
+<a name="2134"><span class="lineNum">    2134 </span><span class="lineCov">       6918 :     if (canUseProxy() &amp;&amp; ! af.isNull())</span></a>
 <a name="2135"><span class="lineNum">    2135 </span>            :     {</a>
-<a name="2136"><span class="lineNum">    2136 </span><span class="lineCov">       6922 :         const bool timestretched = usesTimeStretchedProxy();</span></a>
+<a name="2136"><span class="lineNum">    2136 </span><span class="lineCov">       6917 :         const bool timestretched = usesTimeStretchedProxy();</span></a>
 <a name="2137"><span class="lineNum">    2137 </span>            : </a>
-<a name="2138"><span class="lineNum">    2138 </span><span class="lineCov">       6922 :         if (timestretched || af.getInfo().needsCachedProxy)</span></a>
+<a name="2138"><span class="lineNum">    2138 </span><span class="lineCov">       6917 :         if (timestretched || af.getInfo().needsCachedProxy)</span></a>
 <a name="2139"><span class="lineNum">    2139 </span><span class="lineCov">          4 :             return getProxyFileToCreate (timestretched);</span></a>
 <a name="2140"><span class="lineNum">    2140 </span>            :     }</a>
 <a name="2141"><span class="lineNum">    2141 </span>            : </a>
-<a name="2142"><span class="lineNum">    2142 </span><span class="lineCov">       6946 :     return af;</span></a>
-<a name="2143"><span class="lineNum">    2143 </span><span class="lineCov">       6950 : }</span></a>
+<a name="2142"><span class="lineNum">    2142 </span><span class="lineCov">       6942 :     return af;</span></a>
+<a name="2143"><span class="lineNum">    2143 </span><span class="lineCov">       6946 : }</span></a>
 <a name="2144"><span class="lineNum">    2144 </span>            : </a>
-<a name="2145"><span class="lineNum">    2145 </span><span class="lineCov">         18 : AudioFileInfo AudioClipBase::getWaveInfo()</span></a>
+<a name="2145"><span class="lineNum">    2145 </span><span class="lineCov">         19 : AudioFileInfo AudioClipBase::getWaveInfo()</span></a>
 <a name="2146"><span class="lineNum">    2146 </span>            : {</a>
 <a name="2147"><span class="lineNum">    2147 </span>            :     // if the source needs to render we'll just have to bodge return a WaveInfo so the AudioSegmentList gives us a consistent hash</a>
 <a name="2148"><span class="lineNum">    2148 </span>            :     // this is of course a massive hack because it assumes that the rendered file will have the same sample rate etc.</a>
 <a name="2149"><span class="lineNum">    2149 </span>            : </a>
-<a name="2150"><span class="lineNum">    2150 </span><span class="lineCov">         18 :     if (needsRender())</span></a>
+<a name="2150"><span class="lineNum">    2150 </span><span class="lineCov">         19 :     if (needsRender())</span></a>
 <a name="2151"><span class="lineNum">    2151 </span><span class="lineNoCov">          0 :         if (auto sourceItem = sourceFileReference.getSourceProjectItem())</span></a>
 <a name="2152"><span class="lineNum">    2152 </span><span class="lineNoCov">          0 :             return AudioFile (edit.engine, sourceItem-&gt;getSourceFile()).getInfo();</span></a>
 <a name="2153"><span class="lineNum">    2153 </span>            : </a>
-<a name="2154"><span class="lineNum">    2154 </span><span class="lineCov">         18 :     return getAudioFile().getInfo();</span></a>
+<a name="2154"><span class="lineNum">    2154 </span><span class="lineCov">         19 :     return getAudioFile().getInfo();</span></a>
 <a name="2155"><span class="lineNum">    2155 </span>            : }</a>
 <a name="2156"><span class="lineNum">    2156 </span>            : </a>
 <a name="2157"><span class="lineNum">    2157 </span><span class="lineNoCov">          0 : HashCode AudioClipBase::getProxyHash()</span></a>
@@ -2249,28 +2249,28 @@
 <a name="2187"><span class="lineNum">    2187 </span><span class="lineCov">       3469 : void AudioClipBase::beginRenderingNewProxyIfNeeded()</span></a>
 <a name="2188"><span class="lineNum">    2188 </span>            : {</a>
 <a name="2189"><span class="lineNum">    2189 </span>            :     if (! canUseProxy())</a>
-<a name="2190"><span class="lineNum">    2190 </span><span class="lineCov">       3397 :         return;</span></a>
+<a name="2190"><span class="lineNum">    2190 </span><span class="lineCov">       3401 :         return;</span></a>
 <a name="2191"><span class="lineNum">    2191 </span>            :     </a>
 <a name="2192"><span class="lineNum">    2192 </span><span class="lineCov">       3447 :     if (isTimerRunning())</span></a>
 <a name="2193"><span class="lineNum">    2193 </span>            :     {</a>
-<a name="2194"><span class="lineNum">    2194 </span><span class="lineCov">       3375 :         startTimer (1);</span></a>
-<a name="2195"><span class="lineNum">    2195 </span><span class="lineCov">       3375 :         return;</span></a>
+<a name="2194"><span class="lineNum">    2194 </span><span class="lineCov">       3379 :         startTimer (1);</span></a>
+<a name="2195"><span class="lineNum">    2195 </span><span class="lineCov">       3379 :         return;</span></a>
 <a name="2196"><span class="lineNum">    2196 </span>            :     }</a>
 <a name="2197"><span class="lineNum">    2197 </span>            :     </a>
-<a name="2198"><span class="lineNum">    2198 </span><span class="lineCov">         72 :     const AudioFile playFile (getPlaybackFile());</span></a>
+<a name="2198"><span class="lineNum">    2198 </span><span class="lineCov">         68 :     const AudioFile playFile (getPlaybackFile());</span></a>
 <a name="2199"><span class="lineNum">    2199 </span>            : </a>
-<a name="2200"><span class="lineNum">    2200 </span><span class="lineCov">         72 :     if (playFile.isNull())</span></a>
+<a name="2200"><span class="lineNum">    2200 </span><span class="lineCov">         68 :     if (playFile.isNull())</span></a>
 <a name="2201"><span class="lineNum">    2201 </span>            :         return;</a>
 <a name="2202"><span class="lineNum">    2202 </span>            : </a>
-<a name="2203"><span class="lineNum">    2203 </span><span class="lineCov">         72 :     auto original = getAudioFile();</span></a>
+<a name="2203"><span class="lineNum">    2203 </span><span class="lineCov">         68 :     auto original = getAudioFile();</span></a>
 <a name="2204"><span class="lineNum">    2204 </span>            : </a>
 <a name="2205"><span class="lineNum">    2205 </span><span class="lineNoCov">          0 :     if (shouldAttemptRender() &amp;&amp; ! original.isValid())</span></a>
 <a name="2206"><span class="lineNum">    2206 </span><span class="lineNoCov">          0 :         createNewProxyAsync();</span></a>
 <a name="2207"><span class="lineNum">    2207 </span>            : </a>
-<a name="2208"><span class="lineNum">    2208 </span><span class="lineCov">         72 :     if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)</span></a>
+<a name="2208"><span class="lineNum">    2208 </span><span class="lineCov">         68 :     if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)</span></a>
 <a name="2209"><span class="lineNum">    2209 </span><span class="lineCov">          1 :         if (playFile.getSampleRate() &lt;= 0.0)</span></a>
 <a name="2210"><span class="lineNum">    2210 </span><span class="lineCov">          1 :             createNewProxyAsync();</span></a>
-<a name="2211"><span class="lineNum">    2211 </span><span class="lineCov">         72 : }</span></a>
+<a name="2211"><span class="lineNum">    2211 </span><span class="lineCov">         68 : }</span></a>
 <a name="2212"><span class="lineNum">    2212 </span>            : </a>
 <a name="2213"><span class="lineNum">    2213 </span>            : //==============================================================================</a>
 <a name="2214"><span class="lineNum">    2214 </span><span class="lineNoCov">          0 : void AudioClipBase::jobFinished (RenderManager::Job&amp; job, bool completedOk)</span></a>
@@ -2288,11 +2288,11 @@
 <a name="2226"><span class="lineNum">    2226 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2227"><span class="lineNum">    2227 </span>            : </a>
 <a name="2228"><span class="lineNum">    2228 </span>            : //==============================================================================</a>
-<a name="2229"><span class="lineNum">    2229 </span><span class="lineCov">      33418 : void AudioClipBase::createNewProxyAsync()</span></a>
+<a name="2229"><span class="lineNum">    2229 </span><span class="lineCov">      33431 : void AudioClipBase::createNewProxyAsync()</span></a>
 <a name="2230"><span class="lineNum">    2230 </span>            : {</a>
 <a name="2231"><span class="lineNum">    2231 </span>            :     if (canUseProxy())</a>
-<a name="2232"><span class="lineNum">    2232 </span><span class="lineCov">      33400 :         startTimer (600);</span></a>
-<a name="2233"><span class="lineNum">    2233 </span><span class="lineCov">      33418 : }</span></a>
+<a name="2232"><span class="lineNum">    2232 </span><span class="lineCov">      33406 :         startTimer (600);</span></a>
+<a name="2233"><span class="lineNum">    2233 </span><span class="lineCov">      33431 : }</span></a>
 <a name="2234"><span class="lineNum">    2234 </span>            : </a>
 <a name="2235"><span class="lineNum">    2235 </span><span class="lineNoCov">          0 : void AudioClipBase::cancelCurrentRender()</span></a>
 <a name="2236"><span class="lineNum">    2236 </span>            : {</a>
@@ -2300,10 +2300,10 @@
 <a name="2238"><span class="lineNum">    2238 </span><span class="lineNoCov">          0 :         renderJob-&gt;cancelJob();</span></a>
 <a name="2239"><span class="lineNum">    2239 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2240"><span class="lineNum">    2240 </span>            : </a>
-<a name="2241"><span class="lineNum">    2241 </span><span class="lineCov">         20 : void AudioClipBase::timerCallback()</span></a>
+<a name="2241"><span class="lineNum">    2241 </span><span class="lineCov">         19 : void AudioClipBase::timerCallback()</span></a>
 <a name="2242"><span class="lineNum">    2242 </span>            : {</a>
-<a name="2243"><span class="lineNum">    2243 </span><span class="lineCov">         20 :     if (edit.isLoading()</span></a>
-<a name="2244"><span class="lineNum">    2244 </span><span class="lineCov">         20 :          || ! edit.getTransport().isAllowedToReallocate())</span></a>
+<a name="2243"><span class="lineNum">    2243 </span><span class="lineCov">         19 :     if (edit.isLoading()</span></a>
+<a name="2244"><span class="lineNum">    2244 </span><span class="lineCov">         19 :          || ! edit.getTransport().isAllowedToReallocate())</span></a>
 <a name="2245"><span class="lineNum">    2245 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="2246"><span class="lineNum">    2246 </span>            : </a>
 <a name="2247"><span class="lineNum">    2247 </span>            :     // if the source file hasn't been rendered yet we need to delay this</a>
@@ -2318,19 +2318,19 @@
 <a name="2256"><span class="lineNum">    2256 </span>            :         }</a>
 <a name="2257"><span class="lineNum">    2257 </span>            :     }</a>
 <a name="2258"><span class="lineNum">    2258 </span>            : </a>
-<a name="2259"><span class="lineNum">    2259 </span><span class="lineCov">         20 :     stopTimer();</span></a>
+<a name="2259"><span class="lineNum">    2259 </span><span class="lineCov">         19 :     stopTimer();</span></a>
 <a name="2260"><span class="lineNum">    2260 </span>            : </a>
 <a name="2261"><span class="lineNum">    2261 </span>            :     if (! canUseProxy())</a>
 <a name="2262"><span class="lineNum">    2262 </span>            :         return;</a>
 <a name="2263"><span class="lineNum">    2263 </span>            : </a>
-<a name="2264"><span class="lineNum">    2264 </span><span class="lineCov">         20 :     const bool isTimeStretched = usesTimeStretchedProxy();</span></a>
+<a name="2264"><span class="lineNum">    2264 </span><span class="lineCov">         19 :     const bool isTimeStretched = usesTimeStretchedProxy();</span></a>
 <a name="2265"><span class="lineNum">    2265 </span>            : </a>
-<a name="2266"><span class="lineNum">    2266 </span><span class="lineCov">         20 :     const AudioFile originalFile (getAudioFile());</span></a>
-<a name="2267"><span class="lineNum">    2267 </span><span class="lineCov">         20 :     const AudioFile newProxy (getPlaybackFile());</span></a>
+<a name="2266"><span class="lineNum">    2266 </span><span class="lineCov">         19 :     const AudioFile originalFile (getAudioFile());</span></a>
+<a name="2267"><span class="lineNum">    2267 </span><span class="lineCov">         19 :     const AudioFile newProxy (getPlaybackFile());</span></a>
 <a name="2268"><span class="lineNum">    2268 </span>            : </a>
 <a name="2269"><span class="lineNum">    2269 </span>            :     const bool proxyChanged = lastProxy != newProxy;</a>
 <a name="2270"><span class="lineNum">    2270 </span>            : </a>
-<a name="2271"><span class="lineNum">    2271 </span><span class="lineCov">         20 :     if (proxyChanged || ! newProxy.getFile().exists())</span></a>
+<a name="2271"><span class="lineNum">    2271 </span><span class="lineCov">         19 :     if (proxyChanged || ! newProxy.getFile().exists())</span></a>
 <a name="2272"><span class="lineNum">    2272 </span>            :     {</a>
 <a name="2273"><span class="lineNum">    2273 </span><span class="lineCov">         15 :         if (proxyChanged</span></a>
 <a name="2274"><span class="lineNum">    2274 </span><span class="lineCov">         15 :              &amp;&amp; lastProxy != originalFile</span></a>
@@ -2352,23 +2352,23 @@
 <a name="2290"><span class="lineNum">    2290 </span><span class="lineCov">         15 :             edit.restartPlayback();</span></a>
 <a name="2291"><span class="lineNum">    2291 </span>            :         }</a>
 <a name="2292"><span class="lineNum">    2292 </span>            :     }</a>
-<a name="2293"><span class="lineNum">    2293 </span><span class="lineCov">         20 : }</span></a>
+<a name="2293"><span class="lineNum">    2293 </span><span class="lineCov">         19 : }</span></a>
 <a name="2294"><span class="lineNum">    2294 </span>            : </a>
-<a name="2295"><span class="lineNum">    2295 </span><span class="lineCov">      33453 : void AudioClipBase::valueTreePropertyChanged (juce::ValueTree&amp; tree, const juce::Identifier&amp; id)</span></a>
+<a name="2295"><span class="lineNum">    2295 </span><span class="lineCov">      33475 : void AudioClipBase::valueTreePropertyChanged (juce::ValueTree&amp; tree, const juce::Identifier&amp; id)</span></a>
 <a name="2296"><span class="lineNum">    2296 </span>            : {</a>
-<a name="2297"><span class="lineNum">    2297 </span><span class="lineCov">      33453 :     if (tree == state)</span></a>
+<a name="2297"><span class="lineNum">    2297 </span><span class="lineCov">      33475 :     if (tree == state)</span></a>
 <a name="2298"><span class="lineNum">    2298 </span>            :     {</a>
-<a name="2299"><span class="lineNum">    2299 </span><span class="lineCov">      23230 :         if (id == IDs::fadeInType || id == IDs::fadeOutType</span></a>
-<a name="2300"><span class="lineNum">    2300 </span><span class="lineCov">      23230 :             || id == IDs::fadeInBehaviour || id == IDs::fadeOutBehaviour</span></a>
-<a name="2301"><span class="lineNum">    2301 </span><span class="lineCov">      23230 :             || id == IDs::fadeIn || id == IDs::fadeOut</span></a>
-<a name="2302"><span class="lineNum">    2302 </span><span class="lineCov">      23216 :             || id == IDs::loopStart || id == IDs::loopLength</span></a>
-<a name="2303"><span class="lineNum">    2303 </span><span class="lineCov">      23214 :             || id == IDs::loopStartBeats || id == IDs::loopLengthBeats</span></a>
-<a name="2304"><span class="lineNum">    2304 </span><span class="lineCov">      23211 :             || id == IDs::transpose || id == IDs::pitchChange</span></a>
-<a name="2305"><span class="lineNum">    2305 </span><span class="lineCov">      23211 :             || id == IDs::elastiqueMode || id == IDs::autoPitch</span></a>
-<a name="2306"><span class="lineNum">    2306 </span><span class="lineCov">      19820 :             || id == IDs::elastiqueOptions || id == IDs::warpTime</span></a>
-<a name="2307"><span class="lineNum">    2307 </span><span class="lineCov">      43050 :             || id == IDs::effectsVisible || id == IDs::autoPitchMode)</span></a>
+<a name="2299"><span class="lineNum">    2299 </span><span class="lineCov">      23240 :         if (id == IDs::fadeInType || id == IDs::fadeOutType</span></a>
+<a name="2300"><span class="lineNum">    2300 </span><span class="lineCov">      23240 :             || id == IDs::fadeInBehaviour || id == IDs::fadeOutBehaviour</span></a>
+<a name="2301"><span class="lineNum">    2301 </span><span class="lineCov">      23240 :             || id == IDs::fadeIn || id == IDs::fadeOut</span></a>
+<a name="2302"><span class="lineNum">    2302 </span><span class="lineCov">      23226 :             || id == IDs::loopStart || id == IDs::loopLength</span></a>
+<a name="2303"><span class="lineNum">    2303 </span><span class="lineCov">      23224 :             || id == IDs::loopStartBeats || id == IDs::loopLengthBeats</span></a>
+<a name="2304"><span class="lineNum">    2304 </span><span class="lineCov">      23221 :             || id == IDs::transpose || id == IDs::pitchChange</span></a>
+<a name="2305"><span class="lineNum">    2305 </span><span class="lineCov">      23221 :             || id == IDs::elastiqueMode || id == IDs::autoPitch</span></a>
+<a name="2306"><span class="lineNum">    2306 </span><span class="lineCov">      19827 :             || id == IDs::elastiqueOptions || id == IDs::warpTime</span></a>
+<a name="2307"><span class="lineNum">    2307 </span><span class="lineCov">      43067 :             || id == IDs::effectsVisible || id == IDs::autoPitchMode)</span></a>
 <a name="2308"><span class="lineNum">    2308 </span>            :         {</a>
-<a name="2309"><span class="lineNum">    2309 </span><span class="lineCov">       3410 :             if (id == IDs::warpTime)</span></a>
+<a name="2309"><span class="lineNum">    2309 </span><span class="lineCov">       3413 :             if (id == IDs::warpTime)</span></a>
 <a name="2310"><span class="lineNum">    2310 </span>            :             {</a>
 <a name="2311"><span class="lineNum">    2311 </span><span class="lineNoCov">          0 :                 warpTime.forceUpdateOfCachedValue();</span></a>
 <a name="2312"><span class="lineNum">    2312 </span>            :                 </a>
@@ -2381,81 +2381,81 @@
 <a name="2319"><span class="lineNum">    2319 </span>            :                 }</a>
 <a name="2320"><span class="lineNum">    2320 </span>            :             }</a>
 <a name="2321"><span class="lineNum">    2321 </span>            :             </a>
-<a name="2322"><span class="lineNum">    2322 </span><span class="lineCov">       3410 :             changed();</span></a>
+<a name="2322"><span class="lineNum">    2322 </span><span class="lineCov">       3413 :             changed();</span></a>
 <a name="2323"><span class="lineNum">    2323 </span>            :         }</a>
-<a name="2324"><span class="lineNum">    2324 </span><span class="lineCov">      19820 :         else if (id == IDs::gain)</span></a>
+<a name="2324"><span class="lineNum">    2324 </span><span class="lineCov">      19827 :         else if (id == IDs::gain)</span></a>
 <a name="2325"><span class="lineNum">    2325 </span>            :         {</a>
 <a name="2326"><span class="lineNum">    2326 </span><span class="lineCov">       3360 :             changed();</span></a>
 <a name="2327"><span class="lineNum">    2327 </span>            :         }</a>
-<a name="2328"><span class="lineNum">    2328 </span><span class="lineCov">      13069 :         else if (id == IDs::pan || id == IDs::mute</span></a>
-<a name="2329"><span class="lineNum">    2329 </span><span class="lineCov">      29529 :                  || id == IDs::autoCrossfade)</span></a>
+<a name="2328"><span class="lineNum">    2328 </span><span class="lineCov">      13075 :         else if (id == IDs::pan || id == IDs::mute</span></a>
+<a name="2329"><span class="lineNum">    2329 </span><span class="lineCov">      29542 :                  || id == IDs::autoCrossfade)</span></a>
 <a name="2330"><span class="lineNum">    2330 </span>            :         {</a>
-<a name="2331"><span class="lineNum">    2331 </span><span class="lineCov">       3395 :             changed();</span></a>
+<a name="2331"><span class="lineNum">    2331 </span><span class="lineCov">       3396 :             changed();</span></a>
 <a name="2332"><span class="lineNum">    2332 </span>            : </a>
-<a name="2333"><span class="lineNum">    2333 </span><span class="lineCov">       3395 :             if (id == IDs::mute)</span></a>
+<a name="2333"><span class="lineNum">    2333 </span><span class="lineCov">       3396 :             if (id == IDs::mute)</span></a>
 <a name="2334"><span class="lineNum">    2334 </span>            :             {</a>
 <a name="2335"><span class="lineNum">    2335 </span><span class="lineNoCov">          0 :                 if (auto track = getTrack())</span></a>
 <a name="2336"><span class="lineNum">    2336 </span><span class="lineNoCov">          0 :                     if (auto f = track-&gt;getParentFolderTrack())</span></a>
 <a name="2337"><span class="lineNum">    2337 </span><span class="lineNoCov">          0 :                         f-&gt;setDirtyClips();</span></a>
 <a name="2338"><span class="lineNum">    2338 </span>            :             }</a>
-<a name="2339"><span class="lineNum">    2339 </span><span class="lineCov">       3395 :             else if (id == IDs::autoCrossfade)</span></a>
+<a name="2339"><span class="lineNum">    2339 </span><span class="lineCov">       3396 :             else if (id == IDs::autoCrossfade)</span></a>
 <a name="2340"><span class="lineNum">    2340 </span>            :             {</a>
 <a name="2341"><span class="lineNum">    2341 </span>            :                 updateAutoCrossfadesAsync (true);</a>
 <a name="2342"><span class="lineNum">    2342 </span>            :             }</a>
 <a name="2343"><span class="lineNum">    2343 </span>            :         }</a>
-<a name="2344"><span class="lineNum">    2344 </span><span class="lineCov">      13065 :         else if (id == IDs::autoTempo)</span></a>
+<a name="2344"><span class="lineNum">    2344 </span><span class="lineCov">      13071 :         else if (id == IDs::autoTempo)</span></a>
 <a name="2345"><span class="lineNum">    2345 </span>            :         {</a>
 <a name="2346"><span class="lineNum">    2346 </span><span class="lineCov">          3 :             autoTempo.forceUpdateOfCachedValue();</span></a>
 <a name="2347"><span class="lineNum">    2347 </span><span class="lineCov">          3 :             updateAutoTempoState();</span></a>
 <a name="2348"><span class="lineNum">    2348 </span>            :         }</a>
-<a name="2349"><span class="lineNum">    2349 </span><span class="lineCov">      13062 :         else if (id == IDs::isReversed)</span></a>
+<a name="2349"><span class="lineNum">    2349 </span><span class="lineCov">      13068 :         else if (id == IDs::isReversed)</span></a>
 <a name="2350"><span class="lineNum">    2350 </span>            :         {</a>
 <a name="2351"><span class="lineNum">    2351 </span><span class="lineNoCov">          0 :             isReversed.forceUpdateOfCachedValue();</span></a>
 <a name="2352"><span class="lineNum">    2352 </span><span class="lineNoCov">          0 :             updateReversedState();</span></a>
 <a name="2353"><span class="lineNum">    2353 </span>            :         }</a>
-<a name="2354"><span class="lineNum">    2354 </span><span class="lineCov">      13062 :         else if (id == IDs::channels)</span></a>
+<a name="2354"><span class="lineNum">    2354 </span><span class="lineCov">      13068 :         else if (id == IDs::channels)</span></a>
 <a name="2355"><span class="lineNum">    2355 </span>            :         {</a>
 <a name="2356"><span class="lineNum">    2356 </span><span class="lineNoCov">          0 :             channels.forceUpdateOfCachedValue();</span></a>
 <a name="2357"><span class="lineNum">    2357 </span><span class="lineNoCov">          0 :             updateLeftRightChannelActivenessFlags();</span></a>
 <a name="2358"><span class="lineNum">    2358 </span><span class="lineNoCov">          0 :             changed();</span></a>
 <a name="2359"><span class="lineNum">    2359 </span>            :         }</a>
-<a name="2360"><span class="lineNum">    2360 </span><span class="lineCov">      13062 :         else if (id == IDs::proxyAllowed)</span></a>
+<a name="2360"><span class="lineNum">    2360 </span><span class="lineCov">      13068 :         else if (id == IDs::proxyAllowed)</span></a>
 <a name="2361"><span class="lineNum">    2361 </span>            :         {</a>
-<a name="2362"><span class="lineNum">    2362 </span><span class="lineCov">       3394 :             propertiesChanged();</span></a>
+<a name="2362"><span class="lineNum">    2362 </span><span class="lineCov">       3396 :             propertiesChanged();</span></a>
 <a name="2363"><span class="lineNum">    2363 </span>            :         }</a>
 <a name="2364"><span class="lineNum">    2364 </span>            :         else</a>
 <a name="2365"><span class="lineNum">    2365 </span>            :         {</a>
-<a name="2366"><span class="lineNum">    2366 </span><span class="lineCov">       9668 :             Clip::valueTreePropertyChanged (tree, id);</span></a>
+<a name="2366"><span class="lineNum">    2366 </span><span class="lineCov">       9672 :             Clip::valueTreePropertyChanged (tree, id);</span></a>
 <a name="2367"><span class="lineNum">    2367 </span>            :         }</a>
 <a name="2368"><span class="lineNum">    2368 </span>            :     }</a>
-<a name="2369"><span class="lineNum">    2369 </span><span class="lineCov">      10223 :     else if (tree.hasType (IDs::WARPMARKER))</span></a>
+<a name="2369"><span class="lineNum">    2369 </span><span class="lineCov">      10235 :     else if (tree.hasType (IDs::WARPMARKER))</span></a>
 <a name="2370"><span class="lineNum">    2370 </span>            :     {</a>
 <a name="2371"><span class="lineNum">    2371 </span><span class="lineNoCov">          0 :         if (id == IDs::warpTime || id == IDs::sourceTime)</span></a>
 <a name="2372"><span class="lineNum">    2372 </span><span class="lineNoCov">          0 :             changed();</span></a>
 <a name="2373"><span class="lineNum">    2373 </span>            :     }</a>
-<a name="2374"><span class="lineNum">    2374 </span><span class="lineCov">      10223 :     else if (tree.hasType (IDs::LOOPINFO))</span></a>
+<a name="2374"><span class="lineNum">    2374 </span><span class="lineCov">      10235 :     else if (tree.hasType (IDs::LOOPINFO))</span></a>
 <a name="2375"><span class="lineNum">    2375 </span>            :     {</a>
-<a name="2376"><span class="lineNum">    2376 </span><span class="lineCov">      10195 :         if (isInitialised)</span></a>
-<a name="2377"><span class="lineNum">    2377 </span><span class="lineCov">      10180 :             changed();</span></a>
+<a name="2376"><span class="lineNum">    2376 </span><span class="lineCov">      10207 :         if (isInitialised)</span></a>
+<a name="2377"><span class="lineNum">    2377 </span><span class="lineCov">      10184 :             changed();</span></a>
 <a name="2378"><span class="lineNum">    2378 </span>            :     }</a>
 <a name="2379"><span class="lineNum">    2379 </span>            :     else</a>
 <a name="2380"><span class="lineNum">    2380 </span>            :     {</a>
 <a name="2381"><span class="lineNum">    2381 </span><span class="lineCov">         28 :         Clip::valueTreePropertyChanged (tree, id);</span></a>
 <a name="2382"><span class="lineNum">    2382 </span>            :     }</a>
-<a name="2383"><span class="lineNum">    2383 </span><span class="lineCov">      33453 : }</span></a>
+<a name="2383"><span class="lineNum">    2383 </span><span class="lineCov">      33475 : }</span></a>
 <a name="2384"><span class="lineNum">    2384 </span>            : </a>
-<a name="2385"><span class="lineNum">    2385 </span><span class="lineCov">      10191 : void AudioClipBase::valueTreeChildAdded (juce::ValueTree&amp; parentState, juce::ValueTree&amp; child)</span></a>
+<a name="2385"><span class="lineNum">    2385 </span><span class="lineCov">      10195 : void AudioClipBase::valueTreeChildAdded (juce::ValueTree&amp; parentState, juce::ValueTree&amp; child)</span></a>
 <a name="2386"><span class="lineNum">    2386 </span>            : {</a>
-<a name="2387"><span class="lineNum">    2387 </span><span class="lineCov">      10191 :     if (parentState == state)</span></a>
+<a name="2387"><span class="lineNum">    2387 </span><span class="lineCov">      10195 :     if (parentState == state)</span></a>
 <a name="2388"><span class="lineNum">    2388 </span>            :     {</a>
-<a name="2389"><span class="lineNum">    2389 </span><span class="lineCov">      10181 :         if (child.hasType (IDs::PLUGIN))</span></a>
+<a name="2389"><span class="lineNum">    2389 </span><span class="lineCov">      10185 :         if (child.hasType (IDs::PLUGIN))</span></a>
 <a name="2390"><span class="lineNum">    2390 </span><span class="lineCov">          3 :             Selectable::changed();</span></a>
-<a name="2391"><span class="lineNum">    2391 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::EFFECTS))</span></a>
+<a name="2391"><span class="lineNum">    2391 </span><span class="lineCov">      10182 :         else if (child.hasType (IDs::EFFECTS))</span></a>
 <a name="2392"><span class="lineNum">    2392 </span><span class="lineNoCov">          0 :             updateClipEffectsState();</span></a>
-<a name="2393"><span class="lineNum">    2393 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::PATTERNGENERATOR))</span></a>
+<a name="2393"><span class="lineNum">    2393 </span><span class="lineCov">      10182 :         else if (child.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="2394"><span class="lineNum">    2394 </span><span class="lineNoCov">          0 :             patternGenerator.reset (new PatternGenerator (*this, child));</span></a>
-<a name="2395"><span class="lineNum">    2395 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::LOOPINFO) &amp;&amp; isInitialised)</span></a>
-<a name="2396"><span class="lineNum">    2396 </span><span class="lineCov">      10175 :             loopInfo.state = child;</span></a>
+<a name="2395"><span class="lineNum">    2395 </span><span class="lineCov">      10182 :         else if (child.hasType (IDs::LOOPINFO) &amp;&amp; isInitialised)</span></a>
+<a name="2396"><span class="lineNum">    2396 </span><span class="lineCov">      10178 :             loopInfo.state = child;</span></a>
 <a name="2397"><span class="lineNum">    2397 </span>            :     }</a>
 <a name="2398"><span class="lineNum">    2398 </span><span class="lineCov">         10 :     else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))</span></a>
 <a name="2399"><span class="lineNum">    2399 </span>            :     {</a>
@@ -2465,20 +2465,20 @@
 <a name="2403"><span class="lineNum">    2403 </span>            :     {</a>
 <a name="2404"><span class="lineNum">    2404 </span><span class="lineCov">         10 :         Clip::valueTreeChildAdded (parentState, child);</span></a>
 <a name="2405"><span class="lineNum">    2405 </span>            :     }</a>
-<a name="2406"><span class="lineNum">    2406 </span><span class="lineCov">      10191 : }</span></a>
+<a name="2406"><span class="lineNum">    2406 </span><span class="lineCov">      10195 : }</span></a>
 <a name="2407"><span class="lineNum">    2407 </span>            : </a>
-<a name="2408"><span class="lineNum">    2408 </span><span class="lineCov">      10181 : void AudioClipBase::valueTreeChildRemoved (juce::ValueTree&amp; parentState, juce::ValueTree&amp; child, int oldIndex)</span></a>
+<a name="2408"><span class="lineNum">    2408 </span><span class="lineCov">      10184 : void AudioClipBase::valueTreeChildRemoved (juce::ValueTree&amp; parentState, juce::ValueTree&amp; child, int oldIndex)</span></a>
 <a name="2409"><span class="lineNum">    2409 </span>            : {</a>
-<a name="2410"><span class="lineNum">    2410 </span><span class="lineCov">      10181 :     if (parentState == state)</span></a>
+<a name="2410"><span class="lineNum">    2410 </span><span class="lineCov">      10184 :     if (parentState == state)</span></a>
 <a name="2411"><span class="lineNum">    2411 </span>            :     {</a>
-<a name="2412"><span class="lineNum">    2412 </span><span class="lineCov">      10175 :         if (child.hasType (IDs::PLUGIN))</span></a>
+<a name="2412"><span class="lineNum">    2412 </span><span class="lineCov">      10178 :         if (child.hasType (IDs::PLUGIN))</span></a>
 <a name="2413"><span class="lineNum">    2413 </span><span class="lineNoCov">          0 :             Selectable::changed();</span></a>
-<a name="2414"><span class="lineNum">    2414 </span><span class="lineCov">      10175 :         else if (child.hasType (IDs::EFFECTS))</span></a>
+<a name="2414"><span class="lineNum">    2414 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::EFFECTS))</span></a>
 <a name="2415"><span class="lineNum">    2415 </span><span class="lineNoCov">          0 :             updateClipEffectsState();</span></a>
-<a name="2416"><span class="lineNum">    2416 </span><span class="lineCov">      10175 :         else if (child.hasType (IDs::PATTERNGENERATOR))</span></a>
+<a name="2416"><span class="lineNum">    2416 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="2417"><span class="lineNum">    2417 </span>            :             patternGenerator = nullptr;</a>
-<a name="2418"><span class="lineNum">    2418 </span><span class="lineCov">      10175 :         else if (child.hasType (IDs::LOOPINFO) &amp;&amp; isInitialised)</span></a>
-<a name="2419"><span class="lineNum">    2419 </span><span class="lineCov">      20350 :             copyValueTree (loopInfo.state, LoopInfo (edit.engine).state, nullptr); // Resets to default</span></a>
+<a name="2418"><span class="lineNum">    2418 </span><span class="lineCov">      10178 :         else if (child.hasType (IDs::LOOPINFO) &amp;&amp; isInitialised)</span></a>
+<a name="2419"><span class="lineNum">    2419 </span><span class="lineCov">      20356 :             copyValueTree (loopInfo.state, LoopInfo (edit.engine).state, nullptr); // Resets to default</span></a>
 <a name="2420"><span class="lineNum">    2420 </span>            :     }</a>
 <a name="2421"><span class="lineNum">    2421 </span><span class="lineCov">          6 :     else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))</span></a>
 <a name="2422"><span class="lineNum">    2422 </span>            :     {</a>
@@ -2488,19 +2488,19 @@
 <a name="2426"><span class="lineNum">    2426 </span>            :     {</a>
 <a name="2427"><span class="lineNum">    2427 </span><span class="lineCov">          6 :         Clip::valueTreeChildRemoved (parentState, child, oldIndex);</span></a>
 <a name="2428"><span class="lineNum">    2428 </span>            :     }</a>
-<a name="2429"><span class="lineNum">    2429 </span><span class="lineCov">      10181 : }</span></a>
+<a name="2429"><span class="lineNum">    2429 </span><span class="lineCov">      10184 : }</span></a>
 <a name="2430"><span class="lineNum">    2430 </span>            : </a>
 <a name="2431"><span class="lineNum">    2431 </span><span class="lineNoCov">          0 : void AudioClipBase::valueTreeChildOrderChanged (juce::ValueTree&amp; parentState, int oldIndex, int newIndex)</span></a>
 <a name="2432"><span class="lineNum">    2432 </span>            : {</a>
 <a name="2433"><span class="lineNum">    2433 </span><span class="lineNoCov">          0 :     Clip::valueTreeChildOrderChanged (parentState, oldIndex, newIndex);</span></a>
 <a name="2434"><span class="lineNum">    2434 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2435"><span class="lineNum">    2435 </span>            : </a>
-<a name="2436"><span class="lineNum">    2436 </span><span class="lineCov">       3392 : void AudioClipBase::valueTreeParentChanged (juce::ValueTree&amp; child)</span></a>
+<a name="2436"><span class="lineNum">    2436 </span><span class="lineCov">       3393 : void AudioClipBase::valueTreeParentChanged (juce::ValueTree&amp; child)</span></a>
 <a name="2437"><span class="lineNum">    2437 </span>            : {</a>
 <a name="2438"><span class="lineNum">    2438 </span>            :     updateAutoCrossfadesAsync (true);</a>
 <a name="2439"><span class="lineNum">    2439 </span>            : </a>
-<a name="2440"><span class="lineNum">    2440 </span><span class="lineCov">       3392 :     Clip::valueTreeParentChanged (child);</span></a>
-<a name="2441"><span class="lineNum">    2441 </span><span class="lineCov">       3392 : }</span></a>
+<a name="2440"><span class="lineNum">    2440 </span><span class="lineCov">       3393 :     Clip::valueTreeParentChanged (child);</span></a>
+<a name="2441"><span class="lineNum">    2441 </span><span class="lineCov">       3393 : }</span></a>
 <a name="2442"><span class="lineNum">    2442 </span>            : </a>
 <a name="2443"><span class="lineNum">    2443 </span><span class="lineNoCov">          0 : void AudioClipBase::updateReversedState()</span></a>
 <a name="2444"><span class="lineNum">    2444 </span>            : {</a>
@@ -2545,11 +2545,11 @@
 <a name="2483"><span class="lineNum">    2483 </span>            :     }</a>
 <a name="2484"><span class="lineNum">    2484 </span><span class="lineCov">          3 : }</span></a>
 <a name="2485"><span class="lineNum">    2485 </span>            : </a>
-<a name="2486"><span class="lineNum">    2486 </span><span class="lineCov">       3392 : void AudioClipBase::updateClipEffectsState()</span></a>
+<a name="2486"><span class="lineNum">    2486 </span><span class="lineCov">       3393 : void AudioClipBase::updateClipEffectsState()</span></a>
 <a name="2487"><span class="lineNum">    2487 </span>            : {</a>
-<a name="2488"><span class="lineNum">    2488 </span><span class="lineCov">       3392 :     auto v = state.getChildWithName (IDs::EFFECTS);</span></a>
+<a name="2488"><span class="lineNum">    2488 </span><span class="lineCov">       3393 :     auto v = state.getChildWithName (IDs::EFFECTS);</span></a>
 <a name="2489"><span class="lineNum">    2489 </span>            : </a>
-<a name="2490"><span class="lineNum">    2490 </span><span class="lineCov">       3392 :     if (v.isValid() &amp;&amp; canHaveEffects())</span></a>
+<a name="2490"><span class="lineNum">    2490 </span><span class="lineCov">       3393 :     if (v.isValid() &amp;&amp; canHaveEffects())</span></a>
 <a name="2491"><span class="lineNum">    2491 </span>            :     {</a>
 <a name="2492"><span class="lineNum">    2492 </span><span class="lineNoCov">          0 :         if (clipEffects == nullptr)</span></a>
 <a name="2493"><span class="lineNum">    2493 </span>            :         {</a>
@@ -2557,7 +2557,7 @@
 <a name="2495"><span class="lineNum">    2495 </span><span class="lineNoCov">          0 :             changed();</span></a>
 <a name="2496"><span class="lineNum">    2496 </span>            :         }</a>
 <a name="2497"><span class="lineNum">    2497 </span>            :     }</a>
-<a name="2498"><span class="lineNum">    2498 </span><span class="lineCov">       3392 :     else if (clipEffects != nullptr)</span></a>
+<a name="2498"><span class="lineNum">    2498 </span><span class="lineCov">       3393 :     else if (clipEffects != nullptr)</span></a>
 <a name="2499"><span class="lineNum">    2499 </span>            :     {</a>
 <a name="2500"><span class="lineNum">    2500 </span>            :         clipEffects = nullptr;</a>
 <a name="2501"><span class="lineNum">    2501 </span>            : </a>
@@ -2568,7 +2568,7 @@
 <a name="2506"><span class="lineNum">    2506 </span>            :     }</a>
 <a name="2507"><span class="lineNum">    2507 </span>            : </a>
 <a name="2508"><span class="lineNum">    2508 </span>            :     markAsDirty();</a>
-<a name="2509"><span class="lineNum">    2509 </span><span class="lineCov">       3392 : }</span></a>
+<a name="2509"><span class="lineNum">    2509 </span><span class="lineCov">       3393 : }</span></a>
 <a name="2510"><span class="lineNum">    2510 </span>            : </a>
 <a name="2511"><span class="lineNum">    2511 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
