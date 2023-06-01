@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-31 13:29:34</td>
+            <td class="headerValue">2023-06-01 22:05:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -83,7 +83,7 @@
 <a name="21"><span class="lineNum">      21 </span>            :     ~PluginList();</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     //==============================================================================</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       1259 :     Edit&amp; getEdit() const                                   { return edit; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       3867 :     Edit&amp; getEdit() const                                   { return edit; }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     Clip* getOwnerClip() const                              { return ownerClip; }</a>
 <a name="26"><span class="lineNum">      26 </span>            :     Track* getOwnerTrack() const                            { return ownerTrack; }</a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
@@ -115,11 +115,11 @@
 <a name="53"><span class="lineNum">      53 </span>            :     void addPluginsFrom (const juce::ValueTree&amp;, bool clearFirst, bool atStart);</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span>            :     template &lt;typename PluginType&gt;</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       1215 :     PluginType* findFirstPluginOfType() const</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       2823 :     PluginType* findFirstPluginOfType() const</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :     {</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       2395 :         for (auto af : *this)</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       1783 :             if (auto f = dynamic_cast&lt;PluginType*&gt; (af))</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        603 :                 return f;</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       5611 :         for (auto af : *this)</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       4195 :             if (auto f = dynamic_cast&lt;PluginType*&gt; (af))</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       1407 :                 return f;</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            :         return {};</a>
 <a name="63"><span class="lineNum">      63 </span>            :     }</a>

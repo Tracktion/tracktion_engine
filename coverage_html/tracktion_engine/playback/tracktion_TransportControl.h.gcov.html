@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-31 13:29:34</td>
+            <td class="headerValue">2023-06-01 22:05:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -369,7 +369,7 @@
 <a name="307"><span class="lineNum">     307 </span>            :     struct Listener</a>
 <a name="308"><span class="lineNum">     308 </span>            :     {</a>
 <a name="309"><span class="lineNum">     309 </span>            :         /** Destructor. */</a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineCov">       1677 :         virtual ~Listener() {}</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">       2493 :         virtual ~Listener() {}</span></a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
 <a name="312"><span class="lineNum">     312 </span>            :         /** Called when an EditPlaybackContext is created or deleted. */</a>
 <a name="313"><span class="lineNum">     313 </span>            :         virtual void playbackContextChanged() = 0;</a>
@@ -407,7 +407,7 @@
 <a name="345"><span class="lineNum">     345 </span>            :     void addListener (Listener* l)          { listeners.add (l); }</a>
 <a name="346"><span class="lineNum">     346 </span>            : </a>
 <a name="347"><span class="lineNum">     347 </span>            :     /** Removes a Listener. */</a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       1677 :     void removeListener (Listener* l)       { listeners.remove (l); }</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       2493 :     void removeListener (Listener* l)       { listeners.remove (l); }</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
 <a name="350"><span class="lineNum">     350 </span>            :     //==============================================================================</a>
 <a name="351"><span class="lineNum">     351 </span>            :     Engine&amp; engine;         /**&lt; The Engine this Edit belongs to. */</a>

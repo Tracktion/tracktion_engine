@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-31 13:29:34</td>
+            <td class="headerValue">2023-06-01 22:05:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -75,9 +75,9 @@
 <a name="13"><span class="lineNum">      13 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="14"><span class="lineNum">      14 </span>            : {</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">          2 : AuxSendNode::AuxSendNode (std::unique_ptr&lt;Node&gt; inputNode, int busIDToUse,</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        202 : AuxSendNode::AuxSendNode (std::unique_ptr&lt;Node&gt; inputNode, int busIDToUse,</span></a>
 <a name="17"><span class="lineNum">      17 </span>            :                           AuxSendPlugin&amp; sourceSendPlugin, tracktion::graph::PlayHeadState&amp; phs,</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          2 :                           const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        202 :                           const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :     : SendNode (std::move (inputNode), busIDToUse,</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1036 :                 [&amp;sourceSendPlugin, trackMuteState, processAuxSendsWhenTrackIsMuted]</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :                 {</a>
@@ -102,21 +102,21 @@
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :                     return gain;</a>
 <a name="42"><span class="lineNum">      42 </span>            :                }),</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          2 :       playHeadState (phs),</span></a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :       pluginPtr (sourceSendPlugin),</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          4 :       sendPlugin (sourceSendPlugin)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        202 :       playHeadState (phs),</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">        202 :       pluginPtr (sourceSendPlugin),</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">        404 :       sendPlugin (sourceSendPlugin)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : {</a>
 <a name="47"><span class="lineNum">      47 </span>            :     jassert (pluginPtr != nullptr);</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">          2 : }</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        202 : }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span>            : //==============================================================================</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          4 : void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        204 : void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          4 :     sampleRate = info.sampleRate;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        204 :     sampleRate = info.sampleRate;</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :     </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          4 :     if (auto props = getNodeProperties(); props.latencyNumSamples &gt; 0)</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        204 :     if (auto props = getNodeProperties(); props.latencyNumSamples &gt; 0)</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          4 : }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        204 : }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">       1034 : void AuxSendNode::process (ProcessContext&amp; pc)</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : {</a>

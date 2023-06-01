@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-31 13:29:34</td>
+            <td class="headerValue">2023-06-01 22:05:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">38</td>
@@ -76,19 +76,19 @@
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
 <a name="15"><span class="lineNum">      15 </span>            : struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener</a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       1674 :     CollectionClipList (ClipTrack&amp; t, juce::ValueTree&amp; v) : ct (t), state (v)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       2490 :     CollectionClipList (ClipTrack&amp; t, juce::ValueTree&amp; v) : ct (t), state (v)</span></a>
 <a name="18"><span class="lineNum">      18 </span>            :     {</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       1674 :         state.addListener (this);</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1674 :     }</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       2490 :         state.addListener (this);</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       2490 :     }</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       3348 :     ~CollectionClipList() override</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       1674 :     {</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       1674 :         state.removeListener (this);</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       3348 :     }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       4980 :     ~CollectionClipList() override</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       2490 :     {</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       2490 :         state.removeListener (this);</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       4980 :     }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">      36803 :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id) override</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">      40023 :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id) override</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :     {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      36803 :         if (id == IDs::groupID)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      40023 :         if (id == IDs::groupID)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :         {</a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :             if (auto c = ct.findClipForID (EditItemID::fromID (v)))</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :             {</a>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :                 }</a>
 <a name="60"><span class="lineNum">      60 </span>            :             }</a>
 <a name="61"><span class="lineNum">      61 </span>            :         }</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">      36803 :         else if (id == IDs::start || id == IDs::length)</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">      40023 :         else if (id == IDs::start || id == IDs::length)</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :         {</a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">         80 :             if (auto c = ct.findClipForID (EditItemID::fromID (v)))</span></a>
 <a name="65"><span class="lineNum">      65 </span>            :             {</a>
@@ -135,15 +135,15 @@
 <a name="73"><span class="lineNum">      73 </span>            :                 }</a>
 <a name="74"><span class="lineNum">      74 </span>            :             }</a>
 <a name="75"><span class="lineNum">      75 </span>            :         }</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">      36803 :     }</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">      40023 :     }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      21714 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      25738 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      21714 :         if (Clip::isClipState (child))</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      25738 :         if (Clip::isClipState (child))</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">       8503 :             if (auto c = ct.findClipForID (EditItemID::fromID (child)))</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :             {</a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       2238 :                 if (c-&gt;isGrouped())</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       2586 :                 if (c-&gt;isGrouped())</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :                 {</a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :                     auto cc = findOrCreateCollectionClip (c-&gt;getGroupID());</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :                     cc-&gt;addClip (c);</span></a>
@@ -152,7 +152,7 @@
 <a name="90"><span class="lineNum">      90 </span>            :                 }</a>
 <a name="91"><span class="lineNum">      91 </span>            :             }</a>
 <a name="92"><span class="lineNum">      92 </span>            :         }</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      21714 :     }</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      25738 :     }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineCov">      10294 :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp; child, int) override</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :     {</a>
@@ -208,7 +208,7 @@
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineCov">      10408 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override {}</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1205 :     void valueTreeParentChanged (juce::ValueTree&amp;) override {}</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       2017 :     void valueTreeParentChanged (juce::ValueTree&amp;) override {}</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :     ClipTrack&amp; ct;</a>
 <a name="152"><span class="lineNum">     152 </span>            :     juce::ValueTree&amp; state;</a>
@@ -219,21 +219,21 @@
 <a name="157"><span class="lineNum">     157 </span>            : };</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span>            : //==============================================================================</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">       1674 : ClipTrack::ClipTrack (Edit&amp; ed, const juce::ValueTree&amp; v, double defaultHeight, double minHeight, double maxHeight)</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">       1674 :     : Track (ed, v, defaultHeight, minHeight, maxHeight)</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">       2490 : ClipTrack::ClipTrack (Edit&amp; ed, const juce::ValueTree&amp; v, double defaultHeight, double minHeight, double maxHeight)</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">       2490 :     : Track (ed, v, defaultHeight, minHeight, maxHeight)</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : {</a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       1674 :     collectionClipList.reset (new CollectionClipList (*this, state));</span></a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       1674 : }</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       2490 :     collectionClipList.reset (new CollectionClipList (*this, state));</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       2490 : }</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       1674 : ClipTrack::~ClipTrack()</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       2490 : ClipTrack::~ClipTrack()</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : {</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       1674 : }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2490 : }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2134 : void ClipTrack::initialise()</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2954 : void ClipTrack::initialise()</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : {</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">       2134 :     initialiseClipOwner (edit, state);</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       2134 :     Track::initialise();</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       2134 : }</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">       2954 :     initialiseClipOwner (edit, state);</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       2954 :     Track::initialise();</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       2954 : }</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 : void ClipTrack::flushStateToValueTree()</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : {</a>
@@ -340,15 +340,15 @@
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">       8671 : Clip* ClipTrack::findClipForID (EditItemID id) const</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : {</a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">     400907 :     for (auto c : getClips())</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     394547 :         if (c-&gt;itemID == id)</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">       2311 :             return c;</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     394895 :         if (c-&gt;itemID == id)</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">       2659 :             return c;</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span>            :     return {};</a>
 <a name="285"><span class="lineNum">     285 </span>            : }</a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">       1805 : TimeDuration ClipTrack::getLength() const</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">       1821 : TimeDuration ClipTrack::getLength() const</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : {</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       1805 :     return toDuration (getTotalRange().getEnd());</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       1821 :     return toDuration (getTotalRange().getEnd());</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : }</a>
 <a name="291"><span class="lineNum">     291 </span>            : </a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineCov">          4 : TimeDuration ClipTrack::getLengthIncludingInputTracks() const</span></a>
@@ -364,7 +364,7 @@
 <a name="302"><span class="lineNum">     302 </span>            : </a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : TimeRange ClipTrack::getTotalRange() const</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : {</a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineCov">       1805 :     return findUnionOfEditTimeRanges (getClips());</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">       1821 :     return findUnionOfEditTimeRanges (getClips());</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : }</a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 : bool ClipTrack::addClip (const Clip::Ptr&amp; clip)</span></a>
@@ -644,12 +644,12 @@
 <a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : }</a>
 <a name="584"><span class="lineNum">     584 </span>            : </a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineCov">     234999 : bool ClipTrack::containsPlugin (const Plugin* plugin) const</span></a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineCov">    4821879 : bool ClipTrack::containsPlugin (const Plugin* plugin) const</span></a>
 <a name="586"><span class="lineNum">     586 </span>            : {</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineCov">     234999 :     if (pluginList.contains (plugin))</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">    4821879 :     if (pluginList.contains (plugin))</span></a>
 <a name="588"><span class="lineNum">     588 </span>            :         return true;</a>
 <a name="589"><span class="lineNum">     589 </span>            : </a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">     387639 :     for (auto c : getClips())</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">    4928907 :     for (auto c : getClips())</span></a>
 <a name="591"><span class="lineNum">     591 </span><span class="lineCov">     156420 :         if (auto plugins = c-&gt;getPluginList())</span></a>
 <a name="592"><span class="lineNum">     592 </span><span class="lineCov">     134596 :             if (plugins-&gt;contains (plugin))</span></a>
 <a name="593"><span class="lineNum">     593 </span>            :                 return true;</a>
@@ -657,11 +657,11 @@
 <a name="595"><span class="lineNum">     595 </span>            :     return false;</a>
 <a name="596"><span class="lineNum">     596 </span>            : }</a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineCov">      15807 : Plugin::Array ClipTrack::getAllPlugins() const</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">      15855 : Plugin::Array ClipTrack::getAllPlugins() const</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : {</a>
 <a name="600"><span class="lineNum">     600 </span>            :     auto destArray = Track::getAllPlugins();</a>
 <a name="601"><span class="lineNum">     601 </span>            : </a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineCov">      46246 :     for (auto c : getClips())</span></a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineCov">      46294 :     for (auto c : getClips())</span></a>
 <a name="603"><span class="lineNum">     603 </span>            :     {</a>
 <a name="604"><span class="lineNum">     604 </span><span class="lineCov">      30439 :         destArray.addArray (c-&gt;getAllPlugins());</span></a>
 <a name="605"><span class="lineNum">     605 </span>            : </a>
@@ -670,16 +670,16 @@
 <a name="608"><span class="lineNum">     608 </span><span class="lineCov">         92 :                 destArray.addArray (childClip-&gt;getAllPlugins());</span></a>
 <a name="609"><span class="lineNum">     609 </span>            :     }</a>
 <a name="610"><span class="lineNum">     610 </span>            : </a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineCov">      15807 :     return destArray;</span></a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineCov">      15855 :     return destArray;</span></a>
 <a name="612"><span class="lineNum">     612 </span>            : }</a>
 <a name="613"><span class="lineNum">     613 </span>            : </a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineCov">        376 : void ClipTrack::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineCov">        384 : void ClipTrack::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
 <a name="615"><span class="lineNum">     615 </span>            : {</a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineCov">        376 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="616"><span class="lineNum">     616 </span><span class="lineCov">        384 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
 <a name="617"><span class="lineNum">     617 </span>            : </a>
-<a name="618"><span class="lineNum">     618 </span><span class="lineCov">        455 :     for (auto c : getClips())</span></a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineCov">         79 :         c-&gt;sendMirrorUpdateToAllPlugins (p);</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineCov">        376 : }</span></a>
+<a name="618"><span class="lineNum">     618 </span><span class="lineCov">        465 :     for (auto c : getClips())</span></a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineCov">         81 :         c-&gt;sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">        384 : }</span></a>
 <a name="621"><span class="lineNum">     621 </span>            : </a>
 <a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 : bool ClipTrack::areAnyClipsUsingFile (const AudioFile&amp; af)</span></a>
 <a name="623"><span class="lineNum">     623 </span>            : {</a>
