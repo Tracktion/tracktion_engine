@@ -232,6 +232,7 @@ using namespace std::literals;
 #include "playback/graph/tracktion_RackReturnNode.h"
 #include "playback/graph/tracktion_RackReturnNode.cpp"
 #include "playback/graph/tracktion_PluginNode.cpp"
+#include "playback/graph/tracktion_PluginNodeBenchmarks.test.cpp"
 #include "playback/graph/tracktion_ModifierNode.cpp"
 
 #include "playback/graph/tracktion_TrackMutingNode.cpp"
