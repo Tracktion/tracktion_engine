@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-02 19:09:20</td>
+            <td class="headerValue">2023-06-02 21:22:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">34</td>
@@ -341,10 +341,10 @@
 <a name="279"><span class="lineNum">     279 </span><span class="lineCov">      23021 :     return pluginList.getPlugins();</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : }</a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        198 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">        202 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : {</a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">        198 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">        198 : }</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">        202 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">        202 : }</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 : void Track::flipAllPluginsEnablement()</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : {</a>
@@ -638,12 +638,12 @@
 <a name="576"><span class="lineNum">     576 </span>            :     }</a>
 <a name="577"><span class="lineNum">     577 </span><span class="lineCov">      40307 : }</span></a>
 <a name="578"><span class="lineNum">     578 </span>            : </a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineCov">      25918 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">      25926 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="580"><span class="lineNum">     580 </span>            : {</a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">      25918 :     if (p == state)</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">      25926 :     if (p == state)</span></a>
 <a name="582"><span class="lineNum">     582 </span><span class="lineCov">      13538 :         if (TrackList::isTrack (c))</span></a>
 <a name="583"><span class="lineNum">     583 </span><span class="lineCov">          8 :             updateTrackList();</span></a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineCov">      25918 : }</span></a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineCov">      25926 : }</span></a>
 <a name="585"><span class="lineNum">     585 </span>            : </a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineCov">      10318 : void Track::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="587"><span class="lineNum">     587 </span>            : {</a>

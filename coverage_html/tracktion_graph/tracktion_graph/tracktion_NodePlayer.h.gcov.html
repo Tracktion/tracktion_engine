@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-02 19:09:20</td>
+            <td class="headerValue">2023-06-02 21:22:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -144,11 +144,11 @@
 <a name="82"><span class="lineNum">      82 </span>            :     /** Processes a block of audio and MIDI data.</a>
 <a name="83"><span class="lineNum">      83 </span>            :         Returns the number of times a node was checked but unable to be processed.</a>
 <a name="84"><span class="lineNum">      84 </span>            :     */</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">    1413644 :     int process (const Node::ProcessContext&amp; pc)</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">    1426335 :     int process (const Node::ProcessContext&amp; pc)</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :     {</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">    1413644 :         if (inputAndNodesLock.tryEnter())</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">    1426335 :         if (inputAndNodesLock.tryEnter())</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :         {</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    1413644 :             if (! nodeGraph)</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    1426335 :             if (! nodeGraph)</span></a>
 <a name="90"><span class="lineNum">      90 </span>            :             {</a>
 <a name="91"><span class="lineNum">      91 </span>            :                 inputAndNodesLock.exit();</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :                 return 0;</span></a>
@@ -156,14 +156,14 @@
 <a name="94"><span class="lineNum">      94 </span>            :             </a>
 <a name="95"><span class="lineNum">      95 </span>            :             int numMisses = 0;</a>
 <a name="96"><span class="lineNum">      96 </span>            :             </a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">    1413644 :             if (playHeadState != nullptr)</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">    1426335 :             if (playHeadState != nullptr)</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :                 numMisses = processWithPlayHeadState (*playHeadState, *nodeGraph, pc);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            :             else</a>
 <a name="100"><span class="lineNum">     100 </span>            :                 numMisses = processPostorderedNodes (*nodeGraph, pc);</a>
 <a name="101"><span class="lineNum">     101 </span>            :             </a>
 <a name="102"><span class="lineNum">     102 </span>            :             inputAndNodesLock.exit();</a>
 <a name="103"><span class="lineNum">     103 </span>            :             </a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">    1413644 :             return numMisses;</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">    1426335 :             return numMisses;</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :         }</a>
 <a name="106"><span class="lineNum">     106 </span>            :         </a>
 <a name="107"><span class="lineNum">     107 </span>            :         return 0;</a>
@@ -176,7 +176,7 @@
 <a name="114"><span class="lineNum">     114 </span>            :     </a>
 <a name="115"><span class="lineNum">     115 </span>            :     int processPostorderedNodes (NodeGraph&amp; graphToProcess, const Node::ProcessContext&amp; pc)</a>
 <a name="116"><span class="lineNum">     116 </span>            :     {</a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">    1413644 :         return processPostorderedNodesSingleThreaded (graphToProcess, pc);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">    1426335 :         return processPostorderedNodesSingleThreaded (graphToProcess, pc);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :     }</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            : protected:</a>
@@ -240,22 +240,22 @@
 <a name="178"><span class="lineNum">     178 </span>            :     /** Processes a group of Nodes assuming a postordering VertexOrdering.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         If these conditions are met the Nodes should be processed in a single loop iteration.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    1413644 :     static int processPostorderedNodesSingleThreaded (NodeGraph&amp; nodeGraph, const Node::ProcessContext&amp; pc)</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    1426335 :     static int processPostorderedNodesSingleThreaded (NodeGraph&amp; nodeGraph, const Node::ProcessContext&amp; pc)</span></a>
 <a name="182"><span class="lineNum">     182 </span>            :     {</a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">    9182319 :         for (auto node : nodeGraph.orderedNodes)</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">    7768675 :             node-&gt;prepareForNextBlock (pc.referenceSampleRange);</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">    9265668 :         for (auto node : nodeGraph.orderedNodes)</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">    7839333 :             node-&gt;prepareForNextBlock (pc.referenceSampleRange);</span></a>
 <a name="185"><span class="lineNum">     185 </span>            :         </a>
 <a name="186"><span class="lineNum">     186 </span>            :         int numMisses = 0;</a>
 <a name="187"><span class="lineNum">     187 </span>            :         size_t numNodesProcessed = 0;</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :         for (;;)</a>
 <a name="190"><span class="lineNum">     190 </span>            :         {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    9182319 :             for (auto node : nodeGraph.orderedNodes)</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    9265668 :             for (auto node : nodeGraph.orderedNodes)</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :             {</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    7768675 :                 if (! node-&gt;hasProcessed() &amp;&amp; node-&gt;isReadyToProcess())</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    7839333 :                 if (! node-&gt;hasProcessed() &amp;&amp; node-&gt;isReadyToProcess())</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :                 {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    7768675 :                     node-&gt;process (pc.numSamples, pc.referenceSampleRange);</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">    7768675 :                     ++numNodesProcessed;</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    7839333 :                     node-&gt;process (pc.numSamples, pc.referenceSampleRange);</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">    7839333 :                     ++numNodesProcessed;</span></a>
 <a name="197"><span class="lineNum">     197 </span>            :                 }</a>
 <a name="198"><span class="lineNum">     198 </span>            :                 else</a>
 <a name="199"><span class="lineNum">     199 </span>            :                 {</a>
@@ -263,23 +263,23 @@
 <a name="201"><span class="lineNum">     201 </span>            :                 }</a>
 <a name="202"><span class="lineNum">     202 </span>            :             }</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    1413644 :             if (numNodesProcessed == nodeGraph.orderedNodes.size())</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">    1426335 :             if (numNodesProcessed == nodeGraph.orderedNodes.size())</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :             {</a>
 <a name="206"><span class="lineNum">     206 </span>            :                 auto output = nodeGraph.rootNode-&gt;getProcessedOutput();</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">    2827288 :                 auto numAudioChannels = std::min (output.audio.getNumChannels(),</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">    1413644 :                                                   pc.buffers.audio.getNumChannels());</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">    2852670 :                 auto numAudioChannels = std::min (output.audio.getNumChannels(),</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">    1426335 :                                                   pc.buffers.audio.getNumChannels());</span></a>
 <a name="209"><span class="lineNum">     209 </span>            :                 </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">    1413644 :                 if (numAudioChannels &gt; 0)</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    1303019 :                     add (pc.buffers.audio.getFirstChannels (numAudioChannels),</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">    1303019 :                          output.audio.getFirstChannels (numAudioChannels));</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">    1426335 :                 if (numAudioChannels &gt; 0)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    1314681 :                     add (pc.buffers.audio.getFirstChannels (numAudioChannels),</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">    1314681 :                          output.audio.getFirstChannels (numAudioChannels));</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :                 </a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">    1413644 :                 pc.buffers.midi.mergeFrom (output.midi);</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">    1426335 :                 pc.buffers.midi.mergeFrom (output.midi);</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            :                 break;</a>
 <a name="217"><span class="lineNum">     217 </span>            :             }</a>
 <a name="218"><span class="lineNum">     218 </span>            :         }</a>
 <a name="219"><span class="lineNum">     219 </span>            :         </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    1413644 :         return numMisses;</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    1426335 :         return numMisses;</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     }</a>
 <a name="222"><span class="lineNum">     222 </span>            : };</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
