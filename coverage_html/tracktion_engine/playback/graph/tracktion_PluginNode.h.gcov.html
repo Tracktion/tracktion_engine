@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-02 21:22:24</td>
+            <td class="headerValue">2023-06-02 22:06:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -112,8 +112,8 @@
 <a name="50"><span class="lineNum">      50 </span>            :     Plugin&amp; getPlugin()                                 { return *plugin; }</a>
 <a name="51"><span class="lineNum">      51 </span>            :     </a>
 <a name="52"><span class="lineNum">      52 </span>            :     tracktion::graph::NodeProperties getNodeProperties() override;</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     626527 :     std::vector&lt;Node*&gt; getDirectInputNodes() override   { return { input.get() }; }</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     528814 :     bool isReadyToProcess() override                    { return input-&gt;hasProcessed(); }</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     628927 :     std::vector&lt;Node*&gt; getDirectInputNodes() override   { return { input.get() }; }</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     524888 :     bool isReadyToProcess() override                    { return input-&gt;hasProcessed(); }</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override;</a>
 <a name="56"><span class="lineNum">      56 </span>            :     void prefetchBlock (juce::Range&lt;int64_t&gt;) override;</a>
 <a name="57"><span class="lineNum">      57 </span>            :     void process (ProcessContext&amp;) override;</a>
