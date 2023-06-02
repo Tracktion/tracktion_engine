@@ -74,9 +74,6 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
                         .withParameter ("request", "push_results")
                         .withParameter ("content", jsonString);
 
-    std::cout << "Benchamrk JSON:\n"
-              << jsonString;
-
     if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)
                                                                         .withExtraHeaders ("User-Agent: Mozilla/2.2")))
     {
