@@ -115,9 +115,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc67998aa3b75e41bc7b89e1ebf94d50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html">AudioAndMidiBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">getProcessedOutput</a> ()</td></tr>
 <tr class="memdesc:adc67998aa3b75e41bc7b89e1ebf94d50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the processed audio and MIDI output.  <a href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">More...</a><br /></td></tr>
 <tr class="separator:adc67998aa3b75e41bc7b89e1ebf94d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a755e4d568280a33aa0a7d60dad7a8a75"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a755e4d568280a33aa0a7d60dad7a8a75">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;)</td></tr>
-<tr class="memdesc:a755e4d568280a33aa0a7d60dad7a8a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1Node.html#a755e4d568280a33aa0a7d60dad7a8a75">More...</a><br /></td></tr>
-<tr class="separator:a755e4d568280a33aa0a7d60dad7a8a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8526b7e0fe5df4a3bb715f5ab485b7f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;)</td></tr>
+<tr class="memdesc:af8526b7e0fe5df4a3bb715f5ab485b7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">More...</a><br /></td></tr>
+<tr class="separator:af8526b7e0fe5df4a3bb715f5ab485b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0">getDirectInputNodes</a> ()</td></tr>
 <tr class="memdesc:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0">More...</a><br /></td></tr>
 <tr class="separator:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -348,8 +348,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a755e4d568280a33aa0a7d60dad7a8a75"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a755e4d568280a33aa0a7d60dad7a8a75">&#9670;&nbsp;</a></span>transform()</h2>
+<a id="af8526b7e0fe5df4a3bb715f5ab485b7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8526b7e0fe5df4a3bb715f5ab485b7f">&#9670;&nbsp;</a></span>transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -361,8 +361,18 @@ Protected Member Functions</h2></td></tr>
           <td class="memname">virtual bool tracktion::graph::Node::transform </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -373,9 +383,15 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called after construction to give the node a chance to modify its topology. </p>
-<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed. </p>
+<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">postOrderedNodes</td><td>This is an ordered list obtained from visiting all the Nodes and can be used for quicker introspection of the graph </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Reimplemented in <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a07a175d17500446657239c59d01a5651">tracktion::graph::ReturnNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a0999d50c57962f6fa85da72068da1af1">tracktion::graph::SummingNode</a>, and <a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#ab792f52d5074bb9ae6ca1b3601b0affa">tracktion::graph::ConnectedNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a92ba1e9b0f2e86c27c83e48fe501fd08">tracktion::graph::ReturnNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a3422f27920524dfb6f4d3dfbbefa56e1">tracktion::graph::SummingNode</a>, and <a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#a0c9ec9b06388326cf933013ff342761a">tracktion::graph::ConnectedNode</a>.</p>
 
 </div>
 </div>
@@ -781,7 +797,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 2 2023 21:47:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jun 5 2023 10:32:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

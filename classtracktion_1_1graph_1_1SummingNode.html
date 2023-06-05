@@ -104,9 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af7165114b5f53c0d9ce9b56dcd84c785"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#af7165114b5f53c0d9ce9b56dcd84c785">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:af7165114b5f53c0d9ce9b56dcd84c785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="classtracktion_1_1graph_1_1SummingNode.html#af7165114b5f53c0d9ce9b56dcd84c785">More...</a><br /></td></tr>
 <tr class="separator:af7165114b5f53c0d9ce9b56dcd84c785"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0999d50c57962f6fa85da72068da1af1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a0999d50c57962f6fa85da72068da1af1">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;) override</td></tr>
-<tr class="memdesc:a0999d50c57962f6fa85da72068da1af1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1SummingNode.html#a0999d50c57962f6fa85da72068da1af1">More...</a><br /></td></tr>
-<tr class="separator:a0999d50c57962f6fa85da72068da1af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3422f27920524dfb6f4d3dfbbefa56e1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a3422f27920524dfb6f4d3dfbbefa56e1">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;) override</td></tr>
+<tr class="memdesc:a3422f27920524dfb6f4d3dfbbefa56e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1SummingNode.html#a3422f27920524dfb6f4d3dfbbefa56e1">More...</a><br /></td></tr>
+<tr class="separator:a3422f27920524dfb6f4d3dfbbefa56e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2122b21f371f99e20571e38fe01e834e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a2122b21f371f99e20571e38fe01e834e">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
 <tr class="memdesc:a2122b21f371f99e20571e38fe01e834e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1graph_1_1SummingNode.html#a2122b21f371f99e20571e38fe01e834e">More...</a><br /></td></tr>
 <tr class="separator:a2122b21f371f99e20571e38fe01e834e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -363,8 +363,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0999d50c57962f6fa85da72068da1af1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0999d50c57962f6fa85da72068da1af1">&#9670;&nbsp;</a></span>transform()</h2>
+<a id="a3422f27920524dfb6f4d3dfbbefa56e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3422f27920524dfb6f4d3dfbbefa56e1">&#9670;&nbsp;</a></span>transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -376,8 +376,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">bool tracktion::graph::SummingNode::transform </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -388,9 +398,15 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called after construction to give the node a chance to modify its topology. </p>
-<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed. </p>
+<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">postOrderedNodes</td><td>This is an ordered list obtained from visiting all the Nodes and can be used for quicker introspection of the graph </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a755e4d568280a33aa0a7d60dad7a8a75">tracktion::graph::Node</a>.</p>
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">tracktion::graph::Node</a>.</p>
 
 </div>
 </div>
@@ -494,7 +510,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 2 2023 21:47:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jun 5 2023 10:32:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

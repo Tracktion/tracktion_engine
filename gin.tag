@@ -20429,8 +20429,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ConnectedNode.html</anchorfile>
-      <anchor>ab792f52d5074bb9ae6ca1b3601b0affa</anchor>
-      <arglist>(Node &amp;) override</arglist>
+      <anchor>a0c9ec9b06388326cf933013ff342761a</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -37993,8 +37993,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>ab10ad1e500a518f67423fbaee8f7a650</anchor>
-      <arglist>(Node &amp;) override</arglist>
+      <anchor>aa6bc1867eaddc680b48c3e5f4f50e49c</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -49143,8 +49143,8 @@
       <type>virtual bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
-      <anchor>a755e4d568280a33aa0a7d60dad7a8a75</anchor>
-      <arglist>(Node &amp;)</arglist>
+      <anchor>af8526b7e0fe5df4a3bb715f5ab485b7f</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual std::vector&lt; Node * &gt;</type>
@@ -58495,8 +58495,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
-      <anchor>a367a1109149e34bdd5a5ad7dc2435879</anchor>
-      <arglist>(Node &amp;) override</arglist>
+      <anchor>aff7a3b7b05ec9a14c59e1b1eb0e1bf20</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -60944,8 +60944,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
-      <anchor>a07a175d17500446657239c59d01a5651</anchor>
-      <arglist>(Node &amp;rootNode) override</arglist>
+      <anchor>a92ba1e9b0f2e86c27c83e48fe501fd08</anchor>
+      <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -66372,8 +66372,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1SummingNode.html</anchorfile>
-      <anchor>a0999d50c57962f6fa85da72068da1af1</anchor>
-      <arglist>(Node &amp;) override</arglist>
+      <anchor>a3422f27920524dfb6f4d3dfbbefa56e1</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-02 22:06:04</td>
+            <td class="headerValue">2023-06-05 10:54:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">32</td>
@@ -101,9 +101,9 @@
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">       2493 :         freeObjects();</span></a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineCov">       4986 :     }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">      45232 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">      45216 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="43"><span class="lineNum">      43 </span>            :     {</a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      45232 :         return Clip::isClipState (v);</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      45216 :         return Clip::isClipState (v);</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     }</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">      23453 :     Clip* createNewObject (const juce::ValueTree&amp; v) override</span></a>
@@ -265,10 +265,10 @@
 <a name="203"><span class="lineNum">     203 </span><span class="lineCov">       4986 :     clipList = std::make_unique&lt;ClipList&gt; (*this, edit, clipParentState);</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : }</a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">    4802648 : const juce::Array&lt;Clip*&gt;&amp; ClipOwner::getClips() const</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">    4802640 : const juce::Array&lt;Clip*&gt;&amp; ClipOwner::getClips() const</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : {</a>
 <a name="208"><span class="lineNum">     208 </span>            :     assert (clipList &amp;&amp; &quot;You must call initialiseClipOwner before any other methods&quot;);</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    4802648 :     return clipList-&gt;objects;</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    4802640 :     return clipList-&gt;objects;</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : }</a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            : //==============================================================================</a>

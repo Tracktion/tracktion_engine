@@ -102,9 +102,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af258b3d5371e9d023ea0203022281063"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#af258b3d5371e9d023ea0203022281063">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:af258b3d5371e9d023ea0203022281063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="classtracktion_1_1graph_1_1ConnectedNode.html#af258b3d5371e9d023ea0203022281063">More...</a><br /></td></tr>
 <tr class="separator:af258b3d5371e9d023ea0203022281063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab792f52d5074bb9ae6ca1b3601b0affa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#ab792f52d5074bb9ae6ca1b3601b0affa">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;) override</td></tr>
-<tr class="memdesc:ab792f52d5074bb9ae6ca1b3601b0affa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1ConnectedNode.html#ab792f52d5074bb9ae6ca1b3601b0affa">More...</a><br /></td></tr>
-<tr class="separator:ab792f52d5074bb9ae6ca1b3601b0affa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c9ec9b06388326cf933013ff342761a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#a0c9ec9b06388326cf933013ff342761a">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;) override</td></tr>
+<tr class="memdesc:a0c9ec9b06388326cf933013ff342761a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1ConnectedNode.html#a0c9ec9b06388326cf933013ff342761a">More...</a><br /></td></tr>
+<tr class="separator:a0c9ec9b06388326cf933013ff342761a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a869805fa52221841edb88c6f65c76e6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#a869805fa52221841edb88c6f65c76e6f">isReadyToProcess</a> () override</td></tr>
 <tr class="memdesc:a869805fa52221841edb88c6f65c76e6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true when this node is ready to be processed.  <a href="classtracktion_1_1graph_1_1ConnectedNode.html#a869805fa52221841edb88c6f65c76e6f">More...</a><br /></td></tr>
 <tr class="separator:a869805fa52221841edb88c6f65c76e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -333,8 +333,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ab792f52d5074bb9ae6ca1b3601b0affa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab792f52d5074bb9ae6ca1b3601b0affa">&#9670;&nbsp;</a></span>transform()</h2>
+<a id="a0c9ec9b06388326cf933013ff342761a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c9ec9b06388326cf933013ff342761a">&#9670;&nbsp;</a></span>transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,8 +346,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">bool tracktion::graph::ConnectedNode::transform </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -358,9 +368,15 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called after construction to give the node a chance to modify its topology. </p>
-<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed. </p>
+<p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">postOrderedNodes</td><td>This is an ordered list obtained from visiting all the Nodes and can be used for quicker introspection of the graph </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a755e4d568280a33aa0a7d60dad7a8a75">tracktion::graph::Node</a>.</p>
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">tracktion::graph::Node</a>.</p>
 
 </div>
 </div>
@@ -464,7 +480,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 2 2023 21:47:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jun 5 2023 10:32:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
