@@ -39,14 +39,14 @@ std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectIn
     return inputs;
 }
 
-bool InsertSendReturnDependencyNode::transform (Node& rootNode)
+bool InsertSendReturnDependencyNode::transform (Node&, const std::vector<Node*>& postOrderedNodes)
 {
     if (sendNode && returnNode)
         return false;
     
     bool foundSend = false, foundReturn = false;
     
-    for (auto n : getNodes (rootNode, tracktion::graph::VertexOrdering::postordering))
+    for (auto n : postOrderedNodes)
     {
         if (! sendNode)
         {

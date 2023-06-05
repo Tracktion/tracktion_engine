@@ -96,7 +96,7 @@ public:
         return inputNodes;
     }
     
-    bool transform (Node&) override
+    bool transform (Node&, const std::vector<Node*>&) override
     {
         const bool hasFlattened = flattenSummingNodes();
         const bool hasCreatedLatency = createLatencyNodes();

@@ -508,11 +508,11 @@ public:
         return { input.get() };
     }
     
-    bool transform (Node& rootNode) override
+    bool transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes) override
     {
         if (! hasInitialised)
         {
-            findSendNodes (rootNode);
+            findSendNodes (rootNode, postOrderedNodes);
             return true;
         }
         
@@ -548,7 +548,7 @@ private:
     const int busID;
     bool hasInitialised = false;
     
-    void findSendNodes (Node& rootNode)
+    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes)
     {
         // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
@@ -557,14 +557,12 @@ private:
             return;
         
         std::vector<SendNode*> sends;
-        visitNodes (rootNode,
-                    [&] (Node& n)
-                    {
-                       if (auto send = dynamic_cast<SendNode*> (&n))
-                           if (send->getBusID() == busID)
-                               sends.push_back (send);
-                    }, true);
-        
+
+        for (auto n : postOrderedNodes)
+           if (auto send = dynamic_cast<SendNode*> (n))
+               if (send->getBusID() == busID)
+                   sends.push_back (send);
+
         // Remove any send nodes that feed back in to this
         std::vector<Node*> sendsToRemove;
         

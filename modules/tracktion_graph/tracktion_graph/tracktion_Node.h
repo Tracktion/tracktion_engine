@@ -232,8 +232,15 @@ public:
         This should return true if any changes were made to the topology as this
         indicates that the method may need to be called again after other nodes have
         had their toplogy changed.
+
+        @param postOrderedNodes This is an ordered list obtained from visiting all
+                                the Nodes and can be used for quicker introspection
+                                of the graph
     */
-    virtual bool transform (Node& /*rootNode*/) { return false; }
+    virtual bool transform (Node& /*rootNode*/, const std::vector<Node*>& /*postOrderedNodes*/)
+    {
+        return false;
+    }
     
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
@@ -378,7 +385,7 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
         auto allNodes = getNodes (rootNode, VertexOrdering::postordering);
 
         for (auto node : allNodes)
-            if (node->transform (rootNode))
+            if (node->transform (rootNode, allNodes))
                 needToTransformAgain = true;
 
         if (! needToTransformAgain)
