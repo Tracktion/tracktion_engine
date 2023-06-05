@@ -57,6 +57,9 @@ private:
     struct WireList;
     std::unique_ptr<WireList> list;
     bool recursionCheck = false;
+    SafeSelectable<Plugin> inputPlugin, outputPlugin;
+
+    void cacheInputAndOutputPlugins();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchBayPlugin)
 };
