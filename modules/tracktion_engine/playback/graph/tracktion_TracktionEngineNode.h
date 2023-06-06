@@ -18,36 +18,33 @@ struct ProcessState
 {
     /** Creates a ProcessState. */
     ProcessState (tracktion::graph::PlayHeadState&);
-
+    
     /** Creates a ProcessState that will update the editBeatRange field. */
     ProcessState (tracktion::graph::PlayHeadState&, const TempoSequence&);
-
+    
     /** An enum to indicate if the PlayHeadState continuity should be updated. */
     enum class UpdateContinuityFlags { no, yes };
-
+    
     /** Updates the internal state based on a reference sample range.
-        @param UpdateContinuityFlags    If yes, the PlayHeadState will be updated, if no it won't be.
-                                        If you are calling update more than once in a block, for example
-                                        to update the reference sample range for timeline position, updating
-                                        the continuity flags more than once will render it useless as it
-                                        tracks changes from one call to the next. This flag lets you ensure
-                                        it is only called once per block.
-    */
+     @param UpdateContinuityFlags    If yes, the PlayHeadState will be updated, if no it won't be.
+     If you are calling update more than once in a block, for example
+     to update the reference sample range for timeline position, updating
+     the continuity flags more than once will render it useless as it
+     tracks changes from one call to the next. This flag lets you ensure
+     it is only called once per block.
+     */
     void update (double sampleRate, juce::Range<int64_t> referenceSampleRange, UpdateContinuityFlags);
-
+    
     /** Sets a playback speed ratio.
-        Some Nodes might use this to adjust their playback speeds.
-    */
+     Some Nodes might use this to adjust their playback speeds.
+     */
     void setPlaybackSpeedRatio (double newRatio);
-
+    
     /** Sets the TempoSequence this state utilises. */
-    void setTempoSequence (const TempoSequence*);
-
-    /** Returns the TempoSequence this state has been initialised with one. */
-    const TempoSequence* getTempoSequence() const;
-
-    /** Returns the tempo::Sequence::Position this state uses. */
-    const tempo::Sequence::Position* getTempoSequencePosition() const;
+    void setTempoSequence (const ProcessState&, BeatDuration offset);
+    
+    /** Creats a Position referencing the internal TempoSequence. */
+    std::unique_ptr<tempo::Sequence::Position> createPosition();
 
     tracktion::graph::PlayHeadState& playHeadState;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
@@ -56,9 +53,31 @@ struct ProcessState
     TimeRange editTimeRange;
     BeatRange editBeatRange;
 
+    /** @internal */
+    bool hasTempoSequence() const;
+    /** @internal */
+    BeatPosition toBeats (TimePosition);
+    /** @internal */
+    BeatRange toBeats (TimeRange);
+    /** @internal */
+    TimePosition toTime (BeatPosition);
+    /** @internal */
+    TimeRange toTime (BeatRange);
+    /** @internal */
+    TimePosition getTimeOfNextChange() const;
+    /** @internal */
+    BeatPosition getBeatOfNextChange() const;
+    /** @internal */
+    tempo::Key getKey() const;
+
 private:
     const TempoSequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+    
+    BeatDuration tempoOffsetBeats;
+    TimeDuration tempoOffsetTime;
+
+    void setTempoSequence (const TempoSequence*, BeatDuration offset);
 };
 
 

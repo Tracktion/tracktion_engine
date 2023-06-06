@@ -44,6 +44,8 @@ public:
             synthTempFile->getFile().replaceWithData (BinaryData::synth_loop_wav, BinaryData::synth_loop_wavSize);
         }
 
+        edit.tempoSequence.insertTempo (16_bp, 60.0, 1.0f);
+
         // Load some example audio to start
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {

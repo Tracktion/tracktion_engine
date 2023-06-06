@@ -33,8 +33,8 @@ public:
     TracktionNodePlayer (ProcessState& processStateToUse,
                          tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
         : playHeadState (processStateToUse.playHeadState),
-          processState (processStateToUse),
-          nodePlayer (std::move (poolCreator))
+          processState (processStateToUse)/*,
+          nodePlayer (std::move (poolCreator))*/
     {
     }
 
@@ -118,14 +118,14 @@ public:
     /** @internal */
     void enablePooledMemoryAllocations (bool enablePooledMemory)
     {
-        nodePlayer.enablePooledMemoryAllocations (enablePooledMemory);
+//ddd        nodePlayer.enablePooledMemoryAllocations (enablePooledMemory);
     }
     
 private:
     tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;
     MidiMessageArray scratchMidi;
-    tracktion::graph::LockFreeMultiThreadedNodePlayer nodePlayer;
+    tracktion::graph::MultiThreadedNodePlayer nodePlayer;
 
     tracktion::graph::Node::ProcessContext getSubProcessContext (const tracktion::graph::Node::ProcessContext& pc, juce::Range<int64_t> subReferenceSampleRange)
     {
@@ -159,14 +159,14 @@ private:
         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
         const auto timeRange = processState.editTimeRange;
 
-        if (auto tempoPosition = processState.getTempoSequencePosition())
+        if (processState.hasTempoSequence())
         {
             double startProportion = 0.0;
             auto lastEventPosition = timeRange.getStart();
 
             for (;;)
             {
-                const auto nextTempoChangePosition = tempoPosition->getTimeOfNextChange();
+                const auto nextTempoChangePosition = processState.getTimeOfNextChange();
 
                 if (nextTempoChangePosition == lastEventPosition)
                     break;

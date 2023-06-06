@@ -48,10 +48,10 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     if (! tempoPosition)
         return;
 
-    tempoPosition->set (editTimeRange.getStart());
-    const auto beatStart = tempoPosition->getBeats();
-    tempoPosition->set (editTimeRange.getEnd());
-    const auto beatEnd = tempoPosition->getBeats();
+    tempoPosition->set (editTimeRange.getStart() + tempoOffsetTime);
+    const auto beatStart = tempoPosition->getBeats() - tempoOffsetBeats;
+    tempoPosition->set (editTimeRange.getEnd() + tempoOffsetTime);
+    const auto beatEnd = tempoPosition->getBeats() - tempoOffsetBeats;
     editBeatRange = { beatStart, beatEnd };
 }
 
@@ -60,7 +60,12 @@ void ProcessState::setPlaybackSpeedRatio (double newRatio)
     playbackSpeedRatio = newRatio;
 }
 
-void ProcessState::setTempoSequence (const TempoSequence* ts)
+void ProcessState::setTempoSequence (const ProcessState& other, BeatDuration offset)
+{
+    setTempoSequence (other.tempoSequence, offset);
+}
+
+void ProcessState::setTempoSequence (const TempoSequence* ts, BeatDuration offset)
 {
     if (tempoSequence == ts)
         return;
@@ -68,19 +73,71 @@ void ProcessState::setTempoSequence (const TempoSequence* ts)
     tempoSequence = ts;
 
     if (tempoSequence)
+    {
         tempoPosition = std::make_unique<tempo::Sequence::Position> (tempoSequence->getInternalSequence());
+        tempoOffsetBeats = offset;
+        tempoOffsetTime = toDuration (tempoSequence->toTime (toPosition (offset)));
+    }
     else
+    {
         tempoPosition.reset();
+        tempoOffsetBeats = {};
+        tempoOffsetTime = {};
+    }
 }
 
-const TempoSequence* ProcessState::getTempoSequence() const
+std::unique_ptr<tempo::Sequence::Position> ProcessState::createPosition()
 {
-    return tempoSequence;
+    assert (tempoPosition != nullptr);
+    return std::make_unique<tempo::Sequence::Position> (*tempoPosition);
 }
 
-const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
+bool ProcessState::hasTempoSequence() const
 {
-    return tempoPosition.get();
+    assert (tempoSequence == nullptr || tempoPosition != nullptr);
+    return tempoSequence != nullptr;
+}
+
+BeatPosition ProcessState::toBeats (TimePosition t)
+{
+    assert (hasTempoSequence());
+    return tempoSequence->toBeats (t + tempoOffsetTime) - tempoOffsetBeats;
+}
+
+BeatRange ProcessState::toBeats (TimeRange t)
+{
+    assert (hasTempoSequence());
+    return tempoSequence->toBeats (t + tempoOffsetTime) - tempoOffsetBeats;
+}
+
+TimePosition ProcessState::toTime (BeatPosition t)
+{
+    assert (hasTempoSequence());
+    return tempoSequence->toTime (t + tempoOffsetBeats) - tempoOffsetTime;
+}
+
+TimeRange ProcessState::toTime (BeatRange t)
+{
+    assert (hasTempoSequence());
+    return tempoSequence->toTime (t + tempoOffsetBeats) - tempoOffsetTime;
+}
+
+TimePosition ProcessState::getTimeOfNextChange() const
+{
+    assert (hasTempoSequence());
+    return tempoPosition->getTimeOfNextChange() - tempoOffsetTime;
+}
+
+BeatPosition ProcessState::getBeatOfNextChange() const
+{
+    assert (hasTempoSequence());
+    return tempoPosition->getBeatOfNextChange() - tempoOffsetBeats;
+}
+
+tempo::Key ProcessState::getKey() const
+{
+    assert (hasTempoSequence());
+    return tempoPosition->getKey();
 }
 
 
@@ -93,8 +150,8 @@ TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
 
 tempo::Key TracktionEngineNode::getKey() const
 {
-    if (auto tempoPosition = processState->getTempoSequencePosition())
-        return tempoPosition->getKey();
+    if (processState->hasTempoSequence())
+        return processState->getKey();
 
     return {};
 }
@@ -106,16 +163,19 @@ double TracktionEngineNode::getPlaybackSpeedRatio() const
 
 std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const
 {
-    if (auto tempoPosition = processState->getTempoSequencePosition())
-        return tempoPosition->getTimeOfNextChange();
+    if (processState->hasTempoSequence())
+        return processState->getTimeOfNextChange();
 
     return {};
 }
 
 std::optional<BeatPosition> TracktionEngineNode::getBeatOfNextChange() const
 {
-    if (auto tempoPosition = processState->getTempoSequencePosition())
-        return tempoPosition->getBeatOfNextChange();
+    if (processState->hasTempoSequence())
+        return processState->getBeatOfNextChange();
+
+//    if (auto tempoPosition = processState->getTempoSequencePosition())
+//        return tempoPosition->getBeatOfNextChange();
 
     return {};
 }
