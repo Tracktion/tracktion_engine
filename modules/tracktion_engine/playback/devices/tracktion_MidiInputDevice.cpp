@@ -647,7 +647,7 @@ public:
         stopTimer();
         //clear RECORDINGMIDICLIP state nodes at this point
         for (const auto& track : getTargetTracks())
-            track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
+            track->state.removeChild(track->state.getChildWithName(IDs::RecordingMidiClip), nullptr);
         //BEATCONNECT MODIFICATION END
     }
 
@@ -658,7 +658,7 @@ public:
         stopTimer();
         //clear RECORDINGMIDICLIP state nodes at this point
         for (const auto& track : getTargetTracks())
-            track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
+            track->state.removeChild(track->state.getChildWithName(IDs::RecordingMidiClip), nullptr);
         //BEATCONNECT MODIFICATION END
     }
 
@@ -1161,7 +1161,7 @@ private:
             {
                 for (const auto& track : getTargetTracks())
                 {
-                    auto recordingMidiClip = track->state.getChildWithName("RECORDINGMIDICLIP");
+                    auto recordingMidiClip = track->state.getChildWithName(IDs::RecordingMidiClip);
                     if (recordingMidiClip.isValid())
                     {
                         // see if there is a sequence with the associated channelNumber

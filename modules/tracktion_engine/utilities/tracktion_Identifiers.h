@@ -658,6 +658,7 @@ namespace IDs
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
     DECLARE_ID(Faceplate)
+    DECLARE_ID(RecordingMidiClip)
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID
