@@ -174,9 +174,6 @@ std::optional<BeatPosition> TracktionEngineNode::getBeatOfNextChange() const
     if (processState->hasTempoSequence())
         return processState->getBeatOfNextChange();
 
-//    if (auto tempoPosition = processState->getTempoSequencePosition())
-//        return tempoPosition->getBeatOfNextChange();
-
     return {};
 }
 
