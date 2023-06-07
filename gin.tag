@@ -61361,6 +61361,150 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::Plugin &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Plugin &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Plugin *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Plugin *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Plugin *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Plugin *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Plugin &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Plugin *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Plugin *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Plugin *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Plugin *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::SamplerPlugin</name>
     <filename>classtracktion_1_1engine_1_1SamplerPlugin.html</filename>
     <base>tracktion::engine::Plugin</base>

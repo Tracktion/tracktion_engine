@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-05 10:54:07</td>
+            <td class="headerValue">2023-06-07 11:34:06</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">66</td>
@@ -564,10 +564,10 @@
 <a name="502"><span class="lineNum">     502 </span>            : }</a>
 <a name="503"><span class="lineNum">     503 </span>            : </a>
 <a name="504"><span class="lineNum">     504 </span>            : //==============================================================================</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">   12864645 : BeatPosition TempoSequence::toBeats (TimePosition time) const</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">   12864325 : BeatPosition TempoSequence::toBeats (TimePosition time) const</span></a>
 <a name="506"><span class="lineNum">     506 </span>            : {</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">   12864645 :     updateTempoDataIfNeeded();</span></a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   12864645 :     return internalSequence.toBeats (time);</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">   12864325 :     updateTempoDataIfNeeded();</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   12864325 :     return internalSequence.toBeats (time);</span></a>
 <a name="509"><span class="lineNum">     509 </span>            : }</a>
 <a name="510"><span class="lineNum">     510 </span>            : </a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineCov">       3762 : BeatRange TempoSequence::toBeats (TimeRange range) const</span></a>
@@ -581,10 +581,10 @@
 <a name="519"><span class="lineNum">     519 </span><span class="lineCov">         38 :     return toBeats (toTime (barsBeats));</span></a>
 <a name="520"><span class="lineNum">     520 </span>            : }</a>
 <a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineCov">    3683484 : TimePosition TempoSequence::toTime (BeatPosition beats) const</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineCov">    3683164 : TimePosition TempoSequence::toTime (BeatPosition beats) const</span></a>
 <a name="523"><span class="lineNum">     523 </span>            : {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineCov">    3683484 :     updateTempoDataIfNeeded();</span></a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineCov">    3683484 :     return internalSequence.toTime (beats);</span></a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineCov">    3683164 :     updateTempoDataIfNeeded();</span></a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineCov">    3683164 :     return internalSequence.toTime (beats);</span></a>
 <a name="526"><span class="lineNum">     526 </span>            : }</a>
 <a name="527"><span class="lineNum">     527 </span>            : </a>
 <a name="528"><span class="lineNum">     528 </span><span class="lineCov">       3781 : TimeRange TempoSequence::toTime (BeatRange range) const</span></a>
@@ -657,14 +657,14 @@
 <a name="595"><span class="lineNum">     595 </span>            :     }</a>
 <a name="596"><span class="lineNum">     596 </span><span class="lineCov">       1027 : }</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineCov">   16552358 : void TempoSequence::updateTempoDataIfNeeded() const</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">   16551718 : void TempoSequence::updateTempoDataIfNeeded() const</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : {</a>
-<a name="600"><span class="lineNum">     600 </span><span class="lineCov">   16552358 :     if (tempos-&gt;isUpdatePending())</span></a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineCov">   16551718 :     if (tempos-&gt;isUpdatePending())</span></a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineCov">          9 :         tempos-&gt;handleAsyncUpdate();</span></a>
 <a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineCov">   16552358 :     if (timeSigs-&gt;isUpdatePending())</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineCov">   16551718 :     if (timeSigs-&gt;isUpdatePending())</span></a>
 <a name="604"><span class="lineNum">     604 </span><span class="lineCov">        718 :         timeSigs-&gt;handleAsyncUpdate();</span></a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineCov">   16552358 : }</span></a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineCov">   16551718 : }</span></a>
 <a name="606"><span class="lineNum">     606 </span>            : </a>
 <a name="607"><span class="lineNum">     607 </span><span class="lineCov">         71 : void TempoSequence::handleAsyncUpdate()</span></a>
 <a name="608"><span class="lineNum">     608 </span>            : {</a>
@@ -867,140 +867,144 @@
 <a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 :             a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));</span></a>
 <a name="806"><span class="lineNum">     806 </span><span class="lineCov">         17 : }</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
-<a name="808"><span class="lineNum">     808 </span>            : //==============================================================================</a>
-<a name="809"><span class="lineNum">     809 </span>            : //==============================================================================</a>
-<a name="810"><span class="lineNum">     810 </span>            : class TempoSequenceTests : public juce::UnitTest</a>
-<a name="811"><span class="lineNum">     811 </span>            : {</a>
-<a name="812"><span class="lineNum">     812 </span>            : public:</a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">          1 :     TempoSequenceTests() : juce::UnitTest (&quot;TempoSequence&quot;, &quot;Tracktion&quot;) {}</span></a>
-<a name="814"><span class="lineNum">     814 </span>            : </a>
-<a name="815"><span class="lineNum">     815 </span>            :     //==============================================================================</a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineCov">          1 :     void runTest() override</span></a>
-<a name="817"><span class="lineNum">     817 </span>            :     {</a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineCov">          1 :         runPositionTests();</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">          1 :         runModificationTests();</span></a>
-<a name="820"><span class="lineNum">     820 </span><span class="lineCov">          1 :     }</span></a>
-<a name="821"><span class="lineNum">     821 </span>            : </a>
-<a name="822"><span class="lineNum">     822 </span>            : private:</a>
-<a name="823"><span class="lineNum">     823 </span><span class="lineCov">         22 :     void expectBarsAndBeats (tempo::Sequence::Position&amp; pos, int bars, int beats)</span></a>
-<a name="824"><span class="lineNum">     824 </span>            :     {</a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">         22 :         auto barsBeats = pos.getBarsBeats();</span></a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineCov">         22 :         expectEquals (barsBeats.bars, bars);</span></a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         22 :         expectEquals (barsBeats.getWholeBeats(), beats);</span></a>
-<a name="828"><span class="lineNum">     828 </span><span class="lineCov">         22 :     }</span></a>
-<a name="829"><span class="lineNum">     829 </span>            : </a>
-<a name="830"><span class="lineNum">     830 </span><span class="lineCov">          7 :     void expectTempoSetting (TempoSetting&amp; tempo, double startTime, double bpm, float curve)</span></a>
-<a name="831"><span class="lineNum">     831 </span>            :     {</a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineCov">         14 :         expectWithinAbsoluteError (tempo.getStartTime().inSeconds(), startTime, 0.001);</span></a>
-<a name="833"><span class="lineNum">     833 </span><span class="lineCov">          7 :         expectWithinAbsoluteError (tempo.getBpm(), bpm, 0.001);</span></a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">          7 :         expectWithinAbsoluteError (tempo.getCurve(), curve, 0.001f);</span></a>
-<a name="835"><span class="lineNum">     835 </span><span class="lineCov">          7 :     }</span></a>
-<a name="836"><span class="lineNum">     836 </span>            : </a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          1 :     void runPositionTests()</span></a>
-<a name="838"><span class="lineNum">     838 </span>            :     {</a>
-<a name="839"><span class="lineNum">     839 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines().getFirst());</span></a>
-<a name="840"><span class="lineNum">     840 </span>            : </a>
-<a name="841"><span class="lineNum">     841 </span><span class="lineCov">          1 :         beginTest (&quot;Defaults&quot;);</span></a>
-<a name="842"><span class="lineNum">     842 </span>            :         {</a>
-<a name="843"><span class="lineNum">     843 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
-<a name="844"><span class="lineNum">     844 </span>            : </a>
-<a name="845"><span class="lineNum">     845 </span><span class="lineCov">          1 :             expectEquals (pos.getTempo(), 120.0);</span></a>
-<a name="846"><span class="lineNum">     846 </span><span class="lineCov">          1 :             expectEquals (pos.getTimeSignature().numerator, 4);</span></a>
-<a name="847"><span class="lineNum">     847 </span><span class="lineCov">          1 :             expectEquals (pos.getTimeSignature().denominator, 4);</span></a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineCov">          1 :             expectEquals (pos.getPPQTimeOfBarStart(), 0.0);</span></a>
-<a name="849"><span class="lineNum">     849 </span><span class="lineCov">          1 :             expectEquals (pos.getBarsBeats().numerator, 4);</span></a>
-<a name="850"><span class="lineNum">     850 </span>            :         }</a>
-<a name="851"><span class="lineNum">     851 </span>            : </a>
-<a name="852"><span class="lineNum">     852 </span><span class="lineCov">          1 :         beginTest (&quot;Positive sequences&quot;);</span></a>
-<a name="853"><span class="lineNum">     853 </span>            :         {</a>
-<a name="854"><span class="lineNum">     854 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
-<a name="855"><span class="lineNum">     855 </span><span class="lineCov">          1 :             pos.set (0_tp);</span></a>
-<a name="856"><span class="lineNum">     856 </span>            : </a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 0);</span></a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="859"><span class="lineNum">     859 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 1);</span></a>
+<a name="808"><span class="lineNum">     808 </span>            : #if TRACKTION_UNIT_TESTS &amp;&amp; ENGINE_UNIT_TESTS_TEMPO_SEQUENCE</a>
+<a name="809"><span class="lineNum">     809 </span>            : </a>
+<a name="810"><span class="lineNum">     810 </span>            : //==============================================================================</a>
+<a name="811"><span class="lineNum">     811 </span>            : //==============================================================================</a>
+<a name="812"><span class="lineNum">     812 </span>            : class TempoSequenceTests : public juce::UnitTest</a>
+<a name="813"><span class="lineNum">     813 </span>            : {</a>
+<a name="814"><span class="lineNum">     814 </span>            : public:</a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">          1 :     TempoSequenceTests() : juce::UnitTest (&quot;TempoSequence&quot;, &quot;Tracktion&quot;) {}</span></a>
+<a name="816"><span class="lineNum">     816 </span>            : </a>
+<a name="817"><span class="lineNum">     817 </span>            :     //==============================================================================</a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineCov">          1 :     void runTest() override</span></a>
+<a name="819"><span class="lineNum">     819 </span>            :     {</a>
+<a name="820"><span class="lineNum">     820 </span><span class="lineCov">          1 :         runPositionTests();</span></a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineCov">          1 :         runModificationTests();</span></a>
+<a name="822"><span class="lineNum">     822 </span><span class="lineCov">          1 :     }</span></a>
+<a name="823"><span class="lineNum">     823 </span>            : </a>
+<a name="824"><span class="lineNum">     824 </span>            : private:</a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">         22 :     void expectBarsAndBeats (tempo::Sequence::Position&amp; pos, int bars, int beats)</span></a>
+<a name="826"><span class="lineNum">     826 </span>            :     {</a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         22 :         auto barsBeats = pos.getBarsBeats();</span></a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineCov">         22 :         expectEquals (barsBeats.bars, bars);</span></a>
+<a name="829"><span class="lineNum">     829 </span><span class="lineCov">         22 :         expectEquals (barsBeats.getWholeBeats(), beats);</span></a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineCov">         22 :     }</span></a>
+<a name="831"><span class="lineNum">     831 </span>            : </a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineCov">          7 :     void expectTempoSetting (TempoSetting&amp; tempo, double startTime, double bpm, float curve)</span></a>
+<a name="833"><span class="lineNum">     833 </span>            :     {</a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">         14 :         expectWithinAbsoluteError (tempo.getStartTime().inSeconds(), startTime, 0.001);</span></a>
+<a name="835"><span class="lineNum">     835 </span><span class="lineCov">          7 :         expectWithinAbsoluteError (tempo.getBpm(), bpm, 0.001);</span></a>
+<a name="836"><span class="lineNum">     836 </span><span class="lineCov">          7 :         expectWithinAbsoluteError (tempo.getCurve(), curve, 0.001f);</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          7 :     }</span></a>
+<a name="838"><span class="lineNum">     838 </span>            : </a>
+<a name="839"><span class="lineNum">     839 </span><span class="lineCov">          1 :     void runPositionTests()</span></a>
+<a name="840"><span class="lineNum">     840 </span>            :     {</a>
+<a name="841"><span class="lineNum">     841 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines().getFirst());</span></a>
+<a name="842"><span class="lineNum">     842 </span>            : </a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineCov">          1 :         beginTest (&quot;Defaults&quot;);</span></a>
+<a name="844"><span class="lineNum">     844 </span>            :         {</a>
+<a name="845"><span class="lineNum">     845 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
+<a name="846"><span class="lineNum">     846 </span>            : </a>
+<a name="847"><span class="lineNum">     847 </span><span class="lineCov">          1 :             expectEquals (pos.getTempo(), 120.0);</span></a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">          1 :             expectEquals (pos.getTimeSignature().numerator, 4);</span></a>
+<a name="849"><span class="lineNum">     849 </span><span class="lineCov">          1 :             expectEquals (pos.getTimeSignature().denominator, 4);</span></a>
+<a name="850"><span class="lineNum">     850 </span><span class="lineCov">          1 :             expectEquals (pos.getPPQTimeOfBarStart(), 0.0);</span></a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineCov">          1 :             expectEquals (pos.getBarsBeats().numerator, 4);</span></a>
+<a name="852"><span class="lineNum">     852 </span>            :         }</a>
+<a name="853"><span class="lineNum">     853 </span>            : </a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">          1 :         beginTest (&quot;Positive sequences&quot;);</span></a>
+<a name="855"><span class="lineNum">     855 </span>            :         {</a>
+<a name="856"><span class="lineNum">     856 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
+<a name="857"><span class="lineNum">     857 </span><span class="lineCov">          1 :             pos.set (0_tp);</span></a>
+<a name="858"><span class="lineNum">     858 </span>            : </a>
+<a name="859"><span class="lineNum">     859 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 0);</span></a>
 <a name="860"><span class="lineNum">     860 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 2);</span></a>
+<a name="861"><span class="lineNum">     861 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 1);</span></a>
 <a name="862"><span class="lineNum">     862 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 3);</span></a>
+<a name="863"><span class="lineNum">     863 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 2);</span></a>
 <a name="864"><span class="lineNum">     864 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="865"><span class="lineNum">     865 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 1, 0);</span></a>
-<a name="866"><span class="lineNum">     866 </span>            : </a>
-<a name="867"><span class="lineNum">     867 </span><span class="lineCov">          1 :             pos.addBars (1);</span></a>
-<a name="868"><span class="lineNum">     868 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 0);</span></a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 1);</span></a>
+<a name="865"><span class="lineNum">     865 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 3);</span></a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 1, 0);</span></a>
+<a name="868"><span class="lineNum">     868 </span>            : </a>
+<a name="869"><span class="lineNum">     869 </span><span class="lineCov">          1 :             pos.addBars (1);</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 0);</span></a>
 <a name="871"><span class="lineNum">     871 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 2);</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 1);</span></a>
 <a name="873"><span class="lineNum">     873 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 3);</span></a>
-<a name="875"><span class="lineNum">     875 </span>            :         }</a>
-<a name="876"><span class="lineNum">     876 </span>            : </a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">          1 :         beginTest (&quot;Negative sequences&quot;);</span></a>
-<a name="878"><span class="lineNum">     878 </span>            :         {</a>
-<a name="879"><span class="lineNum">     879 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineCov">          1 :             pos.set (0_tp);</span></a>
-<a name="881"><span class="lineNum">     881 </span><span class="lineCov">          1 :             pos.addBars (-2);</span></a>
-<a name="882"><span class="lineNum">     882 </span>            : </a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 0);</span></a>
-<a name="884"><span class="lineNum">     884 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="885"><span class="lineNum">     885 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 1);</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 2);</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 2, 3);</span></a>
+<a name="877"><span class="lineNum">     877 </span>            :         }</a>
+<a name="878"><span class="lineNum">     878 </span>            : </a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">          1 :         beginTest (&quot;Negative sequences&quot;);</span></a>
+<a name="880"><span class="lineNum">     880 </span>            :         {</a>
+<a name="881"><span class="lineNum">     881 </span>            :             auto pos = createPosition (edit-&gt;tempoSequence);</a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">          1 :             pos.set (0_tp);</span></a>
+<a name="883"><span class="lineNum">     883 </span><span class="lineCov">          1 :             pos.addBars (-2);</span></a>
+<a name="884"><span class="lineNum">     884 </span>            : </a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 0);</span></a>
 <a name="886"><span class="lineNum">     886 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 2);</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 1);</span></a>
 <a name="888"><span class="lineNum">     888 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="889"><span class="lineNum">     889 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 3);</span></a>
+<a name="889"><span class="lineNum">     889 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 2);</span></a>
 <a name="890"><span class="lineNum">     890 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 0);</span></a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -2, 3);</span></a>
 <a name="892"><span class="lineNum">     892 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 1);</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 0);</span></a>
 <a name="894"><span class="lineNum">     894 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 2);</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 1);</span></a>
 <a name="896"><span class="lineNum">     896 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 3);</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 2);</span></a>
 <a name="898"><span class="lineNum">     898 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 0);</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, -1, 3);</span></a>
 <a name="900"><span class="lineNum">     900 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 1);</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 0);</span></a>
 <a name="902"><span class="lineNum">     902 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 2);</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 1);</span></a>
 <a name="904"><span class="lineNum">     904 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 3);</span></a>
+<a name="905"><span class="lineNum">     905 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 2);</span></a>
 <a name="906"><span class="lineNum">     906 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="907"><span class="lineNum">     907 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 1, 0);</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 0, 3);</span></a>
 <a name="908"><span class="lineNum">     908 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
-<a name="909"><span class="lineNum">     909 </span>            :         }</a>
-<a name="910"><span class="lineNum">     910 </span><span class="lineCov">          1 :     }</span></a>
-<a name="911"><span class="lineNum">     911 </span>            : </a>
-<a name="912"><span class="lineNum">     912 </span><span class="lineCov">          1 :     void runModificationTests()</span></a>
-<a name="913"><span class="lineNum">     913 </span>            :     {</a>
-<a name="914"><span class="lineNum">     914 </span>            :         using namespace std::literals;</a>
-<a name="915"><span class="lineNum">     915 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);</span></a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">          1 :         auto&amp; ts = edit-&gt;tempoSequence;</span></a>
-<a name="917"><span class="lineNum">     917 </span>            : </a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">          1 :         beginTest (&quot;Insertions&quot;);</span></a>
-<a name="919"><span class="lineNum">     919 </span>            :         {</a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (ts.getTempoAt (0_tp).getBpm(), 120.0, 0.001);</span></a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (ts.getTempoAt (0_tp).getCurve(), 1.0f, 0.001f);</span></a>
-<a name="922"><span class="lineNum">     922 </span>            : </a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineCov">          1 :             ts.insertTempo (4_bp, 120, 0.0);</span></a>
-<a name="924"><span class="lineNum">     924 </span><span class="lineCov">          1 :             ts.insertTempo (4_bp, 300, 0.0);</span></a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineCov">          1 :             ts.insertTempo (8_bp, 300, 0.0);</span></a>
-<a name="926"><span class="lineNum">     926 </span>            : </a>
-<a name="927"><span class="lineNum">     927 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);</span></a>
-<a name="928"><span class="lineNum">     928 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);</span></a>
-<a name="929"><span class="lineNum">     929 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);</span></a>
-<a name="930"><span class="lineNum">     930 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);</span></a>
-<a name="931"><span class="lineNum">     931 </span>            : </a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (0_tp), 0.0, 120.0, 1.0f);</span></a>
-<a name="933"><span class="lineNum">     933 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (2.0s), 2.0, 300.0, 0.0f);</span></a>
-<a name="934"><span class="lineNum">     934 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (3.0s), 2.8, 300.0, 0.0f);</span></a>
-<a name="935"><span class="lineNum">     935 </span>            :         }</a>
-<a name="936"><span class="lineNum">     936 </span><span class="lineCov">          1 :     }</span></a>
-<a name="937"><span class="lineNum">     937 </span>            : };</a>
-<a name="938"><span class="lineNum">     938 </span>            : </a>
-<a name="939"><span class="lineNum">     939 </span>            : static TempoSequenceTests tempoSequenceTests;</a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineCov">          1 :             expectBarsAndBeats (pos, 1, 0);</span></a>
+<a name="910"><span class="lineNum">     910 </span><span class="lineCov">          1 :             pos.add (1_bd);</span></a>
+<a name="911"><span class="lineNum">     911 </span>            :         }</a>
+<a name="912"><span class="lineNum">     912 </span><span class="lineCov">          1 :     }</span></a>
+<a name="913"><span class="lineNum">     913 </span>            : </a>
+<a name="914"><span class="lineNum">     914 </span><span class="lineCov">          1 :     void runModificationTests()</span></a>
+<a name="915"><span class="lineNum">     915 </span>            :     {</a>
+<a name="916"><span class="lineNum">     916 </span>            :         using namespace std::literals;</a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">          2 :         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">          1 :         auto&amp; ts = edit-&gt;tempoSequence;</span></a>
+<a name="919"><span class="lineNum">     919 </span>            : </a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">          1 :         beginTest (&quot;Insertions&quot;);</span></a>
+<a name="921"><span class="lineNum">     921 </span>            :         {</a>
+<a name="922"><span class="lineNum">     922 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (ts.getTempoAt (0_tp).getBpm(), 120.0, 0.001);</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (ts.getTempoAt (0_tp).getCurve(), 1.0f, 0.001f);</span></a>
+<a name="924"><span class="lineNum">     924 </span>            : </a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">          1 :             ts.insertTempo (4_bp, 120, 0.0);</span></a>
+<a name="926"><span class="lineNum">     926 </span><span class="lineCov">          1 :             ts.insertTempo (4_bp, 300, 0.0);</span></a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineCov">          1 :             ts.insertTempo (8_bp, 300, 0.0);</span></a>
+<a name="928"><span class="lineNum">     928 </span>            : </a>
+<a name="929"><span class="lineNum">     929 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);</span></a>
+<a name="930"><span class="lineNum">     930 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);</span></a>
+<a name="932"><span class="lineNum">     932 </span><span class="lineCov">          1 :             expectTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);</span></a>
+<a name="933"><span class="lineNum">     933 </span>            : </a>
+<a name="934"><span class="lineNum">     934 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (0_tp), 0.0, 120.0, 1.0f);</span></a>
+<a name="935"><span class="lineNum">     935 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (2.0s), 2.0, 300.0, 0.0f);</span></a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineCov">          1 :             expectTempoSetting (ts.getTempoAt (3.0s), 2.8, 300.0, 0.0f);</span></a>
+<a name="937"><span class="lineNum">     937 </span>            :         }</a>
+<a name="938"><span class="lineNum">     938 </span><span class="lineCov">          1 :     }</span></a>
+<a name="939"><span class="lineNum">     939 </span>            : };</a>
 <a name="940"><span class="lineNum">     940 </span>            : </a>
-<a name="941"><span class="lineNum">     941 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="941"><span class="lineNum">     941 </span>            : static TempoSequenceTests tempoSequenceTests;</a>
+<a name="942"><span class="lineNum">     942 </span>            : </a>
+<a name="943"><span class="lineNum">     943 </span>            : #endif</a>
+<a name="944"><span class="lineNum">     944 </span>            : </a>
+<a name="945"><span class="lineNum">     945 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

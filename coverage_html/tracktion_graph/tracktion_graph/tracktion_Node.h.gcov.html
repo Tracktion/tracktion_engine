@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-05 10:54:07</td>
+            <td class="headerValue">2023-06-07 11:34:06</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">75</td>
@@ -151,7 +151,7 @@
 <a name="89"><span class="lineNum">      89 </span>            : /**</a>
 <a name="90"><span class="lineNum">      90 </span>            :     Holds a view over some data and optionally some storage for that data.</a>
 <a name="91"><span class="lineNum">      91 </span>            : */</a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">   76023275 : struct NodeBuffer</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">   76156087 : struct NodeBuffer</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
 <a name="94"><span class="lineNum">      94 </span>            :     choc::buffer::ChannelArrayView&lt;float&gt; view;</a>
 <a name="95"><span class="lineNum">      95 </span>            :     choc::buffer::ChannelArrayBuffer&lt;float&gt; data;</a>
@@ -365,7 +365,7 @@
 <a name="303"><span class="lineNum">     303 </span>            :     /** Called before once on all Nodes before they are processed.</a>
 <a name="304"><span class="lineNum">     304 </span>            :         This can be used to prefetch audio data or update mute statuses etc..</a>
 <a name="305"><span class="lineNum">     305 </span>            :     */</a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineCov">  216506574 :     virtual void prefetchBlock (juce::Range&lt;int64_t&gt; /*referenceSampleRange*/) {}</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">  216567762 :     virtual void prefetchBlock (juce::Range&lt;int64_t&gt; /*referenceSampleRange*/) {}</span></a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
 <a name="308"><span class="lineNum">     308 </span>            :     /** Called when the node is to be processed.</a>
 <a name="309"><span class="lineNum">     309 </span>            :         This should add in to the buffers available making sure not to change their size at all.</a>
@@ -479,25 +479,25 @@
 <a name="417"><span class="lineNum">     417 </span><span class="lineCov">      75740 :     directInputNodes = getDirectInputNodes();</span></a>
 <a name="418"><span class="lineNum">     418 </span><span class="lineCov">      75740 : }</span></a>
 <a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineCov">  327602858 : inline void Node::prepareForNextBlock (juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineCov">  327671912 : inline void Node::prepareForNextBlock (juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
 <a name="421"><span class="lineNum">     421 </span>            : {</a>
 <a name="422"><span class="lineNum">     422 </span>            :     // Only do this once as prepare may be called multiple times</a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineCov">  327602858 :     if (retainCount == 0)</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineCov">  327671912 :     if (retainCount == 0)</span></a>
 <a name="424"><span class="lineNum">     424 </span>            :     {</a>
 <a name="425"><span class="lineNum">     425 </span>            :         assert (directInputNodes.size() == getDirectInputNodes().size());</a>
 <a name="426"><span class="lineNum">     426 </span>            :         nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes</a>
 <a name="427"><span class="lineNum">     427 </span>            :         </a>
 <a name="428"><span class="lineNum">     428 </span>            :         retain();</a>
 <a name="429"><span class="lineNum">     429 </span>            :         </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">  698167591 :         for (auto&amp; n : directInputNodes)</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">  371568783 :             n-&gt;retain();</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">  698289989 :         for (auto&amp; n : directInputNodes)</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineCov">  371623727 :             n-&gt;retain();</span></a>
 <a name="432"><span class="lineNum">     432 </span>            :     }</a>
 <a name="433"><span class="lineNum">     433 </span>            :     </a>
 <a name="434"><span class="lineNum">     434 </span>            :     hasBeenProcessed.store (false, std::memory_order_release);</a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">  327602858 :     prefetchBlock (referenceSampleRange);</span></a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineCov">  327602858 : }</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">  327671912 :     prefetchBlock (referenceSampleRange);</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">  327671912 : }</span></a>
 <a name="437"><span class="lineNum">     437 </span>            : </a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineCov">  318042420 : inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineCov">  318985870 : inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
 <a name="439"><span class="lineNum">     439 </span>            : {</a>
 <a name="440"><span class="lineNum">     440 </span>            :    #if JUCE_DEBUG</a>
 <a name="441"><span class="lineNum">     441 </span>            :     assert (! isBeingProcessed);</a>
@@ -508,15 +508,15 @@
 <a name="446"><span class="lineNum">     446 </span>            :    #endif</a>
 <a name="447"><span class="lineNum">     447 </span>            :     </a>
 <a name="448"><span class="lineNum">     448 </span>            :     // First, allocate buffers if possible</a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineCov">  318042420 :     if (allocateAudioBuffer)</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">  318985870 :     if (allocateAudioBuffer)</span></a>
 <a name="450"><span class="lineNum">     450 </span>            :     {</a>
-<a name="451"><span class="lineNum">     451 </span><span class="lineCov">   45470381 :         auto nodeBuffer = allocateAudioBuffer (audioBufferSize);</span></a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">   45470381 :         audioBuffer = std::move (nodeBuffer.data);</span></a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">   45573053 :         allocatedView = std::move (nodeBuffer.view);</span></a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">   45561534 :         auto nodeBuffer = allocateAudioBuffer (audioBufferSize);</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">   45561534 :         audioBuffer = std::move (nodeBuffer.data);</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">   45823255 :         allocatedView = std::move (nodeBuffer.view);</span></a>
 <a name="454"><span class="lineNum">     454 </span>            :         assert (audioBufferSize == allocatedView.getSize());</a>
 <a name="455"><span class="lineNum">     455 </span>            :     }</a>
 <a name="456"><span class="lineNum">     456 </span>            : </a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineCov">  317569641 :     if (nodeOptimisations.clear == ClearBuffers::yes)</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">  318768114 :     if (nodeOptimisations.clear == ClearBuffers::yes)</span></a>
 <a name="458"><span class="lineNum">     458 </span>            :     {</a>
 <a name="459"><span class="lineNum">     459 </span>            :         audioBuffer.clear();</a>
 <a name="460"><span class="lineNum">     460 </span>            :         midiBuffer.clear();</a>
@@ -532,29 +532,29 @@
 <a name="470"><span class="lineNum">     470 </span>            :     if (allocatedView.getSize() == audioBufferSize)</a>
 <a name="471"><span class="lineNum">     471 </span>            :     {</a>
 <a name="472"><span class="lineNum">     472 </span>            :         // Use a pre-allocated view if one has been initialised</a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">   45714567 :         audioView = allocatedView;</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">   45408461 :         audioView = allocatedView;</span></a>
 <a name="474"><span class="lineNum">     474 </span>            :     }</a>
 <a name="475"><span class="lineNum">     475 </span>            :     else</a>
 <a name="476"><span class="lineNum">     476 </span>            :     {</a>
 <a name="477"><span class="lineNum">     477 </span>            :         // Fallback to the internal buffer or an empty view</a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineCov">  267705064 :         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineCov">  265453937 :         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()</span></a>
 <a name="479"><span class="lineNum">     479 </span>            :                                                                              : choc::buffer::ChannelArrayView&lt;float&gt; { {}, audioBufferSize }));</a>
 <a name="480"><span class="lineNum">     480 </span>            :     }</a>
 <a name="481"><span class="lineNum">     481 </span>            :     </a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineCov">  313419631 :     audioView = audioView.getStart (numSamples);</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineCov">  310862398 :     audioView = audioView.getStart (numSamples);</span></a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
 <a name="484"><span class="lineNum">     484 </span>            :     auto destAudioView = audioView;</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineCov">  313419631 :     ProcessContext pc { numSamples, referenceSampleRange, { destAudioView, midiBuffer } };</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineCov">  313419631 :     process (pc);</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">  310862398 :     ProcessContext pc { numSamples, referenceSampleRange, { destAudioView, midiBuffer } };</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineCov">  310862398 :     process (pc);</span></a>
 <a name="487"><span class="lineNum">     487 </span>            :     numSamplesProcessed.store ((int) numSamples, std::memory_order_release);</a>
 <a name="488"><span class="lineNum">     488 </span>            :     </a>
 <a name="489"><span class="lineNum">     489 </span>            :     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());</a>
 <a name="490"><span class="lineNum">     490 </span>            :     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());</a>
 <a name="491"><span class="lineNum">     491 </span>            : </a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">  310051980 :     release();</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">  316016802 :     release();</span></a>
 <a name="493"><span class="lineNum">     493 </span>            :     </a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineCov">  676532089 :     for (auto&amp; n : directInputNodes)</span></a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineCov">  356378120 :         n-&gt;release();</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineCov">  689763985 :     for (auto&amp; n : directInputNodes)</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">  367729101 :         n-&gt;release();</span></a>
 <a name="496"><span class="lineNum">     496 </span>            :     </a>
 <a name="497"><span class="lineNum">     497 </span>            :     // If you've set a new view with setAudioOutput, they must be the same size!</a>
 <a name="498"><span class="lineNum">     498 </span>            :     jassert (destAudioView.getSize() == audioView.getSize());</a>
@@ -565,7 +565,7 @@
 <a name="503"><span class="lineNum">     503 </span>            : </a>
 <a name="504"><span class="lineNum">     504 </span>            :     // N.B. This must be set last to release the Node back to the player</a>
 <a name="505"><span class="lineNum">     505 </span>            :     hasBeenProcessed.store (true, std::memory_order_release);</a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineCov">  320153969 : }</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">  322034884 : }</span></a>
 <a name="507"><span class="lineNum">     507 </span>            : </a>
 <a name="508"><span class="lineNum">     508 </span>            : inline bool Node::hasProcessed() const</a>
 <a name="509"><span class="lineNum">     509 </span>            : {</a>
@@ -576,7 +576,7 @@
 <a name="514"><span class="lineNum">     514 </span>            : {</a>
 <a name="515"><span class="lineNum">     515 </span>            :     jassert (hasProcessed());</a>
 <a name="516"><span class="lineNum">     516 </span>            :     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),</a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineCov">  350863920 :              midiBuffer };</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">  348265614 :              midiBuffer };</span></a>
 <a name="518"><span class="lineNum">     518 </span>            : }</a>
 <a name="519"><span class="lineNum">     519 </span>            : </a>
 <a name="520"><span class="lineNum">     520 </span><span class="lineCov">      26436 : inline size_t Node::getAllocatedBytes() const</span></a>
@@ -590,34 +590,34 @@
 <a name="528"><span class="lineNum">     528 </span><span class="lineCov">      11972 :     nodeOptimisations = newOptimisations;</span></a>
 <a name="529"><span class="lineNum">     529 </span>            : }</a>
 <a name="530"><span class="lineNum">     530 </span>            : </a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineCov">  122603079 : inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView&lt;float&gt;&amp; newAudioView)</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">  123027850 : inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView&lt;float&gt;&amp; newAudioView)</span></a>
 <a name="532"><span class="lineNum">     532 </span>            : {</a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">  122603079 :     if (sourceNode)</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">  123027850 :     if (sourceNode)</span></a>
 <a name="534"><span class="lineNum">     534 </span>            :         sourceNode-&gt;retain();</a>
 <a name="535"><span class="lineNum">     535 </span>            :     </a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">  123045567 :     audioView = newAudioView;</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">  123473230 :     audioView = newAudioView;</span></a>
 <a name="537"><span class="lineNum">     537 </span>            :     nodeToRelease.store (sourceNode, std::memory_order_relaxed);</a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineCov">  122603079 : }</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineCov">  123027850 : }</span></a>
 <a name="539"><span class="lineNum">     539 </span>            : </a>
 <a name="540"><span class="lineNum">     540 </span>            : inline void Node::retain()</a>
 <a name="541"><span class="lineNum">     541 </span>            : {</a>
 <a name="542"><span class="lineNum">     542 </span>            :     assert (retainCount.load() &gt;= 0);</a>
 <a name="543"><span class="lineNum">     543 </span>            :     retainCount.fetch_add (1, std::memory_order_relaxed);</a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineCov">  122603079 : }</span></a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineCov">  123027850 : }</span></a>
 <a name="545"><span class="lineNum">     545 </span>            : </a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineCov">  790678309 : inline void Node::release()</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineCov">  806165599 : inline void Node::release()</span></a>
 <a name="547"><span class="lineNum">     547 </span>            : {</a>
 <a name="548"><span class="lineNum">     548 </span>            :     assert (retainCount.load() &gt; 0);</a>
 <a name="549"><span class="lineNum">     549 </span>            :     </a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineCov">  790678309 :     if (retainCount.fetch_sub (1, std::memory_order_acq_rel) == 1)</span></a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineCov">  806165599 :     if (retainCount.fetch_sub (1, std::memory_order_acq_rel) == 1)</span></a>
 <a name="551"><span class="lineNum">     551 </span>            :     {</a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineCov">  325035885 :         if (auto node = nodeToRelease.load (std::memory_order_relaxed))</span></a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineCov">  125786940 :             node-&gt;release();</span></a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineCov">  324918556 :         if (auto node = nodeToRelease.load (std::memory_order_relaxed))</span></a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineCov">  125501286 :             node-&gt;release();</span></a>
 <a name="554"><span class="lineNum">     554 </span>            : </a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineCov">  324657438 :         if (deallocateAudioBuffer)</span></a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineCov">   61364819 :             deallocateAudioBuffer ({ std::move (allocatedView), std::move (audioBuffer) });</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineCov">  324975435 :         if (deallocateAudioBuffer)</span></a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineCov">   61335729 :             deallocateAudioBuffer ({ std::move (allocatedView), std::move (audioBuffer) });</span></a>
 <a name="557"><span class="lineNum">     557 </span>            :     }</a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineCov">  790172073 : }</span></a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineCov">  806156705 : }</span></a>
 <a name="559"><span class="lineNum">     559 </span>            : </a>
 <a name="560"><span class="lineNum">     560 </span>            : //==============================================================================</a>
 <a name="561"><span class="lineNum">     561 </span>            : //==============================================================================</a>
@@ -626,23 +626,23 @@
 <a name="564"><span class="lineNum">     564 </span>            :     struct VisitNodesWithRecord</a>
 <a name="565"><span class="lineNum">     565 </span>            :     {</a>
 <a name="566"><span class="lineNum">     566 </span>            :         template&lt;typename Visitor&gt;</a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    1644864 :         static void visit (std::vector&lt;Node*&gt;&amp; visitedNodes, Node&amp; visitingNode, Visitor&amp;&amp; visitor, bool preordering)</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    1656064 :         static void visit (std::vector&lt;Node*&gt;&amp; visitedNodes, Node&amp; visitingNode, Visitor&amp;&amp; visitor, bool preordering)</span></a>
 <a name="568"><span class="lineNum">     568 </span>            :         {</a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineCov">    1644864 :             if (std::find (visitedNodes.begin(), visitedNodes.end(), &amp;visitingNode) != visitedNodes.end())</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineCov">    1656064 :             if (std::find (visitedNodes.begin(), visitedNodes.end(), &amp;visitingNode) != visitedNodes.end())</span></a>
 <a name="570"><span class="lineNum">     570 </span>            :                 return;</a>
 <a name="571"><span class="lineNum">     571 </span>            :             </a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">    1604230 :             if (preordering)</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineCov">    1615430 :             if (preordering)</span></a>
 <a name="573"><span class="lineNum">     573 </span>            :             {</a>
 <a name="574"><span class="lineNum">     574 </span><span class="lineCov">     150174 :                 visitedNodes.push_back (&amp;visitingNode);</span></a>
 <a name="575"><span class="lineNum">     575 </span><span class="lineCov">          9 :                 visitor (visitingNode);</span></a>
 <a name="576"><span class="lineNum">     576 </span>            :             }</a>
 <a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    4697195 :             for (auto n : visitingNode.getDirectInputNodes())</span></a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineCov">    1488735 :                 visit  (visitedNodes, *n, visitor, preordering);</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    4729195 :             for (auto n : visitingNode.getDirectInputNodes())</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">    1498335 :                 visit  (visitedNodes, *n, visitor, preordering);</span></a>
 <a name="580"><span class="lineNum">     580 </span>            : </a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    1604230 :             if (! preordering)</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    1615430 :             if (! preordering)</span></a>
 <a name="582"><span class="lineNum">     582 </span>            :             {</a>
-<a name="583"><span class="lineNum">     583 </span><span class="lineCov">    1454056 :                 visitedNodes.push_back (&amp;visitingNode);</span></a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineCov">    1465256 :                 visitedNodes.push_back (&amp;visitingNode);</span></a>
 <a name="584"><span class="lineNum">     584 </span><span class="lineCov">        906 :                 visitor (visitingNode);</span></a>
 <a name="585"><span class="lineNum">     585 </span>            :             }</a>
 <a name="586"><span class="lineNum">     586 </span>            :         }</a>
@@ -691,10 +691,10 @@
 <a name="629"><span class="lineNum">     629 </span>            :     detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, visitor);</a>
 <a name="630"><span class="lineNum">     630 </span>            : }</a>
 <a name="631"><span class="lineNum">     631 </span>            : </a>
-<a name="632"><span class="lineNum">     632 </span><span class="lineCov">     142654 : inline std::vector&lt;Node*&gt; getNodes (Node&amp; node, VertexOrdering vertexOrdering)</span></a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineCov">     144254 : inline std::vector&lt;Node*&gt; getNodes (Node&amp; node, VertexOrdering vertexOrdering)</span></a>
 <a name="633"><span class="lineNum">     633 </span>            : {</a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineCov">     142654 :     if (vertexOrdering == VertexOrdering::bfsPreordering</span></a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineCov">     142654 :         || vertexOrdering == VertexOrdering::bfsReversePreordering)</span></a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineCov">     144254 :     if (vertexOrdering == VertexOrdering::bfsPreordering</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">     144254 :         || vertexOrdering == VertexOrdering::bfsReversePreordering)</span></a>
 <a name="636"><span class="lineNum">     636 </span>            :     {</a>
 <a name="637"><span class="lineNum">     637 </span>            :         std::vector&lt;Node*&gt; visitedNodes;</a>
 <a name="638"><span class="lineNum">     638 </span><span class="lineCov">          2 :         detail::VisitNodesWithRecordBFS::visit (visitedNodes, node, [](auto&amp;){});</span></a>
@@ -705,14 +705,14 @@
 <a name="643"><span class="lineNum">     643 </span>            :         return visitedNodes;</a>
 <a name="644"><span class="lineNum">     644 </span>            :     }</a>
 <a name="645"><span class="lineNum">     645 </span>            :     </a>
-<a name="646"><span class="lineNum">     646 </span><span class="lineCov">     142652 :     bool preordering = vertexOrdering == VertexOrdering::preordering</span></a>
-<a name="647"><span class="lineNum">     647 </span><span class="lineCov">     142652 :                     || vertexOrdering == VertexOrdering::reversePreordering;</span></a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineCov">     144252 :     bool preordering = vertexOrdering == VertexOrdering::preordering</span></a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineCov">     144252 :                     || vertexOrdering == VertexOrdering::reversePreordering;</span></a>
 <a name="648"><span class="lineNum">     648 </span>            :     </a>
 <a name="649"><span class="lineNum">     649 </span>            :     std::vector&lt;Node*&gt; visitedNodes;</a>
-<a name="650"><span class="lineNum">     650 </span><span class="lineCov">     142652 :     detail::VisitNodesWithRecord::visit (visitedNodes, node, [](auto&amp;){}, preordering);</span></a>
+<a name="650"><span class="lineNum">     650 </span><span class="lineCov">     144252 :     detail::VisitNodesWithRecord::visit (visitedNodes, node, [](auto&amp;){}, preordering);</span></a>
 <a name="651"><span class="lineNum">     651 </span>            : </a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineCov">     142652 :     if (vertexOrdering == VertexOrdering::reversePreordering</span></a>
-<a name="653"><span class="lineNum">     653 </span><span class="lineCov">     142652 :         || vertexOrdering == VertexOrdering::reversePostordering)</span></a>
+<a name="652"><span class="lineNum">     652 </span><span class="lineCov">     144252 :     if (vertexOrdering == VertexOrdering::reversePreordering</span></a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineCov">     144252 :         || vertexOrdering == VertexOrdering::reversePostordering)</span></a>
 <a name="654"><span class="lineNum">     654 </span>            :        std::reverse (visitedNodes.begin(), visitedNodes.end());</a>
 <a name="655"><span class="lineNum">     655 </span>            :     </a>
 <a name="656"><span class="lineNum">     656 </span>            :     return visitedNodes;</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-05 10:54:07</td>
+            <td class="headerValue">2023-06-07 11:34:06</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -119,11 +119,14 @@
 <a name="57"><span class="lineNum">      57 </span>            :     struct WireList;</a>
 <a name="58"><span class="lineNum">      58 </span>            :     std::unique_ptr&lt;WireList&gt; list;</a>
 <a name="59"><span class="lineNum">      59 </span>            :     bool recursionCheck = false;</a>
-<a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchBayPlugin)</a>
-<a name="62"><span class="lineNum">      62 </span>            : };</a>
+<a name="60"><span class="lineNum">      60 </span>            :     SafeSelectable&lt;Plugin&gt; inputPlugin, outputPlugin;</a>
+<a name="61"><span class="lineNum">      61 </span>            : </a>
+<a name="62"><span class="lineNum">      62 </span>            :     void cacheInputAndOutputPlugins();</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="64"><span class="lineNum">      64 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchBayPlugin)</a>
+<a name="65"><span class="lineNum">      65 </span>            : };</a>
+<a name="66"><span class="lineNum">      66 </span>            : </a>
+<a name="67"><span class="lineNum">      67 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-05 10:54:07</td>
+            <td class="headerValue">2023-06-07 11:34:06</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">25</td>
@@ -96,9 +96,9 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">       6367 :         freeObjects();</span></a>
 <a name="35"><span class="lineNum">      35 </span><span class="lineCov">      12734 :     }</span></a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      80438 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      80430 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     {</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      80438 :         return v.hasType (IDs::PLUGIN);</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      80430 :         return v.hasType (IDs::PLUGIN);</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :     }</a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">       5052 :     Plugin* createNewObject (const juce::ValueTree&amp; v) override</span></a>
@@ -169,19 +169,19 @@
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     return &amp;edit.getUndoManager();</span></a>
 <a name="108"><span class="lineNum">     108 </span>            : }</a>
 <a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">      72443 : Plugin::Array PluginList::getPlugins() const</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">      30243 : Plugin::Array PluginList::getPlugins() const</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : {</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">      72443 :     Plugin::Array plugins;</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">      30243 :     Plugin::Array plugins;</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      72443 :     if (list != nullptr)</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">     194777 :         for (auto p : list-&gt;objects)</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     137494 :             plugins.add (p);</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      30243 :     if (list != nullptr)</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">      25977 :         for (auto p : list-&gt;objects)</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      10894 :             plugins.add (p);</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">      72443 :     return plugins;</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">      30243 :     return plugins;</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : }</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">    5547815 : Plugin** PluginList::begin() const  { return list == nullptr ? nullptr : list-&gt;objects.begin(); }</span></a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">    5547815 : Plugin** PluginList::end() const    { return list == nullptr ? nullptr : list-&gt;objects.end(); }</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">    1264515 : Plugin** PluginList::begin() const  { return list == nullptr ? nullptr : list-&gt;objects.begin(); }</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">    1264515 : Plugin** PluginList::end() const    { return list == nullptr ? nullptr : list-&gt;objects.end(); }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">          9 : int PluginList::size() const</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
@@ -199,21 +199,21 @@
 <a name="137"><span class="lineNum">     137 </span>            :     return {};</a>
 <a name="138"><span class="lineNum">     138 </span>            : }</a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    4998389 : bool PluginList::contains (const Plugin* plugin) const</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">     757289 : bool PluginList::contains (const Plugin* plugin) const</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : {</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">    4998389 :     return indexOf (plugin) &gt;= 0;</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     757289 :     return indexOf (plugin) &gt;= 0;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : }</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 : int PluginList::indexOf (const Plugin* plugin) const</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
 <a name="147"><span class="lineNum">     147 </span>            :     int i = 0;</a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">   19150442 :     for (auto p : *this)</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">    2101642 :     for (auto p : *this)</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     {</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">   14201605 :         if (p == plugin)</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">    1351705 :         if (p == plugin)</span></a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :             return i;</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">   14109451 :         ++i;</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">    1343951 :         ++i;</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     }</a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :     return -1;</a>
@@ -231,12 +231,12 @@
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         p-&gt;trackPropertiesChanged();</span></a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineCov">         68 : }</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">        722 : void PluginList::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">        736 : void PluginList::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        722 :     if (list != nullptr)</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        776 :         for (auto p : list-&gt;objects)</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        370 :             p-&gt;updateFromMirroredPluginIfNeeded (plugin);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        722 : }</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        736 :     if (list != nullptr)</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        786 :         for (auto p : list-&gt;objects)</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        374 :             p-&gt;updateFromMirroredPluginIfNeeded (plugin);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        736 : }</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : bool PluginList::needsConstantBufferSize()</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : {</a>
