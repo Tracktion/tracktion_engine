@@ -82,8 +82,11 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aca735e4fdf5bd20d17113702f1b45e1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html#aca735e4fdf5bd20d17113702f1b45e1e">AsyncCaller</a> ()=default</td></tr>
-<tr class="memdesc:aca735e4fdf5bd20d17113702f1b45e1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an empty <a class="el" href="structtracktion_1_1engine_1_1AsyncFunctionCaller.html" title="Holds a list of function objects and enables you to call them asyncronously.">AsyncFunctionCaller</a>.  <a href="structtracktion_1_1engine_1_1AsyncCaller.html#aca735e4fdf5bd20d17113702f1b45e1e">More...</a><br /></td></tr>
+<tr class="memdesc:aca735e4fdf5bd20d17113702f1b45e1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an empty <a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html" title="Asyncronously call a function.">AsyncCaller</a>.  <a href="structtracktion_1_1engine_1_1AsyncCaller.html#aca735e4fdf5bd20d17113702f1b45e1e">More...</a><br /></td></tr>
 <tr class="separator:aca735e4fdf5bd20d17113702f1b45e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f5360599a7ab821c0f37a00981362d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html#a8f5360599a7ab821c0f37a00981362d6">AsyncCaller</a> (std::function&lt; void()&gt; f)</td></tr>
+<tr class="memdesc:a8f5360599a7ab821c0f37a00981362d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html" title="Asyncronously call a function.">AsyncCaller</a> with a given callback function.  <a href="structtracktion_1_1engine_1_1AsyncCaller.html#a8f5360599a7ab821c0f37a00981362d6">More...</a><br /></td></tr>
+<tr class="separator:a8f5360599a7ab821c0f37a00981362d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa10f851db2f6bc4b1d7dae43246a2222"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html#aa10f851db2f6bc4b1d7dae43246a2222">~AsyncCaller</a> () override</td></tr>
 <tr class="memdesc:aa10f851db2f6bc4b1d7dae43246a2222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="structtracktion_1_1engine_1_1AsyncCaller.html#aa10f851db2f6bc4b1d7dae43246a2222">More...</a><br /></td></tr>
 <tr class="separator:aa10f851db2f6bc4b1d7dae43246a2222"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,7 +105,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Asyncronously call a function. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aca735e4fdf5bd20d17113702f1b45e1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca735e4fdf5bd20d17113702f1b45e1e">&#9670;&nbsp;</a></span>AsyncCaller()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aca735e4fdf5bd20d17113702f1b45e1e">&#9670;&nbsp;</a></span>AsyncCaller() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -124,7 +127,27 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates an empty <a class="el" href="structtracktion_1_1engine_1_1AsyncFunctionCaller.html" title="Holds a list of function objects and enables you to call them asyncronously.">AsyncFunctionCaller</a>. </p>
+<p>Creates an empty <a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html" title="Asyncronously call a function.">AsyncCaller</a>. </p>
+
+</div>
+</div>
+<a id="a8f5360599a7ab821c0f37a00981362d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f5360599a7ab821c0f37a00981362d6">&#9670;&nbsp;</a></span>AsyncCaller() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tracktion::engine::AsyncCaller::AsyncCaller </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates an <a class="el" href="structtracktion_1_1engine_1_1AsyncCaller.html" title="Asyncronously call a function.">AsyncCaller</a> with a given callback function. </p>
 
 </div>
 </div>
@@ -223,7 +246,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 7 2023 11:15:53 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jun 7 2023 11:16:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

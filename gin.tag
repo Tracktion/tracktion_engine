@@ -8676,6 +8676,13 @@
     </member>
     <member kind="function">
       <type></type>
+      <name>AsyncCaller</name>
+      <anchorfile>structtracktion_1_1engine_1_1AsyncCaller.html</anchorfile>
+      <anchor>a8f5360599a7ab821c0f37a00981362d6</anchor>
+      <arglist>(std::function&lt; void()&gt; f)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
       <name>~AsyncCaller</name>
       <anchorfile>structtracktion_1_1engine_1_1AsyncCaller.html</anchorfile>
       <anchor>aa10f851db2f6bc4b1d7dae43246a2222</anchor>
