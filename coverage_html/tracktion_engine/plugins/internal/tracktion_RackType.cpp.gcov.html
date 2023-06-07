@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-07 14:45:09</td>
+            <td class="headerValue">2023-06-07 21:29:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">70</td>
@@ -531,9 +531,9 @@
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">       3771 :     juce::Array&lt;Plugin*&gt; list;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       9046 :     for (auto i : pluginList-&gt;objects)</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       5275 :         if (i-&gt;plugin != nullptr)</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       5275 :             list.add (i-&gt;plugin.get());</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       8983 :     for (auto i : pluginList-&gt;objects)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       5212 :         if (i-&gt;plugin != nullptr)</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       5212 :             list.add (i-&gt;plugin.get());</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       3771 :     return list;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
@@ -1098,8 +1098,8 @@
 <a name="1036"><span class="lineNum">    1036 </span>            : </a>
 <a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       2435 :     numberOfInstancesInEdit = 0;</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            : </a>
-<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">      10027 :     for (auto p : getAllPlugins (edit, false))</span></a>
-<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       7592 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">       9964 :     for (auto p : getAllPlugins (edit, false))</span></a>
+<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       7529 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :             if (rf-&gt;type.get() == this)</span></a>
 <a name="1042"><span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                 ++numberOfInstancesInEdit;</span></a>
 <a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">       2435 : }</span></a>
@@ -1248,16 +1248,16 @@
 <a name="1186"><span class="lineNum">    1186 </span>            : struct RackTypeList::ValueTreeList  : public ValueTreeObjectList&lt;RackType&gt;</a>
 <a name="1187"><span class="lineNum">    1187 </span>            : {</a>
 <a name="1188"><span class="lineNum">    1188 </span>            :     ValueTreeList (RackTypeList&amp; l, const juce::ValueTree&amp; parentTree)</a>
-<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">        280 :         : ValueTreeObjectList&lt;RackType&gt; (parentTree), list (l)</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">        281 :         : ValueTreeObjectList&lt;RackType&gt; (parentTree), list (l)</span></a>
 <a name="1190"><span class="lineNum">    1190 </span>            :     {</a>
 <a name="1191"><span class="lineNum">    1191 </span>            :         // NB: rebuildObjects() is called after construction so that the edit has a valid</a>
 <a name="1192"><span class="lineNum">    1192 </span>            :         // list while they're being created</a>
 <a name="1193"><span class="lineNum">    1193 </span>            :     }</a>
 <a name="1194"><span class="lineNum">    1194 </span>            : </a>
-<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">        560 :     ~ValueTreeList() override</span></a>
-<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">        280 :     {</span></a>
-<a name="1197"><span class="lineNum">    1197 </span><span class="lineCov">        280 :         freeObjects();</span></a>
-<a name="1198"><span class="lineNum">    1198 </span><span class="lineCov">        560 :     }</span></a>
+<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">        562 :     ~ValueTreeList() override</span></a>
+<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">        281 :     {</span></a>
+<a name="1197"><span class="lineNum">    1197 </span><span class="lineCov">        281 :         freeObjects();</span></a>
+<a name="1198"><span class="lineNum">    1198 </span><span class="lineCov">        562 :     }</span></a>
 <a name="1199"><span class="lineNum">    1199 </span>            : </a>
 <a name="1200"><span class="lineNum">    1200 </span><span class="lineCov">       3503 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="1201"><span class="lineNum">    1201 </span>            :     {</a>
@@ -1293,32 +1293,32 @@
 <a name="1231"><span class="lineNum">    1231 </span>            : };</a>
 <a name="1232"><span class="lineNum">    1232 </span>            : </a>
 <a name="1233"><span class="lineNum">    1233 </span>            : //==============================================================================</a>
-<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">        280 : RackTypeList::RackTypeList (Edit&amp; ed) : edit (ed)</span></a>
+<a name="1234"><span class="lineNum">    1234 </span><span class="lineCov">        281 : RackTypeList::RackTypeList (Edit&amp; ed) : edit (ed)</span></a>
 <a name="1235"><span class="lineNum">    1235 </span>            : {</a>
-<a name="1236"><span class="lineNum">    1236 </span><span class="lineCov">        280 : }</span></a>
+<a name="1236"><span class="lineNum">    1236 </span><span class="lineCov">        281 : }</span></a>
 <a name="1237"><span class="lineNum">    1237 </span>            : </a>
-<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">        280 : void RackTypeList::initialise (const juce::ValueTree&amp; v)</span></a>
+<a name="1238"><span class="lineNum">    1238 </span><span class="lineCov">        281 : void RackTypeList::initialise (const juce::ValueTree&amp; v)</span></a>
 <a name="1239"><span class="lineNum">    1239 </span>            : {</a>
-<a name="1240"><span class="lineNum">    1240 </span><span class="lineCov">        280 :     CRASH_TRACER</span></a>
+<a name="1240"><span class="lineNum">    1240 </span><span class="lineCov">        281 :     CRASH_TRACER</span></a>
 <a name="1241"><span class="lineNum">    1241 </span>            : </a>
-<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">        280 :     state = v;</span></a>
+<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">        281 :     state = v;</span></a>
 <a name="1243"><span class="lineNum">    1243 </span>            :     jassert (state.hasType (IDs::RACKS));</a>
 <a name="1244"><span class="lineNum">    1244 </span>            : </a>
-<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">        280 :     list.reset (new ValueTreeList (*this, v));</span></a>
-<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        280 :     list-&gt;rebuildObjects();</span></a>
-<a name="1247"><span class="lineNum">    1247 </span><span class="lineCov">        280 : }</span></a>
+<a name="1245"><span class="lineNum">    1245 </span><span class="lineCov">        281 :     list.reset (new ValueTreeList (*this, v));</span></a>
+<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        281 :     list-&gt;rebuildObjects();</span></a>
+<a name="1247"><span class="lineNum">    1247 </span><span class="lineCov">        281 : }</span></a>
 <a name="1248"><span class="lineNum">    1248 </span>            : </a>
-<a name="1249"><span class="lineNum">    1249 </span><span class="lineCov">        280 : RackTypeList::~RackTypeList()</span></a>
+<a name="1249"><span class="lineNum">    1249 </span><span class="lineCov">        281 : RackTypeList::~RackTypeList()</span></a>
 <a name="1250"><span class="lineNum">    1250 </span>            : {</a>
-<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">        452 :     for (auto t : list-&gt;objects)</span></a>
+<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">        453 :     for (auto t : list-&gt;objects)</span></a>
 <a name="1252"><span class="lineNum">    1252 </span><span class="lineCov">        172 :         t-&gt;hideWindowForShutdown();</span></a>
 <a name="1253"><span class="lineNum">    1253 </span>            : </a>
 <a name="1254"><span class="lineNum">    1254 </span>            :     list = nullptr;</a>
-<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">        280 : }</span></a>
+<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">        281 : }</span></a>
 <a name="1256"><span class="lineNum">    1256 </span>            : </a>
-<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">       4556 : const juce::Array&lt;RackType*&gt;&amp; RackTypeList::getTypes() const noexcept</span></a>
+<a name="1257"><span class="lineNum">    1257 </span><span class="lineCov">       4560 : const juce::Array&lt;RackType*&gt;&amp; RackTypeList::getTypes() const noexcept</span></a>
 <a name="1258"><span class="lineNum">    1258 </span>            : {</a>
-<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">       4556 :     return list-&gt;objects;</span></a>
+<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">       4560 :     return list-&gt;objects;</span></a>
 <a name="1260"><span class="lineNum">    1260 </span>            : }</a>
 <a name="1261"><span class="lineNum">    1261 </span>            : </a>
 <a name="1262"><span class="lineNum">    1262 </span><span class="lineNoCov">          0 : int RackTypeList::size() const</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-07 14:45:09</td>
+            <td class="headerValue">2023-06-07 21:29:53</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -73,14 +73,14 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">      23733 : TrackItem::TrackItem (Edit&amp; ed, EditItemID id, Type t)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      24014 :     : EditItem (id, ed), type (t)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">      23735 : TrackItem::TrackItem (Edit&amp; ed, EditItemID id, Type t)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      24017 :     : EditItem (id, ed), type (t)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">      23453 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">      23454 : }</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">      24014 : TrackItem::~TrackItem()</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">      24017 : TrackItem::~TrackItem()</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      24014 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      24017 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 : const char* TrackItem::typeToString (TrackItem::Type t)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : {</a>
@@ -124,12 +124,12 @@
 <a name="62"><span class="lineNum">      62 </span>            :     return Type::unknown;</a>
 <a name="63"><span class="lineNum">      63 </span>            : }</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3452 : juce::Identifier TrackItem::clipTypeToXMLType (TrackItem::Type t)</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3453 : juce::Identifier TrackItem::clipTypeToXMLType (TrackItem::Type t)</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : {</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">       3452 :     switch (t)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">       3453 :     switch (t)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :     {</a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">       3390 :         case Type::wave:          return IDs::AUDIOCLIP;</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">         61 :         case Type::midi:          return IDs::MIDICLIP;</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">         62 :         case Type::midi:          return IDs::MIDICLIP;</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :         case Type::edit:          return IDs::EDITCLIP;</span></a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :         case Type::step:          return IDs::STEPCLIP;</span></a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :         case Type::marker:        return IDs::MARKERCLIP;</span></a>
@@ -194,12 +194,12 @@
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : }</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        250 : BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    7347299 : BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        124 : BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        117 : BeatDuration TrackItem::getOffsetInBeats() const     { return BeatDuration::fromBeats (getPosition().getOffset().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart())); }</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        253 : BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    7347203 : BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        127 : BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        119 : BeatDuration TrackItem::getOffsetInBeats() const     { return BeatDuration::fromBeats (getPosition().getOffset().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart())); }</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        199 : BeatPosition TrackItem::getEndBeat() const                              { return edit.tempoSequence.toBeats (getPosition().getEnd()); }</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        202 : BeatPosition TrackItem::getEndBeat() const                              { return edit.tempoSequence.toBeats (getPosition().getEnd()); }</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : TimePosition TrackItem::getTimeOfRelativeBeat (BeatDuration b) const    { return edit.tempoSequence.toTime (getStartBeat() + b); }</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : BeatPosition TrackItem::getBeatOfRelativeTime (TimeDuration t) const    { return edit.tempoSequence.toBeats (getPosition().getStart() + t); }</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
