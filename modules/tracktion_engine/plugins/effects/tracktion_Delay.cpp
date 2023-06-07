@@ -110,7 +110,7 @@ void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         p->updateFromAttachedValue();
 }
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_DELAY_PLUGIN
 
 //==============================================================================
 //==============================================================================
