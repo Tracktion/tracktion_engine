@@ -709,10 +709,8 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             addPluginParametersToValueTree(rackInstance);
 
             // BEATCONNECT MODIFICATIONS START
-            juce::ValueTree v(IDs::Faceplate);
-            rackType->state.addChild(v, -1, nullptr);
+            rackType->state.getOrCreateChildWithName(IDs::Faceplate, nullptr);
             // BEATCONNECT MODIFICATIONS END
-
             return rackInstance;
         }
     }
