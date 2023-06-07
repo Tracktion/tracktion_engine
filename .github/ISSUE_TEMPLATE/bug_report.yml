@@ -19,6 +19,48 @@ body:
       label: What is the expected behaviour?
     validations:
       required: true
+  - type: textarea
+    id: unittest
+    attributes:
+      label: Unit test to reproduce the error?
+      description: If possible please use the template below to create a failing unit test. This will enable us to quickly reproduce the issue and validate your use case is fixed.
+      value: |
+        /*
+            Copy this code in to your application, replacing the test cases in the runTest function.
+            Then call runTest() from somewhere in your application.
+        */
+        class TestClassName  : public juce::UnitTest
+        {
+        public:
+            TestClassName()
+                : juce::UnitTest ("TestClass", "tracktion_engine")
+            {
+            }
+        
+            void runTest() override
+            {
+                // Group tests in to sections with beginTest
+                beginTest ("Test section");
+                {
+                    expect (1 == 1);        // Test an expression for true
+                    expectEquals (1, 1);    // Test two values are equal
+                    expectNotEquals (1, 1); // Test two values are not equal: FAILS
+                }
+            }
+        };
+        
+        // Creates an instance of the test so you can run it
+        static TestClassName testClassName;
+        
+        // Call this from your applications
+        inline void runTest()
+        {
+            juce::UnitTestRunner runner;
+            runner.runTests ({ &testClassName });
+        }
+      render: bash
+    validations:
+      required: false
   - type: dropdown
     id: os
     attributes:
