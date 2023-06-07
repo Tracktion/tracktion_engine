@@ -65,7 +65,6 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     //==============================================================================
-    juce::CachedValue<float> volume, pan;
     juce::CachedValue<bool> applyToMidi, ignoreVca, polarity;
     juce::CachedValue<int> panLaw;
 
@@ -73,6 +72,8 @@ public:
     AutomatableParameter::Ptr volParam, panParam;
 
 private:
+    juce::CachedValue<float> volume, pan;
+    
     float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
 
     juce::CriticalSection vcaTrackLock;
@@ -80,6 +81,8 @@ private:
     const bool isMasterVolume = false;
 
     void refreshVCATrack();
+
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeAndPanPlugin)
 };
