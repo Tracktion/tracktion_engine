@@ -58,7 +58,7 @@ body:
             juce::UnitTestRunner runner;
             runner.runTests ({ &testClassName });
         }
-    render: bash
+      render: bash
     validations:
       required: false
   - type: dropdown
