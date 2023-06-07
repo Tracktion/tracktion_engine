@@ -24,7 +24,7 @@ body:
     attributes:
       label: Unit test to reproduce the error?
       description: If possible please use the template below to create a failing unit test. This will enable us to quickly reproduce the issue and validate your use case is fixed.
-      placeholder: |
+      render: |
         /*
             Copy this code in to your application, replacing the test cases in the runTest function.
             Then call runTest() from somewhere in your application.
