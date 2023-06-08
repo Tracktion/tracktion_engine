@@ -206,7 +206,8 @@ void PluginList::insertPlugin (const Plugin::Ptr& plugin, int index, SelectionMa
         }
 
         // BEATCONNECT MODIFICATIONS START
-        auto& pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
+        auto pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
+        
         if (pluginParameters.getNumChildren() == 0)
         {
             for (auto param : plugin->getAutomatableParameters())

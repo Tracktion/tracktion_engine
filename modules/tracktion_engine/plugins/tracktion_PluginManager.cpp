@@ -747,7 +747,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
 void PluginManager::addPluginParametersToValueTree(Plugin::Ptr plugin)
 {
     // BEATCONNECT MODIFICATIONS START
-    auto& pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
+    auto pluginParameters = plugin->state.getOrCreateChildWithName(IDs::PluginParameters.toString(), nullptr);
     if (pluginParameters.getNumChildren() == 0)
     {
         for (const auto& param : plugin->getAutomatableParameters())
