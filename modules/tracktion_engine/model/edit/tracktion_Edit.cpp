@@ -1843,8 +1843,8 @@ void Edit::deleteTrack (Track* t)
 
                 for (auto at : audioTracks)
                 {
-                    if (clearWave)  editInputDevices->clearInputsOfDevice (*at, wid);
-                    if (clearMidi)  editInputDevices->clearInputsOfDevice (*at, mid);
+                    if (clearWave)  editInputDevices->clearInputsOfDevice (*at, wid, &getUndoManager());
+                    if (clearMidi)  editInputDevices->clearInputsOfDevice (*at, mid, &getUndoManager());
                 }
             }
         };
@@ -1868,7 +1868,7 @@ void Edit::deleteTrack (Track* t)
                         ep->hideWindowForShutdown();
 
                 clearEnabledTrackDevices (at);
-                editInputDevices->clearAllInputs (*at);
+                editInputDevices->clearAllInputs (*at, &getUndoManager());
             }
         }
         else
@@ -1880,7 +1880,7 @@ void Edit::deleteTrack (Track* t)
             if (auto at = dynamic_cast<AudioTrack*> (t))
             {
                 clearEnabledTrackDevices (at);
-                editInputDevices->clearAllInputs (*at);
+                editInputDevices->clearAllInputs (*at, &getUndoManager());
             }
         }
 

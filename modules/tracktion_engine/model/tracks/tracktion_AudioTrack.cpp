@@ -154,8 +154,8 @@ AudioTrack::~AudioTrack()
 
         for (auto at : getTracksOfType<AudioTrack> (edit, true))
         {
-            if (clearWave)  edit.getEditInputDevices().clearInputsOfDevice (*at, *waveInputDevice);
-            if (clearMidi)  edit.getEditInputDevices().clearInputsOfDevice (*at, *midiInputDevice);
+            if (clearWave)  edit.getEditInputDevices().clearInputsOfDevice (*at, *waveInputDevice, &edit.getUndoManager());
+            if (clearMidi)  edit.getEditInputDevices().clearInputsOfDevice (*at, *midiInputDevice, &edit.getUndoManager());
         }
     }
 
@@ -651,7 +651,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
         if (i == IDs::maxInputs)
         {
             maxInputs.forceUpdateOfCachedValue();
-            edit.getEditInputDevices().clearAllInputs (*this);
+            edit.getEditInputDevices().clearAllInputs (*this, &edit.getUndoManager());
         }
         else if (i == IDs::ghostTracks)
         {

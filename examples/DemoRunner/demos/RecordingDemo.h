@@ -12,6 +12,7 @@
 
 #include "../common/Utilities.h"
 #include "../common/Components.h"
+#include "../common/kick.wav.h"
 
 //==============================================================================
 class RecordingDemo  : public Component,
@@ -28,7 +29,7 @@ public:
         updateRecordButtonText();
         editNameLabel.setJustificationType (Justification::centred);
         Helpers::addAndMakeVisible (*this, { &newEditButton, &playPauseButton, &recordButton, &showEditButton,
-                                             &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton, &undoButton, &redoButton });
+                                             &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton, &undoButton, &redoButton, &newClipButton });
 
         deleteButton.setEnabled (false);
         
@@ -63,7 +64,7 @@ public:
     void resized() override
     {
         auto r = getLocalBounds();
-        int w = r.getWidth() / 9;
+        int w = r.getWidth() / 10;
         auto topR = r.removeFromTop (30);
         newEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -74,6 +75,7 @@ public:
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
         undoButton.setBounds(topR.removeFromLeft(w).reduced(2));
         redoButton.setBounds(topR.removeFromLeft(w).reduced(2));
+        newClipButton.setBounds (topR.removeFromLeft(w).reduced(2));
 
         topR = r.removeFromTop (30);
         showWaveformButton.setBounds (topR.removeFromLeft (w * 2).reduced (2));
@@ -89,10 +91,12 @@ private:
     te::SelectionManager selectionManager { engine };
     std::unique_ptr<te::Edit> edit;
     std::unique_ptr<EditComponent> editComponent;
+    te::WaveAudioClip::Ptr currentClip;
+    juce::TemporaryFile tempFile { ".wav" };
 
     TextButton newEditButton { "New" }, playPauseButton { "Play" }, recordButton { "Record" },
                showEditButton { "Show Edit" }, newTrackButton { "New Track" }, clearTracksButton { "Clear Tracks" }, deleteButton { "Delete" },
-               undoButton {"Undo"}, redoButton {"Redo"};
+               undoButton {"Undo"}, redoButton {"Redo"}, newClipButton { "New Clip" };
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
 
@@ -150,6 +154,10 @@ private:
         {
             edit->getUndoManager().redo();
         };
+        newClipButton.onClick = [this]
+        {
+            insertNewClip();
+        };
     }
     
     void updatePlayButtonText()
@@ -178,11 +186,12 @@ private:
         selectionManager.deselectAll();
         editComponent = nullptr;
         
-        if (editFile.existsAsFile())
-            edit = te::loadEditFromFile (engine, editFile);
-        else
-            edit = te::createEmptyEdit (engine, editFile);
-        
+//ddd        if (editFile.existsAsFile())
+//            edit = te::loadEditFromFile (engine, editFile);
+//        else
+//            edit = te::createEmptyEdit (engine, editFile);
+        edit = te::createEmptyEdit (engine, editFile);
+
         edit->playInStopEnabled = true;
         
         auto& transport = edit->getTransport();
@@ -196,14 +205,47 @@ private:
         };
         
         createTracksAndAssignInputs();
-        
+
+        auto& file = tempFile.getFile();
+        file.replaceWithData (kick_wav, sizeof (kick_wav));
+
+        insertNewClip();
+
+
         te::EditFileOperations (*edit).save (true, true, false);
         
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         addAndMakeVisible (*editComponent);
         resized();
     }
-    
+
+    void insertNewClip()
+    {
+        auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, 0);
+        auto barsAndBeats = edit->tempoSequence.toBarsAndBeats (edit->getTransport().getPosition());
+        barsAndBeats.bars += 1;
+        barsAndBeats.beats = 0_bd;
+        auto newTime = edit->tempoSequence.toTime (barsAndBeats);
+        if (currentClip)
+        {
+            auto pos = currentClip->getPosition();
+            pos.time = pos.time.withEnd (newTime);
+            currentClip->setPosition (pos);
+        }
+//        const juce::ValueTree cv { tracktion::engine::IDs::CONTAINERCLIP };
+//        auto cc = static_cast<ContainerClip*>(tracktion::engine::insertClipWithState(*t, cv, "", TrackItem::Type::container, { { newTime, 1000_tp }, 0_td }, tracktion::engine::DeleteExistingClips::no, false));
+//        cc->setAutoTempo (true);
+//        cc->applyEdgeFades();
+
+        const juce::ValueTree wv { tracktion::engine::IDs::AUDIOCLIP };
+        auto w = te::insertWaveClip(*t, "", tempFile.getFile(), { { 0_tp, 4_tp }, 0_td }, te::DeleteExistingClips::no);
+//        w->applyEdgeFades();
+        w->setAutoTempo (true);
+        w->setUsesProxy (false);
+        w->setLoopRangeBeats ({0_bp, 4_bp});
+        currentClip = w;
+    }
+
     void createTracksAndAssignInputs()
     {
         auto& dm = engine.getDeviceManager();
@@ -230,7 +272,7 @@ private:
             {
                 if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                 {
-                    instance->setTargetTrack (*t, 0, true);
+                    instance->setTargetTrack (*t, 0, true, &edit->getUndoManager());
                     instance->setRecordingEnabled (*t, true);
                     
                     trackNum++;
