@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 10:46:22</td>
+            <td class="headerValue">2023-06-12 12:13:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -77,7 +77,7 @@
 <a name="15"><span class="lineNum">      15 </span>            : /** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */</a>
 <a name="16"><span class="lineNum">      16 </span>            : inline juce::AudioBuffer&lt;float&gt; toAudioBuffer (choc::buffer::ChannelArrayView&lt;float&gt; view)</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">   42846057 :     return juce::AudioBuffer&lt;float&gt; (view.data.channels, (int) view.getNumChannels(), (int) view.data.offset, (int) view.getNumFrames());</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">   42429102 :     return juce::AudioBuffer&lt;float&gt; (view.data.channels, (int) view.getNumChannels(), (int) view.data.offset, (int) view.getNumFrames());</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : }</a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            : /** Converts a juce::AudioBuffer&lt;SampleType&gt; to a choc::buffer::BufferView. */</a>
@@ -93,7 +93,7 @@
 <a name="31"><span class="lineNum">      31 </span>            : /** Converts a choc::midi event to a juce::MidiMessage */</a>
 <a name="32"><span class="lineNum">      32 </span>            : inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event&amp; e)</a>
 <a name="33"><span class="lineNum">      33 </span>            : {</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">     505904 :     return { e.message.data(), (int) e.message.length(), e.timeStamp };</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">     505992 :     return { e.message.data(), (int) e.message.length(), e.timeStamp };</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : }</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span>            : //==============================================================================</a>
@@ -123,7 +123,7 @@
 <a name="61"><span class="lineNum">      61 </span>            : /** Returns a FrameRange with a start and length. */</a>
 <a name="62"><span class="lineNum">      62 </span>            : inline choc::buffer::FrameRange frameRangeWithStartAndLength (choc::buffer::FrameCount start, choc::buffer::FrameCount length)</a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">   27215945 :     return { start, start + length };</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">   26802055 :     return { start, start + length };</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : }</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span>            : /** Returns a ChannelRange with a start and length. */</a>
@@ -147,12 +147,12 @@
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            : /** Adds two buffers applying a gain. */</a>
 <a name="87"><span class="lineNum">      87 </span>            : template &lt;typename DestBuffer, typename SourceBuffer, typename GainType&gt;</a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">   15184514 : static void add (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source, GainType gain)</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">   15172125 : static void add (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source, GainType gain)</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : {</a>
 <a name="90"><span class="lineNum">      90 </span>            :     auto size = source.getSize();</a>
 <a name="91"><span class="lineNum">      91 </span>            :     CHOC_ASSERT (size == dest.getSize());</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">   15664902 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">   15652513 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
 <a name="94"><span class="lineNum">      94 </span>            :     {</a>
 <a name="95"><span class="lineNum">      95 </span>            :         auto src = source.getIterator (chan);</a>
 <a name="96"><span class="lineNum">      96 </span>            :         auto dst = dest.getIterator (chan);</a>
@@ -164,7 +164,7 @@
 <a name="102"><span class="lineNum">     102 </span>            :             ++src;</a>
 <a name="103"><span class="lineNum">     103 </span>            :         }</a>
 <a name="104"><span class="lineNum">     104 </span>            :     }</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">   15184514 : }</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">   15172125 : }</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span>            : /** Adds two buffers applying a smoothed gain. */</a>
 <a name="108"><span class="lineNum">     108 </span>            : template &lt;typename DestBuffer, typename SourceBuffer, typename GainType&gt;</a>
@@ -196,28 +196,28 @@
 <a name="134"><span class="lineNum">     134 </span>            :     This will assert if the two views do not have exactly the same size.</a>
 <a name="135"><span class="lineNum">     135 </span>            : */</a>
 <a name="136"><span class="lineNum">     136 </span>            : template &lt;typename DestBuffer, typename SourceBuffer&gt;</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">   20704543 : static void copyIfNotAliased (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">   20826325 : static void copyIfNotAliased (DestBuffer&amp;&amp; dest, const SourceBuffer&amp; source)</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
 <a name="139"><span class="lineNum">     139 </span>            :     auto size = source.getSize();</a>
 <a name="140"><span class="lineNum">     140 </span>            :     CHOC_ASSERT (size == dest.getSize());</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">   61493902 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">   61779715 :     for (decltype (size.numChannels) chan = 0; chan &lt; size.numChannels; ++chan)</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :     {</a>
 <a name="144"><span class="lineNum">     144 </span>            :         auto src = source.getIterator (chan);</a>
 <a name="145"><span class="lineNum">     145 </span>            :         auto dst = dest.getIterator (chan);</a>
 <a name="146"><span class="lineNum">     146 </span>            :         </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">   40789359 :         if (src.sample == dst.sample)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">   40953390 :         if (src.sample == dst.sample)</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :             continue;</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov"> 6692594351 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov"> 6691636290 :         for (decltype (size.numFrames) i = 0; i &lt; size.numFrames; ++i)</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :         {</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov"> 6651878170 :             *dst = static_cast&lt;decltype (dst.get())&gt; (src.get());</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov"> 6650756078 :             *dst = static_cast&lt;decltype (dst.get())&gt; (src.get());</span></a>
 <a name="153"><span class="lineNum">     153 </span>            :             ++dst;</a>
 <a name="154"><span class="lineNum">     154 </span>            :             ++src;</a>
 <a name="155"><span class="lineNum">     155 </span>            :         }</a>
 <a name="156"><span class="lineNum">     156 </span>            :     }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   20704543 : }</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   20826325 : }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
 <a name="160"><span class="lineNum">     160 </span>            : }} // namespace tracktion</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
@@ -229,11 +229,11 @@
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">         48 :         size_t seed = 0;</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        720 :         for (auto meh : sequence)</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        624 :         for (auto meh : sequence)</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :         {</a>
 <a name="172"><span class="lineNum">     172 </span>            :             auto&amp; me = meh-&gt;message;</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">        672 :             tracktion::hash_combine (seed, me.getTimeStamp());</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        672 :             tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">        576 :             tracktion::hash_combine (seed, me.getTimeStamp());</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        576 :             tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :         }</a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineCov">         48 :         return seed;</span></a>

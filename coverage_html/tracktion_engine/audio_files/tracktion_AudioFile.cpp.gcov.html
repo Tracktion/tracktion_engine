@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 10:46:22</td>
+            <td class="headerValue">2023-06-12 12:13:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">47</td>
@@ -183,15 +183,15 @@
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">          3 :     return ok;</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">          3 : }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        277 : bool AudioFile::deleteFiles (Engine&amp; engine, const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        278 : bool AudioFile::deleteFiles (Engine&amp; engine, const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
 <a name="126"><span class="lineNum">     126 </span>            :     bool allOK = true;</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">        277 :     for (auto&amp; f : files)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">        278 :     for (auto&amp; f : files)</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :         if (! AudioFile (engine, f).deleteFile())</span></a>
 <a name="130"><span class="lineNum">     130 </span>            :             allOK = false;</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        277 :     return allOK;</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        278 :     return allOK;</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : }</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 : bool AudioFile::isWavFile() const               { return file.hasFileExtension (&quot;wav;bwav;bwf&quot;); }</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 10:46:22</td>
+            <td class="headerValue">2023-06-12 12:13:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -76,10 +76,10 @@
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 : ChannelIndex::ChannelIndex() {}</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : </a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3294 : ChannelIndex::ChannelIndex (int index, juce::AudioChannelSet::ChannelType c)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3696 : ChannelIndex::ChannelIndex (int index, juce::AudioChannelSet::ChannelType c)</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     : indexInDevice (index), channel (c)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       3294 : }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       3696 : }</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 : bool ChannelIndex::operator== (const ChannelIndex&amp; other) const  { return indexInDevice == other.indexInDevice &amp;&amp; channel == other.channel; }</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 : bool ChannelIndex::operator!= (const ChannelIndex&amp; other) const  { return ! operator== (other); }</span></a>
@@ -102,14 +102,14 @@
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     return desc.toString();</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       1647 : juce::AudioChannelSet createChannelSet (const std::vector&lt;ChannelIndex&gt;&amp; channels)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       1848 : juce::AudioChannelSet createChannelSet (const std::vector&lt;ChannelIndex&gt;&amp; channels)</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : {</a>
 <a name="45"><span class="lineNum">      45 </span>            :     juce::AudioChannelSet channelSet;</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       4941 :     for (const auto&amp; ci : channels)</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       3294 :         channelSet.addChannel (ci.channel);</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       5544 :     for (const auto&amp; ci : channels)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       3696 :         channelSet.addChannel (ci.channel);</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1647 :     return channelSet;</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1848 :     return channelSet;</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">       6778 : juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::String&amp; abbreviatedName)</span></a>

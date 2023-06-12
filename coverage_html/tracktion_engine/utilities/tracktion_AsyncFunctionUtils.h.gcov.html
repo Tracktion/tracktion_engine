@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 10:46:22</td>
+            <td class="headerValue">2023-06-12 12:13:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -116,19 +116,19 @@
 <a name="54"><span class="lineNum">      54 </span>            : struct AsyncFunctionCaller  : private juce::AsyncUpdater</a>
 <a name="55"><span class="lineNum">      55 </span>            : {</a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Creates an empty AsyncFunctionCaller. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">       5036 :     AsyncFunctionCaller() = default;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">       5237 :     AsyncFunctionCaller() = default;</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Destructor. */</a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       5036 :     ~AsyncFunctionCaller() override</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       5036 :     {</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       5036 :         cancelPendingUpdate();</span></a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       5036 :     }</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       5237 :     ~AsyncFunctionCaller() override</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       5237 :     {</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       5237 :         cancelPendingUpdate();</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       5237 :     }</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     /** Adds a function and associates a functionID with it. */</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       8425 :     void addFunction (int functionID, const std::function&lt;void()&gt;&amp; f)</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       8626 :     void addFunction (int functionID, const std::function&lt;void()&gt;&amp; f)</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">       8425 :         functions[functionID] = { false, f };</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       8425 :     }</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">       8626 :         functions[functionID] = { false, f };</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       8626 :     }</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span>            :     /** Triggers an asyncronous call to one of the functions. */</a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineCov">       3489 :     void updateAsync (int functionID)</span></a>
@@ -181,7 +181,7 @@
 <a name="119"><span class="lineNum">     119 </span>            : class LambdaTimer   : public juce::Timer</a>
 <a name="120"><span class="lineNum">     120 </span>            : {</a>
 <a name="121"><span class="lineNum">     121 </span>            : public:</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">       6132 :     LambdaTimer() = default;</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">       9336 :     LambdaTimer() = default;</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span>            :     LambdaTimer (std::function&lt;void()&gt; newCallback)</a>
 <a name="125"><span class="lineNum">     125 </span>            :     {</a>
@@ -190,7 +190,7 @@
 <a name="128"><span class="lineNum">     128 </span>            : </a>
 <a name="129"><span class="lineNum">     129 </span>            :     void setCallback (std::function&lt;void()&gt; newCallback)</a>
 <a name="130"><span class="lineNum">     130 </span>            :     {</a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">       6132 :         callback = std::move (newCallback);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">       9336 :         callback = std::move (newCallback);</span></a>
 <a name="132"><span class="lineNum">     132 </span>            :     }</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         40 :     void timerCallback() override</span></a>
@@ -208,8 +208,8 @@
 <a name="146"><span class="lineNum">     146 </span>            : class MessageThreadCallback   : private juce::AsyncUpdater</a>
 <a name="147"><span class="lineNum">     147 </span>            : {</a>
 <a name="148"><span class="lineNum">     148 </span>            : public:</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">      15981 :     MessageThreadCallback() = default;</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">      31962 :     ~MessageThreadCallback() override       { cancelPendingUpdate(); }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">      16595 :     MessageThreadCallback() = default;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">      33190 :     ~MessageThreadCallback() override       { cancelPendingUpdate(); }</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            :     /** Returns true if the callback has completed. */</a>
 <a name="153"><span class="lineNum">     153 </span>            :     bool hasFinished() const noexcept       { return finished; }</a>
@@ -217,12 +217,12 @@
 <a name="155"><span class="lineNum">     155 </span>            :     /** Triggers the callback to happen on the message thread and blocks</a>
 <a name="156"><span class="lineNum">     156 </span>            :         until it has returned or the thread signals it should exit.</a>
 <a name="157"><span class="lineNum">     157 </span>            :     */</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">      15981 :     void triggerAndWaitForCallback()</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">      16595 :     void triggerAndWaitForCallback()</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :     {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">      15981 :         if (juce::MessageManager::getInstance()-&gt;isThisTheMessageThread())</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">      16595 :         if (juce::MessageManager::getInstance()-&gt;isThisTheMessageThread())</span></a>
 <a name="161"><span class="lineNum">     161 </span>            :         {</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">      15720 :             handleAsyncUpdate();</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">      15720 :             return;</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">      16334 :             handleAsyncUpdate();</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">      16334 :             return;</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :         }</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineCov">        261 :         triggerAsyncUpdate();</span></a>
@@ -243,8 +243,8 @@
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">        261 :         if (auto thread = juce::Thread::getCurrentThread())</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :         {</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        522 :             while (! (thread-&gt;threadShouldExit() || hasFinished()))</span></a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        261 :                 waiter.wait (50);</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">        523 :             while (! (thread-&gt;threadShouldExit() || hasFinished()))</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">        262 :                 waiter.wait (50);</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :             </a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineCov">        261 :             if (thread-&gt;threadShouldExit())</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :             {</a>
@@ -272,18 +272,18 @@
 <a name="210"><span class="lineNum">     210 </span>            :     std::atomic&lt;bool&gt; finished { false }, hasBeenCancelled { false };</a>
 <a name="211"><span class="lineNum">     211 </span>            :     juce::WaitableEvent waiter;</a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">      15981 :     void handleAsyncUpdate() override</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">      16595 :     void handleAsyncUpdate() override</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :     {</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">      15981 :         CRASH_TRACER</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">      16595 :         CRASH_TRACER</span></a>
 <a name="216"><span class="lineNum">     216 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="217"><span class="lineNum">     217 </span>            :         </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">      15981 :         if (hasBeenCancelled)</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">      16595 :         if (hasBeenCancelled)</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :             return;</a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">      15981 :         performAction();</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">      16595 :         performAction();</span></a>
 <a name="222"><span class="lineNum">     222 </span>            :         finished = true;</a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      15981 :         waiter.signal();</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      15981 :     }</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      16595 :         waiter.signal();</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      16595 :     }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MessageThreadCallback)</a>
 <a name="227"><span class="lineNum">     227 </span>            : };</a>
@@ -291,21 +291,21 @@
 <a name="229"><span class="lineNum">     229 </span>            : //==============================================================================</a>
 <a name="230"><span class="lineNum">     230 </span>            : struct BlockingFunction  : public MessageThreadCallback</a>
 <a name="231"><span class="lineNum">     231 </span>            : {</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      15981 :     BlockingFunction (std::function&lt;void()&gt; f)  : fn (f) {}</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      16595 :     BlockingFunction (std::function&lt;void()&gt; f)  : fn (f) {}</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span>            : private:</a>
 <a name="235"><span class="lineNum">     235 </span>            :     std::function&lt;void()&gt; fn;</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      15981 :     void performAction() override    { fn(); }</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      16595 :     void performAction() override    { fn(); }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
 <a name="238"><span class="lineNum">     238 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockingFunction)</a>
 <a name="239"><span class="lineNum">     239 </span>            : };</a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      15981 : inline bool callBlocking (std::function&lt;void()&gt; f)</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      16595 : inline bool callBlocking (std::function&lt;void()&gt; f)</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : {</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">      15981 :     BlockingFunction bf (f);</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      15981 :     bf.triggerAndWaitForCallback();</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      15981 :     return bf.hasFinished();</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">      15981 : }</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">      16595 :     BlockingFunction bf (f);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      16595 :     bf.triggerAndWaitForCallback();</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      16595 :     return bf.hasFinished();</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">      16595 : }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

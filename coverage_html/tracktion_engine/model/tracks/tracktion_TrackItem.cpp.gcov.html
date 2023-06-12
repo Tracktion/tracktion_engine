@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 10:46:22</td>
+            <td class="headerValue">2023-06-12 12:13:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -73,14 +73,14 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">      23727 : TrackItem::TrackItem (Edit&amp; ed, EditItemID id, Type t)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      24005 :     : EditItem (id, ed), type (t)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">      23728 : TrackItem::TrackItem (Edit&amp; ed, EditItemID id, Type t)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">      24007 :     : EditItem (id, ed), type (t)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">      23450 : }</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">      24005 : TrackItem::~TrackItem()</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">      24007 : TrackItem::~TrackItem()</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      24005 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      24007 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 : const char* TrackItem::typeToString (TrackItem::Type t)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : {</a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span>            : }</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">        253 : BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    7346723 : BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    7346819 : BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }</span></a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">        127 : BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">        119 : BeatDuration TrackItem::getOffsetInBeats() const     { return BeatDuration::fromBeats (getPosition().getOffset().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart())); }</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
