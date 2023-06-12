@@ -68,6 +68,9 @@ public:
     //==============================================================================
     NodeProperties getNodeProperties() override
     {
+        if (cachedNodeProperties)
+            return *cachedNodeProperties;
+
         NodeProperties props;
         props.hasAudio = false;
         props.hasMidi = false;
@@ -82,6 +85,9 @@ public:
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
+
+        if (isPrepared)
+            cachedNodeProperties = props;
 
         return props;
     }
@@ -111,6 +117,8 @@ public:
         if (useDoublePrecision)
             tempDoubleBuffer.resize ({ (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels,
                                        (choc::buffer::FrameCount) info.blockSize });
+
+        isPrepared = true;
     }
 
     bool isReadyToProcess() override
@@ -134,7 +142,10 @@ private:
     //==============================================================================
     std::vector<std::unique_ptr<Node>> ownedNodes;
     std::vector<Node*> nodes;
-    
+
+    std::optional<NodeProperties> cachedNodeProperties;
+    bool isPrepared = false;
+
     bool useDoublePrecision = false;
     choc::buffer::ChannelArrayBuffer<double> tempDoubleBuffer;
     
