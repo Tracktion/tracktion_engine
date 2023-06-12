@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 14:48:45</td>
+            <td class="headerValue">2023-06-12 16:04:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -131,13 +131,13 @@
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : int PatchBayPlugin::getNumWires() const                           { return list-&gt;objects.size(); }</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 : PatchBayPlugin::Wire* PatchBayPlugin::getWire (int index) const   { return list-&gt;objects[index]; }</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">     743029 : void PatchBayPlugin::getChannelNames (juce::StringArray* ins,</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">     230600 : void PatchBayPlugin::getChannelNames (juce::StringArray* ins,</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :                                       juce::StringArray* outs)</a>
 <a name="74"><span class="lineNum">      74 </span>            : {</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">     743029 :     if (baseClassNeedsInitialising())</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">     230600 :     if (baseClassNeedsInitialising())</span></a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :         cacheInputAndOutputPlugins();</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">     743029 :     if (ins != nullptr)</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">     230600 :     if (ins != nullptr)</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :         if (inputPlugin != nullptr &amp;&amp; ! recursionCheck)</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
@@ -153,22 +153,22 @@
 <a name="91"><span class="lineNum">      91 </span>            :         }</a>
 <a name="92"><span class="lineNum">      92 </span>            :     }</a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">     743029 :     if (outs != nullptr)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">     230600 :     if (outs != nullptr)</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     657429 :         if (outputPlugin != nullptr &amp;&amp; ! recursionCheck)</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     145000 :         if (outputPlugin != nullptr &amp;&amp; ! recursionCheck)</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :         {</a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">     657429 :             juce::StringArray in;</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">     657429 :             recursionCheck = true;</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">     657429 :             outputPlugin-&gt;getChannelNames (&amp;in, nullptr);</span></a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineCov">     657429 :             recursionCheck = false;</span></a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     657429 :             outs-&gt;addArray (in);</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">     145000 :             juce::StringArray in;</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">     145000 :             recursionCheck = true;</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">     145000 :             outputPlugin-&gt;getChannelNames (&amp;in, nullptr);</span></a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">     145000 :             recursionCheck = false;</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     145000 :             outs-&gt;addArray (in);</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :         }</a>
 <a name="104"><span class="lineNum">     104 </span>            :         else</a>
 <a name="105"><span class="lineNum">     105 </span>            :         {</a>
 <a name="106"><span class="lineNum">     106 </span><span class="lineCov">      85600 :             getLeftRightChannelNames (outs);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :         }</a>
 <a name="108"><span class="lineNum">     108 </span>            :     }</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     743029 : }</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     230600 : }</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">       1000 : void PatchBayPlugin::initialise (const PluginInitialisationInfo&amp;)</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>

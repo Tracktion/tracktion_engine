@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">18</td>
             <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntryLo">74.1 %</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-12 14:48:45</td>
+            <td class="headerValue">2023-06-12 16:04:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -79,13 +79,13 @@
 <a name="17"><span class="lineNum">      17 </span>            :                           AuxSendPlugin&amp; sourceSendPlugin, tracktion::graph::PlayHeadState&amp; phs,</a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">        602 :                           const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :     : SendNode (std::move (inputNode), busIDToUse,</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1832 :                 [&amp;sourceSendPlugin, trackMuteState, processAuxSendsWhenTrackIsMuted]</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1036 :                 [&amp;sourceSendPlugin, trackMuteState, processAuxSendsWhenTrackIsMuted]</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :                 {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1832 :                     if (processAuxSendsWhenTrackIsMuted)</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1036 :                     if (processAuxSendsWhenTrackIsMuted)</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :                     {</a>
 <a name="24"><span class="lineNum">      24 </span>            :                         if (trackMuteState</a>
 <a name="25"><span class="lineNum">      25 </span>            :                             &amp;&amp; ! trackMuteState-&gt;shouldTrackBeAudible()</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">       1832 :                             &amp;&amp; ! trackMuteState-&gt;shouldTrackContentsBeProcessed())</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">       1036 :                             &amp;&amp; ! trackMuteState-&gt;shouldTrackContentsBeProcessed())</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :                            return 0.0f;</a>
 <a name="28"><span class="lineNum">      28 </span>            :                     }</a>
 <a name="29"><span class="lineNum">      29 </span>            :                     else</a>
@@ -96,8 +96,8 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :                            return 0.0f;</span></a>
 <a name="35"><span class="lineNum">      35 </span>            :                     }</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">        796 :                     auto gain = volumeFaderPositionToGain (sourceSendPlugin.gain-&gt;getCurrentValue());</span></a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">        796 :                     if (sourceSendPlugin.invertPhase)</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :                     auto gain = volumeFaderPositionToGain (sourceSendPlugin.gain-&gt;getCurrentValue());</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :                     if (sourceSendPlugin.invertPhase)</span></a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :                         gain *= -1.0f;</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :                     return gain;</a>
