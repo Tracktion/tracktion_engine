@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-07 21:29:53</td>
+            <td class="headerValue">2023-06-12 10:46:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -105,7 +105,7 @@
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">        106 :                     + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? &quot;, MT&quot; : &quot;, ST&quot;);</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :         </a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">         50 :         if (opts.isMultiThreaded == MultiThreaded::yes &amp;&amp; opts.isLockFree == LockFree::yes)</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         19 :             s &lt;&lt; &quot;, lock-free&quot;;</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         43 :             s &lt;&lt; &quot;, lock-free&quot;;</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">         50 :         if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)</span></a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineCov">          5 :             s &lt;&lt; &quot;, pooled-memory&quot;;</span></a>
@@ -198,21 +198,21 @@
 <a name="136"><span class="lineNum">     136 </span>            :         //===</a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">         36 :         if (opts.isLockFree == LockFree::yes)</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :         {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">         40 :             tracktion::graph::test_utilities::TestProcess&lt;TracktionNodePlayer&gt; testContext (std::make_unique&lt;TracktionNodePlayer&gt; (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">         20 :                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         40 :                                                                                            opts.testSetup, 2, opts.edit-&gt;getLength().inSeconds(), false);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">         68 :             tracktion::graph::test_utilities::TestProcess&lt;TracktionNodePlayer&gt; testContext (std::make_unique&lt;TracktionNodePlayer&gt; (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">         34 :                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         68 :                                                                                            opts.testSetup, 2, opts.edit-&gt;getLength().inSeconds(), false);</span></a>
 <a name="142"><span class="lineNum">     142 </span>            :             </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         20 :             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         34 :             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);</a>
 <a name="145"><span class="lineNum">     145 </span>            :                 </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">         20 :             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">         20 :         }</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">         34 :             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">         34 :         }</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :         else</a>
 <a name="149"><span class="lineNum">     149 </span>            :         {</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">         16 :             tracktion::graph::test_utilities::TestProcess&lt;MultiThreadedNodePlayer&gt; testContext (std::make_unique&lt;MultiThreadedNodePlayer&gt; (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">         32 :                                                                                                 opts.testSetup, 2, opts.edit-&gt;getLength().inSeconds(), false);</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">         16 :             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">         16 :         }</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          2 :             tracktion::graph::test_utilities::TestProcess&lt;MultiThreadedNodePlayer&gt; testContext (std::make_unique&lt;MultiThreadedNodePlayer&gt; (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          4 :                                                                                                 opts.testSetup, 2, opts.edit-&gt;getLength().inSeconds(), false);</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">          2 :             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">          2 :         }</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :         </a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">         36 :         ut.beginTest (opts.editName + &quot; - cleanup: &quot; + description);</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :         // This is deliberately empty as RAII will take care of cleanup</a>

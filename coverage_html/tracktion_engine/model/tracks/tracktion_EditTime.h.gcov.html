@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-07 21:29:53</td>
+            <td class="headerValue">2023-06-12 10:46:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -178,7 +178,7 @@
 <a name="116"><span class="lineNum">     116 </span>            :     /** Returns the length. */</a>
 <a name="117"><span class="lineNum">     117 </span>            :     TimeDuration getLength() const            { return time.getLength(); }</a>
 <a name="118"><span class="lineNum">     118 </span>            :     /** Returns the offset. */</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">      10484 :     TimeDuration getOffset() const            { return offset; }</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">      10468 :     TimeDuration getOffset() const            { return offset; }</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :     /** Returns what would be the the start of the source material in the timeline. */</a>
 <a name="121"><span class="lineNum">     121 </span>            :     TimePosition getStartOfSource() const     { return time.getStart() - offset; }</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
@@ -207,21 +207,21 @@
 <a name="145"><span class="lineNum">     145 </span>            :     template&lt;&gt;</a>
 <a name="146"><span class="lineNum">     146 </span>            :     struct VariantConverter&lt;tracktion::core::TimePosition&gt;</a>
 <a name="147"><span class="lineNum">     147 </span>            :     {</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      23493 :         static tracktion::core::TimePosition fromVar (const var&amp; v)   { return tracktion::core::TimePosition::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      23489 :         static tracktion::core::TimePosition fromVar (const var&amp; v)   { return tracktion::core::TimePosition::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">         37 :         static var toVar (tracktion::core::TimePosition v)            { return v.inSeconds(); }</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     };</a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            :     template&lt;&gt;</a>
 <a name="153"><span class="lineNum">     153 </span>            :     struct VariantConverter&lt;tracktion::core::TimeDuration&gt;</a>
 <a name="154"><span class="lineNum">     154 </span>            :     {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">      47007 :         static tracktion::core::TimeDuration fromVar (const var&amp; v)   { return tracktion::core::TimeDuration::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">      46999 :         static tracktion::core::TimeDuration fromVar (const var&amp; v)   { return tracktion::core::TimeDuration::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">        100 :         static var toVar (tracktion::core::TimeDuration v)            { return v.inSeconds(); }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            :     };</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span>            :     template&lt;&gt;</a>
 <a name="160"><span class="lineNum">     160 </span>            :     struct VariantConverter&lt;tracktion::core::BeatPosition&gt;</a>
 <a name="161"><span class="lineNum">     161 </span>            :     {</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">        940 :         static tracktion::core::BeatPosition fromVar (const var&amp; v)   { return tracktion::core::BeatPosition::fromBeats (static_cast&lt;double&gt; (v)); }</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">        928 :         static tracktion::core::BeatPosition fromVar (const var&amp; v)   { return tracktion::core::BeatPosition::fromBeats (static_cast&lt;double&gt; (v)); }</span></a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">         55 :         static var toVar (tracktion::core::BeatPosition v)            { return v.inBeats(); }</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :     };</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>

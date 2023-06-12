@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-07 21:29:53</td>
+            <td class="headerValue">2023-06-12 10:46:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -238,30 +238,30 @@
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :             std::atomic&lt;bool&gt; shouldExit { false };</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">         21 :             for (int threadNum = 0; threadNum &lt; numThreads; ++threadNum)</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">    2154021 :                 pool.emplace_back ([&amp;shouldExit]</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">    2325295 :                 pool.emplace_back ([&amp;shouldExit]</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :                                    {</a>
 <a name="181"><span class="lineNum">     181 </span>            :                                        const size_t maxSize = 100'000;</a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">         20 :                                        juce::Random r;</span></a>
 <a name="183"><span class="lineNum">     183 </span>            :                                        std::vector&lt;int, rpallocator&lt;int&gt;&gt; vec;</a>
 <a name="184"><span class="lineNum">     184 </span>            :                     </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    2154001 :                                        while (! shouldExit)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">    2325275 :                                        while (! shouldExit)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :                                        {</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">    2153981 :                                            const bool remove = r.nextBool() || vec.size() &gt;= maxSize;</span></a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">    1881899 :                                            const auto num = (size_t) r.nextInt ({ 5, 6 + r.nextInt (5) });</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">    2325255 :                                            const bool remove = r.nextBool() || vec.size() &gt;= maxSize;</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">    2082375 :                                            const auto num = (size_t) r.nextInt ({ 5, 6 + r.nextInt (5) });</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    2180704 :                                            if (remove)</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    2353709 :                                            if (remove)</span></a>
 <a name="191"><span class="lineNum">     191 </span>            :                                            {</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">    1154222 :                                                const auto numToRemove = std::min (num, vec.size());</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">    1242459 :                                                const auto numToRemove = std::min (num, vec.size());</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :                                                </a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    3741541 :                                                for (size_t i = 0; i &lt; numToRemove; ++i)</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">    3864705 :                                                for (size_t i = 0; i &lt; numToRemove; ++i)</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :                                                    vec.pop_back();</a>
 <a name="196"><span class="lineNum">     196 </span>            :                                            }</a>
 <a name="197"><span class="lineNum">     197 </span>            :                                            else</a>
 <a name="198"><span class="lineNum">     198 </span>            :                                            {</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">    1026482 :                                                const auto numToAdd = (size_t) r.nextInt ({ 5, 6 + r.nextInt (5) });</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">    1111250 :                                                const auto numToAdd = (size_t) r.nextInt ({ 5, 6 + r.nextInt (5) });</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    6804863 :                                                for (size_t i = 0; i &lt; numToAdd; ++i)</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    5805104 :                                                    vec.push_back (r.nextInt());</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    7273065 :                                                for (size_t i = 0; i &lt; numToAdd; ++i)</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    6190269 :                                                    vec.push_back (r.nextInt());</span></a>
 <a name="203"><span class="lineNum">     203 </span>            :                                            }</a>
 <a name="204"><span class="lineNum">     204 </span>            :                                        }</a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
