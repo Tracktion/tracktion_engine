@@ -471,7 +471,6 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             
             preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
             numNodesQueued.fetch_add (1, std::memory_order_release);
-            threadPool->signalOne();
         }
     }
 

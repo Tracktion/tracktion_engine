@@ -358,14 +358,13 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
 
-            // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread
+            // If there is only one Node or we're at the last Node we can return this to be processed by the same thread
             if (playbackNode->outputs.size() == 1
                 || output == playbackNode->outputs.back())
                return &outputPlaybackNode->node;
 
             preparedNode.nodesReadyToBeProcessed->try_enqueue (&outputPlaybackNode->node);
             numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
-            threadPool->signalOne();
         }
     }
 
