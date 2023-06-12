@@ -117,13 +117,12 @@ private:
 
                 if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (plugin.get()))
                 {
-                    returnPlugin->busNumber.setValue (trackIndex == 0 ? commonBusNumber : trackIndex, nullptr);
+                    returnPlugin->busNumber.setValue (trackIndex, nullptr);
                 }
                 else if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (plugin.get()))
                 {
-                    // Sending all sends to the same return is approximately 3x more time compared to sending each to
-                    // a different return:
-                    // sendPlugin->busNumber.setValue(trackIndex, nullptr);
+                    // Sending all sends to the same return is approximately 3x more time
+                    // compared to sending each to a different return:
                     sendPlugin->busNumber.setValue (commonBusNumber, nullptr);
                 }
 
