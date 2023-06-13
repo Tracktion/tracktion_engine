@@ -27,6 +27,8 @@ jobs:
             - run_target: true
             - run_target: false
               target: EngineInPluginDemo
+            - run_target: false
+              target: DemoRunner
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -54,16 +56,13 @@ jobs:
 
           if [ "${{ matrix.name }}" = 'windows' ]; then
             echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
-          elif [ "${{ matrix.name }}" = 'linux' ] || [ "${{ matrix.target }}" = 'TestRunner' ] || [ "${{ matrix.target }}" = 'Benchmarks' ]; then
+          else
             echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
-          elif [ "${{ matrix.name }}" = 'macOS' ] && [ "${{ matrix.target }}" = 'DemoRunner' ]; then
-                echo "APP_EXE=${{ matrix.target }}/Contents/MacOS/${{ matrix.target }}" >> $GITHUB_ENV
           fi
-
-          echo "APP_EXE: $APP_EXE" 
 
       # Generate build files
       - name: "Generate Build Files"
+        id: generate
         shell: bash
         run: |
           cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }}
@@ -94,7 +93,7 @@ jobs:
 
       # Upload test results
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: steps.generate.outcome == 'success'
         with:
           name: test_results_${{ matrix.name }}
           path: ./bin/test_results/**/TEST-*.xml
