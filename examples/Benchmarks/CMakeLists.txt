@@ -90,11 +90,6 @@ endif()
 # If we are compiling for Linux specify the arch to enable sse and avx instructions
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_compile_options(${TARGET_NAME} PRIVATE "-march=sandybridge")
-
-    # Default to release for this benchmarking project
-    if(NOT CMAKE_BUILD_TYPE)
-      set(CMAKE_BUILD_TYPE Release)
-    endif()
 endif()
     
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
