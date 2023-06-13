@@ -30,20 +30,22 @@ jobs:
             - run_target: false
               target: DemoRunner
             - name: macOS_asan
+              target: TestRunner
               os: macos-latest
               generator: "-G Xcode"
               asan_cmake_args: "-- -enableAddressSanitizer YES"
               tests_file_suffix: "_asan"
             - name: macOS_tsan
+              target: TestRunner
               os: macos-latest
               generator: "-G Xcode"
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
               tests_file_suffix: "_tsan"
             - name: macOS_analyse
+              target: TestRunner
               os: macos-latest
               generator: "-G Xcode"
               analyse: true
-
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -215,30 +217,30 @@ jobs:
 
   #         ./tests/build
 
-  # # Upload test results
-  # deploy:
-  #   if: always()
-  #   needs: build_and_test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get Artifacts
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         path: ./
+  # Upload test results
+  deploy:
+    if: always()
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
 
-  #     - name: Display structure of downloaded files
-  #       run: ls -la
+      - name: Display structure of downloaded files
+        run: ls -la
     
-  #     - name: Publish Unit Test Results
-  #       uses: EnricoMi/publish-unit-test-result-action@v1.6
-  #       with:
-  #         check_name: Unit Test Results
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         files: ./**/TEST-*.xml
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.6
+        with:
+          check_name: Unit Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./**/TEST-*.xml
 
-  #     - name: Publish Performance Test Results
-  #       uses: EnricoMi/publish-unit-test-result-action@v1.6
-  #       with:
-  #         check_name: Performance Test Results
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         files: ./**/TEST-*PerformanceTests*.xml
+      - name: Publish Performance Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.6
+        with:
+          check_name: Performance Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ./**/TEST-*PerformanceTests*.xml
