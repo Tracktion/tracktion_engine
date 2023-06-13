@@ -16,7 +16,7 @@ jobs:
       matrix:
           name: [ linux, macOS, windows ]
           target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
-          run_target: true
+          run_target: [ true ]
           include:
             - name: linux
               os: linux-latest
@@ -26,7 +26,6 @@ jobs:
             - name: windows
               os: windows-latest
             - target: EngineInPluginDemo
-              run_target: false
 
     runs-on: ${{ matrix.os }}
     steps:
