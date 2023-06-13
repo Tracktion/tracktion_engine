@@ -16,14 +16,14 @@ jobs:
       matrix:
           name: [ linux, macOS, windows ]
           target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
-        include:
-          - name: linux
-            os: linux-latest
-          - name: macOS
-            os: macos-latest
-            generator: "-G Xcode"
-          - name: windows
-            os: windows-latest
+          include:
+            - name: linux
+              os: linux-latest
+            - name: macOS
+              os: macos-latest
+              generator: "-G Xcode"
+            - name: windows
+              os: windows-latest
 
     runs-on: ${{ matrix.os }}
     steps:
