@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME DemoRunner)
 
-if (DEFINED CMAKE_PROJECT_NAME)
-    message ("Adding ${TARGET_NAME} to the ${CMAKE_PROJECT_NAME} project")
+if (DEFINED PROJECT_NAME)
+    message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
 else()
     file(READ ../../VERSION.md CURRENT_VERSION)
     project(${TARGET_NAME} VERSION ${CURRENT_VERSION})
@@ -70,12 +70,6 @@ if (DEFINED ENV{VST2_SDK_DIR})
         JUCE_PLUGINHOST_VST=1)
 endif()
 
-target_include_directories(${TARGET_NAME} PRIVATE
-    "/Users/dave/Documents/Developement/Code/Tracktion/waveform/waveform/common/Source/3rd_party/")
-target_include_directories(${TARGET_NAME} PRIVATE
-    "/Users/dave/Documents/Developement/Code/Tracktion/waveform/waveform/common/Source/3rd_party/link/include")
-target_include_directories(${TARGET_NAME} PRIVATE
-    "/Users/dave/Documents/Developement/Code/Tracktion/waveform/waveform/common/Source/3rd_party/boost_asio/asio/include")
 
 target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_PLUGINHOST_AU=1
@@ -88,23 +82,7 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_STRICT_REFCOUNTEDPOINTER=1
-    # TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
-    TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE=1
-    TRACKTION_ENABLE_ABLETON_LINK=1) # Enable this if you have the Ableton Link SDK present
-
-function(add_elastique_lib name location)
-    add_library(${name} STATIC IMPORTED)
-    set_target_properties(${name} PROPERTIES
-        IMPORTED_LOCATION
-        "/Users/dave/Documents/Developement/Code/Tracktion/waveform/waveform/common/Source/3rd_party/elastique_pro/lib/osx/$(CURRENT_ARCH)/${location}")
-endfunction()
-
-add_elastique_lib(elastique_efficient       libelastiqueEfficient.a)
-add_elastique_lib(elastique_pro             libelastiquePro.a)
-add_elastique_lib(elastique_resample        libResample.a)
-add_elastique_lib(elastique_soloist         libelastiqueSOLOIST.a)
-add_elastique_lib(elastique_zplaudiofile    libzplAudioFile.a)
-add_elastique_lib(elastique_zplveclib       libzplVecLib.a)
+    TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     tracktion::tracktion_core
@@ -113,12 +91,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     juce::juce_audio_devices
     juce::juce_audio_processors
     juce::juce_audio_utils
-    elastique_efficient
-    elastique_pro
-    elastique_resample
-    elastique_soloist
-    elastique_zplaudiofile
-    elastique_zplveclib
     juce::juce_recommended_warning_flags
     ${TARGET_NAME}BinaryData)
 

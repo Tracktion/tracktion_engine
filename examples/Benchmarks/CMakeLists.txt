@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME Benchmarks)
 
-if (DEFINED CMAKE_PROJECT_NAME)
-    message ("Adding ${TARGET_NAME} to the ${CMAKE_PROJECT_NAME} project")
+if (DEFINED PROJECT_NAME)
+    message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
 else()
     file(READ ../../VERSION.md CURRENT_VERSION)
     project(${TARGET_NAME} VERSION ${CURRENT_VERSION})

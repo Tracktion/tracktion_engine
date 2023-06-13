@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME EngineInPluginDemo)
 
-if (DEFINED CMAKE_PROJECT_NAME)
-    message ("Adding ${TARGET_NAME} to the ${CMAKE_PROJECT_NAME} project")
+if (DEFINED PROJECT_NAME)
+    message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
 else()
     project(${TARGET_NAME} VERSION 1.0.0)
     add_subdirectory(../../modules/juce ./tmp/cmake_build_juce)
