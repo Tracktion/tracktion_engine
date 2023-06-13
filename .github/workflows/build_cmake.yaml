@@ -16,6 +16,7 @@ jobs:
       matrix:
           name: [ linux, macOS, windows ]
           target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
+          run: [ true ]
           include:
             - name: linux
               os: linux-latest
@@ -24,6 +25,8 @@ jobs:
               generator: "-G Xcode"
             - name: windows
               os: windows-latest
+            - target: EngineInPluginDemo
+              run: false
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -47,20 +50,20 @@ jobs:
           ls -la
           VERSION=$(cat VERSION.md)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "APP_DIR=${{ env.BUILD_DIR }}/${{ env.BINARY_NAME }}_artefacts/${{ env.BUILD_TYPE }}" >> $GITHUB_ENV
+          echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
 
-          if [ ${{ matrix.platform }} = 'DemoRunner' ]; then
-            if [ ${{ matrix.platform }} = 'linux' ]; then
+          if [ ${{ matrix.platform == 'DemoRunner' }} ]; then
+            if [ ${{ matrix.platform == 'linux' }} ]; then
               echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform }} = 'macOS' ]; then
+            elif [ ${{ matrix.platform == 'macOS' }} ]; then
               echo "APP_EXE=${{ matrix.target }}/Contents/MacOS/${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform }} = 'windows' ]; then
+            elif [ ${{ matrix.platform == 'windows' }} ]; then
               echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
             fi
-          elif [ ${{ matrix.platform }} = 'TestRunner' ] || [ ${{ matrix.platform }} = 'Benchmarks' ]; then
-            if [ ${{ matrix.platform }} = 'linux' ] || [ ${{ matrix.platform }} = 'macOS' ]; then
+          elif [ ${{ matrix.platform == 'TestRunner' }} ] || [ ${{ matrix.platform == 'Benchmarks' }} ]; then
+            if [ ${{ matrix.platform == 'linux' }} ] || [ ${{ matrix.platform == 'macOS' }} ]; then
               echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform }} = 'windows' ]; then
+            elif [ ${{ matrix.platform == 'windows' }} ]; then
               echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
             fi
           fi
@@ -88,11 +91,12 @@ jobs:
 
       # Run products
       - name: "Run products"
+        if: ${{ matrix.run }}
         shell: bash
         env:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
-          cd ${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}
+          cd ${{ env.APP_DIR }}
           ${{ env.APP_EXE }}
 
       # Upload test results
