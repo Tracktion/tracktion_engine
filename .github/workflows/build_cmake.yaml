@@ -16,7 +16,7 @@ jobs:
       matrix:
           name: [ linux, macOS, windows ]
           target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
-          run: [ true ]
+          run_target: [ true ]
           include:
             - name: linux
               os: linux-latest
@@ -26,7 +26,7 @@ jobs:
             - name: windows
               os: windows-latest
             - target: EngineInPluginDemo
-              run: false
+              run_target: false
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -91,7 +91,7 @@ jobs:
 
       # Run products
       - name: "Run products"
-        if: ${{ matrix.run }}
+        if: ${{ matrix.run_target }}
         shell: bash
         env:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
