@@ -39,6 +39,7 @@ jobs:
               run_target: true
               asan_cmake_args: "-- -enableAddressSanitizer YES"
               tests_file_suffix: "_asan"
+              schedule_only: true
             - name: macOS_asan
               target: Benchmarks
               os: macos-latest
@@ -46,6 +47,7 @@ jobs:
               run_target: true
               asan_cmake_args: "-- -enableAddressSanitizer YES"
               tests_file_suffix: "_asan"
+              schedule_only: true
             - name: macOS_tsan
               target: TestRunner
               os: macos-latest
@@ -53,6 +55,7 @@ jobs:
               run_target: true
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
               tests_file_suffix: "_tsan"
+              schedule_only: true
             - name: macOS_tsan
               target: Benchmarks
               os: macos-latest
@@ -60,6 +63,7 @@ jobs:
               run_target: true
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
               tests_file_suffix: "_tsan"
+              schedule_only: true
             - name: macOS_analyse
               target: TestRunner
               os: macos-latest
@@ -72,6 +76,7 @@ jobs:
               analyse: true
 
     runs-on: ${{ matrix.os }}
+    if: ${{ ! matrix.schedule_only || github.event_name == 'schedule' }}
     steps:
       # Install dependencies
       - name: Install dependencies
