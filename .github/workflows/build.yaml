@@ -25,6 +25,7 @@ jobs:
             - name: windows
               os: windows-latest
             - run_target: true
+            - publish_benchmark: true
             - run_target: false
               target: EngineInPluginDemo
             - run_target: false
@@ -48,7 +49,6 @@ jobs:
               os: macos-latest
               generator: "-G Xcode"
               analyse: true
-              # github.event_name == 'schedule'
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -121,7 +121,7 @@ jobs:
         if: ${{ matrix.run_target && ! matrix.analyse }}
         shell: bash
         env:
-          BM_API_KEY: ${{ secrets.BM_API_KEY }}
+          BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || "" }}
         run: |
           ROOT=$(cd "$(dirname "$0")"; pwd)
           ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}${{ matrix.tests_file_suffix }}.xml"
