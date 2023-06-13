@@ -29,17 +29,17 @@ jobs:
               target: EngineInPluginDemo
             - run_target: false
               target: DemoRunner
-            - name: macOS
+            - name: macOS_asan
               os: macos-latest
               generator: "-G Xcode"
               asan_cmake_args: "-- -enableAddressSanitizer YES"
               tests_file_suffix: "_asan"
-            - name: macOS
+            - name: macOS_tsan
               os: macos-latest
               generator: "-G Xcode"
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
               tests_file_suffix: "_tsan"
-            - name: macOS
+            - name: macOS_analyse
               os: macos-latest
               generator: "-G Xcode"
               analyse: true
