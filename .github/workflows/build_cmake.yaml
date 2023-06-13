@@ -32,11 +32,13 @@ jobs:
             - name: macOS
               os: macos-latest
               generator: "-G Xcode"
-              tsan_args: "-- -enableAddressSanitizer YES"
+              asan_cmake_args: "-- -enableAddressSanitizer YES"
+              tests_file_suffix: "_asan"
             - name: macOS
               os: macos-latest
               generator: "-G Xcode"
-              asan_args: "-- -enableThreadSanitizer YES"
+              tsan_cmake_args: "-- -enableThreadSanitizer YES"
+              tests_file_suffix: "_tsan"
             - name: macOS
               os: macos-latest
               generator: "-G Xcode"
@@ -94,7 +96,7 @@ jobs:
           fi
 
           cd ${{ env.BUILD_DIR }}
-          cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_args }} ${{ matrix.tsan_args }}
+          cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_cmake_args }} ${{ matrix.tsan_cmake_args }}
 
       # Static analyse
       - name: "Static analyse products"
@@ -112,7 +114,7 @@ jobs:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
           ROOT=$(cd "$(dirname "$0")"; pwd)
-          ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
+          ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}${{ matrix.tests_file_suffix }}.xml"
 
       # Upload test results
       - uses: actions/upload-artifact@v3
