@@ -220,7 +220,7 @@ jobs:
   # Upload test results
   deploy:
     if: always()
-    needs: build_and_test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
