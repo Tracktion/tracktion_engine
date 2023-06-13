@@ -29,6 +29,19 @@ jobs:
               target: EngineInPluginDemo
             - run_target: false
               target: DemoRunner
+            - name: macOS
+              os: macos-latest
+              generator: "-G Xcode"
+              tsan_args: "-- -enableAddressSanitizer YES"
+            - name: macOS
+              os: macos-latest
+              generator: "-G Xcode"
+              asan_args: "-- -enableThreadSanitizer YES"
+            - name: macOS
+              os: macos-latest
+              generator: "-G Xcode"
+              analyse: true
+
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -70,6 +83,7 @@ jobs:
       # Build products
       - name: "Build products"
         shell: bash
+        if: ${{ ! matrix.analyse }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -79,21 +93,30 @@ jobs:
             g++ -v
           fi
 
-          cd build
-          cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4
+          cd ${{ env.BUILD_DIR }}
+          cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_args }} ${{ matrix.tsan_args }}
+
+      # Static analyse
+      - name: "Static analyse products"
+        shell: bash
+        if: ${{ matrix.analyse }}
+        run: |
+          cd ${{ env.BUILD_DIR }}
+          xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO
 
       # Run products
       - name: "Run products"
-        if: ${{ matrix.run_target }}
+        if: ${{ matrix.run_target && ! matrix.analyse }}
         shell: bash
         env:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
-          ${{ env.APP_DIR }}/${{ env.APP_EXE }}
+          ROOT=$(cd "$(dirname "$0")"; pwd)
+          ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
 
       # Upload test results
       - uses: actions/upload-artifact@v3
-        if: steps.generate.outcome == 'success'
+        if: ${{ steps.generate.outcome == 'success' && ! matrix.analyse }}
         with:
           name: test_results_${{ matrix.name }}
           path: ./bin/test_results/**/TEST-*.xml
