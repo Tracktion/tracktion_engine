@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-13 15:02:37</td>
+            <td class="headerValue">2023-06-13 19:43:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">39</td>
@@ -682,7 +682,7 @@
 <a name="620"><span class="lineNum">     620 </span><span class="lineCov">        468 :                                       clip.getLiveClipLevel(),</span></a>
 <a name="621"><span class="lineNum">     621 </span>            :                                       params.processState,</a>
 <a name="622"><span class="lineNum">     622 </span><span class="lineCov">        234 :                                       clip.itemID,</span></a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineCov">    2467011 :                                       [&amp;trackMuteState]</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineCov">    2467012 :                                       [&amp;trackMuteState]</span></a>
 <a name="624"><span class="lineNum">     624 </span>            :                                       {</a>
 <a name="625"><span class="lineNum">     625 </span>            :                                           if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :                                               return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -1556,10 +1556,10 @@
 <a name="1494"><span class="lineNum">    1494 </span>            :     </a>
 <a name="1495"><span class="lineNum">    1495 </span><span class="lineCov">         58 :     if (edit.masterFadeIn &gt; 0_td || edit.masterFadeOut &gt; 0_td)</span></a>
 <a name="1496"><span class="lineNum">    1496 </span>            :     {</a>
-<a name="1497"><span class="lineNum">    1497 </span><span class="lineNoCov">          0 :         auto length = edit.getLength();</span></a>
+<a name="1497"><span class="lineNum">    1497 </span><span class="lineNoCov">          0 :         auto length = toPosition (edit.getLength());</span></a>
 <a name="1498"><span class="lineNum">    1498 </span>            :         return makeNode&lt;FadeInOutNode&gt; (std::move (node), params.processState,</a>
-<a name="1499"><span class="lineNum">    1499 </span><span class="lineNoCov">          0 :                                         TimeRange { TimePosition(), edit.masterFadeIn },</span></a>
-<a name="1500"><span class="lineNum">    1500 </span><span class="lineNoCov">          0 :                                         TimeRange { toPosition (length) - edit.masterFadeOut, length },</span></a>
+<a name="1499"><span class="lineNum">    1499 </span><span class="lineNoCov">          0 :                                         TimeRange { 0_tp, edit.masterFadeIn },</span></a>
+<a name="1500"><span class="lineNum">    1500 </span><span class="lineNoCov">          0 :                                         TimeRange { length - edit.masterFadeOut, length },</span></a>
 <a name="1501"><span class="lineNum">    1501 </span><span class="lineNoCov">          0 :                                         edit.masterFadeInType.get(),</span></a>
 <a name="1502"><span class="lineNum">    1502 </span><span class="lineNoCov">          0 :                                         edit.masterFadeOutType.get(),</span></a>
 <a name="1503"><span class="lineNum">    1503 </span><span class="lineNoCov">          0 :                                         true);</span></a>
