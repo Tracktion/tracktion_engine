@@ -75,7 +75,6 @@ jobs:
               generator: "-G Xcode"
               analyse: true
 
-    if: ${{ github.event_name == 'schedule' || matrix.os == 'macOS' }}
     runs-on: ${{ matrix.os }}
     steps:
       # Install dependencies
