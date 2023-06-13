@@ -10,7 +10,7 @@ env:
   BUILD_DIR: build
 
 jobs:
-  build_and_test:
+  test:
     strategy:
       fail-fast: false
       matrix:
