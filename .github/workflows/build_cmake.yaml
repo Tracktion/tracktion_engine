@@ -32,7 +32,7 @@ jobs:
     steps:
       # Install dependencies
       - name: Install dependencies
-        if: ${{ matrix.platform == 'linux' }}
+        if: ${{ matrix.name == 'linux' }}
         run: |
             sudo add-apt-repository ppa:ubuntu-toolchain-r/test
             sudo apt-get update
@@ -52,21 +52,15 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
 
-          if [ ${{ matrix.platform == 'DemoRunner' }} ]; then
-            if [ ${{ matrix.platform == 'linux' }} ]; then
-              echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform == 'macOS' }} ]; then
-              echo "APP_EXE=${{ matrix.target }}/Contents/MacOS/${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform == 'windows' }} ]; then
-              echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
-            fi
-          elif [ ${{ matrix.platform == 'TestRunner' }} ] || [ ${{ matrix.platform == 'Benchmarks' }} ]; then
-            if [ ${{ matrix.platform == 'linux' }} ] || [ ${{ matrix.platform == 'macOS' }} ]; then
-              echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
-            elif [ ${{ matrix.platform == 'windows' }} ]; then
-              echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
-            fi
+          if [ "${{ matrix.name }}" = 'windows' ]; then
+            echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
+          elif [ "${{ matrix.name }}" = 'linux' ] || [ "${{ matrix.target }}" = 'TestRunner' ] || [ "${{ matrix.target }}" = 'Benchmarks' ]; then
+            echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
+          elif [ "${{ matrix.name }}" = 'macOS' ] && [ "${{ matrix.target }}" = 'DemoRunner' ]; then
+                echo "APP_EXE=${{ matrix.target }}/Contents/MacOS/${{ matrix.target }}" >> $GITHUB_ENV
           fi
+
+          echo "APP_EXE: $APP_EXE" 
 
       # Generate build files
       - name: "Generate Build Files"
@@ -96,8 +90,7 @@ jobs:
         env:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
-          cd ${{ env.APP_DIR }}
-          ${{ env.APP_EXE }}
+          ${{ env.APP_DIR }}/${{ env.APP_EXE }}
 
       # Upload test results
       - uses: actions/upload-artifact@v3
