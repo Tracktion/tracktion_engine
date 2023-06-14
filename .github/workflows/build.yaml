@@ -132,7 +132,8 @@ jobs:
         env:
           BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
         run: |
-          ROOT=$(cd "$(dirname "$0")"; pwd)
+          ROOT=$(pwd)
+          echo $ROOT
           ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${{ matrix.target }}${{ matrix.tests_file_suffix }}.xml"
 
       # Upload test results
