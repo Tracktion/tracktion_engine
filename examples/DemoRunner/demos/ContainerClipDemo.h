@@ -13,7 +13,7 @@
 #include "../common/Utilities.h"
 #include "DistortionEffectDemo.h"
 #include "../common/PlaybackDemoAudio.h"
-#include "BinaryData.h"
+#include <BinaryData.h>
 
 using namespace tracktion_engine;
 

@@ -1494,10 +1494,10 @@ std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, s
     
     if (edit.masterFadeIn > 0_td || edit.masterFadeOut > 0_td)
     {
-        auto length = edit.getLength();
+        auto length = toPosition (edit.getLength());
         return makeNode<FadeInOutNode> (std::move (node), params.processState,
-                                        TimeRange { TimePosition(), edit.masterFadeIn },
-                                        TimeRange { toPosition (length) - edit.masterFadeOut, length },
+                                        TimeRange { 0_tp, edit.masterFadeIn },
+                                        TimeRange { length - edit.masterFadeOut, length },
                                         edit.masterFadeInType.get(),
                                         edit.masterFadeOutType.get(),
                                         true);

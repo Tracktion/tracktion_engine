@@ -15,11 +15,6 @@
  #pragma warning (disable: 4127)
 #endif
 
-namespace tracktion { inline namespace graph
-{
-#include "../3rd_party/farbot/include/farbot/fifo.hpp"
-}}
-
 #ifdef _MSC_VER
  #pragma warning (pop)
 #endif
@@ -44,14 +39,16 @@ private:
     {
     public:
         LockFreeFifo (int capacity)
-            : fifo (std::make_unique<farbot::fifo<Type>> (juce::nextPowerOfTwo (capacity)))
-        {}
+            : fifo (std::make_unique<choc::fifo::MultipleReaderMultipleWriterFIFO<Type>>())
+        {
+            fifo->reset ((size_t) capacity);
+        }
 
         bool try_enqueue (Type&& item)      { return fifo->push (std::move (item)); }
         bool try_dequeue (Type& item)       { return fifo->pop (item); }
 
     private:
-        std::unique_ptr<farbot::fifo<Type>> fifo;
+        std::unique_ptr<choc::fifo::MultipleReaderMultipleWriterFIFO<Type>> fifo;
     };
 
     struct PlaybackNode

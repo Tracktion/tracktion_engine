@@ -64,7 +64,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
         // Find the phase offset between tracktion
         // If this is 0 this means perfect phase, > 0 means link is ahead, < 0 means tracktion is ahead
-        auto offsetPhase = linkPhase - localPhase;
+        auto offsetPhase = circularDifference (linkPhase, localPhase);
         chaseProportion = offsetPhase;
 
         const auto offsetBeats = offsetPhase * numerator;
@@ -182,6 +182,16 @@ struct AbletonLink::ImplBase  : public juce::Timer
     static inline double negativeAwareFmod (double a, double b)
     {
         return a - b * std::floor (a / b);
+    }
+
+    static inline double circularDifference (double a, double b)
+    {
+        double diff = a - b;
+
+        if (diff < -0.5)    return diff + 1.0;
+        if (diff > 0.5)     return diff - 1.0;
+
+        return diff;
     }
 
     void setSpeedCompensation (double phaseProportion)

@@ -39,6 +39,7 @@ public:
         opts.testSetup = ts;
         opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
         opts.isMultiThreaded = MultiThreaded::no;
+        opts.isLockFree = LockFree::yes;
         opts.poolMemoryAllocations = PoolMemoryAllocations::no;
 
         bool singleFile = true;
@@ -224,7 +225,7 @@ private:
     }
 };
 
-static ResamplingBenchmarks resamplingBenchmarks;
+//dddstatic ResamplingBenchmarks resamplingBenchmarks;
 
 #endif
 
