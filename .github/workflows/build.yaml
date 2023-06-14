@@ -14,50 +14,50 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          name: [ linux, macOS, windows ]
-          target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
-          include:
-            # Main maxtix
-            - name: linux
-              os: ubuntu-latest
-            - name: macOS
-              os: macos-latest
-              generator: "-G Xcode"
-            - name: windows
-              os: windows-latest
-            - run_target: true
-            - publish_benchmark: true
-            - run_target: false
-              target: EngineInPluginDemo
-            - run_target: false
-              target: DemoRunner
-            # Extra tooled builds (outside of matrix)
-            - name: macOS_asan
-              target: TestRunner
-              os: macos-latest
-              generator: "-G Xcode"
-              run_target: true
-              asan_cmake_args: "-- -enableAddressSanitizer YES"
-              tests_file_suffix: "_asan"
-              schedule_only: true
-            - name: macOS_asan
-              target: Benchmarks
-              os: macos-latest
-              generator: "-G Xcode"
-              run_target: true
-              asan_cmake_args: "-- -enableAddressSanitizer YES"
-              tests_file_suffix: "_asan"
-              schedule_only: true
-            - name: macOS_analyse
-              target: TestRunner
-              os: macos-latest
-              generator: "-G Xcode"
-              analyse: true
-            - name: macOS_analyse
-              target: Benchmarks
-              os: macos-latest
-              generator: "-G Xcode"
-              analyse: true
+        name: [ linux, macOS, windows ]
+        target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
+        include:
+          # Main maxtix
+          - name: linux
+            os: ubuntu-latest
+          - name: macOS
+            os: macos-latest
+            generator: "-G Xcode"
+          - name: windows
+            os: windows-latest
+          - run_target: true
+          - publish_benchmark: true
+          - run_target: false
+            target: EngineInPluginDemo
+          - run_target: false
+            target: DemoRunner
+          # Extra tooled builds (outside of matrix)
+          - name: macOS_asan
+            target: TestRunner
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            tests_file_suffix: "_asan"
+            schedule_only: true
+          - name: macOS_asan
+            target: Benchmarks
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            tests_file_suffix: "_asan"
+            schedule_only: true
+          - name: macOS_analyse
+            target: TestRunner
+            os: macos-latest
+            generator: "-G Xcode"
+            analyse: true
+          - name: macOS_analyse
+            target: Benchmarks
+            os: macos-latest
+            generator: "-G Xcode"
+            analyse: true
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -149,24 +149,24 @@ tooled:
     strategy:
       fail-fast: false
       matrix:
-      include:
-        # Extra tooled builds (only run on sceduled builds)
-        - name: macOS_tsan
-          target: TestRunner
-          os: macos-latest
-          generator: "-G Xcode"
-          run_target: true
-          tsan_cmake_args: "-- -enableThreadSanitizer YES"
-          tests_file_suffix: "_tsan"
-          schedule_only: true
-        - name: macOS_tsan
-          target: Benchmarks
-          os: macos-latest
-          generator: "-G Xcode"
-          run_target: true
-          tsan_cmake_args: "-- -enableThreadSanitizer YES"
-          tests_file_suffix: "_tsan"
-          schedule_only: true
+        include:
+          # Extra tooled builds (only run on sceduled builds)
+          - name: macOS_tsan
+            target: TestRunner
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            tsan_cmake_args: "-- -enableThreadSanitizer YES"
+            tests_file_suffix: "_tsan"
+            schedule_only: true
+          - name: macOS_tsan
+            target: Benchmarks
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            tsan_cmake_args: "-- -enableThreadSanitizer YES"
+            tests_file_suffix: "_tsan"
+            schedule_only: true
 
     runs-on: ${{ matrix.os }}
     steps:
