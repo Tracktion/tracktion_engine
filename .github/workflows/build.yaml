@@ -278,10 +278,3 @@ jobs:
           check_name: Unit Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: ./**/TEST-*.xml
-
-      - name: Publish Performance Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.6
-        with:
-          check_name: Performance Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./**/TEST-*PerformanceTests*.xml
