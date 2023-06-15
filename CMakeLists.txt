@@ -15,3 +15,17 @@ add_subdirectory(modules/juce)
 add_subdirectory(modules)
 
 add_subdirectory(examples)
+
+# Add engine code to IDE browser
+file(GLOB_RECURSE LibraryFiles CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_core/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_core/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_graph/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_graph/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_engine/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/tracktion_engine/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/3rd_party/choc/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules/3rd_party/choc/*.h)
+set_source_files_properties(${LibraryFiles} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/modules PREFIX Libraries FILES ${LibraryFiles})
+add_library(EngineSource ${LibraryFiles})
