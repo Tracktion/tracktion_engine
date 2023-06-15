@@ -111,6 +111,8 @@ void ContainerClipNode::process (ProcessContext& pc)
         || sectionEditBeatRange.getStart() >= clipPosition.getEnd())
        return;
 
+    DBG("C: " << sectionEditBeatRange.getLength().inBeats());
+
     // Set playHead loop range using loopRange
     // Find ref offset from clip time
     // If playhead position was overriden, pass this on to the PlayHeadState
@@ -147,7 +149,21 @@ void ContainerClipNode::process (ProcessContext& pc)
     int64_t newPosition = editPlayHead.getPosition() - playheadOffset + loopRangeSamples.getStart();
 
     if (localPlayHead.isLooping())
+    {
+        const int numLoops = static_cast<int> ((newPosition - localPlayHead.getLoopRange().getStart()) / (double) (localPlayHead.getLoopRange().getLength()));
+        const auto loopOffsetSamples = numLoops * localPlayHead.getLoopRange().getLength();
+        const auto loopOffsetDuration = TimeDuration::fromSamples (loopOffsetSamples, sampleRate);
+
+        tempoPosition->set (clipPosition.getStart());
+        const auto clipStartTime = tempoPosition->getTime();
+
+        tempoPosition->set (clipStartTime + loopOffsetDuration);
+        const auto loopOffsetBeats = tempoPosition->getBeats(); // Don't subtract the clip start time here!
+
+        playerContext->processState.setTempoSequenceOffset (toDuration (loopOffsetBeats));
+
         newPosition = localPlayHead.linearPositionToLoopPosition (newPosition, localPlayHead.getLoopRange());
+    }
 
     if (editPlayHeadState.isContiguousWithPreviousBlock())
         localPlayHead.overridePosition (newPosition);

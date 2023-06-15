@@ -49,6 +49,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
         return;
 
     tempoPosition->set (editTimeRange.getStart() + tempoOffsetTime);
+    DBG("T: " << tempoPosition->getTempo());
     const auto beatStart = tempoPosition->getBeats() - tempoOffsetBeats;
     tempoPosition->set (editTimeRange.getEnd() + tempoOffsetTime);
     const auto beatEnd = tempoPosition->getBeats() - tempoOffsetBeats;
@@ -65,25 +66,36 @@ void ProcessState::setTempoSequence (const ProcessState& other, BeatDuration off
     setTempoSequence (other.tempoSequence, offset);
 }
 
+void ProcessState::setTempoSequenceOffset (BeatDuration offset)
+{
+    if (offset == tempoOffsetBeats)
+        return;
+
+    DBG("offset: " << offset.inBeats());
+    if (tempoSequence)
+    {
+        tempoOffsetBeats = offset;
+        tempoOffsetTime = toDuration (tempoSequence->toTime (toPosition (offset)));
+    }
+    else
+    {
+        tempoOffsetBeats = {};
+        tempoOffsetTime = {};
+    }
+}
+
 void ProcessState::setTempoSequence (const TempoSequence* ts, BeatDuration offset)
 {
     if (tempoSequence == ts)
         return;
 
     tempoSequence = ts;
+    setTempoSequenceOffset (offset);
 
     if (tempoSequence)
-    {
         tempoPosition = std::make_unique<tempo::Sequence::Position> (tempoSequence->getInternalSequence());
-        tempoOffsetBeats = offset;
-        tempoOffsetTime = toDuration (tempoSequence->toTime (toPosition (offset)));
-    }
     else
-    {
         tempoPosition.reset();
-        tempoOffsetBeats = {};
-        tempoOffsetTime = {};
-    }
 }
 
 std::unique_ptr<tempo::Sequence::Position> ProcessState::createPosition()

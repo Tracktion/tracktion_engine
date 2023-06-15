@@ -340,6 +340,7 @@ private:
          }
          else
          {
+             DBG("");
              auto audioView = choc::buffer::createChannelArrayView (allChannels,
                                                                     (choc::buffer::ChannelCount) numChannels,
                                                                     numSamplesToProcess);

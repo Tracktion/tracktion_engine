@@ -42,7 +42,10 @@ struct ProcessState
     
     /** Sets the TempoSequence this state utilises. */
     void setTempoSequence (const ProcessState&, BeatDuration offset);
-    
+
+    /** Updates the offset to use when doing tempo calculations. */
+    void setTempoSequenceOffset (BeatDuration);
+
     /** Creats a Position referencing the internal TempoSequence. */
     std::unique_ptr<tempo::Sequence::Position> createPosition();
 
