@@ -65,18 +65,29 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
 
         auto getDefaultNoteNumber = [] (int chanNum)
         {
+            // BEATCONNECT MODIFICATIONS START
             switch (chanNum)
             {
                 case 0:     return 36;
-                case 1:     return 38;
-                case 2:     return 42;
-                case 3:     return 46;
-                case 4:     return 39;
-                case 5:     return 45;
-                case 6:     return 50;
-                case 7:     return 51;
+                case 1:     return 37;
+                case 2:     return 38;
+                case 3:     return 39;
+                case 4:     return 40;
+                case 5:     return 41;
+                case 6:     return 42;
+                case 7:     return 43;
+                case 8:     return 44;
+                case 9:     return 45;
+                case 10:     return 46;
+                case 11:     return 47;
+                case 12:     return 48;
+                case 13:     return 49;
+                case 14:     return 50;
+                case 15:     return 51;
+
                 default:    return 60 + chanNum - 4;
             }
+            // BEATCONNECT MODIFICATIONS END
         };
 
         for (int i = 0; i < std::min (getChannels().size(), 8); ++i)

@@ -172,7 +172,9 @@ public:
     enum Defaults
     {
         defaultNumNotes     = 16,
-        defaultNumChannels  = 8,
+        // BEATCONNECT MODIFICATIONS START
+        defaultNumChannels  = 16,
+        // BEATCONNECT MODIFICATIONS END
         defaultMidiChannel  = 1,
         defaultNoteNumber   = 60,
         defaultNoteValue    = 96,

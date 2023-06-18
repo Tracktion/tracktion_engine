@@ -796,7 +796,7 @@ void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
         d.setProperty(IDs::colour, "#FFFFFF", nullptr);
         d.setProperty(IDs::name, "Pad", nullptr);
         d.setProperty(IDs::icon, icon, nullptr);
-        d.setProperty(IDs::note, juce::String(i + 1), nullptr);
+        d.setProperty(IDs::note, juce::String(i + 36), nullptr);
 
         v.addChild(d, -1, nullptr);
     }

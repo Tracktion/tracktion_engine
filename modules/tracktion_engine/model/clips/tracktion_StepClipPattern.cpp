@@ -285,7 +285,9 @@ void StepClip::Pattern::clearChannel (int channel)
 
 void StepClip::Pattern::insertChannel (int channel)
 {
-    state.addChild (juce::ValueTree (IDs::CHANNEL), channel, clip.getUndoManager());
+    // BEATCONNECT MODIFICATION START
+    state.addChild (juce::ValueTree (IDs::PatternChannel), channel, clip.getUndoManager());
+    // BEATCONNECT MODIFICATION END
 }
 
 void StepClip::Pattern::removeChannel (int channel)
