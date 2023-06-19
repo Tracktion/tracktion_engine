@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-19 12:43:31</td>
+            <td class="headerValue">2023-06-19 19:28:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -251,7 +251,7 @@
 <a name="189"><span class="lineNum">     189 </span>            :     return indexes;</a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : void InputDeviceInstance::setTargetTrack (AudioTrack&amp; track, int index, bool moveToTrack)</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : void InputDeviceInstance::setTargetTrack (AudioTrack&amp; track, int index, bool moveToTrack, juce::UndoManager* um)</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :     {</a>
@@ -262,16 +262,16 @@
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     if (owner.isTrackDevice() || moveToTrack)</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     {</a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         for (auto t : getTargetTracks())</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :             removeTargetTrack (*t);</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :             removeTargetTrack (*t, um);</span></a>
 <a name="204"><span class="lineNum">     204 </span>            :     }</a>
 <a name="205"><span class="lineNum">     205 </span>            :     else</a>
 <a name="206"><span class="lineNum">     206 </span>            :     {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         removeTargetTrack (track);</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         removeTargetTrack (track, um);</span></a>
 <a name="208"><span class="lineNum">     208 </span>            :     }</a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     state.addChild (v, -1, &amp;edit.getUndoManager());</span></a>
-<a name="212"><span class="lineNum">     212 </span>            :     </a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     state.addChild (v, -1, um);</span></a>
+<a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     auto&amp; dest = *destTracks[destTracks.size() - 1];</span></a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :     dest.targetTrack = track.itemID;</span></a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     dest.targetIndex = index;</span></a>
@@ -279,7 +279,7 @@
 <a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     trackDeviceEnabler.triggerAsyncUpdate();</span></a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (AudioTrack&amp; track)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (AudioTrack&amp; track, juce::UndoManager* um)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
@@ -291,16 +291,16 @@
 <a name="229"><span class="lineNum">     229 </span>            :     {</a>
 <a name="230"><span class="lineNum">     230 </span>            :         auto&amp; dt = *destTracks[i];</a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :         if (dt.targetTrack == track.itemID)</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :             state.removeChild (dt.state, &amp;edit.getUndoManager());</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :             state.removeChild (dt.state, um);</span></a>
 <a name="233"><span class="lineNum">     233 </span>            :     }</a>
 <a name="234"><span class="lineNum">     234 </span>            : }</a>
 <a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (AudioTrack&amp; track, int index)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (AudioTrack&amp; track, int index, juce::UndoManager* um)</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : {</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     removeTargetTrack (track.itemID, index);</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     removeTargetTrack (track.itemID, index, um);</span></a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index)</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 : void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index, juce::UndoManager* um)</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : {</a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :     {</a>
@@ -312,11 +312,11 @@
 <a name="250"><span class="lineNum">     250 </span>            :     {</a>
 <a name="251"><span class="lineNum">     251 </span>            :         auto&amp; dt = *destTracks[i];</a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :         if (dt.targetTrack == trackID &amp;&amp; dt.targetIndex == index)</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :             state.removeChild (dt.state, &amp;edit.getUndoManager());</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :             state.removeChild (dt.state, um);</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :     }</a>
 <a name="255"><span class="lineNum">     255 </span>            : }</a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 : void InputDeviceInstance::clearFromTracks()</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 : void InputDeviceInstance::clearFromTracks (juce::UndoManager* um)</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : {</a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :     if (isRecording())</span></a>
 <a name="260"><span class="lineNum">     260 </span>            :     {</a>
@@ -327,7 +327,7 @@
 <a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     for (int i = destTracks.size(); --i &gt;= 0;)</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :     {</a>
 <a name="267"><span class="lineNum">     267 </span>            :         auto&amp; dt = *destTracks[i];</a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :         state.removeChild (dt.state, &amp;edit.getUndoManager());</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :         state.removeChild (dt.state, um);</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :     }</a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     trackDeviceEnabler.triggerAsyncUpdate();</span></a>

@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">30</td>
-            <td class="headerCovTableEntry">525</td>
-            <td class="headerCovTableEntryLo">5.7 %</td>
+            <td class="headerCovTableEntry">543</td>
+            <td class="headerCovTableEntryLo">5.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-19 12:43:31</td>
+            <td class="headerValue">2023-06-19 19:28:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">62</td>
-            <td class="headerCovTableEntryLo">6.5 %</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntryLo">6.2 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -732,471 +732,509 @@
 <a name="670"><span class="lineNum">     670 </span>            : </a>
 <a name="671"><span class="lineNum">     671 </span><span class="lineNoCov">          0 :     bool handleIncomingMidiMessage (const juce::MidiMessage&amp; message)</span></a>
 <a name="672"><span class="lineNum">     672 </span>            :     {</a>
-<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :         if (recording)</span></a>
-<a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :             recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds()));</span></a>
+<a name="673"><span class="lineNum">     673 </span>            :         {</a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :             juce::ScopedLock sl (activeNotesLock);</span></a>
 <a name="675"><span class="lineNum">     675 </span>            : </a>
-<a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 :         juce::ScopedLock sl (consumerLock);</span></a>
-<a name="677"><span class="lineNum">     677 </span>            : </a>
-<a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :         for (auto c : consumers)</span></a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineNoCov">          0 :             c-&gt;handleIncomingMidiMessage (message);</span></a>
-<a name="680"><span class="lineNum">     680 </span>            : </a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineNoCov">          0 :         return recording || consumers.size() &gt; 0;</span></a>
-<a name="682"><span class="lineNum">     682 </span>            :     }</a>
-<a name="683"><span class="lineNum">     683 </span>            : </a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 :     MidiChannel applyChannel (juce::MidiMessageSequence&amp; sequence, MidiChannel channelToApply)</span></a>
-<a name="685"><span class="lineNum">     685 </span>            :     {</a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineNoCov">          0 :         if (! channelToApply.isValid())</span></a>
-<a name="687"><span class="lineNum">     687 </span>            :         {</a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; sequence.getNumEvents(); ++i)</span></a>
-<a name="689"><span class="lineNum">     689 </span>            :             {</a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :                 auto chan = MidiChannel::fromChannelOrZero (sequence.getEventPointer (i)-&gt;message.getChannel());</span></a>
-<a name="691"><span class="lineNum">     691 </span>            : </a>
-<a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 :                 if (chan.isValid())</span></a>
-<a name="693"><span class="lineNum">     693 </span>            :                 {</a>
-<a name="694"><span class="lineNum">     694 </span>            :                     channelToApply = chan;</a>
-<a name="695"><span class="lineNum">     695 </span>            :                     break;</a>
-<a name="696"><span class="lineNum">     696 </span>            :                 }</a>
-<a name="697"><span class="lineNum">     697 </span>            :             }</a>
-<a name="698"><span class="lineNum">     698 </span>            :         }</a>
-<a name="699"><span class="lineNum">     699 </span>            : </a>
-<a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :         if (channelToApply.isValid())</span></a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineNoCov">          0 :             for (int i = sequence.getNumEvents(); --i &gt;= 0;)</span></a>
-<a name="702"><span class="lineNum">     702 </span><span class="lineNoCov">          0 :                 sequence.getEventPointer(i)-&gt;message.setChannel (channelToApply.getChannelNumber());</span></a>
-<a name="703"><span class="lineNum">     703 </span>            : </a>
-<a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :         return channelToApply;</span></a>
-<a name="705"><span class="lineNum">     705 </span>            :     }</a>
-<a name="706"><span class="lineNum">     706 </span>            : </a>
-<a name="707"><span class="lineNum">     707 </span>            :     static void applyTimeAdjustment (juce::MidiMessageSequence&amp; sequence, double adjustmentMs)</a>
-<a name="708"><span class="lineNum">     708 </span>            :     {</a>
-<a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 :         if (adjustmentMs != 0)</span></a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :             sequence.addTimeToMessages (adjustmentMs * 0.001);</span></a>
-<a name="711"><span class="lineNum">     711 </span>            :     }</a>
+<a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 :             if (message.isNoteOn())</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :                 activeNotes.startNote (message.getChannel(), message.getNoteNumber());</span></a>
+<a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :             else if (message.isNoteOff())</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineNoCov">          0 :                 activeNotes.clearNote (message.getChannel(), message.getNoteNumber());</span></a>
+<a name="680"><span class="lineNum">     680 </span>            :         }</a>
+<a name="681"><span class="lineNum">     681 </span>            : </a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineNoCov">          0 :         if (recording)</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineNoCov">          0 :             recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds()));</span></a>
+<a name="684"><span class="lineNum">     684 </span>            : </a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 :         juce::ScopedLock sl (consumerLock);</span></a>
+<a name="686"><span class="lineNum">     686 </span>            : </a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :         for (auto c : consumers)</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineNoCov">          0 :             c-&gt;handleIncomingMidiMessage (message);</span></a>
+<a name="689"><span class="lineNum">     689 </span>            : </a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :         return recording || consumers.size() &gt; 0;</span></a>
+<a name="691"><span class="lineNum">     691 </span>            :     }</a>
+<a name="692"><span class="lineNum">     692 </span>            : </a>
+<a name="693"><span class="lineNum">     693 </span><span class="lineNoCov">          0 :     MidiChannel applyChannel (juce::MidiMessageSequence&amp; sequence, MidiChannel channelToApply)</span></a>
+<a name="694"><span class="lineNum">     694 </span>            :     {</a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineNoCov">          0 :         if (! channelToApply.isValid())</span></a>
+<a name="696"><span class="lineNum">     696 </span>            :         {</a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; sequence.getNumEvents(); ++i)</span></a>
+<a name="698"><span class="lineNum">     698 </span>            :             {</a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 :                 auto chan = MidiChannel::fromChannelOrZero (sequence.getEventPointer (i)-&gt;message.getChannel());</span></a>
+<a name="700"><span class="lineNum">     700 </span>            : </a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineNoCov">          0 :                 if (chan.isValid())</span></a>
+<a name="702"><span class="lineNum">     702 </span>            :                 {</a>
+<a name="703"><span class="lineNum">     703 </span>            :                     channelToApply = chan;</a>
+<a name="704"><span class="lineNum">     704 </span>            :                     break;</a>
+<a name="705"><span class="lineNum">     705 </span>            :                 }</a>
+<a name="706"><span class="lineNum">     706 </span>            :             }</a>
+<a name="707"><span class="lineNum">     707 </span>            :         }</a>
+<a name="708"><span class="lineNum">     708 </span>            : </a>
+<a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 :         if (channelToApply.isValid())</span></a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :             for (int i = sequence.getNumEvents(); --i &gt;= 0;)</span></a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 :                 sequence.getEventPointer(i)-&gt;message.setChannel (channelToApply.getChannelNumber());</span></a>
 <a name="712"><span class="lineNum">     712 </span>            : </a>
-<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :     Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,</span></a>
-<a name="714"><span class="lineNum">     714 </span>            :                                           bool isLooping, TimeRange loopRange,</a>
-<a name="715"><span class="lineNum">     715 </span>            :                                           bool discardRecordings,</a>
-<a name="716"><span class="lineNum">     716 </span>            :                                           SelectionManager* selectionManager) override</a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :         return channelToApply;</span></a>
+<a name="714"><span class="lineNum">     714 </span>            :     }</a>
+<a name="715"><span class="lineNum">     715 </span>            : </a>
+<a name="716"><span class="lineNum">     716 </span>            :     static void applyTimeAdjustment (juce::MidiMessageSequence&amp; sequence, double adjustmentMs)</a>
 <a name="717"><span class="lineNum">     717 </span>            :     {</a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="719"><span class="lineNum">     719 </span>            : </a>
-<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :         if (discardRecordings)</span></a>
-<a name="721"><span class="lineNum">     721 </span>            :         { </a>
-<a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :             for (auto c : consumers)</span></a>
-<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 :                 c-&gt;discardRecordings();</span></a>
-<a name="724"><span class="lineNum">     724 </span>            : </a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :             recorded.clear();</span></a>
-<a name="726"><span class="lineNum">     726 </span>            :         }</a>
-<a name="727"><span class="lineNum">     727 </span>            : </a>
-<a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 :         if (recorded.getNumEvents() == 0)</span></a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :             return {};</span></a>
-<a name="730"><span class="lineNum">     730 </span>            : </a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :         Clip::Array createdClips;</span></a>
-<a name="732"><span class="lineNum">     732 </span>            :         auto&amp; mi = getMidiInput();</a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :         if (adjustmentMs != 0)</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 :             sequence.addTimeToMessages (adjustmentMs * 0.001);</span></a>
+<a name="720"><span class="lineNum">     720 </span>            :     }</a>
+<a name="721"><span class="lineNum">     721 </span>            : </a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,</span></a>
+<a name="723"><span class="lineNum">     723 </span>            :                                           bool isLooping, TimeRange loopRange,</a>
+<a name="724"><span class="lineNum">     724 </span>            :                                           bool discardRecordings,</a>
+<a name="725"><span class="lineNum">     725 </span>            :                                           SelectionManager* selectionManager) override</a>
+<a name="726"><span class="lineNum">     726 </span>            :     {</a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
+<a name="728"><span class="lineNum">     728 </span>            : </a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :         if (discardRecordings)</span></a>
+<a name="730"><span class="lineNum">     730 </span>            :         { </a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :             for (auto c : consumers)</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 :                 c-&gt;discardRecordings();</span></a>
 <a name="733"><span class="lineNum">     733 </span>            : </a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :         recorded.updateMatchedPairs();</span></a>
-<a name="735"><span class="lineNum">     735 </span><span class="lineNoCov">          0 :         auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()</span></a>
-<a name="736"><span class="lineNum">     736 </span><span class="lineNoCov">          0 :                                                         : applyChannel (recorded, mi.getChannelToUse());</span></a>
-<a name="737"><span class="lineNum">     737 </span>            :         auto timeAdjustMs = mi.getManualAdjustmentMs();</a>
-<a name="738"><span class="lineNum">     738 </span>            :         </a>
-<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :         if (context.getNodePlayHead() != nullptr)</span></a>
-<a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :             timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());</span></a>
-<a name="741"><span class="lineNum">     741 </span>            :         </a>
-<a name="742"><span class="lineNum">     742 </span>            :         applyTimeAdjustment (recorded, timeAdjustMs);</a>
-<a name="743"><span class="lineNum">     743 </span>            : </a>
-<a name="744"><span class="lineNum">     744 </span>            :         auto recordingStart = recordedRange.getStart();</a>
-<a name="745"><span class="lineNum">     745 </span>            :         auto recordingEnd = recordedRange.getEnd();</a>
-<a name="746"><span class="lineNum">     746 </span>            : </a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 :         bool createTakes = mi.recordingEnabled &amp;&amp; ! (mi.mergeRecordings || mi.replaceExistingClips);</span></a>
-<a name="748"><span class="lineNum">     748 </span>            : </a>
-<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :         for (auto track : getTargetTracks())</span></a>
-<a name="750"><span class="lineNum">     750 </span>            :         {</a>
-<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :             if (! activeTracks.contains (track))</span></a>
-<a name="752"><span class="lineNum">     752 </span><span class="lineNoCov">          0 :                 continue;</span></a>
-<a name="753"><span class="lineNum">     753 </span>            :                 </a>
-<a name="754"><span class="lineNum">     754 </span><span class="lineNoCov">          0 :             if (isLooping &amp;&amp; recordingEnd &gt; loopRange.getEnd())</span></a>
-<a name="755"><span class="lineNum">     755 </span>            :             {</a>
-<a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :                 juce::MidiMessageSequence replaceSequence;</span></a>
-<a name="757"><span class="lineNum">     757 </span>            :                 const auto loopLen = loopRange.getLength();</a>
-<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :                 const auto maxNumLoops = 2 + (int) ((recordingEnd - recordingStart) / loopLen);</span></a>
-<a name="759"><span class="lineNum">     759 </span>            : </a>
-<a name="760"><span class="lineNum">     760 </span>            :                 Clip* takeClip = nullptr;</a>
-<a name="761"><span class="lineNum">     761 </span>            : </a>
-<a name="762"><span class="lineNum">     762 </span><span class="lineNoCov">          0 :                 for (int loopNum = 0; loopNum &lt; maxNumLoops; ++loopNum)</span></a>
-<a name="763"><span class="lineNum">     763 </span>            :                 {</a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :                     juce::MidiMessageSequence loopSequence;</span></a>
-<a name="765"><span class="lineNum">     765 </span><span class="lineNoCov">          0 :                     const auto thisLoopStart = loopRange.getStart() + loopLen * loopNum;</span></a>
-<a name="766"><span class="lineNum">     766 </span>            :                     const auto thisLoopEnd = (thisLoopStart + loopLen).inSeconds();</a>
-<a name="767"><span class="lineNum">     767 </span>            : </a>
-<a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :                     for (int i = 0; i &lt; recorded.getNumEvents(); ++i)</span></a>
-<a name="769"><span class="lineNum">     769 </span>            :                     {</a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :                         auto&amp; m = recorded.getEventPointer (i)-&gt;message;</span></a>
-<a name="771"><span class="lineNum">     771 </span>            : </a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineNoCov">          0 :                         if (m.isNoteOn())</span></a>
-<a name="773"><span class="lineNum">     773 </span>            :                         {</a>
-<a name="774"><span class="lineNum">     774 </span>            :                             double s = m.getTimeStamp();</a>
-<a name="775"><span class="lineNum">     775 </span>            :                             double e = s;</a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :             recorded.clear();</span></a>
+<a name="735"><span class="lineNum">     735 </span>            :         }</a>
+<a name="736"><span class="lineNum">     736 </span>            : </a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :         if (recorded.getNumEvents() == 0)</span></a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineNoCov">          0 :             return {};</span></a>
+<a name="739"><span class="lineNum">     739 </span>            : </a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :         Clip::Array createdClips;</span></a>
+<a name="741"><span class="lineNum">     741 </span>            :         auto&amp; mi = getMidiInput();</a>
+<a name="742"><span class="lineNum">     742 </span>            : </a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 :         recorded.updateMatchedPairs();</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :         auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()</span></a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :                                                         : applyChannel (recorded, mi.getChannelToUse());</span></a>
+<a name="746"><span class="lineNum">     746 </span>            :         auto timeAdjustMs = mi.getManualAdjustmentMs();</a>
+<a name="747"><span class="lineNum">     747 </span>            :         </a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 :         if (context.getNodePlayHead() != nullptr)</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :             timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());</span></a>
+<a name="750"><span class="lineNum">     750 </span>            :         </a>
+<a name="751"><span class="lineNum">     751 </span>            :         applyTimeAdjustment (recorded, timeAdjustMs);</a>
+<a name="752"><span class="lineNum">     752 </span>            : </a>
+<a name="753"><span class="lineNum">     753 </span>            :         auto recordingStart = recordedRange.getStart();</a>
+<a name="754"><span class="lineNum">     754 </span>            :         auto recordingEnd = recordedRange.getEnd();</a>
+<a name="755"><span class="lineNum">     755 </span>            : </a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :         bool createTakes = mi.recordingEnabled &amp;&amp; ! (mi.mergeRecordings || mi.replaceExistingClips);</span></a>
+<a name="757"><span class="lineNum">     757 </span>            : </a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :         for (auto track : getTargetTracks())</span></a>
+<a name="759"><span class="lineNum">     759 </span>            :         {</a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :             if (! activeTracks.contains (track))</span></a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="762"><span class="lineNum">     762 </span>            :                 </a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :             if (isLooping &amp;&amp; recordingEnd &gt; loopRange.getEnd())</span></a>
+<a name="764"><span class="lineNum">     764 </span>            :             {</a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineNoCov">          0 :                 juce::MidiMessageSequence replaceSequence;</span></a>
+<a name="766"><span class="lineNum">     766 </span>            :                 const auto loopLen = loopRange.getLength();</a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 :                 const auto maxNumLoops = 2 + (int) ((recordingEnd - recordingStart) / loopLen);</span></a>
+<a name="768"><span class="lineNum">     768 </span>            : </a>
+<a name="769"><span class="lineNum">     769 </span>            :                 Clip* takeClip = nullptr;</a>
+<a name="770"><span class="lineNum">     770 </span>            : </a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineNoCov">          0 :                 for (int loopNum = 0; loopNum &lt; maxNumLoops; ++loopNum)</span></a>
+<a name="772"><span class="lineNum">     772 </span>            :                 {</a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 :                     juce::MidiMessageSequence loopSequence;</span></a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineNoCov">          0 :                     const auto thisLoopStart = loopRange.getStart() + loopLen * loopNum;</span></a>
+<a name="775"><span class="lineNum">     775 </span>            :                     const auto thisLoopEnd = (thisLoopStart + loopLen).inSeconds();</a>
 <a name="776"><span class="lineNum">     776 </span>            : </a>
-<a name="777"><span class="lineNum">     777 </span><span class="lineNoCov">          0 :                             if (auto* noteOff = recorded.getEventPointer (i)-&gt;noteOffObject)</span></a>
-<a name="778"><span class="lineNum">     778 </span>            :                                 e = noteOff-&gt;message.getTimeStamp();</a>
-<a name="779"><span class="lineNum">     779 </span>            : </a>
-<a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :                             if (e &gt; thisLoopStart.inSeconds() &amp;&amp; s &lt; thisLoopEnd)</span></a>
-<a name="781"><span class="lineNum">     781 </span>            :                             {</a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :                                 if (s &lt; thisLoopStart.inSeconds())</span></a>
-<a name="783"><span class="lineNum">     783 </span>            :                                     s = 0.0;</a>
-<a name="784"><span class="lineNum">     784 </span>            :                                 else</a>
-<a name="785"><span class="lineNum">     785 </span><span class="lineNoCov">          0 :                                     s = std::fmod (s - loopRange.getStart().inSeconds(), loopLen.inSeconds());</span></a>
-<a name="786"><span class="lineNum">     786 </span>            : </a>
-<a name="787"><span class="lineNum">     787 </span><span class="lineNoCov">          0 :                                 if (e &gt; thisLoopEnd)</span></a>
-<a name="788"><span class="lineNum">     788 </span>            :                                     e = loopLen.inSeconds();</a>
-<a name="789"><span class="lineNum">     789 </span>            :                                 else</a>
-<a name="790"><span class="lineNum">     790 </span><span class="lineNoCov">          0 :                                     e = std::fmod (e - loopRange.getStart().inSeconds(), loopLen.inSeconds());</span></a>
-<a name="791"><span class="lineNum">     791 </span>            : </a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (m, s));</span></a>
-<a name="793"><span class="lineNum">     793 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (juce::MidiMessage::noteOff (m.getChannel(),</span></a>
-<a name="794"><span class="lineNum">     794 </span>            :                                                                                                       m.getNoteNumber()), e));</a>
-<a name="795"><span class="lineNum">     795 </span>            :                             }</a>
-<a name="796"><span class="lineNum">     796 </span>            :                         }</a>
-<a name="797"><span class="lineNum">     797 </span><span class="lineNoCov">          0 :                         else if (! m.isNoteOff())</span></a>
-<a name="798"><span class="lineNum">     798 </span>            :                         {</a>
-<a name="799"><span class="lineNum">     799 </span>            :                             const double t = m.getTimeStamp();</a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineNoCov">          0 :                     for (int i = 0; i &lt; recorded.getNumEvents(); ++i)</span></a>
+<a name="778"><span class="lineNum">     778 </span>            :                     {</a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :                         auto&amp; m = recorded.getEventPointer (i)-&gt;message;</span></a>
+<a name="780"><span class="lineNum">     780 </span>            : </a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :                         if (m.isNoteOn())</span></a>
+<a name="782"><span class="lineNum">     782 </span>            :                         {</a>
+<a name="783"><span class="lineNum">     783 </span>            :                             double s = m.getTimeStamp();</a>
+<a name="784"><span class="lineNum">     784 </span>            :                             double e = s;</a>
+<a name="785"><span class="lineNum">     785 </span>            : </a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineNoCov">          0 :                             if (auto* noteOff = recorded.getEventPointer (i)-&gt;noteOffObject)</span></a>
+<a name="787"><span class="lineNum">     787 </span>            :                                 e = noteOff-&gt;message.getTimeStamp();</a>
+<a name="788"><span class="lineNum">     788 </span>            : </a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 :                             if (e &gt; thisLoopStart.inSeconds() &amp;&amp; s &lt; thisLoopEnd)</span></a>
+<a name="790"><span class="lineNum">     790 </span>            :                             {</a>
+<a name="791"><span class="lineNum">     791 </span><span class="lineNoCov">          0 :                                 if (s &lt; thisLoopStart.inSeconds())</span></a>
+<a name="792"><span class="lineNum">     792 </span>            :                                     s = 0.0;</a>
+<a name="793"><span class="lineNum">     793 </span>            :                                 else</a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineNoCov">          0 :                                     s = std::fmod (s - loopRange.getStart().inSeconds(), loopLen.inSeconds());</span></a>
+<a name="795"><span class="lineNum">     795 </span>            : </a>
+<a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 :                                 if (e &gt; thisLoopEnd)</span></a>
+<a name="797"><span class="lineNum">     797 </span>            :                                     e = loopLen.inSeconds();</a>
+<a name="798"><span class="lineNum">     798 </span>            :                                 else</a>
+<a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 :                                     e = std::fmod (e - loopRange.getStart().inSeconds(), loopLen.inSeconds());</span></a>
 <a name="800"><span class="lineNum">     800 </span>            : </a>
-<a name="801"><span class="lineNum">     801 </span><span class="lineNoCov">          0 :                             if (t &gt;= thisLoopStart.inSeconds() &amp;&amp; t &lt; thisLoopEnd)</span></a>
-<a name="802"><span class="lineNum">     802 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (m, std::fmod (t - loopRange.getStart().inSeconds(), loopLen.inSeconds())));</span></a>
-<a name="803"><span class="lineNum">     803 </span>            :                         }</a>
-<a name="804"><span class="lineNum">     804 </span>            :                     }</a>
-<a name="805"><span class="lineNum">     805 </span>            : </a>
-<a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 :                     if (loopSequence.getNumEvents() &gt; 0)</span></a>
-<a name="807"><span class="lineNum">     807 </span>            :                     {</a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineNoCov">          0 :                         loopSequence.updateMatchedPairs();</span></a>
+<a name="801"><span class="lineNum">     801 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (m, s));</span></a>
+<a name="802"><span class="lineNum">     802 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (juce::MidiMessage::noteOff (m.getChannel(),</span></a>
+<a name="803"><span class="lineNum">     803 </span>            :                                                                                                       m.getNoteNumber()), e));</a>
+<a name="804"><span class="lineNum">     804 </span>            :                             }</a>
+<a name="805"><span class="lineNum">     805 </span>            :                         }</a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 :                         else if (! m.isNoteOff())</span></a>
+<a name="807"><span class="lineNum">     807 </span>            :                         {</a>
+<a name="808"><span class="lineNum">     808 </span>            :                             const double t = m.getTimeStamp();</a>
 <a name="809"><span class="lineNum">     809 </span>            : </a>
-<a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :                         if (createTakes)</span></a>
-<a name="811"><span class="lineNum">     811 </span>            :                         {</a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 :                             if (auto* clip = mi.addMidiToTrackAsTransaction (takeClip, *track,</span></a>
-<a name="813"><span class="lineNum">     813 </span>            :                                                                              loopSequence, loopRange,</a>
-<a name="814"><span class="lineNum">     814 </span>            :                                                                              MidiInputDevice::MergeMode::optional,</a>
-<a name="815"><span class="lineNum">     815 </span>            :                                                                              channelToApply,</a>
-<a name="816"><span class="lineNum">     816 </span>            :                                                                              selectionManager))</a>
-<a name="817"><span class="lineNum">     817 </span>            :                             {</a>
-<a name="818"><span class="lineNum">     818 </span>            :                                 takeClip = clip;</a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :                                 createdClips.add (clip);</span></a>
-<a name="820"><span class="lineNum">     820 </span>            :                             }</a>
-<a name="821"><span class="lineNum">     821 </span>            :                         }</a>
-<a name="822"><span class="lineNum">     822 </span><span class="lineNoCov">          0 :                         else if (mi.replaceExistingClips)</span></a>
-<a name="823"><span class="lineNum">     823 </span>            :                         {</a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 :                             replaceSequence = loopSequence;</span></a>
-<a name="825"><span class="lineNum">     825 </span>            :                         }</a>
-<a name="826"><span class="lineNum">     826 </span>            :                         else</a>
-<a name="827"><span class="lineNum">     827 </span>            :                         {</a>
-<a name="828"><span class="lineNum">     828 </span><span class="lineNoCov">          0 :                             if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,</span></a>
-<a name="829"><span class="lineNum">     829 </span>            :                                                                              loopSequence, loopRange,</a>
-<a name="830"><span class="lineNum">     830 </span>            :                                                                              MidiInputDevice::MergeMode::always,</a>
-<a name="831"><span class="lineNum">     831 </span>            :                                                                              channelToApply,</a>
-<a name="832"><span class="lineNum">     832 </span>            :                                                                              selectionManager))</a>
-<a name="833"><span class="lineNum">     833 </span>            :                             {</a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineNoCov">          0 :                                 createdClips.add (clip);</span></a>
-<a name="835"><span class="lineNum">     835 </span>            :                             }</a>
-<a name="836"><span class="lineNum">     836 </span>            :                         }</a>
-<a name="837"><span class="lineNum">     837 </span>            :                     }</a>
-<a name="838"><span class="lineNum">     838 </span>            :                 }</a>
-<a name="839"><span class="lineNum">     839 </span>            : </a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineNoCov">          0 :                 if (mi.replaceExistingClips &amp;&amp; replaceSequence.getNumEvents() &gt; 0)</span></a>
-<a name="841"><span class="lineNum">     841 </span>            :                 {</a>
-<a name="842"><span class="lineNum">     842 </span><span class="lineNoCov">          0 :                     if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,</span></a>
-<a name="843"><span class="lineNum">     843 </span>            :                                                                      replaceSequence, loopRange,</a>
-<a name="844"><span class="lineNum">     844 </span>            :                                                                      MidiInputDevice::MergeMode::optional,</a>
-<a name="845"><span class="lineNum">     845 </span>            :                                                                      channelToApply, selectionManager))</a>
-<a name="846"><span class="lineNum">     846 </span>            :                     {</a>
-<a name="847"><span class="lineNum">     847 </span><span class="lineNoCov">          0 :                         createdClips.add (clip);</span></a>
-<a name="848"><span class="lineNum">     848 </span>            :                     }</a>
-<a name="849"><span class="lineNum">     849 </span>            :                 }</a>
-<a name="850"><span class="lineNum">     850 </span>            :             }</a>
-<a name="851"><span class="lineNum">     851 </span>            :             else</a>
-<a name="852"><span class="lineNum">     852 </span>            :             {</a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 :                 auto startPos  = recordingStart;</span></a>
-<a name="854"><span class="lineNum">     854 </span>            :                 auto endPos    = recordingEnd;</a>
-<a name="855"><span class="lineNum">     855 </span>            :                 auto maxEndPos = endPos + 0.5s;</a>
-<a name="856"><span class="lineNum">     856 </span>            : </a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineNoCov">          0 :                 if (edit.recordingPunchInOut)</span></a>
-<a name="858"><span class="lineNum">     858 </span>            :                 {</a>
-<a name="859"><span class="lineNum">     859 </span><span class="lineNoCov">          0 :                     if (startPos &lt; loopRange.getEnd())</span></a>
-<a name="860"><span class="lineNum">     860 </span>            :                     {</a>
-<a name="861"><span class="lineNum">     861 </span>            :                         // if we didn't get as far as the punch-in</a>
-<a name="862"><span class="lineNum">     862 </span><span class="lineNoCov">          0 :                         if (endPos &lt;= loopRange.getStart())</span></a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :                             return createdClips;</span></a>
-<a name="864"><span class="lineNum">     864 </span>            : </a>
-<a name="865"><span class="lineNum">     865 </span><span class="lineNoCov">          0 :                         startPos  = std::max (startPos, loopRange.getStart());</span></a>
-<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :                         endPos    = juce::jlimit (startPos + 0.1s, loopRange.getEnd(), endPos);</span></a>
-<a name="867"><span class="lineNum">     867 </span>            :                         maxEndPos = endPos;</a>
-<a name="868"><span class="lineNum">     868 </span>            :                     }</a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 :                     else if (edit.getNumCountInBeats() &gt; 0)</span></a>
-<a name="870"><span class="lineNum">     870 </span>            :                     {</a>
-<a name="871"><span class="lineNum">     871 </span><span class="lineNoCov">          0 :                         startPos = std::max (startPos, loopRange.getStart());</span></a>
-<a name="872"><span class="lineNum">     872 </span>            :                     }</a>
-<a name="873"><span class="lineNum">     873 </span>            :                 }</a>
-<a name="874"><span class="lineNum">     874 </span>            : </a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineNoCov">          0 :                 juce::Array&lt;int&gt; eventsToDelete;</span></a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineNoCov">          0 :                 juce::Array&lt;juce::MidiMessage&gt; noteOffMessagesToAdd, mpeMessagesToAddAtStartPos;</span></a>
-<a name="877"><span class="lineNum">     877 </span>            : </a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 :                 const auto ensureNoteOffIsInsideClip = [&amp;noteOffMessagesToAdd, endPos] (juce::MidiMessageSequence::MidiEventHolder&amp; m)</span></a>
-<a name="879"><span class="lineNum">     879 </span>            :                 {</a>
-<a name="880"><span class="lineNum">     880 </span>            :                     jassert (m.message.isNoteOn());</a>
-<a name="881"><span class="lineNum">     881 </span>            : </a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineNoCov">          0 :                     if (m.noteOffObject == nullptr)</span></a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineNoCov">          0 :                         noteOffMessagesToAdd.add (juce::MidiMessage (juce::MidiMessage::noteOff (m.message.getChannel(),</span></a>
-<a name="884"><span class="lineNum">     884 </span>            :                                                                                                  m.message.getNoteNumber()), endPos.inSeconds()));</a>
-<a name="885"><span class="lineNum">     885 </span>            : </a>
-<a name="886"><span class="lineNum">     886 </span><span class="lineNoCov">          0 :                     else if (m.noteOffObject-&gt;message.getTimeStamp() &gt; endPos.inSeconds())</span></a>
-<a name="887"><span class="lineNum">     887 </span>            :                         m.noteOffObject-&gt;message.setTimeStamp (endPos.inSeconds());</a>
-<a name="888"><span class="lineNum">     888 </span><span class="lineNoCov">          0 :                 };</span></a>
-<a name="889"><span class="lineNum">     889 </span>            : </a>
-<a name="890"><span class="lineNum">     890 </span><span class="lineNoCov">          0 :                 const auto isNoteOnThatEndsAfterClipStart = [startPos] (juce::MidiMessageSequence::MidiEventHolder&amp; m)</span></a>
-<a name="891"><span class="lineNum">     891 </span>            :                 {</a>
-<a name="892"><span class="lineNum">     892 </span><span class="lineNoCov">          0 :                     return m.message.isNoteOn() &amp;&amp; (m.noteOffObject == nullptr || m.noteOffObject-&gt;message.getTimeStamp() &gt; startPos.inSeconds());</span></a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 :                 };</span></a>
+<a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :                             if (t &gt;= thisLoopStart.inSeconds() &amp;&amp; t &lt; thisLoopEnd)</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineNoCov">          0 :                                 loopSequence.addEvent (juce::MidiMessage (m, std::fmod (t - loopRange.getStart().inSeconds(), loopLen.inSeconds())));</span></a>
+<a name="812"><span class="lineNum">     812 </span>            :                         }</a>
+<a name="813"><span class="lineNum">     813 </span>            :                     }</a>
+<a name="814"><span class="lineNum">     814 </span>            : </a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineNoCov">          0 :                     if (loopSequence.getNumEvents() &gt; 0)</span></a>
+<a name="816"><span class="lineNum">     816 </span>            :                     {</a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :                         loopSequence.updateMatchedPairs();</span></a>
+<a name="818"><span class="lineNum">     818 </span>            : </a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :                         if (createTakes)</span></a>
+<a name="820"><span class="lineNum">     820 </span>            :                         {</a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineNoCov">          0 :                             if (auto* clip = mi.addMidiToTrackAsTransaction (takeClip, *track,</span></a>
+<a name="822"><span class="lineNum">     822 </span>            :                                                                              loopSequence, loopRange,</a>
+<a name="823"><span class="lineNum">     823 </span>            :                                                                              MidiInputDevice::MergeMode::optional,</a>
+<a name="824"><span class="lineNum">     824 </span>            :                                                                              channelToApply,</a>
+<a name="825"><span class="lineNum">     825 </span>            :                                                                              selectionManager))</a>
+<a name="826"><span class="lineNum">     826 </span>            :                             {</a>
+<a name="827"><span class="lineNum">     827 </span>            :                                 takeClip = clip;</a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineNoCov">          0 :                                 createdClips.add (clip);</span></a>
+<a name="829"><span class="lineNum">     829 </span>            :                             }</a>
+<a name="830"><span class="lineNum">     830 </span>            :                         }</a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineNoCov">          0 :                         else if (mi.replaceExistingClips)</span></a>
+<a name="832"><span class="lineNum">     832 </span>            :                         {</a>
+<a name="833"><span class="lineNum">     833 </span><span class="lineNoCov">          0 :                             replaceSequence = loopSequence;</span></a>
+<a name="834"><span class="lineNum">     834 </span>            :                         }</a>
+<a name="835"><span class="lineNum">     835 </span>            :                         else</a>
+<a name="836"><span class="lineNum">     836 </span>            :                         {</a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineNoCov">          0 :                             if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,</span></a>
+<a name="838"><span class="lineNum">     838 </span>            :                                                                              loopSequence, loopRange,</a>
+<a name="839"><span class="lineNum">     839 </span>            :                                                                              MidiInputDevice::MergeMode::always,</a>
+<a name="840"><span class="lineNum">     840 </span>            :                                                                              channelToApply,</a>
+<a name="841"><span class="lineNum">     841 </span>            :                                                                              selectionManager))</a>
+<a name="842"><span class="lineNum">     842 </span>            :                             {</a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineNoCov">          0 :                                 createdClips.add (clip);</span></a>
+<a name="844"><span class="lineNum">     844 </span>            :                             }</a>
+<a name="845"><span class="lineNum">     845 </span>            :                         }</a>
+<a name="846"><span class="lineNum">     846 </span>            :                     }</a>
+<a name="847"><span class="lineNum">     847 </span>            :                 }</a>
+<a name="848"><span class="lineNum">     848 </span>            : </a>
+<a name="849"><span class="lineNum">     849 </span><span class="lineNoCov">          0 :                 if (mi.replaceExistingClips &amp;&amp; replaceSequence.getNumEvents() &gt; 0)</span></a>
+<a name="850"><span class="lineNum">     850 </span>            :                 {</a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineNoCov">          0 :                     if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track,</span></a>
+<a name="852"><span class="lineNum">     852 </span>            :                                                                      replaceSequence, loopRange,</a>
+<a name="853"><span class="lineNum">     853 </span>            :                                                                      MidiInputDevice::MergeMode::optional,</a>
+<a name="854"><span class="lineNum">     854 </span>            :                                                                      channelToApply, selectionManager))</a>
+<a name="855"><span class="lineNum">     855 </span>            :                     {</a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :                         createdClips.add (clip);</span></a>
+<a name="857"><span class="lineNum">     857 </span>            :                     }</a>
+<a name="858"><span class="lineNum">     858 </span>            :                 }</a>
+<a name="859"><span class="lineNum">     859 </span>            :             }</a>
+<a name="860"><span class="lineNum">     860 </span>            :             else</a>
+<a name="861"><span class="lineNum">     861 </span>            :             {</a>
+<a name="862"><span class="lineNum">     862 </span><span class="lineNoCov">          0 :                 auto startPos  = recordingStart;</span></a>
+<a name="863"><span class="lineNum">     863 </span>            :                 auto endPos    = recordingEnd;</a>
+<a name="864"><span class="lineNum">     864 </span>            :                 auto maxEndPos = endPos + 0.5s;</a>
+<a name="865"><span class="lineNum">     865 </span>            : </a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :                 if (edit.recordingPunchInOut)</span></a>
+<a name="867"><span class="lineNum">     867 </span>            :                 {</a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :                     if (startPos &lt; loopRange.getEnd())</span></a>
+<a name="869"><span class="lineNum">     869 </span>            :                     {</a>
+<a name="870"><span class="lineNum">     870 </span>            :                         // if we didn't get as far as the punch-in</a>
+<a name="871"><span class="lineNum">     871 </span><span class="lineNoCov">          0 :                         if (endPos &lt;= loopRange.getStart())</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineNoCov">          0 :                             return createdClips;</span></a>
+<a name="873"><span class="lineNum">     873 </span>            : </a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineNoCov">          0 :                         startPos  = std::max (startPos, loopRange.getStart());</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineNoCov">          0 :                         endPos    = juce::jlimit (startPos + 0.1s, loopRange.getEnd(), endPos);</span></a>
+<a name="876"><span class="lineNum">     876 </span>            :                         maxEndPos = endPos;</a>
+<a name="877"><span class="lineNum">     877 </span>            :                     }</a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 :                     else if (edit.getNumCountInBeats() &gt; 0)</span></a>
+<a name="879"><span class="lineNum">     879 </span>            :                     {</a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineNoCov">          0 :                         startPos = std::max (startPos, loopRange.getStart());</span></a>
+<a name="881"><span class="lineNum">     881 </span>            :                     }</a>
+<a name="882"><span class="lineNum">     882 </span>            :                 }</a>
+<a name="883"><span class="lineNum">     883 </span>            : </a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineNoCov">          0 :                 juce::Array&lt;int&gt; eventsToDelete;</span></a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineNoCov">          0 :                 juce::Array&lt;juce::MidiMessage&gt; noteOffMessagesToAdd, mpeMessagesToAddAtStartPos;</span></a>
+<a name="886"><span class="lineNum">     886 </span>            : </a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineNoCov">          0 :                 const auto ensureNoteOffIsInsideClip = [&amp;noteOffMessagesToAdd, endPos] (juce::MidiMessageSequence::MidiEventHolder&amp; m)</span></a>
+<a name="888"><span class="lineNum">     888 </span>            :                 {</a>
+<a name="889"><span class="lineNum">     889 </span>            :                     jassert (m.message.isNoteOn());</a>
+<a name="890"><span class="lineNum">     890 </span>            : </a>
+<a name="891"><span class="lineNum">     891 </span><span class="lineNoCov">          0 :                     if (m.noteOffObject == nullptr)</span></a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineNoCov">          0 :                         noteOffMessagesToAdd.add (juce::MidiMessage (juce::MidiMessage::noteOff (m.message.getChannel(),</span></a>
+<a name="893"><span class="lineNum">     893 </span>            :                                                                                                  m.message.getNoteNumber()), endPos.inSeconds()));</a>
 <a name="894"><span class="lineNum">     894 </span>            : </a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 :                 const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage&amp; m)</span></a>
-<a name="896"><span class="lineNum">     896 </span>            :                 {</a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :                     return (m.getTimeStamp() &lt; startPos.inSeconds() || m.getTimeStamp() &gt; maxEndPos.inSeconds()) &amp;&amp; ! m.isNoteOff();</span></a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineNoCov">          0 :                 };</span></a>
-<a name="899"><span class="lineNum">     899 </span>            : </a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :                 if (mi.recordToNoteAutomation)</span></a>
-<a name="901"><span class="lineNum">     901 </span>            :                 {</a>
-<a name="902"><span class="lineNum">     902 </span><span class="lineNoCov">          0 :                     auto clipStartIndex = recorded.getNextIndexAtTime (startPos.inSeconds());</span></a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 :                     else if (m.noteOffObject-&gt;message.getTimeStamp() &gt; endPos.inSeconds())</span></a>
+<a name="896"><span class="lineNum">     896 </span>            :                         m.noteOffObject-&gt;message.setTimeStamp (endPos.inSeconds());</a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :                 };</span></a>
+<a name="898"><span class="lineNum">     898 </span>            : </a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :                 const auto isNoteOnThatEndsAfterClipStart = [startPos] (juce::MidiMessageSequence::MidiEventHolder&amp; m)</span></a>
+<a name="900"><span class="lineNum">     900 </span>            :                 {</a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineNoCov">          0 :                     return m.message.isNoteOn() &amp;&amp; (m.noteOffObject == nullptr || m.noteOffObject-&gt;message.getTimeStamp() &gt; startPos.inSeconds());</span></a>
+<a name="902"><span class="lineNum">     902 </span><span class="lineNoCov">          0 :                 };</span></a>
 <a name="903"><span class="lineNum">     903 </span>            : </a>
-<a name="904"><span class="lineNum">     904 </span><span class="lineNoCov">          0 :                     for (int i = recorded.getNumEvents(); --i &gt;= 0;)</span></a>
-<a name="905"><span class="lineNum">     905 </span>            :                     {</a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineNoCov">          0 :                         auto&amp; m = *recorded.getEventPointer (i);</span></a>
-<a name="907"><span class="lineNum">     907 </span>            : </a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineNoCov">          0 :                         if (m.message.getTimeStamp() &lt; startPos.inSeconds() &amp;&amp; isNoteOnThatEndsAfterClipStart (m))</span></a>
-<a name="909"><span class="lineNum">     909 </span>            :                         {</a>
-<a name="910"><span class="lineNum">     910 </span><span class="lineNoCov">          0 :                             MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStartPos, recorded, clipStartIndex, m.message.getChannel());</span></a>
-<a name="911"><span class="lineNum">     911 </span>            : </a>
-<a name="912"><span class="lineNum">     912 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
-<a name="913"><span class="lineNum">     913 </span>            :                             eventsToDelete.add (i); // Remove original noteOn, findInitialNoteExpression makes new one in correct order</a>
-<a name="914"><span class="lineNum">     914 </span><span class="lineNoCov">          0 :                             m.noteOffObject = nullptr; // Prevent deletion of original note off, it will be paird with the new note-on later</span></a>
-<a name="915"><span class="lineNum">     915 </span>            :                         }</a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineNoCov">          0 :                         else if (isOutsideClipAndNotNoteOff (m.message))</span></a>
-<a name="917"><span class="lineNum">     917 </span>            :                         {</a>
-<a name="918"><span class="lineNum">     918 </span>            :                             eventsToDelete.add (i);</a>
-<a name="919"><span class="lineNum">     919 </span>            :                         }</a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineNoCov">          0 :                         else if (m.message.getTimeStamp() &lt; endPos.inSeconds() &amp;&amp; m.message.isNoteOn())</span></a>
-<a name="921"><span class="lineNum">     921 </span>            :                         {</a>
-<a name="922"><span class="lineNum">     922 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
-<a name="923"><span class="lineNum">     923 </span>            :                         }</a>
-<a name="924"><span class="lineNum">     924 </span>            :                     }</a>
-<a name="925"><span class="lineNum">     925 </span>            :                 }</a>
-<a name="926"><span class="lineNum">     926 </span>            :                 else</a>
-<a name="927"><span class="lineNum">     927 </span>            :                 {</a>
-<a name="928"><span class="lineNum">     928 </span><span class="lineNoCov">          0 :                     for (int i = recorded.getNumEvents(); --i &gt;= 0;)</span></a>
-<a name="929"><span class="lineNum">     929 </span>            :                     {</a>
-<a name="930"><span class="lineNum">     930 </span><span class="lineNoCov">          0 :                         auto&amp; m = *recorded.getEventPointer (i);</span></a>
-<a name="931"><span class="lineNum">     931 </span>            : </a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineNoCov">          0 :                         if (m.message.getTimeStamp() &lt; startPos.inSeconds() &amp;&amp; isNoteOnThatEndsAfterClipStart (m))</span></a>
-<a name="933"><span class="lineNum">     933 </span>            :                             m.message.setTimeStamp (startPos.inSeconds());</a>
-<a name="934"><span class="lineNum">     934 </span>            : </a>
-<a name="935"><span class="lineNum">     935 </span><span class="lineNoCov">          0 :                         if (isOutsideClipAndNotNoteOff (m.message))</span></a>
-<a name="936"><span class="lineNum">     936 </span>            :                             eventsToDelete.add (i);</a>
-<a name="937"><span class="lineNum">     937 </span>            : </a>
-<a name="938"><span class="lineNum">     938 </span><span class="lineNoCov">          0 :                         else if (m.message.getTimeStamp() &lt; endPos.inSeconds() &amp;&amp; m.message.isNoteOn())</span></a>
-<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
-<a name="940"><span class="lineNum">     940 </span>            :                     }</a>
-<a name="941"><span class="lineNum">     941 </span>            :                 }</a>
-<a name="942"><span class="lineNum">     942 </span>            : </a>
-<a name="943"><span class="lineNum">     943 </span><span class="lineNoCov">          0 :                 if (! eventsToDelete.isEmpty())</span></a>
-<a name="944"><span class="lineNum">     944 </span>            :                 {</a>
-<a name="945"><span class="lineNum">     945 </span>            :                     // N.B. eventsToDelete is in reverse order so iterate forwards when deleting</a>
-<a name="946"><span class="lineNum">     946 </span><span class="lineNoCov">          0 :                     for (int index : eventsToDelete)</span></a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineNoCov">          0 :                         recorded.deleteEvent (index, true);</span></a>
-<a name="948"><span class="lineNum">     948 </span>            :                 }</a>
-<a name="949"><span class="lineNum">     949 </span>            : </a>
-<a name="950"><span class="lineNum">     950 </span><span class="lineNoCov">          0 :                 if (! noteOffMessagesToAdd.isEmpty())</span></a>
-<a name="951"><span class="lineNum">     951 </span>            :                 {</a>
-<a name="952"><span class="lineNum">     952 </span><span class="lineNoCov">          0 :                     for (const auto&amp; m : noteOffMessagesToAdd)</span></a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineNoCov">          0 :                         recorded.addEvent (m);</span></a>
-<a name="954"><span class="lineNum">     954 </span>            :                 }</a>
-<a name="955"><span class="lineNum">     955 </span>            : </a>
-<a name="956"><span class="lineNum">     956 </span><span class="lineNoCov">          0 :                 if (! mpeMessagesToAddAtStartPos.isEmpty())</span></a>
-<a name="957"><span class="lineNum">     957 </span>            :                 {</a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineNoCov">          0 :                     for (const auto&amp; m : mpeMessagesToAddAtStartPos)</span></a>
-<a name="959"><span class="lineNum">     959 </span><span class="lineNoCov">          0 :                         recorded.addEvent (m, startPos.inSeconds());</span></a>
-<a name="960"><span class="lineNum">     960 </span>            :                 }</a>
-<a name="961"><span class="lineNum">     961 </span>            : </a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 :                 recorded.sort();</span></a>
-<a name="963"><span class="lineNum">     963 </span><span class="lineNoCov">          0 :                 recorded.updateMatchedPairs();</span></a>
-<a name="964"><span class="lineNum">     964 </span><span class="lineNoCov">          0 :                 recorded.addTimeToMessages (-startPos.inSeconds());</span></a>
-<a name="965"><span class="lineNum">     965 </span>            : </a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineNoCov">          0 :                 if (recorded.getNumEvents() &gt; 0)</span></a>
-<a name="967"><span class="lineNum">     967 </span>            :                 {</a>
-<a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 :                     if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track, recorded,</span></a>
-<a name="969"><span class="lineNum">     969 </span>            :                                                                      { startPos, endPos },</a>
-<a name="970"><span class="lineNum">     970 </span>            :                                                                      MidiInputDevice::MergeMode::optional,</a>
-<a name="971"><span class="lineNum">     971 </span>            :                                                                      channelToApply, selectionManager))</a>
-<a name="972"><span class="lineNum">     972 </span>            :                     {</a>
-<a name="973"><span class="lineNum">     973 </span><span class="lineNoCov">          0 :                         createdClips.add (clip);</span></a>
-<a name="974"><span class="lineNum">     974 </span>            :                     }</a>
-<a name="975"><span class="lineNum">     975 </span>            :                 }</a>
-<a name="976"><span class="lineNum">     976 </span>            :             }</a>
-<a name="977"><span class="lineNum">     977 </span>            :         }</a>
-<a name="978"><span class="lineNum">     978 </span>            : </a>
-<a name="979"><span class="lineNum">     979 </span><span class="lineNoCov">          0 :         recorded.clear();</span></a>
-<a name="980"><span class="lineNum">     980 </span>            : </a>
-<a name="981"><span class="lineNum">     981 </span>            :         return createdClips;</a>
-<a name="982"><span class="lineNum">     982 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="983"><span class="lineNum">     983 </span>            : </a>
-<a name="984"><span class="lineNum">     984 </span><span class="lineNoCov">          0 :     juce::Array&lt;Clip*&gt; applyRetrospectiveRecord (SelectionManager* selectionManager) override</span></a>
-<a name="985"><span class="lineNum">     985 </span>            :     {</a>
-<a name="986"><span class="lineNum">     986 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="987"><span class="lineNum">     987 </span>            :         </a>
-<a name="988"><span class="lineNum">     988 </span><span class="lineNoCov">          0 :         juce::Array&lt;Clip*&gt; clips;</span></a>
+<a name="904"><span class="lineNum">     904 </span><span class="lineNoCov">          0 :                 const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage&amp; m)</span></a>
+<a name="905"><span class="lineNum">     905 </span>            :                 {</a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineNoCov">          0 :                     return (m.getTimeStamp() &lt; startPos.inSeconds() || m.getTimeStamp() &gt; maxEndPos.inSeconds()) &amp;&amp; ! m.isNoteOff();</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineNoCov">          0 :                 };</span></a>
+<a name="908"><span class="lineNum">     908 </span>            : </a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineNoCov">          0 :                 if (mi.recordToNoteAutomation)</span></a>
+<a name="910"><span class="lineNum">     910 </span>            :                 {</a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineNoCov">          0 :                     auto clipStartIndex = recorded.getNextIndexAtTime (startPos.inSeconds());</span></a>
+<a name="912"><span class="lineNum">     912 </span>            : </a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineNoCov">          0 :                     for (int i = recorded.getNumEvents(); --i &gt;= 0;)</span></a>
+<a name="914"><span class="lineNum">     914 </span>            :                     {</a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineNoCov">          0 :                         auto&amp; m = *recorded.getEventPointer (i);</span></a>
+<a name="916"><span class="lineNum">     916 </span>            : </a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineNoCov">          0 :                         if (m.message.getTimeStamp() &lt; startPos.inSeconds() &amp;&amp; isNoteOnThatEndsAfterClipStart (m))</span></a>
+<a name="918"><span class="lineNum">     918 </span>            :                         {</a>
+<a name="919"><span class="lineNum">     919 </span><span class="lineNoCov">          0 :                             MPEStartTrimmer::reconstructExpression (mpeMessagesToAddAtStartPos, recorded, clipStartIndex, m.message.getChannel());</span></a>
+<a name="920"><span class="lineNum">     920 </span>            : </a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
+<a name="922"><span class="lineNum">     922 </span>            :                             eventsToDelete.add (i); // Remove original noteOn, findInitialNoteExpression makes new one in correct order</a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineNoCov">          0 :                             m.noteOffObject = nullptr; // Prevent deletion of original note off, it will be paird with the new note-on later</span></a>
+<a name="924"><span class="lineNum">     924 </span>            :                         }</a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineNoCov">          0 :                         else if (isOutsideClipAndNotNoteOff (m.message))</span></a>
+<a name="926"><span class="lineNum">     926 </span>            :                         {</a>
+<a name="927"><span class="lineNum">     927 </span>            :                             eventsToDelete.add (i);</a>
+<a name="928"><span class="lineNum">     928 </span>            :                         }</a>
+<a name="929"><span class="lineNum">     929 </span><span class="lineNoCov">          0 :                         else if (m.message.getTimeStamp() &lt; endPos.inSeconds() &amp;&amp; m.message.isNoteOn())</span></a>
+<a name="930"><span class="lineNum">     930 </span>            :                         {</a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
+<a name="932"><span class="lineNum">     932 </span>            :                         }</a>
+<a name="933"><span class="lineNum">     933 </span>            :                     }</a>
+<a name="934"><span class="lineNum">     934 </span>            :                 }</a>
+<a name="935"><span class="lineNum">     935 </span>            :                 else</a>
+<a name="936"><span class="lineNum">     936 </span>            :                 {</a>
+<a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 :                     for (int i = recorded.getNumEvents(); --i &gt;= 0;)</span></a>
+<a name="938"><span class="lineNum">     938 </span>            :                     {</a>
+<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 :                         auto&amp; m = *recorded.getEventPointer (i);</span></a>
+<a name="940"><span class="lineNum">     940 </span>            : </a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :                         if (m.message.getTimeStamp() &lt; startPos.inSeconds() &amp;&amp; isNoteOnThatEndsAfterClipStart (m))</span></a>
+<a name="942"><span class="lineNum">     942 </span>            :                             m.message.setTimeStamp (startPos.inSeconds());</a>
+<a name="943"><span class="lineNum">     943 </span>            : </a>
+<a name="944"><span class="lineNum">     944 </span><span class="lineNoCov">          0 :                         if (isOutsideClipAndNotNoteOff (m.message))</span></a>
+<a name="945"><span class="lineNum">     945 </span>            :                             eventsToDelete.add (i);</a>
+<a name="946"><span class="lineNum">     946 </span>            : </a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineNoCov">          0 :                         else if (m.message.getTimeStamp() &lt; endPos.inSeconds() &amp;&amp; m.message.isNoteOn())</span></a>
+<a name="948"><span class="lineNum">     948 </span><span class="lineNoCov">          0 :                             ensureNoteOffIsInsideClip (m);</span></a>
+<a name="949"><span class="lineNum">     949 </span>            :                     }</a>
+<a name="950"><span class="lineNum">     950 </span>            :                 }</a>
+<a name="951"><span class="lineNum">     951 </span>            : </a>
+<a name="952"><span class="lineNum">     952 </span><span class="lineNoCov">          0 :                 if (! eventsToDelete.isEmpty())</span></a>
+<a name="953"><span class="lineNum">     953 </span>            :                 {</a>
+<a name="954"><span class="lineNum">     954 </span>            :                     // N.B. eventsToDelete is in reverse order so iterate forwards when deleting</a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineNoCov">          0 :                     for (int index : eventsToDelete)</span></a>
+<a name="956"><span class="lineNum">     956 </span><span class="lineNoCov">          0 :                         recorded.deleteEvent (index, true);</span></a>
+<a name="957"><span class="lineNum">     957 </span>            :                 }</a>
+<a name="958"><span class="lineNum">     958 </span>            : </a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineNoCov">          0 :                 if (! noteOffMessagesToAdd.isEmpty())</span></a>
+<a name="960"><span class="lineNum">     960 </span>            :                 {</a>
+<a name="961"><span class="lineNum">     961 </span><span class="lineNoCov">          0 :                     for (const auto&amp; m : noteOffMessagesToAdd)</span></a>
+<a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 :                         recorded.addEvent (m);</span></a>
+<a name="963"><span class="lineNum">     963 </span>            :                 }</a>
+<a name="964"><span class="lineNum">     964 </span>            : </a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :                 if (! mpeMessagesToAddAtStartPos.isEmpty())</span></a>
+<a name="966"><span class="lineNum">     966 </span>            :                 {</a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineNoCov">          0 :                     for (const auto&amp; m : mpeMessagesToAddAtStartPos)</span></a>
+<a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 :                         recorded.addEvent (m, startPos.inSeconds());</span></a>
+<a name="969"><span class="lineNum">     969 </span>            :                 }</a>
+<a name="970"><span class="lineNum">     970 </span>            : </a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineNoCov">          0 :                 recorded.sort();</span></a>
+<a name="972"><span class="lineNum">     972 </span><span class="lineNoCov">          0 :                 recorded.updateMatchedPairs();</span></a>
+<a name="973"><span class="lineNum">     973 </span><span class="lineNoCov">          0 :                 recorded.addTimeToMessages (-startPos.inSeconds());</span></a>
+<a name="974"><span class="lineNum">     974 </span>            : </a>
+<a name="975"><span class="lineNum">     975 </span><span class="lineNoCov">          0 :                 if (recorded.getNumEvents() &gt; 0)</span></a>
+<a name="976"><span class="lineNum">     976 </span>            :                 {</a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineNoCov">          0 :                     if (auto* clip = mi.addMidiToTrackAsTransaction (nullptr, *track, recorded,</span></a>
+<a name="978"><span class="lineNum">     978 </span>            :                                                                      { startPos, endPos },</a>
+<a name="979"><span class="lineNum">     979 </span>            :                                                                      MidiInputDevice::MergeMode::optional,</a>
+<a name="980"><span class="lineNum">     980 </span>            :                                                                      channelToApply, selectionManager))</a>
+<a name="981"><span class="lineNum">     981 </span>            :                     {</a>
+<a name="982"><span class="lineNum">     982 </span><span class="lineNoCov">          0 :                         createdClips.add (clip);</span></a>
+<a name="983"><span class="lineNum">     983 </span>            :                     }</a>
+<a name="984"><span class="lineNum">     984 </span>            :                 }</a>
+<a name="985"><span class="lineNum">     985 </span>            :             }</a>
+<a name="986"><span class="lineNum">     986 </span>            :         }</a>
+<a name="987"><span class="lineNum">     987 </span>            : </a>
+<a name="988"><span class="lineNum">     988 </span><span class="lineNoCov">          0 :         recorded.clear();</span></a>
 <a name="989"><span class="lineNum">     989 </span>            : </a>
-<a name="990"><span class="lineNum">     990 </span>            :         auto&amp; mi = getMidiInput();</a>
-<a name="991"><span class="lineNum">     991 </span>            :         auto retrospective = mi.getRetrospectiveMidiBuffer();</a>
+<a name="990"><span class="lineNum">     990 </span>            :         return createdClips;</a>
+<a name="991"><span class="lineNum">     991 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="992"><span class="lineNum">     992 </span>            : </a>
-<a name="993"><span class="lineNum">     993 </span><span class="lineNoCov">          0 :         if (retrospective == nullptr)</span></a>
-<a name="994"><span class="lineNum">     994 </span><span class="lineNoCov">          0 :             return {};</span></a>
-<a name="995"><span class="lineNum">     995 </span>            : </a>
-<a name="996"><span class="lineNum">     996 </span><span class="lineNoCov">          0 :         for (auto track : getTargetTracks())</span></a>
-<a name="997"><span class="lineNum">     997 </span>            :         {</a>
-<a name="998"><span class="lineNum">     998 </span><span class="lineNoCov">          0 :             auto sequence = retrospective-&gt;getMidiMessages();</span></a>
-<a name="999"><span class="lineNum">     999 </span>            : </a>
-<a name="1000"><span class="lineNum">    1000 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() == 0)</span></a>
-<a name="1001"><span class="lineNum">    1001 </span><span class="lineNoCov">          0 :                 return {};</span></a>
-<a name="1002"><span class="lineNum">    1002 </span>            : </a>
-<a name="1003"><span class="lineNum">    1003 </span><span class="lineNoCov">          0 :             sequence.updateMatchedPairs();</span></a>
-<a name="1004"><span class="lineNum">    1004 </span><span class="lineNoCov">          0 :             auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()</span></a>
-<a name="1005"><span class="lineNum">    1005 </span><span class="lineNoCov">          0 :                                                             : applyChannel (sequence, mi.getChannelToUse());</span></a>
-<a name="1006"><span class="lineNum">    1006 </span>            :             auto timeAdjustMs = mi.getManualAdjustmentMs();</a>
-<a name="1007"><span class="lineNum">    1007 </span>            :             </a>
-<a name="1008"><span class="lineNum">    1008 </span><span class="lineNoCov">          0 :             if (context.getNodePlayHead() != nullptr)</span></a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 :                 timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());</span></a>
-<a name="1010"><span class="lineNum">    1010 </span>            :             </a>
-<a name="1011"><span class="lineNum">    1011 </span>            :             applyTimeAdjustment (sequence, timeAdjustMs);</a>
-<a name="1012"><span class="lineNum">    1012 </span>            : </a>
-<a name="1013"><span class="lineNum">    1013 </span><span class="lineNoCov">          0 :             auto clipStart = juce::Time::getMillisecondCounterHiRes() * 0.001</span></a>
-<a name="1014"><span class="lineNum">    1014 </span><span class="lineNoCov">          0 :                                 - retrospective-&gt;lengthInSeconds + mi.getAdjustSecs();</span></a>
-<a name="1015"><span class="lineNum">    1015 </span><span class="lineNoCov">          0 :             sequence.addTimeToMessages (-clipStart);</span></a>
-<a name="1016"><span class="lineNum">    1016 </span>            : </a>
-<a name="1017"><span class="lineNum">    1017 </span>            :             double start;</a>
-<a name="1018"><span class="lineNum">    1018 </span><span class="lineNoCov">          0 :             double length = retrospective-&gt;lengthInSeconds;</span></a>
-<a name="1019"><span class="lineNum">    1019 </span>            :             double offset = 0;</a>
-<a name="1020"><span class="lineNum">    1020 </span>            : </a>
-<a name="1021"><span class="lineNum">    1021 </span><span class="lineNoCov">          0 :             if (context.isPlaying())</span></a>
-<a name="1022"><span class="lineNum">    1022 </span>            :             {</a>
-<a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :                 start = std::max (TimePosition(), context.getPosition()).inSeconds() - length;</span></a>
-<a name="1024"><span class="lineNum">    1024 </span>            :             }</a>
-<a name="1025"><span class="lineNum">    1025 </span><span class="lineNoCov">          0 :             else if (lastEditTime &gt;= 0 &amp;&amp; pausedTime &lt; 20)</span></a>
-<a name="1026"><span class="lineNum">    1026 </span>            :             {</a>
-<a name="1027"><span class="lineNum">    1027 </span><span class="lineNoCov">          0 :                 start = lastEditTime + pausedTime - length;</span></a>
-<a name="1028"><span class="lineNum">    1028 </span><span class="lineNoCov">          0 :                 lastEditTime = -1;</span></a>
-<a name="1029"><span class="lineNum">    1029 </span>            :             }</a>
-<a name="1030"><span class="lineNum">    1030 </span>            :             else</a>
+<a name="993"><span class="lineNum">     993 </span><span class="lineNoCov">          0 :     juce::Array&lt;Clip*&gt; applyRetrospectiveRecord (SelectionManager* selectionManager) override</span></a>
+<a name="994"><span class="lineNum">     994 </span>            :     {</a>
+<a name="995"><span class="lineNum">     995 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
+<a name="996"><span class="lineNum">     996 </span>            :         </a>
+<a name="997"><span class="lineNum">     997 </span><span class="lineNoCov">          0 :         juce::Array&lt;Clip*&gt; clips;</span></a>
+<a name="998"><span class="lineNum">     998 </span>            : </a>
+<a name="999"><span class="lineNum">     999 </span>            :         auto&amp; mi = getMidiInput();</a>
+<a name="1000"><span class="lineNum">    1000 </span>            :         auto retrospective = mi.getRetrospectiveMidiBuffer();</a>
+<a name="1001"><span class="lineNum">    1001 </span>            : </a>
+<a name="1002"><span class="lineNum">    1002 </span><span class="lineNoCov">          0 :         if (retrospective == nullptr)</span></a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineNoCov">          0 :             return {};</span></a>
+<a name="1004"><span class="lineNum">    1004 </span>            : </a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineNoCov">          0 :         for (auto track : getTargetTracks())</span></a>
+<a name="1006"><span class="lineNum">    1006 </span>            :         {</a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :             auto sequence = retrospective-&gt;getMidiMessages();</span></a>
+<a name="1008"><span class="lineNum">    1008 </span>            : </a>
+<a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() == 0)</span></a>
+<a name="1010"><span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 return {};</span></a>
+<a name="1011"><span class="lineNum">    1011 </span>            : </a>
+<a name="1012"><span class="lineNum">    1012 </span><span class="lineNoCov">          0 :             sequence.updateMatchedPairs();</span></a>
+<a name="1013"><span class="lineNum">    1013 </span><span class="lineNoCov">          0 :             auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineNoCov">          0 :                                                             : applyChannel (sequence, mi.getChannelToUse());</span></a>
+<a name="1015"><span class="lineNum">    1015 </span>            :             auto timeAdjustMs = mi.getManualAdjustmentMs();</a>
+<a name="1016"><span class="lineNum">    1016 </span>            :             </a>
+<a name="1017"><span class="lineNum">    1017 </span><span class="lineNoCov">          0 :             if (context.getNodePlayHead() != nullptr)</span></a>
+<a name="1018"><span class="lineNum">    1018 </span><span class="lineNoCov">          0 :                 timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());</span></a>
+<a name="1019"><span class="lineNum">    1019 </span>            :             </a>
+<a name="1020"><span class="lineNum">    1020 </span>            :             applyTimeAdjustment (sequence, timeAdjustMs);</a>
+<a name="1021"><span class="lineNum">    1021 </span>            : </a>
+<a name="1022"><span class="lineNum">    1022 </span><span class="lineNoCov">          0 :             auto clipStart = juce::Time::getMillisecondCounterHiRes() * 0.001</span></a>
+<a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :                                 - retrospective-&gt;lengthInSeconds + mi.getAdjustSecs();</span></a>
+<a name="1024"><span class="lineNum">    1024 </span><span class="lineNoCov">          0 :             sequence.addTimeToMessages (-clipStart);</span></a>
+<a name="1025"><span class="lineNum">    1025 </span>            : </a>
+<a name="1026"><span class="lineNum">    1026 </span>            :             double start;</a>
+<a name="1027"><span class="lineNum">    1027 </span><span class="lineNoCov">          0 :             double length = retrospective-&gt;lengthInSeconds;</span></a>
+<a name="1028"><span class="lineNum">    1028 </span>            :             double offset = 0;</a>
+<a name="1029"><span class="lineNum">    1029 </span>            : </a>
+<a name="1030"><span class="lineNum">    1030 </span><span class="lineNoCov">          0 :             if (context.isPlaying())</span></a>
 <a name="1031"><span class="lineNum">    1031 </span>            :             {</a>
-<a name="1032"><span class="lineNum">    1032 </span><span class="lineNoCov">          0 :                 auto position = context.getPosition();</span></a>
-<a name="1033"><span class="lineNum">    1033 </span>            : </a>
-<a name="1034"><span class="lineNum">    1034 </span><span class="lineNoCov">          0 :                 if (position &gt;= 5s)</span></a>
-<a name="1035"><span class="lineNum">    1035 </span><span class="lineNoCov">          0 :                     start = position.inSeconds() - length;</span></a>
-<a name="1036"><span class="lineNum">    1036 </span>            :                 else</a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineNoCov">          0 :                     start = std::max (TimePosition(), context.getPosition()).inSeconds();</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineNoCov">          0 :                 start = std::max (TimePosition(), context.getPosition()).inSeconds() - length;</span></a>
+<a name="1033"><span class="lineNum">    1033 </span>            :             }</a>
+<a name="1034"><span class="lineNum">    1034 </span><span class="lineNoCov">          0 :             else if (lastEditTime &gt;= 0 &amp;&amp; pausedTime &lt; 20)</span></a>
+<a name="1035"><span class="lineNum">    1035 </span>            :             {</a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineNoCov">          0 :                 start = lastEditTime + pausedTime - length;</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineNoCov">          0 :                 lastEditTime = -1;</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            :             }</a>
-<a name="1039"><span class="lineNum">    1039 </span>            : </a>
-<a name="1040"><span class="lineNum">    1040 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() &gt; 0)</span></a>
-<a name="1041"><span class="lineNum">    1041 </span>            :             {</a>
-<a name="1042"><span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                 auto firstEventTime = std::floor (sequence.getStartTime());</span></a>
-<a name="1043"><span class="lineNum">    1043 </span><span class="lineNoCov">          0 :                 sequence.addTimeToMessages (-firstEventTime);</span></a>
-<a name="1044"><span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                 start += firstEventTime;</span></a>
-<a name="1045"><span class="lineNum">    1045 </span><span class="lineNoCov">          0 :                 length -= firstEventTime;</span></a>
-<a name="1046"><span class="lineNum">    1046 </span>            :             }</a>
-<a name="1047"><span class="lineNum">    1047 </span>            : </a>
-<a name="1048"><span class="lineNum">    1048 </span><span class="lineNoCov">          0 :             if (start &lt; 0)</span></a>
-<a name="1049"><span class="lineNum">    1049 </span>            :             {</a>
-<a name="1050"><span class="lineNum">    1050 </span><span class="lineNoCov">          0 :                 offset = -start;</span></a>
-<a name="1051"><span class="lineNum">    1051 </span>            :                 start = 0;</a>
-<a name="1052"><span class="lineNum">    1052 </span><span class="lineNoCov">          0 :                 length -= offset;</span></a>
-<a name="1053"><span class="lineNum">    1053 </span>            :             }</a>
-<a name="1054"><span class="lineNum">    1054 </span>            : </a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineNoCov">          0 :             retrospective-&gt;sequence.clear();</span></a>
+<a name="1039"><span class="lineNum">    1039 </span>            :             else</a>
+<a name="1040"><span class="lineNum">    1040 </span>            :             {</a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :                 auto position = context.getPosition();</span></a>
+<a name="1042"><span class="lineNum">    1042 </span>            : </a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineNoCov">          0 :                 if (position &gt;= 5s)</span></a>
+<a name="1044"><span class="lineNum">    1044 </span><span class="lineNoCov">          0 :                     start = position.inSeconds() - length;</span></a>
+<a name="1045"><span class="lineNum">    1045 </span>            :                 else</a>
+<a name="1046"><span class="lineNum">    1046 </span><span class="lineNoCov">          0 :                     start = std::max (TimePosition(), context.getPosition()).inSeconds();</span></a>
+<a name="1047"><span class="lineNum">    1047 </span>            :             }</a>
+<a name="1048"><span class="lineNum">    1048 </span>            : </a>
+<a name="1049"><span class="lineNum">    1049 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() &gt; 0)</span></a>
+<a name="1050"><span class="lineNum">    1050 </span>            :             {</a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineNoCov">          0 :                 auto firstEventTime = std::floor (sequence.getStartTime());</span></a>
+<a name="1052"><span class="lineNum">    1052 </span><span class="lineNoCov">          0 :                 sequence.addTimeToMessages (-firstEventTime);</span></a>
+<a name="1053"><span class="lineNum">    1053 </span><span class="lineNoCov">          0 :                 start += firstEventTime;</span></a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineNoCov">          0 :                 length -= firstEventTime;</span></a>
+<a name="1055"><span class="lineNum">    1055 </span>            :             }</a>
 <a name="1056"><span class="lineNum">    1056 </span>            : </a>
-<a name="1057"><span class="lineNum">    1057 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() &gt; 0)</span></a>
+<a name="1057"><span class="lineNum">    1057 </span><span class="lineNoCov">          0 :             if (start &lt; 0)</span></a>
 <a name="1058"><span class="lineNum">    1058 </span>            :             {</a>
-<a name="1059"><span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                 auto clip = mi.addMidiToTrackAsTransaction (nullptr, *track, sequence,</span></a>
-<a name="1060"><span class="lineNum">    1060 </span>            :                                                             { TimePosition::fromSeconds (start), TimePosition::fromSeconds (start + length) },</a>
-<a name="1061"><span class="lineNum">    1061 </span>            :                                                             MidiInputDevice::MergeMode::never,</a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineNoCov">          0 :                                                             channelToApply, selectionManager);</span></a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineNoCov">          0 :                 clip-&gt;setOffset (TimeDuration::fromSeconds (offset));</span></a>
-<a name="1064"><span class="lineNum">    1064 </span>            :                 clips.add (clip);</a>
-<a name="1065"><span class="lineNum">    1065 </span>            :             }</a>
-<a name="1066"><span class="lineNum">    1066 </span>            :         }</a>
-<a name="1067"><span class="lineNum">    1067 </span>            : </a>
-<a name="1068"><span class="lineNum">    1068 </span>            :         return clips;</a>
-<a name="1069"><span class="lineNum">    1069 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="1070"><span class="lineNum">    1070 </span>            : </a>
-<a name="1071"><span class="lineNum">    1071 </span><span class="lineNoCov">          0 :     void masterTimeUpdate (double time)</span></a>
-<a name="1072"><span class="lineNum">    1072 </span>            :     {</a>
-<a name="1073"><span class="lineNum">    1073 </span><span class="lineNoCov">          0 :         if (context.isPlaying())</span></a>
-<a name="1074"><span class="lineNum">    1074 </span>            :         {</a>
-<a name="1075"><span class="lineNum">    1075 </span><span class="lineNoCov">          0 :             pausedTime = 0;</span></a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineNoCov">          0 :             lastEditTime = context.globalStreamTimeToEditTime (time).inSeconds();</span></a>
-<a name="1077"><span class="lineNum">    1077 </span>            :         }</a>
-<a name="1078"><span class="lineNum">    1078 </span>            :         else</a>
-<a name="1079"><span class="lineNum">    1079 </span>            :         {</a>
-<a name="1080"><span class="lineNum">    1080 </span><span class="lineNoCov">          0 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
-<a name="1081"><span class="lineNum">    1081 </span>            :         }</a>
-<a name="1082"><span class="lineNum">    1082 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="1083"><span class="lineNum">    1083 </span>            : </a>
-<a name="1084"><span class="lineNum">    1084 </span><span class="lineNoCov">          0 :     bool isLivePlayEnabled (const Track&amp; t) const override</span></a>
-<a name="1085"><span class="lineNum">    1085 </span>            :     {</a>
-<a name="1086"><span class="lineNum">    1086 </span><span class="lineNoCov">          0 :         return owner.isEndToEndEnabled() &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
-<a name="1087"><span class="lineNum">    1087 </span>            :     }</a>
-<a name="1088"><span class="lineNum">    1088 </span>            : </a>
-<a name="1089"><span class="lineNum">    1089 </span><span class="lineNoCov">          0 :     MidiInputDevice&amp; getMidiInput() const   { return static_cast&lt;MidiInputDevice&amp;&gt; (owner); }</span></a>
-<a name="1090"><span class="lineNum">    1090 </span>            : </a>
-<a name="1091"><span class="lineNum">    1091 </span>            :     std::atomic&lt;bool&gt; recording { false }, livePlayOver { false };</a>
-<a name="1092"><span class="lineNum">    1092 </span>            :     TimePosition startTime;</a>
-<a name="1093"><span class="lineNum">    1093 </span>            :     juce::MidiMessageSequence recorded;</a>
-<a name="1094"><span class="lineNum">    1094 </span>            : </a>
-<a name="1095"><span class="lineNum">    1095 </span>            : private:</a>
-<a name="1096"><span class="lineNum">    1096 </span>            :     juce::CriticalSection consumerLock;</a>
-<a name="1097"><span class="lineNum">    1097 </span>            :     juce::Array&lt;Consumer*&gt; consumers;</a>
-<a name="1098"><span class="lineNum">    1098 </span>            :     double lastEditTime = -1.0;</a>
-<a name="1099"><span class="lineNum">    1099 </span>            :     double pausedTime = 0;</a>
-<a name="1100"><span class="lineNum">    1100 </span>            :     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();</a>
-<a name="1101"><span class="lineNum">    1101 </span>            : </a>
-<a name="1102"><span class="lineNum">    1102 </span><span class="lineNoCov">          0 :     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }</span></a>
-<a name="1103"><span class="lineNum">    1103 </span><span class="lineNoCov">          0 :     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }</span></a>
-<a name="1104"><span class="lineNum">    1104 </span>            : </a>
-<a name="1105"><span class="lineNum">    1105 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)</a>
-<a name="1106"><span class="lineNum">    1106 </span>            : };</a>
-<a name="1107"><span class="lineNum">    1107 </span>            : </a>
-<a name="1108"><span class="lineNum">    1108 </span>            : </a>
-<a name="1109"><span class="lineNum">    1109 </span>            : //==============================================================================</a>
-<a name="1110"><span class="lineNum">    1110 </span><span class="lineNoCov">          0 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
-<a name="1111"><span class="lineNum">    1111 </span>            : {</a>
-<a name="1112"><span class="lineNum">    1112 </span><span class="lineNoCov">          0 :     adjustSecs = time - juce::Time::getMillisecondCounterHiRes() * 0.001;</span></a>
-<a name="1113"><span class="lineNum">    1113 </span>            : </a>
-<a name="1114"><span class="lineNum">    1114 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (instanceLock);</span></a>
-<a name="1115"><span class="lineNum">    1115 </span>            : </a>
-<a name="1116"><span class="lineNum">    1116 </span><span class="lineNoCov">          0 :     for (auto instance : instances)</span></a>
-<a name="1117"><span class="lineNum">    1117 </span><span class="lineNoCov">          0 :         instance-&gt;masterTimeUpdate (time);</span></a>
-<a name="1118"><span class="lineNum">    1118 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1059"><span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                 offset = -start;</span></a>
+<a name="1060"><span class="lineNum">    1060 </span>            :                 start = 0;</a>
+<a name="1061"><span class="lineNum">    1061 </span><span class="lineNoCov">          0 :                 length -= offset;</span></a>
+<a name="1062"><span class="lineNum">    1062 </span>            :             }</a>
+<a name="1063"><span class="lineNum">    1063 </span>            : </a>
+<a name="1064"><span class="lineNum">    1064 </span><span class="lineNoCov">          0 :             retrospective-&gt;sequence.clear();</span></a>
+<a name="1065"><span class="lineNum">    1065 </span>            : </a>
+<a name="1066"><span class="lineNum">    1066 </span><span class="lineNoCov">          0 :             if (sequence.getNumEvents() &gt; 0)</span></a>
+<a name="1067"><span class="lineNum">    1067 </span>            :             {</a>
+<a name="1068"><span class="lineNum">    1068 </span><span class="lineNoCov">          0 :                 auto clip = mi.addMidiToTrackAsTransaction (nullptr, *track, sequence,</span></a>
+<a name="1069"><span class="lineNum">    1069 </span>            :                                                             { TimePosition::fromSeconds (start), TimePosition::fromSeconds (start + length) },</a>
+<a name="1070"><span class="lineNum">    1070 </span>            :                                                             MidiInputDevice::MergeMode::never,</a>
+<a name="1071"><span class="lineNum">    1071 </span><span class="lineNoCov">          0 :                                                             channelToApply, selectionManager);</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineNoCov">          0 :                 clip-&gt;setOffset (TimeDuration::fromSeconds (offset));</span></a>
+<a name="1073"><span class="lineNum">    1073 </span>            :                 clips.add (clip);</a>
+<a name="1074"><span class="lineNum">    1074 </span>            :             }</a>
+<a name="1075"><span class="lineNum">    1075 </span>            :         }</a>
+<a name="1076"><span class="lineNum">    1076 </span>            : </a>
+<a name="1077"><span class="lineNum">    1077 </span>            :         return clips;</a>
+<a name="1078"><span class="lineNum">    1078 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1079"><span class="lineNum">    1079 </span>            : </a>
+<a name="1080"><span class="lineNum">    1080 </span><span class="lineNoCov">          0 :     void masterTimeUpdate (double time)</span></a>
+<a name="1081"><span class="lineNum">    1081 </span>            :     {</a>
+<a name="1082"><span class="lineNum">    1082 </span><span class="lineNoCov">          0 :         if (context.isPlaying())</span></a>
+<a name="1083"><span class="lineNum">    1083 </span>            :         {</a>
+<a name="1084"><span class="lineNum">    1084 </span><span class="lineNoCov">          0 :             pausedTime = 0;</span></a>
+<a name="1085"><span class="lineNum">    1085 </span><span class="lineNoCov">          0 :             lastEditTime = context.globalStreamTimeToEditTime (time).inSeconds();</span></a>
+<a name="1086"><span class="lineNum">    1086 </span>            :         }</a>
+<a name="1087"><span class="lineNum">    1087 </span>            :         else</a>
+<a name="1088"><span class="lineNum">    1088 </span>            :         {</a>
+<a name="1089"><span class="lineNum">    1089 </span><span class="lineNoCov">          0 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
+<a name="1090"><span class="lineNum">    1090 </span>            :         }</a>
+<a name="1091"><span class="lineNum">    1091 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1092"><span class="lineNum">    1092 </span>            : </a>
+<a name="1093"><span class="lineNum">    1093 </span><span class="lineNoCov">          0 :     bool isLivePlayEnabled (const Track&amp; t) const override</span></a>
+<a name="1094"><span class="lineNum">    1094 </span>            :     {</a>
+<a name="1095"><span class="lineNum">    1095 </span><span class="lineNoCov">          0 :         return owner.isEndToEndEnabled() &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
+<a name="1096"><span class="lineNum">    1096 </span>            :     }</a>
+<a name="1097"><span class="lineNum">    1097 </span>            : </a>
+<a name="1098"><span class="lineNum">    1098 </span><span class="lineNoCov">          0 :     MidiInputDevice&amp; getMidiInput() const   { return static_cast&lt;MidiInputDevice&amp;&gt; (owner); }</span></a>
+<a name="1099"><span class="lineNum">    1099 </span>            : </a>
+<a name="1100"><span class="lineNum">    1100 </span>            :     std::atomic&lt;bool&gt; recording { false }, livePlayOver { false };</a>
+<a name="1101"><span class="lineNum">    1101 </span>            :     TimePosition startTime;</a>
+<a name="1102"><span class="lineNum">    1102 </span>            :     juce::MidiMessageSequence recorded;</a>
+<a name="1103"><span class="lineNum">    1103 </span>            : </a>
+<a name="1104"><span class="lineNum">    1104 </span>            : private:</a>
+<a name="1105"><span class="lineNum">    1105 </span>            :     juce::CriticalSection consumerLock, activeNotesLock;</a>
+<a name="1106"><span class="lineNum">    1106 </span>            :     juce::Array&lt;Consumer*&gt; consumers;</a>
+<a name="1107"><span class="lineNum">    1107 </span>            :     double lastEditTime = -1.0;</a>
+<a name="1108"><span class="lineNum">    1108 </span>            :     double pausedTime = 0;</a>
+<a name="1109"><span class="lineNum">    1109 </span>            :     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();</a>
+<a name="1110"><span class="lineNum">    1110 </span>            :     ActiveNoteList activeNotes;</a>
+<a name="1111"><span class="lineNum">    1111 </span>            : </a>
+<a name="1112"><span class="lineNum">    1112 </span><span class="lineNoCov">          0 :     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }</span></a>
+<a name="1113"><span class="lineNum">    1113 </span><span class="lineNoCov">          0 :     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }</span></a>
+<a name="1114"><span class="lineNum">    1114 </span>            : </a>
+<a name="1115"><span class="lineNum">    1115 </span><span class="lineNoCov">          0 :     void valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int index) override</span></a>
+<a name="1116"><span class="lineNum">    1116 </span>            :     {</a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineNoCov">          0 :         if (p == state &amp;&amp; c.hasType (IDs::INPUTDEVICEDESTINATION))</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineNoCov">          0 :             injectNoteOffsToTrack();</span></a>
 <a name="1119"><span class="lineNum">    1119 </span>            : </a>
-<a name="1120"><span class="lineNum">    1120 </span><span class="lineNoCov">          0 : void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage&amp; message)</span></a>
-<a name="1121"><span class="lineNum">    1121 </span>            : {</a>
-<a name="1122"><span class="lineNum">    1122 </span>            :     bool messageUnused = true;</a>
-<a name="1123"><span class="lineNum">    1123 </span>            : </a>
+<a name="1120"><span class="lineNum">    1120 </span><span class="lineNoCov">          0 :         InputDeviceInstance::valueTreeChildRemoved (p, c, index);</span></a>
+<a name="1121"><span class="lineNum">    1121 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1122"><span class="lineNum">    1122 </span>            : </a>
+<a name="1123"><span class="lineNum">    1123 </span><span class="lineNoCov">          0 :     void injectNoteOffsToTrack()</span></a>
 <a name="1124"><span class="lineNum">    1124 </span>            :     {</a>
-<a name="1125"><span class="lineNum">    1125 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="1125"><span class="lineNum">    1125 </span>            :         ActiveNoteList notes;</a>
 <a name="1126"><span class="lineNum">    1126 </span>            : </a>
-<a name="1127"><span class="lineNum">    1127 </span><span class="lineNoCov">          0 :         for (auto i : instances)</span></a>
-<a name="1128"><span class="lineNum">    1128 </span><span class="lineNoCov">          0 :             if (i-&gt;handleIncomingMidiMessage (message))</span></a>
-<a name="1129"><span class="lineNum">    1129 </span>            :                 messageUnused = false;</a>
-<a name="1130"><span class="lineNum">    1130 </span>            :     }</a>
-<a name="1131"><span class="lineNum">    1131 </span>            : </a>
-<a name="1132"><span class="lineNum">    1132 </span><span class="lineNoCov">          0 :     if (messageUnused &amp;&amp; message.isNoteOn())</span></a>
-<a name="1133"><span class="lineNum">    1133 </span><span class="lineNoCov">          0 :         if (auto&amp;&amp; warnOfWasted = engine.getDeviceManager().warnOfWastedMidiMessagesFunction)</span></a>
-<a name="1134"><span class="lineNum">    1134 </span><span class="lineNoCov">          0 :             warnOfWasted (this);</span></a>
-<a name="1135"><span class="lineNum">    1135 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1136"><span class="lineNum">    1136 </span>            : </a>
-<a name="1137"><span class="lineNum">    1137 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="1127"><span class="lineNum">    1127 </span>            :         // The lock isn't great here but it's mostly uncontended and when it is, it's between the MIDI and message threads</a>
+<a name="1128"><span class="lineNum">    1128 </span>            :         // The lock time is also constant so low-risk</a>
+<a name="1129"><span class="lineNum">    1129 </span>            :         {</a>
+<a name="1130"><span class="lineNum">    1130 </span><span class="lineNoCov">          0 :             const juce::ScopedLock sl (activeNotesLock);</span></a>
+<a name="1131"><span class="lineNum">    1131 </span><span class="lineNoCov">          0 :             notes = activeNotes;</span></a>
+<a name="1132"><span class="lineNum">    1132 </span>            :         }</a>
+<a name="1133"><span class="lineNum">    1133 </span>            : </a>
+<a name="1134"><span class="lineNum">    1134 </span><span class="lineNoCov">          0 :         for (auto t : getTargetTracks())</span></a>
+<a name="1135"><span class="lineNum">    1135 </span>            :         {</a>
+<a name="1136"><span class="lineNum">    1136 </span><span class="lineNoCov">          0 :             notes.iterate ([&amp;] (auto channel, auto noteNumber)</span></a>
+<a name="1137"><span class="lineNum">    1137 </span>            :                            {</a>
+<a name="1138"><span class="lineNum">    1138 </span><span class="lineNoCov">          0 :                                t-&gt;injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, noteNumber), midiSourceID);</span></a>
+<a name="1139"><span class="lineNum">    1139 </span><span class="lineNoCov">          0 :                            });</span></a>
+<a name="1140"><span class="lineNum">    1140 </span>            :         }</a>
+<a name="1141"><span class="lineNum">    1141 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1142"><span class="lineNum">    1142 </span>            : </a>
+<a name="1143"><span class="lineNum">    1143 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)</a>
+<a name="1144"><span class="lineNum">    1144 </span>            : };</a>
+<a name="1145"><span class="lineNum">    1145 </span>            : </a>
+<a name="1146"><span class="lineNum">    1146 </span>            : </a>
+<a name="1147"><span class="lineNum">    1147 </span>            : //==============================================================================</a>
+<a name="1148"><span class="lineNum">    1148 </span><span class="lineNoCov">          0 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
+<a name="1149"><span class="lineNum">    1149 </span>            : {</a>
+<a name="1150"><span class="lineNum">    1150 </span><span class="lineNoCov">          0 :     adjustSecs = time - juce::Time::getMillisecondCounterHiRes() * 0.001;</span></a>
+<a name="1151"><span class="lineNum">    1151 </span>            : </a>
+<a name="1152"><span class="lineNum">    1152 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="1153"><span class="lineNum">    1153 </span>            : </a>
+<a name="1154"><span class="lineNum">    1154 </span><span class="lineNoCov">          0 :     for (auto instance : instances)</span></a>
+<a name="1155"><span class="lineNum">    1155 </span><span class="lineNoCov">          0 :         instance-&gt;masterTimeUpdate (time);</span></a>
+<a name="1156"><span class="lineNum">    1156 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1157"><span class="lineNum">    1157 </span>            : </a>
+<a name="1158"><span class="lineNum">    1158 </span><span class="lineNoCov">          0 : void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage&amp; message)</span></a>
+<a name="1159"><span class="lineNum">    1159 </span>            : {</a>
+<a name="1160"><span class="lineNum">    1160 </span>            :     bool messageUnused = true;</a>
+<a name="1161"><span class="lineNum">    1161 </span>            : </a>
+<a name="1162"><span class="lineNum">    1162 </span>            :     {</a>
+<a name="1163"><span class="lineNum">    1163 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="1164"><span class="lineNum">    1164 </span>            : </a>
+<a name="1165"><span class="lineNum">    1165 </span><span class="lineNoCov">          0 :         for (auto i : instances)</span></a>
+<a name="1166"><span class="lineNum">    1166 </span><span class="lineNoCov">          0 :             if (i-&gt;handleIncomingMidiMessage (message))</span></a>
+<a name="1167"><span class="lineNum">    1167 </span>            :                 messageUnused = false;</a>
+<a name="1168"><span class="lineNum">    1168 </span>            :     }</a>
+<a name="1169"><span class="lineNum">    1169 </span>            : </a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineNoCov">          0 :     if (messageUnused &amp;&amp; message.isNoteOn())</span></a>
+<a name="1171"><span class="lineNum">    1171 </span><span class="lineNoCov">          0 :         if (auto&amp;&amp; warnOfWasted = engine.getDeviceManager().warnOfWastedMidiMessagesFunction)</span></a>
+<a name="1172"><span class="lineNum">    1172 </span><span class="lineNoCov">          0 :             warnOfWasted (this);</span></a>
+<a name="1173"><span class="lineNum">    1173 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1174"><span class="lineNum">    1174 </span>            : </a>
+<a name="1175"><span class="lineNum">    1175 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

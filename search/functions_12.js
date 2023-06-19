@@ -464,7 +464,7 @@ var searchData=
   ['setstriptoupdate_11056',['setStripToUpdate',['../classtracktion_1_1engine_1_1WaveCompManager.html#a9b6669bd8d143877cab45b4dbfa127cd',1,'tracktion::engine::WaveCompManager::setStripToUpdate()'],['../classtracktion_1_1engine_1_1CompManager.html#a9060e92806b6cfe530f4f03e6770c0b6',1,'tracktion::engine::CompManager::setStripToUpdate()']]],
   ['setsynctype_11057',['setSyncType',['../classtracktion_1_1engine_1_1Clip.html#af61d8838219d1c803a2b739fa0af46a1',1,'tracktion::engine::Clip']]],
   ['settags_11058',['setTags',['../classtracktion_1_1engine_1_1Track.html#a74de0134da9760051eff34835e8f491e',1,'tracktion::engine::Track']]],
-  ['settargettrack_11059',['setTargetTrack',['../classtracktion_1_1engine_1_1InputDeviceInstance.html#ac000b93f04532ee1161328eee4acae06',1,'tracktion::engine::InputDeviceInstance']]],
+  ['settargettrack_11059',['setTargetTrack',['../classtracktion_1_1engine_1_1InputDeviceInstance.html#ad98b269758c1a32b8677edfc6c42b748',1,'tracktion::engine::InputDeviceInstance']]],
   ['settempdirectory_11060',['setTempDirectory',['../classtracktion_1_1engine_1_1TemporaryFileManager.html#ad7379bf4bdb063c8ae5e2b6362e785fb',1,'tracktion::engine::TemporaryFileManager::setTempDirectory()'],['../classtracktion_1_1engine_1_1Edit.html#ade5b59165be64ce13111c50e2bde22b5',1,'tracktion::engine::Edit::setTempDirectory()']]],
   ['settempoadjustment_11061',['setTempoAdjustment',['../classtracktion_1_1engine_1_1EditPlaybackContext.html#a9fcb656cfc10b68627755acf0d4e7761',1,'tracktion::engine::EditPlaybackContext']]],
   ['settempoconstraint_11062',['setTempoConstraint',['../classtracktion_1_1engine_1_1AbletonLink.html#ae8d4e8161dad5d58b2e85ae6654fc6c9',1,'tracktion::engine::AbletonLink']]],

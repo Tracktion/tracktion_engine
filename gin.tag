@@ -28768,15 +28768,15 @@
       <type>void</type>
       <name>clearAllInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1EditInputDevices.html</anchorfile>
-      <anchor>a99d32b1394e5802f6bbb7fd1d8a721ff</anchor>
-      <arglist>(AudioTrack &amp;)</arglist>
+      <anchor>a1ec1cfd325584c5dcc788a07915b024c</anchor>
+      <arglist>(AudioTrack &amp;, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>clearInputsOfDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1EditInputDevices.html</anchorfile>
-      <anchor>a50a11a58ecd93b73fc9e122963e76309</anchor>
-      <arglist>(AudioTrack &amp;, const InputDevice &amp;)</arglist>
+      <anchor>aa5123061c123cccbb9d99790c8a6a482</anchor>
+      <arglist>(AudioTrack &amp;, const InputDevice &amp;, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>InputDeviceInstance *</type>
@@ -37261,36 +37261,36 @@
       <type>void</type>
       <name>setTargetTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ac000b93f04532ee1161328eee4acae06</anchor>
-      <arglist>(AudioTrack &amp;, int index, bool moveToTrack)</arglist>
+      <anchor>ad98b269758c1a32b8677edfc6c42b748</anchor>
+      <arglist>(AudioTrack &amp;, int index, bool moveToTrack, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>removeTargetTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a9acb2564cef0f3678e1e16a91404c94b</anchor>
-      <arglist>(AudioTrack &amp;)</arglist>
+      <anchor>a4d2fa7f9ce3a56f0e0ae26c899a27a04</anchor>
+      <arglist>(AudioTrack &amp;, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>removeTargetTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a328b496a8daae2f740349f2fecbfa76f</anchor>
-      <arglist>(AudioTrack &amp;, int index)</arglist>
+      <anchor>ac07c0108ead7df9ceee869b77ee63b12</anchor>
+      <arglist>(AudioTrack &amp;, int index, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>removeTargetTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a7504cdf54e2871e01b17e312319d4c3e</anchor>
-      <arglist>(EditItemID, int index)</arglist>
+      <anchor>ab52a20667700f8095503f9a79b8fa163</anchor>
+      <arglist>(EditItemID, int index, juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>clearFromTracks</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a56bcd9b973a961064eae6e7843f25366</anchor>
-      <arglist>()</arglist>
+      <anchor>a4be181dc0d513ba7172df5a3e5a706b3</anchor>
+      <arglist>(juce::UndoManager *)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>

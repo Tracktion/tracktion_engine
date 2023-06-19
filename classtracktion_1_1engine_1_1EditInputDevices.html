@@ -85,10 +85,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a757357bf0fd6071fb5057932e16846da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a814ff5f9811301726199f0823c6ba24c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a814ff5f9811301726199f0823c6ba24c">isInputDeviceAssigned</a> (const <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;)</td></tr>
 <tr class="separator:a814ff5f9811301726199f0823c6ba24c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99d32b1394e5802f6bbb7fd1d8a721ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a99d32b1394e5802f6bbb7fd1d8a721ff">clearAllInputs</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;)</td></tr>
-<tr class="separator:a99d32b1394e5802f6bbb7fd1d8a721ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50a11a58ecd93b73fc9e122963e76309"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a50a11a58ecd93b73fc9e122963e76309">clearInputsOfDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;)</td></tr>
-<tr class="separator:a50a11a58ecd93b73fc9e122963e76309"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ec1cfd325584c5dcc788a07915b024c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a1ec1cfd325584c5dcc788a07915b024c">clearAllInputs</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, juce::UndoManager *)</td></tr>
+<tr class="separator:a1ec1cfd325584c5dcc788a07915b024c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5123061c123cccbb9d99790c8a6a482"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#aa5123061c123cccbb9d99790c8a6a482">clearInputsOfDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;, juce::UndoManager *)</td></tr>
+<tr class="separator:aa5123061c123cccbb9d99790c8a6a482"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a373ff71ac07845ebda994ac6e2f7d4e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a373ff71ac07845ebda994ac6e2f7d4e8">getInputInstance</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, int index) const</td></tr>
 <tr class="separator:a373ff71ac07845ebda994ac6e2f7d4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d010d96a2bfed2e248a69addda6f945"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html#a6d010d96a2bfed2e248a69addda6f945">getDevicesForTargetTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;) const</td></tr>
@@ -186,8 +186,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a99d32b1394e5802f6bbb7fd1d8a721ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99d32b1394e5802f6bbb7fd1d8a721ff">&#9670;&nbsp;</a></span>clearAllInputs()</h2>
+<a id="a1ec1cfd325584c5dcc788a07915b024c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ec1cfd325584c5dcc788a07915b024c">&#9670;&nbsp;</a></span>clearAllInputs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,16 +196,26 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void tracktion::engine::EditInputDevices::clearAllInputs </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">juce::UndoManager *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a50a11a58ecd93b73fc9e122963e76309"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50a11a58ecd93b73fc9e122963e76309">&#9670;&nbsp;</a></span>clearInputsOfDevice()</h2>
+<a id="aa5123061c123cccbb9d99790c8a6a482"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5123061c123cccbb9d99790c8a6a482">&#9670;&nbsp;</a></span>clearInputsOfDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -220,6 +230,12 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::UndoManager *&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -302,7 +318,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 19 2023 12:20:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jun 19 2023 19:06:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
