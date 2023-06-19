@@ -50,13 +50,8 @@ set(SourceFiles
 target_sources(${TARGET_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
 
-message(${CMAKE_CURRENT_SOURCE_DIR})
-file(GLOB_RECURSE LibraryFiles CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.h)
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party PREFIX Libraries FILES ${LibraryFiles})
-
-add_library(Source ${ModuleFiles} ${SourceFiles} ${LibraryFiles})
+include("${CMAKE_CURRENT_SOURCE_DIR}/../../tests/utils.cmake")
+addModuleSourceTarget()
 
 if (DEFINED ENV{VST2_SDK_DIR})
     target_compile_definitions(${TARGET_NAME} PRIVATE

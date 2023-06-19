@@ -65,6 +65,9 @@ set(SourceFiles
 target_sources(${TARGET_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. PREFIX Source FILES ${SourceFiles})
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/../../tests/utils.cmake")
+addModuleSourceTarget()
+
 if (DEFINED ENV{VST2_SDK_DIR})
     target_compile_definitions(${TARGET_NAME} PRIVATE
         JUCE_PLUGINHOST_VST=1)
