@@ -94,8 +94,8 @@ public:
                 if (auto dev = dm.getMidiInDevice (midiInputsBox.getSelectedItemIndex()))
                     for (auto instance : edit.getAllInputDevices())
                         if (&instance->getInputDevice() == dev)
-                            instance->setTargetTrack (*t, 0, true);
-            
+                            instance->setTargetTrack (*t, 0, true, &edit.getUndoManager());
+
             edit.restartPlayback();
         }
         else if (b == &modeBox)

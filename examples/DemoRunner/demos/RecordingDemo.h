@@ -230,7 +230,7 @@ private:
             {
                 if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                 {
-                    instance->setTargetTrack (*t, 0, true);
+                    instance->setTargetTrack (*t, 0, true, &edit->getUndoManager());
                     instance->setRecordingEnabled (*t, true);
                     
                     trackNum++;
