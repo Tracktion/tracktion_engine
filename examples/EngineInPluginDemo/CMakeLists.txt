@@ -88,5 +88,8 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   target_link_libraries(${TARGET_NAME} PRIVATE "-latomic")
-  target_link_options(${TARGET_NAME} PRIVATE "-m64")
+
+  if (NOT ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64")
+    target_link_options(${TARGET_NAME} PRIVATE "-m64")
+  endif()
 endif()
