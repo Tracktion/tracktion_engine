@@ -16,8 +16,14 @@ namespace tracktion { inline namespace engine
 */
 struct AsyncCaller  : public juce::AsyncUpdater
 {
-    /** Creates an empty AsyncFunctionCaller. */
+    /** Creates an empty AsyncCaller. */
     AsyncCaller() = default;
+
+    /** Creates an AsyncCaller with a given callback function. */
+    AsyncCaller (std::function<void()> f)
+    {
+        function = std::move (f);
+    }
 
     /** Destructor. */
     ~AsyncCaller() override

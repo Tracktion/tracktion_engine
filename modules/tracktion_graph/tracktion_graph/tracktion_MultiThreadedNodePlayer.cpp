@@ -452,6 +452,7 @@ void MultiThreadedNodePlayer::resetProcessQueue()
 Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
 {
     auto playbackNode = static_cast<PlaybackNode*> (node.internal);
+    Node* nodeToReturn = nullptr;
 
     for (auto output : playbackNode->outputs)
     {
@@ -464,18 +465,21 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
 
-            // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread
-            if (playbackNode->outputs.size() == 1
-                || output == playbackNode->outputs.back())
-               return &outputPlaybackNode->node;
-            
-            preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
-            threadPool->signalOne();
+            // We can return one Node to be processed on this thread, otherwise we can
+            // queue it for another thread to possibly process
+            if (nodeToReturn == nullptr)
+            {
+                nodeToReturn = &outputPlaybackNode->node;
+            }
+            else
+            {
+                preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
+                numNodesQueued.fetch_add (1, std::memory_order_release);
+            }
         }
     }
 
-    return nullptr;
+    return nodeToReturn;
 }
 
 //==============================================================================

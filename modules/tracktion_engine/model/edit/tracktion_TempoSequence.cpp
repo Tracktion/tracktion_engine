@@ -805,6 +805,8 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
             a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));
 }
 
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TEMPO_SEQUENCE
+
 //==============================================================================
 //==============================================================================
 class TempoSequenceTests : public juce::UnitTest
@@ -937,5 +939,7 @@ private:
 };
 
 static TempoSequenceTests tempoSequenceTests;
+
+#endif
 
 }} // namespace tracktion { inline namespace engine

@@ -5,31 +5,65 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  BUILD_CONFIG: Release
+  BUILD_DIR: build
+
 jobs:
-  build_and_test:
+  test:
     strategy:
       fail-fast: false
       matrix:
+        name: [ linux, macOS, windows ]
+        target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
         include:
-          - name: Linux
+          # Main maxtix
+          - name: linux
             os: ubuntu-latest
-            platform: linux
           - name: macOS
             os: macos-latest
-            platform: mac
-            static_analyser: true
-          - name: Windows
+            generator: "-G Xcode"
+          - name: windows
             os: windows-latest
-            platform: windows
-        # cfg:
-        # - { name: Linux, os: ubuntu-16.04, platform: linux }
-        # - { name: macOS, os: macos-latest, platform: mac }
-        # - { name: Windows, os: windows-latest, platform: windows }
+          - run_target: true
+          - publish_benchmark: true
+          - run_target: false
+            target: EngineInPluginDemo
+          - run_target: false
+            target: DemoRunner
+          # Extra tooled builds (outside of matrix)
+          - name: macOS_asan
+            target: TestRunner
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            tests_file_suffix: "_asan"
+            schedule_only: true
+          - name: macOS_asan
+            target: Benchmarks
+            os: macos-latest
+            generator: "-G Xcode"
+            run_target: true
+            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            tests_file_suffix: "_asan"
+            schedule_only: true
+          - name: macOS_analyse
+            target: TestRunner
+            os: macos-latest
+            generator: "-G Xcode"
+            analyse: true
+          - name: macOS_analyse
+            target: Benchmarks
+            os: macos-latest
+            generator: "-G Xcode"
+            analyse: true
+
     runs-on: ${{ matrix.os }}
     steps:
       # Install dependencies
       - name: Install dependencies
-        if: ${{ matrix.platform == 'linux' }}
+        if: ${{ matrix.name == 'linux' }}
         run: |
             sudo add-apt-repository ppa:ubuntu-toolchain-r/test
             sudo apt-get update
@@ -38,12 +72,39 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
+
+      # Setup Environment Variables
+      - name: Setup Environment Variables
+        shell: bash
+        run: |
+          pwd
+          ls -la
+          VERSION=$(cat VERSION.md)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+          if [ "${{ matrix.name }}" = 'linux' ]; then
+            echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts" >> $GITHUB_ENV
+          else
+            echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
+          fi
+
+          if [ "${{ matrix.name }}" = 'windows' ]; then
+            echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
+          else
+            echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
+          fi
+
+      # Generate build files
+      - name: "Generate Build Files"
+        id: generate
+        shell: bash
+        run: |
+          cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }}
 
       # Build products
       - name: "Build products"
         shell: bash
-        env:
-          BM_API_KEY: ${{ secrets.BM_API_KEY }}
+        if: ${{ ! matrix.analyse }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -53,111 +114,149 @@ jobs:
             g++ -v
           fi
 
-          ./tests/build
+          cd ${{ env.BUILD_DIR }}
+          cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_cmake_args }} ${{ matrix.tsan_cmake_args }}
+
+      # Static analyse
+      - name: "Static analyse products"
+        shell: bash
+        if: ${{ matrix.analyse }}
+        run: |
+          cd ${{ env.BUILD_DIR }}
+          xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO
+
+      # Run products
+      - name: "Run products"
+        if: ${{ matrix.run_target && ! matrix.analyse }}
+        shell: bash
+        env:
+          BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
+        run: |
+          ROOT=$(pwd)
+          echo $ROOT
+          ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${{ matrix.target }}${{ matrix.tests_file_suffix }}.xml"
 
       # Upload test results
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: ${{ steps.generate.outcome == 'success' && ! matrix.analyse }}
         with:
           name: test_results_${{ matrix.name }}
           path: ./bin/test_results/**/TEST-*.xml
 
-  build_and_test_tooled:
-    if: github.event_name == 'schedule'
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: macOS ASan
-            os: macos-latest
-            platform: mac
-            asan: true
-          - name: macOS TSan
-            os: macos-latest
-            platform: mac
-            tsan: true
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Install dependencies
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-            sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-            sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
+  # The steps should be identical to the above, they're only repeated here as 
+  # we can't skip jobs based on matrix expressions at the moment
+  tooled:
+      if: github.event_name == 'schedule'
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+            # Extra tooled builds (only run on sceduled builds)
+            - name: macOS_tsan
+              target: TestRunner
+              os: macos-latest
+              generator: "-G Xcode"
+              run_target: true
+              tsan_cmake_args: "-- -enableThreadSanitizer YES"
+              tests_file_suffix: "_tsan"
+              schedule_only: true
+            - name: macOS_tsan
+              target: Benchmarks
+              os: macos-latest
+              generator: "-G Xcode"
+              run_target: true
+              tsan_cmake_args: "-- -enableThreadSanitizer YES"
+              tests_file_suffix: "_tsan"
+              schedule_only: true
 
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
+      runs-on: ${{ matrix.os }}
+      steps:
+        # Install dependencies
+        - name: Install dependencies
+          if: ${{ matrix.name == 'linux' }}
+          run: |
+              sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+              sudo apt-get update
+              sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
 
-      - name: "Build products"
-        shell: bash
-        env:
-          ENABLE_ASAN: ${{ matrix.asan }}
-          ENABLE_TSAN: ${{ matrix.tsan }}
-        run: |
-          if [[ "$OSTYPE" == "linux-gnu" ]]; then
-            export DISABLE_VALGRIND=1
-            export CC=/usr/bin/gcc-11
-            export CXX=/usr/bin/g++-11
-            gcc -v
-            g++ -v
-          fi
+        - uses: actions/checkout@v3
+          with:
+            submodules: true
 
-          if [[ "$ENABLE_ASAN" == "true" ]]; then
-            export ENABLE_ASAN=1
-          fi
+        # Setup Environment Variables
+        - name: Setup Environment Variables
+          shell: bash
+          run: |
+            pwd
+            ls -la
+            VERSION=$(cat VERSION.md)
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            
+            if [ "${{ matrix.name }}" = 'linux' ]; then
+              echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts" >> $GITHUB_ENV
+            else
+              echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
+            fi
 
-          if [[ "$ENABLE_TSAN" == "true" ]]; then
-            export ENABLE_TSAN=1
-          fi
+            if [ "${{ matrix.name }}" = 'windows' ]; then
+              echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
+            else
+              echo "APP_EXE=${{ matrix.target }}" >> $GITHUB_ENV
+            fi
 
-          export DISABLE_BUILD=1
-          ./tests/build
+        # Generate build files
+        - name: "Generate Build Files"
+          id: generate
+          shell: bash
+          run: |
+            cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }}
 
-  static_analysis:
-    if: github.event_name == 'schedule'
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: macOS Static Analyser
-            os: macos-latest
-            platform: mac
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Install dependencies
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-            sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-            sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
+        # Build products
+        - name: "Build products"
+          shell: bash
+          if: ${{ ! matrix.analyse }}
+          run: |
+            if [[ "$OSTYPE" == "linux-gnu" ]]; then
+              export DISABLE_VALGRIND=1
+              export CC=/usr/bin/gcc-11
+              export CXX=/usr/bin/g++-11
+              gcc -v
+              g++ -v
+            fi
 
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
+            cd ${{ env.BUILD_DIR }}
+            cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_cmake_args }} ${{ matrix.tsan_cmake_args }}
 
-      - name: "Build products"
-        shell: bash
-        env:
-          ENABLE_STATIC_ANALYSER: ${{ matrix.static_analyser }}
-        run: |
-          if [[ "$OSTYPE" == "linux-gnu" ]]; then
-            export DISABLE_VALGRIND=1
-            export CC=/usr/bin/gcc-11
-            export CXX=/usr/bin/g++-11
-            gcc -v
-            g++ -v
-          fi
+        # Static analyse
+        - name: "Static analyse products"
+          shell: bash
+          if: ${{ matrix.analyse }}
+          run: |
+            cd ${{ env.BUILD_DIR }}
+            xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO
 
-          export ENABLE_STATIC_ANALYSER=1
-          export DISABLE_BUILD=1
+        # Run products
+        - name: "Run products"
+          if: ${{ matrix.run_target && ! matrix.analyse }}
+          shell: bash
+          env:
+            BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
+          run: |
+            ROOT=$(pwd)
+            echo $ROOT
+            ${{ env.APP_DIR }}/${{ env.APP_EXE }} --junit-xml-file "$ROOT/bin/test_results/TEST-${{ matrix.target }}${{ matrix.tests_file_suffix }}.xml"
 
-          ./tests/build
+        # Upload test results
+        - uses: actions/upload-artifact@v3
+          if: ${{ steps.generate.outcome == 'success' && ! matrix.analyse }}
+          with:
+            name: test_results_${{ matrix.name }}
+            path: ./bin/test_results/**/TEST-*.xml
 
   # Upload test results
   deploy:
     if: always()
-    needs: build_and_test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
@@ -168,16 +267,14 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -la
     
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        with:
+          report_paths: './**/TEST-*.xml'
+
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.6
         with:
           check_name: Unit Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: ./**/TEST-*.xml
-
-      - name: Publish Performance Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.6
-        with:
-          check_name: Performance Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./**/TEST-*PerformanceTests*.xml

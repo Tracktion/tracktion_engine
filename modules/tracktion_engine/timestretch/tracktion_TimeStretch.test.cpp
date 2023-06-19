@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TIMESTRETCHER
 
 // Enable this to dump the output of the current test file to the desktop
 #define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 0

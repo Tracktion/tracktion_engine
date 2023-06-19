@@ -547,12 +547,12 @@ void AudioScratchBuffer::initialise()
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PAN_LAW
 
 class PanLawTests : public juce::UnitTest
 {
 public:
-    PanLawTests() : juce::UnitTest ("PanLaw", "Tracktion") {}
+    PanLawTests() : juce::UnitTest ("PanLaw", "tracktion_engine") {}
 
     //==============================================================================
     void runTest() override
