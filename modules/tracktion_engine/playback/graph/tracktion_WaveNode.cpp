@@ -1872,7 +1872,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         return;
 
     if (editReader->isBeatBased()
-        && (sectionEditBeats.getEnd() <= editPositionBeats.getStart()
+        && (sectionEditBeats.getEnd() <= (editPositionBeats.getStart() - 0.5_bd)
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
 

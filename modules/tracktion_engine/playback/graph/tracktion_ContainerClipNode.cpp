@@ -115,7 +115,7 @@ void ContainerClipNode::process (ProcessContext& pc)
     const auto sectionEditBeatRange = getEditBeatRange();
     const auto sectionEditSampleRange = getTimelineSampleRange();
 
-    if (sectionEditBeatRange.getEnd() <= clipPosition.getStart()
+    if (sectionEditBeatRange.getEnd() <= (clipPosition.getStart() - 0.5_bd)
         || sectionEditBeatRange.getStart() >= clipPosition.getEnd())
        return;
 
