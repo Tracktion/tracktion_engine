@@ -138,7 +138,7 @@ private:
                 {
                     if (&instance->getInputDevice() == dev)
                     {
-                        instance->setTargetTrack (*t, 0, true);
+                        instance->setTargetTrack (*t, 0, true, &edit.getUndoManager());
 
                         if (auto destination = instance->getDestination (*t, 0))
                             destination->recordEnabled = true;
@@ -152,7 +152,7 @@ private:
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
                     if (&instance->getInputDevice() == dev)
-                        instance->setTargetTrack (*t, 0, false);
+                        instance->setTargetTrack (*t, 0, false, &edit.getUndoManager());
 
         edit.restartPlayback();
     }
