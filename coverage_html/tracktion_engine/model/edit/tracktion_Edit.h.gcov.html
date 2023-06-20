@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-19 19:28:45</td>
+            <td class="headerValue">2023-06-20 15:52:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -207,10 +207,10 @@
 <a name="145"><span class="lineNum">     145 </span>            :     EditRole getEditRole() const noexcept   { return editRole; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1018 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1017 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns true if this Edit can render proxy files. */</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      47206 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      47208 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :     /** Returns true if this Edit can load Plugin[s]. */</a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineCov">        406 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
@@ -314,7 +314,7 @@
 <a name="252"><span class="lineNum">     252 </span>            :     /** Returns the AbletonLink object.</a>
 <a name="253"><span class="lineNum">     253 </span>            :         Used to sync an Edit's playback with an AbletonLink session.</a>
 <a name="254"><span class="lineNum">     254 </span>            :     */</a>
-<a name="255"><span class="lineNum">     255 </span>            :     AbletonLink&amp; getAbletonLink() const noexcept                        { return *abletonLink; }</a>
+<a name="255"><span class="lineNum">     255 </span>            :     AbletonLink&amp; getAbletonLink() const noexcept;</a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span>            :     //==============================================================================</a>
 <a name="258"><span class="lineNum">     258 </span>            :     /**</a>
@@ -351,7 +351,7 @@
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     //==============================================================================</a>
 <a name="291"><span class="lineNum">     291 </span>            :     /** Returns the juce::UndoManager used for this Edit. */</a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">     214733 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">     214728 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span>            :     /** Undoes the most recent changes made. */</a>
 <a name="295"><span class="lineNum">     295 </span>            :     void undo();</a>
@@ -880,7 +880,7 @@
 <a name="818"><span class="lineNum">     818 </span>            :     std::unique_ptr&lt;MirroredPluginUpdateTimer&gt; mirroredPluginUpdateTimer;</a>
 <a name="819"><span class="lineNum">     819 </span>            :     juce::ReferenceCountedObjectPtr&lt;VolumeAndPanPlugin&gt; masterVolumePlugin;</a>
 <a name="820"><span class="lineNum">     820 </span>            :     std::unique_ptr&lt;TransportControl&gt; transportControl;</a>
-<a name="821"><span class="lineNum">     821 </span>            :     std::unique_ptr&lt;AbletonLink&gt; abletonLink;</a>
+<a name="821"><span class="lineNum">     821 </span>            :     mutable std::unique_ptr&lt;AbletonLink&gt; abletonLink;</a>
 <a name="822"><span class="lineNum">     822 </span>            :     std::unique_ptr&lt;AutomationRecordManager&gt; automationRecordManager;</a>
 <a name="823"><span class="lineNum">     823 </span>            :     std::unique_ptr&lt;MarkerManager&gt; markerManager;</a>
 <a name="824"><span class="lineNum">     824 </span>            :     struct UndoTransactionTimer;</a>
