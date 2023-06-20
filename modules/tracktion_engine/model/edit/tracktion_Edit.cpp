@@ -556,7 +556,6 @@ Edit::Edit (Options options)
     pluginCache                 = std::make_unique<PluginCache> (*this);
     mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
     transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
-    abletonLink                 = std::make_unique<AbletonLink> (*transportControl);
     automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
     markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
     pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
@@ -1075,6 +1074,14 @@ void Edit::restartPlayback()
 EditPlaybackContext* Edit::getCurrentPlaybackContext() const
 {
     return transportControl->getCurrentPlaybackContext();
+}
+
+AbletonLink& Edit::getAbletonLink() const noexcept
+{
+    if (! abletonLink)
+        abletonLink = std::make_unique<AbletonLink> (*transportControl);
+
+    return *abletonLink;
 }
 
 //==============================================================================
