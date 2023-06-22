@@ -721,16 +721,18 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
         {
             auto v = createValueTree(IDs::PLUGIN,
                 IDs::type, type,
-                IDs::name, desc.name);
+                IDs::name, desc.name
+                // BEATCONNECT MODIFICATIONS START
+                , IDs::uniqueId, juce::String(desc.name).hashCode()
+                // BEATCONNECT MODIFICATIONS END
+            );
 
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
             if (type == "sampler")
-            {
                 addInitialSamplerDrumPadValueTree(v);
-            }
             // BEATCONNECT MODIFICATIONS END
 
             if (auto p = builtIn->create(PluginCreationInfo(ed, v, true)))
