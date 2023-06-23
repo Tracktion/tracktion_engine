@@ -153,6 +153,9 @@ std::unique_ptr<FreezePointPlugin::ScopedTrackFreezer> FreezePointPlugin::create
 
 //==============================================================================
 const char* FreezePointPlugin::xmlTypeName ("freezePoint");
+// BEATCONNECT MODIFICATION START
+const char* FreezePointPlugin::uniqueId ("aaedf06e-7268-4864-b8b1-bcf80bbf1f59");
+// BEATCONNECT MODIFICATION END
 
 FreezePointPlugin::FreezePointPlugin (PluginCreationInfo info) : Plugin (info)
 {

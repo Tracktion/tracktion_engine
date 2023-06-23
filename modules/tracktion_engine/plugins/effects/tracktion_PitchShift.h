@@ -23,10 +23,16 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override             { return TRANS("Pitch Shifter"); }
     juce::String getPluginType() override       { return xmlTypeName; }
     juce::String getShortName (int) override    { return TRANS("Pitch"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override         { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override     { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;

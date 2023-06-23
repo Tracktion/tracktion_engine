@@ -23,10 +23,16 @@ public:
 
     //==============================================================================
     static const char* getPluginName()              { return NEEDS_TRANS("4-Band Equaliser"); }
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
     static const char* xmlTypeName;
 
     juce::String getName() override                 { return TRANS("4-Band Equaliser"); }
     juce::String getPluginType() override           { return xmlTypeName; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override             { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     juce::String getShortName (int) override        { return "EQ"; }
     juce::String getTooltip() override;
     bool needsConstantBufferSize() override         { return false; }

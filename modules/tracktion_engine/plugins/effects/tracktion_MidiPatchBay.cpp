@@ -32,6 +32,9 @@ juce::ValueTree MidiPatchBayPlugin::create()
 }
 
 const char* MidiPatchBayPlugin::xmlTypeName = "midipatchbay";
+// BEATCONNECT MODIFICATION START
+const char* MidiPatchBayPlugin::uniqueId = "b2f665a3-bf3f-4962-98e7-07ee61a127ed";
+// BEATCONNECT MODIFICATION END
 
 void MidiPatchBayPlugin::initialise (const PluginInitialisationInfo&) {}
 void MidiPatchBayPlugin::deinitialise() {}

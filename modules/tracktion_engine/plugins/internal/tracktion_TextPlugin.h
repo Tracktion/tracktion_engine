@@ -23,10 +23,16 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     bool canBeAddedToFolderTrack() override             { return true; }
     juce::String getName() override                     { return textTitle.get().isNotEmpty() ? textTitle : TRANS("Text Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     void initialise (const PluginInitialisationInfo&) override {}
     void deinitialise() override                        {}
     void applyToBuffer (const PluginRenderContext&) override {}

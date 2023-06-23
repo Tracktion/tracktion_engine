@@ -24,10 +24,16 @@ public:
     //==============================================================================
     static const char* getPluginName()                      { return NEEDS_TRANS("Latency Tester"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                         { return getPluginName(); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getSelectableDescription() override        { return getName(); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

@@ -22,6 +22,9 @@ AuxReturnPlugin::~AuxReturnPlugin()
 }
 
 const char* AuxReturnPlugin::xmlTypeName = "auxreturn";
+// BEATCONNECT MODIFICATION START
+const char* AuxReturnPlugin::uniqueId = "1dd50556-5b26-4280-bf24-049cd94c174b";
+// BEATCONNECT MODIFICATION END
 
 juce::String AuxReturnPlugin::getName()
 {

@@ -31,6 +31,9 @@ public:
 
     static const char* getPluginName();
     static inline const char* xmlTypeName = "impulseResponse";
+        // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+        // BEATCONNECT MODIFICATION END
 
     //==============================================================================
     /** Loads an impulse from binary audio file data i.e. not a block of raw floats.
@@ -69,6 +72,9 @@ public:
     /** @internal */
     juce::String getPluginType() override;
     /** @internal */
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override;
     /** @internal */
     juce::String getSelectableDescription() override;

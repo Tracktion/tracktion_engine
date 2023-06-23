@@ -88,6 +88,9 @@ InsertPlugin::~InsertPlugin()
 
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
+// BEATCONNECT MODIFICATION START
+const char* InsertPlugin::uniqueId ("e5d82c26-b33e-42b6-828d-4949db93ff9a");
+// BEATCONNECT MODIFICATION END
 
 juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
 juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }

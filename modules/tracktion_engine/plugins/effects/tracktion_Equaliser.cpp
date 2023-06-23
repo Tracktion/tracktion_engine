@@ -62,6 +62,9 @@ public:
 
 //==============================================================================
 const char* EqualiserPlugin::xmlTypeName = "4bandEq";
+// BEATCONNECT MODIFICATION START
+const char* EqualiserPlugin::uniqueId = "951dd82a-863b-4e10-af69-be8fbf8cba33";
+// BEATCONNECT MODIFICATION END
 
 EqualiserPlugin::EqualiserPlugin (PluginCreationInfo info) : Plugin (info)
 {

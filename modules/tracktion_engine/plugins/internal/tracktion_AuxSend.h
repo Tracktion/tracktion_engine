@@ -33,10 +33,16 @@ public:
     //==============================================================================
     static const char* getPluginName()              { return NEEDS_TRANS("Aux Send"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override;
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getPluginType() override           { return xmlTypeName; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override             { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void initialise (const PluginInitialisationInfo&) override;

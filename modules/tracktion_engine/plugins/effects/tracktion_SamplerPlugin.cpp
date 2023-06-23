@@ -156,6 +156,9 @@ SamplerPlugin::~SamplerPlugin()
 }
 
 const char* SamplerPlugin::xmlTypeName = "sampler";
+// BEATCONNECT MODIFICATION START
+const char* SamplerPlugin::uniqueId = "2dfa0d4a-fa7f-4785-b7c2-35bffc65ecd0";
+// BEATCONNECT MODIFICATION END
 
 void SamplerPlugin::valueTreeChanged()
 {

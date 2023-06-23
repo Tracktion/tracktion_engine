@@ -147,6 +147,9 @@ juce::ValueTree VolumeAndPanPlugin::create()
 }
 
 const char* VolumeAndPanPlugin::xmlTypeName = "volume";
+// BEATCONNECT MODIFICATION START
+const char* VolumeAndPanPlugin::uniqueId = "25d4c341-df05-4af8-b61e-d29691734660";
+// BEATCONNECT MODIFICATION END
 
 //==============================================================================
 void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&)

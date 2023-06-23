@@ -26,6 +26,9 @@ PhaserPlugin::~PhaserPlugin()
 }
 
 const char* PhaserPlugin::xmlTypeName = "phaser";
+// BEATCONNECT MODIFICATION START
+const char* PhaserPlugin::uniqueId = "bb7d2f63-861a-433a-9559-48696bd38851";
+// BEATCONNECT MODIFICATION END
 
 void PhaserPlugin::initialise (const PluginInitialisationInfo& info)
 {

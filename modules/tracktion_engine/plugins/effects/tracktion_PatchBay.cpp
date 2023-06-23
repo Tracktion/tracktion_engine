@@ -65,6 +65,9 @@ PatchBayPlugin::~PatchBayPlugin()
 }
 
 const char* PatchBayPlugin::xmlTypeName = "patchbay";
+// BEATCONNECT MODIFICATION START
+const char* PatchBayPlugin::uniqueId = "232d89fd-11e0-43e2-9ba0-8cd43dc4a2a0";
+// BEATCONNECT MODIFICATION END
 
 int PatchBayPlugin::getNumWires() const                           { return list->objects.size(); }
 PatchBayPlugin::Wire* PatchBayPlugin::getWire (int index) const   { return list->objects[index]; }

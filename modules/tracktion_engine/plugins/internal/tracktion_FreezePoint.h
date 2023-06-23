@@ -82,12 +82,18 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     void initialiseFully() override;
     juce::String getName() override                     { return TRANS("Freeze"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getTooltip() override                  { return TRANS("Track will freeze up to this plugin"); }
     juce::String getSelectableDescription() override    { return TRANS("Freeze Point Plugin"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool producesAudioWhenNoAudioInput() override       { return false; }
     bool canBeAddedToClip() override                    { return false; }
     bool canBeAddedToRack() override                    { return false; }

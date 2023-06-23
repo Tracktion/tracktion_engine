@@ -74,7 +74,9 @@ CompressorPlugin::~CompressorPlugin()
 }
 
 const char* CompressorPlugin::xmlTypeName = "compressor";
-
+// BEATCONNECT MODIFICATION START
+const char* CompressorPlugin::uniqueId = "82de56d5-e856-4e64-8ef9-16687c39571e";
+// BEATCONNECT MODIFICATION END
 void CompressorPlugin::getChannelNames (juce::StringArray* ins,
                                         juce::StringArray* outs)
 {

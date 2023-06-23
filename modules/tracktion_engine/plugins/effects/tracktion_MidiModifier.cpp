@@ -33,6 +33,9 @@ MidiModifierPlugin::~MidiModifierPlugin()
 }
 
 const char* MidiModifierPlugin::xmlTypeName ("midiModifier");
+// BEATCONNECT MODIFICATION START
+const char* MidiModifierPlugin::uniqueId ("9f57d71a - 3bd6 - 4036 - adeb - 293237622010");
+// BEATCONNECT MODIFICATION END
 
 juce::String MidiModifierPlugin::getName()                                         { return TRANS("MIDI Modifier"); }
 juce::String MidiModifierPlugin::getPluginType()                                   { return xmlTypeName; }

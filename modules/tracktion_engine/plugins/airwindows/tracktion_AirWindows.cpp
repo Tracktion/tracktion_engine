@@ -325,6 +325,7 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 }
 
 //==============================================================================
+const char* AirWindowsPlugin::uniqueId = "a25cbcf7-8410-493f-bbad-676ed8657d3b";
 const char* AirWindowsADClip7::xmlTypeName = "airwindows_adclip7";
 const char* AirWindowsADT::xmlTypeName = "airwindows_adt";
 const char* AirWindowsAQuickVoiceClip::xmlTypeName = "airwindows_aquickvoiceclip";

@@ -568,6 +568,9 @@ juce::String ExternalPlugin::getLoadError()
 }
 
 const char* ExternalPlugin::xmlTypeName = "vst";
+// BEATCONNECT MODIFICATION START
+const char* ExternalPlugin::uniqueId = "05629ee1-4ead-453f-83e5-93e01e382884";
+// BEATCONNECT MODIFICATION END
 
 void ExternalPlugin::initialiseFully()
 {

@@ -27,6 +27,7 @@ ChorusPlugin::~ChorusPlugin()
 }
 
 const char* ChorusPlugin::xmlTypeName = "chorus";
+const char* ChorusPlugin::uniqueId = "fef2bbee-919e-48de-aa2c-ec2cae4e09a5";
 
 void ChorusPlugin::initialise (const PluginInitialisationInfo& info)
 {

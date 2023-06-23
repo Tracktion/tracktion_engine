@@ -146,6 +146,10 @@ public:
     /** default returns the name, others can return special stuff if needed */
     virtual juce::String getTooltip();
 
+    // BEATCONNECT MODIFICATION START
+    virtual juce::String getUniqueId() = 0;
+    // BEATCONNECT MODIFICATION END
+
     //==============================================================================
     /** Enable/disable the plugin.  */
     virtual void setEnabled (bool);

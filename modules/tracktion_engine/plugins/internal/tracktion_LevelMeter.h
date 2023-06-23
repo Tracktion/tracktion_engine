@@ -23,11 +23,17 @@ public:
     //==============================================================================
     static const char* getPluginName()              { return NEEDS_TRANS("Level Meter"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                 { return TRANS("Level Meter"); }
     juce::String getPluginType() override           { return xmlTypeName; }
     juce::String getShortName (int) override        { return "Meter"; }
     juce::String getTooltip() override              { return TRANS("Level meter plugin") + "$levelmeterplugin"; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override             { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool canBeDisabled() override                   { return false; }
     bool needsConstantBufferSize() override         { return false; }
 

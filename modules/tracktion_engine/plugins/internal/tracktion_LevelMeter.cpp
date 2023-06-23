@@ -31,6 +31,9 @@ juce::ValueTree LevelMeterPlugin::create()
 }
 
 const char* LevelMeterPlugin::xmlTypeName = "level";
+// BEATCONNECT MODIFICATION START
+const char* LevelMeterPlugin::uniqueId = "faacbb76-3ef3-4671-a31d-be7b23acb59c";
+// BEATCONNECT MODIFICATION END
 
 void LevelMeterPlugin::initialise (const PluginInitialisationInfo& info)
 {

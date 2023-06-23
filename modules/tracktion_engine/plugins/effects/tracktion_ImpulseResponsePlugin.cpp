@@ -73,6 +73,10 @@ ImpulseResponsePlugin::~ImpulseResponsePlugin()
     filterQParam->detachFromCurrentValue();
 }
 
+// BEATCONNECT MODIFICATION START
+const char* ImpulseResponsePlugin::uniqueId = "c303ab82-45f9-4cbd-b02a-bf2736e77fc4";
+// BEATCONNECT MODIFICATION END
+
 const char* ImpulseResponsePlugin::getPluginName() { return NEEDS_TRANS ("Impulse Response"); }
 
 //==============================================================================

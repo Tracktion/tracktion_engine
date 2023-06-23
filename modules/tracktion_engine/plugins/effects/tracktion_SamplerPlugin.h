@@ -53,11 +53,17 @@ public:
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Sampler"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return TRANS("Sampler"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool isSynth() override                             { return true; }
     bool needsConstantBufferSize() override             { return false; }
 

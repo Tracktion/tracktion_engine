@@ -20,10 +20,16 @@ public:
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Tone Generator"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return TRANS(getPluginName()); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool producesAudioWhenNoAudioInput() override       { return true; }
     bool isSynth() override                             { return true; }
 

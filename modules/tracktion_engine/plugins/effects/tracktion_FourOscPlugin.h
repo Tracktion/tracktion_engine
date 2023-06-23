@@ -173,11 +173,17 @@ public:
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("4OSC"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return TRANS("4OSC"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "4OSC"; }
     juce::String getSelectableDescription() override    { return TRANS("4OSC"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }

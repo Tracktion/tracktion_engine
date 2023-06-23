@@ -724,6 +724,8 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 IDs::name, desc.name
             );
 
+
+
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
@@ -880,8 +882,13 @@ Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, boo
 
     for (auto builtIn : builtInTypes)
         if (builtIn->type == type)
-            if (auto af = builtIn->create (info))
+            if (auto af = builtIn->create(info)) 
+            {
+                // BEATCONNECT MODIFICATIONS START
+                af.get()->state.setProperty(IDs::uniqueId, af.get()->getUniqueId(), nullptr);
+                // BEATCONNECT MODIFICATIONS START
                 return af;
+            }
 
     if (auto af = engine.getEngineBehaviour().createCustomPlugin (info))
         return af;
@@ -970,6 +977,13 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
+    // BEATCONNECT MODIFICATIONS START
+    std::string test = p.get()->getPluginType().toStdString();
+    if (p.get()->getPluginType() == v.getType().toString()) { // untested
+        p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+    }
+    // BEATCONNECT MODIFICATIONS START
+
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);
 
@@ -982,6 +996,13 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
+
+    // BEATCONNECT MODIFICATIONS START
+    std::string test = p.get()->getPluginType().toStdString();
+    if (p.get()->getPluginType() == type) {
+        p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+    }
+    // BEATCONNECT MODIFICATIONS START
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);

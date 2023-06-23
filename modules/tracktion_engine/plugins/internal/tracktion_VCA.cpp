@@ -60,6 +60,9 @@ juce::ValueTree VCAPlugin::create()
 }
 
 const char* VCAPlugin::xmlTypeName = "vca";
+// BEATCONNECT MODIFICATION START
+const char* VCAPlugin::uniqueId = "c99e6b7a-a642-4e94-a71d-a8bf1c3ec6fb";
+// BEATCONNECT MODIFICATION END
 
 void VCAPlugin::initialise (const PluginInitialisationInfo&) {}
 void VCAPlugin::deinitialise() {}

@@ -20,6 +20,9 @@ public:
     //==============================================================================
     static const char* getPluginName()                      { return NEEDS_TRANS("Phaser"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                         { return TRANS("Phaser"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
@@ -29,6 +32,9 @@ public:
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                     { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     juce::CachedValue<float> depth, rate, feedbackGain;

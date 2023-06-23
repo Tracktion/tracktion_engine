@@ -24,7 +24,6 @@ AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
                      [] (const juce::String& s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });
 
     gain->attachToCurrentValue (gainLevel);
-
     quickParamName = "send level";
 }
 
@@ -50,6 +49,9 @@ bool AuxSendPlugin::shouldProcess()
 }
 
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
+// BEATCONNECT MODIFICATION START
+const char* AuxSendPlugin::uniqueId = "3fe6a382-018f-4c67-80a7-74efbc58f31f";
+// BEATCONNECT MODIFICATION END
 
 juce::String AuxSendPlugin::getName()
 {

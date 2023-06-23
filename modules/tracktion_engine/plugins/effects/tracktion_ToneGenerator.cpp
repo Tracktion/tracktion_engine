@@ -47,6 +47,9 @@ ToneGeneratorPlugin::~ToneGeneratorPlugin()
 }
 
 const char* ToneGeneratorPlugin::xmlTypeName = "toneGenerator";
+// BEATCONNECT MODIFICATION START
+const char* ToneGeneratorPlugin::uniqueId = "32090069-3bb1-4956-be95-ed7098480433";
+// BEATCONNECT MODIFICATION END
 
 void ToneGeneratorPlugin::initialise (const PluginInitialisationInfo& info)
 {

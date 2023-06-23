@@ -39,11 +39,17 @@ public:
     juce::String getLoadError();
 
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     void flushPluginStateToValueTree() override;
     void flushBusesLayoutToValueTree();
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
     void getPluginStateFromTree (juce::MemoryBlock&);
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override     { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
 
     void updateFromMirroredPluginIfNeeded (Plugin&) override;
 

@@ -34,10 +34,16 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return TRANS("VCA"); }
     juce::String getSelectableDescription() override    { return getName(); }
     juce::String getPluginType() override               { return xmlTypeName; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool canBeAddedToClip() override                    { return false; }
     bool canBeAddedToRack() override                    { return false; }
     bool canBeAddedToFolderTrack()   override           { return true;  }

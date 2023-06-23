@@ -20,9 +20,15 @@ public:
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Reverb"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return TRANS("Reverb"); }
     juce::String getPluginType() override               { return xmlTypeName; }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;

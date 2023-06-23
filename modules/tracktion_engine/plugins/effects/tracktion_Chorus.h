@@ -19,11 +19,17 @@ public:
 
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Chorus"); }
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
     static const char* xmlTypeName;
 
     juce::String getName() override                     { return TRANS("Chorus"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void initialise (const PluginInitialisationInfo&) override;

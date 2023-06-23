@@ -160,6 +160,9 @@ juce::ValueTree PitchShiftPlugin::create()
 }
 
 const char* PitchShiftPlugin::xmlTypeName = "pitchShifter";
+// BEATCONNECT MODIFICATION START
+const char* PitchShiftPlugin::uniqueId = "5d89bac7-8b47-4bb2-91ff-3efd5bf11619";
+// BEATCONNECT MODIFICATION END
 
 //==============================================================================
 void PitchShiftPlugin::initialise (const PluginInitialisationInfo& info)

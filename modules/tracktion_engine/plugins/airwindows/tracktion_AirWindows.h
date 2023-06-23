@@ -95,8 +95,15 @@ public:
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
 
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
+
 private:
 
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AirWindowsPlugin)
 };
 

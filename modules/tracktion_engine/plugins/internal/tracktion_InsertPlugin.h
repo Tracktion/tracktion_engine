@@ -27,10 +27,16 @@ public:
     //==============================================================================
     static const char* getPluginName()          { return NEEDS_TRANS("Insert"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override         { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     double getLatencySeconds() override;
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     bool takesAudioInput() override;

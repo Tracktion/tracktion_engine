@@ -12,6 +12,9 @@ namespace tracktion { inline namespace engine
 {
 
 const char* TextPlugin::xmlTypeName ("text");
+// BEATCONNECT MODIFICATION START
+const char* TextPlugin::uniqueId ("cf85e43c-3b47-420a-be17-36b7d0a306f9");
+// BEATCONNECT MODIFICATION END
 
 TextPlugin::TextPlugin (PluginCreationInfo info)  : Plugin (info)
 {

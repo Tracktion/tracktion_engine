@@ -72,6 +72,9 @@ ReverbPlugin::~ReverbPlugin()
 }
 
 const char* ReverbPlugin::xmlTypeName = "reverb";
+// BEATCONNECT MODIFICATION START
+const char* ReverbPlugin::uniqueId = "0dba41d7-8a52-4c70-9d4f-eb563e4f0dff";
+// BEATCONNECT MODIFICATION END
 
 void ReverbPlugin::initialise (const PluginInitialisationInfo& info)
 {

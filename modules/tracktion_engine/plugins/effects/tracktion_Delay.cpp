@@ -40,6 +40,9 @@ DelayPlugin::~DelayPlugin()
 }
 
 const char* DelayPlugin::xmlTypeName = "delay";
+// BEATCONNECT MODIFICATION START
+const char* DelayPlugin::uniqueId = "292d6b46-b19c-4140-9bd4-bdf5873deb87";
+// BEATCONNECT MODIFICATION END
 
 void DelayPlugin::initialise (const PluginInitialisationInfo& info)
 {

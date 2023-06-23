@@ -73,10 +73,16 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     void initialiseFully() override;
     juce::String getName() override;
-    juce::String getPluginType() override                                         { return xmlTypeName; }
+    juce::String getPluginType() override;
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override { return uniqueId; }
+    // BEATCONNECT MODIFICATION END{ return xmlTypeName; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

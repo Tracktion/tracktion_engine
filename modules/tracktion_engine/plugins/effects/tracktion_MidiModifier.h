@@ -26,10 +26,16 @@ public:
 
     static const char* getPluginName()      { return NEEDS_TRANS("MIDI Modifier"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override     { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     double getLatencySeconds() override;

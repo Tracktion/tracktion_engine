@@ -137,6 +137,9 @@ juce::String RackInstance::getTooltip()
 }
 
 const char* RackInstance::xmlTypeName = "rack";
+// BEATCONNECT MODIFICATION START
+const char* RackInstance::uniqueId = "848ee322-7f68-4415-aaf9-2a409969134e";
+// BEATCONNECT MODIFICATION END
 
 juce::String RackInstance::getName()
 {

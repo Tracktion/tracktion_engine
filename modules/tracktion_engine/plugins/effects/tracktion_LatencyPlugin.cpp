@@ -128,6 +128,9 @@ private:
 //==============================================================================
 //==============================================================================
 const char* LatencyPlugin::xmlTypeName ("latencyTester");
+// BEATCONNECT MODIFICATION START
+const char* LatencyPlugin::uniqueId ("048052db-54fc-4822-ac71-3ca356d5cacb");
+// BEATCONNECT MODIFICATION END
 
 LatencyPlugin::LatencyPlugin (PluginCreationInfo info)
     : Plugin (info)

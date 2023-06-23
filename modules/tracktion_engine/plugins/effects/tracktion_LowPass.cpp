@@ -33,6 +33,9 @@ LowPassPlugin::~LowPassPlugin()
 }
 
 const char* LowPassPlugin::xmlTypeName = "lowpass";
+// BEATCONNECT MODIFICATION START
+const char* LowPassPlugin::uniqueId = "b82be959-2b55-43ec-8207-6b8b899dc0dc";
+// BEATCONNECT MODIFICATION END
 
 void LowPassPlugin::updateFilters()
 {

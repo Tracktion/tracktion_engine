@@ -1118,6 +1118,9 @@ FourOscPlugin::~FourOscPlugin()
 }
 
 const char* FourOscPlugin::xmlTypeName = "4osc";
+// BEATCONNECT MODIFICATION START
+const char* FourOscPlugin::uniqueId = "8854123f-9c36-4e63-9a90-5124376cee59";
+// BEATCONNECT MODIFICATION END
 
 AutomatableParameter* FourOscPlugin::addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange, juce::String label)
 {

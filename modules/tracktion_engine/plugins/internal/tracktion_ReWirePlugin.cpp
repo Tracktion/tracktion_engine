@@ -1036,6 +1036,9 @@ void ReWireSystem::timerCallback()
 
 //==============================================================================
 const char* ReWirePlugin::xmlTypeName = "ReWire";
+// BEATCONNECT MODIFICATION START
+const char* ReWirePlugin::uniqueId = "41911e10-3eba-4ac2-83ea-3456d1df8f48";
+// BEATCONNECT MODIFICATION END
 
 ReWirePlugin::ReWirePlugin (PluginCreationInfo info)  : Plugin (info)
 {

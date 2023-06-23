@@ -22,10 +22,16 @@ public:
 
     //==============================================================================
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                                         { return TRANS("Patch Bay Plugin"); }
     juce::String getPluginType() override                                   { return xmlTypeName; }
     juce::String getShortName (int) override                                { return TRANS("MIDIPatch"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                                     { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool canBeAddedToClip() override                                        { return false; }
     bool canBeAddedToRack() override                                        { return true; }
     bool needsConstantBufferSize() override                                 { return false; }

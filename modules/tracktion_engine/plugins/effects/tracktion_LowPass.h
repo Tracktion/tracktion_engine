@@ -20,11 +20,17 @@ public:
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Low/High-Pass Filter"); }
     static const char* xmlTypeName;
+    // BEATCONNECT MODIFICATION START
+    static const char* uniqueId;
+    // BEATCONNECT MODIFICATION END
 
     juce::String getName() override                     { return "LPF/HPF"; }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "HP/LP"; }
     juce::String getSelectableDescription() override    { return TRANS("Low/High-Pass Filter"); }
+    // BEATCONNECT MODIFICATION START
+    juce::String getUniqueId() override                 { return uniqueId; }
+    // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
