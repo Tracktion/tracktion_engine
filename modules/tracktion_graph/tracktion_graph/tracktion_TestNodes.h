@@ -508,11 +508,11 @@ public:
         return { input.get() };
     }
     
-    bool transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes) override
+    bool transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
     {
         if (! hasInitialised)
         {
-            findSendNodes (rootNode, postOrderedNodes);
+            findSendNodes (rootNode, postOrderedNodes, cache);
             return true;
         }
         
@@ -547,8 +547,8 @@ private:
     std::unique_ptr<Node> input;
     const int busID;
     bool hasInitialised = false;
-    
-    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes)
+
+    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache& cache)
     {
         // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
@@ -558,10 +558,21 @@ private:
         
         std::vector<SendNode*> sends;
 
-        for (auto n : postOrderedNodes)
-           if (auto send = dynamic_cast<SendNode*> (n))
-               if (send->getBusID() == busID)
-                   sends.push_back (send);
+        constexpr size_t cacheKey = 3399892065; // Random number
+
+        if (auto cachedVec = cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
+        {
+            sends = *cachedVec;
+        }
+        else
+        {
+            for (auto n : postOrderedNodes)
+               if (auto send = dynamic_cast<SendNode*> (n))
+                   if (send->getBusID() == busID)
+                       sends.push_back (send);
+
+            cache.cacheProperty (cacheKey, sends);
+        }
 
         // Remove any send nodes that feed back in to this
         std::vector<Node*> sendsToRemove;
