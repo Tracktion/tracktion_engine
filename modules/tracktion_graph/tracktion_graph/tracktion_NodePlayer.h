@@ -60,6 +60,9 @@ public:
     /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
     {
+        if (sampleRate == sampleRateToUse && blockSize == blockSizeToUse)
+            return;
+
         auto oldGraph = std::move (nodeGraph);
         auto rootNodeToPrepare = input ? std::move (input)
                                        : oldGraph ? std::move (oldGraph->rootNode)
@@ -122,8 +125,8 @@ protected:
     std::unique_ptr<NodeGraph> nodeGraph;
     PlayHeadState* playHeadState = nullptr;
     
-    double sampleRate = 44100.0;
-    int blockSize = 512;
+    double sampleRate = 0.0;
+    int blockSize = 0;
     
     juce::SpinLock inputAndNodesLock;
     
