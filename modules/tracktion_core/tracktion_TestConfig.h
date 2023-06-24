@@ -25,6 +25,7 @@
 #define ENGINE_UNIT_TESTS_FREEZE                        1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE               1
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
+#define ENGINE_UNIT_TESTS_MIDILIST                      1
 #define ENGINE_UNIT_TESTS_MODIFIERS                     1
 #define ENGINE_UNIT_TESTS_PAN_LAW                       1
 #define ENGINE_UNIT_TESTS_PLUGINS                       1

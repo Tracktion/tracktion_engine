@@ -462,6 +462,19 @@ namespace MidiHelpers
         return {};
     }
 
+    inline std::optional<size_t> getNoteOffIndex (size_t noteOnIndex,
+                                                  const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
+                                   [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
+
+        if (found != noteOffMap.end())
+            return found->second;
+
+        return {};
+    }
+
+
     inline void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
                                              choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
@@ -644,6 +657,48 @@ namespace MidiHelpers
 
         return noteList;
     }
+
+    inline void clipSequenceToRange (choc::midi::Sequence& sequence, const juce::Range<double> clipRange,
+                                     std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        if (clipRange.isEmpty())
+            return;
+
+        // First adjust all the note times
+        for (auto& m : sequence)
+            if (m.message.isShortMessage())
+                if (auto sm = m.message.getShortMessage(); sm.isNoteOn() || sm.isNoteOff())
+                   m.timeStamp = clipRange.clipValue (m.timeStamp);
+
+        // Then remove any zero or negative length notes
+        for (int i = (int) sequence.events.size(); --i >= 0;)
+        {
+            const size_t index = static_cast<size_t> (i);
+            auto& m = sequence.events[index];
+
+            if (! m.message.isShortMessage())
+                continue;
+
+            auto sm = m.message.getShortMessage();
+
+            if (! sm.isNoteOn())
+                continue;
+
+            if (auto noteOffIndex = getNoteOffIndex (index, noteOffMap))
+            {
+                if (*noteOffIndex < index)
+                    continue;
+
+                const auto noteLength = sequence.events[*noteOffIndex].timeStamp - m.timeStamp;
+
+                if (noteLength > 0.0)
+                    continue;
+
+                sequence.events.erase (sequence.events.begin() + static_cast<int> (*noteOffIndex));
+                sequence.events.erase (sequence.events.begin() + i);
+            }
+        }
+    }
 }
 
 //==============================================================================
@@ -673,7 +728,7 @@ public:
     }
 
     //==============================================================================
-    virtual void cacheSequence (double /*offset*/) {}
+    virtual void cacheSequence (double /*offset*/, std::optional<juce::Range<double>> /*clipRange*/) {}
 
     virtual void setTime (double) = 0;
     virtual bool advance() = 0;
@@ -809,7 +864,7 @@ public:
           grooveStrength (grooveStrength_)
     {
         // Cache the sequence at 0.0 time to reserve the required storage
-        cacheSequence (0.0);
+        cacheSequence (0.0, {});
 
         // Reserve the scratch space for the note on/off map
         size_t maxNumEvents = 0, maxNumNoteOns = 0;
@@ -864,7 +919,7 @@ public:
         generator.setTime (editBeatPosition);
     }
 
-    void cacheSequence (double offsetBeats) override
+    void cacheSequence (double offsetBeats, std::optional<juce::Range<double>> clipRange) override
     {
         // Create a new sequence by:
         // - Iterating the current sequence
@@ -893,6 +948,13 @@ public:
             MidiHelpers::applyGrooveToSequence (groove, grooveStrength, currentSequence);
 
         currentSequence.sortEvents();
+
+        if (clipRange)
+        {
+            MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
+            MidiHelpers::clipSequenceToRange (currentSequence, *clipRange, noteOffMap);
+        }
+
         MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
 
         cachedSequenceOffset = offsetBeats;
@@ -1045,7 +1107,7 @@ private:
 
         loopIndex = newLoopIndex;
         const auto sequenceOffset = clipRange.getStart() + (loopIndex * loopTimes.getLength());
-        generator->cacheSequence (sequenceOffset);
+        generator->cacheSequence (sequenceOffset, loopTimes + sequenceOffset);
     }
 };
 

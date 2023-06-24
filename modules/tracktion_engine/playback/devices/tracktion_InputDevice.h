@@ -102,11 +102,11 @@ public:
     bool isOnTargetTrack (const Track&);
     bool isOnTargetTrack (const Track&, int idx);
     
-    void setTargetTrack (AudioTrack&, int index, bool moveToTrack);
-    void removeTargetTrack (AudioTrack&);
-    void removeTargetTrack (AudioTrack&, int index);
-    void removeTargetTrack (EditItemID, int index);
-    void clearFromTracks();
+    void setTargetTrack (AudioTrack&, int index, bool moveToTrack, juce::UndoManager*);
+    void removeTargetTrack (AudioTrack&, juce::UndoManager*);
+    void removeTargetTrack (AudioTrack&, int index, juce::UndoManager*);
+    void removeTargetTrack (EditItemID, int index, juce::UndoManager*);
+    void clearFromTracks (juce::UndoManager*);
     bool isAttachedToTrack() const;
 
     virtual bool isLivePlayEnabled (const Track& t) const;

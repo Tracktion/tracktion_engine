@@ -1,33 +1,30 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(TestRunner VERSION 1.0.0)
+set (TARGET_NAME TestRunner)
+
+if (DEFINED PROJECT_NAME)
+    message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
+else()
+    file(READ ../../VERSION.md CURRENT_VERSION)
+    project(${TARGET_NAME} VERSION ${CURRENT_VERSION})
+    add_subdirectory(../../modules/juce ./cmake_build_juce)
+    add_subdirectory(../../modules ./cmake_build_tracktion)
+endif()
 
 # If we are using MSVC we want static runtime linkage
 if (MSVC)
     set (CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# If we are compiling for macOS we want to target OS versions down to 10.11
+# If we are compiling for macOS we want to target OS versions down to 10.13
 if (APPLE)
     set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
-endif()
-
-# Compile with werror in release builds
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
-    CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Werror")
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /WX")
 endif()
 
 
 # Adds all the module sources so they appear correctly in the IDE
 set_property(GLOBAL PROPERTY USE_FOLDERS YES)
 option(JUCE_ENABLE_MODULE_SOURCE_GROUPS "Enable Module Source Groups" ON)
-
-add_subdirectory(../../modules/juce ./cmake_build_juce)
-add_subdirectory(../../modules ./cmake_build_tracktion)
 
 if (DEFINED ENV{VST2_SDK_DIR})
     MESSAGE(STATUS "Building with VST2 SDK: $ENV{VST2_SDK_DIR}")
@@ -36,37 +33,32 @@ else()
     MESSAGE(STATUS "Not building with VST2")
 endif()
 
-juce_add_console_app(${CMAKE_PROJECT_NAME})
+juce_add_console_app(${TARGET_NAME})
 
-juce_generate_juce_header(${CMAKE_PROJECT_NAME})
+juce_generate_juce_header(${TARGET_NAME})
 
-target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
 
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
+set_target_properties(${TARGET_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
     CXX_VISIBILITY_PRESET hidden)
 
 set(SourceFiles
-    ${CMAKE_PROJECT_NAME}.cpp
-    ${CMAKE_PROJECT_NAME}.h)
+    ${TARGET_NAME}.cpp
+    ${TARGET_NAME}.h)
 
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
+target_sources(${TARGET_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
 
-message(${CMAKE_CURRENT_SOURCE_DIR})
-file(GLOB_RECURSE LibraryFiles CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.h)
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party PREFIX Libraries FILES ${LibraryFiles})
-
-add_library(Source ${ModuleFiles} ${SourceFiles} ${LibraryFiles})
+include("${CMAKE_CURRENT_SOURCE_DIR}/../../tests/utils.cmake")
+addModuleSourceTarget()
 
 if (DEFINED ENV{VST2_SDK_DIR})
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
+    target_compile_definitions(${TARGET_NAME} PRIVATE
         JUCE_PLUGINHOST_VST=1)
 endif()
 
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
+target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_PLUGINHOST_AU=1
     JUCE_PLUGINHOST_LADSPA=1
     JUCE_PLUGINHOST_VST3=1
@@ -81,7 +73,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     TRACKTION_UNIT_TESTS=1
     TRACKTION_LOG_DEVICES=0)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+target_link_libraries(${TARGET_NAME} PRIVATE
     tracktion::tracktion_core
     tracktion::tracktion_engine
     tracktion::tracktion_graph
@@ -90,11 +82,23 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     juce::juce_audio_utils
     juce::juce_recommended_warning_flags)
 
+# Compile with werror in release builds
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
+    CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(${TARGET_NAME} PRIVATE "/W4")
+    target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
+endif()
+    
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE "-latomic")
-  target_link_options(${CMAKE_PROJECT_NAME} PRIVATE "-m64")
+  target_link_libraries(${TARGET_NAME} PRIVATE "-latomic")
+
+  if (NOT ${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64")
+    target_link_options(${TARGET_NAME} PRIVATE "-m64")
+  endif()
 endif()

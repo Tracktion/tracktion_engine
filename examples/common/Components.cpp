@@ -687,7 +687,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            instance->setTargetTrack (*at, 0, true, &at->edit.getUndoManager());
                         id++;
                     }
                 }
@@ -700,7 +700,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            instance->setTargetTrack (*at, 0, true, &at->edit.getUndoManager());
                         id++;
                     }
                 }
