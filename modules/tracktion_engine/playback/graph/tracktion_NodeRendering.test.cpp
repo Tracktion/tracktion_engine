@@ -225,7 +225,7 @@ private:
     }
 };
 
-//dddstatic ResamplingBenchmarks resamplingBenchmarks;
+static ResamplingBenchmarks resamplingBenchmarks;
 
 #endif
 
