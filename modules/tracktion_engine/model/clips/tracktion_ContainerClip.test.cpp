@@ -415,7 +415,9 @@ private:
 
         auto insertClip = [cc, f = sinFile->getFile(), &ts] (BeatRange r)
                           {
-                              insertWaveClip (*cc, {}, f, { ts.toTime (r) }, DeleteExistingClips::no);
+                              auto wac = insertWaveClip (*cc, {}, f, { ts.toTime (r) }, DeleteExistingClips::no);
+                              wac->setAutoTempo (true);
+                              wac->setUsesProxy (false);
                           };
 
         // Kick
