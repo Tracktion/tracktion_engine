@@ -77,19 +77,18 @@ struct CombiningNode::TimedNode
 
     void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     {
-        if (hasPrefetched)
-            return;
-        
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
 
+       #if JUCE_DEBUG
         hasPrefetched = true;
+       #endif
     }
 
     void process (ProcessContext& pc)
     {
         jassert (hasPrefetched);
-        
+
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.numSamples, pc.referenceSampleRange);
@@ -104,8 +103,10 @@ struct CombiningNode::TimedNode
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
-        
+
+       #if JUCE_DEBUG
         hasPrefetched = false;
+       #endif
     }
 
     size_t getAllocatedBytes() const
@@ -123,7 +124,9 @@ struct CombiningNode::TimedNode
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+   #if JUCE_DEBUG
     bool hasPrefetched = false;
+   #endif
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
