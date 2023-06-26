@@ -348,3 +348,139 @@ static ContainerClipTests containerClipTests;
 }} // namespace tracktion { inline namespace engine
 
 #endif //TRACKTION_UNIT_TESTS_CLIPS
+
+
+//==============================================================================
+//==============================================================================
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_CONTAINERCLIP
+#include "../../utilities/tracktion_TestUtilities.h"
+#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+#include "../../playback/graph/tracktion_BenchmarkUtilities.h"
+
+namespace tracktion { inline namespace engine
+{
+
+//==============================================================================
+//==============================================================================
+class ContainerClipBenchmarks   : public juce::UnitTest
+{
+public:
+    ContainerClipBenchmarks()
+        : juce::UnitTest ("ContainerClip", "tracktion_benchmarks")
+    {}
+    
+    void runTest() override
+    {
+        runCreateLoopedContainerClipBenchmark();
+    }
+    
+private:
+    BenchmarkDescription getDescription (std::string bmName)
+    {
+        const auto bmCategory = (getName() + "/" + getCategory()).toStdString();
+        const auto bmDescription = bmName;
+        
+        return { std::hash<std::string>{} (bmName + bmCategory + bmDescription),
+            bmCategory, bmName, bmDescription };
+    }
+
+    void runCreateLoopedContainerClipBenchmark()
+    {
+        //- Create a container clip
+        //- Create contained clip sequence like a standard drum pattern (4 beats)
+        //- Set the container clip's loop range to [0, 4)
+        //- Loop the container clip for 48hrs
+        //- Benchmark how long this takes to build with EditNodeBuilder
+
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto& ts = edit->tempoSequence;
+
+        auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*getAudioTracks (*edit)[0], TrackItem::Type::container,
+                                                               ts.toTime ({ 0_bp, 4_bp })));
+        cc->setLoopRangeBeats ({ 0_bp, 4_bp });
+        cc->setEnd (Edit::getMaximumEditEnd(), true);
+
+        // BEAT:    0    1    2    3
+        // kick:    x--- x--- x--- x---
+        // snare:   x--- ---- x--- ----
+        // hat1:    x-x- x-x- x-x- x-x-
+        // hat2:    -x-x -x-x -x-x -x-x
+        // tom1:    ---- x-x- ---- x-x-
+
+        // Use a real file so the Nodes don't get optomised away
+        constexpr double sampleRate = 96'000.0;
+        constexpr int bufferSize = 128;
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 1.0);
+
+        auto insertClip = [cc, f = sinFile->getFile(), &ts] (BeatRange r)
+                          {
+                              insertWaveClip (*cc, {}, f, { ts.toTime (r) }, DeleteExistingClips::no);
+                          };
+
+        // Kick
+        {
+            insertClip ({ 0_bp, 0.25_bd });
+            insertClip ({ 1_bp, 0.25_bd });
+            insertClip ({ 2_bp, 0.25_bd });
+            insertClip ({ 3_bp, 0.25_bd });
+        }
+
+        // Snare
+        {
+            insertClip ({ 0_bp, 0.25_bd });
+            insertClip ({ 2_bp, 0.25_bd });
+        }
+
+        // Hat 1
+        {
+            insertClip ({ 0_bp,   0.25_bd });
+            insertClip ({ 0.5_bp, 0.25_bd });
+            insertClip ({ 1_bp,   0.25_bd });
+            insertClip ({ 1.5_bp, 0.25_bd });
+            insertClip ({ 2_bp,   0.25_bd });
+            insertClip ({ 2.5_bp, 0.25_bd });
+            insertClip ({ 3_bp,   0.25_bd });
+            insertClip ({ 3.5_bp, 0.25_bd });
+        }
+
+        // Hat 2
+        {
+            insertClip ({ 0.25_bp, 0.25_bd });
+            insertClip ({ 0.75_bp, 0.25_bd });
+            insertClip ({ 1.25_bp, 0.25_bd });
+            insertClip ({ 1.75_bp, 0.25_bd });
+            insertClip ({ 2.25_bp, 0.25_bd });
+            insertClip ({ 2.75_bp, 0.25_bd });
+            insertClip ({ 3.25_bp, 0.25_bd });
+            insertClip ({ 3.75_bp, 0.25_bd });
+        }
+
+        // Tom
+        {
+            insertClip ({ 1_bp,   0.25_bd });
+            insertClip ({ 1.5_bp, 0.25_bd });
+            insertClip ({ 3_bp,   0.25_bd });
+            insertClip ({ 3.5_bp, 0.25_bd });
+        }
+
+        {
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, ts };
+            CreateNodeParams cnp { processState, sampleRate, bufferSize };
+
+            const ScopedBenchmark sb (createBenchmarkDescription (
+                "Node",
+                juce::String ("Looping container clip").toStdString(),
+                juce::String ("Conatiner clip with 4 beat drum loop over max Edit length").toStdString()));
+            [[ maybe_unused ]] auto editNode = createNodeForEdit (*edit, cnp);
+        }
+    }
+};
+
+static ContainerClipBenchmarks containerClipBenchmarks;
+
+}} // namespace tracktion { inline namespace engine
+
+#endif

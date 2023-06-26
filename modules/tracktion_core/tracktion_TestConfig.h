@@ -57,6 +57,7 @@
 #define GRAPH_BENCHMARKS_THREADS                        1
 
 #define ENGINE_BENCHMARKS_AUDIOFILECACHE                1
+#define ENGINE_BENCHMARKS_CONTAINERCLIP                 1
 #define ENGINE_BENCHMARKS_MIDICLIP                      1
 #define ENGINE_BENCHMARKS_EDITITEMID                    1
 #define ENGINE_BENCHMARKS_NODE                          1

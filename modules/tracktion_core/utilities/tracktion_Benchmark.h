@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 #include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
 namespace tracktion { inline namespace engine
