@@ -62,7 +62,7 @@ public:
     juce::String getShortName (int) override            { return "Smplr"; }
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override                 { return uniqueId; }
+    // juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool isSynth() override                             { return true; }
     bool needsConstantBufferSize() override             { return false; }

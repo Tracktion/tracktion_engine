@@ -34,7 +34,7 @@ public:
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override     { return uniqueId; }
+    // juce::String getUniqueId() override     { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

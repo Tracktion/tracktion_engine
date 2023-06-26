@@ -35,7 +35,7 @@ public:
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override         { return uniqueId; }
+    // juce::String getUniqueId() override         { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     double getLatencySeconds() override;
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;

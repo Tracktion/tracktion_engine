@@ -27,7 +27,7 @@ public:
     juce::String getName() override                     { return TRANS("Reverb"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override { return uniqueId; }
+    // juce::String getUniqueId() override { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 

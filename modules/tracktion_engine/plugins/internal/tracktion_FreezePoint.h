@@ -92,7 +92,7 @@ public:
     juce::String getTooltip() override                  { return TRANS("Track will freeze up to this plugin"); }
     juce::String getSelectableDescription() override    { return TRANS("Freeze Point Plugin"); }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override                 { return uniqueId; }
+    // juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool producesAudioWhenNoAudioInput() override       { return false; }
     bool canBeAddedToClip() override                    { return false; }

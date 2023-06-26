@@ -182,7 +182,7 @@ public:
     juce::String getShortName (int) override            { return "4OSC"; }
     juce::String getSelectableDescription() override    { return TRANS("4OSC"); }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override                 { return uniqueId; }
+    // juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 

@@ -73,7 +73,7 @@ public:
     juce::String getPluginType() override;
     /** @internal */
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override { return uniqueId; }
+    // juce::String getUniqueId() override { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override;
     /** @internal */

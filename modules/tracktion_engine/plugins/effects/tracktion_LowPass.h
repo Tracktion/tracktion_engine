@@ -29,7 +29,7 @@ public:
     juce::String getShortName (int) override            { return "HP/LP"; }
     juce::String getSelectableDescription() override    { return TRANS("Low/High-Pass Filter"); }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override                 { return uniqueId; }
+    // juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 

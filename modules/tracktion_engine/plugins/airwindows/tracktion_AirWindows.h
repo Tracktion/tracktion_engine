@@ -96,7 +96,7 @@ public:
     AutomatableParameter::Ptr dryGain, wetGain;
 
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override { return uniqueId; }
+    // juce::String getUniqueId() override { return uniqueId; }
     // BEATCONNECT MODIFICATION END
 
 private:

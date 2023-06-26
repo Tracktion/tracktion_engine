@@ -30,7 +30,7 @@ public:
     juce::String getPluginType() override                                   { return xmlTypeName; }
     juce::String getShortName (int) override                                { return TRANS("MIDIPatch"); }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override                                     { return uniqueId; }
+    // juce::String getUniqueId() override                                     { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool canBeAddedToClip() override                                        { return false; }
     bool canBeAddedToRack() override                                        { return true; }

@@ -31,7 +31,7 @@ public:
     juce::String getName() override                 { return TRANS("4-Band Equaliser"); }
     juce::String getPluginType() override           { return xmlTypeName; }
     // BEATCONNECT MODIFICATION START
-    juce::String getUniqueId() override             { return uniqueId; }
+    // juce::String getUniqueId() override             { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     juce::String getShortName (int) override        { return "EQ"; }
     juce::String getTooltip() override;

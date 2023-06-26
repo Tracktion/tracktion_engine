@@ -885,7 +885,7 @@ Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, boo
             if (auto af = builtIn->create(info)) 
             {
                 // BEATCONNECT MODIFICATIONS START
-                af.get()->state.setProperty(IDs::uniqueId, af.get()->getUniqueId(), nullptr);
+                // af.get()->state.setProperty(IDs::uniqueId, af.get()->getUniqueId(), nullptr);
                 // BEATCONNECT MODIFICATIONS START
                 return af;
             }
@@ -980,7 +980,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     // BEATCONNECT MODIFICATIONS START
     std::string test = p.get()->getPluginType().toStdString();
     if (p.get()->getPluginType() == v.getType().toString()) { // untested
-        p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+        // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
     // BEATCONNECT MODIFICATIONS START
 
@@ -1000,7 +1000,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
     // BEATCONNECT MODIFICATIONS START
     std::string test = p.get()->getPluginType().toStdString();
     if (p.get()->getPluginType() == type) {
-        p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+        // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
     // BEATCONNECT MODIFICATIONS START
 
