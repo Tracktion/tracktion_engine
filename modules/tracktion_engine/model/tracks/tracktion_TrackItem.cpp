@@ -132,6 +132,7 @@ EditItemID TrackItem::getTrackID() const
     return {};
 }
 
+BeatRange TrackItem::getEditBeatRange() const        { return edit.tempoSequence.toBeats (getPosition().time); }
 BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }
 BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }
 BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }
