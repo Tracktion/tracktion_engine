@@ -12,6 +12,9 @@
 
 #include "tracktion_EditNodeBuilder.h"
 #include "../../../tracktion_core/utilities/tracktion_Benchmark.h"
+#include "../../playback/graph/tracktion_TracktionEngineNode.h"
+#include "../../playback/graph/tracktion_TracktionNodePlayer.h"
+#include "../../playback/graph/tracktion_MultiThreadedNodePlayer.h"
 
 namespace tracktion { inline namespace engine
 {
@@ -39,7 +42,7 @@ namespace benchmark_utilities
     inline juce::String getDescription (const BenchmarkOptions& opts)
     {
         using namespace tracktion::graph;
-        auto s = test_utilities::getDescription (opts.testSetup)
+        auto s = graph::test_utilities::getDescription (opts.testSetup)
                     + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST");
         
         if (opts.isMultiThreaded == MultiThreaded::yes && opts.isLockFree == LockFree::yes)
@@ -49,7 +52,7 @@ namespace benchmark_utilities
             s << ", pooled-memory";
 
         if (opts.isMultiThreaded == MultiThreaded::yes)
-            s << ", " + test_utilities::getName (opts.poolType);
+            s << ", " + graph::test_utilities::getName (opts.poolType);
         
         return s;
     }
@@ -137,7 +140,7 @@ namespace benchmark_utilities
         if (opts.isLockFree == LockFree::yes)
         {
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
-                                                                                                                                  tracktion::graph::getPoolCreatorFunction (opts.poolType)),
+                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),
                                                                                            opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
@@ -147,7 +150,7 @@ namespace benchmark_utilities
         }
         else
         {
-            tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
+            tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<engine::MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
                                                                                                 opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
