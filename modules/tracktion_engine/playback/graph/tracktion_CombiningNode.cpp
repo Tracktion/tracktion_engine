@@ -10,6 +10,8 @@
 
 #include "tracktion_LoopingMidiNode.h"
 
+#define USE_PARTITION_INSERTION 1
+
 namespace tracktion { inline namespace engine
 {
 
@@ -159,10 +161,19 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     hash_combine (nodeProperties.nodeID, props.nodeID);
     hash_combine (nodeProperties.nodeID, beatRange);
 
+   #if USE_PARTITION_INSERTION
+    const auto lower = std::partition_point (inputs.begin(), inputs.end(),
+                                             [&] (const auto& i)
+                                             {
+                                                return i->time.getStart() < beatRange.getStart();
+                                            });
+    int i = static_cast<int> (std::distance (inputs.begin(), lower));
+   #else
     int i;
     for (i = 0; i < inputs.size(); ++i)
         if (inputs.getUnchecked (i)->time.getStart() >= beatRange.getStart())
             break;
+   #endif
 
     beatRange = BeatRange (beatRange.getStart(), beatRange.getLength() + combining_node_utils::decayTimeAllowance);
     auto tan = inputs.insert (i, new TimedNode (std::move (input), beatRange));
@@ -181,10 +192,19 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     {
         auto g = groups.getUnchecked (i);
 
+       #if USE_PARTITION_INSERTION
+        const auto lowerGroup = std::partition_point (g->begin(), g->end(),
+                                                      [&] (auto in)
+                                                      {
+                                                          return in->time.getStart() < beatRange.getStart();
+                                                      });
+        const int j = static_cast<int> (std::distance (g->begin(), lowerGroup));
+       #else
         int j;
         for (j = 0; j < g->size(); ++j)
             if (g->getUnchecked (j)->time.getStart() >= beatRange.getStart())
                 break;
+       #endif
 
         jassert (tan != nullptr);
         g->insert (j, tan);
