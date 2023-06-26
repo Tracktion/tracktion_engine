@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-20 15:52:51</td>
+            <td class="headerValue">2023-06-26 12:47:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -75,19 +75,19 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
 <a name="15"><span class="lineNum">      15 </span>            : //==============================================================================</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       3436 : LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack&amp; at, std::unique_ptr&lt;tracktion::graph::Node&gt; inputNode)</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3436 :     : track (at), input (std::move (inputNode))</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       3437 : LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack&amp; at, std::unique_ptr&lt;tracktion::graph::Node&gt; inputNode)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3437 :     : track (at), input (std::move (inputNode))</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            :     setOptimisations ({ tracktion::graph::ClearBuffers::no,</a>
 <a name="20"><span class="lineNum">      20 </span>            :                         tracktion::graph::AllocateAudioBuffer::no });</a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       3436 :     track-&gt;addListener (this);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       3436 : }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       3437 :     track-&gt;addListener (this);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       3437 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       6872 : LiveMidiInjectingNode::~LiveMidiInjectingNode()</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       6874 : LiveMidiInjectingNode::~LiveMidiInjectingNode()</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       3436 :     track-&gt;removeListener (this);</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">      10308 : }</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       3437 :     track-&gt;removeListener (this);</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">      10311 : }</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span>            : //==============================================================================</a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineCov">  147208947 : tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()</span></a>
@@ -99,9 +99,9 @@
 <a name="37"><span class="lineNum">      37 </span><span class="lineCov">  147208947 :     return props;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : }</a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     300764 : std::vector&lt;tracktion::graph::Node*&gt; LiveMidiInjectingNode::getDirectInputNodes()</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     301664 : std::vector&lt;tracktion::graph::Node*&gt; LiveMidiInjectingNode::getDirectInputNodes()</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : {</a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">     300764 :     return { input.get() };</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">     301664 :     return { input.get() };</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">       6193 : void LiveMidiInjectingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
@@ -122,18 +122,18 @@
 <a name="60"><span class="lineNum">      60 </span><span class="lineCov">      29321 :     return input-&gt;hasProcessed();</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : }</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">   27466986 : void LiveMidiInjectingNode::process (ProcessContext&amp; pc)</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">   27410247 : void LiveMidiInjectingNode::process (ProcessContext&amp; pc)</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : {</a>
 <a name="65"><span class="lineNum">      65 </span>            :     auto sourceBuffers = input-&gt;getProcessedOutput();</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">   27466986 :     auto&amp; destMidiBlock = pc.buffers.midi;</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">   27410247 :     auto&amp; destMidiBlock = pc.buffers.midi;</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     jassert (sourceBuffers.audio.getSize() == pc.buffers.audio.getSize());</a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   27466986 :     destMidiBlock.copyFrom (sourceBuffers.midi);</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">   27382223 :     setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   27410247 :     destMidiBlock.copyFrom (sourceBuffers.midi);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">   27343981 :     setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">   27507243 :     const juce::ScopedLock sl (liveMidiLock);</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">   27507583 :     const juce::ScopedLock sl (liveMidiLock);</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :     </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">   27513267 :     if (liveMidiMessages.isEmpty())</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">   27507706 :     if (liveMidiMessages.isEmpty())</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :         return;</a>
 <a name="76"><span class="lineNum">      76 </span>            :     </a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     destMidiBlock.mergeFromAndClear (liveMidiMessages);</span></a>

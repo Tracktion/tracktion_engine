@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-20 15:52:51</td>
+            <td class="headerValue">2023-06-26 12:47:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -140,7 +140,7 @@
 <a name="78"><span class="lineNum">      78 </span>            : template&lt;typename SampleType&gt;</a>
 <a name="79"><span class="lineNum">      79 </span>            : inline choc::buffer::BufferView&lt;SampleType, choc::buffer::SeparateChannelLayout&gt; toBufferView (juce::AudioBuffer&lt;SampleType&gt;&amp; buffer)</a>
 <a name="80"><span class="lineNum">      80 </span>            : {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">      73772 :     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">      73764 :     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),</a>
 <a name="83"><span class="lineNum">      83 </span>            :                                                  (choc::buffer::FrameCount) buffer.getNumSamples());</a>
 <a name="84"><span class="lineNum">      84 </span>            : }</a>
@@ -324,25 +324,25 @@
 <a name="262"><span class="lineNum">     262 </span>            :     template &lt;&gt;</a>
 <a name="263"><span class="lineNum">     263 </span>            :     struct VariantConverter&lt;tracktion::engine::ResamplingQuality&gt;</a>
 <a name="264"><span class="lineNum">     264 </span>            :     {</a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">       3387 :         static tracktion::engine::ResamplingQuality fromVar (const var&amp; v)</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">       3388 :         static tracktion::engine::ResamplingQuality fromVar (const var&amp; v)</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :         {</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       3387 :             const auto s = v.toString();</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       3388 :             const auto s = v.toString();</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">       3387 :             if (s == &quot;lagrange&quot;)    return tracktion::engine::ResamplingQuality::lagrange;</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">       3388 :             if (s == &quot;lagrange&quot;)    return tracktion::engine::ResamplingQuality::lagrange;</span></a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :             if (s == &quot;sincFast&quot;)    return tracktion::engine::ResamplingQuality::sincFast;</span></a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :             if (s == &quot;sincMedium&quot;)  return tracktion::engine::ResamplingQuality::sincMedium;</span></a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :             if (s == &quot;sincBest&quot;)    return tracktion::engine::ResamplingQuality::sincBest;</span></a>
 <a name="273"><span class="lineNum">     273 </span>            : </a>
 <a name="274"><span class="lineNum">     274 </span>            :             return tracktion::engine::ResamplingQuality::lagrange;</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       3387 :         }</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       3388 :         }</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">       3386 :         static var toVar (tracktion::engine::ResamplingQuality v)</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">       3387 :         static var toVar (tracktion::engine::ResamplingQuality v)</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :         {</a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">       3386 :             if (v == tracktion::engine::ResamplingQuality::sincFast)    return &quot;sincFast&quot;;</span></a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">       3386 :             if (v == tracktion::engine::ResamplingQuality::sincMedium)  return &quot;sincMedium&quot;;</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">       3386 :             if (v == tracktion::engine::ResamplingQuality::sincBest)    return &quot;sincBest&quot;;</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineCov">       3387 :             if (v == tracktion::engine::ResamplingQuality::sincFast)    return &quot;sincFast&quot;;</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">       3387 :             if (v == tracktion::engine::ResamplingQuality::sincMedium)  return &quot;sincMedium&quot;;</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">       3387 :             if (v == tracktion::engine::ResamplingQuality::sincBest)    return &quot;sincBest&quot;;</span></a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineCov">       3386 :             return &quot;lagrange&quot;;</span></a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">       3387 :             return &quot;lagrange&quot;;</span></a>
 <a name="284"><span class="lineNum">     284 </span>            :         }</a>
 <a name="285"><span class="lineNum">     285 </span>            :     };</a>
 <a name="286"><span class="lineNum">     286 </span>            : }</a>

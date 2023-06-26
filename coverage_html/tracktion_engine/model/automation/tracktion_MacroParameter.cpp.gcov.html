@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-20 15:52:51</td>
+            <td class="headerValue">2023-06-26 12:47:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -148,22 +148,22 @@
 <a name="86"><span class="lineNum">      86 </span>            : //==============================================================================</a>
 <a name="87"><span class="lineNum">      87 </span>            : struct MacroParameterList::List : public ValueTreeObjectList&lt;MacroParameter&gt;</a>
 <a name="88"><span class="lineNum">      88 </span>            : {</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">      11565 :     List (MacroParameterList&amp; mpl, const juce::ValueTree&amp; v)</span></a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">      11565 :         : ValueTreeObjectList&lt;MacroParameter&gt; (v),</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">      11565 :           macroParameterList (mpl), edit (mpl.edit)</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">      11575 :     List (MacroParameterList&amp; mpl, const juce::ValueTree&amp; v)</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">      11575 :         : ValueTreeObjectList&lt;MacroParameter&gt; (v),</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">      11575 :           macroParameterList (mpl), edit (mpl.edit)</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :     {</a>
 <a name="93"><span class="lineNum">      93 </span>            :         jassert (v.hasType (IDs::MACROPARAMETERS));</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      11565 :         rebuildObjects();</span></a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">      11565 :     }</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      11575 :         rebuildObjects();</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">      11575 :     }</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">      23130 :     ~List() override</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      11565 :     {</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">      11565 :         freeObjects();</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">      23130 :     }</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">      23150 :     ~List() override</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      11575 :     {</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">      11575 :         freeObjects();</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">      23150 :     }</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">       8752 :     juce::ReferenceCountedArray&lt;MacroParameter&gt; getMacroParameters() const</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">       8777 :     juce::ReferenceCountedArray&lt;MacroParameter&gt; getMacroParameters() const</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :     {</a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">       8752 :         juce::ReferenceCountedArray&lt;MacroParameter&gt; params;</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">       8777 :         juce::ReferenceCountedArray&lt;MacroParameter&gt; params;</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :         </a>
 <a name="106"><span class="lineNum">     106 </span>            :         // This is verbose but directly returning macroParameters causes a</a>
 <a name="107"><span class="lineNum">     107 </span>            :         // crash in optimised gcc Linux builds, could be a compiler bug</a>
@@ -171,11 +171,11 @@
 <a name="109"><span class="lineNum">     109 </span>            :             const juce::ScopedLock sl (macroParameters.getLock());</a>
 <a name="110"><span class="lineNum">     110 </span>            :             params.ensureStorageAllocated (macroParameters.size());</a>
 <a name="111"><span class="lineNum">     111 </span>            :             </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">       8758 :             for (auto&amp; p : macroParameters)</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">       8783 :             for (auto&amp; p : macroParameters)</span></a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineCov">          6 :                 params.add (p);</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :         }</a>
 <a name="115"><span class="lineNum">     115 </span>            :         </a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">       8752 :         return params;</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">       8777 :         return params;</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :     }</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span>            :     MacroParameterList&amp; macroParameterList;</a>
@@ -229,21 +229,21 @@
 <a name="167"><span class="lineNum">     167 </span>            : };</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            : //==============================================================================</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">      11565 : MacroParameterList::MacroParameterList (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">      11575 : MacroParameterList::MacroParameterList (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :     : AutomatableEditItem (e, v),</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">      11565 :       state (v)</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">      11575 :       state (v)</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
 <a name="174"><span class="lineNum">     174 </span>            :     jassert (state.hasType (IDs::MACROPARAMETERS));</a>
 <a name="175"><span class="lineNum">     175 </span>            :     jassert (itemID.isValid());</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">      11565 :     list = std::make_unique&lt;List&gt; (*this, v);</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">      11575 :     list = std::make_unique&lt;List&gt; (*this, v);</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      11565 :     restoreChangedParametersFromState();</span></a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">      11565 : }</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">      11575 :     restoreChangedParametersFromState();</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">      11575 : }</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">      11565 : MacroParameterList::~MacroParameterList()</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">      11575 : MacroParameterList::~MacroParameterList()</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : {</a>
 <a name="183"><span class="lineNum">     183 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">      11565 : }</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">      11575 : }</span></a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineCov">          1 : MacroParameter* MacroParameterList::createMacroParameter()</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : {</a>
@@ -302,9 +302,9 @@
 <a name="240"><span class="lineNum">     240 </span>            :     }</a>
 <a name="241"><span class="lineNum">     241 </span><span class="lineCov">          1 : }</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       1751 : juce::ReferenceCountedArray&lt;MacroParameter&gt; MacroParameterList::getMacroParameters() const</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       1755 : juce::ReferenceCountedArray&lt;MacroParameter&gt; MacroParameterList::getMacroParameters() const</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : {</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       8752 :     return list-&gt;getMacroParameters();</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       8777 :     return list-&gt;getMacroParameters();</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : }</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : Track* MacroParameterList::getTrack() const</span></a>
@@ -331,10 +331,10 @@
 <a name="269"><span class="lineNum">     269 </span>            : }</a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
 <a name="271"><span class="lineNum">     271 </span>            : //==============================================================================</a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      11565 : MacroParameterElement::MacroParameterElement (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      11565 :     : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &amp;e.getUndoManager()))</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      11575 : MacroParameterElement::MacroParameterElement (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      11575 :     : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &amp;e.getUndoManager()))</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : {</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      11565 : }</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      11575 : }</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
 <a name="277"><span class="lineNum">     277 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

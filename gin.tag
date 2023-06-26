@@ -2609,6 +2609,9 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__BenchmarkUtilities_8h.html</filename>
     <includes id="tracktion__EditNodeBuilder_8h" name="tracktion_EditNodeBuilder.h" local="yes" imported="no">tracktion_EditNodeBuilder.h</includes>
+    <includes id="tracktion__TracktionEngineNode_8h" name="tracktion_TracktionEngineNode.h" local="yes" imported="no">../../playback/graph/tracktion_TracktionEngineNode.h</includes>
+    <includes id="tracktion__TracktionNodePlayer_8h" name="tracktion_TracktionNodePlayer.h" local="yes" imported="no">../../playback/graph/tracktion_TracktionNodePlayer.h</includes>
+    <includes id="tracktion__engine_2playback_2graph_2tracktion__MultiThreadedNodePlayer_8h" name="tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h" local="yes" imported="no">../../playback/graph/tracktion_MultiThreadedNodePlayer.h</includes>
     <class kind="struct">tracktion::engine::benchmark_utilities::BenchmarkOptions</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -84968,14 +84971,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__graph-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_engine-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__engine-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__graph-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -85044,11 +85047,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -85058,13 +85056,18 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>

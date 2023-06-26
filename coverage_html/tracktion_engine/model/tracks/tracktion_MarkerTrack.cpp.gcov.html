@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-20 15:52:51</td>
+            <td class="headerValue">2023-06-26 12:47:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -73,16 +73,16 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        278 : MarkerTrack::MarkerTrack (Edit&amp; e, const juce::ValueTree&amp; v)  : ClipTrack (e, v, 40, 13, 60)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        279 : MarkerTrack::MarkerTrack (Edit&amp; e, const juce::ValueTree&amp; v)  : ClipTrack (e, v, 40, 13, 60)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        278 : }</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        279 : }</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        556 : MarkerTrack::~MarkerTrack()</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        558 : MarkerTrack::~MarkerTrack()</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        278 :     notifyListenersOfDeletion();</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        556 : }</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        279 :     notifyListenersOfDeletion();</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        558 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        278 : bool MarkerTrack::isMarkerTrack() const                  { return true; }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        279 : bool MarkerTrack::isMarkerTrack() const                  { return true; }</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : juce::String MarkerTrack::getSelectableDescription()     { return getName(); }</span></a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : juce::String MarkerTrack::getName() const                { return TRANS(&quot;Marker&quot;); }</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 : bool MarkerTrack::canContainPlugin (Plugin*) const       { return false; }</span></a>
