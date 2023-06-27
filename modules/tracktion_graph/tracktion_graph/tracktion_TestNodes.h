@@ -556,23 +556,28 @@ private:
         if (hasInitialised)
             return;
         
-        std::vector<SendNode*> sends;
+        std::vector<SendNode*> allSends;
 
         constexpr size_t cacheKey = 3399892065; // Random number
 
         if (auto cachedVec = cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
         {
-            sends = *cachedVec;
+            allSends = *cachedVec;
         }
         else
         {
             for (auto n : postOrderedNodes)
                if (auto send = dynamic_cast<SendNode*> (n))
-                   if (send->getBusID() == busID)
-                       sends.push_back (send);
+                   allSends.push_back (send);
 
-            cache.cacheProperty (cacheKey, sends);
+            cache.cacheProperty (cacheKey, allSends);
         }
+
+        std::vector<SendNode*> sends;
+
+        for (auto send : allSends)
+            if (send->getBusID() == busID)
+                sends.push_back (send);
 
         // Remove any send nodes that feed back in to this
         std::vector<Node*> sendsToRemove;
