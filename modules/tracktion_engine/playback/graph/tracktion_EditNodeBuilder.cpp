@@ -379,7 +379,7 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, EditTimeRange clipTimeRangeToUse,
+std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, EditItemID idToUse, EditTimeRange clipTimeRangeToUse,
                                                                 bool includeMelodyne, const CreateNodeParams& params)
 {
     auto& playHeadState = params.processState.playHeadState;
@@ -458,7 +458,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                                   clip.getActiveChannels(),
                                                                   juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                                   params.processState,
-                                                                  clip.itemID,
+                                                                  idToUse,
                                                                   params.forRendering,
                                                                   desc);
         }
@@ -473,7 +473,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          clip.getActiveChannels(),
                                                          juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                          params.processState,
-                                                         clip.itemID,
+                                                         idToUse,
                                                          params.forRendering);
         }
     }
@@ -531,7 +531,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getActiveChannels(),
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,
-                                               clip.itemID,
+                                               idToUse,
                                                params.forRendering,
                                                clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
@@ -551,7 +551,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getActiveChannels(),
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,
-                                               clip.itemID,
+                                               idToUse,
                                                params.forRendering,
                                                clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
@@ -581,12 +581,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeMelodyne, const CreateNodeParams& params)
 {
     if (clip.canUseProxy())
-        return createNodeForAudioClip (clip, clip.getEditTimeRange(), includeMelodyne, params);
+        return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params);
 
     if (clip.getAutoTempo() || clip.getAutoPitch())
-        return createNodeForAudioClip (clip, clip.getEditBeatRange(), includeMelodyne, params);
+        return createNodeForAudioClip (clip, clip.itemID, clip.getEditBeatRange(), includeMelodyne, params);
 
-    return createNodeForAudioClip (clip, clip.getEditTimeRange(), includeMelodyne, params);
+    return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params);
 }
 
 std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
@@ -736,7 +736,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
                     
                     assert (ccBeatRange.contains (clipBeatRangeRelativeToEditClippedToContainer));
 
-                    if (auto clipNode = createNodeForAudioClip (*acb, clipBeatRangeRelativeToEditClippedToContainer, false, params))
+                    // Create a new ID (that won't be in use elsewhere) so each clip has its own
+                    // state than can persist between graph builds
+                    const auto idToUse = static_cast<uint64_t> (hash (static_cast<size_t> (loopNum), acb->itemID.getRawID()))
+                                            | (1ULL << 63);
+
+                    if (auto clipNode = createNodeForAudioClip (*acb, EditItemID::fromRawID (idToUse), clipBeatRangeRelativeToEditClippedToContainer, false, params))
                         combiningNode->addInput (std::move (clipNode), clipBeatRangeRelativeToEditClippedToContainer);
                 }
                 else
