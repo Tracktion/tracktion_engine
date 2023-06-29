@@ -48,7 +48,7 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
     void getPluginStateFromTree (juce::MemoryBlock&);
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override     { return uniqueId; }
+    juce::String getUniqueId() override     { return uniqueId; }
     // BEATCONNECT MODIFICATION END
 
     void updateFromMirroredPluginIfNeeded (Plugin&) override;

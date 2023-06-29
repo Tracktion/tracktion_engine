@@ -34,7 +34,7 @@ public:
     juce::String getPluginType() override                               { return xmlTypeName; }
     juce::String getShortName (int) override                            { return TRANS("Comp"); }
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override                                 { return uniqueId; }
+    juce::String getUniqueId() override                                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
