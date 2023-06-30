@@ -993,9 +993,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
+    // BEATCONNECT MODIFICATIONS START
     p.get()->state.setProperty(IDs::isInstrument, desc.isInstrument, nullptr);
 
-    // BEATCONNECT MODIFICATIONS START
     if (p.get()->getPluginType() == type) {
         // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
