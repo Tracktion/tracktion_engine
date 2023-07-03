@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-06-26 12:47:10</td>
+            <td class="headerValue">2023-07-03 16:23:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -78,7 +78,7 @@
 <a name="16"><span class="lineNum">      16 </span>            : /**</a>
 <a name="17"><span class="lineNum">      17 </span>            :     Holds the state of a process call.</a>
 <a name="18"><span class="lineNum">      18 </span>            : */</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        481 : struct ProcessState</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        485 : struct ProcessState</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
 <a name="21"><span class="lineNum">      21 </span>            :     /** Creates a ProcessState. */</a>
 <a name="22"><span class="lineNum">      22 </span>            :     ProcessState (tracktion::graph::PlayHeadState&amp;);</a>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span>            :     TracktionEngineNode (ProcessState&amp;);</a>
 <a name="78"><span class="lineNum">      78 </span>            :     </a>
 <a name="79"><span class="lineNum">      79 </span>            :     /** Destructor. */</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       9476 :     virtual ~TracktionEngineNode() = default;</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       9484 :     virtual ~TracktionEngineNode() = default;</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :     </a>
 <a name="82"><span class="lineNum">      82 </span>            :     //==============================================================================</a>
 <a name="83"><span class="lineNum">      83 </span>            :     /** Returns the number of samples in the current process block. */</a>
@@ -149,13 +149,13 @@
 <a name="87"><span class="lineNum">      87 </span><span class="lineCov">      12066 :     double getSampleRate() const                            { return processState-&gt;sampleRate; }</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            :     /** Returns the timeline sample range of the current process block. */</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">   15832471 :     juce::Range&lt;int64_t&gt; getTimelineSampleRange() const     { return processState-&gt;timelineSampleRange; }</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">   15851486 :     juce::Range&lt;int64_t&gt; getTimelineSampleRange() const     { return processState-&gt;timelineSampleRange; }</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span>            :     /** Returns the edit time range of the current process block. */</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">  112679362 :     TimeRange getEditTimeRange() const                      { return processState-&gt;editTimeRange; }</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">  112645994 :     TimeRange getEditTimeRange() const                      { return processState-&gt;editTimeRange; }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
 <a name="95"><span class="lineNum">      95 </span>            :     /** Returns the edit beat range of the current process block. */</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">   56010265 :     BeatRange getEditBeatRange() const                      { return processState-&gt;editBeatRange; }</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">   56129080 :     BeatRange getEditBeatRange() const                      { return processState-&gt;editBeatRange; }</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span>            :     /** Returns the reference sample range (from the DeviceManager) of the current process block. */</a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :     juce::Range&lt;int64_t&gt; getReferenceSampleRange() const    { return processState-&gt;referenceSampleRange; }</span></a>
@@ -175,13 +175,13 @@
 <a name="113"><span class="lineNum">     113 </span>            : </a>
 <a name="114"><span class="lineNum">     114 </span>            :     //==============================================================================</a>
 <a name="115"><span class="lineNum">     115 </span>            :     /** Returns the PlayHeadState in use. */</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">   13183499 :     tracktion::graph::PlayHeadState&amp; getPlayHeadState()      { return processState-&gt;playHeadState; }</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">   13191997 :     tracktion::graph::PlayHeadState&amp; getPlayHeadState()      { return processState-&gt;playHeadState; }</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span>            :     /** Returns the PlayHead in use. */</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    5477719 :     tracktion::graph::PlayHead&amp; getPlayHead()                { return getPlayHeadState().playHead; }</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    5494430 :     tracktion::graph::PlayHead&amp; getPlayHead()                { return getPlayHeadState().playHead; }</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span>            :     /** Returns the ProcessState in use. */</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">       7585 :     ProcessState&amp; getProcessState()                          { return *processState; }</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">       7593 :     ProcessState&amp; getProcessState()                          { return *processState; }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span>            :     //==============================================================================</a>
 <a name="125"><span class="lineNum">     125 </span>            :     /** @internal */</a>
