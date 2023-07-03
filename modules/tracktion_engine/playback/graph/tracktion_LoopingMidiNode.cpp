@@ -705,7 +705,7 @@ namespace MidiHelpers
 
         // Finally, erase any events with the flagged timestamp
         sequence.events.erase (std::remove_if (sequence.events.begin(), sequence.events.end(),
-                                               [] (const auto& e) { return juce::approximatelyEqual (e.timeStamp, timeStampToRemoveFlag); }),
+                                               [timeStampToRemoveFlag] (const auto& e) { return juce::approximatelyEqual (e.timeStamp, timeStampToRemoveFlag); }),
                                sequence.events.end());
     }
 }
