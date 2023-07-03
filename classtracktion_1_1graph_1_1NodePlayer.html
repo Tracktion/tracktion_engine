@@ -129,9 +129,9 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a1f59bcbe70ae0482b12bd5bdeec06bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba98a2cd3b55aac5027f1606661f5134"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">PlayHeadState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#aba98a2cd3b55aac5027f1606661f5134">playHeadState</a> = nullptr</td></tr>
 <tr class="separator:aba98a2cd3b55aac5027f1606661f5134"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af49f0765b84d469fd75771113f61023c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#af49f0765b84d469fd75771113f61023c">sampleRate</a> = 44100.0</td></tr>
+<tr class="memitem:af49f0765b84d469fd75771113f61023c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#af49f0765b84d469fd75771113f61023c">sampleRate</a> = 0.0</td></tr>
 <tr class="separator:af49f0765b84d469fd75771113f61023c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5dfb2c0db0a934007e17992fe01c79c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae5dfb2c0db0a934007e17992fe01c79c">blockSize</a> = 512</td></tr>
+<tr class="memitem:ae5dfb2c0db0a934007e17992fe01c79c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae5dfb2c0db0a934007e17992fe01c79c">blockSize</a> = 0</td></tr>
 <tr class="separator:ae5dfb2c0db0a934007e17992fe01c79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f9fff6f5c76149dba8aeaf7899503ba"><td class="memItemLeft" align="right" valign="top">juce::SpinLock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a8f9fff6f5c76149dba8aeaf7899503ba">inputAndNodesLock</a></td></tr>
 <tr class="separator:a8f9fff6f5c76149dba8aeaf7899503ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -307,7 +307,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Prepares the current <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played. </p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#aef9a8c255f1e362c809ddbff9d42a1a7">input</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a1f59bcbe70ae0482b12bd5bdeec06bc8">nodeGraph</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae5dfb2c0db0a934007e17992fe01c79c">blockSize</a>, <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#aef9a8c255f1e362c809ddbff9d42a1a7">input</a>, <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a1f59bcbe70ae0482b12bd5bdeec06bc8">nodeGraph</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#af49f0765b84d469fd75771113f61023c">sampleRate</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae3616233d59653b27baed923ee1b7943">setNode()</a>.</p>
 
@@ -603,7 +603,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double tracktion::graph::NodePlayer::sampleRate = 44100.0</td>
+          <td class="memname">double tracktion::graph::NodePlayer::sampleRate = 0.0</td>
         </tr>
       </table>
   </td>
@@ -613,7 +613,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a2c14cee9d5b56be8fa260c15063a1a15">getSampleRate()</a>, <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a90925996ea360db38ea345b3585410bb">prepareToPlay()</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae54139fc706a7d021e6621f9796cee20">setNode()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a2c14cee9d5b56be8fa260c15063a1a15">getSampleRate()</a>, <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ac0e6993eebc1d72dc0a4824652cd5972">prepareToPlay()</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae54139fc706a7d021e6621f9796cee20">setNode()</a>.</p>
 
 </div>
 </div>
@@ -627,7 +627,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int tracktion::graph::NodePlayer::blockSize = 512</td>
+          <td class="memname">int tracktion::graph::NodePlayer::blockSize = 0</td>
         </tr>
       </table>
   </td>
@@ -637,7 +637,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a90925996ea360db38ea345b3585410bb">prepareToPlay()</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae54139fc706a7d021e6621f9796cee20">setNode()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ac0e6993eebc1d72dc0a4824652cd5972">prepareToPlay()</a>, and <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#ae54139fc706a7d021e6621f9796cee20">setNode()</a>.</p>
 
 </div>
 </div>
@@ -671,7 +671,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 3 2023 16:04:00 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 3 2023 16:17:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

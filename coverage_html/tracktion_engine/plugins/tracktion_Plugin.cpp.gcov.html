@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">169</td>
+            <td class="headerCovTableEntry">166</td>
             <td class="headerCovTableEntry">419</td>
-            <td class="headerCovTableEntryLo">40.3 %</td>
+            <td class="headerCovTableEntryLo">39.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-03 16:25:57</td>
+            <td class="headerValue">2023-07-03 16:35:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -73,19 +73,19 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">   28025297 : PluginRenderContext::PluginRenderContext (juce::AudioBuffer&lt;float&gt;* buffer,</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">   27772204 : PluginRenderContext::PluginRenderContext (juce::AudioBuffer&lt;float&gt;* buffer,</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :                                           const juce::AudioChannelSet&amp; bufferChannels,</a>
 <a name="16"><span class="lineNum">      16 </span>            :                                           int bufferStart, int bufferSize,</a>
 <a name="17"><span class="lineNum">      17 </span>            :                                           MidiMessageArray* midiBuffer, double midiOffset,</a>
 <a name="18"><span class="lineNum">      18 </span>            :                                           TimeRange editTimeRange, bool playing, bool scrubbing, bool rendering,</a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">   28025297 :                                           bool shouldAllowBypassedProcessing) noexcept</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">   28025297 :     : destBuffer (buffer), destBufferChannels (bufferChannels),</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   28149518 :       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">   28149518 :       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   28149518 :       editTime (editTimeRange),</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   28149518 :       isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   28149518 :       allowBypassedProcessing (shouldAllowBypassedProcessing)</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">   28149518 : {}</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">   27772204 :                                           bool shouldAllowBypassedProcessing) noexcept</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">   27772204 :     : destBuffer (buffer), destBufferChannels (bufferChannels),</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">   27872338 :       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">   27872338 :       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">   27872338 :       editTime (editTimeRange),</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">   27872338 :       isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">   27872338 :       allowBypassedProcessing (shouldAllowBypassedProcessing)</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">   27872338 : {}</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span>            : //==============================================================================</a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 : Plugin::Wire::Wire (const juce::ValueTree&amp; v, juce::UndoManager* um)  : state (v)</span></a>
@@ -200,11 +200,11 @@
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">       7872 :     deleteAutomatableParameters();</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineCov">       7872 : }</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     231176 : int Plugin::getNumOutputChannelsGivenInputs (int)</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     115820 : int Plugin::getNumOutputChannelsGivenInputs (int)</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     231176 :     juce::StringArray outs;</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     231176 :     getChannelNames (nullptr, &amp;outs);</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     231176 :     return outs.size();</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     115820 :     juce::StringArray outs;</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">     115820 :     getChannelNames (nullptr, &amp;outs);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     115820 :     return outs.size();</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : }</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : int Plugin::getNumWires() const</span></a>
@@ -373,10 +373,10 @@
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : }</a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineCov">     146831 : void Plugin::getChannelNames (juce::StringArray* ins, juce::StringArray* outs)</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineCov">      73275 : void Plugin::getChannelNames (juce::StringArray* ins, juce::StringArray* outs)</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : {</a>
 <a name="316"><span class="lineNum">     316 </span>            :     getLeftRightChannelNames (ins, outs);</a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineCov">     146831 : }</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineCov">      73275 : }</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
 <a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : juce::StringArray Plugin::getInputChannelNames()</span></a>
 <a name="320"><span class="lineNum">     320 </span>            : {</a>
@@ -507,40 +507,40 @@
 <a name="445"><span class="lineNum">     445 </span><span class="lineCov">       5781 : }</span></a>
 <a name="446"><span class="lineNum">     446 </span>            : </a>
 <a name="447"><span class="lineNum">     447 </span>            : //==============================================================================</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineCov">       9178 : void Plugin::baseClassInitialise (const PluginInitialisationInfo&amp; info)</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">       8105 : void Plugin::baseClassInitialise (const PluginInitialisationInfo&amp; info)</span></a>
 <a name="449"><span class="lineNum">     449 </span>            : {</a>
 <a name="450"><span class="lineNum">     450 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="451"><span class="lineNum">     451 </span><span class="lineCov">       9178 :     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);</span></a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">       8105 :     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);</span></a>
 <a name="452"><span class="lineNum">     452 </span>            :     bool isUpdatingWithoutStopping = false;</a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">       9178 :     sampleRate = info.sampleRate;</span></a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineCov">       9178 :     blockSizeSamples = info.blockSizeSamples;</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">       8105 :     sampleRate = info.sampleRate;</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">       8105 :     blockSizeSamples = info.blockSizeSamples;</span></a>
 <a name="455"><span class="lineNum">     455 </span>            :     cpuUsageMs = 0.0;</a>
 <a name="456"><span class="lineNum">     456 </span>            : </a>
 <a name="457"><span class="lineNum">     457 </span>            :     {</a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineCov">       9178 :         const double msPerBlock = (sampleRate &gt; 0.0) ? (1000.0 * (blockSizeSamples / sampleRate)) : 0.0;</span></a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineCov">       9178 :         timeToCpuScale = (msPerBlock &gt; 0.0) ? (1.0 / msPerBlock) : 0.0;</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">       8105 :         const double msPerBlock = (sampleRate &gt; 0.0) ? (1000.0 * (blockSizeSamples / sampleRate)) : 0.0;</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineCov">       8105 :         timeToCpuScale = (msPerBlock &gt; 0.0) ? (1.0 / msPerBlock) : 0.0;</span></a>
 <a name="460"><span class="lineNum">     460 </span>            :     }</a>
 <a name="461"><span class="lineNum">     461 </span>            : </a>
 <a name="462"><span class="lineNum">     462 </span>            :     {</a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineCov">       9178 :         if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)</span></a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">       8105 :         if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)</span></a>
 <a name="464"><span class="lineNum">     464 </span>            :         {</a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       7641 :             CRASH_TRACER</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       8105 :             CRASH_TRACER</span></a>
 <a name="466"><span class="lineNum">     466 </span>            :            #if JUCE_DEBUG</a>
 <a name="467"><span class="lineNum">     467 </span>            :             isInitialisingFlag = true;</a>
 <a name="468"><span class="lineNum">     468 </span>            :            #endif</a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineCov">       7641 :             initialise (info);</span></a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineCov">       8105 :             initialise (info);</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
 <a name="472"><span class="lineNum">     472 </span>            :            #if JUCE_DEBUG</a>
 <a name="473"><span class="lineNum">     473 </span>            :             isInitialisingFlag = true;</a>
 <a name="474"><span class="lineNum">     474 </span>            :            #endif</a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineCov">       7641 :         }</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineCov">       8105 :         }</span></a>
 <a name="476"><span class="lineNum">     476 </span>            :         else</a>
 <a name="477"><span class="lineNum">     477 </span>            :         {</a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineCov">       1537 :             CRASH_TRACER</span></a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineCov">       1537 :             initialiseWithoutStopping (info);</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :             CRASH_TRACER</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :             initialiseWithoutStopping (info);</span></a>
 <a name="480"><span class="lineNum">     480 </span>            :             isUpdatingWithoutStopping = true;</a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">       1537 :         }</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="482"><span class="lineNum">     482 </span>            : </a>
 <a name="483"><span class="lineNum">     483 </span>            :        #if JUCE_DEBUG</a>
 <a name="484"><span class="lineNum">     484 </span>            :         isInitialisingFlag = false;</a>
@@ -548,37 +548,37 @@
 <a name="486"><span class="lineNum">     486 </span>            :     }</a>
 <a name="487"><span class="lineNum">     487 </span>            : </a>
 <a name="488"><span class="lineNum">     488 </span>            :     {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       9178 :         CRASH_TRACER</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineCov">       9178 :         resetRecordingStatus();</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineCov">       9178 :     }</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       8105 :         CRASH_TRACER</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">       8105 :         resetRecordingStatus();</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineCov">       8105 :     }</span></a>
 <a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineCov">       9178 :     if (! isUpdatingWithoutStopping)</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">       8105 :     if (! isUpdatingWithoutStopping)</span></a>
 <a name="494"><span class="lineNum">     494 </span>            :     {</a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineCov">       7641 :         CRASH_TRACER</span></a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">       7641 :         setAutomatableParamPosition (info.startTime);</span></a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineCov">       7641 :     }</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">       8105 :         CRASH_TRACER</span></a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineCov">       8105 :         setAutomatableParamPosition (info.startTime);</span></a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">       8105 :     }</span></a>
 <a name="498"><span class="lineNum">     498 </span>            : </a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineCov">       9178 :     if (sampleRateOrBlockSizeChanged)</span></a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineCov">       8105 :     if (sampleRateOrBlockSizeChanged)</span></a>
 <a name="500"><span class="lineNum">     500 </span>            :     {</a>
 <a name="501"><span class="lineNum">     501 </span><span class="lineCov">       5782 :         CRASH_TRACER</span></a>
 <a name="502"><span class="lineNum">     502 </span><span class="lineCov">       5782 :         reset();</span></a>
 <a name="503"><span class="lineNum">     503 </span><span class="lineCov">       5782 :     }</span></a>
-<a name="504"><span class="lineNum">     504 </span><span class="lineCov">       9178 : }</span></a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineCov">       8105 : }</span></a>
 <a name="505"><span class="lineNum">     505 </span>            : </a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineCov">       8290 : void Plugin::baseClassDeinitialise()</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">       8105 : void Plugin::baseClassDeinitialise()</span></a>
 <a name="507"><span class="lineNum">     507 </span>            : {</a>
 <a name="508"><span class="lineNum">     508 </span>            :     jassert (initialiseCount &gt; 0);</a>
 <a name="509"><span class="lineNum">     509 </span>            : </a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineCov">       8290 :     if (initialiseCount &gt; 0 &amp;&amp; --initialiseCount == 0)</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">       8105 :     if (initialiseCount &gt; 0 &amp;&amp; --initialiseCount == 0)</span></a>
 <a name="511"><span class="lineNum">     511 </span>            :     {</a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineCov">       7327 :         CRASH_TRACER</span></a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineCov">       7327 :         deinitialise();</span></a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineCov">       7327 :         resetRecordingStatus();</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">       8105 :         CRASH_TRACER</span></a>
+<a name="513"><span class="lineNum">     513 </span><span class="lineCov">       8105 :         deinitialise();</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">       8105 :         resetRecordingStatus();</span></a>
 <a name="515"><span class="lineNum">     515 </span>            : </a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineCov">       7327 :         timeToCpuScale = 0.0;</span></a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineCov">       8105 :         timeToCpuScale = 0.0;</span></a>
 <a name="517"><span class="lineNum">     517 </span>            :         cpuUsageMs = 0.0;</a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineCov">       7327 :     }</span></a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineCov">       8290 : }</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineCov">       8105 :     }</span></a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineCov">       8105 : }</span></a>
 <a name="520"><span class="lineNum">     520 </span>            : </a>
 <a name="521"><span class="lineNum">     521 </span>            : //==============================================================================</a>
 <a name="522"><span class="lineNum">     522 </span><span class="lineCov">          1 : void Plugin::deleteFromParent()</span></a>
@@ -595,7 +595,7 @@
 <a name="533"><span class="lineNum">     533 </span>            : </a>
 <a name="534"><span class="lineNum">     534 </span><span class="lineCov">       4383 : Track* Plugin::getOwnerTrack() const</span></a>
 <a name="535"><span class="lineNum">     535 </span>            : {</a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">      14375 :     return getTrackContainingPlugin (edit, this);</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">      13302 :     return getTrackContainingPlugin (edit, this);</span></a>
 <a name="537"><span class="lineNum">     537 </span>            : }</a>
 <a name="538"><span class="lineNum">     538 </span>            : </a>
 <a name="539"><span class="lineNum">     539 </span><span class="lineCov">       2077 : Clip* Plugin::getOwnerClip() const</span></a>
@@ -722,31 +722,31 @@
 <a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :         quickParamName = param-&gt;paramID;</span></a>
 <a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="662"><span class="lineNum">     662 </span>            : </a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineCov">   27211123 : void Plugin::applyToBufferWithAutomation (const PluginRenderContext&amp; pc)</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineCov">   26944073 : void Plugin::applyToBufferWithAutomation (const PluginRenderContext&amp; pc)</span></a>
 <a name="664"><span class="lineNum">     664 </span>            : {</a>
 <a name="665"><span class="lineNum">     665 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   27211123 :     const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">   26944073 :     const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);</span></a>
 <a name="668"><span class="lineNum">     668 </span>            : </a>
-<a name="669"><span class="lineNum">     669 </span><span class="lineCov">   27210935 :     auto&amp; arm = edit.getAutomationRecordManager();</span></a>
+<a name="669"><span class="lineNum">     669 </span><span class="lineCov">   27021211 :     auto&amp; arm = edit.getAutomationRecordManager();</span></a>
 <a name="670"><span class="lineNum">     670 </span>            :     jassert (initialiseCount &gt; 0);</a>
 <a name="671"><span class="lineNum">     671 </span>            :    #if JUCE_DEBUG</a>
 <a name="672"><span class="lineNum">     672 </span>            :     jassert (! isInitialisingFlag);</a>
 <a name="673"><span class="lineNum">     673 </span>            :    #endif</a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">   27210935 :     updateLastPlaybackTime();</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineCov">   27021211 :     updateLastPlaybackTime();</span></a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
 <a name="677"><span class="lineNum">     677 </span>            :     if (isAutomationNeeded()</a>
-<a name="678"><span class="lineNum">     678 </span><span class="lineCov">   27188835 :         &amp;&amp; (arm.isReadingAutomation() || isClipEffect.load()))</span></a>
+<a name="678"><span class="lineNum">     678 </span><span class="lineCov">   26937950 :         &amp;&amp; (arm.isReadingAutomation() || isClipEffect.load()))</span></a>
 <a name="679"><span class="lineNum">     679 </span>            :     {</a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineCov">      82556 :         if (pc.isScrubbing || ! pc.isPlaying)</span></a>
+<a name="680"><span class="lineNum">     680 </span><span class="lineCov">      83038 :         if (pc.isScrubbing || ! pc.isPlaying)</span></a>
 <a name="681"><span class="lineNum">     681 </span>            :         {</a>
 <a name="682"><span class="lineNum">     682 </span>            :             SCOPED_REALTIME_CHECK</a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineCov">      82556 :             auto&amp; tc = edit.getTransport();</span></a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">     165112 :             updateParameterStreams (tc.isPlayContextActive() &amp;&amp; ! pc.isRendering</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">      83038 :             auto&amp; tc = edit.getTransport();</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">     166076 :             updateParameterStreams (tc.isPlayContextActive() &amp;&amp; ! pc.isRendering</span></a>
 <a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 :                                         ? tc.getPosition()</span></a>
 <a name="686"><span class="lineNum">     686 </span>            :                                         : pc.editTime.getStart());</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">      82556 :             applyToBuffer (pc);</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">      83038 :             applyToBuffer (pc);</span></a>
 <a name="688"><span class="lineNum">     688 </span>            :         }</a>
 <a name="689"><span class="lineNum">     689 </span>            :         else</a>
 <a name="690"><span class="lineNum">     690 </span>            :         {</a>
@@ -758,9 +758,9 @@
 <a name="696"><span class="lineNum">     696 </span>            :     else</a>
 <a name="697"><span class="lineNum">     697 </span>            :     {</a>
 <a name="698"><span class="lineNum">     698 </span>            :         SCOPED_REALTIME_CHECK</a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineCov">   27106279 :         applyToBuffer (pc);</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineCov">   26854912 :         applyToBuffer (pc);</span></a>
 <a name="700"><span class="lineNum">     700 </span>            :     }</a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   27165638 : }</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">   26964025 : }</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : </a>
 <a name="703"><span class="lineNum">     703 </span>            : //==============================================================================</a>
 <a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 : bool Plugin::hasNameForMidiNoteNumber (int, int midiChannel, juce::String&amp;)</span></a>
@@ -955,20 +955,20 @@
 <a name="893"><span class="lineNum">     893 </span>            :                });</a>
 <a name="894"><span class="lineNum">     894 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="895"><span class="lineNum">     895 </span>            : </a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">     379262 : void Plugin::getLeftRightChannelNames (juce::StringArray* chans)</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">     190350 : void Plugin::getLeftRightChannelNames (juce::StringArray* chans)</span></a>
 <a name="897"><span class="lineNum">     897 </span>            : {</a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineCov">     379262 :     if (chans != nullptr)</span></a>
+<a name="898"><span class="lineNum">     898 </span><span class="lineCov">     190350 :     if (chans != nullptr)</span></a>
 <a name="899"><span class="lineNum">     899 </span>            :     {</a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">     233490 :         chans-&gt;add (TRANS(&quot;Left&quot;));</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     233490 :         chans-&gt;add (TRANS(&quot;Right&quot;));</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">     118134 :         chans-&gt;add (TRANS(&quot;Left&quot;));</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     118134 :         chans-&gt;add (TRANS(&quot;Right&quot;));</span></a>
 <a name="902"><span class="lineNum">     902 </span>            :     }</a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     379262 : }</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     190350 : }</span></a>
 <a name="904"><span class="lineNum">     904 </span>            : </a>
 <a name="905"><span class="lineNum">     905 </span><span class="lineNoCov">          0 : void Plugin::getLeftRightChannelNames (juce::StringArray* ins,</span></a>
 <a name="906"><span class="lineNum">     906 </span>            :                                        juce::StringArray* outs)</a>
 <a name="907"><span class="lineNum">     907 </span>            : {</a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineCov">     146831 :     getLeftRightChannelNames (ins);</span></a>
-<a name="909"><span class="lineNum">     909 </span><span class="lineCov">     146831 :     getLeftRightChannelNames (outs);</span></a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineCov">      73275 :     getLeftRightChannelNames (ins);</span></a>
+<a name="909"><span class="lineNum">     909 </span><span class="lineCov">      73275 :     getLeftRightChannelNames (outs);</span></a>
 <a name="910"><span class="lineNum">     910 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="911"><span class="lineNum">     911 </span>            : </a>
 <a name="912"><span class="lineNum">     912 </span><span class="lineNoCov">          0 : void Plugin::showWindowExplicitly()</span></a>

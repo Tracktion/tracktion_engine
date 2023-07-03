@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-03 16:25:57</td>
+            <td class="headerValue">2023-07-03 16:35:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -283,10 +283,10 @@
 <a name="221"><span class="lineNum">     221 </span>            :     juce::ValueTree getParentTrackTree() const;</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span>            :     /** Returns the parent Track if this is a nested track. */</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">   15279243 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">   15254610 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     /** Returns the parent FolderTrack if this is nested in one. */</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15269880 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15244760 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :     /** Tests whether this is a child of a given Track. */</a>
 <a name="230"><span class="lineNum">     230 </span>            :     bool isAChildOf (const Track&amp; possibleParent) const;</a>

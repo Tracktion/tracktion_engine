@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">18</td>
-            <td class="headerCovTableEntry">27</td>
-            <td class="headerCovTableEntryLo">66.7 %</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntryLo">72.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-03 16:25:57</td>
+            <td class="headerValue">2023-07-03 16:35:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -110,28 +110,43 @@
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">        602 : }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span>            : //==============================================================================</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        604 : void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">      88662 : NodeProperties AuxSendNode::getNodeProperties()</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        604 :     sampleRate = info.sampleRate;</span></a>
-<a name="54"><span class="lineNum">      54 </span>            :     </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        604 :     if (auto props = getNodeProperties(); props.latencyNumSamples &gt; 0)</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        604 : }</span></a>
-<a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       1034 : void AuxSendNode::process (ProcessContext&amp; pc)</span></a>
-<a name="60"><span class="lineNum">      60 </span>            : {</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       1034 :     if (sendPlugin.isAutomationNeeded()</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       1034 :         &amp;&amp; sendPlugin.edit.getAutomationRecordManager().isReadingAutomation())</span></a>
-<a name="63"><span class="lineNum">      63 </span>            :     {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :         const auto editSamplePos = playHeadState.playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :         sendPlugin.updateParameterStreams (editTime);</span></a>
-<a name="67"><span class="lineNum">      67 </span>            :     }</a>
-<a name="68"><span class="lineNum">      68 </span>            :     </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       1034 :     SendNode::process (pc);</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       1034 : }</span></a>
-<a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">      88662 :     if (cachedNodeProperties)</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      21310 :         return *cachedNodeProperties;</span></a>
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<a name="56"><span class="lineNum">      56 </span>            :     auto props = SendNode::getNodeProperties();</a>
+<a name="57"><span class="lineNum">      57 </span>            : </a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">      67352 :     if (isPrepared)</span></a>
+<a name="59"><span class="lineNum">      59 </span>            :         cachedNodeProperties = props;</a>
+<a name="60"><span class="lineNum">      60 </span>            : </a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">      67352 :     return props;</span></a>
+<a name="62"><span class="lineNum">      62 </span>            : }</a>
+<a name="63"><span class="lineNum">      63 </span>            : </a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">        602 : void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
+<a name="65"><span class="lineNum">      65 </span>            : {</a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">        602 :     sampleRate = info.sampleRate;</span></a>
+<a name="67"><span class="lineNum">      67 </span>            :     </a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">        602 :     if (auto props = getNodeProperties(); props.latencyNumSamples &gt; 0)</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);</span></a>
+<a name="70"><span class="lineNum">      70 </span>            : </a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">        602 :     isPrepared = true;</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        602 : }</span></a>
+<a name="73"><span class="lineNum">      73 </span>            : </a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       1034 : void AuxSendNode::process (ProcessContext&amp; pc)</span></a>
+<a name="75"><span class="lineNum">      75 </span>            : {</a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       1034 :     if (sendPlugin.isAutomationNeeded()</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">       1034 :         &amp;&amp; sendPlugin.edit.getAutomationRecordManager().isReadingAutomation())</span></a>
+<a name="78"><span class="lineNum">      78 </span>            :     {</a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :         const auto editSamplePos = playHeadState.playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :         const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :         sendPlugin.updateParameterStreams (editTime);</span></a>
+<a name="82"><span class="lineNum">      82 </span>            :     }</a>
+<a name="83"><span class="lineNum">      83 </span>            :     </a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       1034 :     SendNode::process (pc);</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">       1034 : }</span></a>
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<a name="87"><span class="lineNum">      87 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -87,6 +87,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99fd63e9ee28577e5372efcc266f9e1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#a99fd63e9ee28577e5372efcc266f9e1d">AuxSendNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, int busIDToUse, <a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1TrackMuteState.html">TrackMuteState</a> *, bool processAuxSendsWhenTrackIsMuted)</td></tr>
 <tr class="memdesc:a99fd63e9ee28577e5372efcc266f9e1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send.">AuxSendNode</a> to process an aux send.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#a99fd63e9ee28577e5372efcc266f9e1d">More...</a><br /></td></tr>
 <tr class="separator:a99fd63e9ee28577e5372efcc266f9e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03abc7eae6c9d6ea389ebb6e2e5e6e70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#a03abc7eae6c9d6ea389ebb6e2e5e6e70">getNodeProperties</a> () override</td></tr>
+<tr class="memdesc:a03abc7eae6c9d6ea389ebb6e2e5e6e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#a03abc7eae6c9d6ea389ebb6e2e5e6e70">More...</a><br /></td></tr>
+<tr class="separator:a03abc7eae6c9d6ea389ebb6e2e5e6e70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add8263ddb4760f5d935c343cee2c52a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AuxSendNode.html#add8263ddb4760f5d935c343cee2c52a6">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;) override</td></tr>
 <tr class="memdesc:add8263ddb4760f5d935c343cee2c52a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1engine_1_1AuxSendNode.html#add8263ddb4760f5d935c343cee2c52a6">More...</a><br /></td></tr>
 <tr class="separator:add8263ddb4760f5d935c343cee2c52a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,9 +135,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc67998aa3b75e41bc7b89e1ebf94d50 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html">AudioAndMidiBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">getProcessedOutput</a> ()</td></tr>
 <tr class="memdesc:adc67998aa3b75e41bc7b89e1ebf94d50 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the processed audio and MIDI output.  <a href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">More...</a><br /></td></tr>
 <tr class="separator:adc67998aa3b75e41bc7b89e1ebf94d50 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8526b7e0fe5df4a3bb715f5ab485b7f inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;)</td></tr>
-<tr class="memdesc:af8526b7e0fe5df4a3bb715f5ab485b7f inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1Node.html#af8526b7e0fe5df4a3bb715f5ab485b7f">More...</a><br /></td></tr>
-<tr class="separator:af8526b7e0fe5df4a3bb715f5ab485b7f inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a183f64e412a89d6d5aa6041682d5e7a7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a183f64e412a89d6d5aa6041682d5e7a7">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;, <a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;)</td></tr>
+<tr class="memdesc:a183f64e412a89d6d5aa6041682d5e7a7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1Node.html#a183f64e412a89d6d5aa6041682d5e7a7">More...</a><br /></td></tr>
+<tr class="separator:a183f64e412a89d6d5aa6041682d5e7a7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea8b99cdbe626c76bc7517bdce2870c8 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">getInternalNodes</a> ()</td></tr>
 <tr class="memdesc:aea8b99cdbe626c76bc7517bdce2870c8 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can return Nodes that are internal to this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> but don't make up the main graph constructed from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0" title="Should return all the inputs directly feeding in to this node.">getDirectInputNodes()</a>.  <a href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">More...</a><br /></td></tr>
 <tr class="separator:aea8b99cdbe626c76bc7517bdce2870c8 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,6 +227,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a03abc7eae6c9d6ea389ebb6e2e5e6e70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03abc7eae6c9d6ea389ebb6e2e5e6e70">&#9670;&nbsp;</a></span>getNodeProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">NodeProperties</a> tracktion::engine::AuxSendNode::getNodeProperties </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the properties of the node. </p>
+<p>This should not be called until after initialise. </p>
+
+<p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">tracktion::graph::Node</a>.</p>
+
+</div>
+</div>
 <a id="add8263ddb4760f5d935c343cee2c52a6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add8263ddb4760f5d935c343cee2c52a6">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
 
@@ -292,7 +325,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 3 2023 16:03:59 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 3 2023 16:17:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

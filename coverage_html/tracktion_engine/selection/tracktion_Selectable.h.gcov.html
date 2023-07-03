@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-03 16:25:57</td>
+            <td class="headerValue">2023-07-03 16:35:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -329,13 +329,13 @@
 <a name="267"><span class="lineNum">     267 </span><span class="lineCov">       2000 :     SafeSelectable&amp; operator= (SelectableType* newSelectable)       { weakRef = newSelectable; return *this; }</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
 <a name="269"><span class="lineNum">     269 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">     145006 :     SelectableType* get() const noexcept                            { return dynamic_cast&lt;SelectableType*&gt; (weakRef.get()); }</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      71706 :     SelectableType* get() const noexcept                            { return dynamic_cast&lt;SelectableType*&gt; (weakRef.get()); }</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
 <a name="272"><span class="lineNum">     272 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">          1 :     operator SelectableType*() const noexcept                       { return get(); }</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
 <a name="275"><span class="lineNum">     275 </span>            :     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */</a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineCov">     145000 :     SelectableType* operator-&gt;() const noexcept                     { return get(); }</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">      71700 :     SelectableType* operator-&gt;() const noexcept                     { return get(); }</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">          6 :     bool operator== (SelectableType* selectable) const noexcept     { return weakRef == selectable; }</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     bool operator!= (SelectableType* selectable) const noexcept     { return weakRef != selectable; }</a>

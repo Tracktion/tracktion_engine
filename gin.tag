@@ -5417,6 +5417,7 @@
     <class kind="struct">tracktion::graph::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion::graph::NodeProperties</class>
     <class kind="struct">tracktion::graph::NodeOptimisations</class>
+    <class kind="class">tracktion::graph::TransformCache</class>
     <class kind="class">tracktion::graph::Node</class>
     <class kind="struct">tracktion::graph::Node::AudioAndMidiBuffer</class>
     <class kind="struct">tracktion::graph::Node::ProcessContext</class>
@@ -14770,6 +14771,13 @@
       <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, AuxSendPlugin &amp;, tracktion::graph::PlayHeadState &amp;, const TrackMuteState *, bool processAuxSendsWhenTrackIsMuted)</arglist>
     </member>
     <member kind="function">
+      <type>NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1AuxSendNode.html</anchorfile>
+      <anchor>a03abc7eae6c9d6ea389ebb6e2e5e6e70</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>prepareToPlay</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendNode.html</anchorfile>
@@ -20439,8 +20447,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ConnectedNode.html</anchorfile>
-      <anchor>a0c9ec9b06388326cf933013ff342761a</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
+      <anchor>ae9fb3fdf68745df578f22cd0af5a776e</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -38003,8 +38011,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>aa6bc1867eaddc680b48c3e5f4f50e49c</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
+      <anchor>a5fdfb8da95bb184bc38fd5ba065be31a</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -49153,8 +49161,8 @@
       <type>virtual bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
-      <anchor>af8526b7e0fe5df4a3bb715f5ab485b7f</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;)</arglist>
+      <anchor>a183f64e412a89d6d5aa6041682d5e7a7</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual std::vector&lt; Node * &gt;</type>
@@ -58505,8 +58513,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
-      <anchor>aff7a3b7b05ec9a14c59e1b1eb0e1bf20</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
+      <anchor>ad333c5d1c4dd3f1b29a02cc87b850785</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -60954,8 +60962,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
-      <anchor>a92ba1e9b0f2e86c27c83e48fe501fd08</anchor>
-      <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes) override</arglist>
+      <anchor>acb9171e34d2b22514779fb845bb14991</anchor>
+      <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes, TransformCache &amp;cache) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -66526,8 +66534,8 @@
       <type>bool</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1SummingNode.html</anchorfile>
-      <anchor>a3422f27920524dfb6f4d3dfbbefa56e1</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;) override</arglist>
+      <anchor>a55b721e68a7d8c35c7da92e8a6ccc1ba</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -71843,6 +71851,31 @@
       <anchorfile>classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html</anchorfile>
       <anchor>ade6b38382954cb52936b00d424957e54</anchor>
       <arglist>(ProcessContext &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::graph::TransformCache</name>
+    <filename>classtracktion_1_1graph_1_1TransformCache.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>TransformCache</name>
+      <anchorfile>classtracktion_1_1graph_1_1TransformCache.html</anchorfile>
+      <anchor>aabf10d5dec553f457e8a1bdba717ace4</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cacheProperty</name>
+      <anchorfile>classtracktion_1_1graph_1_1TransformCache.html</anchorfile>
+      <anchor>a352bb191462e26e376361e7194f44027</anchor>
+      <arglist>(size_t key, T value)</arglist>
+    </member>
+    <member kind="function">
+      <type>T *</type>
+      <name>getCachedProperty</name>
+      <anchorfile>classtracktion_1_1graph_1_1TransformCache.html</anchorfile>
+      <anchor>ac7e1ae902bcc7355da4363507cef84d3</anchor>
+      <arglist>(size_t key)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -80101,6 +80134,7 @@
     <class kind="struct">tracktion::NodeGraph</class>
     <class kind="struct">tracktion::NodeProperties</class>
     <class kind="struct">tracktion::NodeOptimisations</class>
+    <class kind="class">tracktion::TransformCache</class>
     <class kind="class">tracktion::Node</class>
     <class kind="class">tracktion::NodePlayer</class>
     <class kind="struct">tracktion::SplitTimelineRange</class>
@@ -84656,6 +84690,7 @@
     <class kind="struct">tracktion::graph::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion::graph::NodeProperties</class>
     <class kind="struct">tracktion::graph::NodeOptimisations</class>
+    <class kind="class">tracktion::graph::TransformCache</class>
     <class kind="class">tracktion::graph::Node</class>
     <class kind="class">tracktion::graph::NodePlayer</class>
     <class kind="struct">tracktion::graph::SplitTimelineRange</class>
