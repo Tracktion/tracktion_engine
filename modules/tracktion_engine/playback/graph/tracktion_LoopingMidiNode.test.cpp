@@ -45,6 +45,8 @@ public:
 
         runProgramChangeTests (false);
         runProgramChangeTests (true);
+
+        runSequenceClippingTests();
     }
 
 private:
@@ -226,6 +228,74 @@ private:
                 expectEquals (importedList.getControllerEvents().size(), sequence.getControllerEvents().size() + (sendBankSelect ? 2 : 0));
                 expectEquals (importedList.getSysexEvents().size(), sequence.getSysexEvents().size());
             }
+        }
+    }
+
+    void runSequenceClippingTests()
+    {
+        beginTest ("Clipping sequence to range");
+
+        struct BytesAndTimeStamp
+        {
+            uint8_t bytes[3];
+            double timestamp;
+        };
+
+        BytesAndTimeStamp data[] = {
+          { { 0x90, 0x4e, 0x7c }, 12.0 },
+          { { 0x90, 0x42, 0x7c }, 12.0 },
+          { { 0x90, 0x49, 0x7c }, 12.0 },
+          { { 0x80, 0x42, 0x00 }, 12.4354 },
+          { { 0x80, 0x49, 0x00 }, 12.4578 },
+          { { 0x80, 0x4e, 0x00 }, 12.4764 },
+          { { 0x90, 0x4e, 0x7c }, 14.5 },
+          { { 0x90, 0x49, 0x7f }, 14.5 },
+          { { 0x90, 0x42, 0x7c }, 14.5 },
+          { { 0x80, 0x4e, 0x00 }, 14.9335 },
+          { { 0x80, 0x42, 0x00 }, 14.9519 },
+          { { 0x80, 0x49, 0x00 }, 14.9752 },
+          { { 0x90, 0x42, 0x7b }, 15.5 },
+          { { 0x80, 0x42, 0x00 }, 15.9744 },
+          { { 0x90, 0x4e, 0x7b }, 16.0 },
+          { { 0x90, 0x49, 0x7b }, 16.0 },
+          { { 0x80, 0x49, 0x00 }, 17.0 },
+          { { 0x80, 0x4e, 0x00 }, 17.0312 },
+          { { 0x90, 0x42, 0x7b }, 20.0 },
+          { { 0x80, 0x42, 0x00 }, 20.3751 },
+          { { 0x90, 0x49, 0x7b }, 22.0 },
+          { { 0x90, 0x42, 0x7a }, 22.0 },
+          { { 0x90, 0x4e, 0x7b }, 22.5 },
+          { { 0x80, 0x42, 0x00 }, 22.5101 },
+          { { 0x80, 0x49, 0x00 }, 22.5207 },
+          { { 0x80, 0x4e, 0x00 }, 23.0279 },
+          { { 0x90, 0x4e, 0x79 }, 24.0 },
+          { { 0x90, 0x42, 0x7a }, 24.0 },
+          { { 0x90, 0x49, 0x7a }, 24.0 },
+          { { 0x80, 0x49, 0x00 }, 24.1976 },
+          { { 0x80, 0x42, 0x00 }, 24.2033 },
+          { { 0x80, 0x4e, 0x00 }, 24.2284 } };
+
+        choc::midi::Sequence seq;
+
+        for (auto d : data)
+            seq.events.push_back ({ d.timestamp, choc::midi::ShortMessage (d.bytes[0], d.bytes[1], d.bytes[2]) });
+
+        {
+            std::vector<std::pair<size_t, size_t>> noteOffMap;
+            MidiHelpers::createNoteOffMap (noteOffMap, seq);
+
+            const juce::Range clipRange (12.0, 24.0);
+            MidiHelpers::clipSequenceToRange (seq, clipRange, noteOffMap);
+
+            expectEquals (seq.events.size(), static_cast<size_t> (26));
+
+            bool allEventsWithinRange = true;
+
+            for (auto e : seq)
+                if (! clipRange.contains (e.timeStamp))
+                    allEventsWithinRange = false;
+
+            expect (allEventsWithinRange, "Not all events within the expected range");
         }
     }
 
