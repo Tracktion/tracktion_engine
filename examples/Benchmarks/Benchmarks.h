@@ -63,7 +63,7 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
         fields->setProperty ("benchmark_cycles_max",        (juce::int64) r.maxCycles);
         fields->setProperty ("benchmark_cycles_mean",       (juce::int64) r.meanCycles);
         fields->setProperty ("benchmark_cycles_variance",   r.varianceCycles);
-        fields->setProperty ("benchmark_branch_name",       branchName);
+        fields->setProperty ("benchmark_branch_name",       branchName.quoted ('\''));
 
         records.add (fields.get());
     }
