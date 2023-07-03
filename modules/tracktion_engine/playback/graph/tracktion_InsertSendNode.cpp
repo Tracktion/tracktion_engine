@@ -39,7 +39,7 @@ std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectIn
     return inputs;
 }
 
-bool InsertSendReturnDependencyNode::transform (Node&, const std::vector<Node*>& postOrderedNodes)
+bool InsertSendReturnDependencyNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
 {
     if (sendNode && returnNode)
         return false;

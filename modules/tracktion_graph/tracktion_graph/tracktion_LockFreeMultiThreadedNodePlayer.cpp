@@ -57,6 +57,9 @@ void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, do
 
 void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
+    if (sampleRateToUse == sampleRate && blockSizeToUse == blockSize)
+        return;
+
     std::unique_ptr<NodeGraph> currentGraph;
 
     // Ensure we've flushed any pending Node to the current prepared Node

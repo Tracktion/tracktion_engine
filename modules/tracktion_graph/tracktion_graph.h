@@ -63,6 +63,7 @@
 #include <cassert>
 #include <thread>
 #include <optional>
+#include <any>
 
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)

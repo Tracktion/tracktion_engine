@@ -218,6 +218,9 @@ void MultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, double sam
 
 void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
+    if (sampleRateToUse == sampleRate && blockSizeToUse == blockSize)
+        return;
+
     if (! preparedNode)
         return;
 

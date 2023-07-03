@@ -29,6 +29,7 @@ public:
                  bool processAuxSendsWhenTrackIsMuted);
 
     //==============================================================================
+    NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
     
@@ -41,6 +42,9 @@ private:
     
     double sampleRate = 44100.0;
     TimeDuration automationAdjustmentTime;
+
+    std::optional<NodeProperties> cachedNodeProperties;
+    bool isPrepared = false;
 };
 
 }} // namespace tracktion { inline namespace engine

@@ -53,7 +53,7 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     return props;
 }
 
-bool RackReturnNode::transform (Node&, const std::vector<Node*>&)
+bool RackReturnNode::transform (Node&, const std::vector<Node*>&, TransformCache&)
 {
     if (hasTransformed)
         return false;
