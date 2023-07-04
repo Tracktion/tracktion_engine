@@ -666,7 +666,7 @@ namespace MidiHelpers
 
         // Use a special number that won't be in use to signify an event to remove
         // We have to do it like this to avoid allocating a new sequence
-        constexpr auto timeStampToRemoveFlag = std::numeric_limits<double>::min();
+        constexpr auto timeStampToRemoveFlag = std::numeric_limits<double>::lowest();
 
         // First adjust all the note times
         for (auto& m : sequence)
