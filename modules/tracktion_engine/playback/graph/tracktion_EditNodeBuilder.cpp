@@ -8,10 +8,13 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+
 // N.B. There are some limitations to this at the moment:
 // - Only works with audio clips
 // - Only works with WaveAudioClips which have setUsesProxy (false) on them
-#define FLATTEN_CONATINER_CLIP 1
+#define USE_DYNAMIC_OFFSET_CONTAINER_CLIP 1
+#define FLATTEN_CONTAINER_CLIP 1
+
 
 namespace tracktion { inline namespace engine
 {
@@ -696,7 +699,38 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
     if (clips.isEmpty())
         return {};
 
-   #if FLATTEN_CONATINER_CLIP
+   #if USE_DYNAMIC_OFFSET_CONTAINER_CLIP
+    std::unique_ptr<Node> node;
+
+    {
+        std::vector<std::unique_ptr<Node>> nodes;
+
+        for (auto c : clips)
+        {
+            if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            {
+                assert (! acb->canUseProxy());
+                assert (acb->getAutoTempo());
+                
+                if (auto clipNode = createNodeForAudioClip (*acb, false, params))
+                    nodes.push_back (std::move (clipNode));
+            }
+            else
+            {
+                assert (false && "Only WaveAudioClips supported at the moment");
+            }
+        }
+
+        auto offsetNode = std::make_unique<DynamicOffsetNode> (params.processState,
+                                                               clip.itemID,
+                                                               clip.getEditBeatRange(),
+                                                               clip.getOffsetInBeats(),
+                                                               clip.getLoopRangeBeats(),
+                                                               std::move (nodes));
+        node = std::move (offsetNode);
+    }
+
+   #elif FLATTEN_CONTAINER_CLIP
     std::unique_ptr<Node> node;
 
     {

@@ -11,6 +11,42 @@
 namespace tracktion { inline namespace engine
 {
 
+namespace utils
+{
+    inline void zeroSamplesOutsideClipRange (choc::buffer::ChannelArrayView<float> buffer,
+                                             BeatRange editBeatRange,
+                                             BeatRange clipBeatRange)
+    {
+        if (editBeatRange.isEmpty())
+            return;
+
+        using choc::buffer::FrameCount;
+        const auto beatsToClearAtStart  = clipBeatRange.getStart() - editBeatRange.getStart();
+        const auto beatsToClearAtEnd    = editBeatRange.getEnd() - clipBeatRange.getEnd();
+
+        const auto editBeatRangeLength = editBeatRange.getLength();
+        const auto numFrames = buffer.getNumFrames();
+
+        if (beatsToClearAtStart > 0_bd)
+        {
+            const auto numSamplesToClearAtStart = std::min (numFrames,
+                                                            static_cast<FrameCount> (numFrames * (beatsToClearAtStart / editBeatRangeLength) + 0.5));
+
+            if (numSamplesToClearAtStart > 0)
+                buffer.getStart (numSamplesToClearAtStart).clear();
+        }
+
+        if (beatsToClearAtEnd > 0_bd)
+        {
+            const auto numSamplesToClearAtEnd = std::min (numFrames,
+                                                          static_cast<FrameCount> (numFrames * (beatsToClearAtEnd / editBeatRangeLength) + 0.5));
+
+          if (numSamplesToClearAtEnd)
+              buffer.getEnd (numSamplesToClearAtEnd).clear();
+        }
+    }
+}
+
 //==============================================================================
 //==============================================================================
 class AudioFileCacheReader final    : public AudioReader
@@ -1023,29 +1059,7 @@ public:
         const auto clipBeatRange = editBeatRange - toDuration (clipPosition.getStart());
         const auto readOk = source->read (clipBeatRange, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
-        // Clear samples outside of clip position
-        // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
-        if (! editBeatRange.isEmpty())
-        {
-            using choc::buffer::FrameCount;
-            const auto beatsToClearAtStart  = (clipPosition.getStart() + dynamicOffset) - editBeatRange.getStart();
-            const auto beatsToClearAtEnd    = editBeatRange.getEnd() - (clipPosition.getEnd() + dynamicOffset);
-
-            const auto editBeatRangeLength = editBeatRange.getLength();
-            const auto numFrames = destBuffer.getNumFrames();
-
-            if (beatsToClearAtStart > 0_bd)
-            {
-                const auto numSamplesToClearAtStart = static_cast<FrameCount> (numFrames * (beatsToClearAtStart / editBeatRangeLength) + 0.5);
-                destBuffer.getStart (numSamplesToClearAtStart).clear();
-            }
-
-            if (beatsToClearAtEnd > 0_bd)
-            {
-                const auto numSamplesToClearAtEnd = static_cast<FrameCount> (numFrames * (beatsToClearAtEnd / editBeatRangeLength) + 0.5);
-                destBuffer.getEnd (numSamplesToClearAtEnd).clear();
-            }
-        }
+        utils::zeroSamplesOutsideClipRange (destBuffer, editBeatRange, clipPosition + dynamicOffset);
 
         return readOk;
     }
