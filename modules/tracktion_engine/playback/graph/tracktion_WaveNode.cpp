@@ -475,6 +475,12 @@ public:
                                   TimeStretcher::defaultMode, {}, false);
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
+
+        source->setPosition (getReadPosition());
+        timeStretcher.reset();
+        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
+        inputFifo.reset();
+        outputFifo.reset();
     }
 
     SampleCount getPosition() override
@@ -577,7 +583,7 @@ public:
     const int numChannels;
     TimeStretcher timeStretcher;
     AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize };
-    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = std::numeric_limits<double>::lowest();
+    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
 
     SampleCount getReadPosition() const
     {
@@ -897,9 +903,10 @@ public:
     BeatRangeReader (std::unique_ptr<TimeRangeReader> input,
                      BeatRange loopRange_,
                      BeatDuration offset_,
+                     BeatDuration& dynamicOffset_,
                      tempo::Sequence::Position sourceSequencePosition_)
         : source (std::move (input)),
-          loopRange (loopRange_), offset (offset_),
+          loopRange (loopRange_), offset (offset_), dynamicOffset (dynamicOffset_),
           sourceSequencePosition (sourceSequencePosition_)
     {
     }
@@ -911,7 +918,7 @@ public:
                double playbackSpeedRatio)
     {
         // Apply offset first
-        br = br + offset;
+        br = br + offset - dynamicOffset;
 
         return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
@@ -932,6 +939,7 @@ private:
     std::unique_ptr<TimeRangeReader> source;
     const BeatRange loopRange;
     const BeatDuration offset;
+    const BeatDuration& dynamicOffset;
     tempo::Sequence::Position sourceSequencePosition;
 
     bool readLoopedBeatRange (BeatRange br,
@@ -1000,8 +1008,9 @@ private:
 class EditToClipBeatReader final    : public AudioReader
 {
 public:
-    EditToClipBeatReader (std::unique_ptr<BeatRangeReader> input, BeatRange clipPosition_)
-        : source (std::move (input)), clipPosition (clipPosition_)
+    EditToClipBeatReader (std::unique_ptr<BeatRangeReader> input, BeatRange clipPosition_,
+                          BeatDuration& dynamicOffset_)
+        : source (std::move (input)), clipPosition (clipPosition_), dynamicOffset (dynamicOffset_)
     {
     }
 
@@ -1019,8 +1028,8 @@ public:
         if (! editBeatRange.isEmpty())
         {
             using choc::buffer::FrameCount;
-            const auto beatsToClearAtStart  = clipPosition.getStart() - editBeatRange.getStart();
-            const auto beatsToClearAtEnd    = editBeatRange.getEnd() - clipPosition.getEnd();
+            const auto beatsToClearAtStart  = (clipPosition.getStart() + dynamicOffset) - editBeatRange.getStart();
+            const auto beatsToClearAtEnd    = editBeatRange.getEnd() - (clipPosition.getEnd() + dynamicOffset);
 
             const auto editBeatRangeLength = editBeatRange.getLength();
             const auto numFrames = destBuffer.getNumFrames();
@@ -1057,6 +1066,7 @@ public:
 private:
     std::unique_ptr<BeatRangeReader> source;
     const BeatRange clipPosition;
+    const BeatDuration& dynamicOffset;
 };
 
 
@@ -1683,6 +1693,13 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
         hash_combine (stateHash, chordPitchSequence->hash());
 }
 
+//==============================================================================
+void WaveNodeRealTime::setOffset (BeatDuration newOffset)
+{
+    dynamicOffsetBeats = newOffset;
+}
+
+//==============================================================================
 tracktion::graph::NodeProperties WaveNodeRealTime::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;
@@ -1795,8 +1812,8 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     {
         assert (fileTempoSequence);
         auto beatRangeReader    = std::make_unique<BeatRangeReader> (std::move (timeRangeReader),
-                                                                     loopSectionBeats, offsetBeats, *fileTempoPosition);
-        auto editToClipBeatReader    = std::make_unique<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats);
+                                                                     loopSectionBeats, offsetBeats, dynamicOffsetBeats, *fileTempoPosition);
+        auto editToClipBeatReader    = std::make_unique<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats, dynamicOffsetBeats);
         basicEditReader = std::make_unique<EditReader> (std::move (editToClipBeatReader), nullptr);
     }
     else
@@ -1853,6 +1870,7 @@ void WaveNodeRealTime::replaceStateIfPossible (WaveNodeRealTime& other)
     resamplerReader = other.resamplerReader;
     editReader = other.editReader;
     pitchAdjustReader = other.pitchAdjustReader;
+    dynamicOffsetBeats = other.dynamicOffsetBeats;
 }
 
 void WaveNodeRealTime::processSection (ProcessContext& pc)
@@ -1872,8 +1890,8 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         return;
 
     if (editReader->isBeatBased()
-        && (sectionEditBeats.getEnd() <= editPositionBeats.getStart()
-            || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
+        && (sectionEditBeats.getEnd() <= (editPositionBeats.getStart() + dynamicOffsetBeats)
+            || sectionEditBeats.getStart() >= (editPositionBeats.getEnd() + dynamicOffsetBeats)))
       return;
 
     auto destBuffer = pc.buffers.audio;

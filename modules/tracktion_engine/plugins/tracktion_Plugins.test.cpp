@@ -33,7 +33,7 @@ public:
         beginTest ("No latency");
         {
             expectEquals (sinFile->getFile().getFileExtension(), juce::String (".wav"));
-            auto edit = createTestEdit (engine);
+            auto edit = engine::test_utilities::createTestEdit (engine, 2);
             auto track1 = getAudioTracks (*edit)[0];
             auto track2 = getAudioTracks (*edit)[1];
             expect (track1 != track2);
@@ -67,7 +67,7 @@ public:
         {
             auto sinFile96Ogg = getSinFile<juce::OggVorbisAudioFormat> (96000.0);
             expectEquals (sinFile96Ogg->getFile().getFileExtension(), juce::String (".ogg"));
-            auto edit = createTestEdit (engine);
+            auto edit = engine::test_utilities::createTestEdit (engine, 2);
             auto track1 = getAudioTracks (*edit)[0];
 
             // Add sin file
@@ -117,19 +117,6 @@ public:
     }
 
     //==============================================================================
-    static std::unique_ptr<Edit> createTestEdit (Engine& engine)
-    {
-        // Make tempo 60bpm and 0dB master vol for easy calculations
-        auto edit = Edit::createSingleTrackEdit (engine);
-        edit->tempoSequence.getTempo (0)->setBpm (60.0);
-        edit->getMasterVolumePlugin()->setVolumeDb (0.0);
-
-        // Create two AudioTracks
-        edit->ensureNumberOfAudioTracks (2);
-
-        return edit;
-    }
-
     template<typename AudioFormatType>
     std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate)
     {

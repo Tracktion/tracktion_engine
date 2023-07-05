@@ -157,6 +157,12 @@ public:
                       std::optional<tempo::Sequence> chordPitchSequence);
 
     //==============================================================================
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    void setOffset (BeatDuration);
+
+    //==============================================================================
     graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
@@ -165,7 +171,7 @@ public:
 private:
     //==============================================================================
     BeatRange editPositionBeats, loopSectionBeats;
-    BeatDuration offsetBeats;
+    BeatDuration offsetBeats, dynamicOffsetBeats;
     TimeRange editPositionTime, loopSectionTime;
     TimeDuration offsetTime;
     const double speedRatio = 1.0;

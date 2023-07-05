@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../utilities/tracktion_TestUtilities.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -53,21 +55,19 @@ public:
 private:
     //==============================================================================
     //==============================================================================
-    void runRackRendering (test_utilities::TestSetup ts,
+    void runRackRendering (graph::test_utilities::TestSetup ts,
                            TimeDuration durationInSeconds,
                            int numChannels,
                            bool isMultiThreaded)
     {
-        using namespace tracktion::graph;
-        using namespace test_utilities;
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
         {
-            auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->ensureNumberOfAudioTracks (1);
             auto track = getAudioTracks (*edit)[0];
 
@@ -85,9 +85,9 @@ private:
             beginTest ("Basic Rack Creation: " + description);
             {
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
-                                                              ts, numChannels, durationInSeconds.inSeconds(), false);
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                                                                                     ts, numChannels, durationInSeconds.inSeconds(), false);
 
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
@@ -103,9 +103,9 @@ private:
             beginTest ("Unconnected Inputs/Outputs: " + description);
             {
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
-                                                              ts, numChannels, durationInSeconds.inSeconds(), false);
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                                                                                     ts, numChannels, durationInSeconds.inSeconds(), false);
 
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
@@ -121,21 +121,21 @@ private:
         aux return which is unmuted. The second track should not be audible because
         the aux source is muted.
     */
-    void runAuxSend (test_utilities::TestSetup ts,
+    void runAuxSend (graph::test_utilities::TestSetup ts,
                      TimeDuration durationInSeconds,
                      int numChannels,
                      bool isMultiThreaded)
     {
         using namespace tracktion::graph;
-        using namespace test_utilities;
+        using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
         {
             auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->ensureNumberOfAudioTracks (2);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
@@ -158,9 +158,9 @@ private:
                 ProcessState processState { playHeadState, edit->tempoSequence };
 
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
-                                                              ts, numChannels, durationInSeconds.inSeconds(), true);
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                                              ts, numChannels, durationInSeconds.inSeconds(), true);
 
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
@@ -178,21 +178,21 @@ private:
     /** Has two tracks with a sin clip at 0.5 magnitude on each track, both sent to a third track as their destination.
         Once rendered, the resulting file should have a magnitude of 1.0.
     */
-    void runTrackDestinationRendering (test_utilities::TestSetup ts,
+    void runTrackDestinationRendering (graph::test_utilities::TestSetup ts,
                                        TimeDuration durationInSeconds,
                                        int numChannels,
                                        bool isMultiThreaded)
     {
         using namespace tracktion::graph;
-        using namespace test_utilities;
+        using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
         {
             auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->ensureNumberOfAudioTracks (3);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
             auto destTrack = getAudioTracks (*edit)[2];
@@ -212,9 +212,9 @@ private:
                 ProcessState processState { playHeadState, edit->tempoSequence };
 
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
-                TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
-                                                              ts, numChannels, durationInSeconds.inSeconds(), true);
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                                                     ts, numChannels, durationInSeconds.inSeconds(), true);
 
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
@@ -244,21 +244,21 @@ private:
         submix_1                    = 0dB/NA
         submix_2                    = -6dB/NA
     */
-    void runSubmix (test_utilities::TestSetup ts,
+    void runSubmix (graph::test_utilities::TestSetup ts,
                     TimeDuration durationInSeconds,
                     int numChannels,
                     bool isMultiThreaded)
     {
         using namespace tracktion::graph;
-        using namespace test_utilities;
-        auto& engine = *tracktion::engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
+        using namespace tracktion::graph::test_utilities;
+        auto& engine = *engine::Engine::getEngines()[0];
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
         {
             auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = engine::test_utilities::createTestEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
             auto submixTrack1 = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true).get();
@@ -286,22 +286,22 @@ private:
     }
 
     /** Runs tests solo and muting various track configurations. */
-    void runMuteSolo (test_utilities::TestSetup ts,
+    void runMuteSolo (graph::test_utilities::TestSetup ts,
                       TimeDuration durationInSeconds,
                       int numChannels,
                       bool isMultiThreaded)
     {
         using namespace tracktion::graph;
-        using namespace test_utilities;
+        using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
-        const auto description = test_utilities::getDescription (ts)
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
         beginTest ("Basic Solo/Mute: " + description);
         {
             auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
             auto audioTrack1 = getAudioTracks (*edit)[0];
@@ -334,7 +334,7 @@ private:
         {
             auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
             auto audioTrack1 = getAudioTracks (*edit)[0];
@@ -356,9 +356,9 @@ private:
 
         beginTest ("Track destination solo/mute: " + description);
         {
-            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
             auto audioTrack1 = getAudioTracks (*edit)[0];
@@ -421,9 +421,9 @@ private:
 
         beginTest ("Submix solo/mute: " + description);
         {
-            auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
-            auto edit = Edit::createSingleTrackEdit (engine);
+            auto edit = test_utilities::createTestEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
 
             auto submixTop = edit->insertNewFolderTrack ({{}}, nullptr, true).get();
@@ -459,18 +459,18 @@ private:
         }
     }
 
-    void runClipFade (test_utilities::TestSetup ts,
+    void runClipFade (graph::test_utilities::TestSetup ts,
                       TimeDuration durationInSeconds,
                       int numChannels,
                       bool isMultiThreaded)
     {
-        const auto description = test_utilities::getDescription (ts)
+        const auto description = graph::test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
 
         auto& engine = *Engine::getEngines()[0];
-        auto edit = Edit::createSingleTrackEdit (engine);
+        auto edit = test_utilities::createTestEdit (engine);
         edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
         auto clip = getAudioTracks (*edit)[0]->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { {}, durationInSeconds } }, false);
         clip->setFadeInType (AudioFadeCurve::linear);

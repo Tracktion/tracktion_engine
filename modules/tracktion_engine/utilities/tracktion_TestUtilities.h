@@ -80,10 +80,12 @@ namespace test_utilities
     }
 
     //==============================================================================
-    inline std::unique_ptr<Edit> createTestEdit (Engine& engine)
+    inline std::unique_ptr<Edit> createTestEdit (Engine& engine, int numAudioTracks = 1)
     {
         // Make tempo 60bpm and 0dB master vol for easy calculations
-        auto edit = Edit::createSingleTrackEdit (engine);
+        auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), Edit::forRendering, nullptr, 1);
+        edit->ensureNumberOfAudioTracks (numAudioTracks);
+
         edit->tempoSequence.getTempo (0)->setBpm (60.0);
         edit->getMasterVolumePlugin()->setVolumeDb (0.0);
 

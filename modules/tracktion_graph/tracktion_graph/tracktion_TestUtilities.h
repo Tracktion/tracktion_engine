@@ -168,6 +168,16 @@ namespace test_utilities
         }
     }
 
+    /** Writes an audio buffer to a file. */
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> writeToTemporaryFile (choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex)
+    {
+        auto f = std::make_unique<juce::TemporaryFile> (AudioFormatType().getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), block, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
     //==============================================================================
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)

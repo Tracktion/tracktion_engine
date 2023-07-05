@@ -145,7 +145,7 @@ CombiningNode::~CombiningNode() {}
 void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
 {
     jassert (time.getEnd() <= Edit::getMaximumEditEnd());
-    addInput (std::move (input), getProcessState().getTempoSequence()->toBeats (time));
+    addInput (std::move (input), toBeats (*getProcessState().getTempoSequence(), time));
 }
 
 void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
@@ -184,7 +184,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     // add the node to any groups it's near to.
     const auto& ts = *getProcessState().getTempoSequence();
     const auto overlapTime = TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2);
-    const auto timeRange = ts.toTime (beatRange).expanded (overlapTime);
+    const auto timeRange = toTime (ts, beatRange).expanded (overlapTime);
     const auto start = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getStart()));
     const auto end   = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getEnd()));
 
