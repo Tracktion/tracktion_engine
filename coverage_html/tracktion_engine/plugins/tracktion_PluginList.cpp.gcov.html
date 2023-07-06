@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-04 09:45:08</td>
+            <td class="headerValue">2023-07-06 18:33:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">25</td>
@@ -96,9 +96,9 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">       6609 :         freeObjects();</span></a>
 <a name="35"><span class="lineNum">      35 </span><span class="lineCov">      13218 :     }</span></a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      84682 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      84698 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     {</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      84682 :         return v.hasType (IDs::PLUGIN);</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      84698 :         return v.hasType (IDs::PLUGIN);</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :     }</a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">       8264 :     Plugin* createNewObject (const juce::ValueTree&amp; v) override</span></a>
@@ -231,12 +231,12 @@
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         p-&gt;trackPropertiesChanged();</span></a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineCov">         68 : }</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">        722 : void PluginList::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">        736 : void PluginList::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        722 :     if (list != nullptr)</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        776 :         for (auto p : list-&gt;objects)</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        370 :             p-&gt;updateFromMirroredPluginIfNeeded (plugin);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        722 : }</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">        736 :     if (list != nullptr)</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">        786 :         for (auto p : list-&gt;objects)</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        374 :             p-&gt;updateFromMirroredPluginIfNeeded (plugin);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">        736 : }</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : bool PluginList::needsConstantBufferSize()</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : {</a>

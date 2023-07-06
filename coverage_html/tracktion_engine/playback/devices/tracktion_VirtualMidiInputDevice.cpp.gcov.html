@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">19</td>
-            <td class="headerCovTableEntry">76</td>
-            <td class="headerCovTableEntryLo">25.0 %</td>
+            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntryLo">24.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-04 09:45:08</td>
+            <td class="headerValue">2023-07-06 18:33:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -160,74 +160,78 @@
 <a name="98"><span class="lineNum">      98 </span><span class="lineCov">       1853 :     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 :     if (! isTrackDevice() &amp;&amp; n != nullptr)</span></a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :         inputDevices.addTokens (n-&gt;getStringAttribute (&quot;inputDevices&quot;), &quot;;&quot;, {});</span></a>
-<a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">       1853 :     MidiInputDevice::loadProps (n.get());</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">       1853 : }</span></a>
+<a name="101"><span class="lineNum">     101 </span>            :     {</a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :         inputDevices.addTokens (n-&gt;getStringAttribute (&quot;inputDevices&quot;), &quot;;&quot;, {});</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :         useAllInputs = n-&gt;getBoolAttribute (&quot;useAllInputs&quot;, false);</span></a>
+<a name="104"><span class="lineNum">     104 </span>            :     }</a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::saveProps()</span></a>
-<a name="107"><span class="lineNum">     107 </span>            : {</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
-<a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;inputDevices&quot;, inputDevices.joinIntoString (&quot;;&quot;));</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :     MidiInputDevice::saveProps (n);</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">       1853 :     MidiInputDevice::loadProps (n.get());</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">       1853 : }</span></a>
+<a name="108"><span class="lineNum">     108 </span>            : </a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::saveProps()</span></a>
+<a name="110"><span class="lineNum">     110 </span>            : {</a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
-<a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage&amp; m)</span></a>
-<a name="119"><span class="lineNum">     119 </span>            : {</a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))</span></a>
-<a name="121"><span class="lineNum">     121 </span>            :     {</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :         juce::MidiMessage message (m);</span></a>
-<a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :         if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);</span></a>
-<a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span>            :         message.addToTimeStamp (adjustSecs);</a>
-<a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :         if (! retrospectiveRecordLock &amp;&amp; retrospectiveBuffer != nullptr)</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :             retrospectiveBuffer-&gt;addMessage (message, adjustSecs);</span></a>
-<a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :         sendNoteOnToMidiKeyListeners (message);</span></a>
-<a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :         sendMessageToInstances (message);</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;inputDevices&quot;, inputDevices.joinIntoString (&quot;;&quot;));</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;useAllInputs&quot;, useAllInputs);</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     MidiInputDevice::saveProps (n);</span></a>
+<a name="116"><span class="lineNum">     116 </span>            : </a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
+<a name="118"><span class="lineNum">     118 </span>            : </a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="121"><span class="lineNum">     121 </span>            : </a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage&amp; m)</span></a>
+<a name="123"><span class="lineNum">     123 </span>            : {</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :     if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))</span></a>
+<a name="125"><span class="lineNum">     125 </span>            :     {</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :         juce::MidiMessage message (m);</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :         if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :             message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);</span></a>
+<a name="130"><span class="lineNum">     130 </span>            : </a>
+<a name="131"><span class="lineNum">     131 </span>            :         message.addToTimeStamp (adjustSecs);</a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :         if (! retrospectiveRecordLock &amp;&amp; retrospectiveBuffer != nullptr)</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :             retrospectiveBuffer-&gt;addMessage (message, adjustSecs);</span></a>
+<a name="135"><span class="lineNum">     135 </span>            : </a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :         sendNoteOnToMidiKeyListeners (message);</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>
-<a name="139"><span class="lineNum">     139 </span>            : {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     if (inputDevices.contains (dev-&gt;getName()))</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :         handleIncomingMidiMessage (m);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="143"><span class="lineNum">     143 </span>            : </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>
-<a name="145"><span class="lineNum">     145 </span>            : {</a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     for (auto d : virtualMidiDevices)</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :         d-&gt;handleMessageFromPhysicalDevice (dev, m);</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::refreshDeviceNames (Engine&amp; e)</span></a>
-<a name="151"><span class="lineNum">     151 </span>            : {</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     juce::String names;</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :         sendMessageToInstances (message);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>
+<a name="143"><span class="lineNum">     143 </span>            : {</a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     if (useAllInputs || inputDevices.contains (dev-&gt;getName()))</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         handleIncomingMidiMessage (m);</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>
+<a name="149"><span class="lineNum">     149 </span>            : {</a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :     for (auto d : virtualMidiDevices)</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :         d-&gt;handleMessageFromPhysicalDevice (dev, m);</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     for (auto d : virtualMidiDevices)</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         names += d-&gt;getName() + &quot;;&quot;;</span></a>
-<a name="156"><span class="lineNum">     156 </span>            : </a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     e.getPropertyStorage().setProperty (SettingID::virtualmididevices, names);</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 : juce::String VirtualMidiInputDevice::getSelectableDescription()</span></a>
-<a name="161"><span class="lineNum">     161 </span>            : {</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     if (getDeviceType() == trackMidiDevice)</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         return getAlias() + &quot; (&quot; + getType() + &quot;)&quot;;</span></a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     return MidiInputDevice::getSelectableDescription();</span></a>
-<a name="166"><span class="lineNum">     166 </span>            : }</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::refreshDeviceNames (Engine&amp; e)</span></a>
+<a name="155"><span class="lineNum">     155 </span>            : {</a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     juce::String names;</span></a>
+<a name="157"><span class="lineNum">     157 </span>            : </a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     for (auto d : virtualMidiDevices)</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :         names += d-&gt;getName() + &quot;;&quot;;</span></a>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     e.getPropertyStorage().setProperty (SettingID::virtualmididevices, names);</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="163"><span class="lineNum">     163 </span>            : </a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 : juce::String VirtualMidiInputDevice::getSelectableDescription()</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : {</a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     if (getDeviceType() == trackMidiDevice)</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :         return getAlias() + &quot; (&quot; + getType() + &quot;)&quot;;</span></a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     return MidiInputDevice::getSelectableDescription();</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : }</a>
+<a name="171"><span class="lineNum">     171 </span>            : </a>
+<a name="172"><span class="lineNum">     172 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

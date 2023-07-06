@@ -77455,6 +77455,13 @@
       <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>useAllInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
+      <anchor>a51a19877e001402d16d701dff641e9dc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>juce::StringArray</type>
       <name>inputDevices</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
@@ -85082,6 +85089,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -85089,11 +85101,6 @@
     <subgroup>tracktion_graph-docs</subgroup>
     <subgroup>tracktion_graph-tracktion_graph</subgroup>
     <subgroup>tracktion_graph-utilities</subgroup>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
