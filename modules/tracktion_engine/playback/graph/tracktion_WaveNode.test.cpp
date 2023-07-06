@@ -272,7 +272,7 @@ private:
                                                             WaveNodeRealTime::SyncTempo::yes,
                                                             WaveNodeRealTime::SyncPitch::no,
                                                             std::nullopt);
-            node->setOffset (fileLengthBeats);
+            node->setDynamicOffsetBeats (fileLengthBeats);
 
             // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
@@ -304,7 +304,7 @@ private:
                                                             WaveNodeRealTime::SyncTempo::yes,
                                                             WaveNodeRealTime::SyncPitch::no,
                                                             std::nullopt);
-            node->setOffset (-fileLengthBeats / 2.0);
+            node->setDynamicOffsetBeats (-fileLengthBeats / 2.0);
 
             // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());

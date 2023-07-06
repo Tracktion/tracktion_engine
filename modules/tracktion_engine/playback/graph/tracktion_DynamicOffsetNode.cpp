@@ -46,8 +46,6 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
 
             if (auto dynamicNode = dynamic_cast<DynamicallyOffsettableNodeBase*> (n))
                 dynamicOffsetNodes.push_back (dynamicNode);
-            else
-                assert(false && "Creating an incompatible clip in a container clip?");
         }
     }
 }
