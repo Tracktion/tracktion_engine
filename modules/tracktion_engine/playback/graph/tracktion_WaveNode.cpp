@@ -939,12 +939,14 @@ public:
     BeatRangeReader (std::unique_ptr<TimeRangeReader> input,
                      BeatRange loopRange_,
                      BeatDuration offset_,
-                     BeatDuration& dynamicOffset_,
+                     std::shared_ptr<BeatDuration> dynamicOffset_,
                      tempo::Sequence::Position sourceSequencePosition_)
         : source (std::move (input)),
-          loopRange (loopRange_), offset (offset_), dynamicOffset (dynamicOffset_),
+          loopRange (loopRange_), offset (offset_),
+          dynamicOffset (std::move (dynamicOffset_)),
           sourceSequencePosition (sourceSequencePosition_)
     {
+        assert (dynamicOffset);
     }
 
     bool read (BeatRange br,
@@ -954,7 +956,7 @@ public:
                double playbackSpeedRatio)
     {
         // Apply offset first
-        br = br + offset - dynamicOffset;
+        br = br + offset - *dynamicOffset;
 
         return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
@@ -975,7 +977,7 @@ private:
     std::unique_ptr<TimeRangeReader> source;
     const BeatRange loopRange;
     const BeatDuration offset;
-    const BeatDuration& dynamicOffset;
+    std::shared_ptr<BeatDuration> dynamicOffset;
     tempo::Sequence::Position sourceSequencePosition;
 
     bool readLoopedBeatRange (BeatRange br,
@@ -1045,9 +1047,11 @@ class EditToClipBeatReader final    : public AudioReader
 {
 public:
     EditToClipBeatReader (std::unique_ptr<BeatRangeReader> input, BeatRange clipPosition_,
-                          BeatDuration& dynamicOffset_)
-        : source (std::move (input)), clipPosition (clipPosition_), dynamicOffset (dynamicOffset_)
+                          std::shared_ptr<BeatDuration> dynamicOffset_)
+        : source (std::move (input)), clipPosition (clipPosition_),
+          dynamicOffset (std::move (dynamicOffset_))
     {
+        assert (dynamicOffset);
     }
 
     bool read (BeatRange editBeatRange,
@@ -1059,7 +1063,7 @@ public:
         const auto clipBeatRange = editBeatRange - toDuration (clipPosition.getStart());
         const auto readOk = source->read (clipBeatRange, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
-        utils::zeroSamplesOutsideClipRange (destBuffer, editBeatRange, clipPosition + dynamicOffset);
+        utils::zeroSamplesOutsideClipRange (destBuffer, editBeatRange, clipPosition + *dynamicOffset);
 
         return readOk;
     }
@@ -1080,7 +1084,7 @@ public:
 private:
     std::unique_ptr<BeatRangeReader> source;
     const BeatRange clipPosition;
-    const BeatDuration& dynamicOffset;
+    std::shared_ptr<BeatDuration> dynamicOffset;
 };
 
 
@@ -1710,7 +1714,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
 //==============================================================================
 void WaveNodeRealTime::setOffset (BeatDuration newOffset)
 {
-    dynamicOffsetBeats = newOffset;
+    (*dynamicOffsetBeats) = newOffset;
 }
 
 //==============================================================================
@@ -1904,8 +1908,8 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         return;
 
     if (editReader->isBeatBased()
-        && (sectionEditBeats.getEnd() <= (editPositionBeats.getStart() + dynamicOffsetBeats)
-            || sectionEditBeats.getStart() >= (editPositionBeats.getEnd() + dynamicOffsetBeats)))
+        && (sectionEditBeats.getEnd() <= (editPositionBeats.getStart() + *dynamicOffsetBeats)
+            || sectionEditBeats.getStart() >= (editPositionBeats.getEnd() + *dynamicOffsetBeats)))
       return;
 
     auto destBuffer = pc.buffers.audio;

@@ -173,7 +173,7 @@ public:
 private:
     //==============================================================================
     BeatRange editPositionBeats, loopSectionBeats;
-    BeatDuration offsetBeats, dynamicOffsetBeats;
+    BeatDuration offsetBeats;
     TimeRange editPositionTime, loopSectionTime;
     TimeDuration offsetTime;
     const double speedRatio = 1.0;
@@ -198,6 +198,7 @@ private:
     PitchAdjustReader* pitchAdjustReader = nullptr;
     std::shared_ptr<SpeedFadeEditReader> editReader;
     std::shared_ptr<std::vector<float>> channelState;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats = std::make_shared<BeatDuration>();
 
     std::shared_ptr<tempo::Sequence> fileTempoSequence;
     std::shared_ptr<tempo::Sequence::Position> fileTempoPosition;

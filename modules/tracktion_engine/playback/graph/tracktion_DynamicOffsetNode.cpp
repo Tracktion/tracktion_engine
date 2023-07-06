@@ -124,9 +124,9 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     const auto playbackStartBeatRelativeToClip = sectionEditBeatRange.getStart() - editStartBeatOfLocalTimeline;
     const auto loopIteration = loopRange.isEmpty() ? 0
                                                    : static_cast<int> (playbackStartBeatRelativeToClip.inBeats() / loopRange.getLength().inBeats());
+    const auto loopIterationOffset = loopRange.getLength() * loopIteration;
+    const auto dynamicOffsetBeats =  toDuration (editStartBeatOfLocalTimeline) + loopIterationOffset - toDuration (loopRange.getStart());
 
-    const auto dynamicOffsetBeats = toDuration (editStartBeatOfLocalTimeline + (loopRange.getLength() * loopIteration));
-    DBG("dynamicOffsetBeats: " << dynamicOffsetBeats);
     // Update the offset for compatible Nodes
     for (auto n : dynamicOffsetNodes)
         n->setOffset (dynamicOffsetBeats);

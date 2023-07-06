@@ -729,7 +729,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
                                                                std::move (nodes));
         node = std::move (offsetNode);
     }
-
    #elif FLATTEN_CONTAINER_CLIP
     std::unique_ptr<Node> node;
 
