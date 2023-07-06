@@ -41,8 +41,13 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
         {
             orderedNodes.push_back (n);
 
-            if (auto dynamicNode = dynamic_cast<WaveNodeRealTime*> (n))
+            if (n->getDirectInputNodes().empty())
+                leafNodes.push_back (n);
+
+            if (auto dynamicNode = dynamic_cast<DynamicallyOffsettableNodeBase*> (n))
                 dynamicOffsetNodes.push_back (dynamicNode);
+            else
+                assert(false && "Creating an incompatible clip in a container clip?");
         }
     }
 }
@@ -98,7 +103,7 @@ void DynamicOffsetNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
 bool DynamicOffsetNode::isReadyToProcess()
 {
     // This should really be leaf nodes...
-    for (auto& i : dynamicOffsetNodes)
+    for (auto& i : leafNodes)
         if (! i->isReadyToProcess())
             return false;
 
@@ -127,9 +132,16 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     const auto loopIterationOffset = loopRange.getLength() * loopIteration;
     const auto dynamicOffsetBeats =  toDuration (editStartBeatOfLocalTimeline) + loopIterationOffset - toDuration (loopRange.getStart());
 
+    const auto offsetStartTime = tempoPosition.set (editStartBeatOfLocalTimeline);
+    const auto offsetEndTime = tempoPosition.add (dynamicOffsetBeats);
+    const auto dynamicOffsetTime = offsetEndTime - offsetStartTime;
+
     // Update the offset for compatible Nodes
     for (auto n : dynamicOffsetNodes)
-        n->setOffset (dynamicOffsetBeats);
+    {
+        n->setDynamicOffset (dynamicOffsetBeats);
+        n->setDynamicOffset (dynamicOffsetTime);
+    }
 
     // Process ordered Nodes
     {

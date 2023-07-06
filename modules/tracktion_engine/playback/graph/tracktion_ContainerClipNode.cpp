@@ -63,7 +63,10 @@ std::vector<tracktion::graph::Node*> ContainerClipNode::getDirectInputNodes()
 
 std::vector<Node*> ContainerClipNode::getInternalNodes()
 {
-    return { input.get() };
+    if (input)
+        return { input.get() };
+
+    return { playerContext->player.getNode() };
 }
 
 void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)

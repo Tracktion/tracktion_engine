@@ -97,7 +97,8 @@ private:
     An Node that plays back a wave file.
 */
 class WaveNodeRealTime final    : public graph::Node,
-                                  public TracktionEngineNode
+                                  public TracktionEngineNode,
+                                  public DynamicallyOffsettableNodeBase
 {
 public:
     /** offset is a time added to the start of the file, e.g. an offset of 10.0
@@ -162,7 +163,7 @@ public:
     /** Sets an offset to be applied to all times in this node, effectively shifting
         it forwards or backwards in time.
     */
-    void setOffset (BeatDuration);
+    void setDynamicOffset (BeatDuration) override;
 
     //==============================================================================
     graph::NodeProperties getNodeProperties() override;

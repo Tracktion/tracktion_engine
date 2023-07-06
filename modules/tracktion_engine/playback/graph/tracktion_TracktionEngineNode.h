@@ -133,4 +133,25 @@ private:
     ProcessState* processState; // Must never be nullptr
 };
 
+
+//==============================================================================
+//==============================================================================
+class DynamicallyOffsettableNodeBase
+{
+public:
+    DynamicallyOffsettableNodeBase() = default;
+    virtual ~DynamicallyOffsettableNodeBase() = default;
+    
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+     */
+    virtual void setDynamicOffset (BeatDuration) {}
+
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    virtual void setDynamicOffset (TimeDuration) {}
+};
+
+
 }} // namespace tracktion { inline namespace engine
