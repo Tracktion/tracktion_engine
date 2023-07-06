@@ -27,7 +27,7 @@ public:
                    AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType,
                    bool clearSamplesOutsideFade);
 
-    void setDynamicOffset (TimeDuration) override;
+    void setDynamicOffsetTime (TimeDuration) override;
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;

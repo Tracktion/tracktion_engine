@@ -163,7 +163,7 @@ public:
     /** Sets an offset to be applied to all times in this node, effectively shifting
         it forwards or backwards in time.
     */
-    void setDynamicOffset (BeatDuration) override;
+    void setDynamicOffsetBeats (BeatDuration) override;
 
     //==============================================================================
     graph::NodeProperties getNodeProperties() override;

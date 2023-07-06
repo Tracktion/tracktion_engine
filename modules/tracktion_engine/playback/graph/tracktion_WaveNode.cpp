@@ -1712,7 +1712,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
 }
 
 //==============================================================================
-void WaveNodeRealTime::setDynamicOffset (BeatDuration newOffset)
+void WaveNodeRealTime::setDynamicOffsetBeats (BeatDuration newOffset)
 {
     (*dynamicOffsetBeats) = newOffset;
 }

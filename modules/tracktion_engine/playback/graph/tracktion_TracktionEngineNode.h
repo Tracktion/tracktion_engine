@@ -145,12 +145,12 @@ public:
     /** Sets an offset to be applied to all times in this node, effectively shifting
         it forwards or backwards in time.
      */
-    virtual void setDynamicOffset (BeatDuration) {}
+    virtual void setDynamicOffsetBeats (BeatDuration) {}
 
     /** Sets an offset to be applied to all times in this node, effectively shifting
         it forwards or backwards in time.
     */
-    virtual void setDynamicOffset (TimeDuration) {}
+    virtual void setDynamicOffsetTime (TimeDuration) {}
 };
 
 

@@ -139,8 +139,8 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     // Update the offset for compatible Nodes
     for (auto n : dynamicOffsetNodes)
     {
-        n->setDynamicOffset (dynamicOffsetBeats);
-        n->setDynamicOffset (dynamicOffsetTime);
+        n->setDynamicOffsetBeats (dynamicOffsetBeats);
+        n->setDynamicOffsetTime (dynamicOffsetTime);
     }
 
     // Process ordered Nodes

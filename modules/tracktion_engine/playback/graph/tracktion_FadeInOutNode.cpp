@@ -130,7 +130,7 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
 }
 
 //==============================================================================
-void FadeInOutNode::setDynamicOffset (TimeDuration newOffset)
+void FadeInOutNode::setDynamicOffsetTime (TimeDuration newOffset)
 {
     dynamicOffset = newOffset;
 }
