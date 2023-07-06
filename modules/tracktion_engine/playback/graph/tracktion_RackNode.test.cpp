@@ -14,6 +14,7 @@ namespace tracktion { inline namespace engine
 #if GRAPH_UNIT_TESTS_RACKNODE
 
 using namespace tracktion::graph;
+using namespace tracktion::graph::test_utilities;
 
 //==============================================================================
 //==============================================================================
@@ -40,7 +41,7 @@ public:
     {
        auto start = std::chrono::high_resolution_clock::now();
                 
-        for (auto setup : test_utilities::getTestSetups (*this))
+        for (auto setup : getTestSetups (*this))
         {
             logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
                         .replace ("SR", juce::String (setup.sampleRate))
@@ -61,7 +62,7 @@ public:
 private:
     //==============================================================================
     template<typename NodePlayerType>
-    void runRackTests (test_utilities::TestSetup testSetup)
+    void runRackTests (TestSetup testSetup)
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         
@@ -91,12 +92,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
             }
 
             engine.getAudioFileManager().releaseAllFiles();
@@ -125,12 +126,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
 
             engine.getAudioFileManager().releaseAllFiles();
@@ -155,12 +156,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 1, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
 
             engine.getAudioFileManager().releaseAllFiles();
@@ -195,14 +196,14 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                 for (int c : { 0, 1, 2, 3 })
-                    test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
+                    expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
             }
 
             engine.getAudioFileManager().releaseAllFiles();
@@ -244,12 +245,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
                     
             engine.getAudioFileManager().releaseAllFiles();
@@ -301,14 +302,14 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 const int latencyNumSamples = juce::roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 1, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
             }
 
             engine.getAudioFileManager().releaseAllFiles();
@@ -342,12 +343,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
             }
                     
             engine.getAudioFileManager().releaseAllFiles();
@@ -356,7 +357,7 @@ private:
     }
 
     template<typename NodePlayerType>
-    void runRackAudioInputTests (test_utilities::TestSetup testSetup)
+    void runRackAudioInputTests (TestSetup testSetup)
     {
         auto& engine = *Engine::getEngines()[0];
         
@@ -388,7 +389,7 @@ private:
 
                 // Fill inputs with sin data
                 {
-                    test_utilities::fillBufferWithSinData (inputBuffer);
+                    fillBufferWithSinData (inputBuffer);
                     tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
@@ -399,12 +400,12 @@ private:
                     PlayHeadState phs (ph);
                     ProcessState ps (phs);
                     auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
-                    test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                    expectUniqueNodeIDs (*this, *rackNode, true);
                     auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                     for (int c : { 0, 1, 2, 3 })
-                        test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
+                        expectAudioBuffer (*this, testContext->buffer, c, 1.0f, 0.707f);
                 }
                 
                 // Remove connections between 3 & 4, add a latency plugin there, the results should be the same
@@ -432,12 +433,12 @@ private:
                         PlayHeadState phs (ph);
                         ProcessState ps (phs);
                         auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
-                        test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                        expectUniqueNodeIDs (*this, *rackNode, true);
                         auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                         for (int c : { 0, 1, 2, 3 })
-                            test_utilities::expectAudioBuffer (*this, testContext->buffer, c, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
+                            expectAudioBuffer (*this, testContext->buffer, c, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);
                     }
 
                     // Set the num audio inputs to be 1 channel and the Rack shouldn't crash
@@ -450,17 +451,17 @@ private:
                         PlayHeadState phs (ph);
                         ProcessState ps (phs);
                         auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
-                        test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                        expectUniqueNodeIDs (*this, *rackNode, true);
                         auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                         // Channel 0 should be a sin from 0.5s, silent before
-                        test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
+                        expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
                                                            0.0f, 0.0f, 1.0f, 0.707f);
 
                         // The others should be silent
                         for (int c : { 1, 2, 3 })
-                            test_utilities::expectAudioBuffer (*this, testContext->buffer, c, 0.0f, 0.0f);
+                            expectAudioBuffer (*this, testContext->buffer, c, 0.0f, 0.0f);
                     }
                 }
                         
@@ -488,7 +489,7 @@ private:
 
                 // Fill inputs with sin data
                 {
-                    test_utilities::fillBufferWithSinData (inputBuffer);
+                    fillBufferWithSinData (inputBuffer);
                     tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
@@ -499,13 +500,13 @@ private:
                     PlayHeadState phs (ph);
                     ProcessState ps (phs);
                     auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
-                    test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                    expectUniqueNodeIDs (*this, *rackNode, true);
                     auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
 
                     // Channel 0 should be a sin, channel 1 silent
-                    test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
-                    test_utilities::expectAudioBuffer (*this, testContext->buffer, 1, 0.0f, 0.0f);
+                    expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
+                    expectAudioBuffer (*this, testContext->buffer, 1, 0.0f, 0.0f);
                 }
 
                 engine.getAudioFileManager().releaseAllFiles();
@@ -515,7 +516,7 @@ private:
     }
     
     template<typename NodePlayerType>
-    void runRackModifiertests (test_utilities::TestSetup ts)
+    void runRackModifiertests (TestSetup ts)
     {
         auto& engine = *Engine::getEngines()[0];
         
@@ -555,12 +556,12 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, makeNode<SilentNode> (2), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), ts.sampleRate, ts.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), ts, 2, 5.0);
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.5f, 0.353f);
+                expectAudioBuffer (*this, testContext->buffer, 0, 0.5f, 0.353f);
             }
 
             // Check this hasn't changed
@@ -616,7 +617,7 @@ private:
 
                 // Fill inputs with sin data
                 {
-                    test_utilities::fillBufferWithSinData (inputBuffer);
+                    fillBufferWithSinData (inputBuffer);
                     tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
@@ -625,7 +626,7 @@ private:
                 PlayHeadState phs (ph);
                 ProcessState ps (phs);
                 auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, makeNode<InputNode> (inputProvider), ps, true);
-                test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
+                expectUniqueNodeIDs (*this, *rackNode, true);
 
                 auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), ts.sampleRate, ts.blockSize);
                                         
@@ -636,7 +637,7 @@ private:
                 ignoreUnused (testContext);
                 // Trim the first 0.1s as the envelope ramps up
                 const juce::Range<int> sampleRange (roundToInt (0.5 * ts.sampleRate), roundToInt (5.0 * ts.sampleRate));
-                test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, sampleRange, 0.5f, 0.353f);
+                expectAudioBuffer (*this, testContext->buffer, 0, sampleRange, 0.5f, 0.353f);
                #endif
             }
 
