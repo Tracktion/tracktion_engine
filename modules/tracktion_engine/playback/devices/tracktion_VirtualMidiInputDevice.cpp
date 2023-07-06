@@ -98,7 +98,10 @@ void VirtualMidiInputDevice::loadProps()
     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);
 
     if (! isTrackDevice() && n != nullptr)
+    {
         inputDevices.addTokens (n->getStringAttribute ("inputDevices"), ";", {});
+        useAllInputs = n->getBoolAttribute ("useAllInputs", false);
+    }
 
     MidiInputDevice::loadProps (n.get());
 }
@@ -108,6 +111,7 @@ void VirtualMidiInputDevice::saveProps()
     juce::XmlElement n ("SETTINGS");
 
     n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
+    n.setAttribute ("useAllInputs", useAllInputs);
     MidiInputDevice::saveProps (n);
 
     juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
@@ -137,7 +141,7 @@ void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage&
 
 void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage& m)
 {
-    if (inputDevices.contains (dev->getName()))
+    if (useAllInputs || inputDevices.contains (dev->getName()))
         handleIncomingMidiMessage (m);
 }
 
