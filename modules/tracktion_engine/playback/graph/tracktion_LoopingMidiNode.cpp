@@ -664,13 +664,17 @@ namespace MidiHelpers
         if (clipRange.isEmpty())
             return;
 
+        // Use a special number that won't be in use to signify an event to remove
+        // We have to do it like this to avoid allocating a new sequence
+        constexpr auto timeStampToRemoveFlag = std::numeric_limits<double>::lowest();
+
         // First adjust all the note times
         for (auto& m : sequence)
             if (m.message.isShortMessage())
                 if (auto sm = m.message.getShortMessage(); sm.isNoteOn() || sm.isNoteOff())
                    m.timeStamp = clipRange.clipValue (m.timeStamp);
 
-        // Then remove any zero or negative length notes
+        // Then change the timestamps of an zero or negative length notes
         for (int i = (int) sequence.events.size(); --i >= 0;)
         {
             const size_t index = static_cast<size_t> (i);
@@ -694,10 +698,15 @@ namespace MidiHelpers
                 if (noteLength > 0.0)
                     continue;
 
-                sequence.events.erase (sequence.events.begin() + static_cast<int> (*noteOffIndex));
-                sequence.events.erase (sequence.events.begin() + i);
+                sequence.events[*noteOffIndex].timeStamp    = timeStampToRemoveFlag;
+                sequence.events[index].timeStamp            = timeStampToRemoveFlag;
             }
         }
+
+        // Finally, erase any events with the flagged timestamp
+        sequence.events.erase (std::remove_if (sequence.events.begin(), sequence.events.end(),
+                                               [timeStampToRemoveFlag] (const auto& e) { return juce::approximatelyEqual (e.timeStamp, timeStampToRemoveFlag); }),
+                               sequence.events.end());
     }
 }
 

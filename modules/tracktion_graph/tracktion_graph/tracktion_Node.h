@@ -179,6 +179,23 @@ struct NodeOptimisations
 
 //==============================================================================
 //==============================================================================
+class TransformCache
+{
+public:
+    TransformCache() = default;
+
+    template<typename T>
+    void cacheProperty (size_t key, T value);
+
+    template<typename T>
+    T* getCachedProperty (size_t key);
+
+private:
+    std::unordered_map<size_t, std::any> cache;
+};
+
+//==============================================================================
+//==============================================================================
 /**
     Main graph Node processor class.
     Nodes are combined together to form a graph with a root Node which can then
@@ -236,8 +253,12 @@ public:
         @param postOrderedNodes This is an ordered list obtained from visiting all
                                 the Nodes and can be used for quicker introspection
                                 of the graph
+        @param TransformCache   A cache which can be used to speed up operations
+                                during the transform stage.
     */
-    virtual bool transform (Node& /*rootNode*/, const std::vector<Node*>& /*postOrderedNodes*/)
+    virtual bool transform (Node& /*rootNode*/,
+                            const std::vector<Node*>& /*postOrderedNodes*/,
+                            TransformCache&)
     {
         return false;
     }
@@ -383,9 +404,10 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
         bool needToTransformAgain = false;
 
         auto allNodes = getNodes (rootNode, VertexOrdering::postordering);
+        TransformCache cache;
 
         for (auto node : allNodes)
-            if (node->transform (rootNode, allNodes))
+            if (node->transform (rootNode, allNodes, cache))
                 needToTransformAgain = true;
 
         if (! needToTransformAgain)
@@ -690,6 +712,22 @@ inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNod
     nodeGraph->sortedNodes = std::move (sortedNodes);
 
     return nodeGraph;
+}
+
+template<typename T>
+inline void TransformCache::cacheProperty (size_t key, T value)
+{
+    cache[key] = std::move (value);
+}
+
+template<typename T>
+inline T* TransformCache::getCachedProperty (size_t key)
+{
+    if (auto found = cache.find (key); found != cache.end())
+        if (auto* typedValue = std::any_cast<T> (&found->second))
+            return typedValue;
+
+    return {};
 }
 
 }}

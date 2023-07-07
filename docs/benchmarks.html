@@ -60,8 +60,12 @@
   <label for="descriptions_list">Description:</label>
   <select id="descriptions_list"></select>
 
+  <br/>
   <label for="platforms_list">Platform:</label>
   <select id="platforms_list"></select>
+
+  <label for="branch_list">Branch:</label>
+  <select id="branch_list"></select>
 
   <br/><br/>
   <label for="start_date">Start Date:</label>
@@ -132,6 +136,7 @@
     var names = new Set();
     var descriptions = new Set();
     var platforms = new Set();
+    var branches = new Set();
 
     var currentResults = new Map();
     var currentMin, currentMax;
@@ -142,6 +147,7 @@
       names_list.innerHTML = "";
       descriptions_list.innerHTML = "";
       platforms_list.innerHTML = "";
+      branch_list.innerHTML = "";
 
       function populateOptions (list, menuItems)
       {
@@ -165,6 +171,7 @@
       populateOptions (names_list, names);
       populateOptions (descriptions_list, descriptions);
       populateOptions (platforms_list, platforms);
+      populateOptions (branch_list, branches);
     }
 
     function buildMenus()
@@ -175,16 +182,19 @@
       if (names_list.value != "All")          filterString += '&benchmark_name=' + names_list.value;
       if (descriptions_list.value != "All")   filterString += '&benchmark_description=' + descriptions_list.value;
       if (platforms_list.value != "All")      filterString += '&benchmark_platform=' + platforms_list.value;
+      if (branch_list.value != "All")         filterString += '&benchmark_branch_name=' + branch_list.value;
 
       document.getElementById ("loader").style.display = "block";
       getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_menus" + filterString, function (status, res)
       {
+        console.log (res);
         document.getElementById ("loader").style.display = "none";
         hashes        = res["benchmark_hash"];
         categories    = res["benchmark_category"];
         names         = res["benchmark_name"];
         descriptions  = res["benchmark_description"];
         platforms     = res["benchmark_platform"];
+        branches      = res["benchmark_branch_name"];
 
         updateMenus();
       });
@@ -296,11 +306,13 @@
       let nameToShow        = names_list.value;
       let descriptionToShow = descriptions_list.value;
       let platformToShow    = platforms_list.value;
+      let branchToShow      = branch_list.value;
 
       if (categoryToShow == "All"
           && nameToShow == "All"
           && descriptionToShow == "All"
-          && platformToShow == "All")
+          && platformToShow == "All"
+          && branchToShow == "All")
       {
         window.alert ("Please set at least one filter!");
         return;
@@ -314,6 +326,7 @@
       if (nameToShow != "All")          filterString += '&benchmark_name=' + nameToShow;
       if (descriptionToShow != "All")   filterString += '&benchmark_description=' + descriptionToShow;
       if (platformToShow != "All")      filterString += '&benchmark_platform=' + platformToShow;
+      if (branchToShow != "All")        filterString += '&benchmark_branch_name=' + branchToShow;
       if (startDate)                    filterString += '&start_date=' + startDate;
       if (endDate)                      filterString += '&end_date=' + endDate;
 
@@ -333,6 +346,7 @@
                             values.category     = result.benchmark_category;
                             values.description  = result.benchmark_description;
                             values.platform     = result.benchmark_platform;
+                            values.branch       = result.benchmark_branch_name;
 
                             values.dateTimes  = result.benchmark_time;
 

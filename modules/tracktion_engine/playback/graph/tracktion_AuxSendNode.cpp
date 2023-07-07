@@ -48,12 +48,27 @@ AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
 }
 
 //==============================================================================
+NodeProperties AuxSendNode::getNodeProperties()
+{
+    if (cachedNodeProperties)
+        return *cachedNodeProperties;
+
+    auto props = SendNode::getNodeProperties();
+
+    if (isPrepared)
+        cachedNodeProperties = props;
+
+    return props;
+}
+
 void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     
     if (auto props = getNodeProperties(); props.latencyNumSamples > 0)
         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
+
+    isPrepared = true;
 }
 
 void AuxSendNode::process (ProcessContext& pc)

@@ -33,9 +33,10 @@
 //==============================================================================
 //==============================================================================
 /** @internal */
-inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkResult> results)
+inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
+                                   std::vector<BenchmarkResult> results)
 {
-    if (apiKey.isEmpty())
+    if (apiKey.isEmpty() || branchName.isEmpty())
     {
         jassertfalse;
         return false;
@@ -62,6 +63,7 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
         fields->setProperty ("benchmark_cycles_max",        (juce::int64) r.maxCycles);
         fields->setProperty ("benchmark_cycles_mean",       (juce::int64) r.meanCycles);
         fields->setProperty ("benchmark_cycles_variance",   r.varianceCycles);
+        fields->setProperty ("benchmark_branch_name",       branchName.quoted ('\''));
 
         records.add (fields.get());
     }
@@ -103,6 +105,7 @@ int main (int, char**)
                   << "\n\t[cycles]\t" << r.totalCycles << "\t(min: " << r.minCycles << ", max: " << r.maxCycles  << ", mean: " << r.meanCycles << ", var: " << r.varianceCycles << ")\n\n";
 
     if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
+                               SystemStats::getEnvironmentVariable ("BM_BRANCH_NAME", {}),
                                std::move (results)))
     {
         std::cout << "INFO: Published benchmark results\n";
