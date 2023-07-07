@@ -170,8 +170,6 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     else
     {
         assert (section2->getLength() > 0_bd);
-        const auto blockNumBeats = sectionEditBeatRange.getLength().inBeats();
-        assert (blockNumBeats > 0.0);
         const juce::NormalisableRange blockRangeBeats (sectionEditBeatRange.getStart().inBeats(),
                                                        sectionEditBeatRange.getEnd().inBeats());
 
