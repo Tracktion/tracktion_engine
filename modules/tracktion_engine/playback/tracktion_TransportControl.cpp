@@ -178,7 +178,8 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     juce::CachedValue<bool> playing, recording, safeRecording;
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
                             invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
-    juce::CachedValue<bool> userDragging, lastUserDragTime, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
+    juce::CachedValue<bool> userDragging, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
+    juce::CachedValue<juce::int64> lastUserDragTime;
     juce::CachedValue<TimePosition> startTime, endTime, cursorPosAtPlayStart;
     juce::CachedValue<TimePosition> videoPosition;
     juce::CachedValue<int> reallocationInhibitors, playbackContextAllocation, nudgeLeftCount, nudgeRightCount;
