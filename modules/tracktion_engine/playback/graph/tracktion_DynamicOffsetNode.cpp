@@ -124,7 +124,93 @@ void DynamicOffsetNode::process (ProcessContext& pc)
        return;
 
     const auto editStartBeatOfLocalTimeline = clipPosition.getStart() - clipOffset;
-    const auto playbackStartBeatRelativeToClip = sectionEditBeatRange.getStart() - editStartBeatOfLocalTimeline;
+
+    auto section1 = sectionEditBeatRange;
+    std::optional<BeatRange> section2;
+
+    if (! loopRange.isEmpty())
+    {
+        const auto playbackStartBeatRelativeToClip = sectionEditBeatRange.getStart() - editStartBeatOfLocalTimeline;
+        const auto loopIteration = loopRange.isEmpty() ? 0
+                                                       : static_cast<int> (playbackStartBeatRelativeToClip.inBeats() / loopRange.getLength().inBeats());
+        const auto loopEndBeat = editStartBeatOfLocalTimeline + (loopRange.getLength() * (loopIteration + 1));
+
+        if (loopEndBeat > sectionEditBeatRange.getStart()
+            && loopEndBeat < sectionEditBeatRange.getEnd())
+        {
+            section1 = sectionEditBeatRange.withLength (sectionEditBeatRange.getEnd() - loopEndBeat);
+            section2 = sectionEditBeatRange.withStart (section1.getEnd());
+
+            assert (juce::approximatelyEqual (section1.getLength().inBeats() + section2->getLength().inBeats(),
+                                              sectionEditBeatRange.getLength().inBeats()));
+            assert (juce::approximatelyEqual (section1.getStart().inBeats(), sectionEditBeatRange.getStart().inBeats()));
+            assert (juce::approximatelyEqual (section2->getEnd().inBeats(), sectionEditBeatRange.getEnd().inBeats()));
+        }
+    }
+
+    // Process the two possible sections
+    if (! section2)
+    {
+        processSection (pc, section1);
+    }
+    else
+    {
+        assert (section2->getLength() > 0_bd);
+        const auto blockNumBeats = sectionEditBeatRange.getLength().inBeats();
+        assert (blockNumBeats > 0.0);
+
+        auto processSubSection = [&] (auto section)
+        {
+            const auto proportion = juce::Range (0.0, section1.getLength().inBeats() / blockNumBeats);
+            const auto startFrame  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
+            const auto endFrame    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
+
+            const auto sectionNumFrames = endFrame - startFrame;
+
+            const auto numRefSamples = pc.referenceSampleRange.getLength();
+            const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * numRefSamples);
+            const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * numRefSamples);
+
+            const juce::Range subSectionReferenceSampleRange (startRefSample, endRefSample);
+
+            for (auto& node : orderedNodes)
+                node->prepareForNextBlock (subSectionReferenceSampleRange);
+
+            ProcessContext subSection {
+                                          sectionNumFrames, subSectionReferenceSampleRange,
+                                          { pc.buffers.audio.getStart (sectionNumFrames), pc.buffers.midi }
+                                      };
+            processSection (subSection, section);
+        };
+
+        processSubSection (section1);
+        processSubSection (*section2);
+    }
+
+    // Silence any samples before or after our edit time range
+    {
+        const TimeRange clipTimeRange (tempoPosition.set (clipPosition.getStart()),
+                                       tempoPosition.set (clipPosition.getEnd()));
+        const auto editPositionInSamples = toSamples ({ clipTimeRange.getStart(), clipTimeRange.getEnd() }, getSampleRate());
+
+        const auto destBuffer = pc.buffers.audio;
+        auto numSamplesToClearAtStart = std::min (editPositionInSamples.getStart() - sectionEditSampleRange.getStart(), (SampleCount) destBuffer.getNumFrames());
+        auto numSamplesToClearAtEnd = std::min (sectionEditSampleRange.getEnd() - editPositionInSamples.getEnd(), (SampleCount) destBuffer.getNumFrames());
+
+        if (numSamplesToClearAtStart > 0)
+            destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
+
+        if (numSamplesToClearAtEnd > 0)
+            destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();
+    }
+}
+
+//==============================================================================
+void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRange)
+{
+    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() - clipOffset;
+
+    const auto playbackStartBeatRelativeToClip = sectionRange.getStart() - editStartBeatOfLocalTimeline;
     const auto loopIteration = loopRange.isEmpty() ? 0
                                                    : static_cast<int> (playbackStartBeatRelativeToClip.inBeats() / loopRange.getLength().inBeats());
     const auto loopIterationOffset = loopRange.getLength() * loopIteration;
@@ -160,33 +246,15 @@ void DynamicOffsetNode::process (ProcessContext& pc)
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
-            
+
             if (inputFromNode.midi.isNotEmpty())
                 nodesWithMidi++;
-            
+
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
-        
+
         if (nodesWithMidi > 1)
             pc.buffers.midi.sortByTimestamp();
-    }
-
-    // Silence any samples before or after our edit time range
-    {
-        const TimeRange clipTimeRange (tempoPosition.set (clipPosition.getStart()),
-                                       tempoPosition.set (clipPosition.getEnd()));
-        const auto editPositionInSamples = toSamples ({ clipTimeRange.getStart(), clipTimeRange.getEnd() }, getSampleRate());
-
-        const auto destBuffer = pc.buffers.audio;
-        auto numSamplesToClearAtStart = std::min (editPositionInSamples.getStart() - sectionEditSampleRange.getStart(), (SampleCount) destBuffer.getNumFrames());
-        auto numSamplesToClearAtEnd = std::min (sectionEditSampleRange.getEnd() - editPositionInSamples.getEnd(), (SampleCount) destBuffer.getNumFrames());
-
-        if (numSamplesToClearAtStart > 0)
-            destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
-
-        if (numSamplesToClearAtEnd > 0)
-            destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();
-    }
-}
+    }}
 
 }} // namespace tracktion { inline namespace engine

@@ -47,6 +47,8 @@ private:
     std::vector<DynamicallyOffsettableNodeBase*> dynamicOffsetNodes;
     std::vector<Node*> orderedNodes, leafNodes;
     std::vector<std::unique_ptr<Node>> inputs;
+
+    void processSection (ProcessContext&, BeatRange sectionRange);
 };
 
 }} // namespace tracktion { inline namespace engine
