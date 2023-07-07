@@ -30,8 +30,9 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
       inputs (std::move (inputNodes))
 {
     assert (getProcessState().getTempoSequence() != nullptr);
-    setOptimisations ({ tracktion::graph::ClearBuffers::yes,
-                        tracktion::graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ inputs.empty() ? graph::ClearBuffers::yes
+                                       : graph::ClearBuffers::no,
+                        graph::AllocateAudioBuffer::yes });
 
     dynamicOffsetNodes.reserve (inputs.size());
 
@@ -176,9 +177,10 @@ void DynamicOffsetNode::process (ProcessContext& pc)
             for (auto& node : orderedNodes)
                 node->prepareForNextBlock (subSectionReferenceSampleRange);
 
+            auto sectionBufferView = pc.buffers.audio.getStart (sectionNumFrames);
             ProcessContext subSection {
                                           sectionNumFrames, subSectionReferenceSampleRange,
-                                          { pc.buffers.audio.getStart (sectionNumFrames), pc.buffers.midi }
+                                          { sectionBufferView, pc.buffers.midi }
                                       };
             processSection (subSection, section);
         };

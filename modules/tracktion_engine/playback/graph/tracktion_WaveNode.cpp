@@ -1714,7 +1714,11 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
 //==============================================================================
 void WaveNodeRealTime::setDynamicOffsetBeats (BeatDuration newOffset)
 {
+    if (juce::approximatelyEqual (dynamicOffsetBeats->inBeats(), newOffset.inBeats()))
+        return;
+
     (*dynamicOffsetBeats) = newOffset;
+    isFirstBlock = true;
 }
 
 //==============================================================================
