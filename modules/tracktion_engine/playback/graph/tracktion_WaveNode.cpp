@@ -1943,7 +1943,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
 
     // Read through the audio stack
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
-    uint32_t lastSampleFadeLength = isFirstBlock ? std::min (numFrames, 40u) : 0;
+    uint32_t lastSampleFadeLength = isFirstBlock ? std::min (numFrames, 10u) : 0;
     isFirstBlock = false;
 
     if (editReader->read (sectionEditBeats, sectionEditTime, pc.buffers.audio, isContiguous, getPlaybackSpeedRatio()))
