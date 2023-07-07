@@ -27,6 +27,7 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
       loopRange (clipLoopRange),
       clipOffset (offset),
       tempoPosition (*getProcessState().getTempoSequence()),
+      localProcessState (editProcessState.playHeadState, *editProcessState.getTempoSequence()),
       inputs (std::move (inputNodes))
 {
     assert (getProcessState().getTempoSequence() != nullptr);
@@ -44,6 +45,9 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
 
             if (n->getDirectInputNodes().empty())
                 leafNodes.push_back (n);
+
+            if (auto engineNode = dynamic_cast<TracktionEngineNode*> (n))
+                engineNode->setProcessState (localProcessState);
 
             if (auto dynamicNode = dynamic_cast<DynamicallyOffsettableNodeBase*> (n))
                 dynamicOffsetNodes.push_back (dynamicNode);
@@ -149,8 +153,6 @@ void DynamicOffsetNode::process (ProcessContext& pc)
         }
     }
 
-    processSection (pc, sectionEditBeatRange);
-
     // Process the two possible sections
     // N.B. Processing in two sections won't work as the WaveNodeRealTime's TracktionEngineNode base
     //      which references the same ProcessState as everything else will have been updated with the
@@ -158,50 +160,50 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     //      of audio past the end of the ContainerClip's loop end
     //      There's two potential solutions to this:
     //      1. Use a local ProcessState for the dynamic offset Node and update it
-    //         each DynamicOffsetNode::processSection call
+    //         each DynamicOffsetNode::processSection call (This is currently in place and in testing)
     //      2. Convey a point of interest to the main Edit player so it chunks the whole buffer on a
     //         ContainerClip loop boundry
-//ddd    if (! section2)
-//    {
-//        processSection (pc, section1);
-//    }
-//    else
-//    {
-//        assert (section2->getLength() > 0_bd);
-//        const auto blockNumBeats = sectionEditBeatRange.getLength().inBeats();
-//        assert (blockNumBeats > 0.0);
-//        const juce::NormalisableRange blockRangeBeats (sectionEditBeatRange.getStart().inBeats(),
-//                                                       sectionEditBeatRange.getEnd().inBeats());
-//
-//        auto processSubSection = [this, &pc, &blockRangeBeats] (auto section)
-//        {
-//            const auto proportion = juce::Range (blockRangeBeats.convertTo0to1 (section.getStart().inBeats()),
-//                                                 blockRangeBeats.convertTo0to1 (section.getEnd().inBeats()));
-//            const auto startFrame  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
-//            const auto endFrame    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
-//
-//            const auto sectionNumFrames = endFrame - startFrame;
-//
-//            const auto numRefSamples = pc.referenceSampleRange.getLength();
-//            const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * numRefSamples);
-//            const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * numRefSamples);
-//
-//            const juce::Range subSectionReferenceSampleRange (startRefSample, endRefSample);
-//
-//            for (auto& node : orderedNodes)
-//                node->prepareForNextBlock (subSectionReferenceSampleRange);
-//
-//            auto sectionBufferView = pc.buffers.audio.getFrameRange ({ startFrame, endFrame });
-//            ProcessContext subSection {
-//                                          sectionNumFrames, subSectionReferenceSampleRange,
-//                                          { sectionBufferView, pc.buffers.midi }
-//                                      };
-//            processSection (subSection, section);
-//        };
-//
-//        processSubSection (section1);
-//        processSubSection (*section2);
-//    }
+    if (! section2)
+    {
+        processSection (pc, section1);
+    }
+    else
+    {
+        assert (section2->getLength() > 0_bd);
+        const auto blockNumBeats = sectionEditBeatRange.getLength().inBeats();
+        assert (blockNumBeats > 0.0);
+        const juce::NormalisableRange blockRangeBeats (sectionEditBeatRange.getStart().inBeats(),
+                                                       sectionEditBeatRange.getEnd().inBeats());
+
+        auto processSubSection = [this, &pc, &blockRangeBeats] (auto section)
+        {
+            const auto proportion = juce::Range (blockRangeBeats.convertTo0to1 (section.getStart().inBeats()),
+                                                 blockRangeBeats.convertTo0to1 (section.getEnd().inBeats()));
+            const auto startFrame  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
+            const auto endFrame    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
+
+            const auto sectionNumFrames = endFrame - startFrame;
+
+            const auto numRefSamples = pc.referenceSampleRange.getLength();
+            const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * numRefSamples);
+            const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * numRefSamples);
+
+            const juce::Range subSectionReferenceSampleRange (startRefSample, endRefSample);
+
+            for (auto& node : orderedNodes)
+                node->prepareForNextBlock (subSectionReferenceSampleRange);
+
+            auto sectionBufferView = pc.buffers.audio.getFrameRange ({ startFrame, endFrame });
+            ProcessContext subSection {
+                                          sectionNumFrames, subSectionReferenceSampleRange,
+                                          { sectionBufferView, pc.buffers.midi }
+                                      };
+            processSection (subSection, section);
+        };
+
+        processSubSection (section1);
+        processSubSection (*section2);
+    }
 
     // Silence any samples before or after our edit time range
     {
@@ -235,6 +237,9 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
     const auto offsetStartTime = tempoPosition.set (editStartBeatOfLocalTimeline);
     const auto offsetEndTime = tempoPosition.add (dynamicOffsetBeats);
     const auto dynamicOffsetTime = offsetEndTime - offsetStartTime;
+
+    localProcessState.update (getSampleRate(), pc.referenceSampleRange,
+                              ProcessState::UpdateContinuityFlags::no);
 
     // Update the offset for compatible Nodes
     for (auto n : dynamicOffsetNodes)

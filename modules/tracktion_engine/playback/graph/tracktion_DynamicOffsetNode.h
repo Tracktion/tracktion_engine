@@ -44,6 +44,8 @@ private:
     const BeatDuration clipOffset;
     tempo::Sequence::Position tempoPosition;
 
+    ProcessState localProcessState;
+
     std::vector<DynamicallyOffsettableNodeBase*> dynamicOffsetNodes;
     std::vector<Node*> orderedNodes, leafNodes;
     std::vector<std::unique_ptr<Node>> inputs;
