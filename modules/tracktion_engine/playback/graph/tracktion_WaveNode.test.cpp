@@ -40,6 +40,7 @@ public:
             runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
             runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
             runDynamicOffsetTests (ts);
+            runTimestretchedTests (ts);
         }
     }
 
@@ -311,6 +312,98 @@ private:
 
             expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0_tp, fileLength / 2.0 }, ts.sampleRate), 1.0f, 1.0f);
             expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength / 2.0), toPosition (fileLength * 3.0) }, ts.sampleRate), 0.0f, 0.0f);
+        }
+    }
+
+    void runTimestretchedTests (graph::test_utilities::TestSetup ts)
+    {
+        using namespace tracktion::graph::test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        
+        const auto fileLength = 1_td;
+        const auto fileLengthBeats = 1_bd;
+        
+        tempo::Sequence fileTempoSequence ({{ 0_bp, 60.0, 0.0f }},
+                                           {{ 0_bp, 4, 4, false }},
+                                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
+        
+        auto squareFile = getSquareFile<juce::WavAudioFormat> (ts.sampleRate, fileLength.inSeconds());
+        AudioFile squareAudioFile (engine, squareFile->getFile());
+        
+        tracktion::graph::PlayHead playHead;
+        playHead.setScrubbingBlockLength (toSamples (0.08_tp, ts.sampleRate));
+        tracktion::graph::PlayHeadState playHeadState (playHead);
+        ProcessState processState (playHeadState, fileTempoSequence);
+        playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
+
+        if (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
+        {
+            beginTest ("WaveNodeRealTime at time 1s, length 1s, time-stretch disabled");
+            {
+                auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
+                                                                TimeRange (1_tp, fileLength),
+                                                                0_td,
+                                                                TimeRange(),
+                                                                LiveClipLevel(),
+                                                                1.0,
+                                                                juce::AudioChannelSet::canonicalChannelSet (squareAudioFile.getNumChannels()),
+                                                                juce::AudioChannelSet::canonicalChannelSet (1),
+                                                                processState,
+                                                                EditItemID(),
+                                                                true,
+                                                                ResamplingQuality::lagrange,
+                                                                SpeedFadeDescription(),
+                                                                std::nullopt,
+                                                                TimeStretcher::Mode::disabled);
+                
+                // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
+                auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
+                
+                auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
+                
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                
+                // Check last 0.1s of the time period for increased accuraccy
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
+            }
+            
+            beginTest ("WaveNodeRealTime at time 1b, length 1b");
+            {
+                auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
+                                                                TimeStretcher::Mode::defaultMode,
+                                                                TimeStretcher::ElastiqueProOptions(),
+                                                                BeatRange (1_bp, fileLengthBeats),
+                                                                0_bd,
+                                                                BeatRange(),
+                                                                LiveClipLevel(),
+                                                                juce::AudioChannelSet::canonicalChannelSet (squareAudioFile.getNumChannels()),
+                                                                juce::AudioChannelSet::canonicalChannelSet (1),
+                                                                processState,
+                                                                EditItemID(),
+                                                                true,
+                                                                ResamplingQuality::lagrange,
+                                                                SpeedFadeDescription(),
+                                                                std::nullopt,
+                                                                std::nullopt,
+                                                                fileTempoSequence,
+                                                                WaveNodeRealTime::SyncTempo::yes,
+                                                                WaveNodeRealTime::SyncPitch::no,
+                                                                std::nullopt);
+                
+                // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
+                auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
+                
+                auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
+                
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                
+                // Check lat 0.1s of the time period for increased accuraccy
+                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
+            }
         }
     }
 };

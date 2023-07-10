@@ -79,6 +79,15 @@ namespace test_utilities
                    juce::String ("Expected peak: ") + juce::String (expectedPeak, 4) + ", actual peak: " + juce::String (peak, 4));
     }
 
+    inline void expectRMS (juce::UnitTest& ut, const BufferAndSampleRate& data, TimeRange tr, int channel, float expectedRMS)
+    {
+        const auto sampleRange = toSamples (tr, data.sampleRate);
+        ut.expectWithinAbsoluteError (data.buffer.getRMSLevel (channel,
+                                                               static_cast<int> (sampleRange.getStart()),
+                                                               static_cast<int> (sampleRange.getLength())),
+                                      expectedRMS, 0.01f);
+    }
+
     //==============================================================================
     inline std::unique_ptr<Edit> createTestEdit (Engine& engine, int numAudioTracks = 1)
     {

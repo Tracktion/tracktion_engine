@@ -34,7 +34,7 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
         // contained clips will use the tempo conversions of the main Edit. This needs
         // to be added by using the ProcessState directly for tempo conversions with a
         // specified offset
-//ddd        jassert (getProcessState().getTempoSequence()->getNumTempos() == 1);
+        jassert (getProcessState().getTempoSequence()->getNumTempos() == 1);
     }
 
     assert (input);

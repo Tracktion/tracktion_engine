@@ -280,6 +280,32 @@ namespace test_utilities
         return f;
     }
 
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTimeEncodedFile (double sampleRate, TimeDuration duration,
+                                                             TimeDuration stepDuration,
+                                                             int numChannels = 1,
+                                                             int qualityOptionIndex = -1)
+    {
+        const auto stepNumFrames = toSamples (stepDuration, sampleRate);
+        const auto numSteps = duration / stepDuration;
+        const auto valPerStep = static_cast<float> (1.0 / numSteps);
+
+        auto buffer = choc::buffer::createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                              [=] (auto, auto frame)
+                                                              {
+                                                                  const int stepNum = static_cast<int> (frame / stepNumFrames) + 1;
+                                                                  const float f = stepNum * valPerStep;
+
+                                                                  return f;
+                                                              });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
     static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
