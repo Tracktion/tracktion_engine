@@ -180,6 +180,69 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
     }
 }
 
+// BEATCONNECT MODIFICATION START
+int StepClip::Pattern::getTremolo(int channel, int index) const {
+
+    if (!getNote (channel, index))
+        return -1;
+
+    auto tremolos = getTremolos (channel);
+
+    if (juce::isPositiveAndBelow(index, tremolos.size()))
+        return tremolos[index];
+
+    if (clip.getChannels()[channel] != nullptr)
+        return defaultTremoloAttacks;
+
+    return -1;
+}
+
+juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
+    juce::Array<int> tremolos;
+    auto stringArray = juce::StringArray::fromTokens(state.getChild(channel)[IDs::tremolos].toString(), false);
+    tremolos.ensureStorageAllocated(stringArray.size());
+
+    for (auto element : stringArray)
+        tremolos.add(element.getIntValue());
+
+    return tremolos;
+}
+
+void StepClip::Pattern::setTremolo(int channel, int index, unsigned int value) {
+    if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
+        return; // Out of range
+
+    setNote(channel, index, true);
+
+    auto tremolos = getTremolos(channel);
+    const int size = tremolos.size();
+
+    if (!juce::isPositiveAndNotGreaterThan(index, size))
+        tremolos.insertMultiple(size, 127, index - size);
+
+    tremolos.set(index, value);
+    setTremolos(channel, tremolos);
+
+    return;
+}
+
+void StepClip::Pattern::setTremolos(int channel, const juce::Array<int>& values) {
+    if (channel >= state.getNumChildren())
+    {
+        jassertfalse;
+        return;
+    }
+
+    juce::StringArray stringArray;
+    stringArray.ensureStorageAllocated(values.size());
+
+    for (int element : values)
+        stringArray.add(juce::String(element));
+
+    state.getChild(channel).setProperty(IDs::velocities, stringArray.joinIntoString(" "), clip.getUndoManager());
+}
+// BEATCONNECT MODIFICATION END
+
 int StepClip::Pattern::getVelocity (int channel, int index) const
 {
     if (! getNote (channel, index))
@@ -363,7 +426,7 @@ int StepClip::Pattern::CachedPattern::getVelocity (int index) const noexcept
 
     if (juce::isPositiveAndBelow (index, velocities.size()))
         return velocities[index];
-
+    
     return 127;
 }
 
@@ -378,6 +441,18 @@ double StepClip::Pattern::CachedPattern::getGate (int index) const noexcept
     return 1.0;
 }
 
+// BEATCONNECT MODIFICATION START
+int StepClip::Pattern::CachedPattern::getPitch(int index) const noexcept {
+    if (!getNote(index))
+        return -1;
+
+    if (juce::isPositiveAndBelow(index, pitches.size()))
+        return pitches[index];
+
+    return defaultPitchOffset;
+}
+// BEATCONNECT MODIFICATION END
+
 float StepClip::Pattern::CachedPattern::getProbability (int index) const noexcept
 {
     if (! getNote (index))
@@ -388,6 +463,19 @@ float StepClip::Pattern::CachedPattern::getProbability (int index) const noexcep
 
     return 1.0;
 }
+
+// BEATCONNECT MODIFICATION START
+int StepClip::Pattern::CachedPattern::getTremolo(int index) const noexcept
+{
+    if (!getNote(index))
+        return -1;
+
+    if (juce::isPositiveAndBelow(index, tremolos.size()))
+        return tremolos[index];
+
+    return defaultPitchOffset;
+}
+// BEATCONNECT MODIFICATION END
 
 //==============================================================================
 StepClip::Pattern StepClip::PatternInstance::getPattern() const

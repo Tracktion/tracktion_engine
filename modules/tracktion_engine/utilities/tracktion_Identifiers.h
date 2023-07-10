@@ -646,20 +646,29 @@ namespace IDs
     DECLARE_ID (resamplingQuality)
 
     // BEATCONNECT MODIFICATIONS START HERE
-    DECLARE_ID(SamplerDrumPad)
-    DECLARE_ID(Tambourine)
-    DECLARE_ID(Cymbol)
-    DECLARE_ID(Snare)
-    DECLARE_ID(Kick)
-    DECLARE_ID(PluginParameters)
-    DECLARE_ID(PluginParameter)
-    DECLARE_ID(paramId)
+    // Generic IDs
     DECLARE_ID(defaultValue)
+    DECLARE_ID(Faceplate)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
-    DECLARE_ID(Faceplate)
-    DECLARE_ID(RecordingMidiClip)
+    DECLARE_ID(paramId)
     DECLARE_ID(PatternChannel)
+    DECLARE_ID(PluginParameter)
+    DECLARE_ID(PluginParameters)
+    DECLARE_ID(RecordingMidiClip)
+    
+    // Sampler IDs
+    DECLARE_ID(pitchOffset)
+    DECLARE_ID(pitchOffsets)
+    DECLARE_ID(tremolo)
+    DECLARE_ID(tremolos)
+
+    // Drum Machine IDs
+    DECLARE_ID(Cymbol)
+    DECLARE_ID(Kick)
+    DECLARE_ID(SamplerDrumPad)
+    DECLARE_ID(Snare)
+    DECLARE_ID(Tambourine)
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID

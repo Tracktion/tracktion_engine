@@ -399,6 +399,9 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                         const float channelVelScale = c.noteValue / 127.0f;
                         const float vel = cache->getVelocity (i) / 127.0f;
+                        // BEATCONNECT MODIFICATION START
+                        const int tremoloAttacks = cache->getTremolo(i);
+                        // BEATCONNECT MODIFICATION END
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
                         result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), eventStart);
@@ -441,6 +444,14 @@ void StepClip::generateMidiSequence (juce::MidiMessageSequence& result,
 
             generateMidiSequenceForChannels (result, convertToSeconds, p->getPattern(), startBeat,
                                              clipStartBeat, clipEndBeat, tempoSequence);
+
+            // =8>
+            for (auto element : result)
+            {
+                auto test = element->message.getFloatVelocity();
+                element->message.setVelocity(0.1);
+            }
+            // =8>
 
             if (instance != nullptr)
             {

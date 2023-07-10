@@ -94,6 +94,14 @@ public:
         /** Sets the length of one step as a fraction of a beat. */
         void setNoteLength (BeatDuration);
 
+        // BEATCONNECT MODIFICATON START
+        int getTremolo (int channel, int index) const;
+        juce::Array<int> getTremolos(int channel) const;
+        void setTremolo(int channel, int index, unsigned int value);
+        void setTremolos(int channel, const juce::Array<int>& values);
+        
+        // BEATCONNECT MODIFICATON END
+
         juce::Array<int> getVelocities (int channel) const;
         void setVelocities (int channel, const juce::Array<int>&);
 
@@ -122,12 +130,24 @@ public:
             bool getNote (int index) const noexcept;
             int getVelocity (int index) const noexcept;
             double getGate (int index) const noexcept;
+            // BEATCONNECT MODIFICATION START
+            int getPitch(int index) const noexcept;
+            // BEATCONNECT MODIFICATION END
             float getProbability (int index) const noexcept;
+            // BEATCONNECT MODIFICATION START
+            int getTremolo(int index) const noexcept;
+            // BEATCONNECT MODIFICATION END
 
             juce::BigInteger notes;
             juce::Array<int> velocities;
             juce::Array<double> gates;
+            // BEATCONNECT MODIFICATION START
+            juce::Array<int> pitches;
+            // BEATCONNECT MODIFICATION END
             juce::Array<float> probabilities;
+            // BEATCONNECT MODIFICATION START
+            juce::Array<int> tremolos;
+            // BEATCONNECT MODIFICATION END
             JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CachedPattern)
         };
 
@@ -177,6 +197,10 @@ public:
         // BEATCONNECT MODIFICATIONS END
         defaultMidiChannel  = 1,
         defaultNoteNumber   = 60,
+        // BEATCONNECT MODIFICATIONS START
+        defaultPitchOffset = 0,
+        defaultTremoloAttacks = 0,
+        // BEATCONNECT MODIFICATIONS END
         defaultNoteValue    = 96,
 
         minNumNotes         = 2,
