@@ -50,7 +50,7 @@ private:
         clip1->setUsesProxy (false);
         clip1->setAutoTempo (true);
 
-        if (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
+        if constexpr (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
         {
             beginTest ("Rendered length");
             {

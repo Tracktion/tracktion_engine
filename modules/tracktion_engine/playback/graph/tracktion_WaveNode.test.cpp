@@ -336,7 +336,7 @@ private:
         ProcessState processState (playHeadState, fileTempoSequence);
         playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
 
-        if (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
+        if constexpr (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
         {
             beginTest ("WaveNodeRealTime at time 1s, length 1s, time-stretch disabled");
             {
