@@ -182,6 +182,9 @@ void DynamicOffsetNode::process (ProcessContext& pc)
 
             const auto sectionNumFrames = endFrame - startFrame;
 
+            if (sectionNumFrames == 0)
+                return;
+
             const auto numRefSamples = pc.referenceSampleRange.getLength();
             const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * numRefSamples);
             const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * numRefSamples);
