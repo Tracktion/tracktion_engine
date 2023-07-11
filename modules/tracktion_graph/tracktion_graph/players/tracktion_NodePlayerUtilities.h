@@ -32,6 +32,32 @@ namespace node_player_utils
         return uniqueEnd == nodeIDs.end();
     }
 
+    /** Returns true if all there are any feedback loops in the graph. */
+    static inline bool areThereAnyCycles (const std::vector<Node*>& orderedNodes)
+    {
+        size_t numCycles = 0;
+
+        // Iterate from the first node to the last
+        // Find each input of the Node
+        // Ensure that the input is in a lower position than the current
+        for (auto iter = orderedNodes.begin(); iter != orderedNodes.end(); ++iter)
+        {
+            auto node = *iter;
+            auto position = std::distance (orderedNodes.begin(), iter);
+
+            for (auto inputNode : node->getDirectInputNodes())
+            {
+                const auto inputPosition = std::distance (orderedNodes.begin(),
+                                                          std::find (orderedNodes.begin(), orderedNodes.end(), inputNode));
+
+                if (inputPosition > position)
+                    ++numCycles;
+            }
+        }
+
+        return numCycles > 0;
+    }
+
     /** Prepares a specific Node to be played and returns all the Nodes. */
     static std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
                                                      double sampleRate, int blockSize,
@@ -43,6 +69,7 @@ namespace node_player_utils
         
         // First give the Nodes a chance to transform
         auto nodeGraph = createNodeGraph (std::move (node));
+        assert (! areThereAnyCycles (nodeGraph->orderedNodes));
 
         // Next, initialise all the nodes, this will call prepareToPlay on them
         const PlaybackInitialisationInfo info { sampleRate, blockSize,
