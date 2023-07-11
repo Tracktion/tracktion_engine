@@ -597,11 +597,8 @@ void TempoSequence::updateTempoData()
 
 void TempoSequence::updateTempoDataIfNeeded() const
 {
-    if (tempos->isUpdatePending())
-        tempos->handleAsyncUpdate();
-
-    if (timeSigs->isUpdatePending())
-        timeSigs->handleAsyncUpdate();
+    tempos->handleUpdateNowIfNeeded();
+    timeSigs->handleUpdateNowIfNeeded();
 }
 
 void TempoSequence::handleAsyncUpdate()

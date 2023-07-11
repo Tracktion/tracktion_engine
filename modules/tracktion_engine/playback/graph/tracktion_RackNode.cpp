@@ -145,7 +145,7 @@ public:
         }
         
         if (hasMidi)
-            pc.buffers.midi = inputBuffers.midi;
+            pc.buffers.midi.copyFrom (inputBuffers.midi);
     }
     
 private:

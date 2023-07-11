@@ -33,8 +33,8 @@ public:
     void runTest() override
     {
         using namespace benchmark_utilities;
-        using namespace tracktion::graph;
-        test_utilities::TestSetup ts;
+        using namespace tracktion::graph::test_utilities;
+        TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
 
@@ -43,7 +43,7 @@ public:
         runRackMixBusTest (engine, ts);
     }
     
-    void runRackMixBusTest (Engine& engine, test_utilities::TestSetup ts)
+    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
     {
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
@@ -183,8 +183,8 @@ public:
         const auto editName = "RackMixBus";
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
         const double fileLength = 20.0;
-        auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
-        
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
+
         beginTest ("Load Edit");
         {
             expect (edit != nullptr);
@@ -206,7 +206,7 @@ public:
         // Then multi threaded with different strategies
         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });
 
-        for (auto strategy : test_utilities::getThreadPoolStrategies())
+        for (auto strategy : graph::test_utilities::getThreadPoolStrategies())
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
 
         // Directly compare not-pooled

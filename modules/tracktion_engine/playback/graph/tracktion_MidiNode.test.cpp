@@ -39,12 +39,12 @@ public:
 
 private:
     //==============================================================================
-    static std::shared_ptr<test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
-                                                                                    test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
+    static std::shared_ptr<graph::test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
+                                                                                           graph::test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
     {
-        test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
-                                                                                                             getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
-                                                                      ts, numChannels, durationInSeconds, true);
+        graph::test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                    getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                                                                             ts, numChannels, durationInSeconds, true);
         testProcess.setPlayHead (&processState.playHeadState.playHead);
         
         return testProcess.processAll();
@@ -54,14 +54,14 @@ private:
     //==============================================================================
     void runMidiTests (tracktion::graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
-        using namespace tracktion::graph;
-        
+        using namespace tracktion::graph::test_utilities;
+
         const double sampleRate = 44100.0;
         const double duration = 5.0;
         
         // Avoid creating events at the end of the duration as they'll get lost after latency is applied
-        const auto masterSequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, ts.random);
-        
+        const auto masterSequence = createRandomMidiMessageSequence (duration - 0.5, ts.random);
+
         tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
         tracktion::graph::PlayHeadState playHeadState (playHead);
@@ -87,7 +87,7 @@ private:
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
-            test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
+            expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
         }
         
         beginTest ("Offset MIDI");
@@ -112,7 +112,7 @@ private:
 
             expectGreaterThan (expectedSequence.getNumEvents(), 0);
             expectEquals (expectedSequence.getNumEvents(), masterSequence.getNumEvents());
-            test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, expectedSequence);
+            expectMidiBuffer (*this, testContext->midi, sampleRate, expectedSequence);
         }
     }
 };

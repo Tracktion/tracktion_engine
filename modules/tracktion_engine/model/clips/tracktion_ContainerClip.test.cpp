@@ -27,10 +27,41 @@ public:
 
     void runTest() override
     {
+        runBasicContainerClipTests();
         runContainerClipTests();
     }
 
 private:
+    void runBasicContainerClipTests()
+    {
+        using namespace tracktion::graph::test_utilities;
+        using namespace tracktion::engine::test_utilities;
+
+        auto& engine = *Engine::getEngines()[0];
+        Clipboard clipboard;
+        auto edit = createTestEdit (engine);
+        auto audioTrack = getAudioTracks (*edit)[0];
+        auto squareFile = getSquareFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 220.0f);
+
+        beginTest ("Adding child clip");
+        auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
+        expect (cc != nullptr);
+        auto clip1 = insertWaveClip (*cc, {}, squareFile->getFile(), {{ 1_tp, 2_tp }}, DeleteExistingClips::no);
+        clip1->setUsesProxy (false);
+        clip1->setAutoTempo (true);
+
+        if constexpr (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
+        {
+            beginTest ("Rendered length");
+            {
+                auto res = renderToAudioBuffer (*edit);
+                expectRMS (*this, res, { 0_tp, 1_tp }, 0, 0.0f);
+                expectRMS (*this, res, { 1_tp, 2_tp }, 0, 1.0f);
+                expectRMS (*this, res, { 2_tp, 3_tp }, 0, 0.0f);
+            }
+        }
+    }
+
     void runContainerClipTests()
     {
         using namespace tracktion::graph::test_utilities;
@@ -41,14 +72,14 @@ private:
         auto edit = createTestEdit (engine);
         auto audioTrack = getAudioTracks (*edit)[0];
         audioTrack->getVolumePlugin()->setVolumeDb (juce::Decibels::gainToDecibels (0.5f));
-        auto sinFile1 = getSquareFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
-        auto sinFile2 = getSquareFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
+        auto squareFile1 = getSquareFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
+        auto squareFile2 = getSquareFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
 
         beginTest ("Adding child clips");
         auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
         expect (cc != nullptr);
-        auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, DeleteExistingClips::no);
-        auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, DeleteExistingClips::no);
+        auto clip1 = insertWaveClip (*cc, {}, squareFile1->getFile(), {{ 0_tp, 3_tp }}, DeleteExistingClips::no);
+        auto clip2 = insertWaveClip (*cc, {}, squareFile2->getFile(), {{ 2_tp, 4_tp }}, DeleteExistingClips::no);
 
         clip1->setUsesProxy (false);
         clip2->setUsesProxy (false);
@@ -415,7 +446,9 @@ private:
 
         auto insertClip = [cc, f = sinFile->getFile(), &ts] (BeatRange r)
                           {
-                              insertWaveClip (*cc, {}, f, { ts.toTime (r) }, DeleteExistingClips::no);
+                              auto wac = insertWaveClip (*cc, {}, f, { ts.toTime (r) }, DeleteExistingClips::no);
+                              wac->setAutoTempo (true);
+                              wac->setUsesProxy (false);
                           };
 
         // Kick

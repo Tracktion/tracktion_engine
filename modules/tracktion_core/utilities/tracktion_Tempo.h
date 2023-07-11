@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "tracktion_Time.h"
+#include "tracktion_TimeRange.h"
 #include "tracktion_Bezier.h"
 
 namespace tracktion { inline namespace core
@@ -311,6 +312,13 @@ namespace tempo
 /** Compares two Keys. */
 [[ nodiscard ]] constexpr bool operator!= (tempo::Key k1, tempo::Key k2) { return ! (k1 == k2); }
 
+/** Converts a BeatRange to a TimeRange. */
+[[ nodiscard ]] TimeRange toTime (const tempo::Sequence&, BeatRange);
+
+/** Converts a TimeRange to a BeatRange. */
+[[ nodiscard ]] BeatRange toBeats (const tempo::Sequence&, TimeRange);
+
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -321,6 +329,19 @@ namespace tempo
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+
+inline TimeRange toTime (const tempo::Sequence& seq, BeatRange range)
+{
+    return { seq.toTime (range.getStart()),
+             seq.toTime (range.getEnd()) };
+}
+
+inline BeatRange toBeats (const tempo::Sequence& seq, TimeRange range)
+{
+    return { seq.toBeats (range.getStart()),
+             seq.toBeats (range.getEnd()) };
+}
+
 
 namespace tempo
 {

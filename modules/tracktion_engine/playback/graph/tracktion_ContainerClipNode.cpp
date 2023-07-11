@@ -34,7 +34,7 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
         // contained clips will use the tempo conversions of the main Edit. This needs
         // to be added by using the ProcessState directly for tempo conversions with a
         // specified offset
-        jassert (getProcessState().getTempoSequence()->getNumTempos() == 1);
+//ddd        jassert (getProcessState().getTempoSequence()->getNumTempos() == 1);
     }
 
     assert (input);
@@ -63,7 +63,10 @@ std::vector<tracktion::graph::Node*> ContainerClipNode::getDirectInputNodes()
 
 std::vector<Node*> ContainerClipNode::getInternalNodes()
 {
-    return { input.get() };
+    if (input)
+        return { input.get() };
+
+    return { playerContext->player.getNode() };
 }
 
 void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)

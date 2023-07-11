@@ -535,6 +535,10 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
+
+    if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_acquire))
+        jassert (node->hasProcessed());
+
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
 }
@@ -678,17 +682,20 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
     return visitedNodes;
 }
 
+inline void addNodesRecursive (std::vector<NodeAndID>& nodeMap, Node& n)
+{
+    nodeMap.push_back ({ &n, n.getNodeProperties().nodeID });
+
+    for (auto internalNode : n.getInternalNodes())
+        addNodesRecursive (nodeMap, *internalNode);
+}
+
 inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
 {
     std::vector<NodeAndID> nodeMap;
 
     for (auto n : nodes)
-    {
-        nodeMap.push_back ({ n, n->getNodeProperties().nodeID });
-
-        for (auto internalNode : n->getInternalNodes())
-            nodeMap.push_back ({ internalNode, internalNode->getNodeProperties().nodeID });
-    }
+        addNodesRecursive (nodeMap, *n);
 
     std::sort (nodeMap.begin(), nodeMap.end());
     nodeMap.erase (std::unique (nodeMap.begin(), nodeMap.end()),

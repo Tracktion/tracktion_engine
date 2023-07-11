@@ -24,6 +24,9 @@ struct ProcessState
     /** Creates a ProcessState that will update the editBeatRange field. */
     ProcessState (tracktion::graph::PlayHeadState&, const TempoSequence&);
 
+    /** Creates a ProcessState that will update the editBeatRange field. */
+    ProcessState (tracktion::graph::PlayHeadState&, const tempo::Sequence&);
+
     /** An enum to indicate if the PlayHeadState continuity should be updated. */
     enum class UpdateContinuityFlags { no, yes };
 
@@ -43,10 +46,10 @@ struct ProcessState
     void setPlaybackSpeedRatio (double newRatio);
 
     /** Sets the TempoSequence this state utilises. */
-    void setTempoSequence (const TempoSequence*);
+    void setTempoSequence (const tempo::Sequence*);
 
-    /** Returns the TempoSequence this state has been initialised with one. */
-    const TempoSequence* getTempoSequence() const;
+    /** Returns the tempo::Sequence this state has been initialised with one. */
+    const tempo::Sequence* getTempoSequence() const;
 
     /** Returns the tempo::Sequence::Position this state uses. */
     const tempo::Sequence::Position* getTempoSequencePosition() const;
@@ -59,7 +62,7 @@ struct ProcessState
     BeatRange editBeatRange;
 
 private:
-    const TempoSequence* tempoSequence = nullptr;
+    const tempo::Sequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
 };
 
@@ -129,5 +132,26 @@ private:
     //==============================================================================
     ProcessState* processState; // Must never be nullptr
 };
+
+
+//==============================================================================
+//==============================================================================
+class DynamicallyOffsettableNodeBase
+{
+public:
+    DynamicallyOffsettableNodeBase() = default;
+    virtual ~DynamicallyOffsettableNodeBase() = default;
+    
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+     */
+    virtual void setDynamicOffsetBeats (BeatDuration) {}
+
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    virtual void setDynamicOffsetTime (TimeDuration) {}
+};
+
 
 }} // namespace tracktion { inline namespace engine

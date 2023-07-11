@@ -37,7 +37,7 @@ jobs:
             os: macos-latest
             generator: "-G Xcode"
             run_target: true
-            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            asan_cmake_args: "-- -enableAddressSanitizer YES -enableUndefinedBehaviorSanitizer YES"
             tests_file_suffix: "_asan"
             schedule_only: true
           - name: macOS_asan
@@ -45,7 +45,7 @@ jobs:
             os: macos-latest
             generator: "-G Xcode"
             run_target: true
-            asan_cmake_args: "-- -enableAddressSanitizer YES"
+            asan_cmake_args: "-- -enableAddressSanitizer YES -enableUndefinedBehaviorSanitizer YES"
             tests_file_suffix: "_asan"
             schedule_only: true
           - name: macOS_analyse

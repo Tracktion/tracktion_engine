@@ -11,6 +11,103 @@
 namespace tracktion { inline namespace engine
 {
 
+namespace fade_utils
+{
+    inline int timeToSample (int numSamples, TimeRange editTime, TimePosition t)
+    {
+        return (int) (((t - editTime.getStart()) / editTime.getLength() * numSamples) + 0.5);
+    }
+
+    inline void processSection (choc::buffer::ChannelArrayView<float> audio, TimeRange editTime,
+                                TimeRange fadeIn, AudioFadeCurve::Type fadeInType,
+                                TimeRange fadeOut, AudioFadeCurve::Type fadeOutType,
+                                bool clearExtraSamples)
+    {
+        const auto numSamples = (int) audio.getNumFrames();
+
+        if (editTime.overlaps (fadeIn) && fadeIn.getLength() > 0s)
+        {
+            double alpha1 = 0;
+            auto startSamp = timeToSample (numSamples, editTime, fadeIn.getStart());
+
+            if (startSamp > 0)
+            {
+                if (clearExtraSamples)
+                    audio.getStart ((choc::buffer::FrameCount) startSamp).clear();
+            }
+            else
+            {
+                alpha1 = (editTime.getStart() - fadeIn.getStart()) / fadeIn.getLength();
+                startSamp = 0;
+            }
+
+            int endSamp;
+            double alpha2;
+
+            if (editTime.getEnd() >= fadeIn.getEnd())
+            {
+                endSamp = timeToSample (numSamples, editTime, fadeIn.getEnd());
+                alpha2 = 1.0;
+            }
+            else
+            {
+                endSamp = numSamples;
+                alpha2 = std::max (0.0, (editTime.getEnd() - fadeIn.getStart()) / fadeIn.getLength());
+            }
+
+            if (endSamp > startSamp)
+            {
+                auto buffer = tracktion::graph::toAudioBuffer (audio);
+                AudioFadeCurve::applyCrossfadeSection (buffer,
+                                                       startSamp, endSamp - startSamp,
+                                                       fadeInType,
+                                                       (float) alpha1,
+                                                       (float) alpha2);
+            }
+        }
+
+        if (editTime.overlaps (fadeOut) && fadeOut.getLength() > 0s)
+        {
+            double alpha1 = 0;
+            auto startSamp = timeToSample (numSamples, editTime, fadeOut.getStart());
+
+            if (startSamp <= 0)
+            {
+                startSamp = 0;
+                alpha1 = (editTime.getStart() - fadeOut.getStart()) / fadeOut.getLength();
+            }
+
+            int endSamp;
+            double alpha2;
+
+            if (editTime.getEnd() >= fadeOut.getEnd())
+            {
+                endSamp = timeToSample (numSamples, editTime, fadeOut.getEnd());
+                alpha2 = 1.0;
+
+                if (clearExtraSamples && endSamp < numSamples)
+                    audio.getEnd ((choc::buffer::FrameCount) endSamp);
+            }
+            else
+            {
+                endSamp = numSamples;
+                alpha2 = (editTime.getEnd() - fadeOut.getStart()) / fadeOut.getLength();
+            }
+
+            if (endSamp > startSamp)
+            {
+                auto buffer = tracktion::graph::toAudioBuffer (audio);
+                AudioFadeCurve::applyCrossfadeSection (buffer,
+                                                       startSamp, endSamp - startSamp,
+                                                       fadeOutType,
+                                                       juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
+                                                       juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));
+            }
+        }
+    }
+}
+
+
 //==============================================================================
 //==============================================================================
 FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
@@ -33,6 +130,11 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
 }
 
 //==============================================================================
+void FadeInOutNode::setDynamicOffsetTime (TimeDuration newOffset)
+{
+    dynamicOffset = newOffset;
+}
+
 tracktion::graph::NodeProperties FadeInOutNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
@@ -70,94 +172,12 @@ void FadeInOutNode::process (ProcessContext& pc)
     }
 
     // Otherwise copy the source in to the dest ready for fading
-    tracktion::graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
+    graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
 
-    processSection (destAudioBlock, editTimeRange);
-}
-
-void FadeInOutNode::processSection (choc::buffer::ChannelArrayView<float> audio, TimeRange editTime)
-{
-    const auto numSamples = (int) audio.getNumFrames();
-
-    if (editTime.overlaps (fadeIn) && fadeIn.getLength() > 0s)
-    {
-        double alpha1 = 0;
-        auto startSamp = timeToSample (numSamples, editTime, fadeIn.getStart());
-
-        if (startSamp > 0)
-        {
-            if (clearExtraSamples)
-                audio.getStart ((choc::buffer::FrameCount) startSamp).clear();
-        }
-        else
-        {
-            alpha1 = (editTime.getStart() - fadeIn.getStart()) / fadeIn.getLength();
-            startSamp = 0;
-        }
-
-        int endSamp;
-        double alpha2;
-
-        if (editTime.getEnd() >= fadeIn.getEnd())
-        {
-            endSamp = timeToSample (numSamples, editTime, fadeIn.getEnd());
-            alpha2 = 1.0;
-        }
-        else
-        {
-            endSamp = numSamples;
-            alpha2 = std::max (0.0, (editTime.getEnd() - fadeIn.getStart()) / fadeIn.getLength());
-        }
-
-        if (endSamp > startSamp)
-        {
-            auto buffer = tracktion::graph::toAudioBuffer (audio);
-            AudioFadeCurve::applyCrossfadeSection (buffer,
-                                                   startSamp, endSamp - startSamp,
-                                                   fadeInType,
-                                                   (float) alpha1,
-                                                   (float) alpha2);
-        }
-    }
-
-    if (editTime.overlaps (fadeOut) && fadeOut.getLength() > 0s)
-    {
-        double alpha1 = 0;
-        auto startSamp = timeToSample (numSamples, editTime, fadeOut.getStart());
-
-        if (startSamp <= 0)
-        {
-            startSamp = 0;
-            alpha1 = (editTime.getStart() - fadeOut.getStart()) / fadeOut.getLength();
-        }
-
-        int endSamp;
-        double alpha2;
-
-        if (editTime.getEnd() >= fadeOut.getEnd())
-        {
-            endSamp = timeToSample (numSamples, editTime, fadeOut.getEnd());
-            alpha2 = 1.0;
-
-            if (clearExtraSamples && endSamp < numSamples)
-                audio.getEnd ((choc::buffer::FrameCount) endSamp);
-        }
-        else
-        {
-            endSamp = numSamples;
-            alpha2 = (editTime.getEnd() - fadeOut.getStart()) / fadeOut.getLength();
-        }
-
-        if (endSamp > startSamp)
-        {
-            auto buffer = tracktion::graph::toAudioBuffer (audio);
-            AudioFadeCurve::applyCrossfadeSection (buffer,
-                                                   startSamp, endSamp - startSamp,
-                                                   fadeOutType,
-                                                   juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
-                                                   juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));
-        }
-    }
+    fade_utils::processSection (destAudioBlock, editTimeRange,
+                                fadeIn + dynamicOffset, fadeInType,
+                                fadeOut + dynamicOffset, fadeOutType,
+                                clearExtraSamples);
 }
 
 bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)
@@ -165,15 +185,10 @@ bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)
     if (! getPlayHead().isPlaying())
         return false;
 
-    return fadeIn.intersects (timelineRange)
-        || fadeOut.intersects (timelineRange)
-        || (clearExtraSamples && (timelineRange.getStart() <= fadeIn.getStart()
-                                  || timelineRange.getEnd() >= fadeOut.getEnd()));
-}
-
-int FadeInOutNode::timeToSample (int numSamples, TimeRange editTime, TimePosition t)
-{
-    return (int) (((t - editTime.getStart()) / editTime.getLength() * numSamples) + 0.5);
+    return (fadeIn + dynamicOffset).intersects (timelineRange)
+        || (fadeOut + dynamicOffset).intersects (timelineRange)
+        || (clearExtraSamples && (timelineRange.getStart() <= (fadeIn.getStart() + dynamicOffset)
+                                  || timelineRange.getEnd() >= (fadeOut.getEnd() + dynamicOffset)));
 }
 
 }} // namespace tracktion { inline namespace engine

@@ -168,6 +168,16 @@ namespace test_utilities
         }
     }
 
+    /** Writes an audio buffer to a file. */
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> writeToTemporaryFile (choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex)
+    {
+        auto f = std::make_unique<juce::TemporaryFile> (AudioFormatType().getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), block, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
     //==============================================================================
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
@@ -267,6 +277,32 @@ namespace test_utilities
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
         writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTimeEncodedFile (double sampleRate, TimeDuration duration,
+                                                             TimeDuration stepDuration,
+                                                             int numChannels = 1,
+                                                             int qualityOptionIndex = -1)
+    {
+        const auto stepNumFrames = toSamples (stepDuration, sampleRate);
+        const auto numSteps = duration / stepDuration;
+        const auto valPerStep = static_cast<float> (1.0 / numSteps);
+
+        auto buffer = choc::buffer::createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                              [=] (auto, auto frame)
+                                                              {
+                                                                  const int stepNum = static_cast<int> (frame / stepNumFrames) + 1;
+                                                                  const float f = stepNum * valPerStep;
+
+                                                                  return f;
+                                                              });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
         return f;
     }
 

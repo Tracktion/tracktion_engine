@@ -10,6 +10,8 @@
 
 #include "tracktion_LoopingMidiNode.h"
 
+#define USE_PARTITION_INSERTION 1
+
 namespace tracktion { inline namespace engine
 {
 
@@ -75,19 +77,18 @@ struct CombiningNode::TimedNode
 
     void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     {
-        if (hasPrefetched)
-            return;
-        
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
 
+       #if JUCE_DEBUG
         hasPrefetched = true;
+       #endif
     }
 
     void process (ProcessContext& pc)
     {
         jassert (hasPrefetched);
-        
+
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.numSamples, pc.referenceSampleRange);
@@ -102,8 +103,10 @@ struct CombiningNode::TimedNode
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
-        
+
+       #if JUCE_DEBUG
         hasPrefetched = false;
+       #endif
     }
 
     size_t getAllocatedBytes() const
@@ -121,7 +124,9 @@ struct CombiningNode::TimedNode
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+   #if JUCE_DEBUG
     bool hasPrefetched = false;
+   #endif
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
@@ -140,7 +145,7 @@ CombiningNode::~CombiningNode() {}
 void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
 {
     jassert (time.getEnd() <= Edit::getMaximumEditEnd());
-    addInput (std::move (input), getProcessState().getTempoSequence()->toBeats (time));
+    addInput (std::move (input), toBeats (*getProcessState().getTempoSequence(), time));
 }
 
 void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
@@ -159,10 +164,19 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     hash_combine (nodeProperties.nodeID, props.nodeID);
     hash_combine (nodeProperties.nodeID, beatRange);
 
+   #if USE_PARTITION_INSERTION
+    const auto lower = std::partition_point (inputs.begin(), inputs.end(),
+                                             [&] (const auto& i)
+                                             {
+                                                return i->time.getStart() < beatRange.getStart();
+                                            });
+    int i = static_cast<int> (std::distance (inputs.begin(), lower));
+   #else
     int i;
     for (i = 0; i < inputs.size(); ++i)
         if (inputs.getUnchecked (i)->time.getStart() >= beatRange.getStart())
             break;
+   #endif
 
     beatRange = BeatRange (beatRange.getStart(), beatRange.getLength() + combining_node_utils::decayTimeAllowance);
     auto tan = inputs.insert (i, new TimedNode (std::move (input), beatRange));
@@ -170,7 +184,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     // add the node to any groups it's near to.
     const auto& ts = *getProcessState().getTempoSequence();
     const auto overlapTime = TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2);
-    const auto timeRange = ts.toTime (beatRange).expanded (overlapTime);
+    const auto timeRange = toTime (ts, beatRange).expanded (overlapTime);
     const auto start = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getStart()));
     const auto end   = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getEnd()));
 
@@ -181,10 +195,19 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     {
         auto g = groups.getUnchecked (i);
 
+       #if USE_PARTITION_INSERTION
+        const auto lowerGroup = std::partition_point (g->begin(), g->end(),
+                                                      [&] (auto in)
+                                                      {
+                                                          return in->time.getStart() < beatRange.getStart();
+                                                      });
+        const int j = static_cast<int> (std::distance (g->begin(), lowerGroup));
+       #else
         int j;
         for (j = 0; j < g->size(); ++j)
             if (g->getUnchecked (j)->time.getStart() >= beatRange.getStart())
                 break;
+       #endif
 
         jassert (tan != nullptr);
         g->insert (j, tan);

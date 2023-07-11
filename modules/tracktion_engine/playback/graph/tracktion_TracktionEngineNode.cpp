@@ -17,9 +17,14 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
 }
 
 ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSequence& seq)
+    : ProcessState (phs, seq.getInternalSequence())
+{
+}
+
+ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const tempo::Sequence& seq)
     : playHeadState (phs),
       tempoSequence (&seq),
-      tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence()))
+      tempoPosition (std::make_unique<tempo::Sequence::Position> (seq))
 {
 }
 
@@ -60,7 +65,7 @@ void ProcessState::setPlaybackSpeedRatio (double newRatio)
     playbackSpeedRatio = newRatio;
 }
 
-void ProcessState::setTempoSequence (const TempoSequence* ts)
+void ProcessState::setTempoSequence (const tempo::Sequence* ts)
 {
     if (tempoSequence == ts)
         return;
@@ -68,12 +73,12 @@ void ProcessState::setTempoSequence (const TempoSequence* ts)
     tempoSequence = ts;
 
     if (tempoSequence)
-        tempoPosition = std::make_unique<tempo::Sequence::Position> (tempoSequence->getInternalSequence());
+        tempoPosition = std::make_unique<tempo::Sequence::Position> (*tempoSequence);
     else
         tempoPosition.reset();
 }
 
-const TempoSequence* ProcessState::getTempoSequence() const
+const tempo::Sequence* ProcessState::getTempoSequence() const
 {
     return tempoSequence;
 }

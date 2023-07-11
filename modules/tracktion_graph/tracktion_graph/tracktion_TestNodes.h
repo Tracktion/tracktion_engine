@@ -443,7 +443,7 @@ public:
         setAudioOutput (input.get(), source.audio);
 
         // If the source only outputs to this node, we can steal its data
-        if (numOutputNodes == 1)
+        if (input->numOutputNodes == 1)
             pc.buffers.midi.swapWith (source.midi);
         else
             pc.buffers.midi.copyFrom (source.midi);

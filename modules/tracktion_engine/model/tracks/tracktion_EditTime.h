@@ -43,6 +43,9 @@ struct EditTime
     /** Creates an EditTime from a BeatPosition. */
     EditTime (BeatPosition);
 
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
+
 private:
     friend TimePosition toTime (EditTime, const TempoSequence&);
     friend BeatPosition toBeats (EditTime, const TempoSequence&);
@@ -75,6 +78,9 @@ struct EditTimeRange
 
     /** Creates an EditTimeRange from a BeatRange. */
     EditTimeRange (BeatRange);
+
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
 
 private:
     friend TimeRange toTime (EditTimeRange, const TempoSequence&);
@@ -199,6 +205,11 @@ inline EditTime::EditTime (BeatPosition bp)
 {
 }
 
+inline bool EditTime::isBeats() const
+{
+    return std::holds_alternative<BeatPosition> (position);
+}
+
 //==============================================================================
 inline TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
@@ -226,6 +237,11 @@ inline EditTimeRange::EditTimeRange (TimeRange r)
 inline EditTimeRange::EditTimeRange (BeatRange r)
     : range (r)
 {
+}
+
+inline bool EditTimeRange::isBeats() const
+{
+    return std::holds_alternative<BeatRange> (range);
 }
 
 //==============================================================================

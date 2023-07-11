@@ -94,12 +94,7 @@ public:
     
     std::vector<Node*> getDirectInputNodes() override
     {
-        std::vector<Node*> inputNodes;
-        
-        for (auto& node : nodes)
-            inputNodes.push_back (node);
-
-        return inputNodes;
+        return nodes;
     }
     
     bool transform (Node&, const std::vector<Node*>&, TransformCache&) override
