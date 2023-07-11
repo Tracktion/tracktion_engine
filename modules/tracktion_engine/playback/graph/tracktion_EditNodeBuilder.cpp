@@ -13,7 +13,6 @@
 // - Only works with audio clips
 // - Only works with WaveAudioClips which have setUsesProxy (false) on them
 #define USE_DYNAMIC_OFFSET_CONTAINER_CLIP 1
-#define FLATTEN_CONTAINER_CLIP 1
 
 
 namespace tracktion { inline namespace engine
@@ -728,63 +727,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
                                                                clip.getLoopRangeBeats(),
                                                                std::move (nodes));
         node = std::move (offsetNode);
-    }
-   #elif FLATTEN_CONTAINER_CLIP
-    std::unique_ptr<Node> node;
-
-    {
-        auto combiningNode = std::make_unique<CombiningNode> (clip.itemID, params.processState);
-
-        const auto ccBeatRange = clip.getEditBeatRange();
-        const auto offset = clip.getOffsetInBeats();
-        const auto loopRange = clip.isLooping() ? clip.getLoopRangeBeats()
-                                                : BeatRange (0_bp, ccBeatRange.getLength());
-
-        for (int loopNum = 0;; ++loopNum)
-        {
-            const auto iterationBeatRange = loopRange + (loopRange.getLength() * loopNum);
-
-            if (iterationBeatRange.getStart() >= (ccBeatRange.getEnd() + offset))
-                break;
-
-            auto toEditPosition = [&] (auto p)
-                                  {
-                                      return p - offset + toDuration (ccBeatRange.getStart());
-                                  };
-
-            for (auto c : clips)
-            {
-                if (auto acb = dynamic_cast<AudioClipBase*> (c))
-                {
-                    assert (! acb->canUseProxy());
-                    assert (acb->getAutoTempo());
-
-                    const auto clipBeatRangeRelativeToContainer = (acb->getEditBeatRange() + toDuration (iterationBeatRange.getStart()))
-                                                                    .getIntersectionWith (iterationBeatRange);
-                    const auto clipBeatRangeRelativeToEdit = toEditPosition (clipBeatRangeRelativeToContainer);
-                    const auto clipBeatRangeRelativeToEditClippedToContainer = clipBeatRangeRelativeToEdit.getIntersectionWith (ccBeatRange);
-
-                    if (clipBeatRangeRelativeToEditClippedToContainer.isEmpty())
-                        continue;
-                    
-                    assert (ccBeatRange.contains (clipBeatRangeRelativeToEditClippedToContainer));
-
-                    // Create a new ID (that won't be in use elsewhere) so each clip has its own
-                    // state than can persist between graph builds
-                    const auto idToUse = static_cast<uint64_t> (hash (static_cast<size_t> (loopNum), acb->itemID.getRawID()))
-                                            | (1ULL << 63);
-
-                    if (auto clipNode = createNodeForAudioClip (*acb, EditItemID::fromRawID (idToUse), clipBeatRangeRelativeToEditClippedToContainer, false, params))
-                        combiningNode->addInput (std::move (clipNode), clipBeatRangeRelativeToEditClippedToContainer);
-                }
-                else
-                {
-                    assert (false && "Only WaveAudioClips supported at the moment");
-                }
-            }
-        }
-
-        node = std::move (combiningNode);
     }
    #else
     // Combiner clip and the contained clips need their own, local PlayHeadState.
