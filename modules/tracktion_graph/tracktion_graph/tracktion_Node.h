@@ -535,6 +535,10 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
+
+    if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_acquire))
+        jassert (node->hasProcessed());
+
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
 }
