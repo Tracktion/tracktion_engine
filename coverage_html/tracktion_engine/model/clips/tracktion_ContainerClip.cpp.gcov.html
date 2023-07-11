@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-07 13:13:20</td>
+            <td class="headerValue">2023-07-11 17:30:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -73,24 +73,24 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">          4 : ContainerClip::ContainerClip (const juce::ValueTree&amp; v, EditItemID clipID, ClipOwner&amp; targetParent)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">          4 :     : AudioClipBase (v, clipID, Type::container, targetParent)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">          5 : ContainerClip::ContainerClip (const juce::ValueTree&amp; v, EditItemID clipID, ClipOwner&amp; targetParent)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">          5 :     : AudioClipBase (v, clipID, Type::container, targetParent)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">          4 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">          5 : }</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">          8 : ContainerClip::~ContainerClip()</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         10 : ContainerClip::~ContainerClip()</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          4 :     notifyListenersOfDeletion();</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">         12 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          5 :     notifyListenersOfDeletion();</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">         15 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            : //==============================================================================</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          4 : void ContainerClip::initialise()</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          5 : void ContainerClip::initialise()</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          4 :     clipListState = state.getOrCreateChildWithName (IDs::CLIPLIST, getUndoManager());</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          4 :     initialiseClipOwner (edit, clipListState);</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          5 :     clipListState = state.getOrCreateChildWithName (IDs::CLIPLIST, getUndoManager());</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          5 :     initialiseClipOwner (edit, clipListState);</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          4 :     AudioClipBase::initialise();</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          4 : }</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          5 :     AudioClipBase::initialise();</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          5 : }</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 : void ContainerClip::cloneFrom (Clip* c)</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : {</a>
@@ -119,14 +119,14 @@
 <a name="57"><span class="lineNum">      57 </span>            :     return false;</a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          4 : TimeDuration ContainerClip::getSourceLength() const</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          5 : TimeDuration ContainerClip::getSourceLength() const</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : {</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          4 :     auto l = getLoopRange().getLength();</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          5 :     auto l = getLoopRange().getLength();</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          8 :     for (auto c : getClips())</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          9 :     for (auto c : getClips())</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">          8 :         l = std::max (l, toDuration (c-&gt;getPosition().getEnd()));</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          4 :     return l;</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          5 :     return l;</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : }</a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 : HashCode ContainerClip::getHash() const</span></a>
@@ -139,20 +139,20 @@
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">          1 :     return static_cast&lt;HashCode&gt; (hash);</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : }</a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          3 : void ContainerClip::setLoopDefaults()</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          4 : void ContainerClip::setLoopDefaults()</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : {</a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          3 :     auto&amp; ts = edit.tempoSequence;</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          3 :     auto pos = getPosition();</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          4 :     auto&amp; ts = edit.tempoSequence;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          4 :     auto pos = getPosition();</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          3 :     if (loopInfo.getNumerator() == 0)</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          3 :         loopInfo.setNumerator (ts.getTimeSigAt (pos.getStart()).numerator);</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          4 :     if (loopInfo.getNumerator() == 0)</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          4 :         loopInfo.setNumerator (ts.getTimeSigAt (pos.getStart()).numerator);</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">          3 :     if (loopInfo.getDenominator() == 0)</span></a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">          3 :         loopInfo.setDenominator (ts.getTimeSigAt (pos.getStart()).denominator);</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">          4 :     if (loopInfo.getDenominator() == 0)</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">          4 :         loopInfo.setDenominator (ts.getTimeSigAt (pos.getStart()).denominator);</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          3 :     if (loopInfo.getNumBeats() == 0.0)</span></a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          2 :         loopInfo.setNumBeats (getSourceLength().inSeconds() * (ts.getTempoAt (pos.getStart()).getBpm() / 60.0));</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          3 : }</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          4 :     if (loopInfo.getNumBeats() == 0.0)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          3 :         loopInfo.setNumBeats (getSourceLength().inSeconds() * (ts.getTempoAt (pos.getStart()).getBpm() / 60.0));</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          4 : }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineCov">          3 : void ContainerClip::setLoopRangeBeats (BeatRange newRangeBeats)</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : {</a>
@@ -169,13 +169,13 @@
 <a name="107"><span class="lineNum">     107 </span>            :     }</a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">          3 : }</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">          3 : void ContainerClip::flushStateToValueTree()</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">          4 : void ContainerClip::flushStateToValueTree()</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : {</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         31 :     for (auto c : getClips())</span></a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         28 :         c-&gt;flushStateToValueTree();</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         33 :     for (auto c : getClips())</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         29 :         c-&gt;flushStateToValueTree();</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          3 :     AudioClipBase::flushStateToValueTree();</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          3 : }</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          4 :     AudioClipBase::flushStateToValueTree();</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          4 : }</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 : void ContainerClip::pitchTempoTrackChanged()</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : {</a>
@@ -186,19 +186,19 @@
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span>            : //==============================================================================</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">         28 : juce::ValueTree&amp; ContainerClip::getClipOwnerState()</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">         29 : juce::ValueTree&amp; ContainerClip::getClipOwnerState()</span></a>
 <a name="128"><span class="lineNum">     128 </span>            : {</a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">         28 :     return clipListState;</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">         29 :     return clipListState;</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : }</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         28 : Selectable* ContainerClip::getClipOwnerSelectable()</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         29 : Selectable* ContainerClip::getClipOwnerSelectable()</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : {</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         28 :     return this;</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         29 :     return this;</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : }</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        140 : Edit&amp; ContainerClip::getClipOwnerEdit()</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        145 : Edit&amp; ContainerClip::getClipOwnerEdit()</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        140 :     return edit;</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">        145 :     return edit;</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : }</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            : //==============================================================================</a>
@@ -214,13 +214,13 @@
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     return false;</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : }</a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         28 : void ContainerClip::clipCreated (Clip&amp;)</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         29 : void ContainerClip::clipCreated (Clip&amp;)</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : {</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">         28 : }</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">         29 : }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">         28 : void ContainerClip::clipAddedOrRemoved()</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">         29 : void ContainerClip::clipAddedOrRemoved()</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : {</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">         28 : }</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">         29 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : void ContainerClip::clipOrderChanged()</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-07 13:13:20</td>
+            <td class="headerValue">2023-07-11 17:30:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -220,17 +220,17 @@
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">          1 : juce::ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
 <a name="160"><span class="lineNum">     160 </span>            : //==============================================================================</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">      20727 : Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree&amp; folder, int pid)</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">      20733 : Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree&amp; folder, int pid)</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : {</a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">      20727 :     if (auto p = getProjectFrom (folder))</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">      20733 :     if (auto p = getProjectFrom (folder))</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :         if (p-&gt;getProjectID() == pid)</span></a>
 <a name="165"><span class="lineNum">     165 </span>            :             return p;</a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      34545 :     for (int i = 0; i &lt; folder.getNumChildren(); ++i)</span></a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      27636 :         if (auto p = findProjectWithId (folder.getChild (i), pid))</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      34555 :     for (int i = 0; i &lt; folder.getNumChildren(); ++i)</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      27644 :         if (auto p = findProjectWithId (folder.getChild (i), pid))</span></a>
 <a name="169"><span class="lineNum">     169 </span>            :             return p;</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">      20727 :     return {};</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">      20733 :     return {};</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 : Project::Ptr ProjectManager::findProjectWithFile (const juce::ValueTree&amp; folder,</span></a>
@@ -247,13 +247,13 @@
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : }</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">      20730 : Project::Ptr ProjectManager::getProjectFrom (const juce::ValueTree&amp; v,</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">      20736 : Project::Ptr ProjectManager::getProjectFrom (const juce::ValueTree&amp; v,</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :                                              bool createIfNotFound)</a>
 <a name="190"><span class="lineNum">     190 </span>            : {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">      20730 :     if (auto p = dynamic_cast&lt;Project*&gt; (v.getProperty (IDs::project).getObject()))</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">      20736 :     if (auto p = dynamic_cast&lt;Project*&gt; (v.getProperty (IDs::project).getObject()))</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :         return p;</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">      20730 :     if (createIfNotFound &amp;&amp; v.hasType (IDs::PROJECT))</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">      20736 :     if (createIfNotFound &amp;&amp; v.hasType (IDs::PROJECT))</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :     {</a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :         const juce::File f (v[IDs::file]);</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
@@ -276,18 +276,18 @@
 <a name="214"><span class="lineNum">     214 </span>            :         }</a>
 <a name="215"><span class="lineNum">     215 </span>            :     }</a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">      20730 :     return {};</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">      20736 :     return {};</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       6909 : Project::Ptr ProjectManager::getProject (int pid)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       6911 : Project::Ptr ProjectManager::getProject (int pid)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">       6909 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">       6911 :     const juce::ScopedLock sl (lock);</span></a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       6909 :     for (auto* p : openProjects)</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       6911 :     for (auto* p : openProjects)</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         if (p-&gt;getProjectID() == pid)</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :             return p;</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">       6909 :     return findProjectWithId (folders, pid);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">       6911 :     return findProjectWithId (folders, pid);</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : }</a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : Project::Ptr ProjectManager::getProject (const juce::File&amp; f)</span></a>
@@ -452,22 +452,22 @@
 <a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 :         result.setProperty (IDs::file, f.getFullPathName(), nullptr);</span></a>
 <a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="392"><span class="lineNum">     392 </span>            : </a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineCov">       3491 : ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)</span></a>
+<a name="393"><span class="lineNum">     393 </span><span class="lineCov">       3492 : ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)</span></a>
 <a name="394"><span class="lineNum">     394 </span>            : {</a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineCov">       3491 :     if (auto p = getProject (id.getProjectID()))</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineCov">       3492 :     if (auto p = getProject (id.getProjectID()))</span></a>
 <a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :         return p-&gt;getProjectItemForID (id);</span></a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineCov">       3491 :     return {};</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineCov">       3492 :     return {};</span></a>
 <a name="399"><span class="lineNum">     399 </span>            : }</a>
 <a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">       3490 : ProjectItem::Ptr ProjectManager::getProjectItem (const Edit&amp; ed)</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">       3491 : ProjectItem::Ptr ProjectManager::getProjectItem (const Edit&amp; ed)</span></a>
 <a name="402"><span class="lineNum">     402 </span>            : {</a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">       3490 :     return getProjectItem (ed.getProjectItemID());</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">       3491 :     return getProjectItem (ed.getProjectItemID());</span></a>
 <a name="404"><span class="lineNum">     404 </span>            : }</a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">       3418 : Project::Ptr ProjectManager::getProject (const Edit&amp; ed)</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">       3419 : Project::Ptr ProjectManager::getProject (const Edit&amp; ed)</span></a>
 <a name="407"><span class="lineNum">     407 </span>            : {</a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineCov">       3418 :     return getProject (ed.getProjectItemID().getProjectID());</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineCov">       3419 :     return getProject (ed.getProjectItemID().getProjectID());</span></a>
 <a name="409"><span class="lineNum">     409 </span>            : }</a>
 <a name="410"><span class="lineNum">     410 </span>            : </a>
 <a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 : juce::File ProjectManager::findSourceFile (ProjectItemID id)</span></a>

@@ -79,7 +79,7 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for tracktion::engine::WaveNodeRealTime:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1WaveNodeRealTime__inherit__graph.svg" width="360" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1WaveNodeRealTime__inherit__graph.svg" width="456" height="170"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -103,6 +103,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9f415d25d3f48af04de517ffa5a677f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d80cd7e8e10757fa70be24c26bb66bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a4d80cd7e8e10757fa70be24c26bb66bf">WaveNodeRealTime</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79e">TimeStretcher::Mode</a>, <a class="el" href="structtracktion_1_1engine_1_1TimeStretcher_1_1ElastiqueProOptions.html">TimeStretcher::ElastiqueProOptions</a>, BeatRange editTime, BeatDuration offset, BeatRange loopSection, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a>, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, bool isOfflineRender, <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>, <a class="el" href="structtracktion_1_1engine_1_1SpeedFadeDescription.html">SpeedFadeDescription</a>, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; <a class="el" href="namespacetracktion_1_1engine.html#adeeadbd2dea66b29cc5bb3586b64326a">WarpMap</a> &gt;, tempo::Sequence sourceFileTempoMap, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a83ad7c0014cb30ab5b7e76554cdad3c9">SyncTempo</a>, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#af292642e27cb2347fb2b23363ac68eec">SyncPitch</a>, std::optional&lt; tempo::Sequence &gt; chordPitchSequence)</td></tr>
 <tr class="separator:a4d80cd7e8e10757fa70be24c26bb66bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a545bbe10d508ba9932e143dfc73077"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a8a545bbe10d508ba9932e143dfc73077">setDynamicOffsetBeats</a> (BeatDuration) override</td></tr>
+<tr class="memdesc:a8a545bbe10d508ba9932e143dfc73077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time.  <a href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a8a545bbe10d508ba9932e143dfc73077">More...</a><br /></td></tr>
+<tr class="separator:a8a545bbe10d508ba9932e143dfc73077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e3dcd45b455e36e9743ab366a393ff9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">graph::NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a7e3dcd45b455e36e9743ab366a393ff9">getNodeProperties</a> () override</td></tr>
 <tr class="memdesc:a7e3dcd45b455e36e9743ab366a393ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a7e3dcd45b455e36e9743ab366a393ff9">More...</a><br /></td></tr>
 <tr class="separator:a7e3dcd45b455e36e9743ab366a393ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +203,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a948adcf3f250e8e951ff7e773c87621c inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7535886e3f0a9d68e0db994db0fee32f inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a7535886e3f0a9d68e0db994db0fee32f">setProcessState</a> (<a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;)</td></tr>
 <tr class="separator:a7535886e3f0a9d68e0db994db0fee32f inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html">tracktion::engine::DynamicallyOffsettableNodeBase</a></td></tr>
+<tr class="memitem:a1e2bf7ae68290c2c2ec7a631bd398a93 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#a1e2bf7ae68290c2c2ec7a631bd398a93">DynamicallyOffsettableNodeBase</a> ()=default</td></tr>
+<tr class="separator:a1e2bf7ae68290c2c2ec7a631bd398a93 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb5978edf0fa97cc34ccf62e97ad4ed5 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#afb5978edf0fa97cc34ccf62e97ad4ed5">~DynamicallyOffsettableNodeBase</a> ()=default</td></tr>
+<tr class="separator:afb5978edf0fa97cc34ccf62e97ad4ed5 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd4712c935d785d23862bd65deecf1d6 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#acd4712c935d785d23862bd65deecf1d6">setDynamicOffsetTime</a> (TimeDuration)</td></tr>
+<tr class="memdesc:acd4712c935d785d23862bd65deecf1d6 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time.  <a href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#acd4712c935d785d23862bd65deecf1d6">More...</a><br /></td></tr>
+<tr class="separator:acd4712c935d785d23862bd65deecf1d6 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -544,6 +555,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8a545bbe10d508ba9932e143dfc73077"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a545bbe10d508ba9932e143dfc73077">&#9670;&nbsp;</a></span>setDynamicOffsetBeats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::WaveNodeRealTime::setDynamicOffsetBeats </td>
+          <td>(</td>
+          <td class="paramtype">BeatDuration&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#a3c413e6b7c5c59a8b402d982440d56ee">tracktion::engine::DynamicallyOffsettableNodeBase</a>.</p>
+
+</div>
+</div>
 <a id="a7e3dcd45b455e36e9743ab366a393ff9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7e3dcd45b455e36e9743ab366a393ff9">&#9670;&nbsp;</a></span>getNodeProperties()</h2>
 
@@ -672,7 +713,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 7 2023 12:55:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 11 2023 17:09:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

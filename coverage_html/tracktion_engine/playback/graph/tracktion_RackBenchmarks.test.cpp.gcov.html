@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-07 13:13:20</td>
+            <td class="headerValue">2023-07-11 17:30:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -95,8 +95,8 @@
 <a name="33"><span class="lineNum">      33 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :     {</a>
 <a name="35"><span class="lineNum">      35 </span>            :         using namespace benchmark_utilities;</a>
-<a name="36"><span class="lineNum">      36 </span>            :         using namespace tracktion::graph;</a>
-<a name="37"><span class="lineNum">      37 </span>            :         test_utilities::TestSetup ts;</a>
+<a name="36"><span class="lineNum">      36 </span>            :         using namespace tracktion::graph::test_utilities;</a>
+<a name="37"><span class="lineNum">      37 </span>            :         TestSetup ts;</a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">          1 :         ts.sampleRate = 96000.0;</span></a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :         ts.blockSize = 128;</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
@@ -105,7 +105,7 @@
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :         runRackMixBusTest (engine, ts);</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :     }</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :     void runRackMixBusTest (Engine&amp; engine, test_utilities::TestSetup ts)</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :     void runRackMixBusTest (Engine&amp; engine, graph::test_utilities::TestSetup ts)</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :     {</a>
 <a name="48"><span class="lineNum">      48 </span>            :         using namespace benchmark_utilities;</a>
 <a name="49"><span class="lineNum">      49 </span>            :         using namespace tracktion::graph;</a>
@@ -245,8 +245,8 @@
 <a name="183"><span class="lineNum">     183 </span>            :         const auto editName = &quot;RackMixBus&quot;;</a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineCov">          1 :         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));</span></a>
 <a name="185"><span class="lineNum">     185 </span>            :         const double fileLength = 20.0;</a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">          1 :         auto sinFile = test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (ts.sampleRate, fileLength, 2);</span></a>
-<a name="187"><span class="lineNum">     187 </span>            :         </a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">          1 :         auto sinFile = graph::test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (ts.sampleRate, fileLength, 2);</span></a>
+<a name="187"><span class="lineNum">     187 </span>            : </a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineCov">          1 :         beginTest (&quot;Load Edit&quot;);</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :         {</a>
 <a name="190"><span class="lineNum">     190 </span><span class="lineCov">          1 :             expect (edit != nullptr);</span></a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span>            :         // Then multi threaded with different strategies</a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 :         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          7 :         for (auto strategy : test_utilities::getThreadPoolStrategies())</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          7 :         for (auto strategy : graph::test_utilities::getThreadPoolStrategies())</span></a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineCov">         12 :             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span>            :         // Directly compare not-pooled</a>

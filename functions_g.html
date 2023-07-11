@@ -1126,6 +1126,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1ClickNode.html#a07192fe7f3b337f27ac1bfa8850a7117">tracktion::engine::ClickNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a766ef604ccc992cd30e2f42c3cfee18e">tracktion::engine::CombiningNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ContainerClipNode.html#ae5fa75631a0fb0a30b91459ecb35519b">tracktion::engine::ContainerClipNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1DynamicOffsetNode.html#a400cbd8d1fc69d8991b51e0b881d0d72">tracktion::engine::DynamicOffsetNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#a626c8337b8a9907874832097845f79d1">tracktion::engine::FadeInOutNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1InsertReturnNode.html#ae32ea5760e1aee2fe3311d912eecd0dd">tracktion::engine::InsertReturnNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1InsertSendNode.html#afbb6982fb605ff89c7f73cd91f68a434">tracktion::engine::InsertSendNode</a>
@@ -1185,7 +1186,8 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1TempoSetting.html#a3e1c360ea063aacc03003cdd7c2667c3">tracktion::engine::TempoSetting</a>
 </li>
 <li>getEditBeatRange()
-: <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#aa36db78bfffabf8fb4616958ea9b408b">tracktion::engine::TracktionEngineNode</a>
+: <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#ac55d4943eb8c0bd3e33802060ea8facb">tracktion::engine::TrackItem</a>
+, <a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#aa36db78bfffabf8fb4616958ea9b408b">tracktion::engine::TracktionEngineNode</a>
 </li>
 <li>getEditBeats()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiControllerEvent.html#a859a1c69e7f8dc0b453d2af9a2f34841">tracktion::engine::MidiControllerEvent</a>
@@ -1635,6 +1637,7 @@ $(function() {
 <li>getInternalNodes()
 : <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">tracktion::engine::CombiningNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ContainerClipNode.html#adcae8575038f8c4751ba7e9336e3611a">tracktion::engine::ContainerClipNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1DynamicOffsetNode.html#ae9fec63af6a70ff8b64c95c5c60edf34">tracktion::engine::DynamicOffsetNode</a>
 , <a class="el" href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">tracktion::graph::Node</a>
 </li>
 <li>getInternalSequence()
@@ -1822,7 +1825,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1BandlimitedWaveLookupTables.html#a2adf7bae8fac43e363a0789d57222b58">tracktion::engine::BandlimitedWaveLookupTables</a>
 </li>
 <li>getLoopInfo()
-: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#acb07be3c9e1b8bdcce71b8df8110e9bc">tracktion::engine::AudioClipBase</a>
+: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#acbfe3b7f91818baed7523c71e722df1f">tracktion::engine::AudioClipBase</a>
 </li>
 <li>getLoopLength()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a64e290fec5a31cd8b4021f73fdba032d">tracktion::engine::AudioClipBase</a>
@@ -2283,6 +2286,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1ClickNode.html#a4ff729decb41e5bd970d4813a2abb50e">tracktion::engine::ClickNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a60795ab1ed3d2990ceb7d49f8b36e051">tracktion::engine::CombiningNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ContainerClipNode.html#acfc38502ca6827a24cf71bd5698ddb88">tracktion::engine::ContainerClipNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1DynamicOffsetNode.html#a206178dadc911758a7d1c617c1b2c776">tracktion::engine::DynamicOffsetNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#a879b187485df0aa8159cd26e3dff81f8">tracktion::engine::FadeInOutNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html#a68e9389f214d61b69234b16b010f84ad">tracktion::engine::HostedMidiInputDeviceNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1InsertReturnNode.html#aa655116a864aeb94ba88b2ae46d5f9eb">tracktion::engine::InsertReturnNode</a>
@@ -2634,7 +2638,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#a16a140dfee1a8288c2d6e0d0e39196e7">tracktion::engine::PluginCache</a>
 </li>
 <li>getOrCreateRenderJob()
-: <a class="el" href="classtracktion_1_1engine_1_1EditRenderJob.html#ad66f0c0919d83acc5ec702f64c8617ad">tracktion::engine::EditRenderJob</a>
+: <a class="el" href="classtracktion_1_1engine_1_1EditRenderJob.html#ad640cec10e16c2df985bfd41c237181b">tracktion::engine::EditRenderJob</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ReverseRenderJob.html#ae8b690d40b139854ce64aacd341c23cc">tracktion::engine::ReverseRenderJob</a>
 , <a class="el" href="classtracktion_1_1engine_1_1WarpTimeRenderJob.html#ac0404951f42ad72a539b0d08a783e157">tracktion::engine::WarpTimeRenderJob</a>
 </li>
@@ -3303,7 +3307,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1EditClip.html#a81e64e95b48f4ab6d332d4cb5580e685">tracktion::engine::EditClip</a>
 </li>
 <li>getRenderParameters()
-: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#aaaf9d556cb2c3aa3e98dfecd791545b5">tracktion::engine::RenderOptions</a>
+: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#ade753fd8dd2018ddd40318234039e66b">tracktion::engine::RenderOptions</a>
 </li>
 <li>getRenderProgress()
 : <a class="el" href="classtracktion_1_1engine_1_1CompManager.html#a3fb3b9d6a86f3c7cb29c3ca335ba2f22">tracktion::engine::CompManager</a>
@@ -3314,7 +3318,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a3a18a65e4b01714920e02c33005100b7">tracktion::engine::AudioClipBase</a>
 </li>
 <li>getRescaledMarkPoints()
-: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ae21c7d7ee748ff93ebdd08773e9dce3f">tracktion::engine::AudioClipBase</a>
+: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a4ef2e24eca748b839885e0fc661e4b2c">tracktion::engine::AudioClipBase</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#abbb5bcc92a45d2500003211c4a9df48e">tracktion::engine::Clip</a>
 </li>
 <li>getResult()
@@ -3728,7 +3732,7 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1StepModifier_1_1Assignment.html#a1a93426aac42bd7d980c4ec0b1737381">tracktion::engine::StepModifier::Assignment</a>
 </li>
 <li>getSteps()
-: <a class="el" href="classtracktion_1_1engine_1_1Chord.html#a016608a5f2f90e6da66128ec00044420">tracktion::engine::Chord</a>
+: <a class="el" href="classtracktion_1_1engine_1_1Chord.html#ac2d92b945d7782866da817999d7b2f4d">tracktion::engine::Chord</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Scale.html#af44a21692ae705aa4d1f5af92cc4766a">tracktion::engine::Scale</a>
 </li>
 <li>getStereo()
@@ -3852,7 +3856,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#ad85ae4d2b3dd192ccd52a2ce1f541a83">tracktion::engine::TempoSequence</a>
 </li>
 <li>getTempoSequence()
-: <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a6644d9bfafc5285bc97c5411fd1f03b1">tracktion::engine::ProcessState</a>
+: <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aeb39f0795d8d54781d73e3c160e8dd17">tracktion::engine::ProcessState</a>
 </li>
 <li>getTempoSequencePosition()
 : <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aa0a56eaa788ad5f20e40cd35cf8beeb1">tracktion::engine::ProcessState</a>
@@ -4330,7 +4334,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 7 2023 12:55:24 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 11 2023 17:09:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

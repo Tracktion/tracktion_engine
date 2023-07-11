@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-07 13:13:20</td>
+            <td class="headerValue">2023-07-11 17:30:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -84,7 +84,7 @@
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     bool isEmpty() const</a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         22 :         return inTimeRange.isEmpty() &amp;&amp; outTimeRange.isEmpty();</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      18420 :         return inTimeRange.isEmpty() &amp;&amp; outTimeRange.isEmpty();</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     }</a>
 <a name="27"><span class="lineNum">      27 </span>            : };</a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
@@ -158,15 +158,15 @@
 <a name="96"><span class="lineNum">      96 </span>            : template&lt;&gt;</a>
 <a name="97"><span class="lineNum">      97 </span>            : struct std::hash&lt;tracktion::engine::SpeedFadeDescription&gt;</a>
 <a name="98"><span class="lineNum">      98 </span>            : {</a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">        102 :     size_t operator() (const tracktion::engine::SpeedFadeDescription&amp; d) const noexcept</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">        144 :     size_t operator() (const tracktion::engine::SpeedFadeDescription&amp; d) const noexcept</span></a>
 <a name="100"><span class="lineNum">     100 </span>            :     {</a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        102 :         size_t seed = 0;</span></a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">        102 :         tracktion::hash_combine (seed, d.inTimeRange);</span></a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">        102 :         tracktion::hash_combine (seed, d.outTimeRange);</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">        102 :         tracktion::hash_combine (seed, static_cast&lt;int&gt; (d.fadeInType));</span></a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        102 :         tracktion::hash_combine (seed, static_cast&lt;int&gt; (d.fadeOutType));</span></a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        144 :         size_t seed = 0;</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">        144 :         tracktion::hash_combine (seed, d.inTimeRange);</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">        144 :         tracktion::hash_combine (seed, d.outTimeRange);</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">        144 :         tracktion::hash_combine (seed, static_cast&lt;int&gt; (d.fadeInType));</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        144 :         tracktion::hash_combine (seed, static_cast&lt;int&gt; (d.fadeOutType));</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineCov">        102 :         return seed;</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">        144 :         return seed;</span></a>
 <a name="108"><span class="lineNum">     108 </span>            :     }</a>
 <a name="109"><span class="lineNum">     109 </span>            : };</a>
 <a name="110"><span class="lineNum">     110 </span>            : #endif</a>

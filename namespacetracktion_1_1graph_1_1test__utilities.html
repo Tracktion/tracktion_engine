@@ -90,6 +90,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a5d40f4397abaca6c0c186e0962bc960c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a5d40f4397abaca6c0c186e0962bc960c">writeToFile</a> (juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</td></tr>
 <tr class="memdesc:a5d40f4397abaca6c0c186e0962bc960c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes an audio buffer to a file.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#a5d40f4397abaca6c0c186e0962bc960c">More...</a><br /></td></tr>
 <tr class="separator:a5d40f4397abaca6c0c186e0962bc960c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a576c470f30e912d743265fa1a7274fb8"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:a576c470f30e912d743265fa1a7274fb8"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a576c470f30e912d743265fa1a7274fb8">writeToTemporaryFile</a> (choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</td></tr>
+<tr class="memdesc:a576c470f30e912d743265fa1a7274fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes an audio buffer to a file.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#a576c470f30e912d743265fa1a7274fb8">More...</a><br /></td></tr>
+<tr class="separator:a576c470f30e912d743265fa1a7274fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd4e10a5038e7f09625e88384d7f97b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#abfd4e10a5038e7f09625e88384d7f97b">getName</a> (<a class="el" href="namespacetracktion_1_1graph.html#a269844fbe17f2d681b0a3df8ae112f96">ThreadPoolStrategy</a> type)</td></tr>
 <tr class="memdesc:abfd4e10a5038e7f09625e88384d7f97b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ammount of internal memory allocated for buffers.  <a href="namespacetracktion_1_1graph_1_1test__utilities.html#abfd4e10a5038e7f09625e88384d7f97b">More...</a><br /></td></tr>
 <tr class="separator:abfd4e10a5038e7f09625e88384d7f97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +111,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a13bb65070355467aebecb665ea51a28b"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
 <tr class="memitem:a13bb65070355467aebecb665ea51a28b"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a13bb65070355467aebecb665ea51a28b">getSquareFile</a> (double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</td></tr>
 <tr class="separator:a13bb65070355467aebecb665ea51a28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a42cdc3d75afd1583451e0f49626fa4c8">getTimeEncodedFile</a> (double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</td></tr>
+<tr class="separator:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5d40f4397abaca6c0c186e0962bc960c"></a>
@@ -152,6 +159,44 @@ template&lt;typename AudioFormatType &gt; </div>
 <p>Writes an audio buffer to a file. </p>
 
 <p class="reference">References <a class="el" href="namespacetracktion_1_1graph.html#a514ef258c89b58227b3f6ad2d8b3ee1f">tracktion::graph::toAudioBuffer()</a>.</p>
+
+</div>
+</div>
+<a id="a576c470f30e912d743265fa1a7274fb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a576c470f30e912d743265fa1a7274fb8">&#9670;&nbsp;</a></span>writeToTemporaryFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AudioFormatType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;juce::TemporaryFile&gt; tracktion::graph::test_utilities::writeToTemporaryFile </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::ChannelArrayView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Writes an audio buffer to a file. </p>
 
 </div>
 </div>
@@ -337,10 +382,58 @@ template&lt;typename AudioFormatType &gt; </div>
 
 </div>
 </div>
+<a id="a42cdc3d75afd1583451e0f49626fa4c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42cdc3d75afd1583451e0f49626fa4c8">&#9670;&nbsp;</a></span>getTimeEncodedFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AudioFormatType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;juce::TemporaryFile&gt; tracktion::graph::test_utilities::getTimeEncodedFile </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeDuration&#160;</td>
+          <td class="paramname"><em>duration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeDuration&#160;</td>
+          <td class="paramname"><em>stepDuration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numChannels</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 7 2023 12:55:24 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 11 2023 17:09:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-07 13:13:20</td>
+            <td class="headerValue">2023-07-11 17:30:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -143,62 +143,65 @@
 <a name="81"><span class="lineNum">      81 </span>            :     virtual ClipPosition getPosition() const = 0;</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span>            :     /** Returns the time range of this item. */</a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">      17165 :     TimeRange getEditTimeRange() const                  { return getPosition().time; }</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">      17149 :     TimeRange getEditTimeRange() const                  { return getPosition().time; }</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span>            :     /** Returns the start beat in the Edit of this item. */</a>
-<a name="87"><span class="lineNum">      87 </span>            :     BeatPosition getStartBeat() const;</a>
+<a name="86"><span class="lineNum">      86 </span>            :     /** Returns the beat range of this item. */</a>
+<a name="87"><span class="lineNum">      87 </span>            :     BeatRange getEditBeatRange() const;</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span>            :     /** Returns the start beat of the content in the Edit of this item.</a>
-<a name="90"><span class="lineNum">      90 </span>            :         I.e. the beat index of (start - offset)</a>
-<a name="91"><span class="lineNum">      91 </span>            :     */</a>
-<a name="92"><span class="lineNum">      92 </span>            :     BeatPosition getContentStartBeat() const;</a>
-<a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span>            :     /** Returns the end beat in the Edit of this item. */</a>
-<a name="95"><span class="lineNum">      95 </span>            :     BeatPosition getEndBeat() const;</a>
+<a name="89"><span class="lineNum">      89 </span>            :     /** Returns the start beat in the Edit of this item. */</a>
+<a name="90"><span class="lineNum">      90 </span>            :     BeatPosition getStartBeat() const;</a>
+<a name="91"><span class="lineNum">      91 </span>            : </a>
+<a name="92"><span class="lineNum">      92 </span>            :     /** Returns the start beat of the content in the Edit of this item.</a>
+<a name="93"><span class="lineNum">      93 </span>            :         I.e. the beat index of (start - offset)</a>
+<a name="94"><span class="lineNum">      94 </span>            :     */</a>
+<a name="95"><span class="lineNum">      95 </span>            :     BeatPosition getContentStartBeat() const;</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span>            :     /** Returns the duration in beats the of this item. */</a>
-<a name="98"><span class="lineNum">      98 </span>            :     BeatDuration getLengthInBeats() const;</a>
+<a name="97"><span class="lineNum">      97 </span>            :     /** Returns the end beat in the Edit of this item. */</a>
+<a name="98"><span class="lineNum">      98 </span>            :     BeatPosition getEndBeat() const;</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
-<a name="100"><span class="lineNum">     100 </span>            :     /** Returns an Edit time point for a given number of beats from the start of this item. */</a>
-<a name="101"><span class="lineNum">     101 </span>            :     TimePosition getTimeOfRelativeBeat (BeatDuration) const;</a>
+<a name="100"><span class="lineNum">     100 </span>            :     /** Returns the duration in beats the of this item. */</a>
+<a name="101"><span class="lineNum">     101 </span>            :     BeatDuration getLengthInBeats() const;</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span>            :     /** Returns an Edit beat point for a given number of seconds from the start of this item. */</a>
-<a name="104"><span class="lineNum">     104 </span>            :     BeatPosition getBeatOfRelativeTime (TimeDuration) const;</a>
+<a name="103"><span class="lineNum">     103 </span>            :     /** Returns an Edit time point for a given number of beats from the start of this item. */</a>
+<a name="104"><span class="lineNum">     104 </span>            :     TimePosition getTimeOfRelativeBeat (BeatDuration) const;</a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span>            :     /** Returns an the offset of this item in beats. */</a>
-<a name="107"><span class="lineNum">     107 </span>            :     BeatDuration getOffsetInBeats() const;</a>
+<a name="106"><span class="lineNum">     106 </span>            :     /** Returns an Edit beat point for a given number of seconds from the start of this item. */</a>
+<a name="107"><span class="lineNum">     107 </span>            :     BeatPosition getBeatOfRelativeTime (TimeDuration) const;</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
-<a name="109"><span class="lineNum">     109 </span>            :     //==============================================================================</a>
-<a name="110"><span class="lineNum">     110 </span>            :     /** Returns the ID of the Track this item lives on. */</a>
-<a name="111"><span class="lineNum">     111 </span>            :     EditItemID getTrackID() const;</a>
-<a name="112"><span class="lineNum">     112 </span>            : </a>
-<a name="113"><span class="lineNum">     113 </span>            :     const Type type; /**&lt; The type of this item. */</a>
-<a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span>            :     //==============================================================================</a>
-<a name="116"><span class="lineNum">     116 </span>            :     /** Helper function to sort an array of TrackItem[s] by their start time. */</a>
-<a name="117"><span class="lineNum">     117 </span>            :     template &lt;typename ArrayType&gt;</a>
-<a name="118"><span class="lineNum">     118 </span>            :     static void sortByTime (ArrayType&amp; items)</a>
-<a name="119"><span class="lineNum">     119 </span>            :     {</a>
-<a name="120"><span class="lineNum">     120 </span>            :         std::sort (items.begin(), items.end(),</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                    [] (const TrackItem* a, const TrackItem* b) { return a-&gt;getPosition().time.getStart() &lt; b-&gt;getPosition().time.getStart(); });</span></a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">          6 :     }</span></a>
-<a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span>            :     /** Helper function to sort an array of TrackItem[s] by their start time without</a>
-<a name="125"><span class="lineNum">     125 </span>            :         changing the order of items at the same time.</a>
-<a name="126"><span class="lineNum">     126 </span>            :     */</a>
-<a name="127"><span class="lineNum">     127 </span>            :     template &lt;typename ArrayType&gt;</a>
-<a name="128"><span class="lineNum">     128 </span>            :     static void stableSortByTime (ArrayType&amp; items)</a>
-<a name="129"><span class="lineNum">     129 </span>            :     {</a>
-<a name="130"><span class="lineNum">     130 </span>            :         std::stable_sort (items.begin(), items.end(),</a>
-<a name="131"><span class="lineNum">     131 </span>            :                           [] (const TrackItem* a, const TrackItem* b) { return a-&gt;getPosition().time.getStart() &lt; b-&gt;getPosition().time.getStart(); });</a>
-<a name="132"><span class="lineNum">     132 </span>            :     }</a>
-<a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span>            : private:</a>
-<a name="135"><span class="lineNum">     135 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackItem)</a>
-<a name="136"><span class="lineNum">     136 </span>            : };</a>
-<a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="109"><span class="lineNum">     109 </span>            :     /** Returns an the offset of this item in beats. */</a>
+<a name="110"><span class="lineNum">     110 </span>            :     BeatDuration getOffsetInBeats() const;</a>
+<a name="111"><span class="lineNum">     111 </span>            : </a>
+<a name="112"><span class="lineNum">     112 </span>            :     //==============================================================================</a>
+<a name="113"><span class="lineNum">     113 </span>            :     /** Returns the ID of the Track this item lives on. */</a>
+<a name="114"><span class="lineNum">     114 </span>            :     EditItemID getTrackID() const;</a>
+<a name="115"><span class="lineNum">     115 </span>            : </a>
+<a name="116"><span class="lineNum">     116 </span>            :     const Type type; /**&lt; The type of this item. */</a>
+<a name="117"><span class="lineNum">     117 </span>            : </a>
+<a name="118"><span class="lineNum">     118 </span>            :     //==============================================================================</a>
+<a name="119"><span class="lineNum">     119 </span>            :     /** Helper function to sort an array of TrackItem[s] by their start time. */</a>
+<a name="120"><span class="lineNum">     120 </span>            :     template &lt;typename ArrayType&gt;</a>
+<a name="121"><span class="lineNum">     121 </span>            :     static void sortByTime (ArrayType&amp; items)</a>
+<a name="122"><span class="lineNum">     122 </span>            :     {</a>
+<a name="123"><span class="lineNum">     123 </span>            :         std::sort (items.begin(), items.end(),</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :                    [] (const TrackItem* a, const TrackItem* b) { return a-&gt;getPosition().time.getStart() &lt; b-&gt;getPosition().time.getStart(); });</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          6 :     }</span></a>
+<a name="126"><span class="lineNum">     126 </span>            : </a>
+<a name="127"><span class="lineNum">     127 </span>            :     /** Helper function to sort an array of TrackItem[s] by their start time without</a>
+<a name="128"><span class="lineNum">     128 </span>            :         changing the order of items at the same time.</a>
+<a name="129"><span class="lineNum">     129 </span>            :     */</a>
+<a name="130"><span class="lineNum">     130 </span>            :     template &lt;typename ArrayType&gt;</a>
+<a name="131"><span class="lineNum">     131 </span>            :     static void stableSortByTime (ArrayType&amp; items)</a>
+<a name="132"><span class="lineNum">     132 </span>            :     {</a>
+<a name="133"><span class="lineNum">     133 </span>            :         std::stable_sort (items.begin(), items.end(),</a>
+<a name="134"><span class="lineNum">     134 </span>            :                           [] (const TrackItem* a, const TrackItem* b) { return a-&gt;getPosition().time.getStart() &lt; b-&gt;getPosition().time.getStart(); });</a>
+<a name="135"><span class="lineNum">     135 </span>            :     }</a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span>            : private:</a>
+<a name="138"><span class="lineNum">     138 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackItem)</a>
+<a name="139"><span class="lineNum">     139 </span>            : };</a>
+<a name="140"><span class="lineNum">     140 </span>            : </a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

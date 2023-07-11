@@ -1,0 +1,5 @@
+<map id="tracktion::engine::DynamicallyOffsettableNodeBase" name="tracktion::engine::DynamicallyOffsettableNodeBase">
+<area shape="rect" id="node1" title=" " alt="" coords="39,5,282,47"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="5,95,145,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="170,95,325,136"/>
+</map>

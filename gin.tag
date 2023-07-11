@@ -3416,6 +3416,14 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_DynamicOffsetNode.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__DynamicOffsetNode_8h.html</filename>
+    <class kind="class">tracktion::engine::DynamicOffsetNode</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Edit.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
     <filename>tracktion__Edit_8h.html</filename>
@@ -5500,6 +5508,13 @@
       <arglist>(Node &amp;node, Visitor &amp;&amp;visitor)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>addNodesRecursive</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a679577226460cf0586b59680de93c387</anchor>
+      <arglist>(std::vector&lt; NodeAndID &gt; &amp;nodeMap, Node &amp;n)</arglist>
+    </member>
+    <member kind="function">
       <type>std::vector&lt; NodeAndID &gt;</type>
       <name>createNodeMap</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -6446,6 +6461,13 @@
       <arglist>(juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
     </member>
     <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>writeToTemporaryFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a576c470f30e912d743265fa1a7274fb8</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
@@ -6486,6 +6508,13 @@
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
       <anchor>a13bb65070355467aebecb665ea51a28b</anchor>
       <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getTimeEncodedFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a42cdc3d75afd1583451e0f49626fa4c8</anchor>
+      <arglist>(double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -6678,6 +6707,7 @@
     <filename>tracktion__TracktionEngineNode_8h.html</filename>
     <class kind="struct">tracktion::engine::ProcessState</class>
     <class kind="class">tracktion::engine::TracktionEngineNode</class>
+    <class kind="class">tracktion::engine::DynamicallyOffsettableNodeBase</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -27047,6 +27077,100 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::DynamicallyOffsettableNodeBase</name>
+    <filename>classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>DynamicallyOffsettableNodeBase</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html</anchorfile>
+      <anchor>a1e2bf7ae68290c2c2ec7a631bd398a93</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~DynamicallyOffsettableNodeBase</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html</anchorfile>
+      <anchor>afb5978edf0fa97cc34ccf62e97ad4ed5</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setDynamicOffsetBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html</anchorfile>
+      <anchor>a3c413e6b7c5c59a8b402d982440d56ee</anchor>
+      <arglist>(BeatDuration)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setDynamicOffsetTime</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html</anchorfile>
+      <anchor>acd4712c935d785d23862bd65deecf1d6</anchor>
+      <arglist>(TimeDuration)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::DynamicOffsetNode</name>
+    <filename>classtracktion_1_1engine_1_1DynamicOffsetNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
+    <member kind="function">
+      <type></type>
+      <name>DynamicOffsetNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>a3efed90cab74fb134cbabb0e6088474b</anchor>
+      <arglist>(ProcessState &amp;editProcessState, EditItemID clipID, BeatRange clipPosition, BeatDuration clipOffset, BeatRange clipLoopRange, std::vector&lt; std::unique_ptr&lt; Node &gt;&gt; inputs)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>a206178dadc911758a7d1c617c1b2c776</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>a400cbd8d1fc69d8991b51e0b881d0d72</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getInternalNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>ae9fec63af6a70ff8b64c95c5c60edf34</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>a169d6887b5e8b81ddd31360d3971f3fd</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>a9b858496d3dbb43ae7aa95b5660b937d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prefetchBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>ad7df177a638387c5f09b5736ff49d5e7</anchor>
+      <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>ad91b292df15ef3746920b96a621ce63e</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::Edit</name>
     <filename>classtracktion_1_1engine_1_1Edit.html</filename>
     <base>tracktion::engine::Selectable</base>
@@ -30321,6 +30445,13 @@
       <anchor>a1a79ad753f6554fda3ca5941155d8020</anchor>
       <arglist>(BeatPosition)</arglist>
     </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isBeats</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTime.html</anchorfile>
+      <anchor>a88955740e25b37e2e7a6058568c69b93</anchor>
+      <arglist>() const</arglist>
+    </member>
     <member kind="friend" protection="private">
       <type>friend TimePosition</type>
       <name>toTime</name>
@@ -30370,6 +30501,13 @@
       <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
       <anchor>a303df43374d0b5edc827037fceffba8b</anchor>
       <arglist>(BeatRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isBeats</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
+      <anchor>ad13377664a57f812758fb7cdf20166e9</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend TimeRange</type>
@@ -34270,12 +34408,20 @@
     <name>tracktion::engine::FadeInOutNode</name>
     <filename>classtracktion_1_1engine_1_1FadeInOutNode.html</filename>
     <base>tracktion::engine::TracktionEngineNode</base>
+    <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
     <member kind="function">
       <type></type>
       <name>FadeInOutNode</name>
       <anchorfile>classtracktion_1_1engine_1_1FadeInOutNode.html</anchorfile>
       <anchor>aa97559c22b060fb677a6d7df3d536b2f</anchor>
       <arglist>(std::unique_ptr&lt; tracktion::graph::Node &gt; input, ProcessState &amp;, TimeRange fadeIn, TimeRange fadeOut, AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType, bool clearSamplesOutsideFade)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setDynamicOffsetTime</name>
+      <anchorfile>classtracktion_1_1engine_1_1FadeInOutNode.html</anchorfile>
+      <anchor>a84b69654e98f26abbfd405c885ee3fbb</anchor>
+      <arglist>(TimeDuration) override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -55874,6 +56020,13 @@
       <arglist>(tracktion::graph::PlayHeadState &amp;, const TempoSequence &amp;)</arglist>
     </member>
     <member kind="function">
+      <type></type>
+      <name>ProcessState</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a25661571ee568402a46d4b3d49a3c271</anchor>
+      <arglist>(tracktion::graph::PlayHeadState &amp;, const tempo::Sequence &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>update</name>
       <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
@@ -55891,14 +56044,14 @@
       <type>void</type>
       <name>setTempoSequence</name>
       <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
-      <anchor>a1bcac8234d9e105c0a6812a99c3e415e</anchor>
-      <arglist>(const TempoSequence *)</arglist>
+      <anchor>af0667cbc0b3bef63e54931f4ca76aa02</anchor>
+      <arglist>(const tempo::Sequence *)</arglist>
     </member>
     <member kind="function">
-      <type>const TempoSequence *</type>
+      <type>const tempo::Sequence *</type>
       <name>getTempoSequence</name>
       <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
-      <anchor>a6644d9bfafc5285bc97c5411fd1f03b1</anchor>
+      <anchor>aeb39f0795d8d54781d73e3c160e8dd17</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -70770,6 +70923,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>BeatRange</type>
+      <name>getEditBeatRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1TrackItem.html</anchorfile>
+      <anchor>ac55d4943eb8c0bd3e33802060ea8facb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>BeatPosition</type>
       <name>getStartBeat</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackItem.html</anchorfile>
@@ -79349,6 +79509,7 @@
     <filename>classtracktion_1_1engine_1_1WaveNodeRealTime.html</filename>
     <base>tracktion::graph::Node</base>
     <base>tracktion::engine::TracktionEngineNode</base>
+    <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
     <member kind="enumeration">
       <type></type>
       <name>SyncTempo</name>
@@ -79380,6 +79541,13 @@
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
       <anchor>a4d80cd7e8e10757fa70be24c26bb66bf</anchor>
       <arglist>(const AudioFile &amp;, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, BeatRange editTime, BeatDuration offset, BeatRange loopSection, LiveClipLevel, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality, SpeedFadeDescription, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; WarpMap &gt;, tempo::Sequence sourceFileTempoMap, SyncTempo, SyncPitch, std::optional&lt; tempo::Sequence &gt; chordPitchSequence)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setDynamicOffsetBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
+      <anchor>a8a545bbe10d508ba9932e143dfc73077</anchor>
+      <arglist>(BeatDuration) override</arglist>
     </member>
     <member kind="function">
       <type>graph::NodeProperties</type>
@@ -79964,6 +80132,7 @@
     <class kind="class">tracktion::ClickNode</class>
     <class kind="class">tracktion::CombiningNode</class>
     <class kind="class">tracktion::ContainerClipNode</class>
+    <class kind="class">tracktion::DynamicOffsetNode</class>
     <class kind="struct">tracktion::CreateNodeParams</class>
     <class kind="struct">tracktion::EditNodeBuilder</class>
     <class kind="class">tracktion::FadeInOutNode</class>
@@ -79999,6 +80168,7 @@
     <class kind="class">tracktion::TrackMutingNode</class>
     <class kind="struct">tracktion::ProcessState</class>
     <class kind="class">tracktion::TracktionEngineNode</class>
+    <class kind="class">tracktion::DynamicallyOffsettableNodeBase</class>
     <class kind="class">tracktion::TracktionNodePlayer</class>
     <class kind="class">tracktion::TrackWaveInputDeviceNode</class>
     <class kind="class">tracktion::WaveInputDeviceNode</class>
@@ -80380,6 +80550,7 @@
     <class kind="class">tracktion::engine::ClickNode</class>
     <class kind="class">tracktion::engine::CombiningNode</class>
     <class kind="class">tracktion::engine::ContainerClipNode</class>
+    <class kind="class">tracktion::engine::DynamicOffsetNode</class>
     <class kind="struct">tracktion::engine::CreateNodeParams</class>
     <class kind="struct">tracktion::engine::EditNodeBuilder</class>
     <class kind="class">tracktion::engine::FadeInOutNode</class>
@@ -80415,6 +80586,7 @@
     <class kind="class">tracktion::engine::TrackMutingNode</class>
     <class kind="struct">tracktion::engine::ProcessState</class>
     <class kind="class">tracktion::engine::TracktionEngineNode</class>
+    <class kind="class">tracktion::engine::DynamicallyOffsettableNodeBase</class>
     <class kind="class">tracktion::engine::TracktionNodePlayer</class>
     <class kind="class">tracktion::engine::TrackWaveInputDeviceNode</class>
     <class kind="class">tracktion::engine::WaveInputDeviceNode</class>
@@ -84812,6 +84984,13 @@
       <arglist>(Node &amp;node, Visitor &amp;&amp;visitor)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>addNodesRecursive</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a679577226460cf0586b59680de93c387</anchor>
+      <arglist>(std::vector&lt; NodeAndID &gt; &amp;nodeMap, Node &amp;n)</arglist>
+    </member>
+    <member kind="function">
       <type>std::vector&lt; NodeAndID &gt;</type>
       <name>createNodeMap</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -84970,6 +85149,13 @@
       <arglist>(juce::File file, choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
     </member>
     <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>writeToTemporaryFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a576c470f30e912d743265fa1a7274fb8</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
@@ -85010,6 +85196,13 @@
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
       <anchor>a13bb65070355467aebecb665ea51a28b</anchor>
       <arglist>(double sampleRate, double durationInSeconds, int numChannels=1, float frequency=220.0f, int qualityOptionIndex=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getTimeEncodedFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a42cdc3d75afd1583451e0f49626fa4c8</anchor>
+      <arglist>(double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</arglist>
     </member>
   </compound>
   <compound kind="group">

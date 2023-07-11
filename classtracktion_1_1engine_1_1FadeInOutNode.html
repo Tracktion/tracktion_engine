@@ -78,7 +78,7 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for tracktion::engine::FadeInOutNode:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1FadeInOutNode__inherit__graph.svg" width="170" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion_1_1engine_1_1FadeInOutNode__inherit__graph.svg" width="442" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
@@ -86,6 +86,9 @@ Inheritance diagram for tracktion::engine::FadeInOutNode:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa97559c22b060fb677a6d7df3d536b2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#aa97559c22b060fb677a6d7df3d536b2f">FadeInOutNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt; input, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, TimeRange fadeIn, TimeRange fadeOut, <a class="el" href="structtracktion_1_1engine_1_1AudioFadeCurve.html#a538e19bf0da8d5d6add9e2ebe93c9405">AudioFadeCurve::Type</a> fadeInType, <a class="el" href="structtracktion_1_1engine_1_1AudioFadeCurve.html#a538e19bf0da8d5d6add9e2ebe93c9405">AudioFadeCurve::Type</a> fadeOutType, bool clearSamplesOutsideFade)</td></tr>
 <tr class="separator:aa97559c22b060fb677a6d7df3d536b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84b69654e98f26abbfd405c885ee3fbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#a84b69654e98f26abbfd405c885ee3fbb">setDynamicOffsetTime</a> (TimeDuration) override</td></tr>
+<tr class="memdesc:a84b69654e98f26abbfd405c885ee3fbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time.  <a href="classtracktion_1_1engine_1_1FadeInOutNode.html#a84b69654e98f26abbfd405c885ee3fbb">More...</a><br /></td></tr>
+<tr class="separator:a84b69654e98f26abbfd405c885ee3fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a879b187485df0aa8159cd26e3dff81f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">tracktion::graph::NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#a879b187485df0aa8159cd26e3dff81f8">getNodeProperties</a> () override</td></tr>
 <tr class="separator:a879b187485df0aa8159cd26e3dff81f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a626c8337b8a9907874832097845f79d1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FadeInOutNode.html#a626c8337b8a9907874832097845f79d1">getDirectInputNodes</a> () override</td></tr>
@@ -142,6 +145,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a948adcf3f250e8e951ff7e773c87621c inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7535886e3f0a9d68e0db994db0fee32f inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineNode.html#a7535886e3f0a9d68e0db994db0fee32f">setProcessState</a> (<a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;)</td></tr>
 <tr class="separator:a7535886e3f0a9d68e0db994db0fee32f inherit pub_methods_classtracktion_1_1engine_1_1TracktionEngineNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html">tracktion::engine::DynamicallyOffsettableNodeBase</a></td></tr>
+<tr class="memitem:a1e2bf7ae68290c2c2ec7a631bd398a93 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#a1e2bf7ae68290c2c2ec7a631bd398a93">DynamicallyOffsettableNodeBase</a> ()=default</td></tr>
+<tr class="separator:a1e2bf7ae68290c2c2ec7a631bd398a93 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb5978edf0fa97cc34ccf62e97ad4ed5 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#afb5978edf0fa97cc34ccf62e97ad4ed5">~DynamicallyOffsettableNodeBase</a> ()=default</td></tr>
+<tr class="separator:afb5978edf0fa97cc34ccf62e97ad4ed5 inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c413e6b7c5c59a8b402d982440d56ee inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#a3c413e6b7c5c59a8b402d982440d56ee">setDynamicOffsetBeats</a> (BeatDuration)</td></tr>
+<tr class="memdesc:a3c413e6b7c5c59a8b402d982440d56ee inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time.  <a href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#a3c413e6b7c5c59a8b402d982440d56ee">More...</a><br /></td></tr>
+<tr class="separator:a3c413e6b7c5c59a8b402d982440d56ee inherit pub_methods_classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> that fades in and out given time regions. </p>
@@ -205,6 +216,36 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a84b69654e98f26abbfd405c885ee3fbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84b69654e98f26abbfd405c885ee3fbb">&#9670;&nbsp;</a></span>setDynamicOffsetTime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::FadeInOutNode::setDynamicOffsetTime </td>
+          <td>(</td>
+          <td class="paramtype">TimeDuration&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets an offset to be applied to all times in this node, effectively shifting it forwards or backwards in time. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html#acd4712c935d785d23862bd65deecf1d6">tracktion::engine::DynamicallyOffsettableNodeBase</a>.</p>
+
+</div>
+</div>
 <a id="a879b187485df0aa8159cd26e3dff81f8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a879b187485df0aa8159cd26e3dff81f8">&#9670;&nbsp;</a></span>getNodeProperties()</h2>
 
@@ -312,7 +353,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 7 2023 12:55:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 11 2023 17:09:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
