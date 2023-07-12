@@ -80,9 +80,10 @@ public:
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override {}
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t>) override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
 
 private:
@@ -90,6 +91,7 @@ private:
     std::unique_ptr<TrackMuteState> trackMuteState;
     std::unique_ptr<tracktion::graph::Node> input;
     bool dontMuteIfTrackContentsShouldBeProcessed = false;
+    bool canUseSourceBuffers = false;
 
     //==============================================================================
     void rampBlock (choc::buffer::ChannelArrayView<float>, float start, float end);
