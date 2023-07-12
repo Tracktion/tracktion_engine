@@ -134,7 +134,7 @@ void TrackMutingNode::prefetchBlock (juce::Range<int64_t>)
 void TrackMutingNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
 {
     if (canUseSourceBuffers)
-        setBufferViewToUse (input->getProcessedOutput().audio);
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
 }
 
 void TrackMutingNode::process (ProcessContext& pc)

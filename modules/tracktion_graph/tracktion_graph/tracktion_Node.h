@@ -344,12 +344,12 @@ protected:
         Be careful with these as they change the default and often expected behaviour.
     */
     void setOptimisations (NodeOptimisations);
-    
+
     /** This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.
         Be careful with this. It's intended to use an input buffer as the internal buffer for this Node
         but that can only be done if the input Node only has a single output (or this Node doesn't write to it).
     */
-    void setBufferViewToUse (const choc::buffer::ChannelArrayView<float>&);
+    void setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>&);
 
     /** This can be called during your process function to set a view to the output.
         This is useful to avoid having to allocate an internal buffer and always fill it if you're
@@ -574,18 +574,30 @@ inline void Node::setOptimisations (NodeOptimisations newOptimisations)
     nodeOptimisations = newOptimisations;
 }
 
-inline void Node::setBufferViewToUse (const choc::buffer::ChannelArrayView<float>& view)
+inline void Node::setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& view)
 {
+    if (sourceNode)
+    {
+        sourceNode->retain();
+        nodeToRelease.store (sourceNode, std::memory_order_relaxed);
+    }
+
     referencedViewToUse = view;
 }
 
 inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
 {
-    if (sourceNode)
+    if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_relaxed))
+    {
+        assert (sourceNode == node);
+    }
+    else if (sourceNode)
+    {
         sourceNode->retain();
-    
+        nodeToRelease.store (sourceNode, std::memory_order_relaxed);
+    }
+
     audioView = newAudioView;
-    nodeToRelease.store (sourceNode, std::memory_order_relaxed);
 }
 
 inline void Node::retain()

@@ -83,7 +83,7 @@ public:
     void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override
     {
         if (canUseSourceBuffers)
-            setBufferViewToUse (input->getProcessedOutput().audio);
+            setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
     }
 
     void process (ProcessContext& pc) override

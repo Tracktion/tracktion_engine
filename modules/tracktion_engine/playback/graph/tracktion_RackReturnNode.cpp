@@ -99,7 +99,7 @@ bool RackReturnNode::isReadyToProcess()
 void RackReturnNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
 {
     if (canUseWetSourceBuffers)
-        setBufferViewToUse (wetInput->getProcessedOutput().audio);
+        setBufferViewToUse (wetInput.get(), wetInput->getProcessedOutput().audio);
 }
 
 void RackReturnNode::process (ProcessContext& pc)

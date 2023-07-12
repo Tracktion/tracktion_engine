@@ -135,7 +135,7 @@ void PluginNode::prefetchBlock (juce::Range<int64_t>)
 void PluginNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
 {
     if (canUseSourceBuffers)
-        setBufferViewToUse (input->getProcessedOutput().audio);
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
 }
 
 void PluginNode::process (ProcessContext& pc)

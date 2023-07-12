@@ -68,7 +68,7 @@ bool RackInstanceNode::isReadyToProcess()
 void RackInstanceNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
 {
     if (canUseSourceBuffers)
-        setBufferViewToUse (input->getProcessedOutput().audio);
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
 }
 
 void RackInstanceNode::process (ProcessContext& pc)
