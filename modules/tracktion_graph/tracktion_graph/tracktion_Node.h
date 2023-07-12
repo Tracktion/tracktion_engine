@@ -331,12 +331,26 @@ protected:
     */
     virtual void process (ProcessContext&) = 0;
 
+    /** Called when the node is to be processed, just before process.
+        You shouldn't normally have to use this but it gives Nodes an opportunity to perform
+        optimisations like steal input buffers from source if appropriate.
+    */
+    virtual void preProcess (choc::buffer::FrameCount /*numSamples*/,
+                             juce::Range<int64_t> /*referenceSampleRange*/)
+    {}
+
     //==============================================================================
     /** This can be called to provide some hints about allocating or playing back a Node to improve efficiency.
         Be careful with these as they change the default and often expected behaviour.
     */
     void setOptimisations (NodeOptimisations);
     
+    /** This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.
+        Be careful with this. It's intended to use an input buffer as the internal buffer for this Node
+        but that can only be done if the input Node only has a single output (or this Node doesn't write to it).
+    */
+    void setBufferViewToUse (const choc::buffer::ChannelArrayView<float>&);
+
     /** This can be called during your process function to set a view to the output.
         This is useful to avoid having to allocate an internal buffer and always fill it if you're
         just passing on data.
@@ -348,6 +362,7 @@ private:
     choc::buffer::Size audioBufferSize;
     choc::buffer::ChannelArrayBuffer<float> audioBuffer;
     choc::buffer::ChannelArrayView<float> audioView, allocatedView;
+    std::optional<choc::buffer::ChannelArrayView<float>> referencedViewToUse;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     NodeOptimisations nodeOptimisations;
@@ -466,7 +481,9 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     for (auto n : directInputNodes)
         assert (n->hasProcessed());
    #endif
-    
+
+    preProcess (numSamples, referenceSampleRange);
+
     // First, allocate buffers if possible
     if (allocateAudioBuffer)
     {
@@ -498,7 +515,8 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     {
         // Fallback to the internal buffer or an empty view
         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                             : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
+                                                                             : referencedViewToUse ? *referencedViewToUse
+                                                                                                   : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
     }
     
     audioView = audioView.getStart (numSamples);
@@ -536,8 +554,10 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
 
+   #if JUCE_DEBUG
     if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_acquire))
         jassert (node->hasProcessed());
+   #endif
 
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
@@ -552,6 +572,11 @@ inline size_t Node::getAllocatedBytes() const
 inline void Node::setOptimisations (NodeOptimisations newOptimisations)
 {
     nodeOptimisations = newOptimisations;
+}
+
+inline void Node::setBufferViewToUse (const choc::buffer::ChannelArrayView<float>& view)
+{
+    referencedViewToUse = view;
 }
 
 inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
