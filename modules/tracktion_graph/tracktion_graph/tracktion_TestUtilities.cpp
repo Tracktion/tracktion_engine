@@ -86,14 +86,17 @@ namespace tracktion { inline namespace graph { namespace test_utilities
         
         for (auto [id, info] : idNameMap)
         {
-            const std::string label = choc::text::replace (info.label,
-                                                           "tracktion::engine", "te",
-                                                           "tracktion::graph", "tg");
+            std::string label = choc::text::replace (info.label,
+                                                     "tracktion::engine", "te",
+                                                     "tracktion::graph", "tg");
 
             std::string colourString, shapeString;
 
             if (info.memorySizeBytes > 0)
+            {
+                label += "*";
                 colourString += "color=red ";
+            }
 
             if (info.containsInternalNodes)
                 shapeString += "shape=box";
