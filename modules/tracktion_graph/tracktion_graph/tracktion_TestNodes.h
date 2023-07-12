@@ -519,11 +519,36 @@ public:
         return false;
     }
 
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override
+    {
+        if (! input)
+            return;
+
+        if (input->numOutputNodes > 1)
+            return;
+
+        const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+        const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+        if (inputNumChannels >= desiredNumChannels)
+        {
+            canUseSourceBuffers = true;
+            setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                                tracktion::graph::AllocateAudioBuffer::no });
+        }
+    }
+
     bool isReadyToProcess() override
     {
         return ! input || input->hasProcessed();
     }
-    
+
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override
+    {
+        if (canUseSourceBuffers)
+            setBufferViewToUse (input->getProcessedOutput().audio);
+    }
+
     void process (ProcessContext& pc) override
     {
         if (! input)
@@ -546,7 +571,7 @@ public:
 private:
     std::unique_ptr<Node> input;
     const int busID;
-    bool hasInitialised = false;
+    bool hasInitialised = false, canUseSourceBuffers = false;
 
     void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache& cache)
     {
