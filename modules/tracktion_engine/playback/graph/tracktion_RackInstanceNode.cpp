@@ -46,11 +46,29 @@ tracktion::graph::NodeProperties RackInstanceNode::getNodeProperties()
 
 void RackInstanceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
+    if (input->numOutputNodes > 1)
+        return;
+
+    const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+    if (inputNumChannels >= desiredNumChannels)
+    {
+        canUseSourceBuffers = true;
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
+    }
 }
 
 bool RackInstanceNode::isReadyToProcess()
 {
     return input->hasProcessed();
+}
+
+void RackInstanceNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseSourceBuffers)
+        setBufferViewToUse (input->getProcessedOutput().audio);
 }
 
 void RackInstanceNode::process (ProcessContext& pc)
@@ -82,7 +100,7 @@ void RackInstanceNode::process (ProcessContext& pc)
         auto dest = pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) destChan);
         auto gain = dbToGain (std::get<2> (chan)->getCurrentValue());
 
-        copy (dest, src);
+        copyIfNotAliased (dest, src);
 
         if (gain == lastGain[channel])
         {
