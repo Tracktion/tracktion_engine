@@ -112,11 +112,30 @@ void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationIn
     }
 
     isPrepared = true;
+
+    if (input->numOutputNodes == 1)
+    {
+        const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+        const auto desiredNumChannels = props.numberOfChannels;
+
+        if (inputNumChannels >= desiredNumChannels)
+        {
+            canUseSourceBuffers = true;
+            setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                                tracktion::graph::AllocateAudioBuffer::no });
+        }
+    }
 }
 
 void PluginNode::prefetchBlock (juce::Range<int64_t>)
 {
     plugin->prepareForNextBlock (getEditTimeRange().getStart());
+}
+
+void PluginNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseSourceBuffers)
+        setBufferViewToUse (input->getProcessedOutput().audio);
 }
 
 void PluginNode::process (ProcessContext& pc)

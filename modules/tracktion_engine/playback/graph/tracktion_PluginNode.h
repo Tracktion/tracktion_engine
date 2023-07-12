@@ -54,8 +54,9 @@ public:
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void prefetchBlock (juce::Range<int64_t>) override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
-    
+
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
@@ -75,7 +76,7 @@ private:
     
     std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
     std::optional<NodeProperties> cachedNodeProperties;
-    bool isPrepared = false;
+    bool isPrepared = false, canUseSourceBuffers = false;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
