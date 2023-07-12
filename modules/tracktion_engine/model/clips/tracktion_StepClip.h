@@ -97,9 +97,8 @@ public:
         // BEATCONNECT MODIFICATON START
         int getTremolo (int channel, int index) const;
         juce::Array<int> getTremolos(int channel) const;
-        void setTremolo(int channel, int index, unsigned int value);
+        void setTremolo(int channel, int index, int value);
         void setTremolos(int channel, const juce::Array<int>& values);
-        
         // BEATCONNECT MODIFICATON END
 
         juce::Array<int> getVelocities (int channel) const;
@@ -208,6 +207,10 @@ public:
 
         minNumChannels      = 1,
         maxNumChannels      = 60
+
+        // BEATCONNECT MODIFICATIONS START
+        ,maxTremoloAttacks  = 8
+        // BEATCONNECT MODIFICATIONS END
     };
 
     //==============================================================================

@@ -182,7 +182,6 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
 
 // BEATCONNECT MODIFICATION START
 int StepClip::Pattern::getTremolo(int channel, int index) const {
-
     if (!getNote (channel, index))
         return -1;
 
@@ -208,7 +207,7 @@ juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
     return tremolos;
 }
 
-void StepClip::Pattern::setTremolo(int channel, int index, unsigned int value) {
+void StepClip::Pattern::setTremolo(int channel, int index, int value) {
     if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
         return; // Out of range
 
@@ -216,9 +215,6 @@ void StepClip::Pattern::setTremolo(int channel, int index, unsigned int value) {
 
     auto tremolos = getTremolos(channel);
     const int size = tremolos.size();
-
-    if (!juce::isPositiveAndNotGreaterThan(index, size))
-        tremolos.insertMultiple(size, 127, index - size);
 
     tremolos.set(index, value);
     setTremolos(channel, tremolos);
@@ -239,7 +235,7 @@ void StepClip::Pattern::setTremolos(int channel, const juce::Array<int>& values)
     for (int element : values)
         stringArray.add(juce::String(element));
 
-    state.getChild(channel).setProperty(IDs::velocities, stringArray.joinIntoString(" "), clip.getUndoManager());
+    state.getChild(channel).setProperty(IDs::tremolos, stringArray.joinIntoString(" "), clip.getUndoManager());
 }
 // BEATCONNECT MODIFICATION END
 
@@ -411,6 +407,9 @@ StepClip::Pattern::CachedPattern::CachedPattern (const Pattern& p, int c)
       velocities (p.getVelocities (c)),
       gates (p.getGates (c)),
       probabilities (p.getProbabilities (c))
+      // BEATCONNECT MODIFICATION START
+      , tremolos (p.getTremolos(c))
+      // BEATCONNECT MODIFICATION END
 {
 }
 
