@@ -515,7 +515,7 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     {
         // Fallback to the internal buffer or an empty view
         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                             : referencedViewToUse ? *referencedViewToUse
+                                                                             : referencedViewToUse ? referencedViewToUse->getFirstChannels (audioBufferSize.numChannels)
                                                                                                    : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
     }
     
