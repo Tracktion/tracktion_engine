@@ -710,6 +710,14 @@ inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNod
     auto orderedNodes = transformNodes (*rootNode);
     auto sortedNodes = createNodeMap (orderedNodes);
 
+    // Iterate all nodes, for each input, increment the dest Node output count
+    for (auto node : orderedNodes)
+        node->numOutputNodes = 0;
+
+    for (auto node : orderedNodes)
+        for (auto inputNode : node->getDirectInputNodes())
+            ++inputNode->numOutputNodes;
+
     auto nodeGraph = std::make_unique<NodeGraph>();
     nodeGraph->rootNode = std::move (rootNode);
     nodeGraph->orderedNodes = std::move (orderedNodes);

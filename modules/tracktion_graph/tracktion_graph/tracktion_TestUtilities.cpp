@@ -9,6 +9,7 @@
 */
 
 #include "tracktion_TestUtilities.h"
+#include "../../3rd_party/choc/text/choc_StringUtilities.h"
 
 #if __has_include (<cxxabi.h>)
 #include <cxxabi.h>
@@ -38,6 +39,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
         {
             std::string label;
             size_t memorySizeBytes = 0;
+            int numOutputs = -1;
             bool containsInternalNodes = false;
         };
 
@@ -56,6 +58,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 destNodeInfo.label = destNodeString;
                 destNodeInfo.memorySizeBytes = n.getAllocatedBytes();
                 destNodeInfo.containsInternalNodes = ! n.getInternalNodes().empty();
+                destNodeInfo.numOutputs = n.numOutputNodes;
 
                 for (auto input : n.getDirectInputNodes())
                 {
@@ -83,6 +86,10 @@ namespace tracktion { inline namespace graph { namespace test_utilities
         
         for (auto [id, info] : idNameMap)
         {
+            const std::string label = choc::text::replace (info.label,
+                                                           "tracktion::engine", "te",
+                                                           "tracktion::graph", "tg");
+
             std::string colourString, shapeString;
 
             if (info.memorySizeBytes > 0)
@@ -91,7 +98,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
             if (info.containsInternalNodes)
                 shapeString += "shape=box";
 
-            output += id + "[label=\"" + info.label + "\" " + colourString + shapeString + "]\n";
+            output += id + "[label=\"" + label + " (" + std::to_string (info.numOutputs) + ")" + "\" " + colourString + shapeString + "]\n";
         }
 
         for (auto edge : edges)
