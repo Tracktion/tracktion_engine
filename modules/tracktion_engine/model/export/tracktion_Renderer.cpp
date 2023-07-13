@@ -355,9 +355,8 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     if (outputSequence.getNumEvents() == 0)
         return false;
 
-    juce::FileOutputStream out (destFile);
-
-    if (out.openedOk())
+    if (juce::FileOutputStream out (destFile);
+        out.openedOk())
     {
         juce::MidiMessageSequence midiTempoSequence;
         auto currentTempoPosition = createPosition (tempoSequence);
