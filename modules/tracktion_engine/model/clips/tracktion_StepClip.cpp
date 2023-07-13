@@ -399,11 +399,13 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                         const float channelVelScale = c.noteValue / 127.0f;
                         const float vel = cache->getVelocity (i) / 127.0f;
+                        int note = c.noteNumber + cache->getKeyNoteOffset(i);
 
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
-                        result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), eventStart);
-                        result.addEvent (juce::MidiMessage::noteOff (chan, c.noteNumber, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
+
+                        result.addEvent (juce::MidiMessage::noteOn  (chan, note, vel * channelVelScale), eventStart);
+                        result.addEvent (juce::MidiMessage::noteOff (chan, note, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
                         
                         // BEATCONNECT MODIFICATION START
                         int tremoloAttacks = cache->getTremolo(i);
@@ -415,8 +417,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                             for (int i = 1; i < totalAttacks; i++) {
                                 float attackTimeOffset = i * attackInterval;
                                 float newEventStart = eventStart + attackTimeOffset;
-                                result.addEvent(juce::MidiMessage::noteOn(chan, c.noteNumber, vel * channelVelScale), newEventStart);
-                                result.addEvent(juce::MidiMessage::noteOff(chan, c.noteNumber, (uint8_t)juce::jlimit(0, 127, c.noteValue.get())), newEventStart + attackInterval);
+                                result.addEvent(juce::MidiMessage::noteOn(chan, note, vel * channelVelScale), newEventStart);
+                                result.addEvent(juce::MidiMessage::noteOff(chan, note, (uint8_t)juce::jlimit(0, 127, c.noteValue.get())), newEventStart + attackInterval);
                             }
                         }
                         // BEATCONNECT MODIFICATION END

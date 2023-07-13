@@ -472,6 +472,9 @@ StepClip::Pattern::CachedPattern::CachedPattern (const Pattern& p, int c)
     : notes (p.getChannel (c)),
       velocities (p.getVelocities (c)),
       gates (p.getGates (c)),
+      // BEATCONNECT MODIFICATION START
+      keyNoteOffsets (p.getKeyNoteOffsets(c)),
+      // BEATCONNECT MODIFICATION END
       probabilities (p.getProbabilities (c))
       // BEATCONNECT MODIFICATION START
       , tremolos (p.getTremolos(c))
