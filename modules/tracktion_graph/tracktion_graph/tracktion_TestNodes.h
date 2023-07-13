@@ -508,15 +508,15 @@ public:
         return { input.get() };
     }
     
-    bool transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
+    TransformResult transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
     {
         if (! hasInitialised)
         {
             findSendNodes (rootNode, postOrderedNodes, cache);
-            return true;
+            return TransformResult::connectionsMade;
         }
         
-        return false;
+        return TransformResult::none;
     }
 
     bool isReadyToProcess() override

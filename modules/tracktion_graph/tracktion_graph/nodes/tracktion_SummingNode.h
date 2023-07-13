@@ -97,12 +97,18 @@ public:
         return nodes;
     }
     
-    bool transform (Node&, const std::vector<Node*>&, TransformCache&) override
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override
     {
         const bool hasFlattened = flattenSummingNodes();
         const bool hasCreatedLatency = createLatencyNodes();
-        
-        return hasFlattened || hasCreatedLatency;
+
+        if (hasFlattened)
+            return TransformResult::nodesDeleted;
+
+        if (hasCreatedLatency)
+            return TransformResult::connectionsMade;
+
+        return TransformResult::none;
     }
 
     void prepareToPlay (const PlaybackInitialisationInfo& info) override

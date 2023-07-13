@@ -158,6 +158,14 @@ struct NodeProperties
 
 //==============================================================================
 //==============================================================================
+/** Enum to signify the result of the transform function. */
+enum class TransformResult
+{
+    none,               /** No transform has been made. */
+    connectionsMade,    /** New connections have been made. */
+    nodesDeleted        /** Nodes have been deleted. */
+};
+
 enum class ClearBuffers
 {
     no, /**< Don't clear buffers before passing them to process, your subclass will take care of that. */
@@ -255,12 +263,16 @@ public:
                                 of the graph
         @param TransformCache   A cache which can be used to speed up operations
                                 during the transform stage.
+
+        @return TransformResult The type of transformation that has taken place.
+                                If connections have been made AND nodes deleted,
+                                return nodesDeleted
     */
-    virtual bool transform (Node& /*rootNode*/,
-                            const std::vector<Node*>& /*postOrderedNodes*/,
-                            TransformCache&)
+    virtual TransformResult transform (Node& /*rootNode*/,
+                                       const std::vector<Node*>& /*postOrderedNodes*/,
+                                       TransformCache&)
     {
-        return false;
+        return TransformResult::none;
     }
     
     /** Should return all the inputs directly feeding in to this node. */
@@ -407,8 +419,21 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
         TransformCache cache;
 
         for (auto node : allNodes)
-            if (node->transform (rootNode, allNodes, cache))
-                needToTransformAgain = true;
+        {
+            const auto res = node->transform (rootNode, allNodes, cache);
+
+            if (res == TransformResult::none)
+                continue;
+
+            needToTransformAgain = true;
+
+            // Nodes may have been deleted from allNodes so start from the top
+            if (res == TransformResult::nodesDeleted)
+                break;
+
+            // New connections have been made but allNodes is still valid
+            assert (res == TransformResult::connectionsMade);
+        }
 
         if (! needToTransformAgain)
             return allNodes;
