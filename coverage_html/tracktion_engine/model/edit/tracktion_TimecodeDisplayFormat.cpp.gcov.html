@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">304</td>
+            <td class="headerCovTableEntry">301</td>
             <td class="headerCovTableEntryLo">0.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-11 17:30:19</td>
+            <td class="headerValue">2023-07-13 11:37:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         if (time == TimePosition() &amp;&amp; useStartLabelIfZero)</span></a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :             return TRANS(&quot;Bar 1&quot;);</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         auto barsBeats = sequence.toBarsAndBeats (time + nudge);</span></a>
+<a name="205"><span class="lineNum">     205 </span>            :         auto barsBeats = sequence.toBarsAndBeats (time + nudge);</a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :         auto bars = barsBeats.bars + 1;</span></a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         auto beats = barsBeats.getWholeBeats() + 1;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
@@ -344,7 +344,7 @@
 <a name="282"><span class="lineNum">     282 </span>            : {</a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
 <a name="284"><span class="lineNum">     284 </span>            :     {</a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :         auto barsBeats = sequence.toBarsAndBeats (t);</span></a>
+<a name="285"><span class="lineNum">     285 </span>            :         auto barsBeats = sequence.toBarsAndBeats (t);</a>
 <a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :         auto&amp; tempo = sequence.getTempoAt (t);</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         if (level &lt; 9)</span></a>
@@ -670,7 +670,7 @@
 <a name="608"><span class="lineNum">     608 </span>            :             auto pos = createPosition (tempo);</a>
 <a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :             pos.set (t);</span></a>
 <a name="610"><span class="lineNum">     610 </span>            : </a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :             auto barsBeats = tempo.toBarsAndBeats (t);</span></a>
+<a name="611"><span class="lineNum">     611 </span>            :             auto barsBeats = tempo.toBarsAndBeats (t);</a>
 <a name="612"><span class="lineNum">     612 </span>            : </a>
 <a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :             if (part == 0)       pos.add (BeatDuration::fromBeats (newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());</span></a>
 <a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :             else if (part == 1)  pos.add (BeatDuration::fromBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats()));</span></a>

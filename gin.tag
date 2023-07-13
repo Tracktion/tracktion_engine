@@ -5436,6 +5436,16 @@
     <namespace>tracktion::graph::detail</namespace>
     <member kind="enumeration">
       <type></type>
+      <name>TransformResult</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>ae8337885018777ed501740f02dcbca0d</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0da334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0da2bc4ad49aaeeedd7b7b4cbbd3cc1835e">connectionsMade</enumvalue>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0daeeb724e7295815f3a8eec90846f596c8">nodesDeleted</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
       <name>ClearBuffers</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a963afb16027e92506362c8076ba7d33d</anchor>
@@ -20474,10 +20484,10 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ConnectedNode.html</anchorfile>
-      <anchor>ae9fb3fdf68745df578f22cd0af5a776e</anchor>
+      <anchor>ac9a7a8b461d338a794b08a41712efb09</anchor>
       <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
@@ -38154,10 +38164,10 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a5fdfb8da95bb184bc38fd5ba065be31a</anchor>
+      <anchor>a45439e879852513609c74d869363ab3d</anchor>
       <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
@@ -49304,10 +49314,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
+      <type>virtual TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
-      <anchor>a183f64e412a89d6d5aa6041682d5e7a7</anchor>
+      <anchor>ad8156b0902fe0ab5104a9c13b34dad77</anchor>
       <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -58663,10 +58673,10 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
-      <anchor>ad333c5d1c4dd3f1b29a02cc87b850785</anchor>
+      <anchor>af74e5e9be0aa3c38f8467a9c2fd432a9</anchor>
       <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
@@ -61112,10 +61122,10 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
-      <anchor>acb9171e34d2b22514779fb845bb14991</anchor>
+      <anchor>a0cbaf65c784d043fbdd84539db9a3dea</anchor>
       <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes, TransformCache &amp;cache) override</arglist>
     </member>
     <member kind="function">
@@ -66684,10 +66694,10 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1SummingNode.html</anchorfile>
-      <anchor>a55b721e68a7d8c35c7da92e8a6ccc1ba</anchor>
+      <anchor>af400d80a6dc87bbd88d5c114725015d8</anchor>
       <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
@@ -84897,6 +84907,16 @@
     <class kind="class">tracktion::graph::RealTimeSpinLock</class>
     <class kind="class">tracktion::graph::Semaphore</class>
     <class kind="class">tracktion::graph::LightweightSemaphore</class>
+    <member kind="enumeration">
+      <type></type>
+      <name>TransformResult</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>ae8337885018777ed501740f02dcbca0d</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0da334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0da2bc4ad49aaeeedd7b7b4cbbd3cc1835e">connectionsMade</enumvalue>
+      <enumvalue file="namespacetracktion_1_1graph.html" anchor="ae8337885018777ed501740f02dcbca0daeeb724e7295815f3a8eec90846f596c8">nodesDeleted</enumvalue>
+    </member>
     <member kind="enumeration">
       <type></type>
       <name>ClearBuffers</name>
