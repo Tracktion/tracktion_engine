@@ -95,6 +95,11 @@ public:
         void setNoteLength (BeatDuration);
 
         // BEATCONNECT MODIFICATON START
+        int getPitch(int channel, int index) const;
+        juce::Array<int> getPitches(int channel) const;
+        void setPitch(int channel, int index, int value);
+        void setPitches(int channel, const juce::Array<int>& values);
+
         int getTremolo (int channel, int index) const;
         juce::Array<int> getTremolos(int channel) const;
         void setTremolo(int channel, int index, int value);

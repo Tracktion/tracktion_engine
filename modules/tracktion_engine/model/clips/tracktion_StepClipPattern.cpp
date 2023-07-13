@@ -176,11 +176,29 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
 
             if (getGate (channel, index) == 0.0)
                 setGate (channel, index, 1.0);
+
+            if (getTremolo(channel, index) == 0)
+                setTremolo(channel, index, defaultTremoloAttacks);
         }
     }
 }
 
 // BEATCONNECT MODIFICATION START
+int StepClip::Pattern::getPitch(int channel, int index) const {
+    if (!getNote(channel, index))
+        return -1;
+
+    auto pitches = getTremolos(channel);
+
+    if (juce::isPositiveAndBelow(index, pitches.size()))
+        return pitches[index];
+
+    if (clip.getChannels()[channel] != nullptr)
+        return defaultPitchOffset;
+
+    return -127; // Midi only has 127 available notes, guaranteed to be out of range.
+}
+
 int StepClip::Pattern::getTremolo(int channel, int index) const {
     if (!getNote (channel, index))
         return -1;
@@ -215,6 +233,9 @@ void StepClip::Pattern::setTremolo(int channel, int index, int value) {
 
     auto tremolos = getTremolos(channel);
     const int size = tremolos.size();
+
+    if (!juce::isPositiveAndNotGreaterThan(index, size))
+        tremolos.insertMultiple(size, 0, index - size);
 
     tremolos.set(index, value);
     setTremolos(channel, tremolos);
