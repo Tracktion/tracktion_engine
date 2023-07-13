@@ -95,10 +95,10 @@ public:
         void setNoteLength (BeatDuration);
 
         // BEATCONNECT MODIFICATON START
-        int getPitch(int channel, int index) const;
-        juce::Array<int> getPitches(int channel) const;
-        void setPitch(int channel, int index, int value);
-        void setPitches(int channel, const juce::Array<int>& values);
+        int getKeyNoteOffset(int channel, int index) const;
+        juce::Array<int> getKeyNoteOffsets(int channel) const;
+        void setKeyNoteOffset(int channel, int index, int value);
+        void setKeyNoteOffsets(int channel, const juce::Array<int>& values);
 
         int getTremolo (int channel, int index) const;
         juce::Array<int> getTremolos(int channel) const;
@@ -135,7 +135,7 @@ public:
             int getVelocity (int index) const noexcept;
             double getGate (int index) const noexcept;
             // BEATCONNECT MODIFICATION START
-            int getPitch(int index) const noexcept;
+            int getKeyNoteOffset(int index) const noexcept;
             // BEATCONNECT MODIFICATION END
             float getProbability (int index) const noexcept;
             // BEATCONNECT MODIFICATION START
@@ -146,7 +146,7 @@ public:
             juce::Array<int> velocities;
             juce::Array<double> gates;
             // BEATCONNECT MODIFICATION START
-            juce::Array<int> pitches;
+            juce::Array<int> keyNoteOffsets;
             // BEATCONNECT MODIFICATION END
             juce::Array<float> probabilities;
             // BEATCONNECT MODIFICATION START
@@ -195,6 +195,9 @@ public:
     //==============================================================================
     enum Defaults
     {
+        // BEATCONNECT MODIFICATIONS START
+        defaultKeyNoteOffset = 0,
+        // BEATCONNECT MODIFICATIONS END
         defaultNumNotes     = 16,
         // BEATCONNECT MODIFICATIONS START
         defaultNumChannels  = 16,
@@ -202,10 +205,15 @@ public:
         defaultMidiChannel  = 1,
         defaultNoteNumber   = 60,
         // BEATCONNECT MODIFICATIONS START
-        defaultPitchOffset = 0,
         defaultTremoloAttacks = 0,
         // BEATCONNECT MODIFICATIONS END
         defaultNoteValue    = 96,
+
+        // BEATCONNECT MODIFICATIONS START
+        // Midi only has 127 available notes, guaranteed to be out of range.
+        errorKeyNoteOffset  = -127,
+        errorTremoloAttacks = -1,
+        // BEATCONNECT MODIFICATIONS END
 
         minNumNotes         = 2,
         maxNumNotes         = 512,
@@ -214,7 +222,7 @@ public:
         maxNumChannels      = 60
 
         // BEATCONNECT MODIFICATIONS START
-        ,maxTremoloAttacks  = 8
+        , maxTremoloAttacks = 8
         // BEATCONNECT MODIFICATIONS END
     };
 

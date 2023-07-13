@@ -658,8 +658,8 @@ namespace IDs
     DECLARE_ID(RecordingMidiClip)
     
     // Sampler IDs
-    DECLARE_ID(pitchOffset)
-    DECLARE_ID(pitchOffsets)
+    DECLARE_ID(keyNoteOffset)
+    DECLARE_ID(keyNoteOffsets)
     DECLARE_ID(tremolo)
     DECLARE_ID(tremolos)
 

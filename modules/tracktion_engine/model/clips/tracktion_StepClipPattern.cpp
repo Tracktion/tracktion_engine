@@ -184,24 +184,35 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
 }
 
 // BEATCONNECT MODIFICATION START
-int StepClip::Pattern::getPitch(int channel, int index) const {
+int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const {
     if (!getNote(channel, index))
-        return -1;
+        return errorKeyNoteOffset;
 
-    auto pitches = getTremolos(channel);
+    auto keyNoteOffsets = getKeyNoteOffsets(channel);
 
-    if (juce::isPositiveAndBelow(index, pitches.size()))
-        return pitches[index];
+    if (juce::isPositiveAndBelow(index, keyNoteOffsets.size()))
+        return keyNoteOffsets[index];
 
     if (clip.getChannels()[channel] != nullptr)
-        return defaultPitchOffset;
+        return defaultKeyNoteOffset;
 
-    return -127; // Midi only has 127 available notes, guaranteed to be out of range.
+    return errorKeyNoteOffset;
+}
+
+juce::Array<int> StepClip::Pattern::getKeyNoteOffsets(int channel) const {
+    juce::Array<int> keyNoteOffSets;
+    auto stringArray = juce::StringArray::fromTokens(state.getChild(channel)[IDs::keyNoteOffsets].toString(), false);
+    keyNoteOffSets.ensureStorageAllocated(stringArray.size());
+
+    for (auto element : stringArray)
+        keyNoteOffSets.add(element.getIntValue());
+
+    return keyNoteOffSets;
 }
 
 int StepClip::Pattern::getTremolo(int channel, int index) const {
     if (!getNote (channel, index))
-        return -1;
+        return errorTremoloAttacks;
 
     auto tremolos = getTremolos (channel);
 
@@ -211,7 +222,7 @@ int StepClip::Pattern::getTremolo(int channel, int index) const {
     if (clip.getChannels()[channel] != nullptr)
         return defaultTremoloAttacks;
 
-    return -1;
+    return errorTremoloAttacks;
 }
 
 juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
@@ -225,6 +236,40 @@ juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
     return tremolos;
 }
 
+void StepClip::Pattern::setKeyNoteOffset(int channel, int index, int value) {
+    if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
+        return; // Out of range
+
+    setNote(channel, index, true);
+
+    auto keyNoteOffsets = getKeyNoteOffsets(channel);
+    const int size = keyNoteOffsets.size();
+
+    if (!juce::isPositiveAndNotGreaterThan(index, size))
+        keyNoteOffsets.insertMultiple(size, defaultKeyNoteOffset, index - size);
+
+    keyNoteOffsets.set(index, value);
+    setKeyNoteOffsets(channel, keyNoteOffsets);
+
+    return;
+}
+
+void StepClip::Pattern::setKeyNoteOffsets(int channel, const juce::Array<int>& values) {
+    if (channel >= state.getNumChildren())
+    {
+        jassertfalse;
+        return;
+    }
+
+    juce::StringArray stringArray;
+    stringArray.ensureStorageAllocated(values.size());
+
+    for (int element : values)
+        stringArray.add(juce::String(element));
+
+    state.getChild(channel).setProperty(IDs::keyNoteOffsets, stringArray.joinIntoString(" "), clip.getUndoManager());
+}
+
 void StepClip::Pattern::setTremolo(int channel, int index, int value) {
     if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
         return; // Out of range
@@ -235,7 +280,7 @@ void StepClip::Pattern::setTremolo(int channel, int index, int value) {
     const int size = tremolos.size();
 
     if (!juce::isPositiveAndNotGreaterThan(index, size))
-        tremolos.insertMultiple(size, 0, index - size);
+        tremolos.insertMultiple(size, defaultTremoloAttacks, index - size);
 
     tremolos.set(index, value);
     setTremolos(channel, tremolos);
@@ -462,14 +507,14 @@ double StepClip::Pattern::CachedPattern::getGate (int index) const noexcept
 }
 
 // BEATCONNECT MODIFICATION START
-int StepClip::Pattern::CachedPattern::getPitch(int index) const noexcept {
+int StepClip::Pattern::CachedPattern::getKeyNoteOffset(int index) const noexcept {
     if (!getNote(index))
         return -1;
 
-    if (juce::isPositiveAndBelow(index, pitches.size()))
-        return pitches[index];
+    if (juce::isPositiveAndBelow(index, keyNoteOffsets.size()))
+        return keyNoteOffsets[index];
 
-    return defaultPitchOffset;
+    return defaultKeyNoteOffset;
 }
 // BEATCONNECT MODIFICATION END
 
@@ -493,7 +538,7 @@ int StepClip::Pattern::CachedPattern::getTremolo(int index) const noexcept
     if (juce::isPositiveAndBelow(index, tremolos.size()))
         return tremolos[index];
 
-    return defaultPitchOffset;
+    return defaultTremoloAttacks;
 }
 // BEATCONNECT MODIFICATION END
 
