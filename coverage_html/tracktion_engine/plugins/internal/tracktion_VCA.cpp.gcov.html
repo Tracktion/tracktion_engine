@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-13 11:37:13</td>
+            <td class="headerValue">2023-07-17 15:37:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -137,9 +137,9 @@
 <a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     setSliderPos (decibelsToVolumeFaderPosition (dB));</span></a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">    3810012 : float VCAPlugin::getVolumeDb() const</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">    3810002 : float VCAPlugin::getVolumeDb() const</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">    3810012 :     return volumeFaderPositionToDB (volParam-&gt;getCurrentValue());</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">    3810002 :     return volumeFaderPositionToDB (volParam-&gt;getCurrentValue());</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : }</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : void VCAPlugin::setSliderPos (float newV)</span></a>
@@ -165,15 +165,15 @@
 <a name="103"><span class="lineNum">     103 </span>            :     }</a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    3810012 : float VCAPlugin::updateAutomationStreamAndGetVolumeDb (TimePosition time)</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    3810002 : float VCAPlugin::updateAutomationStreamAndGetVolumeDb (TimePosition time)</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : {</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">    3810012 :     if (isAutomationNeeded())</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">    3810002 :     if (isAutomationNeeded())</span></a>
 <a name="109"><span class="lineNum">     109 </span>            :     {</a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :         updateParameterStreams (time);</span></a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         updateLastPlaybackTime();</span></a>
 <a name="112"><span class="lineNum">     112 </span>            :     }</a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">    3810012 :     return getVolumeDb();</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">    3810002 :     return getVolumeDb();</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : }</a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 : bool VCAPlugin::canBeMoved()</span></a>

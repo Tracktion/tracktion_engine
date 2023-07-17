@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-13 11:37:13</td>
+            <td class="headerValue">2023-07-17 15:37:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -115,11 +115,11 @@
 <a name="53"><span class="lineNum">      53 </span>            : //==============================================================================</a>
 <a name="54"><span class="lineNum">      54 </span>            : /** Hashes a type with a given seed, modifying the seed. */</a>
 <a name="55"><span class="lineNum">      55 </span>            : template&lt;typename T&gt;</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       9359 : void hash_combine (size_t&amp; seed, const T&amp; v)</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       9407 : void hash_combine (size_t&amp; seed, const T&amp; v)</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : {</a>
 <a name="58"><span class="lineNum">      58 </span>            :     static_assert (! std::is_pointer_v&lt;T&gt;, &quot;Using a pointer here is almost certainly incorrect as it will change on each run&quot;);</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">   48159181 :     seed ^= std::hash&lt;T&gt;()(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">   33282281 : }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">   48159373 :     seed ^= std::hash&lt;T&gt;()(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">   33282329 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            : /** Hashes a range with a default seed and returns the new hash value. */</a>
 <a name="63"><span class="lineNum">      63 </span>            : template&lt;typename It&gt;</a>
@@ -137,7 +137,7 @@
 <a name="75"><span class="lineNum">      75 </span>            : template&lt;typename It&gt;</a>
 <a name="76"><span class="lineNum">      76 </span>            : void hash_range (std::size_t&amp; seed, It first, It last)</a>
 <a name="77"><span class="lineNum">      77 </span>            : {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       2304 :     for (; first != last; ++first)</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       2496 :     for (; first != last; ++first)</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :         hash_combine (seed, *first);</a>
 <a name="80"><span class="lineNum">      80 </span>            : }</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>

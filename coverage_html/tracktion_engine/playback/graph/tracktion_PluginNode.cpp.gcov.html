@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-13 11:37:13</td>
+            <td class="headerValue">2023-07-17 15:37:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -176,25 +176,25 @@
 <a name="114"><span class="lineNum">     114 </span><span class="lineCov">       6015 :     isPrepared = true;</span></a>
 <a name="115"><span class="lineNum">     115 </span><span class="lineCov">       6015 : }</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">   27553103 : void PluginNode::prefetchBlock (juce::Range&lt;int64_t&gt;)</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">   27554013 : void PluginNode::prefetchBlock (juce::Range&lt;int64_t&gt;)</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : {</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">   27553103 :     plugin-&gt;prepareForNextBlock (getEditTimeRange().getStart());</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">   27553103 : }</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">   27554013 :     plugin-&gt;prepareForNextBlock (getEditTimeRange().getStart());</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">   27554013 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   27166618 : void PluginNode::process (ProcessContext&amp; pc)</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">   27102697 : void PluginNode::process (ProcessContext&amp; pc)</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   27166618 :     auto inputBuffers = input-&gt;getProcessedOutput();</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">   27102697 :     auto inputBuffers = input-&gt;getProcessedOutput();</span></a>
 <a name="125"><span class="lineNum">     125 </span>            :     auto&amp; inputAudioBlock = inputBuffers.audio;</a>
 <a name="126"><span class="lineNum">     126 </span>            :     </a>
 <a name="127"><span class="lineNum">     127 </span>            :     auto&amp; outputBuffers = pc.buffers;</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">   27175134 :     auto outputAudioView = outputBuffers.audio;</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">   27059061 :     auto outputAudioView = outputBuffers.audio;</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :     const auto blockNumSamples = inputAudioBlock.getNumFrames();</a>
 <a name="130"><span class="lineNum">     130 </span>            :     jassert (inputAudioBlock.getNumFrames() == outputAudioView.getNumFrames());</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">   27175134 :     const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(),</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">   27175134 :                                                   outputAudioView.getNumChannels());</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">   27059061 :     const auto numInputChannelsToCopy = std::min (inputAudioBlock.getNumChannels(),</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">   27059061 :                                                   outputAudioView.getNumChannels());</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">   27175134 :     if (latencyProcessor)</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">   27059061 :     if (latencyProcessor)</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     {</a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         if (numInputChannelsToCopy &gt; 0)</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :             latencyProcessor-&gt;writeAudio (inputAudioBlock.getFirstChannels (numInputChannelsToCopy));</span></a>
@@ -204,30 +204,30 @@
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span>            :     // Copy the inputs to the outputs, then process using the</a>
 <a name="144"><span class="lineNum">     144 </span>            :     // output buffers as that will be the correct size</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">   27175134 :     if (numInputChannelsToCopy &gt; 0)</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">   20782378 :         tracktion::graph::copyIfNotAliased (outputAudioView.getFirstChannels (numInputChannelsToCopy),</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">   20890912 :                                             inputAudioBlock.getFirstChannels (numInputChannelsToCopy));</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">   27059061 :     if (numInputChannelsToCopy &gt; 0)</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">   20667885 :         tracktion::graph::copyIfNotAliased (outputAudioView.getFirstChannels (numInputChannelsToCopy),</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">   20748750 :                                             inputAudioBlock.getFirstChannels (numInputChannelsToCopy));</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :     </a>
 <a name="149"><span class="lineNum">     149 </span>            :     // Init block</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">   27283668 :     auto subBlockSize = subBlockSizeToUse &lt; 0 ? blockNumSamples</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">   27139926 :     auto subBlockSize = subBlockSizeToUse &lt; 0 ? blockNumSamples</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :                                               : (choc::buffer::FrameCount) subBlockSizeToUse;</a>
 <a name="152"><span class="lineNum">     152 </span>            :     </a>
 <a name="153"><span class="lineNum">     153 </span>            :     choc::buffer::FrameCount numSamplesDone = 0;</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">   27283668 :     auto numSamplesLeft = blockNumSamples;</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">   27139926 :     auto numSamplesLeft = blockNumSamples;</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">   27283668 :     bool shouldProcessPlugin = canProcessBypassed || plugin-&gt;isEnabled();</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">   27341354 :     bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">   27139926 :     bool shouldProcessPlugin = canProcessBypassed || plugin-&gt;isEnabled();</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">   27295421 :     bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;</span></a>
 <a name="158"><span class="lineNum">     158 </span>            :     </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">   27341354 :     if (playHeadState.didPlayheadJump())</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">   27295421 :     if (playHeadState.didPlayheadJump())</span></a>
 <a name="160"><span class="lineNum">     160 </span>            :         isAllNotesOff = true;</a>
 <a name="161"><span class="lineNum">     161 </span>            :     </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">   27341354 :     if (trackMuteState != nullptr)</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">   27295421 :     if (trackMuteState != nullptr)</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :     {</a>
 <a name="164"><span class="lineNum">     164 </span>            :         if (! trackMuteState-&gt;shouldTrackContentsBeProcessed())</a>
 <a name="165"><span class="lineNum">     165 </span>            :         {</a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">      25234 :             shouldProcessPlugin = shouldProcessPlugin &amp;&amp; trackMuteState-&gt;shouldTrackBeAudible();</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">      25232 :             shouldProcessPlugin = shouldProcessPlugin &amp;&amp; trackMuteState-&gt;shouldTrackBeAudible();</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :         </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      25234 :             if (trackMuteState-&gt;wasJustMuted())</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      25232 :             if (trackMuteState-&gt;wasJustMuted())</span></a>
 <a name="169"><span class="lineNum">     169 </span>            :                 isAllNotesOff = true;</a>
 <a name="170"><span class="lineNum">     170 </span>            :         }</a>
 <a name="171"><span class="lineNum">     171 </span>            :     }</a>
@@ -236,57 +236,57 @@
 <a name="174"><span class="lineNum">     174 </span>            :     auto inputMidiIter = inputBuffers.midi.begin();</a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span>            :     // Process in blocks</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      10128 :     for (int subBlockNum = 0;; ++subBlockNum)</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">      29776 :     for (int subBlockNum = 0;; ++subBlockNum)</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :     {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">   27351482 :         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">   27325197 :         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
 <a name="181"><span class="lineNum">     181 </span>            :         auto outputAudioBuffer = toAudioBuffer (outputAudioView.getFrameRange (frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));</a>
 <a name="182"><span class="lineNum">     182 </span>            :         </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">   27348965 :         const auto blockPropStart = (numSamplesDone / (double) blockNumSamples);</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">   27348965 :         const auto blockPropEnd = ((numSamplesDone + numSamplesThisBlock) / (double) blockNumSamples);</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">   27177865 :         const auto blockPropStart = (numSamplesDone / (double) blockNumSamples);</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">   27177865 :         const auto blockPropEnd = ((numSamplesDone + numSamplesThisBlock) / (double) blockNumSamples);</span></a>
 <a name="185"><span class="lineNum">     185 </span>            :         const auto subBlockTimeRange = TimeRange (toPosition (blockTimeRange.getLength()) * blockPropStart,</a>
 <a name="186"><span class="lineNum">     186 </span>            :                                                   toPosition (blockTimeRange.getLength()) * blockPropEnd);</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">   27348965 :         midiMessageArray.clear();</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">   27345884 :         midiMessageArray.isAllNotesOff = isAllNotesOff;</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">   27177865 :         midiMessageArray.clear();</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">   27179607 :         midiMessageArray.isAllNotesOff = isAllNotesOff;</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :         </a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">   27331523 :         for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">   27169735 :         for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :         {</a>
 <a name="193"><span class="lineNum">     193 </span>            :             const auto timestamp = inputMidiIter-&gt;getTimeStamp();</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span>            :             // If the time range is empty, we need to pass through all the MIDI as it means the playhead is stopped</a>
 <a name="196"><span class="lineNum">     196 </span>            :             if (! subBlockTimeRange.isEmpty()</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       4794 :                 &amp;&amp; timestamp &gt;= subBlockTimeRange.getEnd().inSeconds())</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       4890 :                 &amp;&amp; timestamp &gt;= subBlockTimeRange.getEnd().inSeconds())</span></a>
 <a name="198"><span class="lineNum">     198 </span>            :                break;</a>
 <a name="199"><span class="lineNum">     199 </span>            :             </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       4794 :             midiMessageArray.addMidiMessage (*inputMidiIter,</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       4890 :             midiMessageArray.addMidiMessage (*inputMidiIter,</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :                                              timestamp - subBlockTimeRange.getStart().inSeconds(),</a>
 <a name="202"><span class="lineNum">     202 </span>            :                                              inputMidiIter-&gt;mpeSourceID);</a>
 <a name="203"><span class="lineNum">     203 </span>            :         }</a>
 <a name="204"><span class="lineNum">     204 </span>            :         </a>
 <a name="205"><span class="lineNum">     205 </span>            :         // Process the plugin</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">   27326729 :         if (shouldProcessPlugin)</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">   27301325 :             plugin-&gt;applyToBufferWithAutomation (getPluginRenderContext ({ blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()),</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">   27164845 :         if (shouldProcessPlugin)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">   27134975 :             plugin-&gt;applyToBufferWithAutomation (getPluginRenderContext ({ blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()),</span></a>
 <a name="208"><span class="lineNum">     208 </span>            :                                                                            blockTimeRange.getStart() + toDuration (subBlockTimeRange.getEnd()) },</a>
 <a name="209"><span class="lineNum">     209 </span>            :                                                                          outputAudioBuffer));</a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span>            :         // Then copy the buffers to the outputs</a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">   27350014 :         if (subBlockNum == 0)</span></a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">   27341166 :             outputBuffers.midi.swapWith (midiMessageArray);</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">   27152644 :         if (subBlockNum == 0)</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">   27143732 :             outputBuffers.midi.swapWith (midiMessageArray);</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :         else</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">       8848 :             outputBuffers.midi.mergeFrom (midiMessageArray);</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">       8912 :             outputBuffers.midi.mergeFrom (midiMessageArray);</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
 <a name="217"><span class="lineNum">     217 </span>            :         numSamplesDone += numSamplesThisBlock;</a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">   27350014 :         numSamplesLeft -= numSamplesThisBlock;</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">   27152644 :         numSamplesLeft -= numSamplesThisBlock;</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :         </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">   27350014 :         if (numSamplesLeft == 0)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">   27152644 :         if (numSamplesLeft == 0)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :             break;</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span>            :         isAllNotesOff = false;</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      10128 :     }</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      29776 :     }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     // If the plugin was bypassed, use the delayed audio</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   27339886 :     if (latencyProcessor)</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   27122868 :     if (latencyProcessor)</span></a>
 <a name="228"><span class="lineNum">     228 </span>            :     {</a>
 <a name="229"><span class="lineNum">     229 </span>            :         // A slightly better approach would be to crossfade between the processed and latency block to minimise any discrepancies</a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         if (plugin-&gt;isEnabled())</span></a>
@@ -306,7 +306,7 @@
 <a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :             latencyProcessor-&gt;readMIDI (outputBuffers.midi, (int) blockNumSamples);</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :         }</a>
 <a name="246"><span class="lineNum">     246 </span>            :     }</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">   27339886 : }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">   27122868 : }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
 <a name="249"><span class="lineNum">     249 </span>            : //==============================================================================</a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineCov">       6033 : void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)</span></a>
@@ -318,15 +318,15 @@
 <a name="256"><span class="lineNum">     256 </span><span class="lineCov">       6033 :     latencyNumSamples = juce::roundToInt (plugin-&gt;getLatencySeconds() * sampleRate);</span></a>
 <a name="257"><span class="lineNum">     257 </span><span class="lineCov">       6033 : }</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">   27299595 : PluginRenderContext PluginNode::getPluginRenderContext (TimeRange editTime, juce::AudioBuffer&lt;float&gt;&amp; destBuffer)</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">   27130958 : PluginRenderContext PluginNode::getPluginRenderContext (TimeRange editTime, juce::AudioBuffer&lt;float&gt;&amp; destBuffer)</span></a>
 <a name="260"><span class="lineNum">     260 </span>            : {</a>
 <a name="261"><span class="lineNum">     261 </span>            :     return { &amp;destBuffer,</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">   27299595 :              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">   27130958 :              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :              0, destBuffer.getNumSamples(),</a>
 <a name="264"><span class="lineNum">     264 </span>            :              &amp;midiMessageArray, 0.0,</a>
 <a name="265"><span class="lineNum">     265 </span>            :              editTime + automationAdjustmentTime,</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">   26959636 :              playHeadState.playHead.isPlaying(), playHeadState.playHead.isUserDragging(),</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">   26959636 :              isRendering, canProcessBypassed };</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">   26754704 :              playHeadState.playHead.isPlaying(), playHeadState.playHead.isUserDragging(),</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">   26754704 :              isRendering, canProcessBypassed };</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : }</a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 : void PluginNode::replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplace)</span></a>
