@@ -646,14 +646,10 @@ namespace IDs
     DECLARE_ID (resamplingQuality)
 
     // BEATCONNECT MODIFICATIONS START HERE
-    DECLARE_ID(Cymbal)
     // Generic IDs
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
-    DECLARE_ID(Faceplate)
     DECLARE_ID(isInstrument)
-    DECLARE_ID(Kick)
-    DECLARE_ID(maximumValue)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
     DECLARE_ID(paramId)
