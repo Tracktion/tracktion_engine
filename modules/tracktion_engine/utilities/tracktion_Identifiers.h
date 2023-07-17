@@ -647,6 +647,8 @@ namespace IDs
 
     DECLARE_ID (SCENES)
     DECLARE_ID (SCENE)
+    DECLARE_ID (CLIPSLOTS)
+    DECLARE_ID (CLIPSLOT)
 
     #undef DECLARE_ID
 }

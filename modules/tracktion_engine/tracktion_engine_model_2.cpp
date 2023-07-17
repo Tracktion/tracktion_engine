@@ -38,6 +38,7 @@ using namespace std::literals;
 #include "model/tracks/tracktion_AutomationTrack.cpp"
 #include "model/tracks/tracktion_ChordTrack.cpp"
 #include "model/tracks/tracktion_ClipSlot.cpp"
+#include "model/tracks/tracktion_ClipSlot.test.cpp"
 #include "model/tracks/tracktion_ClipTrack.cpp"
 #include "model/tracks/tracktion_MarkerTrack.cpp"
 #include "model/tracks/tracktion_MasterTrack.cpp"

@@ -75,6 +75,10 @@ public:
     bool canPlayMidi() const;
 
     //==============================================================================
+    /** Returns the ClipSlotList for this track. */
+    ClipSlotList& getClipSlotList();
+
+    //==============================================================================
     bool isFrozen (FreezeType) const override;
     void setFrozen (bool, FreezeType) override;
     void insertFreezePointAfterPlugin (const Plugin::Ptr&);
@@ -217,6 +221,7 @@ private:
     AsyncFunctionCaller asyncCaller;
 
     juce::ListenerList<Listener> listeners;
+    std::unique_ptr<ClipSlotList> clipSlotList;
 
     //==============================================================================
     void freezeTrack();

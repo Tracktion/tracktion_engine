@@ -16,6 +16,7 @@ ClipSlot::ClipSlot (const juce::ValueTree& v, Track& t)
     : EditItem (EditItemID::fromID (v), t.edit),
       state (v), track (t)
 {
+    assert (state.hasType (IDs::CLIPSLOT));
     initialiseClipOwner (track.edit, state);
 }
 
@@ -81,5 +82,67 @@ void ClipSlot::clipOrderChanged()
 void ClipSlot::clipPositionChanged()
 {
 }
+
+
+//==============================================================================
+//==============================================================================
+ClipSlotList::ClipSlotList (const juce::ValueTree& v, Track& t)
+    : ValueTreeObjectList<ClipSlot> (v),
+      track (t)
+{
+    assert (v.hasType (IDs::CLIPSLOTS));
+    rebuildObjects();
+}
+
+ClipSlotList::~ClipSlotList()
+{
+    freeObjects();
+}
+
+juce::Array<ClipSlot*> ClipSlotList::getClipSlots() const
+{
+    return objects;
+}
+
+void ClipSlotList::ensureNumberOfSlots (int numSlots)
+{
+    for (int i = size(); i < numSlots; ++i)
+        parent.appendChild (juce::ValueTree (IDs::CLIPSLOT), &track.edit.getUndoManager());
+}
+
+void ClipSlotList::deleteSlot (ClipSlot& cs)
+{
+    assert (&cs.track == &track);
+    parent.removeChild (cs.state, &track.edit.getUndoManager());
+}
+
+//==============================================================================
+bool ClipSlotList::isSuitableType (const juce::ValueTree& v) const
+{
+    return v.hasType (IDs::CLIPSLOT);
+}
+
+ClipSlot* ClipSlotList::createNewObject (const juce::ValueTree& v)
+{
+    return new ClipSlot (v, track);
+}
+
+void ClipSlotList::deleteObject (ClipSlot* clipSlot)
+{
+    delete clipSlot;
+}
+
+void ClipSlotList::newObjectAdded (ClipSlot*)
+{
+}
+
+void ClipSlotList::objectRemoved (ClipSlot*)
+{
+}
+
+void ClipSlotList::objectOrderChanged()
+{
+}
+
 
 }} // namespace tracktion { inline namespace engine

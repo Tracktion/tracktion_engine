@@ -513,6 +513,16 @@ bool AudioTrack::canPlayMidi() const
     return false;
 }
 
+//==============================================================================
+ClipSlotList& AudioTrack::getClipSlotList()
+{
+    if (! clipSlotList)
+        clipSlotList = std::make_unique<ClipSlotList> (state.getOrCreateChildWithName (IDs::CLIPSLOTS, &edit.getUndoManager()), *this);
+
+    return *clipSlotList;
+}
+
+//==============================================================================
 void AudioTrack::setMidiVerticalPos (double visibleProp, double offset)
 {
     visibleProp             = juce::jlimit (0.0, 1.0, visibleProp);

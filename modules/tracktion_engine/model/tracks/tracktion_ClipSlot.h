@@ -44,15 +44,49 @@ public:
     /** @internal. */
     Edit& getClipOwnerEdit() override;
 
-private:
-    juce::ValueTree state;
-    Track& track;
+    juce::ValueTree state;    /**< The state of this ClipSlot. */
+    Track& track;             /**< The Track this ClipSlot belongs to. */
 
+private:
     void clipCreated (Clip&) override;
     void clipAddedOrRemoved() override;
     void clipOrderChanged() override;
     void clipPositionChanged() override;
 };
 
+
+//==============================================================================
+//==============================================================================
+/**
+    A list of the ClipSlots on a Track.
+*/
+class ClipSlotList  : private ValueTreeObjectList<ClipSlot>
+{
+public:
+    /** Creates a ClipSlotList for a Track. */
+    ClipSlotList (const juce::ValueTree&, Track&);
+    /** Destructor. */
+    ~ClipSlotList() override;
+
+    /** Returns the ClipSlot* on this Track. */
+    juce::Array<ClipSlot*> getClipSlots() const;
+
+    /** Adds Slots to ensure at least numSlots exist. */
+    void ensureNumberOfSlots (int numSlots);
+
+    /** Deletes a specific ClipSlot. */
+    void deleteSlot (ClipSlot&);
+
+    Track& track;   /**< The Track this ClipSlotList belongs to. */
+
+private:
+    bool isSuitableType (const juce::ValueTree&) const override;
+    ClipSlot* createNewObject (const juce::ValueTree&) override;
+    void deleteObject (ClipSlot*) override;
+
+    void newObjectAdded (ClipSlot*) override;
+    void objectRemoved (ClipSlot*) override;
+    void objectOrderChanged() override;
+};
 
 }} // namespace tracktion { inline namespace engine
