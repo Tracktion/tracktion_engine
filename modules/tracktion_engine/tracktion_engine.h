@@ -477,6 +477,7 @@ namespace tracktion { inline namespace engine
 #include "model/edit/tracktion_EditInsertPoint.h"
 #include "model/tracks/tracktion_TrackItem.h"
 #include "model/tracks/tracktion_Track.h"
+#include "model/edit/tracktion_Scene.h"
 #include "model/edit/tracktion_TimeSigSetting.h"
 #include "model/edit/tracktion_TempoSetting.h"
 #include "model/edit/tracktion_TempoSequence.h"

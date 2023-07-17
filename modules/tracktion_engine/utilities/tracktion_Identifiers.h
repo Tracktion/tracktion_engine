@@ -645,6 +645,9 @@ namespace IDs
     DECLARE_ID (CLIPLIST)
     DECLARE_ID (defaultValue)
 
+    DECLARE_ID (SCENES)
+    DECLARE_ID (SCENE)
+
     #undef DECLARE_ID
 }
 

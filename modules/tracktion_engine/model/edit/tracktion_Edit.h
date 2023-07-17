@@ -422,6 +422,10 @@ public:
     void updateMuteSoloStatuses();
 
     //==============================================================================
+    /** Returns a list of Scenes in the Edit. */
+    SceneList& getSceneList();
+
+    //==============================================================================
     /** Returns a new EditItemID to use for a new EditItem. */
     EditItemID createNewItemID() const;
 
@@ -863,6 +867,7 @@ private:
 
     std::unique_ptr<TrackList> trackList;
     std::unique_ptr<EditInputDevices> editInputDevices;
+    std::unique_ptr<SceneList> sceneList;
 
     struct ChangedPluginsList;
     std::unique_ptr<ChangedPluginsList> changedPluginsList;
