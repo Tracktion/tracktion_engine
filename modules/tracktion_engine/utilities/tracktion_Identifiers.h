@@ -646,9 +646,14 @@ namespace IDs
     DECLARE_ID (resamplingQuality)
 
     // BEATCONNECT MODIFICATIONS START HERE
+    DECLARE_ID(Cymbal)
     // Generic IDs
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
+    DECLARE_ID(Faceplate)
+    DECLARE_ID(isInstrument)
+    DECLARE_ID(Kick)
+    DECLARE_ID(maximumValue)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
     DECLARE_ID(paramId)
@@ -664,7 +669,7 @@ namespace IDs
     DECLARE_ID(tremolos)
 
     // Drum Machine IDs
-    DECLARE_ID(Cymbol)
+    DECLARE_ID(Cymbal)
     DECLARE_ID(Kick)
     DECLARE_ID(SamplerDrumPad)
     DECLARE_ID(Snare)

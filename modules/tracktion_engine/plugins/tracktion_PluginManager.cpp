@@ -724,8 +724,6 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 IDs::name, desc.name
             );
 
-
-
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
@@ -774,7 +772,7 @@ void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
             return IDs::Tambourine.toString();
         }
         else if (i >= 4 && i <= 7) {
-            return IDs::Cymbol.toString();
+            return IDs::Cymbal.toString();
         }
         else if (i >= 8 && i <= 11) {
             return IDs::Snare.toString();
@@ -978,8 +976,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
     // BEATCONNECT MODIFICATIONS START
-    std::string test = p.get()->getPluginType().toStdString();
-    if (p.get()->getPluginType() == v.getType().toString()) { // untested
+    if (p.get()->getPluginType() == v.getType().toString()) {
         // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
     // BEATCONNECT MODIFICATIONS START
@@ -996,9 +993,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
-
     // BEATCONNECT MODIFICATIONS START
-    std::string test = p.get()->getPluginType().toStdString();
+    p.get()->state.setProperty(IDs::isInstrument, desc.isInstrument, nullptr);
+
     if (p.get()->getPluginType() == type) {
         // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
