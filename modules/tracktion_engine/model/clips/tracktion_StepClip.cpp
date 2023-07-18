@@ -399,11 +399,17 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                         const float channelVelScale = c.noteValue / 127.0f;
                         const float vel = cache->getVelocity (i) / 127.0f;
-                        int note = c.noteNumber + cache->getKeyNoteOffset(i);
+                        int note = c.noteNumber;
 
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
+                        
 
+                        // BEATCONNECT MODIFICATION START
+                        const float pitchWheelRange = 25.0;
+                        float pitchWheel = juce::MidiMessage::pitchbendToPitchwheelPos(i, pitchWheelRange); 
+                        result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheel), eventStart);
+                        // BEATCONNECT MODIFICATION END
                         result.addEvent (juce::MidiMessage::noteOn  (chan, note, vel * channelVelScale), eventStart);
                         result.addEvent (juce::MidiMessage::noteOff (chan, note, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
                         

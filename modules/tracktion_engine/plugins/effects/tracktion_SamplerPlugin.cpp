@@ -304,11 +304,15 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                 highlightedNotes.clear();
             }
 
+            int test = fc.bufferForMidiMessages->size();
+
             for (auto& m : *fc.bufferForMidiMessages)
             {
+
                 if (m.isNoteOn())
                 {
-                    const int note = m.getNoteNumber();
+                   
+                    int note = m.getNoteNumber();
                     const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
 
                     for (auto playingNote : playingNotes)
@@ -329,8 +333,20 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             && ss->audioData.getNumSamples() > 0
                             && playingNotes.size() < maximumSimultaneousNotes)
                         {
-                            highlightedNotes.setBit (note);
 
+                        if (fc.bufferForMidiMessages->size() > 1 && (&m - 1)->isPitchWheel()) {
+                            const float pitchWheel = (&m - 1)->getPitchWheelValue();
+                            const float sampleRate = 440.0;
+                            const int midiPitchWheelBase = 0x2000;
+                            const float semitonesPerOctave = 12.0;
+                            const float pitchWheelRange = 25.0;
+                            double noteHz = sampleRate * std::pow(2.0, (ss->keyNote - 69.0) / semitonesPerOctave);
+
+                            auto newNoteHz = noteHz * pow(2.0, ((pitchWheel - midiPitchWheelBase) * pitchWheelRange)/(semitonesPerOctave * midiPitchWheelBase));
+                            note = frequencyToMidiNote(newNoteHz);
+                        }
+
+                            highlightedNotes.setBit (note);
                             playingNotes.add (new SampledNote (note,
                                                                ss->keyNote,
                                                                m.getVelocity() / 127.0f,
