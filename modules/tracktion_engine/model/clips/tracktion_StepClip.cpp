@@ -399,10 +399,34 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                         const float channelVelScale = c.noteValue / 127.0f;
                         const float vel = cache->getVelocity (i) / 127.0f;
+                        int note = c.noteNumber;
+
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
-                        result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), eventStart);
-                        result.addEvent (juce::MidiMessage::noteOff (chan, c.noteNumber, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
+                        
+                        // BEATCONNECT MODIFICATION START
+                        const float pitchWheelSemitoneRange = 12.0;
+                        float pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
+                        result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
+                        // BEATCONNECT MODIFICATION END
+                        result.addEvent (juce::MidiMessage::noteOn (chan, note, vel * channelVelScale), eventStart);
+                        result.addEvent (juce::MidiMessage::noteOff (chan, note, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
+                        
+                        // BEATCONNECT MODIFICATION START
+                        int tremoloAttacks = cache->getTremolo(i);
+                        if ( tremoloAttacks > 0)  {
+                            double period = eventEnd - eventStart;
+                            int totalAttacks = tremoloAttacks + 1;
+                            double attackInterval = period / totalAttacks;
+
+                            for (int i = 1; i < totalAttacks; i++) {
+                                float attackTimeOffset = i * attackInterval;
+                                float newEventStart = eventStart + attackTimeOffset;
+                                result.addEvent(juce::MidiMessage::noteOn(chan, note, vel * channelVelScale), newEventStart);
+                                result.addEvent(juce::MidiMessage::noteOff(chan, note, (uint8_t)juce::jlimit(0, 127, c.noteValue.get())), newEventStart + attackInterval);
+                            }
+                        }
+                        // BEATCONNECT MODIFICATION END
                     }
                 }
             }
@@ -505,7 +529,8 @@ void StepClip::insertNewChannel (int index)
         auto v = createValueTree (IDs::CHANNEL,
                                   IDs::channel, defaultMidiChannel,
                                   IDs::note, defaultNoteNumber,
-                                  IDs::velocity, defaultNoteValue);
+                                  IDs::velocity, defaultNoteValue,
+                                  IDs::tremolo, defaultTremoloAttacks);
 
         state.getOrCreateChildWithName (IDs::CHANNELS, um)
              .addChild (v, index, um);

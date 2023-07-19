@@ -304,11 +304,16 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                 highlightedNotes.clear();
             }
 
+            int test = fc.bufferForMidiMessages->size();
+
             for (auto& m : *fc.bufferForMidiMessages)
             {
+
                 if (m.isNoteOn())
                 {
-                    const int note = m.getNoteNumber();
+                    // BEATCONNECT MODIFICATION START
+                    int note = m.getNoteNumber();
+                    // BEATCONNECT MODIFICATION END
                     const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
 
                     for (auto playingNote : playingNotes)
@@ -329,8 +334,23 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             && ss->audioData.getNumSamples() > 0
                             && playingNotes.size() < maximumSimultaneousNotes)
                         {
+                        // BEATCONNECT MODIFICATION START
+                        if (fc.bufferForMidiMessages->size() > 1 && (&m - 1)->isPitchWheel()) {
+                            const float pitchWheelPosition = (&m - 1)->getPitchWheelValue();
+                            const float midiCalibriationHz = 440.0;
+                            const int midiPitchWheelBase = 0x2000;
+                            const float semitonesPerOctave = 12.0;
+                            const float pitchWheelSemitoneRange = 12.0;
+                            const float A440asMidiNote = 69.0;
+                            
+                            // Given the variables keyNote, pitchWheelPosition, and pitchWheelSemitoneRange,
+                            // and given system constants, solve for the new note values
+                            double noteHz = midiCalibriationHz * std::pow(2.0, (ss->keyNote - A440asMidiNote) / semitonesPerOctave); // TODO =8> factor this
+                            auto newNoteHz = noteHz * pow(2.0, ((pitchWheelPosition - midiPitchWheelBase) * pitchWheelSemitoneRange)/(semitonesPerOctave * midiPitchWheelBase)); // TODO =8> factor this
+                            note = frequencyToMidiNote(newNoteHz);
+                        }
+                        // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
-
                             playingNotes.add (new SampledNote (note,
                                                                ss->keyNote,
                                                                m.getVelocity() / 127.0f,
