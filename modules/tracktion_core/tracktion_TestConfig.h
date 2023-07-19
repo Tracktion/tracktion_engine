@@ -60,6 +60,7 @@
 #define ENGINE_BENCHMARKS_CONTAINERCLIP                 1
 #define ENGINE_BENCHMARKS_MIDICLIP                      1
 #define ENGINE_BENCHMARKS_EDITITEMID                    1
-#define ENGINE_BENCHMARKS_NODE                          1
+#define ENGINE_BENCHMARKS_WAVENODE                      1
+#define ENGINE_BENCHMARKS_RESAMPLING                    1
 #define ENGINE_BENCHMARKS_RACKS                         1
 #define ENGINE_BENCHMARKS_PLUGINNODE                    1
