@@ -679,7 +679,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
     for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
     {
         juce::MidiMessageSequence sequence;
-
         clip.generateMidiSequence (sequence);
         sequences.push_back (sequence);
     }
