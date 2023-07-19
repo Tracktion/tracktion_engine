@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-19 11:48:33</td>
+            <td class="headerValue">2023-07-19 13:05:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -107,7 +107,7 @@
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">        539 :         }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            :         bool try_enqueue (Type&amp;&amp; item)      { return fifo-&gt;push (std::move (item)); }</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">   68534116 :         bool try_dequeue (Type&amp; item)       { return fifo-&gt;pop (item); }</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">   53350907 :         bool try_dequeue (Type&amp; item)       { return fifo-&gt;pop (item); }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span>            :     private:</a>
 <a name="51"><span class="lineNum">      51 </span>            :         std::unique_ptr&lt;choc::fifo::MultipleReaderMultipleWriterFIFO&lt;Type&gt;&gt; fifo;</a>
@@ -204,33 +204,33 @@
 <a name="142"><span class="lineNum">     142 </span>            :         /** Returns true if there are no free Nodes to be processed and the calling</a>
 <a name="143"><span class="lineNum">     143 </span>            :             thread should wait until there are Nodes ready.</a>
 <a name="144"><span class="lineNum">     144 </span>            :         */</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">  126776971 :         bool shouldWait()</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">  145233191 :         bool shouldWait()</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         {</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">  126776971 :             if (shouldExit())</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">  145233191 :             if (shouldExit())</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :                 return false;</a>
 <a name="149"><span class="lineNum">     149 </span>            :             </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">  126776647 :             return player.numNodesQueued == 0;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">  145232159 :             return player.numNodesQueued == 0;</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :         }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :         /** Returns true if all the Nodes have been processed. */</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">  119948017 :         bool isFinalNodeReady()</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">  138140202 :         bool isFinalNodeReady()</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :         {</a>
 <a name="156"><span class="lineNum">     156 </span>            :             assert (currentPreparedNode);</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">  119948017 :             if (! currentPreparedNode.load()-&gt;graph)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">  138140202 :             if (! currentPreparedNode.load()-&gt;graph)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :                 return true;</a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">  119948017 :             return currentPreparedNode.load()-&gt;graph-&gt;rootNode-&gt;hasProcessed();</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">  138140202 :             return currentPreparedNode.load()-&gt;graph-&gt;rootNode-&gt;hasProcessed();</span></a>
 <a name="162"><span class="lineNum">     162 </span>            :         }</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            :         /** Process the next chain of Nodes.</a>
 <a name="165"><span class="lineNum">     165 </span>            :             Returns true if at least one Node was processed, false if no Nodes were processed.</a>
 <a name="166"><span class="lineNum">     166 </span>            :             You can use this to determine how long to pause/wait for before processing again.</a>
 <a name="167"><span class="lineNum">     167 </span>            :         */</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">   32198660 :         bool process()</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">   26224909 :         bool process()</span></a>
 <a name="169"><span class="lineNum">     169 </span>            :         {</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">   32198660 :             if (auto cpn = currentPreparedNode.load())</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">   32029862 :                 return player.processNextFreeNode (*cpn);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">   26224909 :             if (auto cpn = currentPreparedNode.load())</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">   26048494 :                 return player.processNextFreeNode (*cpn);</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
 <a name="173"><span class="lineNum">     173 </span>            :             return false;</a>
 <a name="174"><span class="lineNum">     174 </span>            :         }</a>
@@ -283,7 +283,7 @@
 <a name="221"><span class="lineNum">     221 </span>            :     /** Returns the current Node. */</a>
 <a name="222"><span class="lineNum">     222 </span>            :     Node* getNode()</a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">     140982 :         return rootNode;</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">     141582 :         return rootNode;</span></a>
 <a name="225"><span class="lineNum">     225 </span>            :     }</a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     /** Process a block of the Node. */</a>
