@@ -40,7 +40,7 @@ public:
     // returns an error
     juce::String addSound (const juce::String& sourcePathOrProjectID, const juce::String& name,
                             double startTime, double length, float gainDb,
-                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24);
+                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true);
     void removeSound (int index);
     void setSoundParams (int index, int keyNote, int minNote, int maxNote);
     void setSoundGains (int index, float gainDb, float pan);
