@@ -487,7 +487,11 @@ double SamplerPlugin::getSoundLength (int index) const
 
 juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
                                       double startTime, double length, float gainDb,
-                                      int keyNote, int minNote, int maxNote)
+                                      int keyNote, int minNote, int maxNote
+                                      // BEATCONNECT MODIFICATION START
+                                      , bool openEnded
+                                      // BEATCONNECT MODIFICATION END
+                                      )
 {
     const int maxNumSamples = 64;
 
@@ -503,7 +507,11 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::minNote, minNote,
                               IDs::maxNote, maxNote,
                               IDs::gainDb, gainDb,
-                              IDs::pan, (double) 0);
+                              IDs::pan, (double) 0
+                              // BEATCONNECT MODIFICATION END
+                              , IDs::openEnded, openEnded
+                              // BEATCONNECT MODIFICATION END
+                              );
 
     state.addChild (v, -1, getUndoManager());
     return {};
