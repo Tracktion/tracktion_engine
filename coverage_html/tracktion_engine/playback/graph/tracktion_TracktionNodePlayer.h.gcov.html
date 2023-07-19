@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-19 10:46:55</td>
+            <td class="headerValue">2023-07-19 11:48:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -142,27 +142,27 @@
 <a name="80"><span class="lineNum">      80 </span>            :     /** Processes a block of audio and MIDI data.</a>
 <a name="81"><span class="lineNum">      81 </span>            :         Returns the number of times a node was checked but unable to be processed.</a>
 <a name="82"><span class="lineNum">      82 </span>            :     */</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    4646242 :     int process (const tracktion::graph::Node::ProcessContext&amp; pc)</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    4643004 :     int process (const tracktion::graph::Node::ProcessContext&amp; pc)</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :     {</a>
 <a name="85"><span class="lineNum">      85 </span>            :         int numMisses = 0;</a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">    4646242 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">    4643004 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span>            :         // Check to see if the timeline needs to be processed in two halves due to looping</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    4646242 :         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    4643004 :         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">    4646242 :         if (splitTimelineRange.isSplit)</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">    4643004 :         if (splitTimelineRange.isSplit)</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :         {</a>
 <a name="93"><span class="lineNum">      93 </span>            :             const auto firstRangeLength = splitTimelineRange.timelineRange1.getLength();</a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">       1820 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange.withLength (firstRangeLength));</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">       1820 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange.withStart (pc.referenceSampleRange.getStart() + firstRangeLength));</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">       1816 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange.withLength (firstRangeLength));</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">       1816 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange.withStart (pc.referenceSampleRange.getStart() + firstRangeLength));</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :         }</a>
 <a name="98"><span class="lineNum">      98 </span>            :         else</a>
 <a name="99"><span class="lineNum">      99 </span>            :         {</a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">    4644422 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange);</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">    4641188 :             numMisses += processReferenceRange (pc, pc.referenceSampleRange);</span></a>
 <a name="101"><span class="lineNum">     101 </span>            :         }</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">    4646242 :         return numMisses;</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">    4643004 :         return numMisses;</span></a>
 <a name="104"><span class="lineNum">     104 </span>            :     }</a>
 <a name="105"><span class="lineNum">     105 </span>            :     </a>
 <a name="106"><span class="lineNum">     106 </span>            :     /** Clears the Node currently playing. */</a>
@@ -189,48 +189,48 @@
 <a name="127"><span class="lineNum">     127 </span>            :     MidiMessageArray scratchMidi;</a>
 <a name="128"><span class="lineNum">     128 </span>            :     tracktion::graph::LockFreeMultiThreadedNodePlayer nodePlayer;</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">    4648062 :     tracktion::graph::Node::ProcessContext getSubProcessContext (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; subReferenceSampleRange)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">    4644820 :     tracktion::graph::Node::ProcessContext getSubProcessContext (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; subReferenceSampleRange)</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :     {</a>
 <a name="132"><span class="lineNum">     132 </span>            :         jassert (! pc.referenceSampleRange.isEmpty());</a>
 <a name="133"><span class="lineNum">     133 </span>            :         jassert (pc.referenceSampleRange.contains (subReferenceSampleRange));</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    4648062 :         const auto originalReferenceLength = (double) pc.referenceSampleRange.getLength();</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    4648062 :         const juce::Range&lt;double&gt; proportion ((subReferenceSampleRange.getStart() - pc.referenceSampleRange.getStart()) / originalReferenceLength,</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">    4648062 :                                               (subReferenceSampleRange.getEnd() - pc.referenceSampleRange.getStart()) / originalReferenceLength);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">    4644820 :         const auto originalReferenceLength = (double) pc.referenceSampleRange.getLength();</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">    4644820 :         const juce::Range&lt;double&gt; proportion ((subReferenceSampleRange.getStart() - pc.referenceSampleRange.getStart()) / originalReferenceLength,</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">    4644820 :                                               (subReferenceSampleRange.getEnd() - pc.referenceSampleRange.getStart()) / originalReferenceLength);</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">    4648062 :         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    4648062 :         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">    4644820 :         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    4644820 :         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :         const choc::buffer::FrameRange sampleRange { startSample, endSample };</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span>            :         auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    4648062 :         return { sampleRange.size(), subReferenceSampleRange, { destAudio, pc.buffers.midi } };</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    4644820 :         return { sampleRange.size(), subReferenceSampleRange, { destAudio, pc.buffers.midi } };</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :     }</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">    4648062 :     int processReferenceRange (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">    4644820 :     int processReferenceRange (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :     {</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">    4648062 :         return processTempoChanges (getSubProcessContext (pc, referenceSampleRange));</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">    4644820 :         return processTempoChanges (getSubProcessContext (pc, referenceSampleRange));</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :     }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">    4648062 :     int processTempoChanges (const tracktion::graph::Node::ProcessContext&amp; pc)</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">    4644820 :     int processTempoChanges (const tracktion::graph::Node::ProcessContext&amp; pc)</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :     {</a>
 <a name="155"><span class="lineNum">     155 </span>            :         int numMisses = 0;</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">    4648062 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">    4644820 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :         const auto sampleRate = nodePlayer.getSampleRate();</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    4648062 :         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    4648062 :         const auto timeRange = processState.editTimeRange;</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">    4644820 :         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    4644820 :         const auto timeRange = processState.editTimeRange;</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">    4648062 :         if (auto tempoPosition = processState.getTempoSequencePosition())</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">    4644820 :         if (auto tempoPosition = processState.getTempoSequencePosition())</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :         {</a>
 <a name="164"><span class="lineNum">     164 </span>            :             double startProportion = 0.0;</a>
 <a name="165"><span class="lineNum">     165 </span>            :             auto lastEventPosition = timeRange.getStart();</a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span>            :             for (;;)</a>
 <a name="168"><span class="lineNum">     168 </span>            :             {</a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">    3628756 :                 const auto nextTempoChangePosition = tempoPosition-&gt;getTimeOfNextChange();</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">    3628758 :                 const auto nextTempoChangePosition = tempoPosition-&gt;getTimeOfNextChange();</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    3628756 :                 if (nextTempoChangePosition == lastEventPosition)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    3628758 :                 if (nextTempoChangePosition == lastEventPosition)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :                     break;</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span>            :                 if (! timeRange.contains (nextTempoChangePosition))</a>
@@ -249,44 +249,44 @@
 <a name="187"><span class="lineNum">     187 </span>            :             }</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :             // Process any remaining buffer proportion</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    3628756 :             if (startProportion &lt; 1.0)</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    3628756 :                 processSubRange (pc, { startProportion, 1.0 });</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">    3628758 :             if (startProportion &lt; 1.0)</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">    3628758 :                 processSubRange (pc, { startProportion, 1.0 });</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :         }</a>
 <a name="193"><span class="lineNum">     193 </span>            :         else</a>
 <a name="194"><span class="lineNum">     194 </span>            :         {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    1019306 :             processSubRange (pc, { 0.0, 1.0 });</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">    1016062 :             processSubRange (pc, { 0.0, 1.0 });</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :         }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">    4648062 :         return numMisses;</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">    4644820 :         return numMisses;</span></a>
 <a name="199"><span class="lineNum">     199 </span>            :     }</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    4648062 :     int processSubRange (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;double&gt; proportion)</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">    4644820 :     int processSubRange (const tracktion::graph::Node::ProcessContext&amp; pc, juce::Range&lt;double&gt; proportion)</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :     {</a>
 <a name="203"><span class="lineNum">     203 </span>            :         assert (pc.numSamples &gt; 0);</a>
 <a name="204"><span class="lineNum">     204 </span>            :         assert (proportion.getStart() &gt;= 0.0);</a>
 <a name="205"><span class="lineNum">     205 </span>            :         assert (proportion.getEnd() &lt;= 1.0);</a>
 <a name="206"><span class="lineNum">     206 </span>            :         const auto sampleRate = nodePlayer.getSampleRate();</a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">    4648062 :         const auto startReferenceSample = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * pc.referenceSampleRange.getLength());</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    4648062 :         const auto endReferenceSample   = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * pc.referenceSampleRange.getLength());</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">    4644820 :         const auto startReferenceSample = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * pc.referenceSampleRange.getLength());</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">    4644820 :         const auto endReferenceSample   = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * pc.referenceSampleRange.getLength());</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :         const juce::Range&lt;int64_t&gt; referenceRange (startReferenceSample, endReferenceSample);</a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">    4648062 :         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);</span></a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    4648062 :         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">    4644820 :         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    4644820 :         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :         const choc::buffer::FrameRange sampleRange { startSample, endSample };</a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            :         auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">    4648062 :         scratchMidi.clear();</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">    4644820 :         scratchMidi.clear();</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">    4648062 :         tracktion::graph::Node::ProcessContext pc2 { sampleRange.size(), referenceRange, { destAudio, scratchMidi } };</span></a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    4648062 :         processState.update (sampleRate, referenceRange, ProcessState::UpdateContinuityFlags::yes);</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">    4648062 :         const auto numMisses = nodePlayer.process (pc2);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">    4644820 :         tracktion::graph::Node::ProcessContext pc2 { sampleRange.size(), referenceRange, { destAudio, scratchMidi } };</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    4644820 :         processState.update (sampleRate, referenceRange, ProcessState::UpdateContinuityFlags::yes);</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">    4644820 :         const auto numMisses = nodePlayer.process (pc2);</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span>            :         // Merge back MIDI from end of block</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    4648062 :         const auto offset = TimeDuration::fromSamples (startReferenceSample - pc.referenceSampleRange.getStart(), sampleRate);</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">    4648062 :         pc.buffers.midi.mergeFromWithOffset (scratchMidi, offset.inSeconds());</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    4644820 :         const auto offset = TimeDuration::fromSamples (startReferenceSample - pc.referenceSampleRange.getStart(), sampleRate);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">    4644820 :         pc.buffers.midi.mergeFromWithOffset (scratchMidi, offset.inSeconds());</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">    4648062 :         return numMisses;</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">    4644820 :         return numMisses;</span></a>
 <a name="228"><span class="lineNum">     228 </span>            :     }</a>
 <a name="229"><span class="lineNum">     229 </span>            : };</a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
