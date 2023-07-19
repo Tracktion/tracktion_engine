@@ -15,6 +15,8 @@
  #include <emmintrin.h>
 #endif
 
+#define RETURN_MID_NODES_OPTIMISATION 1
+
 namespace tracktion { inline namespace graph
 {
 
@@ -384,6 +386,7 @@ void MultiThreadedNodePlayer::buildNodesOutputLists (std::vector<Node*>& allNode
 
         playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
         n->internal = playbackNodes.back().get();
+        n->numOutputNodes = 0;
     }
 
     // Iterate all Nodes, for each input, add to the current Nodes output list
@@ -394,6 +397,7 @@ void MultiThreadedNodePlayer::buildNodesOutputLists (std::vector<Node*>& allNode
             // Check the input is actually still in the graph
             jassert (std::find (allNodes.begin(), allNodes.end(), inputNode) != allNodes.end());
             static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (node);
+            ++inputNode->numOutputNodes;
         }
     }
 }

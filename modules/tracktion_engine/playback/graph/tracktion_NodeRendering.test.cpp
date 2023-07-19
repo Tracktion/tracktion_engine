@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_NODE
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_WAVENODE
 
 using namespace tracktion::graph;
 
@@ -165,6 +165,9 @@ private:
 
 static WaveNodeBenchmarks waveNodeBenchmarks;
 
+#endif
+
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_RESAMPLING
 
 //==============================================================================
 //==============================================================================

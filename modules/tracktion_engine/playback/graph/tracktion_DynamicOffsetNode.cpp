@@ -143,7 +143,7 @@ void DynamicOffsetNode::process (ProcessContext& pc)
         if (loopEndBeat > sectionEditBeatRange.getStart()
             && loopEndBeat < sectionEditBeatRange.getEnd())
         {
-            section1 = sectionEditBeatRange.withLength (sectionEditBeatRange.getEnd() - loopEndBeat);
+            section1 = sectionEditBeatRange.withEnd (loopEndBeat);
             section2 = sectionEditBeatRange.withStart (section1.getEnd());
 
             assert (juce::approximatelyEqual (section1.getLength().inBeats() + section2->getLength().inBeats(),
