@@ -44,6 +44,9 @@ public:
     /** Destructor. */
     ~SceneList() override;
 
+    /** Returns the Scenes in the Edit. */
+    juce::Array<Scene*> getScenes();
+
     //==============================================================================
     /** Adds Scenes to ensure numScenes are preset in the list. */
     void ensureNumberOfScenes (int numScenes);
@@ -51,7 +54,8 @@ public:
     /** Deletes a specific Scene. */
     void deleteScene (Scene&);
 
-    Edit& edit; /**< The Edit this SceneList belongs to. */
+    juce::ValueTree state;  /**< The state of this SceneList. */
+    Edit& edit;             /**< The Edit this SceneList belongs to. */
 
 private:
     //==============================================================================

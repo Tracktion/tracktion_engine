@@ -77,7 +77,8 @@ public:
     /** Deletes a specific ClipSlot. */
     void deleteSlot (ClipSlot&);
 
-    Track& track;   /**< The Track this ClipSlotList belongs to. */
+    juce::ValueTree state;  /**< The state of this ClipSlotList. */
+    Track& track;           /**< The Track this ClipSlotList belongs to. */
 
 private:
     bool isSuitableType (const juce::ValueTree&) const override;

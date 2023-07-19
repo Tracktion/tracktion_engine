@@ -25,6 +25,7 @@ Scene::Scene (const juce::ValueTree& v, Edit& e)
 //==============================================================================
 SceneList::SceneList (const juce::ValueTree& v, Edit& e)
     : ValueTreeObjectList (v),
+      state (v),
       edit (e)
 {
     assert (parent.hasType (IDs::SCENES));
@@ -37,6 +38,11 @@ SceneList::~SceneList()
 }
 
 //==============================================================================
+juce::Array<Scene*> SceneList::getScenes()
+{
+    return objects;
+}
+
 void SceneList::ensureNumberOfScenes (int numScenes)
 {
     for (int i = size(); i < numScenes; ++i)

@@ -1328,7 +1328,7 @@ void Edit::updateMuteSoloStatuses()
 //==============================================================================
 SceneList& Edit::getSceneList()
 {
-    if (sceneList)
+    if (! sceneList)
         sceneList = std::make_unique<SceneList> (state.getOrCreateChildWithName (IDs::SCENES, &undoManager), *this);
 
     return *sceneList;

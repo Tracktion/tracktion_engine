@@ -88,6 +88,7 @@ void ClipSlot::clipPositionChanged()
 //==============================================================================
 ClipSlotList::ClipSlotList (const juce::ValueTree& v, Track& t)
     : ValueTreeObjectList<ClipSlot> (v),
+      state (v),
       track (t)
 {
     assert (v.hasType (IDs::CLIPSLOTS));
