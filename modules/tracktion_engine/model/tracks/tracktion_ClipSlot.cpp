@@ -109,6 +109,8 @@ void ClipSlotList::ensureNumberOfSlots (int numSlots)
 {
     for (int i = size(); i < numSlots; ++i)
         parent.appendChild (juce::ValueTree (IDs::CLIPSLOT), &track.edit.getUndoManager());
+
+    assert (objects.size() >= numSlots);
 }
 
 void ClipSlotList::deleteSlot (ClipSlot& cs)

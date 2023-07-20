@@ -575,6 +575,33 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
     return res;
 }
 
+
+//==============================================================================
+ClipSlot* findClipSlotForID (const Edit& edit, EditItemID id)
+{
+    ClipSlot* result = nullptr;
+
+    edit.visitAllTracksRecursive ([&] (Track& t)
+                                  {
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                      {
+                                          for (auto cs : at->getClipSlotList().getClipSlots())
+                                          {
+                                              if (cs->itemID == id)
+                                              {
+                                                  result = cs;
+                                                  return false;
+                                              }
+                                          }
+                                      }
+
+                                      return true;
+                                  });
+
+    return result;
+}
+
+
 //==============================================================================
 Clip* findClipForID (const Edit& edit, EditItemID clipID)
 {
@@ -757,6 +784,45 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
 
     return juce::Result::fail (TRANS("No clips to merge"));
 }
+
+juce::OwnedArray<MidiList> readFileToMidiList (juce::File midiFile, bool importAsNoteExpression)
+{
+    CRASH_TRACER
+    juce::OwnedArray<MidiList> lists;
+    juce::Array<BeatPosition> tempoChangeBeatNumbers;
+    juce::Array<double> bpms;
+    juce::Array<int> numerators, denominators;
+    BeatDuration len;
+
+    if (MidiList::readSeparateTracksFromFile (midiFile, lists,
+                                              tempoChangeBeatNumbers, bpms,
+                                              numerators, denominators, len,
+                                              importAsNoteExpression))
+    {
+        return lists;
+    }
+
+    return {};
+}
+
+MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner& owner, bool importAsNoteExpression)
+{
+    auto lists = readFileToMidiList (std::move (midiFile), importAsNoteExpression);
+
+    if (auto l = lists.getFirst())
+    {
+        const auto end = owner.getClipOwnerEdit().tempoSequence.toTime (l->getLastBeatNumber());
+
+        if (auto c = insertMIDIClip (owner, { 0_tp, end }))
+        {
+            c->setName (l->getImportedFileName ());
+            c->getSequence ().copyFrom (*l, &owner.getClipOwnerEdit().getUndoManager());
+        }
+    }
+
+    return {};
+}
+
 
 //==============================================================================
 Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)

@@ -153,7 +153,9 @@ static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newCl
 Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipOwner& targetParent)
 {
     jassert (Clip::isClipState (v));
-    jassert (TrackList::isTrack (v.getParent()) || v.getParent().hasType (IDs::CLIPLIST));
+    jassert (TrackList::isTrack (v.getParent())
+             || v.getParent().hasType (IDs::CLIPLIST)
+             || v.getParent().hasType (IDs::CLIPSLOT));
 
     auto& edit = targetParent.getClipOwnerEdit();
     auto newClipID = EditItemID::readOrCreateNewID (edit, v);
@@ -248,6 +250,11 @@ ClipTrack* Clip::getClipTrack() const
 Track* Clip::getTrack() const
 {
     return dynamic_cast<Track*> (parent);
+}
+
+ClipSlot* Clip::getClipSlot() const
+{
+    return dynamic_cast<ClipSlot*> (parent);
 }
 
 //==============================================================================
@@ -510,6 +517,8 @@ void Clip::updateParent()
         setParent (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parentState))));
     else if (parentState.hasType (IDs::CLIPLIST) && parentState.getParent().hasType (IDs::CONTAINERCLIP))
         setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState.getParent()))));
+    else if (parentState.hasType (IDs::CLIPSLOT))
+        setParent (dynamic_cast<ClipSlot*> (findClipSlotForID (edit, EditItemID::fromID (parentState.getParent()))));
     else
         setParent ({});
 }

@@ -106,6 +106,7 @@ struct DemoTypeBase
 #include "demos/PluginDemo.h"
 #include "demos/RecordingDemo.h"
 #include "demos/StepSequencerDemo.h"
+#include "demos/ClipLauncherDemo.h"
 
 
 //==============================================================================

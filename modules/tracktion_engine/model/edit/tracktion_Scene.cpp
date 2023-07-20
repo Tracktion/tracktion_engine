@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-Scene::Scene (const juce::ValueTree& v, Edit& e)
-    : state (v), edit (e)
+Scene::Scene (const juce::ValueTree& v, SceneList& sl)
+    : state (v), edit (sl.edit), sceneList (sl)
 {
     assert (v.hasType (IDs::SCENE));
 
@@ -47,6 +47,8 @@ void SceneList::ensureNumberOfScenes (int numScenes)
 {
     for (int i = size(); i < numScenes; ++i)
         parent.appendChild (juce::ValueTree (IDs::SCENE), &edit.getUndoManager());
+
+    assert (objects.size() >= numScenes);
 }
 
 void SceneList::deleteScene (Scene& scene)
@@ -63,7 +65,7 @@ bool SceneList::isSuitableType (const juce::ValueTree& v) const
 
 Scene* SceneList::createNewObject (const juce::ValueTree& v)
 {
-    return new Scene (v, edit);
+    return new Scene (v, *this);
 }
 
 void SceneList::deleteObject (Scene* scene)

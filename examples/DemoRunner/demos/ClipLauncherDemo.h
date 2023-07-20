@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "../../common/BinaryData.h"
+
 //==============================================================================
 //==============================================================================
 namespace utils
@@ -86,19 +88,52 @@ namespace cl
         ClipComponent (te::Clip& c)
             : clip (c)
         {
+            addAndMakeVisible (playButton);
+            playButton.setShape (Icons::getPlayPath(), false, true, false);
+            playButton.setOutline (Colours::black, 0.5f);
+            playButton.setBorderSize (juce::BorderSize<int> (4));
+            playButton.setOnColours (juce::Colours::green,
+                                     juce::Colours::green.darker (0.2f),
+                                     juce::Colours::green.darker());
+        }
 
+        void resized() override
+        {
+            auto r = getLocalBounds().reduced (1);
+            playButton.setBounds (r.removeFromLeft (r.getHeight()));
         }
 
         void paint (juce::Graphics& g) override
         {
-            g.fillAll (juce::Colours::white);
+            auto r = getLocalBounds().reduced (1);
+
+            g.setColour (getClipColour (clip));
+            g.fillRect (r);
+
+            r.removeFromLeft (r.getHeight()); // Button space
+
+            g.setColour (juce::Colours::white);
+            g.setFont (12.0f);
+            g.drawText (clip.getName(), r, juce::Justification::centredLeft);
         }
 
+    private:
         te::Clip& clip;
+        juce::ShapeButton playButton { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+
+        static juce::Colour getClipColour (te::Clip& c)
+        {
+            if (c.getColour().isTransparent())
+                if (auto cs = c.getClipSlot())
+                    return cs->track.getColour();
+
+            return c.getColour();
+        }
     };
 
     //==============================================================================
     struct ClipSlotComponent : public juce::Component,
+                               public juce::FileDragAndDropTarget,
                                private te::ValueTreeObjectList<utils::AsyncValueTreeItem<ClipComponent>>
     {
         ClipSlotComponent (te::ClipSlot& c)
@@ -115,7 +150,12 @@ namespace cl
 
         void paint (juce::Graphics& g) override
         {
-            g.fillAll (juce::Colours::blue);
+            auto r = getLocalBounds();
+            g.setColour (juce::Colours::darkgrey.darker (isDragging ? 0.0f : 0.4f));
+            g.fillRect (r);
+
+            g.setColour (juce::Colours::black);
+            g.drawRect (r);
         }
 
         void resized() override
@@ -125,9 +165,49 @@ namespace cl
                     clip->setBounds (getLocalBounds());
         }
 
+        bool isInterestedInFileDrag (const juce::StringArray& files) override
+        {
+            for (auto f : files)
+                if (juce::File (f).hasFileExtension (te::soundFileAndMidiExtensions))
+                    return true;
+
+            return false;
+        }
+
+        void fileDragEnter (const juce::StringArray&, int, int) override
+        {
+            isDragging = true;
+            repaint();
+        }
+
+        void fileDragExit (const juce::StringArray&) override
+        {
+            isDragging = false;
+            repaint();
+        }
+
+        void filesDropped (const juce::StringArray& files, int, int) override
+        {
+            for (auto f : files)
+                if (juce::File (f).hasFileExtension (te::soundFileAndMidiExtensions))
+                    setFile (f);
+
+            isDragging = false;
+            repaint();
+        }
+
     private:
         te::ClipSlot& clipSlot;
         utils::AsyncResizer asyncResizer { *this };
+        bool isDragging = false;
+
+        void setFile (juce::File f)
+        {
+            if (f.hasFileExtension (te::soundFileExtensions))
+                insertWaveClip (clipSlot, f.getFileName(), f, {}, te::DeleteExistingClips::yes);
+            else if (f.hasFileExtension (te::midiFileExtensions))
+                te::createClipFromFile (f, clipSlot, te::MidiList::looksLikeMPEData (f));
+        }
 
         using ObjType = utils::AsyncValueTreeItem<ClipComponent>;
 
@@ -177,16 +257,22 @@ namespace cl
             freeObjects();
         }
 
+        void paint (juce::Graphics& g) override
+        {
+            g.setColour (juce::Colours::black);
+            g.drawRect (getLocalBounds());
+        }
+
         void resized() override
         {
             juce::Grid g;
-            g.templateRows.add (1_fr);
-            g.templateColumns.insertMultiple (0, 1_fr, objects.size());
+            g.templateColumns.add (1_fr);
+            g.templateRows.insertMultiple (0, 24_px, objects.size());
             int x = 1, y = 1;
 
             for (auto objectWrapper : objects)
                 if (auto object = objectWrapper->getObject())
-                    g.items.add (juce::GridItem (*object).withArea (x, y++));
+                    g.items.add (juce::GridItem (*object).withArea (y++, x));
 
             g.performLayout (getLocalBounds());
         }
@@ -199,7 +285,7 @@ namespace cl
 
         bool isSuitableType (const juce::ValueTree& v) const override
         {
-            return v.hasProperty (te::IDs::CLIPSLOT);
+            return v.hasType (te::IDs::CLIPSLOT);
         }
 
         ObjType* createNewObject (const juce::ValueTree& v) override
@@ -211,6 +297,7 @@ namespace cl
                                     assert (cs);
                                     auto csc = std::make_unique<ClipSlotComponent> (*cs);
                                     addAndMakeVisible (*csc);
+                                    asyncResizer.resizeAsync();
 
                                     return csc;
                                 });
@@ -232,15 +319,43 @@ namespace cl
         TrackComponent (te::AudioTrack &t)
             : track (t)
         {
-
+            addAndMakeVisible (slotList);
         }
 
         void paint (juce::Graphics& g) override
         {
-            g.fillAll (juce::Colours::red);
+            auto r = getLocalBounds();
+            paintTrackHeader (g, r.removeFromTop (40));
+
+            g.setColour (juce::Colours::white.withAlpha (0.2f));
+            g.drawRect (r);
         }
 
+        void resized() override
+        {
+            slotList.setBounds (getLocalBounds().withTrimmedTop (40));
+        }
+
+    private:
         te::AudioTrack& track;
+        SlotListComponent slotList { track.getClipSlotList() };
+
+        void paintTrackHeader (juce::Graphics& g, juce::Rectangle<int> r)
+        {
+            g.setColour (juce::Colours::darkgrey);
+            g.fillRect (r);
+
+            g.setColour (juce::Colours::black);
+            g.drawRect (r);
+
+            g.setColour (track.getColour().isTransparent() ? juce::Colours::white.darker()
+                                                           : track.getColour());
+            g.fillRect (r.reduced (1).removeFromTop (2));
+
+            g.setColour (juce::Colours::white);
+            g.setFont (13.0f);
+            g.drawText (track.getName(), r.reduced (4), juce::Justification::centred);
+        }
     };
 
     //==============================================================================
@@ -259,10 +374,8 @@ namespace cl
             freeObjects();
         }
 
-        void paint (juce::Graphics& g) override
+        void paint (juce::Graphics&) override
         {
-            g.setColour (juce::Colours::grey);
-            g.drawRect (getLocalBounds());
         }
 
         void resized() override
@@ -321,15 +434,53 @@ namespace cl
         SceneButton (te::Scene& s)
             : scene (s)
         {
+            addAndMakeVisible (playButton);
+            playButton.setShape (Icons::getPlayPath(), false, true, false);
+            playButton.setOutline (Colours::black, 0.5f);
+            playButton.setBorderSize (juce::BorderSize<int> (4));
+            playButton.setOnColours (juce::Colours::green,
+                                     juce::Colours::green.darker (0.2f),
+                                     juce::Colours::green.darker());
+        }
 
+        void resized() override
+        {
+            auto r = getLocalBounds().reduced (1);
+            playButton.setBounds (r.removeFromLeft (r.getHeight() + 2));
         }
 
         void paint (juce::Graphics& g) override
         {
-            g.fillAll (juce::Colours::green);
+            auto r = getLocalBounds();
+            g.setColour (juce::Colours::darkgrey);
+            g.fillRect (r);
+
+            g.setColour (juce::Colours::black);
+            g.drawRect (r.toFloat());
+
+            auto leftR = r.removeFromLeft (r.getHeight()).reduced (1);
+            g.setColour (scene.colour.get().isTransparent() ? juce::Colours::white.darker()
+                                                            : scene.colour.get());
+            g.fillRect (leftR.removeFromLeft (2));
+
+            g.setColour (juce::Colours::white);
+            g.setFont (13.0f);
+            g.drawText (getSceneName (scene), r, juce::Justification::centredLeft);
         }
 
         te::Scene& scene;
+
+    private:
+        juce::ShapeButton playButton { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+
+        static juce::String getSceneName (te::Scene& s)
+        {
+            if (auto n = s.name.get(); n.isNotEmpty())
+                return n;
+
+            return juce::String ("Scene 123")
+                    .replace ("123", juce::String (s.sceneList.getScenes().indexOf (&s) + 1));
+        }
     };
 
     //==============================================================================
@@ -358,12 +509,12 @@ namespace cl
         {
             juce::Grid g;
             g.templateColumns.add (1_fr);
-            g.templateRows.insertMultiple (0, 1_fr, objects.size());
+            g.templateRows.insertMultiple (0, 24_px, objects.size());
             int x = 1, y = 1;
 
             for (auto sceneButtonWrapper : objects)
                 if (auto sceneButton = sceneButtonWrapper->getObject())
-                    g.items.add (juce::GridItem (*sceneButton).withArea (x, y++));
+                    g.items.add (juce::GridItem (*sceneButton).withArea (y++, x));
 
             g.performLayout (getLocalBounds());
         }
@@ -377,7 +528,7 @@ namespace cl
 
         bool isSuitableType (const juce::ValueTree& v) const override
         {
-            return v.hasType (te::IDs::SCENES);
+            return v.hasType (te::IDs::SCENE);
         }
 
         ObjType* createNewObject (const juce::ValueTree& v) override
@@ -390,6 +541,7 @@ namespace cl
                                     assert (o->state == state);
                                     auto sb = std::make_unique<SceneButton> (*o);
                                     addAndMakeVisible (*sb);
+                                    asyncResizer.resizeAsync();
 
                                     return sb;
                                 });
@@ -415,9 +567,8 @@ namespace cl
             addAndMakeVisible (trackListComponent);
         }
 
-        void paint (juce::Graphics& g) override
+        void paint (juce::Graphics&) override
         {
-            g.fillAll (juce::Colours::yellow);
         }
 
         void resized() override
@@ -471,6 +622,10 @@ public:
         lookAndFeelChanged();
 
         edit.ensureNumberOfAudioTracks (8);
+        edit.getSceneList().ensureNumberOfScenes (8);
+
+        for (auto at : te::getAudioTracks (edit))
+            at->getClipSlotList().ensureNumberOfSlots (8);
     }
 
     void paint (juce::Graphics&) override
@@ -493,7 +648,7 @@ public:
             g.performLayout (r.removeFromTop (28));
         }
 
-        clipLauncherComponent.setBounds (r);
+        clipLauncherComponent.setBounds (r.reduced (2).translated (0, 2));
     }
 
     void lookAndFeelChanged() override

@@ -288,6 +288,8 @@ public:
     ClipTrack* getClipTrack() const;
     /** Returns the parent Track this clip is on (if any). */
     Track* getTrack() const override;
+    /** Returns the parent ClipSlot this clip is on (if any). */
+    ClipSlot* getClipSlot() const;
 
     //==============================================================================
     /** Returns the colour property of this clip. */

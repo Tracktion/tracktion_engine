@@ -92,6 +92,13 @@ juce::Array<Track*> toTrackArray (Edit&, const juce::BigInteger&);
 template<typename TrackItemType>
 [[ nodiscard ]] juce::Array<TrackItemType*> getTrackItemsOfType (const Track&);
 
+
+//==============================================================================
+// ClipSlots
+//==============================================================================
+ClipSlot* findClipSlotForID (const Edit&, EditItemID);
+
+
 //==============================================================================
 // Clips
 //==============================================================================
@@ -161,6 +168,15 @@ MidiNote* findNoteForState (const Edit&, const juce::ValueTree&);
 
 /** Merges a set of MIDI clips in to one new one. */
 juce::Result mergeMidiClips (juce::Array<MidiClip*>);
+
+/** Helper function to read a file to a number of MidiLists. */
+juce::OwnedArray<MidiList> readFileToMidiList (juce::File midiFile, bool importAsNoteExpression);
+
+/** Helper function to read a MIDI file and create a MidiClip from it.
+    N.B. This will only use the first track in the file, any other tracks will be discarded.
+    The clip will be positioned at 0 with a beat length the duration of the imported list.
+*/
+MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner&, bool importAsNoteExpression);
 
 
 //==============================================================================

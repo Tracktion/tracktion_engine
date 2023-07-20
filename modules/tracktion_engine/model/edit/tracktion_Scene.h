@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+class SceneList;
+
 //==============================================================================
 /**
     A Scene is a collection of ClipSlots across tracks.
@@ -21,13 +23,15 @@ class Scene
 {
 public:
     /** Creates a Scene for a given state. */
-    Scene (const juce::ValueTree&, Edit&);
+    Scene (const juce::ValueTree&, SceneList&);
 
     juce::ValueTree state;
     Edit& edit;
 
     juce::CachedValue<juce::String> name;
     juce::CachedValue<juce::Colour> colour;
+
+    SceneList& sceneList;
 };
 
 

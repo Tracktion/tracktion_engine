@@ -372,6 +372,9 @@ namespace tracktion { inline namespace engine
     class PropertyStorage;
     class TrackOutput;
     class BufferedFileReader;
+    class ClipSlotList;
+    class ClipSlot;
+    class Scene;
 }} // namespace tracktion { inline namespace engine
 
 #ifdef __GNUC__
