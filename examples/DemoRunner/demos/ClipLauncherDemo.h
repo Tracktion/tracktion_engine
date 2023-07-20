@@ -83,18 +83,70 @@ namespace utils
 namespace cl
 {
     //==============================================================================
+    class PlayButton : public juce::Component
+    {
+    public:
+        PlayButton()
+        {
+            addAndMakeVisible (button);
+            button.setShape (Icons::getPlayPath(), false, true, false);
+            button.setOutline (Colours::black, 0.5f);
+            button.setBorderSize (juce::BorderSize<int> (5));
+            button.setOnColours (juce::Colours::green,
+                                 juce::Colours::green.darker (0.2f),
+                                 juce::Colours::green.darker());
+        }
+
+        void resized() override
+        {
+            button.setBounds (getLocalBounds());
+        }
+
+        juce::Button& getButton()
+        {
+            return button;
+        }
+
+    private:
+        juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+    };
+
+    //==============================================================================
+    class StopButton : public juce::Component
+    {
+    public:
+        StopButton()
+        {
+            addAndMakeVisible (button);
+            button.setShape (Icons::getStopPath(), false, true, false);
+            button.setOutline (Colours::black, 0.5f);
+            button.setBorderSize (juce::BorderSize<int> (6));
+            button.setOnColours (juce::Colours::green,
+                                 juce::Colours::green.darker (0.2f),
+                                 juce::Colours::green.darker());
+        }
+
+        void resized() override
+        {
+            button.setBounds (getLocalBounds());
+        }
+
+        juce::Button& getButton()
+        {
+            return button;
+        }
+
+    private:
+        juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+    };
+
+    //==============================================================================
     struct ClipComponent : public juce::Component
     {
         ClipComponent (te::Clip& c)
             : clip (c)
         {
             addAndMakeVisible (playButton);
-            playButton.setShape (Icons::getPlayPath(), false, true, false);
-            playButton.setOutline (Colours::black, 0.5f);
-            playButton.setBorderSize (juce::BorderSize<int> (4));
-            playButton.setOnColours (juce::Colours::green,
-                                     juce::Colours::green.darker (0.2f),
-                                     juce::Colours::green.darker());
         }
 
         void resized() override
@@ -119,7 +171,7 @@ namespace cl
 
     private:
         te::Clip& clip;
-        juce::ShapeButton playButton { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+        PlayButton playButton;
 
         static juce::Colour getClipColour (te::Clip& c)
         {
@@ -141,6 +193,9 @@ namespace cl
               clipSlot (c)
         {
             rebuildObjects();
+
+            addAndMakeVisible (stopButton);
+            stopButton.setAlpha (0.3f);
         }
 
         ~ClipSlotComponent() override
@@ -160,9 +215,13 @@ namespace cl
 
         void resized() override
         {
+            const auto r = getLocalBounds();
+
             if (auto clipWrapper = objects.getFirst())
                 if (auto clip = clipWrapper->getObject())
-                    clip->setBounds (getLocalBounds());
+                    return clip->setBounds (r);
+
+            stopButton.setBounds (r.reduced (1).removeFromLeft (r.getHeight()));
         }
 
         bool isInterestedInFileDrag (const juce::StringArray& files) override
@@ -200,6 +259,7 @@ namespace cl
         te::ClipSlot& clipSlot;
         utils::AsyncResizer asyncResizer { *this };
         bool isDragging = false;
+        StopButton stopButton;
 
         void setFile (juce::File f)
         {
@@ -320,6 +380,8 @@ namespace cl
             : track (t)
         {
             addAndMakeVisible (slotList);
+            addAndMakeVisible (stopButton);
+            stopButton.setAlpha (0.5f);
         }
 
         void paint (juce::Graphics& g) override
@@ -333,12 +395,17 @@ namespace cl
 
         void resized() override
         {
-            slotList.setBounds (getLocalBounds().withTrimmedTop (40));
+            auto r = getLocalBounds();
+            auto topR = r.removeFromTop (40);
+            stopButton.setBounds (topR.reduced (2).removeFromLeft (22));
+
+            slotList.setBounds (r);
         }
 
     private:
         te::AudioTrack& track;
         SlotListComponent slotList { track.getClipSlotList() };
+        StopButton stopButton;
 
         void paintTrackHeader (juce::Graphics& g, juce::Rectangle<int> r)
         {
@@ -354,7 +421,7 @@ namespace cl
 
             g.setColour (juce::Colours::white);
             g.setFont (13.0f);
-            g.drawText (track.getName(), r.reduced (4), juce::Justification::centred);
+            g.drawText (track.getName(), r.reduced (4).withTrimmedLeft (22), juce::Justification::centredLeft);
         }
     };
 
@@ -435,12 +502,6 @@ namespace cl
             : scene (s)
         {
             addAndMakeVisible (playButton);
-            playButton.setShape (Icons::getPlayPath(), false, true, false);
-            playButton.setOutline (Colours::black, 0.5f);
-            playButton.setBorderSize (juce::BorderSize<int> (4));
-            playButton.setOnColours (juce::Colours::green,
-                                     juce::Colours::green.darker (0.2f),
-                                     juce::Colours::green.darker());
         }
 
         void resized() override
@@ -471,7 +532,7 @@ namespace cl
         te::Scene& scene;
 
     private:
-        juce::ShapeButton playButton { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+        PlayButton playButton;
 
         static juce::String getSceneName (te::Scene& s)
         {
@@ -501,7 +562,7 @@ namespace cl
 
         void paint (juce::Graphics& g) override
         {
-            g.setColour (juce::Colours::grey);
+            g.setColour (juce::Colours::black);
             g.drawRect (getLocalBounds());
         }
 
