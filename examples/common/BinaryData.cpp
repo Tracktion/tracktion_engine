@@ -67,6 +67,16 @@ namespace Icons
         path.loadPathFromData (pathData, sizeof (pathData));
         return path;
     }
+
+    Path getPlusPath()
+    {
+        static const unsigned char pathData[] = { 110,109,0,0,0,64,0,0,0,64,108,0,0,0,64,0,0,0,0,108,0,0,64,64,0,0,0,0,108,0,0,64,64,0,0,0,64,108,0,0,160,64,0,0,0,64,108,0,0,160,64,0,0,64,64,108,0,0,64,64,0,0,64,64,108,0,0,64,64,0,0,160,64,108,0,0,0,64,0,0,160,64,108,0,0,0,64,0,0,64,64,108,0,0,0,0,0,
+                                                  0,64,64,108,0,0,0,0,0,0,0,64,108,0,0,0,64,0,0,0,64,99,101,0,0 };
+
+        Path path;
+        path.loadPathFromData (pathData, sizeof (pathData));
+        return path;
+    }
 }
 
 namespace DemoBinaryData

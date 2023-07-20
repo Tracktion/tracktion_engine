@@ -141,6 +141,35 @@ namespace cl
     };
 
     //==============================================================================
+    class AddSceneButton : public juce::Component
+    {
+    public:
+        AddSceneButton()
+        {
+            addAndMakeVisible (button);
+            button.setShape (Icons::getPlusPath(), false, true, false);
+            button.setOutline (Colours::black, 0.5f);
+            button.setBorderSize (juce::BorderSize<int> (6));
+            button.setOnColours (juce::Colours::green,
+                                 juce::Colours::green.darker (0.2f),
+                                 juce::Colours::green.darker());
+        }
+
+        void resized() override
+        {
+            button.setBounds (getLocalBounds());
+        }
+
+        juce::Button& getButton()
+        {
+            return button;
+        }
+
+    private:
+        juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+    };
+
+    //==============================================================================
     struct ClipComponent : public juce::Component
     {
         ClipComponent (te::Clip& c)
@@ -529,6 +558,21 @@ namespace cl
             g.drawText (getSceneName (scene), r, juce::Justification::centredLeft);
         }
 
+        void mouseUp (const juce::MouseEvent& e) override
+        {
+            if (! e.mods.isPopupMenu())
+                return;
+
+            juce::PopupMenu m;
+            m.addItem (TRANS("Delete Scene"),
+                       [sl = te::SafeSelectable (scene)]() mutable
+                       {
+                           if (sl)
+                               sl->sceneList.deleteScene (*sl);
+                       });
+            m.showMenuAsync ({});
+        }
+
         te::Scene& scene;
 
     private:
@@ -553,11 +597,19 @@ namespace cl
               sceneList (s)
         {
             rebuildObjects();
+            addAndMakeVisible (addButton);
+            addButton.getButton().onClick
+                = [this] { sceneList.ensureNumberOfScenes (sceneList.getScenes().size() + 1); };
         }
 
         ~SceneListComponent() override
         {
             freeObjects();
+        }
+
+        int getIdealHeight() const
+        {
+            return (objects.size() + 1) * 24;
         }
 
         void paint (juce::Graphics& g) override
@@ -568,21 +620,36 @@ namespace cl
 
         void resized() override
         {
-            juce::Grid g;
-            g.templateColumns.add (1_fr);
-            g.templateRows.insertMultiple (0, 24_px, objects.size());
-            int x = 1, y = 1;
+            auto r = getLocalBounds();
 
-            for (auto sceneButtonWrapper : objects)
-                if (auto sceneButton = sceneButtonWrapper->getObject())
-                    g.items.add (juce::GridItem (*sceneButton).withArea (y++, x));
+            {
+                juce::Grid g;
+                g.templateColumns.add (1_fr);
+                g.templateRows.insertMultiple (0, 24_px, objects.size());
+                int x = 1, y = 1;
 
-            g.performLayout (getLocalBounds());
+                for (auto sceneButtonWrapper: objects)
+                    if (auto sceneButton = sceneButtonWrapper->getObject ())
+                        g.items.add (juce::GridItem (*sceneButton).withArea (y++, x));
+
+                g.performLayout (r);
+            }
+
+            {
+                r = r.withHeight (24);
+
+                if (auto last = objects.getLast ())
+                    if (auto sceneButton = last->getObject ())
+                        r = r.withY (sceneButton->getBottom ());
+
+                addButton.setBounds (r);
+            }
         }
 
         te::SceneList& sceneList;
 
     private:
+        AddSceneButton addButton;
         utils::AsyncResizer asyncResizer { *this };
 
         using ObjType = utils::AsyncValueTreeItem<SceneButton>;

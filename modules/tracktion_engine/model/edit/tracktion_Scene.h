@@ -19,11 +19,14 @@ class SceneList;
     This class provides an interface to interact with them all rather than having
     to iterate through each Track's SlotList finding the relevant ClipSlot index.
 */
-class Scene
+class Scene : public Selectable
 {
 public:
     /** Creates a Scene for a given state. */
     Scene (const juce::ValueTree&, SceneList&);
+
+    /** Destructor. */
+    ~Scene() override;
 
     juce::ValueTree state;
     Edit& edit;
@@ -32,6 +35,9 @@ public:
     juce::CachedValue<juce::Colour> colour;
 
     SceneList& sceneList;
+
+    /** @internal */
+    juce::String getSelectableDescription() override;
 };
 
 
@@ -52,7 +58,10 @@ public:
     juce::Array<Scene*> getScenes();
 
     //==============================================================================
-    /** Adds Scenes to ensure numScenes are preset in the list. */
+    /** Adds Scenes to ensure numScenes are preset in the list.
+        N.B. This also adds ClipSlots to all tracks to ensure they have the same
+        number of slots.
+    */
     void ensureNumberOfScenes (int numScenes);
 
     /** Deletes a specific Scene. */

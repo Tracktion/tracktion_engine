@@ -21,6 +21,16 @@ Scene::Scene (const juce::ValueTree& v, SceneList& sl)
     colour.referTo (state, IDs::colour, um);
 }
 
+Scene::~Scene()
+{
+    notifyListenersOfDeletion();
+}
+
+juce::String Scene::getSelectableDescription()
+{
+    return TRANS("Scene");
+}
+
 
 //==============================================================================
 SceneList::SceneList (const juce::ValueTree& v, Edit& e)
@@ -49,12 +59,23 @@ void SceneList::ensureNumberOfScenes (int numScenes)
         parent.appendChild (juce::ValueTree (IDs::SCENE), &edit.getUndoManager());
 
     assert (objects.size() >= numScenes);
+
+    for (auto at : getAudioTracks (edit))
+        at->getClipSlotList().ensureNumberOfSlots (objects.size());
 }
 
 void SceneList::deleteScene (Scene& scene)
 {
     assert (&scene.edit == &edit);
-    parent.removeChild (scene.state, &edit.getUndoManager());
+    const int index = parent.indexOf (scene.state);
+    parent.removeChild (index, &edit.getUndoManager());
+
+    for (auto at : getAudioTracks (edit))
+    {
+        auto& csl = at->getClipSlotList();
+        assert (csl.getClipSlots()[index] != nullptr);
+        csl.deleteSlot (*csl.getClipSlots()[index]);
+    }
 }
 
 //==============================================================================

@@ -74,11 +74,11 @@ public:
     /** Adds Slots to ensure at least numSlots exist. */
     void ensureNumberOfSlots (int numSlots);
 
-    /** Deletes a specific ClipSlot. */
-    void deleteSlot (ClipSlot&);
-
     juce::ValueTree state;  /**< The state of this ClipSlotList. */
     Track& track;           /**< The Track this ClipSlotList belongs to. */
+
+    /** @internal. */
+    void deleteSlot (ClipSlot&);
 
 private:
     bool isSuitableType (const juce::ValueTree&) const override;

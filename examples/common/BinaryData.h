@@ -15,6 +15,7 @@ namespace Icons
     Path getPlayPath();
     Path getStopPath();
     Path getRecPath();
+    Path getPlusPath();
 }
 
 namespace DemoBinaryData
