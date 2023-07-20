@@ -308,7 +308,7 @@ namespace cl
         ObjType* createNewObject (const juce::ValueTree& v) override
         {
             return new ObjType (v,
-                                [this] (auto state)
+                                [this] ([[ maybe_unused ]] auto state)
                                 {
                                     auto c = clipSlot.getClip();
                                     assert (c);

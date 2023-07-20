@@ -48,7 +48,7 @@ private:
         expectEquals (clipSlots.getClipSlots().size(), 1);
 
         auto clipSlot = clipSlots.getClipSlots()[0];
-        expect (findClipSlotForID (edit, clipSlot->itemID) != nullptr);
+        expect (findClipSlotForID (*edit, clipSlot->itemID) != nullptr);
         auto wac = insertWaveClip (*clipSlot, {}, sinFile->getFile(), {}, DeleteExistingClips::no);
         expect (wac != nullptr);
 
