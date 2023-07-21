@@ -730,7 +730,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
-            if (type == "drum machine") // =8>
+            if (type == "drum machine")
                 addInitialSamplerDrumPadValueTree(v);
             // BEATCONNECT MODIFICATIONS END
 
