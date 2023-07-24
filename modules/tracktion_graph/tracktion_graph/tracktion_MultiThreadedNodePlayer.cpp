@@ -469,7 +469,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
 
         // fetch_sub returns the previous value so it will now be 0
-        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)
+        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
             jassert (! outputPlaybackNode->hasBeenQueued);
@@ -485,7 +485,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             else
             {
                 preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
-                numNodesQueued.fetch_add (1, std::memory_order_release);
+                numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
             }
            #else
             // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread
@@ -494,7 +494,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
                 return &outputPlaybackNode->node;
 
             preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
            #endif
         }
     }
@@ -517,7 +517,7 @@ bool MultiThreadedNodePlayer::processNextFreeNode()
     if (! preparedNode->nodesReadyToBeProcessed.pop (nodeToProcess))
         return false;
 
-    numNodesQueued.fetch_sub (1, std::memory_order_release);
+    numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);
 
     assert (nodeToProcess != nullptr);
     processNode (*nodeToProcess);
