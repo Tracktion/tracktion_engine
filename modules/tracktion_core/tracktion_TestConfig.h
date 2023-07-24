@@ -24,6 +24,7 @@
 #define ENGINE_UNIT_TESTS_EDIT                          1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
+#define ENGINE_UNIT_TESTS_LAUNCH_HANDLE                 1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE               1
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
 #define ENGINE_UNIT_TESTS_MIDILIST                      1

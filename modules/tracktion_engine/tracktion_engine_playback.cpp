@@ -255,6 +255,9 @@ using namespace std::literals;
 #include "playback/graph/tracktion_SharedLevelMeasuringNode.h"
 #include "playback/graph/tracktion_SharedLevelMeasuringNode.cpp"
 
+#include "playback/graph/tracktion_SlotControlNode.h"
+#include "playback/graph/tracktion_SlotControlNode.cpp"
+
 #include "playback/graph/tracktion_SpeedRampWaveNode.h"
 #include "playback/graph/tracktion_SpeedRampWaveNode.cpp"
 
