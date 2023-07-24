@@ -1053,6 +1053,11 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     // Setup text functions
     setupTextFunctions();
 
+    // BEATCONNECT MODIFICATION START
+    // This is needed in order to set initial state in Unity
+    state.setProperty(IDs::waveShape + "1", 1, um);
+    // BEATCONNECT MODIFICATION END
+
     valueTreePropertyChanged (state, IDs::voiceMode);
     valueTreePropertyChanged (state, IDs::mpe);
 

@@ -54,6 +54,10 @@ public:
     bool isQuantisingNoteOffs() const                       { return quantiseNoteOffs; }
     void setIsQuantisingNoteOffs (bool isQuantising)        { quantiseNoteOffs = isQuantising; }
 
+    // BEATCONNECT MODIFICATION START
+    double getFractionOfBeat() const;
+    // BEATCONNECT MODIFICATION END
+
     //==============================================================================
     BeatPosition roundBeatToNearest (BeatPosition beatNumber) const;
     BeatPosition roundBeatUp (BeatPosition beatNumber) const;
