@@ -62,6 +62,8 @@ using namespace std::literals;
 #include "model/clips/tracktion_WaveAudioClip.cpp"
 #include "model/clips/tracktion_ChordClip.cpp"
 #include "model/clips/tracktion_EditClip.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.test.cpp"
 #include "model/clips/tracktion_LaunchHandle.cpp"
 #include "model/clips/tracktion_LaunchHandle.test.cpp"
 #include "model/clips/tracktion_MarkerClip.cpp"

@@ -28,31 +28,30 @@ public:
 
     void runTest() override
     {
-        auto& engine = *Engine::getEngines()[0];
-        runBasicLauchHandleTests (engine);
-        runQuantisedLauchHandleTests (engine);
+        runBasicLauchHandleTests();
+        runQuantisedLauchHandleTests();
     }
 
 private:
-    void runBasicLauchHandleTests (Engine& engine)
+    void runBasicLauchHandleTests()
     {
         beginTest ("Non-quantised launching");
 
         {
-            LaunchHandle h (4_bd);
+            LaunchHandle h;
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (! h.getQueuedStatus());
-            expect (! h.getProgress());
+
+            h.sync (0_bp);
 
             h.play ({});
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
 
             {
-                auto s = h.update ({ 0_bp, 0.5_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
-                expectWithinAbsoluteError (*h.getProgress(), 0.125f, 0.001f);
 
                 expect (! s.isSplit);
                 expect (s.playing1);
@@ -62,10 +61,9 @@ private:
             }
 
             {
-                auto s = h.update ({ 0.5_bp, 1.0_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
-                expectWithinAbsoluteError (*h.getProgress(), 0.25f, 0.001f);
 
                 expect (! s.isSplit);
                 expect (s.playing1);
@@ -79,10 +77,9 @@ private:
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
 
             {
-                auto s = h.update ({ 1.0_bp, 1.5_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
                 expect (! h.getQueuedStatus());
-                expect (! h.getProgress());
 
                 expect (! s.isSplit);
                 expect (! s.playing1);
@@ -93,25 +90,25 @@ private:
         }
     }
 
-    void runQuantisedLauchHandleTests (Engine& engine)
+    void runQuantisedLauchHandleTests()
     {
         beginTest ("Quantised launching");
 
         {
-            LaunchHandle h (4_bd);
+            LaunchHandle h;
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (! h.getQueuedStatus());
-            expect (! h.getProgress());
+
+            h.sync (0_bp);
 
             h.play (0.25_bp);
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
 
             {
-                auto s = h.update ({ 0_bp, 0.5_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
-                expectWithinAbsoluteError (*h.getProgress(), 0.0625f, 0.001f);
 
                 expect (s.isSplit);
                 expect (! s.playing1);
@@ -121,10 +118,9 @@ private:
             }
 
             {
-                auto s = h.update ({ 0.5_bp, 1.0_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
-                expectWithinAbsoluteError (*h.getProgress(), 0.1875f, 0.001f);
 
                 expect (! s.isSplit);
                 expect (s.playing1);
@@ -138,10 +134,9 @@ private:
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
 
             {
-                auto s = h.update ({ 1.0_bp, 1.5_bp });
+                auto s = h.update (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
                 expect (! h.getQueuedStatus());
-                expect (! h.getProgress());
 
                 expect (s.isSplit);
                 expect (s.playing1);
@@ -153,7 +148,7 @@ private:
     }
 };
 
-static LaunchHandleTests clipSlotTests;
+static LaunchHandleTests launchHandleTests;
 
 }} // namespace tracktion { inline namespace engine
 

@@ -22,9 +22,10 @@ namespace tracktion { inline namespace engine
     Once this has been retrieved by calling update, this needs to be wrapped in
     to playback actions.
 */
-struct LaunchHandle
+class LaunchHandle
 {
 public:
+    //==============================================================================
     enum class PlayState
     {
         stopped,
@@ -37,8 +38,9 @@ public:
         playQueued
     };
 
-    /** Creates a LaunchHandle for a given BeatDuration. */
-    LaunchHandle (BeatDuration);
+    //==============================================================================
+    /** Creates a LaunchHandle. */
+    LaunchHandle() = default;
 
     /** Returns the current playback state. */
     PlayState getPlayingStatus() const;
@@ -46,14 +48,20 @@ public:
     /** Returns the current queue state. */
     std::optional<QueueState> getQueuedStatus() const;
 
-    /** Returns the current progress if playing. */
-    std::optional<float> getProgress() const;
-
     /** Start playing, optionally at a given beat position. */
     void play (std::optional<BeatPosition>);
 
     /** Stop playing, optionally at a given beat position. */
     void stop (std::optional<BeatPosition>);
+
+    //==============================================================================
+    /** Start the syncronisation.
+        Call this once to sync the clip to the timeline.
+        N.B. This should only be called by the audio thread.
+        @param BeatPosition The start point of the timeline.
+        [[ audio_thread ]]
+    */
+    void sync (BeatPosition);
 
     /** Represents two beat ranges where the play state can be different in each. */
     struct SplitStatus
@@ -65,27 +73,26 @@ public:
     };
 
     /** Update the state.
-        @param BeatRange The timeline's current beat range. N.B. this ignores
-                         any looping to ensure the slots continue to play.
-        @returns         The unlooped Edit beat range split if there are
-                         different play/stop states.
+        N.B. This should only be called by the audio thread.
+        @param BeatDuration The duration to increment the timeline by.
+        @returns            The unlooped Edit beat range split if there are
+                            different play/stop states.
+        [[ audio_thread ]]
     */
-    SplitStatus update (BeatRange unloopedEditBeatRange);
+    SplitStatus update (BeatDuration);
 
 private:
+    //==============================================================================
     struct State
     {
-        PlayState status;
-        BeatRange lastBeatRange;
+        BeatPosition position;
 
+        PlayState status = PlayState::stopped;
         std::optional<BeatPosition> playStartTime;
 
         std::optional<QueueState> nextStatus;
         std::optional<BeatPosition> nextEventTime;
-        std::optional<float> progress;
     };
-
-    const BeatDuration duration;
 
     std::atomic<State> state { State {} };
 
