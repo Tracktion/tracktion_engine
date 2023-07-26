@@ -20,6 +20,8 @@ LauncherClipPlaybackHandle LauncherClipPlaybackHandle::forLooping (BeatRange loo
     h.offset = offset;
     h.isLooping = true;
 
+    assert (! h.loopRange.isEmpty());
+
     return h;
 }
 
@@ -27,6 +29,8 @@ LauncherClipPlaybackHandle LauncherClipPlaybackHandle::forOneShot (BeatRange cli
 {
     LauncherClipPlaybackHandle h;
     h.clipRange = clipRange;
+
+    assert (! h.clipRange.isEmpty());
 
     return h;
 }
@@ -66,9 +70,9 @@ LauncherClipPlaybackHandle::SplitBeatRange LauncherClipPlaybackHandle::timelineR
             const auto duration2 = r.getEnd() - s;
 
             SplitBeatRange splitRange;
-            splitRange.range1 = { toPosition (offset) - duration1, toPosition (offset) };
+            splitRange.range1 = { loopRange.getStart() + offset - duration1, duration1 };
             splitRange.playing1 = false;
-            splitRange.range2 = { toPosition (offset), duration2 };
+            splitRange.range2 = { loopRange.getStart() + offset, duration2 };
             splitRange.playing2 = true;
 
             return splitRange;
@@ -79,11 +83,16 @@ LauncherClipPlaybackHandle::SplitBeatRange LauncherClipPlaybackHandle::timelineR
         // before the start to know it looped
         {
             assert (r.getStart () >= s);
+            const auto loopStart = loopRange.getStart();
             const auto sourceTimelineStart = s - offset;
             const BeatRange virtualClipTimelineRange (sourceTimelineStart, loopRange.getLength());
 
-            const auto wrappedTimelineStart = BeatPosition::fromBeats (std::fmod (r.getStart().inBeats(), virtualClipTimelineRange.getLength().inBeats()));
-            const auto wrappedTimelineEnd = BeatPosition::fromBeats (std::fmod (r.getEnd().inBeats(), virtualClipTimelineRange.getLength().inBeats()));
+            const auto wrappedTimelineStart = virtualClipTimelineRange.getStart()
+                                                + BeatDuration::fromBeats (std::fmod ((r.getStart() - virtualClipTimelineRange.getStart()).inBeats(),
+                                                                                      virtualClipTimelineRange.getLength().inBeats()));
+            const auto wrappedTimelineEnd = virtualClipTimelineRange.getStart()
+                                                + BeatDuration::fromBeats (std::fmod ((r.getEnd() - virtualClipTimelineRange.getStart()).inBeats(),
+                                                                                      virtualClipTimelineRange.getLength().inBeats()));
             assert (wrappedTimelineEnd != wrappedTimelineStart);
             assert (virtualClipTimelineRange.contains (wrappedTimelineStart));
             assert (virtualClipTimelineRange.contains (wrappedTimelineEnd));
@@ -91,8 +100,8 @@ LauncherClipPlaybackHandle::SplitBeatRange LauncherClipPlaybackHandle::timelineR
             if (wrappedTimelineEnd > wrappedTimelineStart)
             {
                 SplitBeatRange splitRange;
-                splitRange.range1 = { wrappedTimelineStart - toDuration (sourceTimelineStart),
-                                      wrappedTimelineEnd   - toDuration (sourceTimelineStart) };
+                splitRange.range1 = { wrappedTimelineStart + toDuration (loopStart) - offset,
+                                      wrappedTimelineEnd   + toDuration (loopStart) - offset };
                 splitRange.playing1 = true;
 
                 return splitRange;
@@ -102,11 +111,11 @@ LauncherClipPlaybackHandle::SplitBeatRange LauncherClipPlaybackHandle::timelineR
             // The range has to be split in two
             assert (wrappedTimelineStart > wrappedTimelineEnd);
             SplitBeatRange splitRange;
-            splitRange.range1 = { wrappedTimelineStart - toDuration (sourceTimelineStart),
-                                  virtualClipTimelineRange.getEnd() - toDuration (sourceTimelineStart) };
+            splitRange.range1 = { wrappedTimelineStart + toDuration (loopStart) - offset,
+                                  virtualClipTimelineRange.getEnd() + toDuration (loopStart) - offset };
             splitRange.playing1 = true;
-            splitRange.range2 = { virtualClipTimelineRange.getStart() - toDuration (sourceTimelineStart),
-                                  wrappedTimelineEnd - toDuration (sourceTimelineStart) };
+            splitRange.range2 = { virtualClipTimelineRange.getStart() + toDuration (loopStart) - offset,
+                                  wrappedTimelineEnd + toDuration (loopStart) - offset };
             splitRange.playing2 = true;
 
             return splitRange;
@@ -178,8 +187,13 @@ std::optional<float> LauncherClipPlaybackHandle::getProgress (BeatPosition p) co
         if (p < s)
             return std::nullopt;
 
-        const auto playedDuration = p - s;
-        const auto numIterationsPlayed = (loopRange.getLength() - playedDuration) / loopRange.getLength();
+        const auto playedDuration = (p - s) + offset;
+
+        if (playedDuration < offset)
+            return std::nullopt;
+
+        const auto numIterationsPlayed = playedDuration / loopRange.getLength();
+
         return static_cast<float> (numIterationsPlayed - static_cast<int> (numIterationsPlayed));
     }
 

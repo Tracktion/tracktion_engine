@@ -177,6 +177,97 @@ private:
     void runLoopingTests()
     {
         beginTest ("Looping");
+
+        // 0...1...2...3...4...5...6...7...8...9...10..11..
+        //     {   [           |               |
+        //     3   4   5   6   3   4   5   6   3
+
+        auto h = LauncherClipPlaybackHandle::forLooping ({ 3_bp, 4_bd }, 1_bd);
+        expect (! h.getStart());
+        expect (! h.getProgress (0_bp));
+        expect (! h.getProgress (4_bp));
+        expect (! h.getProgress (8_bp));
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 0.75_bp, 0.5_bd });
+            expect (s.range1.isEmpty());
+            expect (! s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 1.0_bp, 0.5_bd });
+            expect (s.range1.isEmpty());
+            expect (! s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
+
+        beginTest ("Looping: start from 2");
+        h.start (2_bp);
+        expect (h.getStart() == 2_bp);
+        expect (! h.getProgress (-1_bp));
+        expect (! h.getProgress (0_bp));
+        expect (! h.getProgress (1_bp));
+
+        expectWithinAbsoluteError (*h.getProgress (2_bp), 0.25f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (3_bp), 0.5f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (4_bp), 0.75f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (5_bp), 0.0f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (6_bp), 0.25f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (7_bp), 0.5f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (8_bp), 0.75f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (9_bp), 0.0f, 0.001f);
+        expectWithinAbsoluteError (*h.getProgress (10_bp), 0.25f, 0.001f);
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 0.75_bp, 0.5_bd });
+            expect (s.range1.isEmpty());
+            expect (! s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 1.0_bp, 0.5_bd });
+            expect (s.range1.isEmpty());
+            expect (! s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 1.0_bp, 2.0_bd });
+            expect (s.range1 == BeatRange (3_bp, 4_bp));
+            expect (! s.playing1);
+            expect (s.range2 == BeatRange (4_bp, 5_bp));
+            expect (s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 3.0_bp, 1.0_bd });
+            expect (s.range1 == BeatRange (5_bp, 6_bp));
+            expect (s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 4.0_bp, 2.0_bd });
+            expect (s.range1 == BeatRange (6_bp, 7_bp));
+            expect (s.playing1);
+            expect (s.range2 == BeatRange (3_bp, 4_bp));
+            expect (s.playing2);
+        }
+
+        {
+            const auto s = h.timelineRangeToClipSourceRange ({ 6.0_bp, 1.0_bd });
+            expect (s.range1 == BeatRange (4_bp, 5_bp));
+            expect (s.playing1);
+            expect (s.range2.isEmpty());
+            expect (! s.playing2);
+        }
     }
 };
 
