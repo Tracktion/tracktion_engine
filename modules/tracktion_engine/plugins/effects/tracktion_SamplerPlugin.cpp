@@ -9,7 +9,7 @@
 */
 
 // BEATCONNECT MODIFICATION START
-#include "../../Data/GlobalConstants.h"
+#include "../../Data/Midi.h"
 // BEATCONNECT MODIFICATION END
 
 namespace tracktion { inline namespace engine
