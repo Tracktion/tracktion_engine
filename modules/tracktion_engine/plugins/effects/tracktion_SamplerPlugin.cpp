@@ -347,9 +347,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             double noteHz = BeatConnect::MidiNote::getNoteFrequency(ss->keyNote);
                             double newNoteHz = BeatConnect::MidiNote::getFrequencyByPitchWheel(pitchWheelPosition, DrumMachinePlugin::pitchWheelSemitoneRange, noteHz);
                             note = BeatConnect::MidiNote::getMidiNote(newNoteHz);
-                            auto ShouldBe65point406 = midiNoteToFrequency(ss->keyNote);
-                            auto ShouldBe36 = frequencyToMidiNote(newNoteHz);
-                            auto breakPoint = 1;
                         }
                         // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
