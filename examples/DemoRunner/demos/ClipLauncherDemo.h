@@ -76,6 +76,66 @@ namespace utils
     private:
         te::AsyncCaller resizer;
     };
+
+    //==============================================================================
+    //==============================================================================
+    inline std::shared_ptr<te::LaunchHandle> getPlayingLaunchHandleOnTrack (te::AudioTrack& t)
+    {
+        for (auto s : t.getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                if (auto lh = c->getLaunchHandle())
+                    if (lh->getPlayingStatus() == te::LaunchHandle::PlayState::playing)
+                        return lh;
+
+        return {};
+    }
+
+    inline std::shared_ptr<te::LaunchHandle> getPlayingOrQueuedLaunchHandleOnTrack (te::AudioTrack& t)
+    {
+        for (auto s : t.getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                if (auto lh = c->getLaunchHandle())
+                    if (lh->getPlayingStatus() == te::LaunchHandle::PlayState::playing
+                        || lh->getQueuedStatus() == te::LaunchHandle::QueueState::playQueued)
+                       return lh;
+
+        return {};
+    }
+
+    inline std::vector<std::shared_ptr<te::LaunchHandle>> getPlayingOrQueuedLaunchHandlesOnTrack (te::AudioTrack& t)
+    {
+        std::vector<std::shared_ptr<te::LaunchHandle>> handles;
+
+        for (auto s : t.getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                if (auto lh = c->getLaunchHandle())
+                    if (lh->getPlayingStatus() == te::LaunchHandle::PlayState::playing
+                        || lh->getQueuedStatus() == te::LaunchHandle::QueueState::playQueued)
+                       handles.push_back (std::move (lh));
+
+        return handles;
+    }
+
+    inline std::shared_ptr<te::LaunchHandle> stopPlayingOrQueuedClipsOnTrack (te::AudioTrack& t)
+    {
+        if (auto lh = getPlayingLaunchHandleOnTrack (t))
+        {
+            lh->stop ({});
+            return lh;
+        }
+
+        return {};
+    }
+
+    inline void launchScene (te::Scene& s)
+    {
+        const int sceneIndex = s.sceneList.getScenes().indexOf (&s);
+
+        for (auto at : te::getAudioTracks (s.edit))
+            if (auto slot = at->getClipSlotList().getClipSlots() [sceneIndex])
+                if (auto c = slot->getClip())
+                    c->getLaunchHandle()->play ({});
+    }
 }
 
 //==============================================================================
@@ -95,6 +155,19 @@ namespace cl
             button.setOnColours (juce::Colours::green,
                                  juce::Colours::green.darker (0.2f),
                                  juce::Colours::green.darker());
+            button.shouldUseOnColours (true);
+        }
+
+        PlayButton (std::shared_ptr<te::LaunchHandle> lh)
+            : PlayButton()
+        {
+            launchHandle = std::move (lh);
+            assert (launchHandle);
+
+            button.onClick = [this] { launchHandle->play ({}); };
+
+            timer.setCallback ([this] { button.setToggleState (launchHandle->getPlayingStatus() == te::LaunchHandle::PlayState::playing, dontSendNotification); });
+            timer.startTimerHz (25);
         }
 
         void resized() override
@@ -108,7 +181,9 @@ namespace cl
         }
 
     private:
+        std::shared_ptr<te::LaunchHandle> launchHandle;
         juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+        te::LambdaTimer timer;
     };
 
     //==============================================================================
@@ -121,9 +196,16 @@ namespace cl
             button.setShape (Icons::getStopPath(), false, true, false);
             button.setOutline (Colours::black, 0.5f);
             button.setBorderSize (juce::BorderSize<int> (6));
-            button.setOnColours (juce::Colours::green,
-                                 juce::Colours::green.darker (0.2f),
-                                 juce::Colours::green.darker());
+            button.setAlpha (0.5f);
+            button.onClick = [this] { buttonClicked(); };
+
+            timer.startTimerHz (25);
+        }
+
+        StopButton (te::AudioTrack& t)
+            : StopButton()
+        {
+            track = &t;
         }
 
         void resized() override
@@ -137,7 +219,29 @@ namespace cl
         }
 
     private:
+        te::SafeSelectable<te::AudioTrack> track;
+
         juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
+        std::shared_ptr<te::LaunchHandle> launchHandle;
+        te::LambdaTimer timer { [this] { updateStatus(); } };
+
+        void updateStatus()
+        {
+            if (track)
+            {
+                auto lh = utils::getPlayingOrQueuedLaunchHandleOnTrack (*track);
+                button.setAlpha (lh ? 1.0f : 0.5f);
+            }
+        }
+
+        void buttonClicked()
+        {
+            if (track)
+            {
+                for (auto lh : utils::getPlayingOrQueuedLaunchHandlesOnTrack (*track))
+                    lh->stop ({});
+            }
+        }
     };
 
     //==============================================================================
@@ -150,9 +254,9 @@ namespace cl
             button.setShape (Icons::getPlusPath(), false, true, false);
             button.setOutline (Colours::black, 0.5f);
             button.setBorderSize (juce::BorderSize<int> (6));
-            button.setOnColours (juce::Colours::green,
-                                 juce::Colours::green.darker (0.2f),
-                                 juce::Colours::green.darker());
+            button.setOnColours (juce::Colours::lightgreen,
+                                 juce::Colours::lightgreen.darker (0.2f),
+                                 juce::Colours::lightgreen.darker());
         }
 
         void resized() override
@@ -200,7 +304,16 @@ namespace cl
 
     private:
         te::Clip& clip;
-        PlayButton playButton;
+        PlayButton playButton { getLaunchHandle() };
+
+        std::shared_ptr<te::LaunchHandle> getLaunchHandle()
+        {
+            if (auto acb = dynamic_cast<te::AudioClipBase*> (&clip))
+                return acb->getLaunchHandle();
+
+            assert (false);
+            return {};
+        }
 
         static juce::Colour getClipColour (te::Clip& c)
         {
@@ -293,9 +406,19 @@ namespace cl
         void setFile (juce::File f)
         {
             if (f.hasFileExtension (te::soundFileExtensions))
-                insertWaveClip (clipSlot, f.getFileName(), f, {}, te::DeleteExistingClips::yes);
+            {
+                te::AudioFile af (clipSlot.edit.engine, f);
+                auto wc = insertWaveClip (clipSlot, f.getFileName(), f,
+                                          {{ 0_tp, te::TimeDuration::fromSeconds (af.getLength()) }},
+                                          te::DeleteExistingClips::yes);
+                wc->setUsesProxy (false);
+                wc->setAutoTempo (true);
+                wc->setLoopRangeBeats ({ 0_bp, wc->getLengthInBeats() });
+            }
             else if (f.hasFileExtension (te::midiFileExtensions))
+            {
                 te::createClipFromFile (f, clipSlot, te::MidiList::looksLikeMPEData (f));
+            }
         }
 
         using ObjType = utils::AsyncValueTreeItem<ClipComponent>;
@@ -405,12 +528,11 @@ namespace cl
     //==============================================================================
     struct TrackComponent : public juce::Component
     {
-        TrackComponent (te::AudioTrack &t)
+        TrackComponent (te::AudioTrack& t)
             : track (t)
         {
             addAndMakeVisible (slotList);
             addAndMakeVisible (stopButton);
-            stopButton.setAlpha (0.5f);
         }
 
         void paint (juce::Graphics& g) override
@@ -434,7 +556,7 @@ namespace cl
     private:
         te::AudioTrack& track;
         SlotListComponent slotList { track.getClipSlotList() };
-        StopButton stopButton;
+        StopButton stopButton { track };
 
         void paintTrackHeader (juce::Graphics& g, juce::Rectangle<int> r)
         {
@@ -531,6 +653,7 @@ namespace cl
             : scene (s)
         {
             addAndMakeVisible (playButton);
+            playButton.getButton().onClick = [this] { utils::launchScene (scene); };
         }
 
         void resized() override

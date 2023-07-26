@@ -142,6 +142,12 @@ public:
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override {}
 
     //==============================================================================
+    /** Some clip types can be launched, if that's possible, this returns a handle to
+        trigger starting/stopping the clip.
+    */
+    virtual std::shared_ptr<LaunchHandle> getLaunchHandle()     { return {}; }
+
+    //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
     ClipPosition getPosition() const override;
 

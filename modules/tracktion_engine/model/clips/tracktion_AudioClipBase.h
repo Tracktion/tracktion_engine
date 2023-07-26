@@ -593,6 +593,10 @@ public:
 
     //==============================================================================
     /** @internal */
+    std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+
+    //==============================================================================
+    /** @internal */
     bool addClipPlugin (const Plugin::Ptr&, SelectionManager&) override;
     /** @internal */
     Plugin::Array getAllPlugins() override;
@@ -667,6 +671,8 @@ private:
     //==============================================================================
     class TempoDetectTask;
     class BeatSensitivityComp;
+
+    std::shared_ptr<LaunchHandle> launchHandle;
 
     void updateReversedState();
     void updateAutoTempoState();

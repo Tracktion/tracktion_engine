@@ -63,6 +63,9 @@ public:
     */
     void sync (BeatPosition);
 
+    /** Returns true if this handle has been synced. */
+    bool hasSynced() const;
+
     /** Represents two beat ranges where the play state can be different in each. */
     struct SplitStatus
     {
@@ -70,6 +73,7 @@ public:
         BeatRange range1, range2;
 
         bool isSplit = false;
+        std::optional<BeatPosition> playStartTime1, playStartTime2;
     };
 
     /** Update the state.
@@ -85,7 +89,7 @@ private:
     //==============================================================================
     struct State
     {
-        BeatPosition position;
+        std::optional<BeatPosition> position;
 
         PlayState status = PlayState::stopped;
         std::optional<BeatPosition> playStartTime;

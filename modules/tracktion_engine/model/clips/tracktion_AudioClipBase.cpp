@@ -1532,6 +1532,15 @@ juce::Array<ProjectItemID> AudioClipBase::getTakes() const
 }
 
 //==============================================================================
+std::shared_ptr<LaunchHandle> AudioClipBase::getLaunchHandle()
+{
+    if (! launchHandle)
+        launchHandle = std::make_shared<LaunchHandle>();
+
+    return launchHandle;
+}
+
+//==============================================================================
 juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
 {
     if (p != nullptr)

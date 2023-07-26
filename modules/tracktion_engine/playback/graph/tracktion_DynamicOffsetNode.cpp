@@ -105,7 +105,6 @@ void DynamicOffsetNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
 
 bool DynamicOffsetNode::isReadyToProcess()
 {
-    // This should really be leaf nodes...
     for (auto& i : leafNodes)
         if (! i->isReadyToProcess())
             return false;
@@ -277,6 +276,7 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
 
         if (nodesWithMidi > 1)
             pc.buffers.midi.sortByTimestamp();
-    }}
+    }
+}
 
 }} // namespace tracktion { inline namespace engine
