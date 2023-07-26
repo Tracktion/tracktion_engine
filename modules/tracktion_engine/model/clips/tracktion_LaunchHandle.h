@@ -85,6 +85,13 @@ public:
     */
     SplitStatus update (BeatDuration);
 
+    //==============================================================================
+    /** Returns the position this was launched from. */
+    std::optional<BeatPosition> getPlayStart() const;
+
+    /** Returns the last position this was updated from. */
+    std::optional<BeatPosition> getPosition() const;
+
 private:
     //==============================================================================
     struct State

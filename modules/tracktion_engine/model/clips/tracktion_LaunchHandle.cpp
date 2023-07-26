@@ -42,6 +42,16 @@ void LaunchHandle::stop (std::optional<BeatPosition> pos)
     setState (s);
 }
 
+std::optional<BeatPosition> LaunchHandle::getPlayStart() const
+{
+    return getState().playStartTime;
+}
+
+std::optional<BeatPosition> LaunchHandle::getPosition() const
+{
+    return getState().position;
+}
+
 void LaunchHandle::sync (BeatPosition p)
 {
     auto s = getState();

@@ -152,9 +152,9 @@ namespace cl
             button.setShape (Icons::getPlayPath(), false, true, false);
             button.setOutline (Colours::black, 0.5f);
             button.setBorderSize (juce::BorderSize<int> (5));
-            button.setOnColours (juce::Colours::green,
-                                 juce::Colours::green.darker (0.2f),
-                                 juce::Colours::green.darker());
+            button.setOnColours (juce::Colours::lightgreen,
+                                 juce::Colours::lightgreen.darker (0.2f),
+                                 juce::Colours::lightgreen.darker());
             button.shouldUseOnColours (true);
         }
 
@@ -254,9 +254,6 @@ namespace cl
             button.setShape (Icons::getPlusPath(), false, true, false);
             button.setOutline (Colours::black, 0.5f);
             button.setBorderSize (juce::BorderSize<int> (6));
-            button.setOnColours (juce::Colours::lightgreen,
-                                 juce::Colours::lightgreen.darker (0.2f),
-                                 juce::Colours::lightgreen.darker());
         }
 
         void resized() override
@@ -274,12 +271,21 @@ namespace cl
     };
 
     //==============================================================================
-    struct ClipComponent : public juce::Component
+    struct ClipComponent : public juce::Component,
+                           private te::SelectableListener
     {
         ClipComponent (te::Clip& c)
             : clip (c)
         {
             addAndMakeVisible (playButton);
+            refreshPlaybackHandle();
+            clip.addSelectableListener (this);
+            timer.startTimerHz (25);
+        }
+
+        ~ClipComponent() override
+        {
+            clip.removeSelectableListener (this);
         }
 
         void resized() override
@@ -302,18 +308,17 @@ namespace cl
             g.drawText (clip.getName(), r, juce::Justification::centredLeft);
         }
 
+        void paintOverChildren (juce::Graphics& g) override
+        {
+            drawProgressIndicator (g);
+        }
+
     private:
         te::Clip& clip;
-        PlayButton playButton { getLaunchHandle() };
-
-        std::shared_ptr<te::LaunchHandle> getLaunchHandle()
-        {
-            if (auto acb = dynamic_cast<te::AudioClipBase*> (&clip))
-                return acb->getLaunchHandle();
-
-            assert (false);
-            return {};
-        }
+        const std::shared_ptr<te::LaunchHandle> launchHandle { clip.getLaunchHandle() };
+        std::optional<te::LauncherClipPlaybackHandle> playbackHandle;
+        PlayButton playButton { launchHandle };
+        te::LambdaTimer timer { [this] { repaintIfPlaying(); } };
 
         static juce::Colour getClipColour (te::Clip& c)
         {
@@ -323,6 +328,48 @@ namespace cl
 
             return c.getColour();
         }
+
+        void repaintIfPlaying()
+        {
+            if (launchHandle->getPlayingStatus() == te::LaunchHandle::PlayState::playing)
+                repaint();
+        }
+
+        void refreshPlaybackHandle()
+        {
+            playbackHandle = clip.isLooping()
+                                ? te::LauncherClipPlaybackHandle::forLooping (clip.getLoopRangeBeats(), clip.getOffsetInBeats())
+                                : te::LauncherClipPlaybackHandle::forOneShot ({ te::toPosition (clip.getOffsetInBeats()), clip.getLengthInBeats() });
+        }
+
+        void drawProgressIndicator (juce::Graphics& g)
+        {
+            if (launchHandle->getPlayingStatus() != te::LaunchHandle::PlayState::playing)
+                return;
+
+            if (auto startPos = launchHandle->getPlayStart())
+            {
+                playbackHandle->start (*startPos);
+
+                if (auto pos = launchHandle->getPosition())
+                {
+                    if (auto p = playbackHandle->getProgress (*pos))
+                    {
+                        auto r = getLocalBounds().reduced (0.5f, 0.0f);
+                        r = r.withWidth (1.0f).withX (r.proportionOfWidth (*p) - 0.5f);
+                        g.setColour (juce::Colours::white.withAlpha (0.75f));
+                        g.fillRect (r);
+                    }
+                }
+            }
+        }
+
+        void selectableObjectChanged (te::Selectable*) override
+        {
+            refreshPlaybackHandle();
+        }
+
+        void selectableObjectAboutToBeDeleted (te::Selectable*) override {}
     };
 
     //==============================================================================
