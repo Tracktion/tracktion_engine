@@ -64,7 +64,7 @@ bool LaunchHandle::hasSynced() const
     return getState().position.has_value();
 }
 
-LaunchHandle::SplitStatus LaunchHandle::update (BeatDuration duration)
+LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
 {
     assert (duration > 0_bd);
 

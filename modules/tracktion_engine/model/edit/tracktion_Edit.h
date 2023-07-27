@@ -422,6 +422,9 @@ public:
     void updateMuteSoloStatuses();
 
     //==============================================================================
+    /** Returns the global launch quantisation. */
+    LaunchQuantisation& getLaunchQuantisation();
+
     /** Returns a list of Scenes in the Edit. */
     SceneList& getSceneList();
 
@@ -868,6 +871,8 @@ private:
     std::unique_ptr<TrackList> trackList;
     std::unique_ptr<EditInputDevices> editInputDevices;
     std::unique_ptr<SceneList> sceneList;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
+
 
     struct ChangedPluginsList;
     std::unique_ptr<ChangedPluginsList> changedPluginsList;

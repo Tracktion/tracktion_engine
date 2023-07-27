@@ -376,6 +376,7 @@ namespace tracktion { inline namespace engine
     class ClipSlot;
     class Scene;
     class LaunchHandle;
+    class LaunchQuantisation;
 }} // namespace tracktion { inline namespace engine
 
 #ifdef __GNUC__
@@ -564,6 +565,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_WaveAudioClip.h"
 
 #include "model/edit/tracktion_GrooveTemplate.h"
+#include "model/edit/tracktion_LaunchQuantisation.h"
 #include "model/edit/tracktion_MarkerManager.h"
 
 #include "model/clips/tracktion_EditClip.h"

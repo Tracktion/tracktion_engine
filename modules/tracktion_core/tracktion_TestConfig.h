@@ -26,6 +26,7 @@
 #define ENGINE_UNIT_TESTS_FREEZE                        1
 #define ENGINE_UNIT_TESTS_LAUNCH_HANDLE                 1
 #define ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE 1
+#define ENGINE_UNIT_TESTS_LAUNCH_QUANTISATION           1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE               1
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
 #define ENGINE_UNIT_TESTS_MIDILIST                      1

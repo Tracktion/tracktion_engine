@@ -79,6 +79,11 @@ namespace utils
 
     //==============================================================================
     //==============================================================================
+    inline te::BeatPosition getLaunchPosition (te::Edit& e)
+    {
+        return e.getLaunchQuantisation().getNext (e.tempoSequence.toBeats (e.getTransport().getPosition()));
+    }
+
     inline std::shared_ptr<te::LaunchHandle> getPlayingLaunchHandleOnTrack (te::AudioTrack& t)
     {
         for (auto s : t.getClipSlotList().getClipSlots())
@@ -120,7 +125,7 @@ namespace utils
     {
         if (auto lh = getPlayingLaunchHandleOnTrack (t))
         {
-            lh->stop ({});
+            lh->stop (getLaunchPosition (t.edit));
             return lh;
         }
 
@@ -134,7 +139,7 @@ namespace utils
         for (auto at : te::getAudioTracks (s.edit))
             if (auto slot = at->getClipSlotList().getClipSlots() [sceneIndex])
                 if (auto c = slot->getClip())
-                    c->getLaunchHandle()->play ({});
+                    c->getLaunchHandle()->play (getLaunchPosition (s.edit));
     }
 }
 
@@ -163,8 +168,6 @@ namespace cl
         {
             launchHandle = std::move (lh);
             assert (launchHandle);
-
-            button.onClick = [this] { launchHandle->play ({}); };
 
             timer.setCallback ([this] { button.setToggleState (launchHandle->getPlayingStatus() == te::LaunchHandle::PlayState::playing, dontSendNotification); });
             timer.startTimerHz (25);
@@ -278,6 +281,12 @@ namespace cl
             : clip (c)
         {
             addAndMakeVisible (playButton);
+            playButton.getButton().onClick = [this]
+                {
+                    launchHandle->play (utils::getLaunchPosition (clip.edit));
+                };
+
+
             refreshPlaybackHandle();
             clip.addSelectableListener (this);
             timer.startTimerHz (25);
@@ -355,7 +364,7 @@ namespace cl
                 {
                     if (auto p = playbackHandle->getProgress (*pos))
                     {
-                        auto r = getLocalBounds().reduced (0.5f, 0.0f);
+                        auto r = getLocalBounds().toFloat().reduced (0.5f, 0.0f);
                         r = r.withWidth (1.0f).withX (r.proportionOfWidth (*p) - 0.5f);
                         g.setColour (juce::Colours::white.withAlpha (0.75f));
                         g.fillRect (r);

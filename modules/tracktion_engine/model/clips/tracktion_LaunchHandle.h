@@ -76,14 +76,14 @@ public:
         std::optional<BeatPosition> playStartTime1, playStartTime2;
     };
 
-    /** Update the state.
+    /** Advance the state.
         N.B. This should only be called by the audio thread.
         @param BeatDuration The duration to increment the timeline by.
         @returns            The unlooped Edit beat range split if there are
                             different play/stop states.
         [[ audio_thread ]]
     */
-    SplitStatus update (BeatDuration);
+    SplitStatus advance (BeatDuration);
 
     //==============================================================================
     /** Returns the position this was launched from. */

@@ -50,6 +50,8 @@ using namespace std::literals;
 #include "model/tracks/tracktion_TrackCompManager.cpp"
 
 #include "model/edit/tracktion_GrooveTemplate.cpp"
+#include "model/edit/tracktion_LaunchQuantisation.cpp"
+#include "model/edit/tracktion_LaunchQuantisation.test.cpp"
 #include "model/edit/tracktion_MarkerManager.cpp"
 #include "model/edit/tracktion_PitchSequence.cpp"
 #include "model/edit/tracktion_PitchSetting.cpp"

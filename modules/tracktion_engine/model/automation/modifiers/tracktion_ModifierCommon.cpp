@@ -15,8 +15,8 @@ namespace ModifierCommon
 {
     double getBarFraction (RateType rt) noexcept
     {
-        const double dot = 1.5;
-        const double triplet = 2.0 / 3.0;
+        constexpr auto dot = 1.5;
+        constexpr auto triplet = 2.0 / 3.0;
 
         switch (rt)
         {

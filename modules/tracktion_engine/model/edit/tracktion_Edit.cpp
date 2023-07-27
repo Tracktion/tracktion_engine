@@ -1334,6 +1334,14 @@ SceneList& Edit::getSceneList()
     return *sceneList;
 }
 
+LaunchQuantisation& Edit::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, *this);
+
+    return *launchQuantisation;
+}
+
 //==============================================================================
 MidiInputDevice* Edit::getCurrentMidiTimecodeSource() const
 {
