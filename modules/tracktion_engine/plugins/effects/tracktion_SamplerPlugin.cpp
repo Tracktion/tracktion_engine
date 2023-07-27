@@ -308,8 +308,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                 highlightedNotes.clear();
             }
 
-            int test = fc.bufferForMidiMessages->size();
-
             for (auto& m : *fc.bufferForMidiMessages)
             {
 
