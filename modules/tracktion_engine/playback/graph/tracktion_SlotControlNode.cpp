@@ -89,8 +89,10 @@ void SlotControlNode::process (ProcessContext& pc)
 
     if (! editBeatRange.isEmpty())
     {
-        const auto splitStatus = launchHandle->update (editBeatRange.getLength());
-        processSplitSection (pc, splitStatus);
+        const auto splitStatus = launchHandle->advance (editBeatRange.getLength());
+
+        if (! splitStatus.range1.isEmpty())
+            processSplitSection (pc, splitStatus);
     }
 }
 
