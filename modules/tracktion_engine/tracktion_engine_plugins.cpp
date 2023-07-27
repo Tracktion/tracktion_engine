@@ -66,7 +66,6 @@ using namespace std::literals;
 #include "plugins/internal/tracktion_VolumeAndPan.cpp"
 #include "plugins/internal/tracktion_InternalPlugins.test.cpp"
 
-
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"
 #include "plugins/effects/tracktion_Delay.cpp"

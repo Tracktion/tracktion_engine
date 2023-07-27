@@ -616,7 +616,6 @@ namespace tracktion { inline namespace engine
 #include "plugins/internal/tracktion_InsertPlugin.h"
 #include "plugins/internal/tracktion_ReWirePlugin.h"
 #include "plugins/internal/tracktion_TextPlugin.h"
-// #include "plugins/internal/DrumMachinePlugin.h"
 
 #include "plugins/effects/tracktion_Compressor.h"
 #include "plugins/effects/tracktion_Delay.h"
