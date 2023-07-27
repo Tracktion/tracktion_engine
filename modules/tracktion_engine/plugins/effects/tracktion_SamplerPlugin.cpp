@@ -9,7 +9,8 @@
 */
 
 // BEATCONNECT MODIFICATION START
-#include "../../Data/Midi.h"
+#include "tracktion_engine/midi/bc_Midi.h"
+#include <tracktion_engine/plugins/internal/DrumMachinePlugin.h>
 // BEATCONNECT MODIFICATION END
 
 namespace tracktion { inline namespace engine
