@@ -11,22 +11,25 @@
 
 #include <JuceHeader.h>
 
-namespace te = tracktion_engine;
-
+namespace tracktion { inline namespace engine
+{
 // A Drum Machine is a specialised Sampler.
 // Whenever general sampler operations are required please deffer to the base class SamplerPlugin
-struct DrumMachinePlugin : public te::SamplerPlugin {
+struct DrumMachinePlugin : public SamplerPlugin {
 public:
-	DrumMachinePlugin(te::PluginCreationInfo pluginCreationInfo);
+	DrumMachinePlugin(PluginCreationInfo pluginCreationInfo);
+
 	static const int pitchWheelSemitoneRange;
 	static const char* uniqueId;
 	static const char* xmlTypeName;
 
-	static const char* getPluginName()				 { return NEEDS_TRANS("Drum Machine"); }
+	static const char* getPluginName() { return NEEDS_TRANS("Drum Machine"); }
 
-	juce::String getName() override					 { return NEEDS_TRANS("Drum Machine"); }
-	juce::String getPluginType() override			 { return xmlTypeName; }
-	juce::String getShortName(int) override			 { return "DrmMchn"; }
+	juce::String getName() override { return NEEDS_TRANS("Drum Machine"); }
+	juce::String getPluginType() override { return xmlTypeName; }
+	juce::String getShortName(int) override { return "DrmMchn"; }
 	juce::String getSelectableDescription() override { return TRANS("Drum Machine"); }
 	// juce::String getUniqueId() override			    { return uniqueId; } // To be incorporated with bc_unity_daw #797
 };
+
+}} // namespace tracktion { inline namespace engine
