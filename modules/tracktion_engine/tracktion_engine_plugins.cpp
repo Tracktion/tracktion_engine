@@ -65,6 +65,9 @@ using namespace std::literals;
 #include "plugins/internal/tracktion_VCA.cpp"
 #include "plugins/internal/tracktion_VolumeAndPan.cpp"
 #include "plugins/internal/tracktion_InternalPlugins.test.cpp"
+// BEATCONNECT MODIFICATION START
+#include "plugins/internal/DrumMachinePlugin.cpp"
+// BEATCONNECT MODIFICATION END
 
 #include "plugins/effects/tracktion_Chorus.cpp"
 #include "plugins/effects/tracktion_Compressor.cpp"
