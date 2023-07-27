@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+// BEATCONNECT MODIFICATION START
+#include "../Source/Plugin/DrumMachinePlugin.h"
+// BEATCONNECT MODIFICATION END
+
 namespace tracktion { inline namespace engine
 {
 
@@ -405,8 +409,7 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         auto chan = c.channel.get().getChannelNumber();
                         
                         // BEATCONNECT MODIFICATION START
-                        const float pitchWheelSemitoneRange = 12.0;
-                        float pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
+                        float pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), DrumMachinePlugin::pitchWheelSemitoneRange);
                         result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
                         // BEATCONNECT MODIFICATION END
                         result.addEvent (juce::MidiMessage::noteOn (chan, note, vel * channelVelScale), eventStart);

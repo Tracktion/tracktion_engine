@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+// BEATCONNECT MODIFICATION START
+#include "../../../../Source/Plugin/DrumMachinePlugin.h"
+// BEATCONNECT MODIFICATION END
+
 namespace tracktion { inline namespace engine
 {
 
@@ -419,6 +423,9 @@ void PluginManager::initialise()
     createBuiltInType<PitchShiftPlugin>();
     createBuiltInType<LowPassPlugin>();
     createBuiltInType<SamplerPlugin>();
+    // BEATCONNECT MODIFICATION START
+    createBuiltInType<DrumMachinePlugin>();
+    // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
     createBuiltInType<MidiPatchBayPlugin>();
@@ -728,7 +735,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
-            if (type == "sampler")
+            if (type == "drum machine")
                 addInitialSamplerDrumPadValueTree(v);
             // BEATCONNECT MODIFICATIONS END
 
@@ -997,9 +1004,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
     p.get()->state.setProperty(IDs::isInstrument, desc.isInstrument, nullptr);
 
     if (p.get()->getPluginType() == type) {
-        // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+        // p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr); // =8> To be added back in with PluginPresets: 
     }
-    // BEATCONNECT MODIFICATIONS START
+    // BEATCONNECT MODIFICATIONS END
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);

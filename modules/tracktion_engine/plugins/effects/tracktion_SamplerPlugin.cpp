@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+// BEATCONNECT MODIFICATION START
+#include "../../Data/Midi.h"
+// BEATCONNECT MODIFICATION END
+
 namespace tracktion { inline namespace engine
 {
 
@@ -336,18 +340,13 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                         {
                         // BEATCONNECT MODIFICATION START
                         if (fc.bufferForMidiMessages->size() > 1 && (&m - 1)->isPitchWheel()) {
-                            const float pitchWheelPosition = (&m - 1)->getPitchWheelValue();
-                            const float midiCalibriationHz = 440.0;
-                            const int midiPitchWheelBase = 0x2000;
-                            const float semitonesPerOctave = 12.0;
-                            const float pitchWheelSemitoneRange = 12.0;
-                            const float A440asMidiNote = 69.0;
+                            const double pitchWheelPosition = (&m - 1)->getPitchWheelValue();
                             
                             // Given the variables keyNote, pitchWheelPosition, and pitchWheelSemitoneRange,
                             // and given system constants, solve for the new note values
-                            double noteHz = midiCalibriationHz * std::pow(2.0, (ss->keyNote - A440asMidiNote) / semitonesPerOctave); // TODO =8> factor this
-                            auto newNoteHz = noteHz * pow(2.0, ((pitchWheelPosition - midiPitchWheelBase) * pitchWheelSemitoneRange)/(semitonesPerOctave * midiPitchWheelBase)); // TODO =8> factor this
-                            note = frequencyToMidiNote(newNoteHz);
+                            double noteHz = BeatConnect::MidiNote::getNoteFrequency(ss->keyNote);
+                            double newNoteHz = BeatConnect::MidiNote::getFrequencyByPitchWheel(pitchWheelPosition, DrumMachinePlugin::pitchWheelSemitoneRange, noteHz);
+                            note = BeatConnect::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
