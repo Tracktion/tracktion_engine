@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -33,8 +33,9 @@ namespace choc::fifo
     serviced by a single thread or timer after they get flagged by a realtime thread.
 
     The class is designed so that the markAsDirty() and popNextDirtyObject() functions
-    are lock-free and realtime-safe, and execute in constant time even when the total
-    number of objects is very large.
+    will execute in very short, constant time even when the total number of objects is
+    very large, and no heap allocations or other system calls are involved. And if only
+    one thread ever calls markAsDirty(), it's safe for realtime use.
     To make this possible, the compromises are that it needs to be initialised with a
     complete list of the objects needed, so that it can assign handles to them, and its
     memory requirements include allocating a small amount of storage per object.

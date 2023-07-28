@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -70,6 +70,10 @@ std::string_view trimEnd (std::string_view textToTrim);
 
 /// Returns a string with any whitespace trimmed from its end.
 std::string_view trimEnd (const char* textToTrim);
+
+/// If the string begins with one or more instances of the given character, this
+/// skips past them, returning the remainder of the string.
+std::string_view trimCharacterAtStart (std::string_view textToTrim, char characterToSkip);
 
 /// If the given character is at the start and end of the string, it trims it away.
 std::string removeOuterCharacter (std::string text, char outerChar);
@@ -283,6 +287,15 @@ inline std::string_view trimEnd (std::string_view text)
     for (auto i = text.length(); i != 0; --i)
         if (! isWhitespace (text[i - 1]))
             return text.substr (0, i);
+
+    return {};
+}
+
+inline std::string_view trimCharacterAtStart (std::string_view textToTrim, char characterToSkip)
+{
+    for (size_t i = 0; i < textToTrim.length(); ++i)
+        if (textToTrim[i] != characterToSkip)
+            return textToTrim.substr (i);
 
     return {};
 }
