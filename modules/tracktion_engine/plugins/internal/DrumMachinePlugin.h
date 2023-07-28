@@ -9,8 +9,7 @@
 
 #pragma once
 
-#include <JuceHeader.h>
-
+class SamplerPlugin;
 namespace tracktion { inline namespace engine
 {
 // A Drum Machine is a specialised Sampler.
