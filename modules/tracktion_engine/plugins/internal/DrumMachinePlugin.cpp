@@ -7,8 +7,6 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "DrumMachinePlugin.h"
-
 namespace tracktion { inline namespace engine
 {
 DrumMachinePlugin::DrumMachinePlugin(PluginCreationInfo pluginCreationInfo) : SamplerPlugin(pluginCreationInfo) {}

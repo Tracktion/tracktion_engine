@@ -8,11 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-// BEATCONNECT MODIFICATION START
-#include "tracktion_engine/midi/bc_Midi.h"
-#include <tracktion_engine/plugins/internal/DrumMachinePlugin.h>
-// BEATCONNECT MODIFICATION END
-
 namespace tracktion { inline namespace engine
 {
 
