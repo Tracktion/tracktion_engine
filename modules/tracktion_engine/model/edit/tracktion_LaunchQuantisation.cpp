@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../3rd_party/magic_enum/tracktion_magic_enum.hpp"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -36,6 +38,11 @@ juce::StringArray getLaunchQTypeChoices()
              NEEDS_TRANS("1/64 T"),
              NEEDS_TRANS("1/64"),
              NEEDS_TRANS("1/64 D") };
+}
+
+juce::String getName (LaunchQType t)
+{
+    return getLaunchQTypeChoices()[static_cast<int> (t)];
 }
 
 double toBarFraction (LaunchQType q) noexcept
@@ -75,11 +82,18 @@ double toBarFraction (LaunchQType q) noexcept
 
 LaunchQType fromBarFraction (double f) noexcept
 {
-    for (auto q = static_cast<int> (LaunchQType::eightBars); q <= static_cast<int> (LaunchQType::none); ++q)
-        if (juce::approximatelyEqual (f, toBarFraction (static_cast<LaunchQType> (q))))
-            return static_cast<LaunchQType> (q);
+    auto ret = LaunchQType::bar;
 
-    return LaunchQType::bar;
+    magic_enum::enum_for_each<LaunchQType> ([f, &ret] (auto t)
+    {
+        if (juce::approximatelyEqual (f, toBarFraction (t)))
+        {
+            ret = t;
+            return;
+        }
+    });
+
+    return ret;
 }
 
 BeatPosition getNext (LaunchQType q, const TempoSequence& ts, BeatPosition pos) noexcept
@@ -109,7 +123,7 @@ BeatPosition getNext (LaunchQType q, const TempoSequence& ts, BeatPosition pos) 
 
 //==============================================================================
 //==============================================================================
-LaunchQuantisation::LaunchQuantisation (juce::ValueTree v, Edit& e)
+LaunchQuantisation::LaunchQuantisation (juce::ValueTree& v, Edit& e)
     : edit (e)
 {
     type.referTo (v, IDs::launchQuantisation, &e.getUndoManager(), LaunchQType::bar);

@@ -81,7 +81,7 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
         {
             case QueueState::playQueued:
             {
-                if (s.nextEventTime)
+                if (s.nextEventTime && beatRange.getStart() != *s.nextEventTime)
                 {
                     if (beatRange.contains (*s.nextEventTime))
                     {

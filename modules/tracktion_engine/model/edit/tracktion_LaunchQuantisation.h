@@ -41,7 +41,11 @@ enum class LaunchQType
 };
 
 //==============================================================================
+/** Returns a list of quantisation type options in the order of LaunchQType. */
 juce::StringArray getLaunchQTypeChoices();
+
+/** Retuns the name of a LaunchQType for display purposes. */
+juce::String getName (LaunchQType);
 
 /** Returns the fraction of a bar to be used for a given rate type. */
 double toBarFraction (LaunchQType) noexcept;
@@ -65,7 +69,7 @@ public:
     /** Creates a LaunchQuantisation property on a given state tree.
         The Edit is used to find the TempoSequence and UndoManager.
     */
-    LaunchQuantisation (juce::ValueTree, Edit&);
+    LaunchQuantisation (juce::ValueTree&, Edit&);
 
     /** Returns the next beat quantised to the current type. */
     BeatPosition getNext (BeatPosition) noexcept;

@@ -12,6 +12,7 @@
 #pragma once
 
 #include "../../common/BinaryData.h"
+#include "../../modules/3rd_party/magic_enum/magic_enum_utility.hpp"
 
 //==============================================================================
 //==============================================================================
@@ -240,10 +241,8 @@ namespace cl
         void buttonClicked()
         {
             if (track)
-            {
                 for (auto lh : utils::getPlayingOrQueuedLaunchHandlesOnTrack (*track))
-                    lh->stop ({});
-            }
+                    lh->stop (utils::getLaunchPosition (track->edit));
         }
     };
 
@@ -894,16 +893,19 @@ namespace cl
     };
 }
 
+#include "../../3rd_party/choc/text/choc_OpenSourceLicenseList.h"
+
 //==============================================================================
 class ClipLauncherDemo  : public juce::Component,
-                          private juce::ChangeListener
+                          private juce::ChangeListener,
+                          private juce::Value::Listener
 {
 public:
     //==============================================================================
     ClipLauncherDemo (te::Engine& e)
         : engine (e)
     {
-        Helpers::addAndMakeVisible (*this, { &playPauseButton, &metronomeButton,
+        Helpers::addAndMakeVisible (*this, { &playPauseButton, &quantisationButton, &metronomeButton,
                                              &transportReadout, &clipLauncherComponent });
 
         playPauseButton.setClickingTogglesState (false);
@@ -915,6 +917,8 @@ public:
         metronomeButton.getToggleStateValue().referTo (edit.clickTrackEnabled.getPropertyAsValue());
         metronomeButton.triggerClick();
 
+        quantisationButton.onClick = [this] { showQuantisationMenu(); };
+
         transportReadout.setFont ({ juce::Font::getDefaultMonospacedFontName(), 14, juce::Font::plain });
         transportReadoutTimer.setCallback ([this]
                                            {
@@ -925,14 +929,17 @@ public:
         transportReadoutTimer.startTimerHz (25);
 
         transport.addChangeListener (this);
-
-        lookAndFeelChanged();
+        quantisationValue.addListener (this);
 
         edit.ensureNumberOfAudioTracks (8);
         edit.getSceneList().ensureNumberOfScenes (8);
 
         for (auto at : te::getAudioTracks (edit))
             at->getClipSlotList().ensureNumberOfSlots (8);
+
+        updateQuantisationButtonText();
+
+        lookAndFeelChanged();
     }
 
     void paint (juce::Graphics&) override
@@ -948,10 +955,12 @@ public:
         {
             juce::Grid g;
             g.templateRows.add (1_fr);
-            g.templateColumns.insertMultiple (0, 1_fr, 3);
+            g.templateColumns.insertMultiple (0, 1_fr, 4);
             g.items.add (juce::GridItem (playPauseButton).withArea (1, 1));
             g.items.add (juce::GridItem (metronomeButton).withArea (1, 2));
             g.items.add (juce::GridItem (transportReadout).withArea (1, 3));
+            g.items.add (juce::GridItem (quantisationButton).withArea (1, 4)
+                            .withMargin (juce::GridItem::Margin (2)));
             g.performLayout (r.removeFromTop (28));
         }
 
@@ -967,19 +976,45 @@ private:
     te::Engine& engine;
     te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
+    te::LaunchQuantisation& launchQuantisation { edit.getLaunchQuantisation() };
 
-    juce::TextButton playPauseButton { "Play" };
+    juce::TextButton playPauseButton { "Play" }, quantisationButton;
     juce::ToggleButton metronomeButton { "Metronome" };
     juce::Label transportReadout { "" };
 
     cl::ClipLauncherComponent clipLauncherComponent { edit };
 
     te::LambdaTimer transportReadoutTimer;
+    juce::Value quantisationValue { launchQuantisation.type.getPropertyAsValue() };
+
+    void showQuantisationMenu()
+    {
+        juce::PopupMenu m;
+
+        magic_enum::enum_for_each<te::LaunchQType> ([this, &m] (auto t)
+        {
+            m.addItem (te::getName (t),
+                       [this, t] { launchQuantisation.type = t; });
+        });
+
+        m.showMenuAsync ({});
+    }
+
+    void updateQuantisationButtonText()
+    {
+        quantisationButton.setButtonText ("Quantisation: " + te::getName (launchQuantisation.type));
+    }
 
     void changeListenerCallback (juce::ChangeBroadcaster*) override
     {
         playPauseButton.setToggleState (transport.isPlaying(), juce::dontSendNotification);
         playPauseButton.setButtonText (transport.isPlaying() ? "Pause" : "Play");
+    }
+
+    void valueChanged (juce::Value& v) override
+    {
+        if (v.refersToSameSourceAs (quantisationValue))
+            updateQuantisationButtonText();
     }
 };
 
