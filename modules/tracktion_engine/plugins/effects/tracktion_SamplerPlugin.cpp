@@ -333,7 +333,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             && playingNotes.size() < maximumSimultaneousNotes)
                         {
                         // BEATCONNECT MODIFICATION START
-                        if (fc.bufferForMidiMessages->size() > 1 && (&m - 1)->isPitchWheel()) {
+                        if (fc.bufferForMidiMessages->size() > 1 && &m != fc.bufferForMidiMessages->begin() && (&m - 1)->isPitchWheel()) {
                             const double pitchWheelPosition = (&m - 1)->getPitchWheelValue();
                             
                             // Given the variables keyNote, pitchWheelPosition, and pitchWheelSemitoneRange,
