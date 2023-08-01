@@ -49,7 +49,8 @@ private:
     std::vector<Node*> orderedNodes, leafNodes;
 
     void processSplitSection (ProcessContext&, LaunchHandle::SplitStatus);
-    void processSection (ProcessContext&, bool isPlaying, std::optional<BeatPosition> playStartTime);
+    void processSection (ProcessContext&, BeatRange editBeatRange, BeatRange clipBeatRange,
+                         bool isPlaying, std::optional<BeatPosition> playStartTime);
 };
 
 }} // namespace tracktion { inline namespace engine

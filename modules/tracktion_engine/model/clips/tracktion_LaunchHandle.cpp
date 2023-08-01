@@ -81,9 +81,19 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
         {
             case QueueState::playQueued:
             {
-                if (s.nextEventTime && beatRange.getStart() != *s.nextEventTime)
+                if (s.nextEventTime)
                 {
-                    if (beatRange.contains (*s.nextEventTime))
+                    if (*s.nextEventTime <= beatRange.getStart())
+                    {
+                        splitStatus.playing1 = true;
+                        splitStatus.range1 = beatRange;
+                        splitStatus.playStartTime1 = beatRange.getStart();
+
+                        s.playStartTime = beatRange.getStart();
+                        s.status = PlayState::playing;
+                        s.nextStatus = std::nullopt;
+                    }
+                    else if (beatRange.contains (*s.nextEventTime))
                     {
                         splitStatus.playing1 = s.status == PlayState::playing;
                         splitStatus.range1 = beatRange.withEnd (*s.nextEventTime);
@@ -101,6 +111,12 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
                         s.nextEventTime = std::nullopt;
                         s.nextStatus = std::nullopt;
                     }
+                    else
+                    {
+                        splitStatus.playing1 = s.status == PlayState::playing;
+                        splitStatus.range1 = beatRange;
+                        splitStatus.playStartTime1 = s.playStartTime;
+                    }
                 }
                 else
                 {
@@ -117,9 +133,31 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
             }
             case QueueState::stopQueued:
             {
-                if (s.nextEventTime)
+                if (s.status == PlayState::stopped)
                 {
-                    if (beatRange.contains (*s.nextEventTime))
+                    splitStatus.playing1 = false;
+                    splitStatus.range1 = beatRange;
+                    splitStatus.playStartTime1 = std::nullopt;
+
+                    s.playStartTime = std::nullopt;
+                    s.nextStatus = std::nullopt;
+                    s.nextEventTime = std::nullopt;
+                    s.position  = std::nullopt;
+                }
+                else if (s.nextEventTime)
+                {
+                    if (*s.nextEventTime < beatRange.getStart())
+                    {
+                        splitStatus.playing1 = false;
+                        splitStatus.range1 = beatRange;
+                        splitStatus.playStartTime1 = std::nullopt;
+
+                        s.playStartTime = std::nullopt;
+                        s.status = PlayState::stopped;
+                        s.nextStatus = std::nullopt;
+                        s.position  = std::nullopt;
+                    }
+                    else if (beatRange.contains (*s.nextEventTime))
                     {
                         splitStatus.playing1 = s.status == PlayState::playing;
                         splitStatus.range1 = beatRange.withEnd (*s.nextEventTime);
@@ -136,6 +174,16 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
                         s.status = PlayState::stopped;
                         s.nextEventTime = std::nullopt;
                         s.nextStatus = std::nullopt;
+                        s.position  = std::nullopt;
+                    }
+                    else
+                    {
+                        splitStatus.playing1 = s.status == PlayState::playing;
+                        splitStatus.range1 = beatRange;
+                        splitStatus.playStartTime1 = s.playStartTime;
+
+                        if (s.status == PlayState::stopped)
+                            s.position  = std::nullopt;
                     }
                 }
                 else
@@ -147,6 +195,7 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
                     s.playStartTime = std::nullopt;
                     s.status = PlayState::stopped;
                     s.nextStatus = std::nullopt;
+                    s.position  = std::nullopt;
                 }
 
                 break;
@@ -161,7 +210,9 @@ LaunchHandle::SplitStatus LaunchHandle::advance (BeatDuration duration)
     }
 
     // Finally update the current state
-    s.position = *s.position + duration;
+    if (s.position)
+        s.position = *s.position + duration;
+
     setState (s);
 
     return splitStatus;

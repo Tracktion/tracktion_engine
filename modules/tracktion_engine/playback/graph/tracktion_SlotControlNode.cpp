@@ -89,10 +89,9 @@ void SlotControlNode::process (ProcessContext& pc)
 
     if (! editBeatRange.isEmpty())
     {
-        const auto splitStatus = launchHandle->advance (editBeatRange.getLength());
-
-        if (! splitStatus.range1.isEmpty())
-            processSplitSection (pc, splitStatus);
+        if (auto splitStatus = launchHandle->advance (editBeatRange.getLength());
+            ! splitStatus.range1.isEmpty())
+           processSplitSection (pc, splitStatus);
     }
 }
 
@@ -100,10 +99,13 @@ void SlotControlNode::process (ProcessContext& pc)
 void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::SplitStatus status)
 {
     const auto editBeatRange = getEditBeatRange();
-    const juce::NormalisableRange blockRangeBeats (editBeatRange.getStart().inBeats(),
-                                                   editBeatRange.getEnd().inBeats());
+    const auto totalRange = status.range1.isEmpty() ? status.range2
+                                                    : (status.range2.isEmpty() ? status.range1
+                                                                               : status.range1.getUnionWith (status.range2));
+    const juce::NormalisableRange blockRangeBeats (totalRange.getStart().inBeats(),
+                                                   totalRange.getEnd().inBeats());
 
-    auto processSubSection = [this, &pc, &blockRangeBeats] (auto section, bool isPlaying, auto playStartTime)
+    auto processSubSection = [this, &pc, &editBeatRange, &blockRangeBeats] (auto section, bool isPlaying, auto playStartTime)
     {
         const auto proportion = juce::Range (blockRangeBeats.convertTo0to1 (section.getStart().inBeats()),
                                              blockRangeBeats.convertTo0to1 (section.getEnd().inBeats()));
@@ -126,10 +128,13 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 
         auto sectionBufferView = pc.buffers.audio.getFrameRange ({ startFrame, endFrame });
         ProcessContext subSection {
-                sectionNumFrames, subSectionReferenceSampleRange,
-                { sectionBufferView, pc.buffers.midi }
-        };
-        processSection (subSection, isPlaying, playStartTime);
+                                      sectionNumFrames, subSectionReferenceSampleRange,
+                                      { sectionBufferView, pc.buffers.midi }
+                                  };
+
+        const auto startBeat  = editBeatRange.getStart() + editBeatRange.getLength() * proportion.getStart();
+        const auto endBeat    = editBeatRange.getStart() + editBeatRange.getLength() * proportion.getEnd();
+        processSection (subSection, { startBeat, endBeat }, section, isPlaying, playStartTime);
     };
 
     if (status.isSplit)
@@ -143,7 +148,8 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
     }
 }
 
-void SlotControlNode::processSection (ProcessContext& pc, bool isPlaying, std::optional<BeatPosition> playStartTime)
+void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange clipBeatRange,
+                                      bool isPlaying, std::optional<BeatPosition> playStartTime)
 {
     if (! isPlaying)
     {
@@ -154,11 +160,15 @@ void SlotControlNode::processSection (ProcessContext& pc, bool isPlaying, std::o
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
 
+    // Offset is calculated as the edit beat time add  minus the play start time
+
     // Update the offset for compatible Nodes
     if (playStartTime)
     {
-        const auto offset = toDuration (*playStartTime);
-        playbackHandle.start (toPosition (offset));
+        playbackHandle.start (*playStartTime);
+
+        const auto clipEditOffset = editBeatRange.getStart() - clipBeatRange.getStart();
+        const auto offset = clipEditOffset - toDuration (*playStartTime);
 
         for (auto n : offsetNodes)
             n->setDynamicOffsetBeats (offset);
