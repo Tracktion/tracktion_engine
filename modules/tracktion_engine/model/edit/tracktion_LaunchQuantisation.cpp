@@ -75,7 +75,7 @@ double toBarFraction (LaunchQType q) noexcept
         case LaunchQType::sixtyFourth:   return 1.0 / 64.0;
         case LaunchQType::sixtyFourthD:  return 1.0 / 64.0 * dot;
         case LaunchQType::none:          return 0.0;
-    };
+    }
 
     return 1.0;
 }
@@ -129,7 +129,7 @@ LaunchQuantisation::LaunchQuantisation (juce::ValueTree& v, Edit& e)
     type.referTo (v, IDs::launchQuantisation, &e.getUndoManager(), LaunchQType::bar);
 }
 
-BeatPosition LaunchQuantisation::getNext (BeatPosition p) noexcept
+BeatPosition LaunchQuantisation::getNext (BeatPosition p) const noexcept
 {
     return engine::getNext (type, edit.tempoSequence, p);
 }

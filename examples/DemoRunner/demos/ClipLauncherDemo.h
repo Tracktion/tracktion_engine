@@ -133,6 +133,19 @@ namespace utils
         return handles;
     }
 
+    inline std::vector<std::shared_ptr<te::LaunchHandle>> getPlayingOrQueuedLaunchHandles (te::Edit& e)
+    {
+        std::vector<std::shared_ptr<te::LaunchHandle>> handles;
+
+        for (auto at : te::getAudioTracks (e))
+        {
+            auto trackHandles = getPlayingOrQueuedLaunchHandlesOnTrack (*at);
+            std::move (trackHandles.begin(), trackHandles.end(), std::back_inserter (handles));
+        }
+
+        return handles;
+    }
+
     inline std::shared_ptr<te::LaunchHandle> stopPlayingOrQueuedClipsOnTrack (te::AudioTrack& t)
     {
         if (auto lh = getPlayingLaunchHandleOnTrack (t))
@@ -177,6 +190,14 @@ namespace utils
         }
     }
 
+    inline void stopEdit (te::Edit& e)
+    {
+        for (auto at : te::getAudioTracks (e))
+            for (auto slot : at->getClipSlotList().getClipSlots())
+                if (auto c = slot->getClip())
+                    if (auto lh = c->getLaunchHandle())
+                        lh->stop (getStopPosition (c->edit, *lh));
+    }
 
     //==============================================================================
     // UI
@@ -215,6 +236,32 @@ namespace utils
             // No clips on track
             baseCol = juce::Colours::white.withMultipliedAlpha (0.5f);
         }
+
+        b.setColours (baseCol, baseCol.darker (0.2f), baseCol.darker());
+        b.repaint();
+    }
+
+    inline void setStopButtonColours (juce::ShapeButton& b, te::Edit& e)
+    {
+        auto baseCol = juce::Colours::white;
+
+        const auto anyPlayingOrQueued = [handles = getPlayingOrQueuedLaunchHandles (e)]
+                                        {
+                                            for (auto lh : handles)
+                                            {
+                                                if (auto queuedState = lh->getQueuedStatus())
+                                                    if (queuedState == te::LaunchHandle::QueueState::playQueued)
+                                                        return true;
+
+                                                if (lh->getPlayingStatus() == te::LaunchHandle::PlayState::playing)
+                                                    return true;
+                                            }
+
+                                            return false;
+                                        }();
+
+        if (! anyPlayingOrQueued)
+            baseCol = juce::Colours::white.withMultipliedAlpha (0.5f);
 
         b.setColours (baseCol, baseCol.darker (0.2f), baseCol.darker());
         b.repaint();
@@ -286,6 +333,12 @@ namespace cl
             track = &t;
         }
 
+        StopButton (te::Edit& e)
+            : StopButton()
+        {
+            edit = &e;
+        }
+
         void resized() override
         {
             button.setBounds (getLocalBounds());
@@ -298,6 +351,7 @@ namespace cl
 
     private:
         te::SafeSelectable<te::AudioTrack> track;
+        te::SafeSelectable<te::Edit> edit;
 
         juce::ShapeButton button { {}, juce::Colours::white, juce::Colours::lightgrey, juce::Colours::grey };
         std::shared_ptr<te::LaunchHandle> launchHandle;
@@ -309,6 +363,10 @@ namespace cl
             {
                 auto lh = utils::getPlayingOrQueuedLaunchHandleOnTrack (*track);
                 utils::setStopButtonColours (button, lh.get());
+            }
+            else if (edit)
+            {
+                utils::setStopButtonColours (button, *edit);
             }
             else
             {
@@ -840,6 +898,10 @@ namespace cl
               sceneList (s)
         {
             rebuildObjects();
+
+            addAndMakeVisible (stopButton);
+            stopButton.getButton().onClick = [this] { utils::stopEdit (sceneList.edit); };
+
             addAndMakeVisible (addButton);
             addButton.getButton().onClick
                 = [this] { sceneList.ensureNumberOfScenes (sceneList.getScenes().size() + 1); };
@@ -852,11 +914,14 @@ namespace cl
 
         int getIdealHeight() const
         {
-            return (objects.size() + 1) * 24;
+            return 40 + (objects.size() + 1) * 24;
         }
 
         void paint (juce::Graphics& g) override
         {
+            g.setColour (juce::Colours::darkgrey);
+            g.fillRect (getLocalBounds().removeFromTop (40));
+
             g.setColour (juce::Colours::black);
             g.drawRect (getLocalBounds());
         }
@@ -868,8 +933,11 @@ namespace cl
             {
                 juce::Grid g;
                 g.templateColumns.add (1_fr);
-                g.templateRows.insertMultiple (0, 24_px, objects.size());
+                g.templateRows.add (40_px);
+                g.templateRows.insertMultiple (1, 24_px, objects.size());
                 int x = 1, y = 1;
+
+                g.items.add (juce::GridItem (stopButton).withArea (y++, x).withMargin (9));
 
                 for (auto sceneButtonWrapper: objects)
                     if (auto sceneButton = sceneButtonWrapper->getObject ())
@@ -892,6 +960,7 @@ namespace cl
         te::SceneList& sceneList;
 
     private:
+        StopButton stopButton { sceneList.edit };
         AddSceneButton addButton;
         utils::AsyncResizer asyncResizer { *this };
 
@@ -944,11 +1013,10 @@ namespace cl
 
         void resized() override
         {
-            constexpr int trackH = 40;
             constexpr int sceneW = 70;
 
             auto r = getLocalBounds();
-            sceneListComponent.setBounds (r.removeFromLeft (sceneW).withTrimmedTop (trackH));
+            sceneListComponent.setBounds (r.removeFromLeft (sceneW));
             trackListComponent.setBounds (r);
         }
 

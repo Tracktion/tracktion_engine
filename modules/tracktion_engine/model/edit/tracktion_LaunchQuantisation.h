@@ -72,7 +72,7 @@ public:
     LaunchQuantisation (juce::ValueTree&, Edit&);
 
     /** Returns the next beat quantised to the current type. */
-    BeatPosition getNext (BeatPosition) noexcept;
+    BeatPosition getNext (BeatPosition) const noexcept;
 
     //==============================================================================
     Edit& edit;                             /**< The Edit this belongs to.  */
