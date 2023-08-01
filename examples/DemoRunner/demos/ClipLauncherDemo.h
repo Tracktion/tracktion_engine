@@ -158,9 +158,23 @@ namespace utils
         const int sceneIndex = s.sceneList.getScenes().indexOf (&s);
 
         for (auto at : te::getAudioTracks (s.edit))
-            if (auto slot = at->getClipSlotList().getClipSlots() [sceneIndex])
-                if (auto c = slot->getClip())
-                    launchClip (*c);
+        {
+            auto slots = at->getClipSlotList().getClipSlots();
+
+            for (int i = 0; i < slots.size(); ++i)
+            {
+                if (auto slot = slots[i])
+                {
+                    if (auto c = slot->getClip())
+                    {
+                        if (i == sceneIndex)
+                            launchClip (*c);
+                        else if (auto lh = c->getLaunchHandle())
+                            lh->stop (getStopPosition (c->edit, *lh));
+                    }
+                }
+            }
+        }
     }
 
 
