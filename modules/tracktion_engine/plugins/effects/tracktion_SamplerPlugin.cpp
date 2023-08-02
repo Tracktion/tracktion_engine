@@ -309,9 +309,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
                 if (m.isNoteOn())
                 {
-                    // BEATCONNECT MODIFICATION START
-                    int note = m.getNoteNumber();
-                    // BEATCONNECT MODIFICATION END
+                    const int note = m.getNoteNumber();
                     const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
 
                     for (auto playingNote : playingNotes)
@@ -327,6 +325,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
                     for (auto ss : soundList)
                     {
+                        int adjustedMidiNote = note;
                         if (ss->minNote <= note
                             && ss->maxNote >= note
                             && ss->audioData.getNumSamples() > 0
@@ -340,11 +339,14 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             // and given system constants, solve for the new note values
                             double noteHz = BeatConnect::MidiNote::getNoteFrequency(ss->keyNote);
                             double newNoteHz = BeatConnect::MidiNote::getFrequencyByPitchWheel(pitchWheelPosition, DrumMachinePlugin::pitchWheelSemitoneRange, noteHz);
-                            note = BeatConnect::MidiNote::getMidiNote(newNoteHz);
+                            adjustedMidiNote = BeatConnect::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
-                            playingNotes.add (new SampledNote (note,
+                            playingNotes.add (new SampledNote 
+                                                               // BEATCONNECT MODIFICATION START
+                                                               (adjustedMidiNote,
+                                                               // BEATCONNECT MODIFICATION END
                                                                ss->keyNote,
                                                                m.getVelocity() / 127.0f,
                                                                ss->audioFile,
