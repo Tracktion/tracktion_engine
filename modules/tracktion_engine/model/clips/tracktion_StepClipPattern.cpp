@@ -186,7 +186,7 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
 // BEATCONNECT MODIFICATION START
 int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const {
     if (!getNote(channel, index))
-        return errorKeyNoteOffset;
+        return noKeyNoteOffset;
 
     auto keyNoteOffsets = getKeyNoteOffsets(channel);
 
@@ -196,7 +196,7 @@ int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const {
     if (clip.getChannels()[channel] != nullptr)
         return defaultKeyNoteOffset;
 
-    return errorKeyNoteOffset;
+    return defaultKeyNoteOffset;
 }
 
 juce::Array<int> StepClip::Pattern::getKeyNoteOffsets(int channel) const {

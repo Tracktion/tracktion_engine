@@ -211,7 +211,7 @@ public:
 
         // BEATCONNECT MODIFICATIONS START
         // Midi only has 127 available notes, guaranteed to be out of range.
-        errorKeyNoteOffset  = -127,
+        noKeyNoteOffset  = 0,
         errorTremoloAttacks = -1,
         // BEATCONNECT MODIFICATIONS END
 

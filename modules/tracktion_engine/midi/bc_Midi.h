@@ -169,13 +169,24 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 
 				static int getMidiNote(double p_hz)
 				{
-					for (auto element : midiNoteValues)
+					for (auto it = midiNoteValues.begin(); it != midiNoteValues.end(); it++)
 					{
-						if (element.freqHz == p_hz)
-							return element.midiNote;
-						if ((&element - 1) != nullptr && (&element + 1) != nullptr)
-							if (p_hz > (&element - 1)->freqHz && p_hz < (&element + 1)->freqHz)
-								return element.midiNote;
+						if (it->freqHz == p_hz)
+							return it->midiNote;
+						if (it > midiNoteValues.begin() && it < midiNoteValues.end()) {
+							if (p_hz > (it - 1)->freqHz && p_hz < (it + 1)->freqHz)
+							{
+								return it->midiNote;
+							}
+							else if (p_hz < midiNoteValues.begin()->freqHz)
+							{
+								return midiNoteValues.begin()->freqHz;
+							}
+							else if (p_hz > midiNoteValues.end()->freqHz)
+							{
+								midiNoteValues.end()->freqHz;
+							}
+						}
 					}
 					return -1;
 				}
@@ -206,13 +217,24 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 
 				static juce::String getNoteName(double p_hz)
 				{
-					for (auto element : midiNoteValues)
+					for (auto it = midiNoteValues.begin(); it != midiNoteValues.end(); it++)
 					{
-						if (element.freqHz == p_hz)
-							return element.noteName;
-						if ((&element - 1) != nullptr && (&element + 1) != nullptr)
-							if (p_hz > (&element - 1)->freqHz && p_hz < (&element + 1)->freqHz)
-								return element.noteName;
+						if (it->freqHz == p_hz)
+							return it->noteName;
+						if (it > midiNoteValues.begin() && it < midiNoteValues.end()) {
+							if (p_hz > (it - 1)->freqHz && p_hz < (it + 1)->freqHz)
+							{
+								return it->noteName;
+							}
+							else if (p_hz < midiNoteValues.begin()->freqHz)
+							{
+								return midiNoteValues.begin()->noteName;
+							}
+							else if (p_hz > midiNoteValues.end()->freqHz)
+							{
+								midiNoteValues.end()->noteName;
+							}
+						}
 					}
 					return "";
 				}
