@@ -182,9 +182,9 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 							{
 								return midiNoteValues.begin()->freqHz;
 							}
-							else if (p_hz > midiNoteValues.end()->freqHz)
+							else if (p_hz > midiNoteValues.back().freqHz)
 							{
-								midiNoteValues.end()->freqHz;
+								midiNoteValues.back().freqHz;
 							}
 						}
 					}
@@ -217,6 +217,7 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 
 				static juce::String getNoteName(double p_hz)
 				{
+
 					for (auto it = midiNoteValues.begin(); it != midiNoteValues.end(); it++)
 					{
 						if (it->freqHz == p_hz)
@@ -230,9 +231,9 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 							{
 								return midiNoteValues.begin()->noteName;
 							}
-							else if (p_hz > midiNoteValues.end()->freqHz)
+							else if (p_hz > midiNoteValues.back().freqHz)
 							{
-								midiNoteValues.end()->noteName;
+								midiNoteValues.back().noteName;
 							}
 						}
 					}
