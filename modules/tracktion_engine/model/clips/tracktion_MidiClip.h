@@ -46,6 +46,10 @@ public:
     bool canUseProxy() const noexcept               { return proxyAllowed; }
 
     //==============================================================================
+    /** @internal */
+    std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+
+    //==============================================================================
     void scaleVerticallyToFit();
 
     bool hasValidSequence() const noexcept                          { return channelSequence.size() > 0; }
@@ -171,6 +175,7 @@ private:
     //==============================================================================
     juce::OwnedArray<MidiList> channelSequence;
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
+    std::shared_ptr<LaunchHandle> launchHandle;
 
     juce::CachedValue<int> proxyAllowed, currentTake;
     juce::CachedValue<float> grooveStrength;

@@ -811,12 +811,19 @@ MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner& owner, bool im
 
     if (auto l = lists.getFirst())
     {
-        const auto end = owner.getClipOwnerEdit().tempoSequence.toTime (l->getLastBeatNumber());
+        const auto& ts = owner.getClipOwnerEdit().tempoSequence;
+        const auto endTime = ts.toTime (l->getLastBeatNumber());
+        const auto barsBeats = ts.toBarsAndBeats (endTime);
+        const auto totalBars = barsBeats.getTotalBars();
+        const auto nextBar = static_cast<int> (totalBars) + 1;
+        const auto clipEndTime = ts.toTime ({ nextBar });
 
-        if (auto c = insertMIDIClip (owner, { 0_tp, end }))
+        if (auto c = insertMIDIClip (owner, { 0_tp, clipEndTime }))
         {
             c->setName (l->getImportedFileName ());
             c->getSequence ().copyFrom (*l, &owner.getClipOwnerEdit().getUndoManager());
+
+            return c;
         }
     }
 

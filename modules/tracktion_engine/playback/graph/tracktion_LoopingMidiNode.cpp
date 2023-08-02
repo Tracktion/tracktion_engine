@@ -1126,9 +1126,11 @@ class OffsetMidiEventGenerator  : public MidiGenerator
 {
 public:
     OffsetMidiEventGenerator (std::unique_ptr<MidiGenerator> gen,
-                              ClipBeatDuration offsetToUse)
+                              ClipBeatDuration offsetToUse,
+                              std::shared_ptr<BeatDuration> dynamicOffsetToUse)
         : generator (std::move (gen)),
-          clipOffset (offsetToUse)
+          clipOffset (offsetToUse),
+          dynamicOffset (std::move (dynamicOffsetToUse))
     {
     }
 
@@ -1141,7 +1143,7 @@ public:
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator->createMessagesForTime (destBuffer,
-                                          editBeatPosition + clipOffset,
+                                          editBeatPosition + getOffset(),
                                           noteList,
                                           channelNumbers,
                                           clipLevel,
@@ -1151,20 +1153,20 @@ public:
 
     ActiveNoteList getNotesOnAtTime (EditBeatPosition editBeatPosition, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
     {
-        return generator->getNotesOnAtTime (editBeatPosition + clipOffset,
+        return generator->getNotesOnAtTime (editBeatPosition + getOffset(),
                                             channelNumbers,
                                             clipLevel);
     }
 
     void setTime (EditBeatPosition editBeatPosition) override
     {
-        generator->setTime (editBeatPosition + clipOffset);
+        generator->setTime (editBeatPosition + getOffset());
     }
 
     juce::MidiMessage getEvent() override
     {
         auto e = generator->getEvent();
-        e.addToTimeStamp (-clipOffset);
+        e.addToTimeStamp (-getOffset());
         return e;
     }
 
@@ -1182,6 +1184,12 @@ private:
     //==============================================================================
     std::unique_ptr<MidiGenerator> generator;
     const ClipBeatDuration clipOffset;
+    std::shared_ptr<BeatDuration> dynamicOffset;
+
+    ClipBeatDuration getOffset() const
+    {
+        return clipOffset - dynamicOffset->inBeats();
+    }
 };
 
 //==============================================================================
@@ -1208,12 +1216,14 @@ public:
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
-                     bool clipPropertiesHaveChanged, size_t lastSequencesHash)
+                     bool clipPropertiesHaveChanged, size_t lastSequencesHash,
+                     std::shared_ptr<BeatDuration> dynamicOffsetBeatsToUse)
     {
         if (isInitialised())
             return;
 
         assert (sequences.size() > 0);
+        dynamicOffsetBeats = std::move (dynamicOffsetBeatsToUse);
         shouldCreateMessagesForTime = clipPropertiesHaveChanged || noteListToUse == nullptr;
         activeNoteList = noteListToUse ? std::move (noteListToUse)
                                        : std::make_shared<ActiveNoteList>();
@@ -1234,7 +1244,7 @@ public:
         auto loopedGenerator = std::make_unique<LoopedMidiEventGenerator> (std::move (cachingGenerator),
                                                                            activeNoteList, clipRangeRaw, loopRangeRaw);
         generator = std::make_unique<OffsetMidiEventGenerator> (std::move (loopedGenerator),
-                                                                offset.inBeats());
+                                                                offset.inBeats(), dynamicOffsetBeats);
 
         controllerMessagesScratchBuffer.ensureStorageAllocated (32);
         initialised = true;
@@ -1257,16 +1267,16 @@ public:
                          bool lastBlockOfLoop)
     {
         const auto secondsPerBeat = sectionEditTimeRange.getLength() / sectionEditBeatRange.getLength().inBeats();
-        const auto blockStartBeatRelativeToClip = sectionEditBeatRange.getStart() - editRange.getStart();
+        const auto blockStartBeatRelativeToClip = sectionEditBeatRange.getStart() - (editRange.getStart() + *dynamicOffsetBeats);
 
         const auto volScale = clipLevel.getGain();
-        const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive (editRange.getEnd());
+        const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive ((editRange.getEnd() + *dynamicOffsetBeats));
         const double beatDurationOfOneSample = sectionEditBeatRange.getLength().inBeats() / numSamples;
         const auto timePositionOfLastSample = sectionEditTimeRange.getLength() > 0_td
                                                 ? (sectionEditTimeRange.getLength() - sectionEditTimeRange.getLength() / numSamples).inSeconds()
                                                 : 0.0;
 
-        const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange);
+        const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange + *dynamicOffsetBeats);
 
         if (clipIntersection.isEmpty())
         {
@@ -1377,7 +1387,7 @@ public:
 
         if (isLastBlockOfClip)
         {
-            const auto endOfClipBeats = editRange.getEnd() - sectionEditBeatRange.getStart();
+            const auto endOfClipBeats = (editRange.getEnd() + *dynamicOffsetBeats) - sectionEditBeatRange.getStart();
 
             // If the section ends right at the end of the clip, we need to nudge the note-offs back so they get played in this buffer
             auto eventTimeSeconds = (endOfClipBeats.inBeats() - beatDurationOfOneSample) * secondsPerBeat.inSeconds();
@@ -1413,6 +1423,7 @@ public:
 private:
     std::shared_ptr<ActiveNoteList> activeNoteList;
     std::unique_ptr<MidiGenerator> generator;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats;
 
     std::vector<juce::MidiMessageSequence> sequences;
     size_t sequencesHash = 0;
@@ -1472,6 +1483,25 @@ const std::shared_ptr<ActiveNoteList>& LoopingMidiNode::getActiveNoteList() cons
     return generatorAndNoteList->getActiveNoteList();
 }
 
+//==============================================================================
+void LoopingMidiNode::setDynamicOffsetBeats (BeatDuration newOffset)
+{
+    if (juce::approximatelyEqual (dynamicOffsetBeats->inBeats(), newOffset.inBeats()))
+        return;
+
+    (*dynamicOffsetBeats) = newOffset;
+}
+
+void LoopingMidiNode::killActiveNotes (MidiMessageArray& dest, double timestampForNoteOffs)
+{
+    MidiHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
+                                 dest,
+                                 midiSourceID,
+                                 timestampForNoteOffs,
+                                 false);
+}
+
+//==============================================================================
 tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;
@@ -1499,9 +1529,10 @@ void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
         activeNoteList = oldNode->generatorAndNoteList->getActiveNoteList();
         clipPropertiesHaveChanged = ! generatorAndNoteList->hasSameContentAs (*oldNode->generatorAndNoteList);
         lastSequencesHash = oldNode->generatorAndNoteList->getSequencesHash();
+        dynamicOffsetBeats = oldNode->dynamicOffsetBeats;
     }
 
-    generatorAndNoteList->initialise (activeNoteList, clipPropertiesHaveChanged, lastSequencesHash);
+    generatorAndNoteList->initialise (activeNoteList, clipPropertiesHaveChanged, lastSequencesHash, dynamicOffsetBeats);
 }
 
 bool LoopingMidiNode::isReadyToProcess()

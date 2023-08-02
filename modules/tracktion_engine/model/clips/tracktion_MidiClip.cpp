@@ -386,6 +386,15 @@ void MidiClip::setQuantisation (const QuantisationType& newType)
 }
 
 //==============================================================================
+std::shared_ptr<LaunchHandle> MidiClip::getLaunchHandle()
+{
+    if (! launchHandle)
+        launchHandle = std::make_shared<LaunchHandle>();
+
+    return launchHandle;
+}
+
+//==============================================================================
 MidiCompManager& MidiClip::getCompManager()
 {
     jassert (hasAnyTakes());

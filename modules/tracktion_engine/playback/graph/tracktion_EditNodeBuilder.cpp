@@ -627,7 +627,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params, role);
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState,
+                                                               const CreateNodeParams& params, ClipRole role)
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
@@ -641,11 +642,13 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     {
         std::vector<juce::MidiMessageSequence> sequences;
         sequences.emplace_back (clip.getSequence().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
+        const auto clipBeatRange = role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                              : BeatRange (clip.getStartBeat(), clip.getEndBeat());
 
         return graph::makeNode<LoopingMidiNode> (std::move (sequences),
                                                  channels,
                                                  generateMPE,
-                                                 BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                                 clipBeatRange,
                                                  BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
                                                  clip.getOffsetInBeats(),
                                                  clip.getLiveClipLevel(),
@@ -664,6 +667,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     }
 
     // Use looped sequence in seconds time base
+    assert (role != ClipRole::launcher);
     const auto clipTimeRange = clip.getEditTimeRange();
     const juce::Range<double> editTimeRange { clipTimeRange.getStart().inSeconds(), clipTimeRange.getEnd().inSeconds() };
 
@@ -803,7 +807,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const Tra
         return createNodeForAudioClip (*audioClip, false, params, role);
 
     if (auto midiClip = dynamic_cast<MidiClip*> (&clip))
-        return createNodeForMidiClip (*midiClip, trackMuteState, params);
+        return createNodeForMidiClip (*midiClip, trackMuteState, params, role);
 
     if (auto stepClip = dynamic_cast<StepClip*> (&clip))
         return createNodeForStepClip (*stepClip, trackMuteState, params);
@@ -898,7 +902,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
                 if (auto acb = dynamic_cast<AudioClipBase*> (clip))
                     launchHandle = acb->getLaunchHandle();
                 else if (auto mc = dynamic_cast<MidiClip*> (clip))
-                    jassertfalse;
+                    launchHandle = mc->getLaunchHandle();
                 else if (auto sc = dynamic_cast<StepClip*> (clip))
                     jassertfalse;
 

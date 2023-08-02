@@ -39,6 +39,9 @@ SlotControlNode::SlotControlNode (ProcessState& ps,
 
         if (auto dynamicNode = dynamic_cast<DynamicallyOffsettableNodeBase*> (n))
             offsetNodes.push_back (dynamicNode);
+
+        if (auto mn = dynamic_cast<LoopingMidiNode*> (n))
+            midiNode = mn;
     }
 }
 
@@ -151,9 +154,15 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange clipBeatRange,
                                       bool isPlaying, std::optional<BeatPosition> playStartTime)
 {
+    const juce::ScopeGuard scope { [this, isPlaying] { wasPlaying = isPlaying; } };
+
     if (! isPlaying)
     {
-        pc.buffers.audio.clear();
+        if (wasPlaying != isPlaying)
+            processStop (pc);
+        else
+            pc.buffers.audio.clear();
+
         return;
     }
 
@@ -183,6 +192,15 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     assert (sourceBuffers.audio.size == pc.buffers.audio.size);
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
+}
+
+void SlotControlNode::processStop (ProcessContext& pc)
+{
+    if (midiNode)
+    {
+        const auto timeForOneSample = TimeDuration::fromSamples (1, getSampleRate());
+        midiNode->killActiveNotes (pc.buffers.midi, (getEditTimeRange().getLength() - timeForOneSample).inSeconds());
+    }
 }
 
 }} // namespace tracktion { inline namespace engine

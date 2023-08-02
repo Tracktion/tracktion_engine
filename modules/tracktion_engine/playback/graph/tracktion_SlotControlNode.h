@@ -40,6 +40,7 @@ private:
     //==============================================================================
     LauncherClipPlaybackHandle playbackHandle;
     std::shared_ptr<LaunchHandle> launchHandle;
+    bool wasPlaying = false;
 
     const EditItemID slotID;
     std::unique_ptr<Node> input;
@@ -47,10 +48,12 @@ private:
     ProcessState localProcessState;
     std::vector<DynamicallyOffsettableNodeBase*> offsetNodes;
     std::vector<Node*> orderedNodes, leafNodes;
+    LoopingMidiNode* midiNode = nullptr;
 
     void processSplitSection (ProcessContext&, LaunchHandle::SplitStatus);
     void processSection (ProcessContext&, BeatRange editBeatRange, BeatRange clipBeatRange,
                          bool isPlaying, std::optional<BeatPosition> playStartTime);
+    void processStop (ProcessContext&);
 };
 
 }} // namespace tracktion { inline namespace engine

@@ -18,6 +18,10 @@
 //==============================================================================
 namespace utils
 {
+    static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetDirty=\"0\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
+
+    static String leadPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" waveShape1=\"3\" filterFreq=\"100\"><MACROPARAMETERS id=\"1069\"/><MODIFIERASSIGNMENTS/><MODMATRIX/></PLUGIN>";
+
     //==============================================================================
     template<typename ObjectType>
     struct AsyncValueTreeItem
@@ -581,10 +585,18 @@ namespace cl
         bool isDragging = false;
         StopButton stopButton;
 
+        void removeCurrentClip()
+        {
+            if (auto c = clipSlot.getClip())
+                c->removeFromParent();
+        }
+
         void setFile (juce::File f)
         {
             if (f.hasFileExtension (te::soundFileExtensions))
             {
+                removeCurrentClip();
+
                 te::AudioFile af (clipSlot.edit.engine, f);
                 auto wc = insertWaveClip (clipSlot, f.getFileName(), f,
                                           {{ 0_tp, te::TimeDuration::fromSeconds (af.getLength()) }},
@@ -595,7 +607,13 @@ namespace cl
             }
             else if (f.hasFileExtension (te::midiFileExtensions))
             {
-                te::createClipFromFile (f, clipSlot, te::MidiList::looksLikeMPEData (f));
+                removeCurrentClip();
+
+                if (auto mc = te::createClipFromFile (f, clipSlot, te::MidiList::looksLikeMPEData (f)))
+                {
+                    mc->setUsesProxy (false);
+                    mc->setLoopRangeBeats (mc->getEditBeatRange());
+                }
             }
         }
 
@@ -616,6 +634,7 @@ namespace cl
                                     assert (c->state == state);
                                     auto cc = std::make_unique<ClipComponent> (*c);
                                     addAndMakeVisible (*cc);
+                                    asyncResizer.resizeAsync();
 
                                     return cc;
                                 });
@@ -1026,8 +1045,8 @@ namespace cl
     };
 }
 
-#include "../../3rd_party/choc/text/choc_OpenSourceLicenseList.h"
 
+//==============================================================================
 //==============================================================================
 class ClipLauncherDemo  : public juce::Component,
                           private juce::ChangeListener,
@@ -1073,6 +1092,33 @@ public:
 
         for (auto at : te::getAudioTracks (edit))
             at->getClipSlotList().ensureNumberOfSlots (8);
+
+        // Create 4OSC on track 1 & 2
+        if (auto at = te::getAudioTracks (edit)[0])
+        {
+            if (auto p = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
+            {
+                if (auto vt = juce::ValueTree::fromXml (utils::organPatch); vt.isValid())
+                    p->restorePluginStateFromValueTree (vt);
+
+                at->pluginList.insertPlugin (*p, 0, nullptr);
+                at->setName ("Organ");
+                at->setColour (juce::Colours::blue);
+            }
+        }
+
+        if (auto at = te::getAudioTracks (edit)[1])
+        {
+            if (auto p = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
+            {
+                if (auto vt = juce::ValueTree::fromXml (utils::leadPatch); vt.isValid())
+                    p->restorePluginStateFromValueTree (vt);
+
+                at->pluginList.insertPlugin (*p, 0, nullptr);
+                at->setName ("Lead");
+                at->setColour (juce::Colours::green);
+            }
+        }
 
         updateQuantisationButtonText();
 
