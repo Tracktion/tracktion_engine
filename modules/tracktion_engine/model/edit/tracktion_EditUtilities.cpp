@@ -815,7 +815,7 @@ MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner& owner, bool im
         const auto endTime = ts.toTime (l->getLastBeatNumber());
         const auto barsBeats = ts.toBarsAndBeats (endTime);
         const auto totalBars = barsBeats.getTotalBars();
-        const auto nextBar = static_cast<int> (totalBars) + 1;
+        const auto nextBar = static_cast<int> (std::ceil (totalBars));
         const auto clipEndTime = ts.toTime ({ nextBar });
 
         if (auto c = insertMIDIClip (owner, { 0_tp, clipEndTime }))
