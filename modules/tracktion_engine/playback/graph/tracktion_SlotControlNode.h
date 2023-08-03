@@ -49,6 +49,7 @@ private:
     std::vector<DynamicallyOffsettableNodeBase*> offsetNodes;
     std::vector<Node*> orderedNodes, leafNodes;
     LoopingMidiNode* midiNode = nullptr;
+    std::shared_ptr<std::vector<float>> lastSamples;
 
     void processSplitSection (ProcessContext&, LaunchHandle::SplitStatus);
     void processSection (ProcessContext&, BeatRange editBeatRange, BeatRange clipBeatRange,

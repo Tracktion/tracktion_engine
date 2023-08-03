@@ -66,6 +66,22 @@ void SlotControlNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
 
     for (auto& i : orderedNodes)
         i->initialise (info2);
+
+    // Find the lastSamples
+    const auto numChans = static_cast<size_t> (getNodeProperties().numberOfChannels);
+
+    if (numChans == 0)
+        return;
+
+    if (auto oldGraph = info.nodeGraphToReplace)
+        if (auto oldNode = findNodeWithID<SlotControlNode> (*oldGraph, (size_t) slotID.getRawID()))
+            if (oldNode->lastSamples->size() == numChans)
+                lastSamples = oldNode->lastSamples;
+
+    if (lastSamples)
+        return;
+
+    lastSamples = std::make_shared<std::vector<float>> (numChans, 0.0f);
 }
 
 bool SlotControlNode::isReadyToProcess()
@@ -192,14 +208,62 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     assert (sourceBuffers.audio.size == pc.buffers.audio.size);
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
+
+    // Update last samples
+    if (lastSamples)
+    {
+        const auto numChannels = pc.buffers.audio.size.numChannels;
+        const auto numFrames = pc.buffers.audio.size.numFrames;
+        jassert (lastSamples->size() == static_cast<size_t> (numChannels));
+
+        for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
+        {
+            const auto dest = pc.buffers.audio.getIterator (channel).sample;
+            auto& lastSample = (*lastSamples)[(size_t) channel];
+            lastSample = dest[numFrames - 1];
+        }
+    }
 }
 
 void SlotControlNode::processStop (ProcessContext& pc)
 {
     if (midiNode)
     {
-        const auto timeForOneSample = TimeDuration::fromSamples (1, getSampleRate());
-        midiNode->killActiveNotes (pc.buffers.midi, (getEditTimeRange().getLength() - timeForOneSample).inSeconds());
+        const auto timeForOneSample = TimeDuration::fromSamples (1, getSampleRate ());
+        midiNode->killActiveNotes (pc.buffers.midi, (getEditTimeRange ().getLength () - timeForOneSample).inSeconds ());
+    }
+
+    // Fade out last sample
+    if (lastSamples)
+    {
+        auto& buffer = pc.buffers.audio;
+        const auto numChannels = buffer.size.numChannels;
+        const auto numFrames = buffer.size.numFrames;
+
+        if (const auto lastSampleFadeLength = std::min (numFrames, 40u);
+            lastSampleFadeLength > 0)
+        {
+            for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
+            {
+                if (channel < (choc::buffer::ChannelCount) lastSamples->size())
+                {
+                    const auto dest = buffer.getIterator (channel).sample;
+                    auto& lastSample = (*lastSamples)[(size_t) channel];
+
+                    for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
+                    {
+                        auto alpha = i / (float) lastSampleFadeLength;
+                        dest[i] = lastSample * (1.0f - alpha);
+                    }
+
+                    lastSample = 0.0f;
+                }
+                else
+                {
+                    buffer.getChannel (channel).clear ();
+                }
+            }
+        }
     }
 }
 
