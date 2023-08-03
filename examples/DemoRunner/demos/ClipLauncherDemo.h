@@ -18,9 +18,22 @@
 //==============================================================================
 namespace utils
 {
-    static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetDirty=\"0\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
-
+    static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
     static String leadPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" waveShape1=\"3\" filterFreq=\"100\"><MACROPARAMETERS id=\"1069\"/><MODIFIERASSIGNMENTS/><MODMATRIX/></PLUGIN>";
+    static String synthPatch = R"(<PLUGIN type="4osc" windowLocked="1" id="1063" enabled="1" remapOnTempoChange="1" filterType="1" windowX="472" windowY="201" ampAttack="0.001000000047497451" ampDecay="8.886041641235352" ampSustain="0.0" ampRelease="0.04861049354076385" ampVelocity="31.03125" filterAttack="0.0" filterDecay="7.244740962982178" filterSustain="0.0" filterRelease="1.112721562385559" filterFreq="61.53281784057617" filterAmount="0.4973124265670776" reverbSize="0.6706874966621399" reverbWidth="1.0" reverbMix="0.0617656335234642" reverbOn="1" waveShape1="2" level2="-7.216049194335938" waveShape2="4" lfoRate1="3.49334454536438" presetName="4OSC: Synth" filterKey="0.0" masterLevel="-7.8839111328125" pulseWidth1="0.05802000313997269" tune1="-12.0" detune1="0.1634765565395355" tune2="-12.0" detune2="0.1625703126192093" filterResonance="13.36249542236328" filterVelocity="34.26718902587891" reverbDamping="0.6183750033378601" filterSlope="24" fineTune1="0.0" spread1="100.0" voices1="4" spread2="100.0" voices2="2" lfoWaveShape1="2" lfoDepth1="1.0" modAttack1="0.1000000014901161" modDecay1="0.1000000014901161" modSustain1="80.0" modRelease1="0.1000000014901161" modAttack2="0.1000000014901161" modDecay2="0.1000000014901161" modSustain2="80.0" modRelease2="0.1000000014901161"><MODMATRIX><MODMATRIXITEM modParam="filterFreq" modItem="cc1" modDepth="-0.3156406283378601"/><MODMATRIXITEM modParam="fineTune1" modItem="lfo1" modDepth="0.04657812789082527"/></MODMATRIX></PLUGIN>)";
+
+    inline te::AudioTrack& addFourOscWithPatch (te::AudioTrack& at, juce::String patch)
+    {
+        if (auto p = dynamic_cast<te::FourOscPlugin*> (at.edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
+        {
+            if (auto vt = juce::ValueTree::fromXml (patch); vt.isValid())
+                p->restorePluginStateFromValueTree (vt);
+
+            at.pluginList.insertPlugin (*p, 0, nullptr);
+        }
+
+        return at;
+    }
 
     //==============================================================================
     template<typename ObjectType>
@@ -1094,30 +1107,16 @@ public:
             at->getClipSlotList().ensureNumberOfSlots (8);
 
         // Create 4OSC on track 1 & 2
-        if (auto at = te::getAudioTracks (edit)[0])
         {
-            if (auto p = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
-            {
-                if (auto vt = juce::ValueTree::fromXml (utils::organPatch); vt.isValid())
-                    p->restorePluginStateFromValueTree (vt);
-
-                at->pluginList.insertPlugin (*p, 0, nullptr);
-                at->setName ("Organ");
-                at->setColour (juce::Colours::blue);
-            }
+            auto& at = utils::addFourOscWithPatch (*te::getAudioTracks (edit)[0], utils::organPatch);
+            at.setName ("Organ");
+            at.setColour (juce::Colours::blue);
         }
 
-        if (auto at = te::getAudioTracks (edit)[1])
         {
-            if (auto p = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
-            {
-                if (auto vt = juce::ValueTree::fromXml (utils::leadPatch); vt.isValid())
-                    p->restorePluginStateFromValueTree (vt);
-
-                at->pluginList.insertPlugin (*p, 0, nullptr);
-                at->setName ("Lead");
-                at->setColour (juce::Colours::green);
-            }
+            auto& at = utils::addFourOscWithPatch (*te::getAudioTracks (edit)[1], utils::synthPatch);
+            at.setName ("Lead");
+            at.setColour (juce::Colours::green);
         }
 
         updateQuantisationButtonText();
