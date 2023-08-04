@@ -184,7 +184,7 @@ namespace tracktion { inline namespace engine { namespace BeatConnect
 							}
 							else if (p_hz > midiNoteValues.back().freqHz)
 							{
-								midiNoteValues.back().freqHz;
+								return midiNoteValues.back().freqHz;
 							}
 						}
 					}
