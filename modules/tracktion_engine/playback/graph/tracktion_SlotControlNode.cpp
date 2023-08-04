@@ -23,7 +23,8 @@ SlotControlNode::SlotControlNode (ProcessState& ps,
       launchHandle (std::move (launchHandle_)),
       slotID (slotID_),
       input (std::move (input_)),
-      localProcessState (ps.playHeadState, *ps.getTempoSequence())
+      localPlayheadState (ps.playHeadState.playHead),
+      localProcessState (localPlayheadState, *ps.getTempoSequence())
 {
     assert (getProcessState().getTempoSequence() != nullptr);
 
@@ -75,7 +76,7 @@ void SlotControlNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
 
     if (auto oldGraph = info.nodeGraphToReplace)
         if (auto oldNode = findNodeWithID<SlotControlNode> (*oldGraph, (size_t) slotID.getRawID()))
-            if (oldNode->lastSamples->size() == numChans)
+            if (oldNode->lastSamples && oldNode->lastSamples->size() == numChans)
                 lastSamples = oldNode->lastSamples;
 
     if (lastSamples)

@@ -45,6 +45,7 @@ private:
     const EditItemID slotID;
     std::unique_ptr<Node> input;
 
+    PlayHeadState localPlayheadState;
     ProcessState localProcessState;
     std::vector<DynamicallyOffsettableNodeBase*> offsetNodes;
     std::vector<Node*> orderedNodes, leafNodes;
