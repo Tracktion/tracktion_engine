@@ -64,10 +64,7 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
 
     if (getChannels().isEmpty())
     {
-        for (int i = defaultNumChannels; --i >= 0;)
-            insertNewChannel (-1);
-
-        auto getDefaultNoteNumber = [] (int chanNum)
+        auto getDefaultNoteNumber = [](int chanNum)
         {
             // BEATCONNECT MODIFICATIONS START
             switch (chanNum)
@@ -93,6 +90,12 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
             }
             // BEATCONNECT MODIFICATIONS END
         };
+
+        int channelIndex = 0;
+        for (int i = defaultNumChannels; --i >= 0;)
+        {
+            insertNewChannel(-1, getDefaultNoteNumber(channelIndex++));
+        }
 
         for (int i = 0; i < std::min (getChannels().size(), 8); ++i)
         {
@@ -525,7 +528,8 @@ bool StepClip::usesProbability()
     return false;
 }
 
-void StepClip::insertNewChannel (int index)
+// BEATCONNECT MODIFICATON START
+void StepClip::insertNewChannel (int index, int noteNumber)
 {
     if (getChannels().size() < maxNumChannels)
     {
@@ -533,7 +537,7 @@ void StepClip::insertNewChannel (int index)
 
         auto v = createValueTree (IDs::CHANNEL,
                                   IDs::channel, defaultMidiChannel,
-                                  IDs::note, defaultNoteNumber,
+                                  IDs::note, noteNumber == -1 ? defaultNoteNumber : noteNumber,
                                   IDs::velocity, defaultNoteValue,
                                   IDs::tremolo, defaultTremoloAttacks);
 
@@ -548,6 +552,7 @@ void StepClip::insertNewChannel (int index)
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("This clip already contains the maximum number of channels!"));
     }
 }
+// BEATCONNECT MODIFICATON END
 
 void StepClip::removeChannel (int index)
 {

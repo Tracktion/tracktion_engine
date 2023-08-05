@@ -55,7 +55,7 @@ public:
 
     const juce::Array<Channel*>& getChannels() const noexcept;
     void removeChannel (int index);
-    void insertNewChannel (int index);
+    void insertNewChannel (int index, int noteNumber = -1);
 
     bool usesProbability();
 
