@@ -7,8 +7,6 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
-
 namespace tracktion { inline namespace engine
 {
 // A Drum Machine is a specialised Sampler.

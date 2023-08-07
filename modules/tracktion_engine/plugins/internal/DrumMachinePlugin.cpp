@@ -14,4 +14,4 @@ DrumMachinePlugin::DrumMachinePlugin(PluginCreationInfo pluginCreationInfo) : Sa
 const int DrumMachinePlugin::pitchWheelSemitoneRange = 25.0;
 const char* DrumMachinePlugin::uniqueId = "adf30650-4fd8-4cce-933d-fa8aa598c6c9";
 const char* DrumMachinePlugin::xmlTypeName = "drum machine";
-}}
+}} // namespace tracktion { inline namespace engine

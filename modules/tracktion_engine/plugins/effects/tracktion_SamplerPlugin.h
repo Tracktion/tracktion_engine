@@ -122,6 +122,10 @@ private:
 
     void valueTreeChanged() override;
     void handleAsyncUpdate() override;
+    void applyFilter();
+
+    juce::IIRFilter iirFilter;
+    double iirFilterQuotient = 0.710624337;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplerPlugin)
 };

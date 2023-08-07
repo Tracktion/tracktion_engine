@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../Source/Data/Repo.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -147,6 +149,11 @@ private:
 //==============================================================================
 SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
+    auto edit = Repo::getInstance().getEdit();
+    juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(
+        edit->engine.getDeviceManager().getSampleRate(), 110, iirFilterQuotient);
+    iirFilter.setCoefficients(coefs);
+    iirFilter.reset();
     triggerAsyncUpdate();
 }
 
@@ -193,6 +200,8 @@ void SamplerPlugin::handleAsyncUpdate()
 
             newSounds.add (s);
         }
+
+
     }
 
     for (auto newSound : newSounds)
@@ -208,6 +217,7 @@ void SamplerPlugin::handleAsyncUpdate()
                 newSound->fileLengthSamples = s->fileLengthSamples;
                 newSound->audioData = s->audioData;
             }
+            iirFilter.processSamples(s->audioData.getWritePointer(0), s->audioData.getNumSamples());
         }
     }
 
@@ -221,6 +231,10 @@ void SamplerPlugin::handleAsyncUpdate()
 
     newSounds.clear();
     changed();
+}
+
+void SamplerPlugin::applyFilter()
+{
 }
 
 void SamplerPlugin::initialise (const PluginInitialisationInfo&)
@@ -306,8 +320,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             for (auto& m : *fc.bufferForMidiMessages)
             {
-
-                if (m.isNoteOn())
+                 if (m.isNoteOn())
                 {
                     const int note = m.getNoteNumber();
                     const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
@@ -325,6 +338,9 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
                     for (auto ss : soundList)
                     {
+                        // =8> attempt to process the samples here?
+                        // iirFilter.processSamples(ss->audioData.getWritePointer(0), ss->audioData.getNumSamples()); =8>
+                        
                         int adjustedMidiNote = note;
                         if (ss->minNote <= note
                             && ss->maxNote >= note
