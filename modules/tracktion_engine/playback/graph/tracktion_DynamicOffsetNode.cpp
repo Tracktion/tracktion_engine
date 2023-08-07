@@ -239,6 +239,7 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
     const auto offsetEndTime = tempoPosition.add (dynamicOffsetBeats);
     const auto dynamicOffsetTime = offsetEndTime - offsetStartTime;
 
+    localProcessState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
 
