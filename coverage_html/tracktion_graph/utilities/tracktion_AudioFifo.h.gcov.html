@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-19 13:05:43</td>
+            <td class="headerValue">2023-08-07 16:56:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -111,30 +111,30 @@
 <a name="49"><span class="lineNum">      49 </span>            :         }</a>
 <a name="50"><span class="lineNum">      50 </span>            :     }</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     866876 :     bool write (choc::buffer::ChannelArrayView&lt;float&gt; block)</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     862828 :     bool write (choc::buffer::ChannelArrayView&lt;float&gt; block)</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :     {</a>
 <a name="54"><span class="lineNum">      54 </span>            :         jassert (block.getNumChannels() &lt;= buffer.getNumChannels());</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">     866876 :         int numSamples = (int) block.getNumFrames();</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">     862828 :         int numSamples = (int) block.getNumFrames();</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :         int start1, size1, start2, size2;</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">     866876 :         fifo.prepareToWrite (numSamples, start1, size1, start2, size2);</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">     862828 :         fifo.prepareToWrite (numSamples, start1, size1, start2, size2);</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">     866876 :         if (size1 + size2 &lt; numSamples)</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">     862828 :         if (size1 + size2 &lt; numSamples)</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :             return false;</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     866876 :         auto fifo1 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start1, (choc::buffer::FrameCount) (start1 + size1) });</span></a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">     866876 :         auto block1 = block.getStart ((choc::buffer::FrameCount) size1);</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">     866876 :         copyIntersectionAndClearOutside (fifo1, block1);</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     862828 :         auto fifo1 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start1, (choc::buffer::FrameCount) (start1 + size1) });</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">     862828 :         auto block1 = block.getStart ((choc::buffer::FrameCount) size1);</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">     862828 :         copyIntersectionAndClearOutside (fifo1, block1);</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     866876 :         if (size2 != 0)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     862828 :         if (size2 != 0)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :         {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     237302 :             auto fifo2 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start2, (choc::buffer::FrameCount) (start2 + size2) });</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">     237302 :             auto block2 = block.getFrameRange ({ (choc::buffer::FrameCount) size1, (choc::buffer::FrameCount) (size1 + size2) });</span></a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     237302 :             copyIntersectionAndClearOutside (fifo2, block2);</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     237422 :             auto fifo2 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start2, (choc::buffer::FrameCount) (start2 + size2) });</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">     237422 :             auto block2 = block.getFrameRange ({ (choc::buffer::FrameCount) size1, (choc::buffer::FrameCount) (size1 + size2) });</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     237422 :             copyIntersectionAndClearOutside (fifo2, block2);</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :         }</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     866876 :         fifo.finishedWrite (size1 + size2);</span></a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">     866876 :         return true;</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     862828 :         fifo.finishedWrite (size1 + size2);</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">     862828 :         return true;</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :     }</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">        224 :     bool writeSilence (choc::buffer::FrameCount numFrames)</span></a>
@@ -187,30 +187,30 @@
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :         return true;</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :     }</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     866876 :     bool readOverwriting (choc::buffer::ChannelArrayView&lt;float&gt; dest)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     862828 :     bool readOverwriting (choc::buffer::ChannelArrayView&lt;float&gt; dest)</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :     {</a>
 <a name="130"><span class="lineNum">     130 </span>            :         jassert (dest.getNumChannels() &lt;= buffer.getNumChannels());</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">     866876 :         auto numFrames = (int) dest.getNumFrames();</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">     862828 :         auto numFrames = (int) dest.getNumFrames();</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :         int start1, size1, start2, size2;</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     866876 :         fifo.prepareToRead (numFrames, start1, size1, start2, size2);</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     862828 :         fifo.prepareToRead (numFrames, start1, size1, start2, size2);</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     866876 :         if (size1 + size2 &lt; numFrames)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     862828 :         if (size1 + size2 &lt; numFrames)</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :             return false;</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     866876 :         auto fifo1 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start1, (choc::buffer::FrameCount) (start1 + size1) });</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">     866876 :         auto block1 = dest.getStart ((choc::buffer::FrameCount) size1);</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     866876 :         copy (block1, fifo1);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     862828 :         auto fifo1 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start1, (choc::buffer::FrameCount) (start1 + size1) });</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">     862828 :         auto block1 = dest.getStart ((choc::buffer::FrameCount) size1);</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     862828 :         copy (block1, fifo1);</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     866876 :         if (size2 != 0)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     862828 :         if (size2 != 0)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :         {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     237688 :             auto fifo2 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start2, (choc::buffer::FrameCount) (start2 + size2) });</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     237628 :             auto fifo2 = buffer.getFrameRange ({ (choc::buffer::FrameCount) start2, (choc::buffer::FrameCount) (start2 + size2) });</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :             auto block2 = dest.getFrameRange ({ (choc::buffer::FrameCount) size1, (choc::buffer::FrameCount) (size1 + size2) });</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     237688 :             copy (block2, fifo2);</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     237628 :             copy (block2, fifo2);</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :         }</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     866876 :         fifo.finishedRead (size1 + size2);</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     866876 :         return true;</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     862828 :         fifo.finishedRead (size1 + size2);</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     862828 :         return true;</span></a>
 <a name="152"><span class="lineNum">     152 </span>            :     }</a>
 <a name="153"><span class="lineNum">     153 </span>            :     </a>
 <a name="154"><span class="lineNum">     154 </span>            :     void removeSamples (int numSamples)</a>
