@@ -55,7 +55,7 @@ public:
 
     const juce::Array<Channel*>& getChannels() const noexcept;
     void removeChannel (int index);
-    void insertNewChannel (int index);
+    void insertNewChannel (int index, int noteNumber = -1);
 
     bool usesProbability();
 
@@ -211,7 +211,7 @@ public:
 
         // BEATCONNECT MODIFICATIONS START
         // Midi only has 127 available notes, guaranteed to be out of range.
-        errorKeyNoteOffset  = -127,
+        noKeyNoteOffset  = 0,
         errorTremoloAttacks = -1,
         // BEATCONNECT MODIFICATIONS END
 
