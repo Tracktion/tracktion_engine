@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_WaveNode.h"
+#include "../../model/clips/tracktion_LaunchHandle.h"
 
 namespace tracktion { inline namespace engine
 {
@@ -143,9 +143,6 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 
         const juce::Range subSectionReferenceSampleRange (startRefSample, endRefSample);
 
-        for (auto& node : orderedNodes)
-            node->prepareForNextBlock (subSectionReferenceSampleRange);
-
         auto sectionBufferView = pc.buffers.audio.getFrameRange ({ startFrame, endFrame });
         ProcessContext subSection {
                                       sectionNumFrames, subSectionReferenceSampleRange,
@@ -171,7 +168,11 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange clipBeatRange,
                                       bool isPlaying, std::optional<BeatPosition> playStartTime)
 {
-    const juce::ScopeGuard scope { [this, isPlaying] { wasPlaying = isPlaying; } };
+    const juce::ScopeGuard scope { [this, isPlaying]
+                                   {
+                                       wasPlaying = isPlaying;
+                                       localPlayheadState.playheadJumped = false;
+                                   } };
 
     if (! isPlaying)
     {
@@ -182,23 +183,31 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
 
         return;
     }
+    else if (! wasPlaying)
+    {
+        // Force the playheadJumped state to true in order to resync MIDI streams etc.
+        localPlayheadState.playheadJumped = true;
+    }
 
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
-
-    // Offset is calculated as the edit beat time add  minus the play start time
 
     // Update the offset for compatible Nodes
     if (playStartTime)
     {
         playbackHandle.start (*playStartTime);
 
+        // Offset is calculated as the edit beat time add  minus the play start time
         const auto clipEditOffset = editBeatRange.getStart() - clipBeatRange.getStart();
         const auto offset = clipEditOffset - toDuration (*playStartTime);
 
         for (auto n : offsetNodes)
             n->setDynamicOffsetBeats (offset);
     }
+
+    // Prepare ordered Nodes
+    for (auto& node : orderedNodes)
+        node->prepareForNextBlock (pc.referenceSampleRange);
 
     // Process ordered Nodes
     for (auto& node : orderedNodes)

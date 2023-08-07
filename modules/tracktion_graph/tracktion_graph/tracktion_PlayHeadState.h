@@ -47,9 +47,11 @@ public:
 
     PlayHead& playHead;
 
+    /** @internal */
+    bool isPlayHeadRunning = false, playheadJumped = false, lastBlockOfLoop = false, firstBlockOfLoop = false;
+
 private:
     std::chrono::system_clock::time_point lastUserInteractionTime;
-    bool isPlayHeadRunning = false, playheadJumped = false, lastBlockOfLoop = false, firstBlockOfLoop = false;
 };
 
 
