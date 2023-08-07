@@ -417,6 +417,7 @@ void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
 void DeviceManager::changeListenerCallback (ChangeBroadcaster*)
 {
     CRASH_TRACER
+    saveSettings();
 
     if (! rebuildWaveDeviceListIfNeeded())
     {
