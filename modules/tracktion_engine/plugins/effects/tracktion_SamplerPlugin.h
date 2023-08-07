@@ -112,6 +112,10 @@ private:
     //==============================================================================
     struct SampledNote;
 
+    juce::IIRFilter iirFilter0;
+    juce::IIRFilter iirFilter1;
+    double iirFilterQuotient = 0.710624337;
+
     juce::Colour colour;
     juce::CriticalSection lock;
     juce::ReferenceCountedArray<SampledNote> playingNotes;
@@ -122,10 +126,6 @@ private:
 
     void valueTreeChanged() override;
     void handleAsyncUpdate() override;
-    void applyFilter();
-
-    juce::IIRFilter iirFilter;
-    double iirFilterQuotient = 0.710624337;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplerPlugin)
 };

@@ -66,10 +66,25 @@ public:
         {
             int numUsed = 0;
 
+            // This doesn't work, results in silence.
+            //auto edit = Repo::getInstance().getEdit();
+            //juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(
+            //    edit->engine.getDeviceManager().getSampleRate(), 1000, iirFilterQuotient);
+            //iirFilter.setCoefficients(coefs);
+            //iirFilter.reset();
+
+            //AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
+            //for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
+            //{
+            //    scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
+            //    iirFilter.processSamples(scratch.buffer.getWritePointer(i), scratch.buffer.getNumSamples());
+            //}
+
             for (int i = std::min (2, outBuffer.getNumChannels()); --i >= 0;)
             {
                 numUsed = resampler[i]
                             .processAdding (playbackRatio,
+                                            // scratch.buffer.getReadPointer (std::min (i, audioData.getNumChannels() - 1), offset),
                                             audioData.getReadPointer (std::min (i, audioData.getNumChannels() - 1), offset),
                                             outBuffer.getWritePointer (i, startSamp),
                                             numSamps,
@@ -132,6 +147,8 @@ public:
         }
     }
 
+    juce::IIRFilter iirFilter;
+    double iirFilterQuotient = 0.710624337;
     juce::LagrangeInterpolator resampler[2];
     int note;
     int offset, samplesLeftToPlay = 0;
@@ -151,9 +168,11 @@ SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto edit = Repo::getInstance().getEdit();
     juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(
-        edit->engine.getDeviceManager().getSampleRate(), 110, iirFilterQuotient);
-    iirFilter.setCoefficients(coefs);
-    iirFilter.reset();
+        edit->engine.getDeviceManager().getSampleRate(), 100, iirFilterQuotient);
+    iirFilter0.setCoefficients(coefs);
+    iirFilter0.reset();    
+    iirFilter1.setCoefficients(coefs);
+    iirFilter1.reset();
     triggerAsyncUpdate();
 }
 
@@ -217,7 +236,6 @@ void SamplerPlugin::handleAsyncUpdate()
                 newSound->fileLengthSamples = s->fileLengthSamples;
                 newSound->audioData = s->audioData;
             }
-            iirFilter.processSamples(s->audioData.getWritePointer(0), s->audioData.getNumSamples());
         }
     }
 
@@ -231,10 +249,6 @@ void SamplerPlugin::handleAsyncUpdate()
 
     newSounds.clear();
     changed();
-}
-
-void SamplerPlugin::applyFilter()
-{
 }
 
 void SamplerPlugin::initialise (const PluginInitialisationInfo&)
@@ -329,6 +343,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                     {
                         if (playingNote->note == note && ! playingNote->openEnded)
                         {
+
                             playingNote->samplesLeftToPlay = std::min (playingNote->samplesLeftToPlay,
                                                                        std::max (minimumSamplesToPlayWhenStopping,
                                                                                  noteTimeSample));
@@ -338,9 +353,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
                     for (auto ss : soundList)
                     {
-                        // =8> attempt to process the samples here?
-                        // iirFilter.processSamples(ss->audioData.getWritePointer(0), ss->audioData.getNumSamples()); =8>
-                        
                         int adjustedMidiNote = note;
                         if (ss->minNote <= note
                             && ss->maxNote >= note
@@ -368,7 +380,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                                                                ss->audioFile,
                                                                sampleRate,
                                                                noteTimeSample,
-                                                               ss->audioData,
+                                                               ss->audioData, 
                                                                ss->fileLengthSamples,
                                                                ss->gainDb,
                                                                ss->pan,
@@ -406,6 +418,11 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             auto sn = playingNotes.getUnchecked (i);
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
+            // What about this?
+            iirFilter0.processSamples(fc.destBuffer->getWritePointer(0), fc.bufferNumSamples);
+            iirFilter1.processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+
+
 
             if (sn->isFinished)
                 playingNotes.remove (i);
