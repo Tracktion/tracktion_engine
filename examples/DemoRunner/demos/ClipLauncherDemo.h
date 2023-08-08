@@ -97,20 +97,48 @@ namespace utils
 
     //==============================================================================
     //==============================================================================
+    inline te::BeatDuration getLaunchOffset (const te::LaunchQuantisation& lq, const te::BeatPosition pos,
+                                             std::optional<te::BeatRange> loopRange)
+    {
+        // Quantise position first
+        auto quantisedPos = lq.getNext (pos);
+
+        if (! loopRange || quantisedPos < loopRange->getEnd())
+            return quantisedPos - pos;
+
+        // If it's after the loop range, quantise the start loop position
+        quantisedPos = lq.getNext (loopRange->getStart());
+
+        // If it still doesn't contain the position, just use the loop start pos
+        if (! loopRange->contains (quantisedPos))
+            quantisedPos = loopRange->getStart();
+
+        // Find the duration from the given position to the loop end + the quantised position from the loop start
+        if (loopRange->contains (pos))
+            return (loopRange->getEnd() - pos) + (quantisedPos - loopRange->getStart());
+
+        return quantisedPos - pos;
+    }
+
     inline te::BeatPosition getLaunchPosition (te::Edit& e, const te::LaunchHandle& lh)
     {
-        if (auto currentPos = lh.getPosition())
-            return e.getLaunchQuantisation().getNext (*currentPos);
+        auto& t= e.getTransport();
+        auto& ts = e.tempoSequence;
+        const auto currentPos = ts.toBeats (t.getPosition());
+        const auto offset = getLaunchOffset (e.getLaunchQuantisation(),
+                                             currentPos,
+                                             t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
+                                                             : std::nullopt);
 
-        return e.getLaunchQuantisation().getNext (e.tempoSequence.toBeats (e.getTransport().getPosition()));
+        if (auto currentLaunchPos = lh.getPosition())
+            return *currentLaunchPos + offset;
+
+        return currentPos + offset;
     }
 
     inline te::BeatPosition getStopPosition (te::Edit& e, const te::LaunchHandle& lh)
     {
-        if (auto currentPos = lh.getPosition())
-            return e.getLaunchQuantisation().getNext (*currentPos);
-
-        return {};
+        return getLaunchPosition (e, lh);
     }
 
     inline std::shared_ptr<te::LaunchHandle> getPlayingLaunchHandleOnTrack (te::AudioTrack& t)
@@ -1095,7 +1123,8 @@ public:
 
 //ddd        edit.tempoSequence.insertTempo (1_bp, 120.0, 0.0f);
 //        edit.tempoSequence.insertTempo (5_bp, 40.0, 0.0f);
-        transport.setLoopRange (edit.tempoSequence.toTime ({ 0_bp, 6.75_bp }));
+//        edit.tempoSequence.getTempo (0)->setBpm (40.0);
+        transport.setLoopRange (edit.tempoSequence.toTime ({ 0.75_bp, 6.75_bp }));
         transport.looping = true;
         transport.addChangeListener (this);
         quantisationValue.addListener (this);
