@@ -148,7 +148,6 @@ public:
     }
 
     juce::IIRFilter iirFilter;
-    double iirFilterQuotient = 0.710624337;
     juce::LagrangeInterpolator resampler[2];
     int note;
     int offset, samplesLeftToPlay = 0;
@@ -167,7 +166,7 @@ private:
 SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto edit = Repo::getInstance().getEdit();
-    juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(
+    coefs = juce::IIRCoefficients::makeLowPass(
         edit->engine.getDeviceManager().getSampleRate(), 100, iirFilterQuotient);
     iirFilter0.setCoefficients(coefs);
     iirFilter0.reset();    
@@ -249,6 +248,50 @@ void SamplerPlugin::handleAsyncUpdate()
 
     newSounds.clear();
     changed();
+}
+
+void SamplerPlugin::setFilter(const IIRFilter::FilterType filterType, const double frequency, const double gainFactor)
+{
+    const double sampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
+    switch (filterType) {
+        case IIRFilter::FilterType::lowpass: {
+            coefs = juce::IIRCoefficients::makeLowPass(sampleRate, frequency, iirFilterQuotient);
+            break;
+        }
+    
+        case IIRFilter::FilterType::highpass: {
+            coefs = juce::IIRCoefficients::makeHighPass(sampleRate, frequency, iirFilterQuotient);
+            break;
+        }
+        case IIRFilter::FilterType::bandpass: {
+            coefs = juce::IIRCoefficients::makeBandPass(sampleRate, frequency, iirFilterQuotient);
+            break;
+        }
+        case IIRFilter::FilterType::notch: {
+            coefs = juce::IIRCoefficients::makeNotchFilter(sampleRate, frequency, iirFilterQuotient);
+            break;
+        }
+        case IIRFilter::FilterType::allpass: {
+            coefs = juce::IIRCoefficients::makeAllPass(sampleRate, frequency, iirFilterQuotient);
+            break;
+        }
+        case IIRFilter::FilterType::lowshelf: {
+            coefs = juce::IIRCoefficients::makeLowShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+            break;
+        }
+        case IIRFilter::FilterType::highshelf: {
+            coefs = juce::IIRCoefficients::makeHighShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+            break;
+        }
+        case IIRFilter::FilterType::peak: {
+            coefs = juce::IIRCoefficients::makePeakFilter(sampleRate, frequency, iirFilterQuotient, gainFactor);
+            break;
+        }
+    }
+    iirFilter0.setCoefficients(coefs);
+    iirFilter1.setCoefficients(coefs);
+    iirFilter0.reset();
+    iirFilter1.reset();
 }
 
 void SamplerPlugin::initialise (const PluginInitialisationInfo&)
@@ -418,11 +461,8 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             auto sn = playingNotes.getUnchecked (i);
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
-            // What about this?
             iirFilter0.processSamples(fc.destBuffer->getWritePointer(0), fc.bufferNumSamples);
             iirFilter1.processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
-
-
 
             if (sn->isFinished)
                 playingNotes.remove (i);
