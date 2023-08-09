@@ -49,8 +49,10 @@
       #include <ifaddrs.h>
      #endif
 
+    #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
      #include <ableton/Link.hpp>
      #include <ableton/link/HostTimeFilter.hpp>
+    #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
 
      #if JUCE_ANDROID
       #include <ifaddrs.cpp>
