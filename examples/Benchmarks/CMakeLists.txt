@@ -89,6 +89,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
+    target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/fp:fast>")
 endif()
 
 # If we are compiling for Linux specify the arch to enable sse and avx instructions
