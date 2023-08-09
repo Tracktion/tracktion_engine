@@ -592,6 +592,9 @@ namespace IDs
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
     DECLARE_ID (filterQ)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (filterGain)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
