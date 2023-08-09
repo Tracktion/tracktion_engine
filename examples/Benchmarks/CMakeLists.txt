@@ -85,6 +85,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
+    target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-ffast-math>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
