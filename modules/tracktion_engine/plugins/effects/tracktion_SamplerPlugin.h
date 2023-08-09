@@ -126,8 +126,8 @@ private:
 
     void valueTreeChanged() override;
     void handleAsyncUpdate() override;
-    juce::IIRFilter iirFilter0;
-    juce::IIRFilter iirFilter1;
+    juce::IIRFilter iirFilterR;
+    juce::IIRFilter iirFilterL;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplerPlugin)
 };

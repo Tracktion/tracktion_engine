@@ -133,55 +133,55 @@ public:
         }
     }
 
-    // BEAT CONNECT MODIFICATION START
-    void setCoefficients(const IIRFilter::FilterType filterType, const double frequency, const double gainFactor = 0)
-    {
-        const double sampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
-        switch (filterType) {
-        case IIRFilter::FilterType::noFilter: {
-            return;
-        }
-        case IIRFilter::FilterType::lowpass: {
-            coefs = juce::IIRCoefficients::makeLowPass(sampleRate, frequency, iirFilterQuotient);
-            break;
-        }
-        case IIRFilter::FilterType::highpass: {
-            coefs = juce::IIRCoefficients::makeHighPass(sampleRate, frequency, iirFilterQuotient);
-            break;
-        }
-        case IIRFilter::FilterType::bandpass: {
-            coefs = juce::IIRCoefficients::makeBandPass(sampleRate, frequency, iirFilterQuotient);
-            break;
-        }
-        case IIRFilter::FilterType::notch: {
-            coefs = juce::IIRCoefficients::makeNotchFilter(sampleRate, frequency, iirFilterQuotient);
-            break;
-        }
-        case IIRFilter::FilterType::allpass: {
-            coefs = juce::IIRCoefficients::makeAllPass(sampleRate, frequency, iirFilterQuotient);
-            break;
-        }
-        case IIRFilter::FilterType::lowshelf: {
-            coefs = juce::IIRCoefficients::makeLowShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
-            break;
-        }
-        case IIRFilter::FilterType::highshelf: {
-            coefs = juce::IIRCoefficients::makeHighShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
-            break;
-        }
-        case IIRFilter::FilterType::peak: {
-            coefs = juce::IIRCoefficients::makePeakFilter(sampleRate, frequency, iirFilterQuotient, gainFactor);
-            break;
-        }
-        iirFilter0.setCoefficients(coefs);
-        iirFilter1.setCoefficients(coefs);
-        iirFilter0.reset();
-        iirFilter1.reset();
+    //// BEAT CONNECT MODIFICATION START
+    //void setCoefficients(const IIRFilter::FilterType filterType, const double frequency, const double gainFactor = 0)
+    //{
+    //    const double sampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
+    //    switch (filterType) {
+    //    case IIRFilter::FilterType::noFilter: {
+    //        return;
+    //    }
+    //    case IIRFilter::FilterType::lowpass: {
+    //        coefs = juce::IIRCoefficients::makeLowPass(sampleRate, frequency, iirFilterQuotient);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::highpass: {
+    //        coefs = juce::IIRCoefficients::makeHighPass(sampleRate, frequency, iirFilterQuotient);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::bandpass: {
+    //        coefs = juce::IIRCoefficients::makeBandPass(sampleRate, frequency, iirFilterQuotient);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::notch: {
+    //        coefs = juce::IIRCoefficients::makeNotchFilter(sampleRate, frequency, iirFilterQuotient);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::allpass: {
+    //        coefs = juce::IIRCoefficients::makeAllPass(sampleRate, frequency, iirFilterQuotient);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::lowshelf: {
+    //        coefs = juce::IIRCoefficients::makeLowShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::highshelf: {
+    //        coefs = juce::IIRCoefficients::makeHighShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+    //        break;
+    //    }
+    //    case IIRFilter::FilterType::peak: {
+    //        coefs = juce::IIRCoefficients::makePeakFilter(sampleRate, frequency, iirFilterQuotient, gainFactor);
+    //        break;
+    //    }
+    //    iirFilter0.setCoefficients(coefs);
+    //    iirFilter1.setCoefficients(coefs);
+    //    iirFilter0.reset();
+    //    iirFilter1.reset();
 
-        return;
-        }
-    }
-    // BEAT CONNECT MODIFICATION END
+    //    return;
+    //    }
+    //}
+    //// BEAT CONNECT MODIFICATION END
 
     juce::LagrangeInterpolator resampler[2];
     int note;
@@ -192,10 +192,10 @@ public:
     float lastVals[4] = { 0, 0, 0, 0 };
     float startFade = 1.0f;
     bool openEnded, isFinished = false;
-    IIRFilter iirFilter0;
-    IIRFilter iirFilter1;
-    juce::IIRCoefficients coefs;
-    double iirFilterQuotient = 0.710624337;
+    //IIRFilter iirFilter0;
+    //IIRFilter iirFilter1;
+    //juce::IIRCoefficients coefs;
+    //double iirFilterQuotient = 0.710624337;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampledNote)
@@ -418,11 +418,15 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             adjustedMidiNote = BeatConnect::MidiNote::getMidiNote(newNoteHz);
                         }
 
+                        // There's enough time and information to set the filter here.
+                        // Is there enough time to add a filter to the array here? No
+                        // If the filter already exists by this time, you can use it here.
+
                         juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(48000, 100, 0.710624337);
-                        iirFilter0.setCoefficients(coefs);
-                        iirFilter1.setCoefficients(coefs);
-                        iirFilter0.reset();
-                        iirFilter1.reset();
+                        iirFilterR.setCoefficients(coefs);
+                        iirFilterL.setCoefficients(coefs);
+                        iirFilterR.reset();
+                        iirFilterL.reset();
                         // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
                             playingNotes.add (new SampledNote 
@@ -473,10 +477,18 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
             
-            iirFilter0.processSamples(fc.destBuffer->getWritePointer(0), fc.bufferNumSamples);
-            iirFilter1.processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
-            //iirFilters[1].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
-            //iirFilters[1].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+            // iirFilterR.processSamples(fc.destBuffer->getWritePointer(0), fc.bufferNumSamples);
+            // iirFilterL.processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+            auto test = iirFilters.size();
+            iirFilters[iirFilters.size() - 3].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+            iirFilters[iirFilters.size() - 4].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+            // iirFilters[0].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+            // iirFilters[1].processSamples(fc.destBuffer->getWritePointer(1), fc.bufferNumSamples);
+
+            IIRFilter testFilter;
+            for (int i = 10; i > 0; i--) {
+                iirFilters.add(testFilter);
+            }
 
             if (sn->isFinished)
                 playingNotes.remove (i);
@@ -609,13 +621,15 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
             v.setProperty(IDs::filterGain, filterGain, nullptr);
     
     int currentSamplerRate = 48000;
-    double frequency = 440;
+    double frequency = 100;
     double iirFilterQuotient = 0.710624337;
+    //IIRFilter iirFilterR;
+    //IIRFilter iirFilterL;
     juce::IIRCoefficients coefs = juce::IIRCoefficients::makeLowPass(currentSamplerRate, frequency, iirFilterQuotient);
-    iirFilter0.setCoefficients(coefs);
-    iirFilter1.setCoefficients(coefs);
-    iirFilter0.reset();
-    iirFilter1.reset();
+    //iirFilterR.setCoefficients(coefs);
+    //iirFilterL.setCoefficients(coefs);
+    //iirFilterR.reset();
+    //iirFilterL.reset();
     // BEATCONNECT MODIFICATION END
 
     state.addChild (v, -1, getUndoManager());
