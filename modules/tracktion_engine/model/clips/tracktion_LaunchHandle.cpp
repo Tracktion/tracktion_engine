@@ -60,7 +60,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
     auto beatRange = BeatRange::endingAt (syncPoint.beat, duration);
 
     if (s.playedRange)
-        beatRange = { s.playedRange->getStart(), s.playedRange->getEnd() + duration };
+        beatRange = { s.playedRange->getEnd(), s.playedRange->getEnd() + duration };
 
     // Check if we need to change state
     if (s.nextStatus)
