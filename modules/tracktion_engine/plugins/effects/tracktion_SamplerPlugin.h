@@ -101,6 +101,8 @@ public:
         bool openEnded = false;
         float gainDb = 0, pan = 0;
         double startTime = 0, length = 0;
+        juce::IIRFilter::FilterType filterType;
+        double filterFrequency = 0, filterGain = 0;
         AudioFile audioFile;
         juce::AudioBuffer<float> audioData { 2, 64 };
 
