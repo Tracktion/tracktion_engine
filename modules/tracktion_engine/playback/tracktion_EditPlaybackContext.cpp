@@ -356,6 +356,11 @@ private:
          return player.getSampleRate();
      }
 
+     SyncPoint getSyncPoint() const
+     {
+         return processState.getSyncPoint();
+     }
+
      const TempoSequence& tempoSequence;
      tracktion::graph::PlayHead playHead;
      tracktion::graph::PlayHeadState playHeadState { playHead };
@@ -948,7 +953,7 @@ TimePosition EditPlaybackContext::getUnloopedPosition() const
 TimeRange EditPlaybackContext::getLoopTimes() const
 {
     return tracktion::timeRangeFromSamples (nodePlaybackContext->playHead.getLoopRange(),
-                                                  nodePlaybackContext->getSampleRate());
+                                            nodePlaybackContext->getSampleRate());
 }
 
 int EditPlaybackContext::getLatencySamples() const
@@ -1016,6 +1021,14 @@ void EditPlaybackContext::stop()
 {
     if (nodePlaybackContext)
         nodePlaybackContext->playHead.stop();
+}
+
+std::optional<SyncPoint> EditPlaybackContext::getSyncPoint() const
+{
+    if (nodePlaybackContext)
+        return nodePlaybackContext->getSyncPoint();
+
+    return {};
 }
 
 TimePosition EditPlaybackContext::globalStreamTimeToEditTime (double globalStreamTime) const

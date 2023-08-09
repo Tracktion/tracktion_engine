@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+//==========================================================================
+//==========================================================================
 class EditPlaybackContext
 {
 public:
@@ -119,6 +121,9 @@ public:
 
     void play();
     void stop();
+
+    /** Returns the last reference sample position and the edit time and beat that it corresponded to. */
+    std::optional<SyncPoint> getSyncPoint() const;
     
     TimePosition globalStreamTimeToEditTime (double) const;
     TimePosition globalStreamTimeToEditTimeUnlooped (double) const;
@@ -168,7 +173,7 @@ private:
     TimeDuration syncInterval;
     bool hasSynced = false;
     double lastStreamPos = 0;
-    
+
     struct ContextSyncroniser;
     std::unique_ptr<ContextSyncroniser> contextSyncroniser;
     

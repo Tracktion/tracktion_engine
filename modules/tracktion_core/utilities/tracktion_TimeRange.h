@@ -81,6 +81,9 @@ struct RangeType
     /** Creates a Range from a start position and duration. */
     RangeType (Position start, Duration);
 
+    /** Creates a Range from a duration and an end position. */
+    static RangeType endingAt (Position end, Duration);
+
     /** Returns the range that lies between two positions (in either order). */
     static RangeType between (Position, Position);
 
@@ -230,6 +233,12 @@ inline RangeType<PositionType>::RangeType (Position s, Duration d)
     : start (s), end (s + d)
 {
     checkInvariants();
+}
+
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::endingAt (Position e, Duration d)
+{
+    return RangeType (e - d, e);
 }
 
 template<typename PositionType>

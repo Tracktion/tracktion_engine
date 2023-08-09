@@ -54,6 +54,8 @@ struct ProcessState
     /** Returns the tempo::Sequence::Position this state uses. */
     const tempo::Sequence::Position* getTempoSequencePosition() const;
 
+    SyncPoint getSyncPoint() const;
+
     tracktion::graph::PlayHeadState& playHeadState;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
     int numSamples = 0;
@@ -64,6 +66,7 @@ struct ProcessState
 private:
     const tempo::Sequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+    std::atomic<SyncPoint> syncPoint { SyncPoint() };
 };
 
 

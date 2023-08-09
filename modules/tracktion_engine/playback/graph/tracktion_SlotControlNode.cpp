@@ -102,14 +102,18 @@ void SlotControlNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 
 void SlotControlNode::process (ProcessContext& pc)
 {
-    const auto editBeatRange = getEditBeatRange();
-
-    if (! launchHandle->hasSynced())
-        launchHandle->sync (editBeatRange.getStart());
-
-    if (! editBeatRange.isEmpty())
+    // If the playhead has just stopped, stop the launch and let it run to fade the audio/stop MIDI notes etc.
+    if (wasPlaying && ! getPlayHead().isPlaying())
     {
-        if (auto splitStatus = launchHandle->advance (editBeatRange.getLength());
+        wasPlaying = false;
+        launchHandle->stop ({});
+        processStop (pc);
+        return;
+    }
+
+    if (const auto editBeatRange = getEditBeatRange(); ! editBeatRange.isEmpty())
+    {
+        if (auto splitStatus = launchHandle->advance (getProcessState().getSyncPoint(), editBeatRange.getLength());
             ! splitStatus.range1.isEmpty())
            processSplitSection (pc, splitStatus);
     }
@@ -165,7 +169,7 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
     }
 }
 
-void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange clipBeatRange,
+void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange unloopedClipBeatRange,
                                       bool isPlaying, std::optional<BeatPosition> playStartTime)
 {
     const juce::ScopeGuard scope { [this, isPlaying]
@@ -195,10 +199,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     // Update the offset for compatible Nodes
     if (playStartTime)
     {
-        playbackHandle.start (*playStartTime);
-
-        // Offset is calculated as the edit beat time add  minus the play start time
-        const auto clipEditOffset = editBeatRange.getStart() - clipBeatRange.getStart();
+        const auto clipEditOffset = editBeatRange.getStart() - unloopedClipBeatRange.getStart();
         const auto offset = clipEditOffset - toDuration (*playStartTime);
 
         for (auto n : offsetNodes)

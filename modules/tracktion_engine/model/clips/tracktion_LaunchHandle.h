@@ -49,23 +49,12 @@ public:
     std::optional<QueueState> getQueuedStatus() const;
 
     /** Start playing, optionally at a given beat position. */
-    void play (std::optional<BeatPosition>);
+    void play (std::optional<MonotonicBeat>);
 
     /** Stop playing, optionally at a given beat position. */
-    void stop (std::optional<BeatPosition>);
+    void stop (std::optional<MonotonicBeat>);
 
     //==============================================================================
-    /** Start the syncronisation.
-        Call this once to sync the clip to the timeline.
-        N.B. This should only be called by the audio thread.
-        @param BeatPosition The start point of the timeline.
-        [[ audio_thread ]]
-    */
-    void sync (BeatPosition);
-
-    /** Returns true if this handle has been synced. */
-    bool hasSynced() const;
-
     /** Represents two beat ranges where the play state can be different in each. */
     struct SplitStatus
     {
@@ -78,31 +67,29 @@ public:
 
     /** Advance the state.
         N.B. This should only be called by the audio thread.
-        @param BeatDuration The duration to increment the timeline by.
+        @param SyncPoint    The current SyncPoint. Used to sync launch positions to
+        @param BeatDuration The duration to increment the timeline by. Must be greater than 0
         @returns            The unlooped Edit beat range split if there are
                             different play/stop states.
         [[ audio_thread ]]
     */
-    SplitStatus advance (BeatDuration);
+    SplitStatus advance (SyncPoint, BeatDuration);
 
     //==============================================================================
-    /** Returns the position this was launched from. */
-    std::optional<BeatPosition> getPlayStart() const;
-
-    /** Returns the last position this was updated from. */
-    std::optional<BeatPosition> getPosition() const;
+    /** Returns the Edit beat range this has been playing for.
+        N.B. The length is unlooped and so monotonically increasing.
+    */
+    std::optional<BeatRange> getPlayedRange() const;
 
 private:
     //==============================================================================
     struct State
     {
-        std::optional<BeatPosition> position;
-
         PlayState status = PlayState::stopped;
-        std::optional<BeatPosition> playStartTime;
+        std::optional<BeatRange> playedRange;
 
         std::optional<QueueState> nextStatus;
-        std::optional<BeatPosition> nextEventTime;
+        std::optional<MonotonicBeat> nextEventTime;
     };
 
     std::atomic<State> state { State {} };

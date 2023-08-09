@@ -58,6 +58,16 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     tempoPosition->set (editTimeRange.getEnd());
     const auto beatEnd = tempoPosition->getBeats();
     editBeatRange = { beatStart, beatEnd };
+
+    // Update the SyncPoint to point to the end of this block
+    if (const auto oldSyncPoint = getSyncPoint();
+        oldSyncPoint.referenceSamplePosition != referenceSampleRange.getEnd())
+    {
+        syncPoint = { referenceSampleRange.getEnd(),
+                      { oldSyncPoint.monotonicBeat.v + editBeatRange.getLength() },
+                      editTimeRange.getEnd(),
+                      beatEnd };
+    }
 }
 
 void ProcessState::setPlaybackSpeedRatio (double newRatio)
@@ -86,6 +96,11 @@ const tempo::Sequence* ProcessState::getTempoSequence() const
 const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
 {
     return tempoPosition.get();
+}
+
+SyncPoint ProcessState::getSyncPoint() const
+{
+    return syncPoint.load (std::memory_order_acquire);
 }
 
 

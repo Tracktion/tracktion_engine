@@ -407,6 +407,7 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_BackgroundJobs.h"
 #include "utilities/tracktion_MiscUtilities.h"
 #include "utilities/tracktion_TemporaryFileManager.h"
+#include "utilities/tracktion_Types.h"
 #include "utilities/tracktion_PluginComponent.h"
 #include "utilities/tracktion_BinaryData.h"
 #include "utilities/tracktion_SettingID.h"
