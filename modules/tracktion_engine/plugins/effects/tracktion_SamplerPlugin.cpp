@@ -617,15 +617,16 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               );
 
     // BEATCONNECT MODIFICATION START
-    if (filterType >= (int)juce::IIRFilter::FilterType::noFilter) 
+    if (filterType != (int)juce::IIRFilter::FilterType::noFilter) 
     {
         v.setProperty(IDs::filterType, filterType, nullptr);
         v.setProperty(IDs::filterFreq, filterFrequency, nullptr);
+
+        if (filterType == (int)juce::IIRFilter::FilterType::lowshelf ||
+            filterType == (int)juce::IIRFilter::FilterType::highshelf ||
+            filterType == (int)juce::IIRFilter::FilterType::peak)
+                v.setProperty(IDs::filterGain, filterGain, nullptr);
     }
-    if (filterType == (int)juce::IIRFilter::FilterType::lowshelf ||
-        filterType == (int)juce::IIRFilter::FilterType::highshelf ||
-        filterType == (int)juce::IIRFilter::FilterType::peak)
-            v.setProperty(IDs::filterGain, filterGain, nullptr);
     // BEATCONNECT MODIFICATION END
 
     state.addChild (v, -1, getUndoManager());
