@@ -14,12 +14,10 @@ namespace tracktion { inline namespace engine
 {
 
 SlotControlNode::SlotControlNode (ProcessState& ps,
-                                  LauncherClipPlaybackHandle playbackHandle_,
                                   std::shared_ptr<LaunchHandle> launchHandle_,
                                   EditItemID slotID_,
                                   std::unique_ptr<Node> input_)
     : TracktionEngineNode (ps),
-      playbackHandle (std::move (playbackHandle_)),
       launchHandle (std::move (launchHandle_)),
       slotID (slotID_),
       input (std::move (input_)),

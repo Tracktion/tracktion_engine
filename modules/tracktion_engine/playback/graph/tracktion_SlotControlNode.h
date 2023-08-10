@@ -22,7 +22,6 @@ class SlotControlNode final : public tracktion::graph::Node,
 {
 public:
     SlotControlNode (ProcessState& editProcessState,
-                     LauncherClipPlaybackHandle,
                      std::shared_ptr<LaunchHandle>,
                      EditItemID slotID,
                      std::unique_ptr<Node> input);
@@ -38,7 +37,6 @@ public:
 
 private:
     //==============================================================================
-    LauncherClipPlaybackHandle playbackHandle;
     std::shared_ptr<LaunchHandle> launchHandle;
     bool wasPlaying = false;
 

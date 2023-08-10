@@ -893,10 +893,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
         {
             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::launcher))
             {
-                auto playbackHandle = clip->isLooping()
-                    ? LauncherClipPlaybackHandle::forLooping (clip->getLoopRangeBeats(), clip->getOffsetInBeats())
-                    : LauncherClipPlaybackHandle::forOneShot ({ toPosition (clip->getOffsetInBeats()), clip->getLengthInBeats() });
-
                 std::shared_ptr<LaunchHandle> launchHandle;
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (clip))
@@ -907,7 +903,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
                     jassertfalse;
 
                 auto controlNode = std::make_unique<SlotControlNode> (params.processState,
-                                                                      std::move (playbackHandle),
                                                                       std::move (launchHandle),
                                                                       slot->itemID,
                                                                       std::move (clipNode));
