@@ -40,7 +40,11 @@ public:
     // returns an error
     juce::String addSound (const juce::String& sourcePathOrProjectID, const juce::String& name,
                             double startTime, double length, float gainDb,
-                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true, int filterType = 0, double filterFrequency = 0, double filterGain = 0);
+                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true
+                            // BEATCONNECT MODIFICATION START
+                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0
+                            // BEATCONNECT MODIFICATION END
+                            );
     void removeSound (int index);
     void setSoundParams (int index, int keyNote, int minNote, int maxNote);
     void setSoundGains (int index, float gainDb, float pan);
@@ -109,8 +113,6 @@ public:
     private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplerSound)
     };
-
-    juce::Array<juce::IIRFilter> iirFilters;
 
 private:
     //==============================================================================

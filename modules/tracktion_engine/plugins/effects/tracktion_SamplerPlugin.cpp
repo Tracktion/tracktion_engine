@@ -266,14 +266,14 @@ void SamplerPlugin::handleAsyncUpdate()
                                        v[IDs::name],
                                        v[IDs::startTime],
                                        v[IDs::length],
-                                       v[IDs::gainDb]
-                                       );
+                                       v[IDs::gainDb]);
 
             s->keyNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::keyNote]));
             s->minNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::minNote]));
             s->maxNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::maxNote]));
             s->pan          = juce::jlimit (-1.0f, 1.0f, static_cast<float> (v[IDs::pan]));
             s->openEnded    = v[IDs::openEnded];
+
             // BEATCONNECT MODIFICATION START
             s->filterType = (IIRFilter::FilterType)(int)v[IDs::filterType];
             
@@ -416,7 +416,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                     {
                         if (playingNote->note == note && ! playingNote->openEnded)
                         {
-
                             playingNote->samplesLeftToPlay = std::min (playingNote->samplesLeftToPlay,
                                                                        std::max (minimumSamplesToPlayWhenStopping,
                                                                                  noteTimeSample));
@@ -454,7 +453,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                                                                ss->audioFile,
                                                                sampleRate,
                                                                noteTimeSample,
-                                                               ss->audioData, 
+                                                               ss->audioData,
                                                                ss->fileLengthSamples,
                                                                ss->gainDb,
                                                                ss->pan,
@@ -493,7 +492,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             }
         }
 
-            for (int i = playingNotes.size(); --i >= 0;)
+        for (int i = playingNotes.size(); --i >= 0;)
         {
             auto sn = playingNotes.getUnchecked (i);
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);

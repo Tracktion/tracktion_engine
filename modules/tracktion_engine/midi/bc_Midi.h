@@ -15,7 +15,6 @@ namespace tracktion {
 		{
 			static const int midiPitchWheelBase = 0x2000;
 			static const int semitonesPerOctave = 12;
-			static const int AUDIO_ENGINE_SAMPLE_RATE = 48000;
 
 			struct midiNoteValue
 			{
