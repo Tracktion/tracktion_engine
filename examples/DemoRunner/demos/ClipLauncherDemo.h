@@ -120,25 +120,32 @@ namespace utils
         return quantisedPos - pos;
     }
 
-    inline te::BeatPosition getLaunchPosition (te::Edit& e, const te::LaunchHandle& lh)
+    inline te::MonotonicBeat getLaunchPosition (te::Edit& e)
     {
-        auto& t= e.getTransport();
+        auto epc = e.getTransport().getCurrentPlaybackContext();
+
+        if (! epc)
+            return {};
+
+        auto syncPoint = epc->getSyncPoint();
+
+        if (! syncPoint)
+            return {};
+
+        auto& t = e.getTransport();
         auto& ts = e.tempoSequence;
-        const auto currentPos = ts.toBeats (t.getPosition());
+        auto currentBeat = syncPoint->beat;
         const auto offset = getLaunchOffset (e.getLaunchQuantisation(),
-                                             currentPos,
+                                             currentBeat,
                                              t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
                                                              : std::nullopt);
 
-        if (auto currentLaunchPos = lh.getPosition())
-            return *currentLaunchPos + offset;
-
-        return currentPos + offset;
+        return { syncPoint->monotonicBeat.v + offset };
     }
 
-    inline te::BeatPosition getStopPosition (te::Edit& e, const te::LaunchHandle& lh)
+    inline te::MonotonicBeat getStopPosition (te::Edit& e)
     {
-        return getLaunchPosition (e, lh);
+        return getLaunchPosition (e);
     }
 
     inline std::shared_ptr<te::LaunchHandle> getPlayingLaunchHandleOnTrack (te::AudioTrack& t)
@@ -195,7 +202,7 @@ namespace utils
     {
         if (auto lh = getPlayingLaunchHandleOnTrack (t))
         {
-            lh->stop (getStopPosition (t.edit, *lh));
+            lh->stop (getStopPosition (t.edit));
             return lh;
         }
 
@@ -205,7 +212,7 @@ namespace utils
     inline void launchClip (te::Clip& c)
     {
         auto lh = c.getLaunchHandle();
-        lh->play (utils::getLaunchPosition (c.edit, *lh));
+        lh->play (utils::getLaunchPosition (c.edit));
 
         if (! c.edit.getTransport().isPlaying())
             c.edit.getTransport().play (false);
@@ -228,7 +235,7 @@ namespace utils
                         if (i == sceneIndex)
                             launchClip (*c);
                         else if (auto lh = c->getLaunchHandle())
-                            lh->stop (getStopPosition (c->edit, *lh));
+                            lh->stop (getStopPosition (c->edit));
                     }
                 }
             }
@@ -241,7 +248,7 @@ namespace utils
             for (auto slot : at->getClipSlotList().getClipSlots())
                 if (auto c = slot->getClip())
                     if (auto lh = c->getLaunchHandle())
-                        lh->stop (getStopPosition (c->edit, *lh));
+                        lh->stop (getStopPosition (c->edit));
     }
 
     //==============================================================================
@@ -423,7 +430,7 @@ namespace cl
         {
             if (track)
                 for (auto lh : utils::getPlayingOrQueuedLaunchHandlesOnTrack (*track))
-                    lh->stop (utils::getStopPosition (track->edit, *lh));
+                    lh->stop (utils::getStopPosition (track->edit));
         }
     };
 
@@ -523,19 +530,16 @@ namespace cl
 
         void drawProgressIndicator (juce::Graphics& g)
         {
-            if (auto startPos = launchHandle->getPlayStart())
+            if (auto playedRange = launchHandle->getPlayedRange())
             {
-                playbackHandle->start (*startPos);
+                playbackHandle->start (playedRange->getStart());
 
-                if (auto pos = launchHandle->getPosition())
+                if (auto p = playbackHandle->getProgress (playedRange->getEnd()))
                 {
-                    if (auto p = playbackHandle->getProgress (*pos))
-                    {
-                        auto r = getLocalBounds().toFloat().reduced (0.5f, 0.0f);
-                        r = r.withWidth (1.0f).withX (r.proportionOfWidth (*p) - 0.5f);
-                        g.setColour (juce::Colours::white.withAlpha (0.75f));
-                        g.fillRect (r);
-                    }
+                    auto r = getLocalBounds().toFloat().reduced (0.5f, 0.0f);
+                    r = r.withWidth (1.0f).withX (r.proportionOfWidth (*p) - 0.5f);
+                    g.setColour (juce::Colours::white.withAlpha (0.75f));
+                    g.fillRect (r);
                 }
             }
         }
@@ -1124,8 +1128,9 @@ public:
 //ddd        edit.tempoSequence.insertTempo (1_bp, 120.0, 0.0f);
 //        edit.tempoSequence.insertTempo (5_bp, 40.0, 0.0f);
 //        edit.tempoSequence.getTempo (0)->setBpm (40.0);
-        transport.setLoopRange (edit.tempoSequence.toTime ({ 0.75_bp, 6.75_bp }));
-        transport.looping = true;
+//        transport.setLoopRange (edit.tempoSequence.toTime ({ 0.25_bp, 6.75_bp }));
+//        transport.setPosition (transport.getLoopRange().getStart());
+//        transport.looping = true;
         transport.addChangeListener (this);
         quantisationValue.addListener (this);
 
@@ -1146,6 +1151,13 @@ public:
             auto& at = utils::addFourOscWithPatch (*te::getAudioTracks (edit)[1], utils::synthPatch);
             at.setName ("Lead");
             at.setColour (juce::Colours::green);
+
+            auto sc = dynamic_cast<te::StepClip*> (te::insertNewClip (*at.getClipSlotList().getClipSlots()[0], te::TrackItem::Type::step,
+                                                                      edit.tempoSequence.toTime ({ 0_bp, 4_bd })));
+            assert (sc);
+            sc->setLoopRangeBeats (sc->getEditBeatRange());
+            sc->getPattern (0).toggleAtInterval (0, 4);
+            sc->getPattern (0).toggleAtInterval (1, 2);
         }
 
         updateQuantisationButtonText();

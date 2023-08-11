@@ -55,7 +55,6 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
 
     SplitStatus splitStatus;
     const auto monotonicBeatRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, duration) };
-//ddd    const auto beatRange = BeatRange::endingAt (syncPoint.beat, duration);
 
     auto beatRange = BeatRange::endingAt (syncPoint.beat, duration);
 

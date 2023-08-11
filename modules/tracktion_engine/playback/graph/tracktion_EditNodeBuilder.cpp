@@ -32,7 +32,7 @@ namespace
     juce::Array<PluginType*> getAllPluginsOfType (Edit& edit)
     {
         juce::Array<PluginType*> plugins;
-        
+
         // N.B. There is a bit of a hack here checking if the plugin is actually still in the Edit
         // as they are removed from the PluginCache async and we don't want to flush it every time
         // we call this method. This should probably be moved to an EditItemCache like Clips and Tracks
@@ -40,7 +40,7 @@ namespace
             if (auto pt = dynamic_cast<PluginType*> (p))
                 if (pt->state.getParent().isValid() && pt->state.getRoot() == edit.state)
                     plugins.add (pt);
-        
+
         return plugins;
     }
 
@@ -134,7 +134,7 @@ namespace
         for (auto ri : getAllPluginsOfType<RackInstance> (type.edit))
             if (ri->type.get() == &type)
                 instances.add (ri);
-        
+
         return instances;
     }
 
@@ -142,7 +142,7 @@ namespace
     {
         auto instances = getInstancesForRack (type);
         instances.removeIf ([] (auto instance) { return ! instance->isEnabled(); });
-        
+
         return instances;
     }
 
@@ -153,17 +153,17 @@ namespace
     bool shouldRenderTrackInSubmix (Track& t, const CreateNodeParams& params)
     {
         jassert (t.isPartOfSubmix());
-        
+
         if (! params.forRendering)
             return false;
-        
+
         if (params.allowedTracks == nullptr)
             return false;
-        
+
         for (auto allowedTrack : *params.allowedTracks)
             if (t.isAChildOf (*allowedTrack))
                 return false;
-        
+
         return true;
     }
 
@@ -171,9 +171,9 @@ namespace
     {
         if (originalTracks.isEmpty())
             return {};
-     
+
         auto tracks = originalTracks;
-        
+
         // Iterate all original tracks
         // If any tracks are submix tracks, check if their parents are included or any of their children
         // If not, add all children recusively
@@ -184,7 +184,7 @@ namespace
                 st != nullptr && st->isSubmixFolder())
             {
                 bool shouldSkip = false;
-                
+
                 // First check for parents
                 for (auto potentialParent : originalTracks)
                 {
@@ -204,7 +204,7 @@ namespace
                         break;
                     }
                 }
-                
+
                 if (shouldSkip)
                     continue;
 
@@ -213,7 +213,7 @@ namespace
                     tracks.addIfNotAlreadyThere (childTrack);
             }
         }
-    
+
         return tracks;
     }
 
@@ -382,7 +382,7 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
                                         clip.getFadeInType(), clip.getFadeOutType(),
                                         true);
     }
-    
+
     return node;
 }
 
@@ -691,38 +691,70 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
                                       });
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, const TrackMuteState& trackMuteState,
+                                                               const CreateNodeParams& params, ClipRole role)
 {
     CRASH_TRACER
 
     std::unique_ptr<tracktion::graph::Node> node;
 
-    std::vector<juce::MidiMessageSequence> sequences;
-
-    for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+    if (role == ClipRole::launcher)
     {
-        juce::MidiMessageSequence sequence;
-        clip.generateMidiSequence (sequence);
-        sequences.push_back (sequence);
+        std::vector<juce::MidiMessageSequence> sequences;
+
+        for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+            sequences.push_back (clip.generateMidiSequence (MidiList::TimeBase::beatsRaw));
+
+        const auto clipBeatRange = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()));
+        node = graph::makeNode<LoopingMidiNode> (std::move (sequences),
+                                                 juce::Range<int> (1, 16),
+                                                 false,
+                                                 clipBeatRange,
+                                                 clip.getLoopRangeBeats(),
+                                                 clip.getOffsetInBeats(),
+                                                 clip.getLiveClipLevel(),
+                                                 params.processState,
+                                                 clip.itemID,
+                                                 QuantisationType(),
+                                                 nullptr,
+                                                 0.0f,
+                                                 [&trackMuteState]
+                                                 {
+                                                     if (! trackMuteState.shouldTrackBeAudible())
+                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();
+
+                                                     return false;
+                                                 });
     }
+    else
+    {
+        std::vector<juce::MidiMessageSequence> sequences;
 
-    const auto clipRange = clip.getEditTimeRange();
-    const juce::Range<double> editTimeRange (clipRange.getStart().inSeconds(), clipRange.getEnd().inSeconds());
-    node = graph::makeNode<MidiNode> (std::move (sequences),
-                                      MidiList::TimeBase::seconds,
-                                      juce::Range<int> (1, 16),
-                                      false,
-                                      editTimeRange,
-                                      clip.getLiveClipLevel(),
-                                      params.processState,
-                                      clip.itemID,
-                                      [&trackMuteState]
-                                      {
-                                          if (! trackMuteState.shouldTrackBeAudible())
-                                              return ! trackMuteState.shouldTrackMidiBeProcessed();
+        for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+        {
+            juce::MidiMessageSequence sequence;
+            clip.generateMidiSequence (sequence);
+            sequences.push_back (sequence);
+        }
 
-                                          return false;
-                                      });
+        const auto clipRange = clip.getEditTimeRange ();
+        const juce::Range<double> editTimeRange (clipRange.getStart ().inSeconds (), clipRange.getEnd ().inSeconds ());
+        node = graph::makeNode<MidiNode> (std::move (sequences),
+                                          MidiList::TimeBase::seconds,
+                                          juce::Range<int> (1, 16),
+                                          false,
+                                          editTimeRange,
+                                          clip.getLiveClipLevel(),
+                                          params.processState,
+                                          clip.itemID,
+                                          [&trackMuteState]
+                                          {
+                                              if (!trackMuteState.shouldTrackBeAudible ())
+                                                  return !trackMuteState.shouldTrackMidiBeProcessed ();
+
+                                              return false;
+                                          });
+    }
 
     if (node && ! clip.getListeners().isEmpty())
         node = makeNode<LiveMidiOutputNode> (clip, std::move (node));
@@ -810,7 +842,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const Tra
         return createNodeForMidiClip (*midiClip, trackMuteState, params, role);
 
     if (auto stepClip = dynamic_cast<StepClip*> (&clip))
-        return createNodeForStepClip (*stepClip, trackMuteState, params);
+        return createNodeForStepClip (*stepClip, trackMuteState, params, role);
 
     return {};
 }
@@ -900,7 +932,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
                 else if (auto mc = dynamic_cast<MidiClip*> (clip))
                     launchHandle = mc->getLaunchHandle();
                 else if (auto sc = dynamic_cast<StepClip*> (clip))
-                    jassertfalse;
+                    launchHandle = sc->getLaunchHandle();
+                else
+                    assert (false);
 
                 auto controlNode = std::make_unique<SlotControlNode> (params.processState,
                                                                       std::move (launchHandle),
