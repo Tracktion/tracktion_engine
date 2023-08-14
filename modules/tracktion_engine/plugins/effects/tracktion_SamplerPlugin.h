@@ -36,6 +36,11 @@ public:
     double getSoundStartTime (int index) const;
     double getSoundLength (int index) const;
     void setSoundExcerpt (int index, double start, double length);
+    // BEATCONNECT MODIFICATION START
+    juce::IIRFilter::FilterType getFilterType(const int index) const;
+    double getFilterFrequency(const int index) const;
+    double getFilterGain(const int index) const;    
+    // BEATCONNECT MODIFICATION END
 
     // returns an error
     juce::String addSound (const juce::String& sourcePathOrProjectID, const juce::String& name,
@@ -47,6 +52,13 @@ public:
                             );
     void removeSound (int index);
     void setSoundParams (int index, int keyNote, int minNote, int maxNote);
+    // BEATCONNECT MODIFICATION START
+    void setFilterType(const int index, juce::IIRFilter::FilterType filterType);
+    void setFilterFrequency (const int index, const double gain);
+    void setFilterGain (const int index, const double filterGain);
+    void setSoundFilter (const int index, const juce::IIRFilter::FilterType filterType, 
+        const double filterFrequency, const double filterGain = 0);
+    // BEATCONNECT MODIFICATION END
     void setSoundGains (int index, float gainDb, float pan);
     void setSoundOpenEnded (int index, bool isOpenEnded);
     void setSoundMedia (int index, const juce::String& sourcePathOrProjectID);

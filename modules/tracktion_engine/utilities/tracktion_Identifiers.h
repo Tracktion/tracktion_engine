@@ -594,8 +594,6 @@ namespace IDs
     DECLARE_ID (filterQ)
     // BEATCONNECT MODIFICATION START
     DECLARE_ID (filterGain)
-    DECLARE_ID (filterRIndex)
-    DECLARE_ID (filterLIndex)
     // BEATCONNECT MODIFICATION END
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)

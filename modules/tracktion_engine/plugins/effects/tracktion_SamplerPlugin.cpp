@@ -69,10 +69,7 @@ public:
         auto numSamps = std::min (numSamples, samplesLeftToPlay);
 
         if (numSamps > 0)
-        {
-            //AudioScratchBuffer scratch(audioData.getNumChannels(), numSamples); // Why +8?
-            //for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
-            //    scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamples);            
+        {       
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
@@ -570,6 +567,14 @@ float SamplerPlugin::getSoundGainDb (int index) const       { return getSound (i
 float SamplerPlugin::getSoundPan (int index) const          { return getSound (index)[IDs::pan]; }
 double SamplerPlugin::getSoundStartTime (int index) const   { return getSound (index)[IDs::startTime]; }
 bool SamplerPlugin::isSoundOpenEnded (int index) const      { return getSound (index)[IDs::openEnded]; }
+// BEATCONNECT MODIFICATION START
+juce::IIRFilter::FilterType SamplerPlugin::getFilterType(const int index) const
+{
+    return (juce::IIRFilter::FilterType)(int)getSound (index)[IDs::filterType];
+}
+double SamplerPlugin::getFilterFrequency(const int index) const { return getSound(index)[IDs::filterFreq]; }
+double SamplerPlugin::getFilterGain(const int index) const      { return getSound(index)[IDs::filterGain]; }
+// BEATCONNECT MODIFICATION END
 
 double SamplerPlugin::getSoundLength (int index) const
 {
@@ -585,6 +590,7 @@ double SamplerPlugin::getSoundLength (int index) const
 
     return l;
 }
+
 
 juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
                                       double startTime, double length, float gainDb,
@@ -650,6 +656,62 @@ void SamplerPlugin::setSoundParams (int index, int keyNote, int minNote, int max
     v.setProperty (IDs::minNote, juce::jlimit (0, 127, std::min (minNote, maxNote)), um);
     v.setProperty (IDs::maxNote, juce::jlimit (0, 127, std::max (minNote, maxNote)), um);
 }
+// BEATCONNECT MODIFICATION START
+void SamplerPlugin::setFilterType(const int index, IIRFilter::FilterType filterType) {
+    auto um = getUndoManager();
+
+    auto v = getSound(index);
+    v.setProperty(IDs::filterType, juce::jlimit((int)IIRFilter::FilterType::noFilter, (int)IIRFilter::FilterType::peak, 
+        (int)filterType), um);
+    
+    return;
+}
+
+void SamplerPlugin::setFilterFrequency(const int index, const double filterFrequency) {
+    jassert(filterFrequency > 0.0);
+
+    if (filterFrequency <= 0.0)
+        return;
+
+    auto um = getUndoManager();
+
+    auto v = getSound(index);
+    v.setProperty(IDs::filterFreq, filterFrequency, um);
+    return;
+}
+
+void SamplerPlugin::setFilterGain(const int index, const double filterGain) {
+    auto um = getUndoManager();
+
+    IIRFilter::FilterType filterType = getFilterType(index);
+    if (filterType != IIRFilter::FilterType::lowshelf ||
+        filterType != IIRFilter::FilterType::highshelf ||
+        filterType != IIRFilter::FilterType::peak)
+        return;
+
+    auto v = getSound(index);
+    v.setProperty(IDs::filterGain, filterGain, um);
+    return;
+}
+
+void SamplerPlugin::setSoundFilter(const int index, const juce::IIRFilter::FilterType filterType,
+    const double filterFrequency, const double filterGain) {
+
+    auto v = getSound(index);
+
+    if (getFilterType(index) != filterType)
+        setFilterType(index, filterType);
+    
+    if (getFilterFrequency(index) != filterFrequency)
+        setFilterFrequency(index, filterFrequency);
+    
+    if (getFilterGain(index) != filterGain)
+        setFilterFrequency(index, filterFrequency);
+
+    setFilterType(index, filterType);
+    return;
+}
+// BEATCONNECT MODIFICATION END
 
 void SamplerPlugin::setSoundGains (int index, float gainDb, float pan)
 {
