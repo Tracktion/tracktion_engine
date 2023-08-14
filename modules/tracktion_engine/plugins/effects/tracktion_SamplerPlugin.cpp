@@ -439,7 +439,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             adjustedMidiNote = BeatConnect::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
-
                             highlightedNotes.setBit (note);
                             playingNotes.add (new SampledNote 
                                                                // BEATCONNECT MODIFICATION START
