@@ -64,6 +64,17 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
     if (s.playedRange)
         beatRange = { s.playedRange->getEnd(), s.playedRange->getEnd() + duration };
 
+    auto continuePlayingOrStopped = [&]
+    {
+        splitStatus.playing1 = s.status == PlayState::playing;
+        splitStatus.range1 = beatRange;
+        splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart())
+                                                   : std::nullopt;
+
+        if (s.playedRange)
+            s.playedRange = s.playedRange->withEnd (s.playedRange->getEnd() + duration);
+    };
+
     // Check if we need to change state
     if (s.nextStatus)
     {
@@ -103,9 +114,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     }
                     else
                     {
-                        splitStatus.playing1 = s.status == PlayState::playing;
-                        splitStatus.range1 = beatRange;
-                        splitStatus.playStartTime1 = s.playedRange->getStart();
+                        continuePlayingOrStopped();
                     }
                 }
                 else
@@ -165,12 +174,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     }
                     else
                     {
-                        splitStatus.playing1 = s.status == PlayState::playing;
-                        splitStatus.range1 = beatRange;
-                        splitStatus.playStartTime1 = s.playedRange->getStart();
-
-                        if (s.playedRange)
-                            s.playedRange = s.playedRange->withEnd (s.playedRange->getEnd() + duration);
+                        continuePlayingOrStopped();
                     }
                 }
                 else
@@ -190,13 +194,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
     }
     else
     {
-        splitStatus.playing1 = s.status == PlayState::playing;
-        splitStatus.range1 = beatRange;
-        splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart())
-                                                   : std::nullopt;
-
-        if (s.playedRange)
-            s.playedRange = s.playedRange->withEnd (s.playedRange->getEnd() + duration);
+        continuePlayingOrStopped();
     }
 
     setState (s);
