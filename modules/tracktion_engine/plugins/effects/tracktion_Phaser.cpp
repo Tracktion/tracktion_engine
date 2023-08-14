@@ -15,14 +15,33 @@ PhaserPlugin::PhaserPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto um = getUndoManager();
 
+    // BEATCONNECT MODIFICATION START
+    // This appears missing for some reason?
+    depthParam = addParam("depth", TRANS("Depth"), { 0, 20.0f });
+    rateParam = addParam("rate", TRANS("Rate"), { 0.1f, 20.0f });
+    feedbackGainParam = addParam("feedback", TRANS("Feedback"), { 0.0f, 1.0f });
+    // BEATCONNECT MODIFICATION END
+
     depth.referTo (state, IDs::depth, um, 5.0f);
     rate.referTo (state, IDs::rate, um, 0.4f);
     feedbackGain.referTo (state, IDs::feedback, um, 0.7f);
+
+    // BEATCONNECT MODIFICATION START
+    depthParam->attachToCurrentValue(depth);
+    rateParam->attachToCurrentValue(rate);
+    feedbackGainParam->attachToCurrentValue(feedbackGain);
+    // BEATCONNECT MODIFICATION END
 }
 
 PhaserPlugin::~PhaserPlugin()
 {
     notifyListenersOfDeletion();
+
+    // BEATCONNECT MODIFICATION START
+    depthParam->detachFromCurrentValue();
+    rateParam->detachFromCurrentValue();
+    feedbackGainParam->detachFromCurrentValue();
+    // BEATCONNECT MODIFICATION END
 }
 
 const char* PhaserPlugin::xmlTypeName = "phaser";
