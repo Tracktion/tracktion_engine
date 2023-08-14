@@ -91,10 +91,10 @@ Clip* insertClipWithState (ClipOwner&,
 
 //==============================================================================
 /** Inserts a new clip with the given type and a default name. */
-Clip* insertNewClip (ClipOwner&, TrackItem::Type, TimeRange);
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, EditTimeRange);
 
 /** Inserts a new clip with the given type and name. */
-Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, TimeRange);
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, EditTimeRange);
 
 /** Inserts a new clip with the given type and name. */
 Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, ClipPosition);

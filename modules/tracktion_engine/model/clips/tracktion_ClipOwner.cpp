@@ -182,7 +182,7 @@ private:
     {
         recordingIsStopping = false;
     }
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)
 };
 
@@ -423,12 +423,12 @@ Clip* insertClipWithState (ClipOwner& parent,
     return {};
 }
 
-Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, TimeRange pos)
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, EditTimeRange pos)
 {
-    return insertNewClip (parent, type, name, { pos, 0_td });
+    return insertNewClip (parent, type, name, { toTime (pos, parent.getClipOwnerEdit().tempoSequence), 0_td });
 }
 
-Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, TimeRange pos)
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, EditTimeRange pos)
 {
     return insertNewClip (parent, type, TrackItem::getSuggestedNameForNewItem (type), pos);
 }
