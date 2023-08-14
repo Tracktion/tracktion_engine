@@ -49,6 +49,7 @@ private:
     std::vector<Node*> orderedNodes, leafNodes;
     LoopingMidiNode* midiNode = nullptr;
     std::shared_ptr<std::vector<float>> lastSamples;
+    BeatDuration lastOffset;
 
     void processSplitSection (ProcessContext&, LaunchHandle::SplitStatus);
     void processSection (ProcessContext&, BeatRange editBeatRange, BeatRange clipBeatRange,

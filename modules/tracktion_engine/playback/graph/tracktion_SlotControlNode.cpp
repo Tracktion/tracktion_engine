@@ -191,6 +191,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
         localPlayheadState.playheadJumped = true;
     }
 
+    localProcessState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
 
@@ -199,6 +200,14 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     {
         const auto clipEditOffset = editBeatRange.getStart() - unloopedClipBeatRange.getStart();
         const auto offset = clipEditOffset - toDuration (*playStartTime);
+
+        if (lastOffset != offset)
+        {
+            lastOffset = offset;
+
+            // Force the playheadJumped state to true in order to send note-offs.
+            localPlayheadState.playheadJumped = true;
+        }
 
         for (auto n : offsetNodes)
             n->setDynamicOffsetBeats (offset);
