@@ -8,15 +8,18 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+
+
 #include "../choc/platform/choc_DisableAllWarnings.h"
-
-namespace tracktion
-{
-    #include "magic_enum.hpp"
-    #include "magic_enum_utility.hpp"
-}
-
+ #if __has_include(<magic_enum.hpp>)
+  #include <magic_enum.hpp>
+  #include <magic_enum_utility.hpp>
+ #else
+  #include "magic_enum.hpp"
+  #include "magic_enum_utility.hpp"
+ #endif
 #include "../choc/platform/choc_ReenableAllWarnings.h"
+
 #include "../choc/text/choc_OpenSourceLicenseList.h"
 
 #ifdef CHOC_REGISTER_OPEN_SOURCE_LICENCE

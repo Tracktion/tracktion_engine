@@ -8,7 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "../../3rd_party/magic_enum/tracktion_magic_enum.hpp"
 
 namespace tracktion { inline namespace engine
 {
@@ -42,11 +41,14 @@ juce::StringArray getLaunchQTypeChoices()
 
 juce::String getName (LaunchQType t)
 {
+    assert (t >= LaunchQType::none || t <= LaunchQType::sixtyFourthD);
     return getLaunchQTypeChoices()[static_cast<int> (t)];
 }
 
 double toBarFraction (LaunchQType q) noexcept
 {
+    assert (q >= LaunchQType::none || q <= LaunchQType::sixtyFourthD);
+
     constexpr auto dot = 1.5;
     constexpr auto triplet = 2.0 / 3.0;
 
@@ -77,6 +79,7 @@ double toBarFraction (LaunchQType q) noexcept
         case LaunchQType::none:          return 0.0;
     }
 
+    assert (false);
     return 1.0;
 }
 

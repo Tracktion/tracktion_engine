@@ -146,7 +146,7 @@
     Enables time-stretching with the RubberBand library.
     You must have RubberBand in your search path if you enable this.
     @see TRACKTION_BUILD_RUBBERBAND
-    
+
     N.B. RubberBand is not owned by Tracktion and is licensed separately.
     Please make sure you have a suitable licence if building with RubberBand
     support. You can find more information here: https://breakfastquay.com/rubberband/
@@ -162,7 +162,7 @@
     less optimised version on some platforms as RubberBand can be configured
     with IPP on Windows etc.
     You must have RubberBand in your search path if you enable this.
-    
+
     N.B. RubberBand is not owned by Tracktion and is licensed separately.
     Please make sure you have a suitable licence if building with RubberBand
     support. You can find more information here: https://breakfastquay.com/rubberband/

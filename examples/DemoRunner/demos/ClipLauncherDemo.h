@@ -12,7 +12,7 @@
 #pragma once
 
 #include "../../common/BinaryData.h"
-#include "../../modules/3rd_party/magic_enum/magic_enum_utility.hpp"
+#include "../../modules/3rd_party/magic_enum/tracktion_magic_enum.hpp"
 
 //==============================================================================
 //==============================================================================
