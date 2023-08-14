@@ -117,8 +117,10 @@ public:
         bool openEnded = false;
         float gainDb = 0, pan = 0;
         double startTime = 0, length = 0;
+        // BEATCONNECT MODIFICATION START
         juce::IIRFilter::FilterType filterType;
         double filterFrequency = 0, filterGain = 0;
+        // BEATCONNECT MODIFICATION END
         AudioFile audioFile;
         juce::AudioBuffer<float> audioData { 2, 64 };
 
