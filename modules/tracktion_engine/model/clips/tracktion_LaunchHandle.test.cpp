@@ -42,14 +42,20 @@ private:
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (! h.getQueuedStatus());
 
-            h.sync (0_bp);
-
             h.play ({});
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
 
+            SyncPoint syncPoint;
+            auto advanceSync = [&syncPoint] (auto duration)
+                               {
+                                   syncPoint.monotonicBeat.v = syncPoint.monotonicBeat.v + duration;
+                                   syncPoint.beat = syncPoint.beat + duration;
+                                   return syncPoint;
+                               };
+
             {
-                auto s = h.update (0.5_bd);
+                auto s = h.advance (advanceSync (0.5_bd), 0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
 
@@ -61,7 +67,7 @@ private:
             }
 
             {
-                auto s = h.update (0.5_bd);
+                auto s = h.advance (advanceSync (0.5_bd), 0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
 
@@ -77,7 +83,7 @@ private:
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
 
             {
-                auto s = h.update (0.5_bd);
+                auto s = h.advance (advanceSync (0.5_bd), 0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
                 expect (! h.getQueuedStatus());
 
@@ -99,14 +105,21 @@ private:
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (! h.getQueuedStatus());
 
-            h.sync (0_bp);
+            SyncPoint syncPoint;
+            auto advanceHandle = [&h, &syncPoint] (auto duration)
+            {
+                syncPoint.monotonicBeat.v = syncPoint.monotonicBeat.v + duration;
+                syncPoint.beat = syncPoint.beat + duration;
 
-            h.play (0.25_bp);
+                return h.advance (syncPoint, duration);
+            };
+
+            h.play (MonotonicBeat { 0.25_bp });
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
             expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
 
             {
-                auto s = h.update (0.5_bd);
+                auto s = advanceHandle (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
 
@@ -118,7 +131,7 @@ private:
             }
 
             {
-                auto s = h.update (0.5_bd);
+                auto s = advanceHandle (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
                 expect (! h.getQueuedStatus());
 
@@ -129,12 +142,12 @@ private:
                 expect (s.range2.isEmpty());
             }
 
-            h.stop (1.25_bp);
+            h.stop (MonotonicBeat { 1.25_bp });
             expect (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
             expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
 
             {
-                auto s = h.update (0.5_bd);
+                auto s = advanceHandle (0.5_bd);
                 expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
                 expect (! h.getQueuedStatus());
 
