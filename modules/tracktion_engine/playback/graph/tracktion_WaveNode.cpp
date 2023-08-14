@@ -1492,7 +1492,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
             if (state.lastSample == 0.0)
                 continue;
-            
+
             const auto dest = destBuffer.getIterator (channel).sample;
 
             for (uint32_t i = 0; i < lastSampleFadeLength; ++i)

@@ -18,7 +18,8 @@ class WaveNodeRealTime;
 /**
 */
 class DynamicOffsetNode final : public tracktion::graph::Node,
-                                public TracktionEngineNode
+                                public TracktionEngineNode,
+                                public DynamicallyOffsettableNodeBase
 {
 public:
     DynamicOffsetNode (ProcessState& editProcessState,
@@ -27,6 +28,12 @@ public:
                        BeatDuration clipOffset,
                        BeatRange clipLoopRange,
                        std::vector<std::unique_ptr<Node>> inputs);
+
+    //==============================================================================
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    void setDynamicOffsetBeats (BeatDuration) override;
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -43,6 +50,7 @@ private:
     const BeatRange clipPosition, loopRange;
     const BeatDuration clipOffset;
     tempo::Sequence::Position tempoPosition;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats = std::make_shared<BeatDuration>();
 
     ProcessState localProcessState;
 
@@ -50,6 +58,7 @@ private:
     std::vector<Node*> orderedNodes, leafNodes;
     std::vector<std::unique_ptr<Node>> inputs;
 
+    BeatDuration getOffset() const;
     void processSection (ProcessContext&, BeatRange sectionRange);
 };
 

@@ -762,7 +762,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerClip& clip, [[ maybe_unused ]] const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerClip& clip, [[ maybe_unused ]] const TrackMuteState& trackMuteState,
+                                                                    const CreateNodeParams& params, ClipRole role)
 {
     CRASH_TRACER
     const auto& clips = clip.getClips();
@@ -782,7 +783,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
             {
                 assert (! acb->canUseProxy());
                 assert (acb->getAutoTempo());
-                
+
                 if (auto clipNode = createNodeForAudioClip (*acb, false, params, ClipRole::arranger))
                     nodes.push_back (std::move (clipNode));
             }
@@ -794,7 +795,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 
         auto offsetNode = std::make_unique<DynamicOffsetNode> (params.processState,
                                                                clip.itemID,
-                                                               clip.getEditBeatRange(),
+                                                               role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                                                          : clip.getEditBeatRange(),
                                                                clip.getOffsetInBeats(),
                                                                clip.getLoopRangeBeats(),
                                                                std::move (nodes));
@@ -825,7 +827,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
     }
 
     // Create FadeInOutNode
-    return createFadeNodeForClip (clip, clip.getEditTimeRange(), std::move (node), params);
+    if (role != ClipRole::launcher)
+        return createFadeNodeForClip (clip, clip.getEditTimeRange(), std::move (node), params);
+
+    return node;
 }
 
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState,
@@ -833,7 +838,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const Tra
 {
     // N.B. This must be checked first as a ContainerClip is an AudioClipBase
     if (auto containerClip = dynamic_cast<ContainerClip*> (&clip))
-        return createNodeForContainerClip (*containerClip, trackMuteState, params);
+        return createNodeForContainerClip (*containerClip, trackMuteState, params, role);
 
     if (auto audioClip = dynamic_cast<AudioClipBase*> (&clip))
         return createNodeForAudioClip (*audioClip, false, params, role);
@@ -989,16 +994,16 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 
     if (araClips.size() == 0)
         return {};
-    
+
     std::vector<std::unique_ptr<Node>> nodes;
-    
+
     for (auto araClip : araClips)
         if (auto araNode = createNodeForAudioClip (*araClip, true, params, ClipRole::arranger))
             nodes.push_back (createFadeNodeForClip (*araClip, araClip->getEditTimeRange(), std::move (araNode), params));
 
     if (nodes.size() == 1)
         return std::move (nodes.front());
-    
+
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
@@ -1011,7 +1016,7 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
 
     if (auto clipsNode = createNodeForClips (trackID, clips, trackMuteState, params))
         nodes.push_back (std::move (clipsNode));
-    
+
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         nodes.push_back (std::move (araNode));
 
@@ -1020,10 +1025,10 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
 
     if (nodes.empty())
         return {};
-    
+
     if (nodes.size() == 1)
         return std::move (nodes.front());
-    
+
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
@@ -1128,17 +1133,17 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
 
     if (plugin.isDisabled())
         return node;
-    
+
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 
     int maxNumChannels = -1;
-    
+
     // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses
     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
         if (! plugin.getSidechainSourceID().isValid())
             maxNumChannels = 2;
-    
+
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion::graph::makeNode<PluginNode> (std::move (node),
                                                    plugin,
@@ -1159,10 +1164,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
 
     const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);
     const auto rackOutputID = getRackOutputBusID (rackInstance.rackTypeID);
-    
+
     // The input to the instance is referenced by the dry signal path
     auto* inputNode = node.get();
-    
+
     // Send
     // N.B. the channel indicies from the RackInstance start a 1 so we need to subtract this to get a 0-indexed channel
     RackInstanceNode::ChannelMap sendChannelMap;
@@ -1191,7 +1196,7 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
     {
         if (! params.forRendering && p->isFrozen())
             continue;
-        
+
         if (auto meterPlugin = dynamic_cast<LevelMeterPlugin*> (p))
         {
             node = makeNode<LevelMeasurerProcessingNode> (std::move (node), *meterPlugin);
@@ -1238,7 +1243,7 @@ std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList&
         node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
                                        trackMuteState, playHeadState, params.forRendering);
     }
-    
+
     return node;
 }
 
@@ -1247,10 +1252,10 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t, Trac
 {
     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,
                                       &trackMuteState, std::move (node), playHeadState, params);
-    
+
     if (params.includePlugins)
         node = createPluginNodeForList (t.pluginList, &trackMuteState, std::move (node), playHeadState, params);
-    
+
     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::postFX,
                                       &trackMuteState, std::move (node), playHeadState, params);
 
@@ -1276,15 +1281,15 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, std
 {
     if (at.getCompGroup() == -1)
         return node;
-    
+
     if (auto tc = at.edit.getTrackCompManager().getTrackComp (&at))
     {
         const auto crossfadeTimeMs = at.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
         const auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
-        
+
         const auto nonMuteTimes = tc->getNonMuteTimes (at, crossfadeTime);
         const auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
-        
+
         if (muteTimes.isEmpty())
             return node;
 
@@ -1304,7 +1309,7 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, std
                                                 AudioFadeCurve::convex, false);
         }
     }
-    
+
     return node;
 }
 
@@ -1323,20 +1328,20 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
     auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
     std::unique_ptr<Node> node = createClipsNode (at, *clipsMuteState, params);
-    
+
     if (node)
     {
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
         node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node), true);
-        
+
         node = createTrackCompNode (at, std::move (node), params);
     }
-    
+
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
-    
+
     if (node && ! at.getListeners().isEmpty())
         node = makeNode<LiveMidiOutputNode> (at, std::move (node));
-    
+
     if (node)
         node = makeNode<LiveMidiInjectingNode> (at, std::move (node));
 
@@ -1351,11 +1356,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
                 break;
             }
         }
-        
+
         if (! node)
             return {};
     }
-    
+
     if (liveInputNode)
     {
         if (node)
@@ -1370,21 +1375,21 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
             node = std::move (liveInputNode);
         }
     }
-    
+
     if (! inputTracks.isEmpty())
     {
         auto sumNode = std::make_unique<SummingNode>();
-        
+
         if (node)
             sumNode->addInput (std::move (node));
 
         for (auto inputTrack : inputTracks)
             if (auto n = createNodeForTrack (*inputTrack, params))
                 sumNode->addInput (std::move (n));
-        
+
         node = std::move (sumNode);
     }
-    
+
     node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);
 
     if (isSidechainSource (at))
@@ -1417,14 +1422,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForSubmixTrack (FolderTrack& s
     {
         if (auto ft = dynamic_cast<AudioTrack*> (t))
             subAudioTracks.add (ft);
-        
+
         if (auto ft = dynamic_cast<FolderTrack*> (t))
             subFolderTracks.add (ft);
     }
 
     if (subAudioTracks.isEmpty() && subFolderTracks.isEmpty())
         return {};
-    
+
     auto sumNode = std::make_unique<tracktion::graph::SummingNode>();
     sumNode->setDoubleProcessingPrecision (submixTrack.edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
@@ -1460,7 +1465,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForSubmixTrack (FolderTrack& s
 
     if (sumNode->getDirectInputNodes().empty())
         return {};
-    
+
     // Finally the effects
     std::unique_ptr<Node> node = std::move (sumNode);
     auto trackMuteState = std::make_unique<TrackMuteState> (submixTrack, false, false);
@@ -1514,7 +1519,7 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
 {
     const auto rackInputID = getRackInputBusID (rackType.rackID);
     const auto rackOutputID = getRackOutputBusID (rackType.rackID);
-    
+
     auto rackInputNode = makeNode<ReturnNode> (rackInputID);
     auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
                                                      params.processState, params.forRendering);
@@ -1526,12 +1531,12 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
 std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, const CreateNodeParams& params)
 {
     std::vector<std::unique_ptr<Node>> nodes;
-    
+
     for (auto rackType : rackTypeList.getTypes())
         if (getEnabledInstancesForRack (*rackType).size() > 0)
             if (auto rackNode = createNodeForRackType (*rackType, params))
                 nodes.push_back (std::move (rackNode));
-    
+
     return nodes;
 }
 
@@ -1539,14 +1544,14 @@ std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList&
 {
     // Finally add the RackType Nodes
     auto rackNodes = createNodesForRacks (rackTypeList, params);
-    
+
     if (rackNodes.empty())
         return input;
-    
+
     auto sumNode = std::make_unique<SummingNode> (std::move (rackNodes));
     sumNode->addInput (std::move (input));
     input = std::move (sumNode);
-    
+
     return input;
 }
 
@@ -1557,9 +1562,9 @@ std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& 
 {
     if (insert.outputDevice != device.getName())
         return {};
-    
+
     auto sendNode = makeNode<InsertSendNode> (insert);
-    
+
     auto getInsertReturnNode = [&] () -> std::unique_ptr<Node>
     {
         if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
@@ -1621,7 +1626,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
         {
             if (channel.indexInDevice != -1)
                 channelMap.push_back (std::make_pair (sourceIndex, channel.indexInDevice));
-            
+
             ++sourceIndex;
         }
 
@@ -1631,7 +1636,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
     {
         return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), playHeadState.playHead);
     }
-    
+
     return {};
 }
 
@@ -1656,7 +1661,7 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tra
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
         node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), params);
-    
+
     return node;
 }
 
@@ -1664,7 +1669,7 @@ std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, s
 {
     if (! params.includeMasterPlugins)
         return node;
-    
+
     if (edit.masterFadeIn > 0_td || edit.masterFadeOut > 0_td)
     {
         auto length = toPosition (edit.getLength());
@@ -1687,7 +1692,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
     Edit& edit = epc.edit;
     auto& playHeadState = params.processState.playHeadState;
     auto insertPlugins = getAllPluginsOfType<InsertPlugin> (edit);
-    
+
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion::graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
     std::vector<OutputDevice*> devicesWithFrozenNodes;
@@ -1703,7 +1708,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             {
                 if (! device->isEnabled())
                     continue;
-                
+
                 if (! params.forRendering && t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
@@ -1745,7 +1750,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         {
             if (! edit.isClickTrackDevice (*device))
                 continue;
-            
+
             auto& trackNodeVector = deviceNodes[device];
             juce::ignoreUnused (trackNodeVector);
             // We don't need to add anything to the vector, just ensure the device is in the map
@@ -1772,13 +1777,13 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
 
 
     auto outputNode = std::make_unique<tracktion::graph::SummingNode>();
-        
+
     for (auto& deviceAndTrackNode : deviceNodes)
     {
         auto device = deviceAndTrackNode.first;
         jassert (device != nullptr);
         auto tracksVector = std::move (deviceAndTrackNode.second);
-        
+
         auto sumNode = std::make_unique<SummingNode> (std::move (tracksVector));
         sumNode->setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
@@ -1789,7 +1794,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         {
             if (ins->isFrozen())
                 continue;
-            
+
             if (ins->outputDevice != device->getName())
                 continue;
 
@@ -1799,14 +1804,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
                 deviceIsBeingUsedAsInsert = true;
             }
         }
-        
+
         std::unique_ptr<Node> node = std::move (sumNode);
 
         if (! deviceIsBeingUsedAsInsert)
         {
             if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
-            
+
             node = createMasterFadeInOutNode (edit, std::move (node), params);
             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
@@ -1814,7 +1819,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
                 if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
                     node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
         }
-        
+
         if (edit.isClickTrackDevice (*device))
         {
             auto clickAndTracksNode = makeSummingNode ({ node.release(),
@@ -1826,12 +1831,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))
             outputNode->addInput (std::move (outputDeviceNode));
     }
-    
+
     std::unique_ptr<Node> finalNode (std::move (outputNode));
     finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);
     finalNode = makeNode<PlayHeadPositionNode> (params.processState, std::move (finalNode), audibleTimeToUpdate);
-    
+
     return finalNode;
 }
 
@@ -1840,7 +1845,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
     std::vector<std::unique_ptr<tracktion::graph::Node>> trackNodes;
     auto params = originalParams;
     auto& playHeadState = params.processState.playHeadState;
-    
+
     if (params.implicitlyIncludeSubmixChildTracks && params.allowedTracks != nullptr)
         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);
 
