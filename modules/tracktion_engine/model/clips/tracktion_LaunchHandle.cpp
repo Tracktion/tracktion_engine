@@ -36,6 +36,9 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
 {
     auto s = getState();
 
+    if (s.status == PlayState::stopped)
+        return;
+
     s.nextStatus = QueueState::stopQueued;
     s.nextEventTime = pos;
 
