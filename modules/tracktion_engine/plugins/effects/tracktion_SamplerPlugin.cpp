@@ -153,45 +153,45 @@ public:
     }
 
     // BEAT CONNECT MODIFICATION START
-    void setCoefficients(const IIRFilter::FilterType filterType, const double frequency, const double gainFactor = 0)
+    void setCoefficients(const IIRFilter::FilterType filter, const double frequency, const double gainFactor = 0)
     {
-        const double sampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
-        switch (filterType) {
+        const double engineSampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
+        switch (filter) {
             case IIRFilter::FilterType::noFilter: {
                 //iirFilterR.makeInactive();
                 //iirFilterL.makeInactive();
                 return;
             }
             case IIRFilter::FilterType::lowpass: {
-                coefs = juce::IIRCoefficients::makeLowPass(sampleRate, frequency, iirFilterQuotient);
+                coefs = juce::IIRCoefficients::makeLowPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
             case IIRFilter::FilterType::highpass: {
-                coefs = juce::IIRCoefficients::makeHighPass(sampleRate, frequency, iirFilterQuotient);
+                coefs = juce::IIRCoefficients::makeHighPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
             case IIRFilter::FilterType::bandpass: {
-                coefs = juce::IIRCoefficients::makeBandPass(sampleRate, frequency, iirFilterQuotient);
+                coefs = juce::IIRCoefficients::makeBandPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
             case IIRFilter::FilterType::notch: {
-                coefs = juce::IIRCoefficients::makeNotchFilter(sampleRate, frequency, iirFilterQuotient);
+                coefs = juce::IIRCoefficients::makeNotchFilter(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
             case IIRFilter::FilterType::allpass: {
-                coefs = juce::IIRCoefficients::makeAllPass(sampleRate, frequency, iirFilterQuotient);
+                coefs = juce::IIRCoefficients::makeAllPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
             case IIRFilter::FilterType::lowshelf: {
-                coefs = juce::IIRCoefficients::makeLowShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+                coefs = juce::IIRCoefficients::makeLowShelf(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
             case IIRFilter::FilterType::highshelf: {
-                coefs = juce::IIRCoefficients::makeHighShelf(sampleRate, frequency, iirFilterQuotient, gainFactor);
+                coefs = juce::IIRCoefficients::makeHighShelf(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
             case IIRFilter::FilterType::peak: {
-                coefs = juce::IIRCoefficients::makePeakFilter(sampleRate, frequency, iirFilterQuotient, gainFactor);
+                coefs = juce::IIRCoefficients::makePeakFilter(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
         }
@@ -199,6 +199,7 @@ public:
         iirFilterL.setCoefficients(coefs);
         iirFilterR.reset();
         iirFilterL.reset();
+        int test = 0;
         return;
     }
     // BEAT CONNECT MODIFICATION END
