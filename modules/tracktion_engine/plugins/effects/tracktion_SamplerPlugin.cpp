@@ -31,7 +31,7 @@ public:
                  float gainDb,
                  float pan,
                  bool openEnded_
-                 , const juce::IIRFilter::FilterType filterType_ = juce::IIRFilter::FilterType::noFilter, 
+                 , const FilterType filterType_ = FilterType::noFilter, 
                  const double filterFrequency_ = 0, 
                  const double filterGain_ = 0
                  )
@@ -73,7 +73,7 @@ public:
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
-            if (filterType != IIRFilter::FilterType::noFilter)
+            if (filterType != FilterType::noFilter)
             {
                 iirFilterR.processSamples(scratch.buffer.getWritePointer(0), scratch.buffer.getNumSamples());
                 iirFilterL.processSamples(scratch.buffer.getWritePointer(1), scratch.buffer.getNumSamples());
@@ -120,7 +120,7 @@ public:
             {
                 for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                     scratch.buffer.copyFrom (i, 0, audioData, i, offset, numSampsNeeded);
-                if (filterType != IIRFilter::FilterType::noFilter)
+                if (filterType != FilterType::noFilter)
                 {
                     iirFilterR.processSamples(scratch.buffer.getWritePointer(0), scratch.buffer.getNumSamples());
                     iirFilterL.processSamples(scratch.buffer.getWritePointer(1), scratch.buffer.getNumSamples());
@@ -153,44 +153,42 @@ public:
     }
 
     // BEAT CONNECT MODIFICATION START
-    void setCoefficients(const IIRFilter::FilterType filter, const double frequency, const double gainFactor = 0)
+    void setCoefficients(const FilterType filter, const double frequency, const double gainFactor = 0)
     {
         const double engineSampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
         switch (filter) {
-            case IIRFilter::FilterType::noFilter: {
-                //iirFilterR.makeInactive();
-                //iirFilterL.makeInactive();
+            case FilterType::noFilter: {
                 return;
             }
-            case IIRFilter::FilterType::lowpass: {
+            case FilterType::lowpass: {
                 coefs = juce::IIRCoefficients::makeLowPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
-            case IIRFilter::FilterType::highpass: {
+            case FilterType::highpass: {
                 coefs = juce::IIRCoefficients::makeHighPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
-            case IIRFilter::FilterType::bandpass: {
+            case FilterType::bandpass: {
                 coefs = juce::IIRCoefficients::makeBandPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
-            case IIRFilter::FilterType::notch: {
+            case FilterType::notch: {
                 coefs = juce::IIRCoefficients::makeNotchFilter(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
-            case IIRFilter::FilterType::allpass: {
+            case FilterType::allpass: {
                 coefs = juce::IIRCoefficients::makeAllPass(engineSampleRate, frequency, iirFilterQuotient);
                 break;
             }
-            case IIRFilter::FilterType::lowshelf: {
+            case FilterType::lowshelf: {
                 coefs = juce::IIRCoefficients::makeLowShelf(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
-            case IIRFilter::FilterType::highshelf: {
+            case FilterType::highshelf: {
                 coefs = juce::IIRCoefficients::makeHighShelf(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
-            case IIRFilter::FilterType::peak: {
+            case FilterType::peak: {
                 coefs = juce::IIRCoefficients::makePeakFilter(engineSampleRate, frequency, iirFilterQuotient, (float)gainFactor);
                 break;
             }
@@ -199,7 +197,6 @@ public:
         iirFilterL.setCoefficients(coefs);
         iirFilterR.reset();
         iirFilterL.reset();
-        int test = 0;
         return;
     }
     // BEAT CONNECT MODIFICATION END
@@ -214,7 +211,7 @@ public:
     float startFade = 1.0f;
     bool openEnded, isFinished = false;
     // BEATCONNECT MODIFICATION START
-    IIRFilter::FilterType filterType;
+    FilterType filterType;
     IIRFilter iirFilterR;
     IIRFilter iirFilterL;
     juce::IIRCoefficients coefs;
@@ -273,14 +270,14 @@ void SamplerPlugin::handleAsyncUpdate()
             s->openEnded    = v[IDs::openEnded];
 
             // BEATCONNECT MODIFICATION START
-            s->filterType = (IIRFilter::FilterType)(int)v[IDs::filterType];
+            s->filterType = (FilterType)(int)v[IDs::filterType];
             
-            if (s->filterType != IIRFilter::FilterType::noFilter)
+            if (s->filterType != FilterType::noFilter)
                 s->filterFrequency = v[IDs::filterFreq];
 
-            if (s->filterType == IIRFilter::FilterType::lowshelf ||
-                s->filterType == IIRFilter::FilterType::highshelf ||
-                s->filterType == IIRFilter::FilterType::peak)
+            if (s->filterType == FilterType::lowshelf ||
+                s->filterType == FilterType::highshelf ||
+                s->filterType == FilterType::peak)
                 s->filterGain = v[IDs::filterGain];
             // BEATCONNECT MODIFICATION END
 
@@ -568,9 +565,9 @@ float SamplerPlugin::getSoundPan (int index) const          { return getSound (i
 double SamplerPlugin::getSoundStartTime (int index) const   { return getSound (index)[IDs::startTime]; }
 bool SamplerPlugin::isSoundOpenEnded (int index) const      { return getSound (index)[IDs::openEnded]; }
 // BEATCONNECT MODIFICATION START
-juce::IIRFilter::FilterType SamplerPlugin::getFilterType(const int index) const
+FilterType SamplerPlugin::getFilterType(const int index) const
 {
-    return (juce::IIRFilter::FilterType)(int)getSound (index)[IDs::filterType];
+    return (FilterType)(int)getSound (index)[IDs::filterType];
 }
 double SamplerPlugin::getFilterFrequency(const int index) const { return getSound(index)[IDs::filterFreq]; }
 double SamplerPlugin::getFilterGain(const int index) const      { return getSound(index)[IDs::filterGain]; }
@@ -622,14 +619,14 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               );
 
     // BEATCONNECT MODIFICATION START
-    if (filterType != (int)juce::IIRFilter::FilterType::noFilter) 
+    if (filterType != (int)FilterType::noFilter) 
     {
         v.setProperty(IDs::filterType, filterType, nullptr);
         v.setProperty(IDs::filterFreq, filterFrequency, nullptr);
 
-        if (filterType == (int)juce::IIRFilter::FilterType::lowshelf ||
-            filterType == (int)juce::IIRFilter::FilterType::highshelf ||
-            filterType == (int)juce::IIRFilter::FilterType::peak)
+        if (filterType == (int)FilterType::lowshelf ||
+            filterType == (int)FilterType::highshelf ||
+            filterType == (int)FilterType::peak)
                 v.setProperty(IDs::filterGain, filterGain, nullptr);
     }
     // BEATCONNECT MODIFICATION END
@@ -657,11 +654,11 @@ void SamplerPlugin::setSoundParams (int index, int keyNote, int minNote, int max
     v.setProperty (IDs::maxNote, juce::jlimit (0, 127, std::max (minNote, maxNote)), um);
 }
 // BEATCONNECT MODIFICATION START
-void SamplerPlugin::setFilterType(const int index, IIRFilter::FilterType filterType) {
+void SamplerPlugin::setFilterType(const int index, FilterType filterType) {
     auto um = getUndoManager();
 
     auto v = getSound(index);
-    v.setProperty(IDs::filterType, juce::jlimit((int)IIRFilter::FilterType::noFilter, (int)IIRFilter::FilterType::peak, 
+    v.setProperty(IDs::filterType, juce::jlimit((int)FilterType::noFilter, (int)FilterType::peak, 
         (int)filterType), um);
     
     return;
@@ -683,10 +680,10 @@ void SamplerPlugin::setFilterFrequency(const int index, const double filterFrequ
 void SamplerPlugin::setFilterGain(const int index, const double filterGain) {
     auto um = getUndoManager();
 
-    IIRFilter::FilterType filterType = getFilterType(index);
-    if (filterType != IIRFilter::FilterType::lowshelf ||
-        filterType != IIRFilter::FilterType::highshelf ||
-        filterType != IIRFilter::FilterType::peak)
+    FilterType filterType = getFilterType(index);
+    if (filterType != FilterType::lowshelf ||
+        filterType != FilterType::highshelf ||
+        filterType != FilterType::peak)
         return;
 
     auto v = getSound(index);
@@ -694,7 +691,7 @@ void SamplerPlugin::setFilterGain(const int index, const double filterGain) {
     return;
 }
 
-void SamplerPlugin::setSoundFilter(const int index, const juce::IIRFilter::FilterType filterType,
+void SamplerPlugin::setSoundFilter(const int index, const FilterType filterType,
     const double filterFrequency, const double filterGain) {
 
     auto v = getSound(index);
