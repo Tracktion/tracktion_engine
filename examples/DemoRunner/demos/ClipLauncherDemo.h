@@ -198,17 +198,6 @@ namespace utils
         return handles;
     }
 
-    inline std::shared_ptr<te::LaunchHandle> stopPlayingOrQueuedClipsOnTrack (te::AudioTrack& t)
-    {
-        if (auto lh = getPlayingLaunchHandleOnTrack (t))
-        {
-            lh->stop (getStopPosition (t.edit));
-            return lh;
-        }
-
-        return {};
-    }
-
     inline void launchClip (te::Clip& c)
     {
         auto lh = c.getLaunchHandle();
