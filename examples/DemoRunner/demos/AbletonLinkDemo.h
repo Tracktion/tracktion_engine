@@ -149,16 +149,16 @@ private:
         {
             auto& ts = edit.tempoSequence;
             const auto timePos = epc->getPosition();
-            const auto beatPos = ts.timeToBeats (timePos);
-            const auto newTimePos = ts.beatsToTime (beatPos + adjustment);
+            const auto beatPos = ts.toBeats (timePos);
+            const auto newTimePos = ts.toTime (beatPos + adjustment);
             epc->postPosition (newTimePos);
         }
         else
         {
             auto& ts = edit.tempoSequence;
             const auto timePos = transport.getPosition();
-            const auto beatPos = ts.timeToBeats (timePos);
-            const auto newTimePos = ts.beatsToTime (beatPos + adjustment);
+            const auto beatPos = ts.toBeats (timePos);
+            const auto newTimePos = ts.toTime (beatPos + adjustment);
             transport.setPosition (newTimePos);
         }
     }
@@ -176,7 +176,7 @@ private:
 
     void timerCallback() override
     {
-        const auto editBarsBeats = edit.tempoSequence.timeToBarsBeats (transport.getPosition());
+        const auto editBarsBeats = edit.tempoSequence.toBarsAndBeats (transport.getPosition());
         const auto barPhase = editBarsBeats.beats.inBeats() / editBarsBeats.numerator;
 
         tracktionPhaseSlider.setValue (barPhase, juce::dontSendNotification);
