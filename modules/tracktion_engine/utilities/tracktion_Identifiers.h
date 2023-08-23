@@ -647,6 +647,8 @@ namespace IDs
 
     // BEATCONNECT MODIFICATIONS START HERE
     // Generic IDs
+    DECLARE_ID(baseValue)
+    DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
     DECLARE_ID(isInstrument)
