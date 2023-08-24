@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -421,6 +423,7 @@ void PluginManager::initialise()
     createBuiltInType<SamplerPlugin>();
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
+    createBuiltInType<BeatConnectPlugin::BitCrusherPlugin>(); // =8> should be in its own list of BC Plugin types, not internal
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
@@ -717,7 +720,14 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             return rackInstance;
         }
     }
-
+    // =8>
+    std::vector<std::string> test;
+    for (auto element : builtInTypes)
+    {
+        test.push_back(element->type.toStdString());
+    }
+    int breakpoint = 88;
+    // =8>
     for (auto builtIn : builtInTypes)
     {
         if (builtIn->type == type)
