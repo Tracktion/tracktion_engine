@@ -957,7 +957,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case elastiqueMonophonic:       [[fallthrough]];
         case elastiqueDirectPro:        [[fallthrough]];
         case elastiqueDirectEfficient:  [[fallthrough]];
-        case elastiqueDirectMobile:     [[fallthrough]];
+        case elastiqueDirectMobile:
             break;
        #endif
 
