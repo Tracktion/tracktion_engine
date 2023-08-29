@@ -512,14 +512,16 @@ public:
         {
             m_SampleID = p_File.getFileNameWithoutExtension();
 
-            engine.createFifoBundle(
-                m_SampleID,
-                punchIn, 
-                std::forward<const juce::Array<AudioTrack*>>(p_TrackList));
+            // TODO: Remove when S3 is finallized 
+            //  engine.createFifoBundle(
+            //      m_SampleID,
+            //      punchIn, 
+            //      std::forward<const juce::Array<AudioTrack*>>(p_TrackList));
         }
         ~RecordingContext()
         {
-            engine.destroyFifoBundle(m_SampleID);
+            // TODO: Remove when S3 is finallized 
+            // engine.destroyFifoBundle(m_SampleID);
         }
         // BEATCONNECT MODIFICATION END
 
@@ -554,12 +556,15 @@ public:
                     for(int i = 0; i < buffer.getNumChannels(); i++)
                         newbuffer.copyFrom(i, 0, buffer, i, start, numSamples);
 
-                    engine.addBlockToAudioFifo(m_SampleID, newbuffer);
+                    // TODO: Remove when S3 is finallized 
+                    // engine.addBlockToAudioFifo(m_SampleID, newbuffer);
                 }
                 else
                 {
                     jassert(numSamples == buffer.getNumSamples());
-                    engine.addBlockToAudioFifo(m_SampleID, buffer);
+
+                    // TODO: Remove when S3 is finallized 
+                    // engine.addBlockToAudioFifo(m_SampleID, buffer);
                 }
                 // BEATCONNECT MODIFICATION END
 

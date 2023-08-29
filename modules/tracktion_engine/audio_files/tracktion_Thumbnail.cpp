@@ -884,8 +884,8 @@ void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int&
     {
         startTime = 0.0f;
         endTime = 0.0f;
-        sizeInBytes = 0.0f;
-        numberOfThumbSamplesPerChannel = 0.0f;
+        sizeInBytes = 0;
+        numberOfThumbSamplesPerChannel = 0;
         return;
     }
         

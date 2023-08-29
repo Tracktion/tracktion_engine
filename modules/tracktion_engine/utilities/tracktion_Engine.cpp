@@ -262,52 +262,53 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
 }
 
 // BEATCONNECT MODIFICATION START
-Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
-: m_PunchIn(p_PunchIn)
-{
-    for (const auto const p : p_Tracks)
-    {
-        jassert(nullptr != p);
-        if (nullptr != p)
-        {
-            const juce::String Temp1 = p->state.getProperty("uuid");
-            m_ListTracksID.push_back(Temp1.toStdString());
-        }
-    }
-}
-
-const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& Engine::getAudioFifo() const
-{
-    return m_ListFifoBundle;
-}
-
-void Engine::addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer)
-{
-    jassert(p_FifoID != 0);
-    auto it = m_ListFifoBundle.find(p_FifoID);
-    jassert(it != m_ListFifoBundle.end());
-
-    if(nullptr == it->second->m_Fifo)
-        it->second->m_Fifo = std::make_unique<AudioFifo>(p_NextBuffer.getNumChannels(), 100000);
-    it->second->m_Fifo->write(p_NextBuffer);
-}
-
-void Engine::createFifoBundle(
-    const juce::Uuid& p_FifoID, 
-    const double p_PunchIn, 
-    const juce::Array<AudioTrack*>&& p_Tracks)
-{
-    jassert(p_FifoID != 0);
-    m_ListFifoBundle[p_FifoID] = std::make_unique<FifoBundle>(
-        p_PunchIn, 
-        std::forward<const juce::Array<AudioTrack*>>(p_Tracks));
-}
-
-void Engine::destroyFifoBundle(const juce::Uuid& p_FifoID)
-{
-    jassert(p_FifoID != 0);
-    m_ListFifoBundle.erase(p_FifoID);
-}
+// TODO: Remove when S3 is finallized 
+//  Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
+//  : m_PunchIn(p_PunchIn)
+//  {
+//      for (const auto const p : p_Tracks)
+//      {
+//          jassert(nullptr != p);
+//          if (nullptr != p)
+//          {
+//              const juce::String Temp1 = p->state.getProperty("uuid");
+//              m_ListTracksID.push_back(Temp1.toStdString());
+//          }
+//      }
+//  }
+//  
+//  const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& Engine::getAudioFifo() const
+//  {
+//      return m_ListFifoBundle;
+//  }
+//  
+//  void Engine::addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer)
+//  {
+//      jassert(p_FifoID != 0);
+//      auto it = m_ListFifoBundle.find(p_FifoID);
+//      jassert(it != m_ListFifoBundle.end());
+//  
+//      if(nullptr == it->second->m_Fifo)
+//          it->second->m_Fifo = std::make_unique<AudioFifo>(p_NextBuffer.getNumChannels(), 100000);
+//      it->second->m_Fifo->write(p_NextBuffer);
+//  }
+//  
+//  void Engine::createFifoBundle(
+//      const juce::Uuid& p_FifoID, 
+//      const double p_PunchIn, 
+//      const juce::Array<AudioTrack*>&& p_Tracks)
+//  {
+//      jassert(p_FifoID != 0);
+//      m_ListFifoBundle[p_FifoID] = std::make_unique<FifoBundle>(
+//          p_PunchIn, 
+//          std::forward<const juce::Array<AudioTrack*>>(p_Tracks));
+//  }
+//  
+//  void Engine::destroyFifoBundle(const juce::Uuid& p_FifoID)
+//  {
+//      jassert(p_FifoID != 0);
+//      m_ListFifoBundle.erase(p_FifoID);
+//  }
 // BEATCONNECT MODIFICATION END
 
 bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
