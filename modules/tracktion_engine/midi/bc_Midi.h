@@ -182,11 +182,11 @@ namespace tracktion {
 							}
 							else if (p_hz < midiNoteValues.begin()->freqHz)
 							{
-								return midiNoteValues.begin()->freqHz;
+								return (int)midiNoteValues.begin()->freqHz;
 							}
 							else if (p_hz > midiNoteValues.back().freqHz)
 							{
-								return midiNoteValues.back().freqHz;
+								return (int)midiNoteValues.back().freqHz;
 							}
 						}
 					}
@@ -201,7 +201,7 @@ namespace tracktion {
 					return -1;
 				}
 
-				static double getNoteFrequency(unsigned int p_midiNote)
+				static double getNoteFrequency(int p_midiNote)
 				{
 					for (auto element : midiNoteValues)
 						if (element.midiNote == p_midiNote)
@@ -242,7 +242,7 @@ namespace tracktion {
 					return "";
 				}
 
-				static juce::String getNoteName(unsigned int p_midiNote)
+				static juce::String getNoteName(int p_midiNote)
 				{
 					for (auto element : midiNoteValues)
 						if (element.midiNote == p_midiNote)

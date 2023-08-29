@@ -178,7 +178,8 @@ public:
     juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
     // BEATCONNECT MODIFICATION START
-    RecordingThumbnailManager::Thumbnail::Ptr receivingThumbnail;
+    // TODO: Remove when S3 is finallized 
+    // RecordingThumbnailManager::Thumbnail::Ptr receivingThumbnail;
     // BEATCONNECT MODIFICATION END
 
 protected:
