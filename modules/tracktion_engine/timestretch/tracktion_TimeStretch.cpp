@@ -257,6 +257,10 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
+       #if JUCE_DEBUG
+        jassert (! hasCheckedFramesButNotProcessed.load());
+       #endif
+
         float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (semitonesUp));
         bool sync  = elastiqueMode == TimeStretcher::elastiqueDirectPro
                         ? elastiqueProOptions.syncTimeStrPitchShft : false;
@@ -280,6 +284,10 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded()
                                               : elastique->GetFramesNeeded();
         jassert (framesNeeded <= maxFramesNeeded);
+       #if JUCE_DEBUG
+        hasCheckedFramesButNotProcessed = true;
+       #endif
+
         return framesNeeded;
     }
 
@@ -340,8 +348,12 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
                     outputFifo.write(scratchBuffer.buffer, 0, numFramesReturned);
                 }
             }
+
+           #if JUCE_DEBUG
+            hasCheckedFramesButNotProcessed = false;
+           #endif
         }
-        
+
         // If enough samples are ready, output these now
         if (const int numReady = outputFifo.getNumReady(); numReady > 0)
         {
@@ -389,6 +401,9 @@ private:
     int maxFramesNeeded;
     AudioFifo outputFifo;
     bool hasBeenReset = true;
+   #if JUCE_DEBUG
+    mutable std::atomic<bool> hasCheckedFramesButNotProcessed { false };
+   #endif
 
     static CElastiqueProV3DirectIf::ElastiqueVersion_t getElastiqueMode (TimeStretcher::Mode mode)
     {
