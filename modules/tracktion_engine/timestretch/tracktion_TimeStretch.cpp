@@ -259,6 +259,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
     {
        #if JUCE_DEBUG
         jassert (! hasCheckedFramesButNotProcessed.load());
+        jassert (! isProcessing.load());
        #endif
 
         float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (semitonesUp));
@@ -302,6 +303,10 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
         if (numSamples > 0)
         {
+           #if JUCE_DEBUG
+            isProcessing = true;
+           #endif
+
             if (hasBeenReset)
             {
                 hasBeenReset = false;
@@ -351,6 +356,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
            #if JUCE_DEBUG
             hasCheckedFramesButNotProcessed = false;
+            isProcessing = false;
            #endif
         }
 
@@ -403,6 +409,7 @@ private:
     bool hasBeenReset = true;
    #if JUCE_DEBUG
     mutable std::atomic<bool> hasCheckedFramesButNotProcessed { false };
+    mutable std::atomic<bool> isProcessing { false };
    #endif
 
     static CElastiqueProV3DirectIf::ElastiqueVersion_t getElastiqueMode (TimeStretcher::Mode mode)
