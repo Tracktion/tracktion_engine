@@ -82,6 +82,7 @@ struct TimeStretcher::Stretcher
 
     virtual bool isOk() const = 0;
     virtual void reset() = 0;
+    virtual bool canSetSpeedAndPitch() const { return true; }
     virtual bool setSpeedAndPitch (float speedRatio, float semitonesUp) = 0;
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
@@ -255,6 +256,11 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         elastique->Reset();
     }
 
+    bool canSetSpeedAndPitch() const override
+    {
+        return hasCalledFirstProcessCall;
+    }
+
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
        #if JUCE_DEBUG
@@ -310,6 +316,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
             if (hasBeenReset)
             {
                 hasBeenReset = false;
+                hasCalledFirstProcessCall = false;
 
                 const int numPreFramesNeeded = elastique->GetPreFramesNeeded();
                 assert (numPreFramesNeeded >= 0);
@@ -352,6 +359,8 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
                     assert (outputFifo.getFreeSpace() >= numFramesReturned);
                     outputFifo.write(scratchBuffer.buffer, 0, numFramesReturned);
                 }
+
+                hasCalledFirstProcessCall = true;
             }
 
            #if JUCE_DEBUG
@@ -406,7 +415,7 @@ private:
     const int samplesPerOutputBuffer, numChannels;
     int maxFramesNeeded;
     AudioFifo outputFifo;
-    bool hasBeenReset = true;
+    bool hasBeenReset = true, hasCalledFirstProcessCall = false;
    #if JUCE_DEBUG
     mutable std::atomic<bool> hasCheckedFramesButNotProcessed { false };
     mutable std::atomic<bool> isProcessing { false };
@@ -1032,6 +1041,12 @@ void TimeStretcher::reset()
 {
     if (stretcher != nullptr)
         stretcher->reset();
+}
+
+bool TimeStretcher::canSetSpeedAndPitch() const
+{
+    return stretcher != nullptr ? stretcher->canSetSpeedAndPitch()
+                                : false;
 }
 
 bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)
