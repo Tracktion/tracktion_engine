@@ -261,7 +261,7 @@ public:
     void setChordPattern (juce::ValueTree pattern);
     void setBassPattern (juce::ValueTree pattern);
 
-    void generatePattern();
+    void generatePattern(bool clear = true);
 
     Scale getScaleAtBeat (BeatPosition) const;
     int getNoteAtBeat (BeatPosition) const;
@@ -289,10 +289,10 @@ private:
                        int velocity, int colourIndex, juce::UndoManager*);
 
     void clearPattern();
-    void generateArpPattern();
-    void generateChordPattern();
-    void generateBassPattern();
-    void generateMelodyPattern();
+    void generateArpPattern(bool clear = true);
+    void generateChordPattern(bool clear = true);
+    void generateBassPattern(bool clear = true);
+    void generateMelodyPattern(bool clear = true);
 
     void updateHash();
     void clearHash();
