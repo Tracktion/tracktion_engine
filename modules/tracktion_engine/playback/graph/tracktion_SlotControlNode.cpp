@@ -100,11 +100,10 @@ void SlotControlNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 
 void SlotControlNode::process (ProcessContext& pc)
 {
-    // If the playhead has just stopped, stop the launch and let it run to fade the audio/stop MIDI notes etc.
+    // If the playhead has just stopped, let it run to fade the audio/stop MIDI notes etc.
     if (wasPlaying && ! getPlayHead().isPlaying())
     {
         wasPlaying = false;
-        launchHandle->stop ({});
         processStop (pc);
         return;
     }
