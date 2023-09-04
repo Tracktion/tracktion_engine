@@ -19,7 +19,8 @@ class SceneList;
     This class provides an interface to interact with them all rather than having
     to iterate through each Track's SlotList finding the relevant ClipSlot index.
 */
-class Scene : public Selectable
+class Scene : public Selectable,
+              private juce::ValueTree::Listener
 {
 public:
     /** Creates a Scene for a given state. */
@@ -38,6 +39,9 @@ public:
 
     /** @internal */
     juce::String getSelectableDescription() override;
+
+private:
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 };
 
 

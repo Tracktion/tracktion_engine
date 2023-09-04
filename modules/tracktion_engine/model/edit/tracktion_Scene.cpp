@@ -19,6 +19,8 @@ Scene::Scene (const juce::ValueTree& v, SceneList& sl)
     auto um = &edit.getUndoManager();
     name.referTo (state, IDs::name, um);
     colour.referTo (state, IDs::colour, um);
+
+    state.addListener (this);
 }
 
 Scene::~Scene()
@@ -29,6 +31,15 @@ Scene::~Scene()
 juce::String Scene::getSelectableDescription()
 {
     return TRANS("Scene");
+}
+
+void Scene::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
+{
+    if (v != state)
+        return;
+
+    if (i == IDs::name || i == IDs::colour)
+        changed();
 }
 
 
