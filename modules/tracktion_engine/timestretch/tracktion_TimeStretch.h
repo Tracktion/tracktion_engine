@@ -123,13 +123,6 @@ public:
     /** Resets the TimeStretcher ready for a new set of audio data, maintains mode, speed and pitch ratios. */
     void reset();
 
-    /** Some algorithms have periods where the speed and pitch can not be set.
-        This usually only happens for the first couple of blocks so calling processData
-        a few times should enable the setting again.
-        @return false if the speed and pitch can not be set at this time
-    */
-    bool canSetSpeedAndPitch() const;
-
     /** Sets the timestretch speed ratio and semitones pitch shift.
         @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.
         @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.

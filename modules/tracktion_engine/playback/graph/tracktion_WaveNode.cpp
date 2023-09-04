@@ -585,8 +585,6 @@ public:
         playbackSpeedRatio = speedRatio;
         semitonesShift = semitones;
 
-        if (! timeStretcher.canSetSpeedAndPitch())
-            return;
 
         [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) (1.0 / speedRatio), (float) semitonesShift);
         assert (ok);
