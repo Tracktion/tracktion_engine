@@ -256,44 +256,26 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         elastique->Reset();
     }
 
-    bool canSetSpeedAndPitch() const override
-    {
-        return hasCalledFirstProcessCall;
-    }
-
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
-       #if JUCE_DEBUG
-        jassert (! hasCheckedFramesButNotProcessed.load());
-        jassert (! isProcessing.load());
-       #endif
+        newSpeedRatio = speedRatio;
+        newSemitonesUp = semitonesUp;
+        newSpeedAndPitchPending = true;
+        tryToSetNewSpeedAndPitch();
 
-        float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (semitonesUp));
-        bool sync  = elastiqueMode == TimeStretcher::elastiqueDirectPro
-                        ? elastiqueProOptions.syncTimeStrPitchShft : false;
-        [[maybe_unused]] int r = elastique->SetStretchPitchQFactor (speedRatio, pitch, sync);
-        jassert (r == 0);
-
-        if (elastiqueMode == TimeStretcher::elastiqueDirectPro && elastiqueProOptions.preserveFormants)
-        {
-            elastique->SetEnvelopeFactor (pitch);
-            elastique->SetEnvelopeOrder (elastiqueProOptions.envelopeOrder);
-        }
-
-        return r == 0;
+        return true;
     }
 
     int getFramesNeeded() const override
     {
+        tryToSetNewSpeedAndPitch();
+
         if (outputFifo.getNumReady() > samplesPerOutputBuffer)
             return 0;
 
         const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded()
                                               : elastique->GetFramesNeeded();
         jassert (framesNeeded <= maxFramesNeeded);
-       #if JUCE_DEBUG
-        hasCheckedFramesButNotProcessed = true;
-       #endif
 
         return framesNeeded;
     }
@@ -307,35 +289,28 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
     {
         CRASH_TRACER
 
-        if (numSamples > 0)
+        if (numSamples > 0 || outputFifo.getNumReady() < samplesPerOutputBuffer)
         {
-           #if JUCE_DEBUG
-            isProcessing = true;
-           #endif
-
             if (hasBeenReset)
             {
                 hasBeenReset = false;
-                hasCalledFirstProcessCall = false;
 
                 const int numPreFramesNeeded = elastique->GetPreFramesNeeded();
                 assert (numPreFramesNeeded >= 0);
                 assert (numPreFramesNeeded <= numSamples);
 
-                AudioScratchBuffer scratchBuffer(numChannels, numSamples);
-                const int numPreProcessFrames = elastique->PreProcessData((float **) inChannels, numSamples,
-                                                                          (float **) scratchBuffer.buffer.getArrayOfWritePointers());
+                AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
+                const int numPreProcessFrames = elastique->PreProcessData ((float **) inChannels, numSamples,
+                                                                           (float **) scratchBuffer.buffer.getArrayOfWritePointers());
 
                 assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
                 assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
-                outputFifo.write(scratchBuffer.buffer, 0, numPreProcessFrames);
+                outputFifo.write (scratchBuffer.buffer, 0, numPreProcessFrames);
             }
             else
             {
-                const int numFramesNeeded = elastique->GetFramesNeeded();
-
                 {
-                    [[maybe_unused]] const int err = elastique->ProcessData((float **) inChannels, numSamples);
+                    [[maybe_unused]] const int err = elastique->ProcessData ((float **) inChannels, numSamples);
                     assert (err == 0);
                 }
 
@@ -351,22 +326,14 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
                 {
                     const int numFramesProcessed = elastique->GetFramesProcessed();
-                    AudioScratchBuffer scratchBuffer(numChannels, numFramesProcessed);
-                    const int numFramesReturned = elastique->GetProcessedData(
-                        (float **) scratchBuffer.buffer.getArrayOfWritePointers());
+                    AudioScratchBuffer scratchBuffer (numChannels, numFramesProcessed);
+                    const int numFramesReturned = elastique->GetProcessedData ((float **) scratchBuffer.buffer.getArrayOfWritePointers());
                     assert (numFramesProcessed == numFramesReturned);
                     assert (numFramesReturned <= scratchBuffer.buffer.getNumSamples());
                     assert (outputFifo.getFreeSpace() >= numFramesReturned);
-                    outputFifo.write(scratchBuffer.buffer, 0, numFramesReturned);
+                    outputFifo.write (scratchBuffer.buffer, 0, numFramesReturned);
                 }
-
-                hasCalledFirstProcessCall = true;
             }
-
-           #if JUCE_DEBUG
-            hasCheckedFramesButNotProcessed = false;
-            isProcessing = false;
-           #endif
         }
 
         // If enough samples are ready, output these now
@@ -415,11 +382,9 @@ private:
     const int samplesPerOutputBuffer, numChannels;
     int maxFramesNeeded;
     AudioFifo outputFifo;
-    bool hasBeenReset = true, hasCalledFirstProcessCall = false;
-   #if JUCE_DEBUG
-    mutable std::atomic<bool> hasCheckedFramesButNotProcessed { false };
-    mutable std::atomic<bool> isProcessing { false };
-   #endif
+    bool hasBeenReset = true;
+    float newSpeedRatio, newSemitonesUp;
+    mutable bool newSpeedAndPitchPending = false;
 
     static CElastiqueProV3DirectIf::ElastiqueVersion_t getElastiqueMode (TimeStretcher::Mode mode)
     {
@@ -443,6 +408,23 @@ private:
             default:
                 jassertfalse;
                 return CElastiqueProV3DirectIf::kV3Pro;
+        }
+    }
+
+    void tryToSetNewSpeedAndPitch() const
+    {
+        if (! newSpeedAndPitchPending)
+            return;
+
+        float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (newSemitonesUp));
+        const bool  sync = elastiqueMode == TimeStretcher::elastiqueDirectPro ? elastiqueProOptions.syncTimeStrPitchShft : false;
+        const int res = elastique->SetStretchPitchQFactor (newSpeedRatio, pitch, sync);
+        newSpeedAndPitchPending = res != 0;
+
+        if (elastiqueMode == TimeStretcher::elastiqueDirectPro && elastiqueProOptions.preserveFormants)
+        {
+            elastique->SetEnvelopeFactor (pitch);
+            elastique->SetEnvelopeOrder (elastiqueProOptions.envelopeOrder);
         }
     }
 
@@ -1041,12 +1023,6 @@ void TimeStretcher::reset()
 {
     if (stretcher != nullptr)
         stretcher->reset();
-}
-
-bool TimeStretcher::canSetSpeedAndPitch() const
-{
-    return stretcher != nullptr ? stretcher->canSetSpeedAndPitch()
-                                : false;
 }
 
 bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)
