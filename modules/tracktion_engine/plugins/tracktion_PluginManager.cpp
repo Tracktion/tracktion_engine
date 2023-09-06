@@ -767,7 +767,8 @@ void PluginManager::addPluginParametersToValueTree(Plugin::Ptr plugin)
             juce::ValueTree v(IDs::PluginParameter.toString());
 
             v.setProperty(IDs::paramId, juce::String(param->paramID).replaceCharacters(" ", "_"), nullptr);
-            v.setProperty(IDs::value, param->getCurrentValue(), nullptr);
+            v.setProperty(IDs::baseValue, param->getCurrentBaseValue(), nullptr);
+            v.setProperty(IDs::currentValue, param->getCurrentValue(), nullptr);
             v.setProperty(IDs::defaultValue, param->getDefaultValue().has_value() ? param->getDefaultValue().value() : 0, nullptr);
             v.setProperty(IDs::minimumValue, param->getValueRange().getStart(), nullptr);
             v.setProperty(IDs::maximumValue, param->getValueRange().getEnd(), nullptr);

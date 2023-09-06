@@ -133,6 +133,10 @@ namespace IDs
     DECLARE_ID (index)
     DECLARE_ID (layout)
     DECLARE_ID (parameters)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (parameterIDs)
+    DECLARE_ID (Component)
+    // BEAT CONNECT MODIFICATION END
     DECLARE_ID (CURVESECTION)
     DECLARE_ID (TEMPOCURVESECTION)
     DECLARE_ID (AUTOMATIONCURVE)
@@ -647,6 +651,8 @@ namespace IDs
 
     // BEATCONNECT MODIFICATIONS START HERE
     // Generic IDs
+    DECLARE_ID(baseValue)
+    DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
     DECLARE_ID(isInstrument)

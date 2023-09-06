@@ -1055,7 +1055,8 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
 
     // BEATCONNECT MODIFICATION START
     // This is needed in order to set initial state in Unity
-    state.setProperty(IDs::waveShape + "1", 1, um);
+    if (!state.hasProperty(IDs::waveShape + "1"))
+        state.setProperty(IDs::waveShape + "1", 1, um);
     // BEATCONNECT MODIFICATION END
 
     valueTreePropertyChanged (state, IDs::voiceMode);
