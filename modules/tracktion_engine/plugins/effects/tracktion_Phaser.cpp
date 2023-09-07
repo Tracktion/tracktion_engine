@@ -19,7 +19,7 @@ PhaserPlugin::PhaserPlugin (PluginCreationInfo info)  : Plugin (info)
     // This appears missing for some reason?
     depthParam = addParam("depth", TRANS("Depth"), { 0, 20.0f });
     rateParam = addParam("rate", TRANS("Rate"), { 0.1f, 20.0f });
-    feedbackGainParam = addParam("feedback", TRANS("Feedback"), { 0.0f, 1.0f });
+    feedbackGainParam = addParam("feedback", TRANS("Feedback"), { 0.0f, 0.7f });
     // BEATCONNECT MODIFICATION END
 
     depth.referTo (state, IDs::depth, um, 5.0f);
