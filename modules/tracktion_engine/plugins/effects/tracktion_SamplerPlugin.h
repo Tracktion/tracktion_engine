@@ -11,6 +11,20 @@
 namespace tracktion { inline namespace engine
 {
 
+// BEATCONNECT MODIFICATION START
+enum class FilterType {
+    noFilter = 0,
+    lowpass,
+    highpass,
+    bandpass,
+    notch,
+    allpass,
+    lowshelf,
+    highshelf,
+    peak
+};
+// BEATCONNECT MODIFICATION END
+
 class SamplerPlugin  : public Plugin,
 // BEATCONNECT MODIFICATION START
                        // private juce::AsyncUpdater
@@ -36,13 +50,29 @@ public:
     double getSoundStartTime (int index) const;
     double getSoundLength (int index) const;
     void setSoundExcerpt (int index, double start, double length);
+    // BEATCONNECT MODIFICATION START
+    FilterType getFilterType(const int index) const;
+    double getFilterFrequency(const int index) const;
+    double getFilterGain(const int index) const;    
+    // BEATCONNECT MODIFICATION END
 
     // returns an error
     juce::String addSound (const juce::String& sourcePathOrProjectID, const juce::String& name,
                             double startTime, double length, float gainDb,
-                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true);
+                            int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true
+                            // BEATCONNECT MODIFICATION START
+                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0
+                            // BEATCONNECT MODIFICATION END
+                            );
     void removeSound (int index);
     void setSoundParams (int index, int keyNote, int minNote, int maxNote);
+    // BEATCONNECT MODIFICATION START
+    void setFilterType(const int index, FilterType filterType);
+    void setFilterFrequency (const int index, const double gain);
+    void setFilterGain (const int index, const double filterGain);
+    void setSoundFilter (const int index, const FilterType filterType, 
+        const double filterFrequency, const double filterGain = 0);
+    // BEATCONNECT MODIFICATION END
     void setSoundGains (int index, float gainDb, float pan);
     void setSoundOpenEnded (int index, bool isOpenEnded);
     void setSoundMedia (int index, const juce::String& sourcePathOrProjectID);
@@ -101,6 +131,10 @@ public:
         bool openEnded = false;
         float gainDb = 0, pan = 0;
         double startTime = 0, length = 0;
+        // BEATCONNECT MODIFICATION START
+        FilterType filterType;
+        double filterFrequency = 0, filterGain = 0;
+        // BEATCONNECT MODIFICATION END
         AudioFile audioFile;
         juce::AudioBuffer<float> audioData { 2, 64 };
 
@@ -125,5 +159,7 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamplerPlugin)
 };
+
+
 
 }} // namespace tracktion { inline namespace engine

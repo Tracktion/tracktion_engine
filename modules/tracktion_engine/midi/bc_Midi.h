@@ -18,7 +18,7 @@ namespace tracktion {
 
 			struct midiNoteValue
 			{
-				const int midiNote;
+				const unsigned int midiNote;
 				const double freqHz;
 				const juce::String noteName;
 			};
