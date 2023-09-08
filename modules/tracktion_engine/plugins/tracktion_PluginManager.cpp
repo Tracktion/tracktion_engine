@@ -713,6 +713,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
 
             // BEATCONNECT MODIFICATIONS START
             rackType->state.getOrCreateChildWithName(IDs::Faceplate, nullptr);
+            rackType->state.getOrCreateChildWithName(IDs::PresetCategories, nullptr);
             // BEATCONNECT MODIFICATIONS END
             return rackInstance;
         }
