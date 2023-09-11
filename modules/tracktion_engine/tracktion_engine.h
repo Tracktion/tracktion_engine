@@ -634,9 +634,8 @@ namespace tracktion { inline namespace engine
 #include "plugins/effects/tracktion_ToneGenerator.h"
 // BEATCONNECT MODIFICATION START
 #include "plugins/internal/DrumMachinePlugin.h" // Must be placed after tracktion_SamplerPlugin.h
-#include "midi/bc_Midi.h""
+#include "midi/bc_Midi.h"
 // BEATCONNECT MODIFICATION END
-
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 

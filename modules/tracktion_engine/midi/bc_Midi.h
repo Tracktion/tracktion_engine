@@ -11,7 +11,7 @@
 
 namespace tracktion {
 	inline namespace engine {
-		namespace BeatConnect
+		namespace bc
 		{
 			static const int midiPitchWheelBase = 0x2000;
 			static const int semitonesPerOctave = 12;
@@ -182,11 +182,11 @@ namespace tracktion {
 							}
 							else if (p_hz < midiNoteValues.begin()->freqHz)
 							{
-								return midiNoteValues.begin()->freqHz;
+								return midiNoteValues.begin()->midiNote;
 							}
 							else if (p_hz > midiNoteValues.back().freqHz)
 							{
-								return midiNoteValues.back().freqHz;
+								return midiNoteValues.back().midiNote;
 							}
 						}
 					}
@@ -204,7 +204,7 @@ namespace tracktion {
 				static double getNoteFrequency(unsigned int p_midiNote)
 				{
 					for (auto element : midiNoteValues)
-						if (element.midiNote == p_midiNote)
+						if (element.midiNote == (int)p_midiNote)
 							return element.freqHz;
 					return -1;
 				}
@@ -245,7 +245,7 @@ namespace tracktion {
 				static juce::String getNoteName(unsigned int p_midiNote)
 				{
 					for (auto element : midiNoteValues)
-						if (element.midiNote == p_midiNote)
+						if (element.midiNote == (int)p_midiNote)
 							return element.noteName;
 					return "";
 				}

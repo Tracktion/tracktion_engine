@@ -337,9 +337,9 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             
                             // Given the variables keyNote, pitchWheelPosition, and pitchWheelSemitoneRange,
                             // and given system constants, solve for the new note values
-                            double noteHz = BeatConnect::MidiNote::getNoteFrequency(ss->keyNote);
-                            double newNoteHz = BeatConnect::MidiNote::getFrequencyByPitchWheel(pitchWheelPosition, DrumMachinePlugin::pitchWheelSemitoneRange, noteHz);
-                            adjustedMidiNote = BeatConnect::MidiNote::getMidiNote(newNoteHz);
+                            double noteHz = bc::MidiNote::getNoteFrequency(ss->keyNote);
+                            double newNoteHz = bc::MidiNote::getFrequencyByPitchWheel(pitchWheelPosition, DrumMachinePlugin::pitchWheelSemitoneRange, noteHz);
+                            adjustedMidiNote = bc::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
                             highlightedNotes.setBit (note);
