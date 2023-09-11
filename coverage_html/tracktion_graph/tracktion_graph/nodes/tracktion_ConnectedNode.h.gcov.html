@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-08-07 16:56:55</td>
+            <td class="headerValue">2023-09-11 15:51:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -274,10 +274,10 @@
 <a name="212"><span class="lineNum">     212 </span><span class="lineCov">       3752 :                                 : TransformResult::none;</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : }</a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">    1116354 : inline bool ConnectedNode::isReadyToProcess()</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">    1117418 : inline bool ConnectedNode::isReadyToProcess()</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : {</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">    2287294 :     for (const auto&amp; connection : connections)</span></a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    1177948 :         if (! connection.node-&gt;hasProcessed())</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">    2289460 :     for (const auto&amp; connection : connections)</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    1179050 :         if (! connection.node-&gt;hasProcessed())</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :             return false;</a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span>            :     return true;</a>
@@ -287,44 +287,44 @@
 <a name="225"><span class="lineNum">     225 </span>            : {</a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">       2056 : }</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   18896863 : inline void ConnectedNode::process (ProcessContext&amp; pc)</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   18932329 : inline void ConnectedNode::process (ProcessContext&amp; pc)</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : {</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   18896863 :     auto destAudio = pc.buffers.audio;</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">   18896863 :     auto&amp; destMIDI = pc.buffers.midi;</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   18932329 :     auto destAudio = pc.buffers.audio;</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">   18932329 :     auto&amp; destMIDI = pc.buffers.midi;</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span>            :     const int numSamples = (int) pc.referenceSampleRange.getLength();</a>
 <a name="234"><span class="lineNum">     234 </span>            :     juce::ignoreUnused (numSamples);</a>
 <a name="235"><span class="lineNum">     235 </span>            :     jassert (destAudio.getNumChannels() == 0 || numSamples == (int) destAudio.getNumFrames());</a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">   52227225 :     for (const auto&amp; connection : connections)</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">   52281007 :     for (const auto&amp; connection : connections)</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :     {</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">   33060401 :         auto sourceOutput = connection.node-&gt;getProcessedOutput();</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">   33426562 :         auto sourceAudio = sourceOutput.audio;</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">   33426562 :         auto&amp; sourceMidi = sourceOutput.midi;</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">   33112105 :         auto sourceOutput = connection.node-&gt;getProcessedOutput();</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">   33460357 :         auto sourceAudio = sourceOutput.audio;</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">   33460357 :         auto&amp; sourceMidi = sourceOutput.midi;</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :         jassert (destAudio.getNumChannels() == 0 || numSamples == (int) sourceAudio.getNumFrames());</a>
 <a name="243"><span class="lineNum">     243 </span>            :         </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">   33426562 :         if (connection.connectMidi)</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">   30832744 :             destMIDI.mergeFrom (sourceMidi);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">   33460357 :         if (connection.connectMidi)</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">   30874904 :             destMIDI.mergeFrom (sourceMidi);</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">   97939623 :         for (const auto&amp; channelConnection : connection.connectedChannels)</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">   98214737 :         for (const auto&amp; channelConnection : connection.connectedChannels)</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :         {</a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">   64609261 :             auto sourceChan = channelConnection.sourceChannel;</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">   64609261 :             auto destChan = channelConnection.destChannel;</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">   64866059 :             auto sourceChan = channelConnection.sourceChannel;</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">   64866059 :             auto destChan = channelConnection.destChannel;</span></a>
 <a name="251"><span class="lineNum">     251 </span>            :             </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">   64609261 :             if (sourceChan &lt; 0 || destChan &lt; 0)</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">   64866059 :             if (sourceChan &lt; 0 || destChan &lt; 0)</span></a>
 <a name="253"><span class="lineNum">     253 </span>            :             {</a>
 <a name="254"><span class="lineNum">     254 </span>            :                 jassertfalse;</a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :                 continue;</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :             }</a>
 <a name="257"><span class="lineNum">     257 </span>            :             </a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">   64609261 :             if (sourceChan &gt;= (int) sourceAudio.getNumChannels())</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">   64866059 :             if (sourceChan &gt;= (int) sourceAudio.getNumChannels())</span></a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineCov">      98520 :                 continue;</span></a>
 <a name="260"><span class="lineNum">     260 </span>            :             </a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">   64510741 :             add (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),</span></a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">   64510741 :                  sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">   64767539 :             add (destAudio.getChannel ((choc::buffer::ChannelCount) destChan),</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">   64767539 :                  sourceAudio.getChannel ((choc::buffer::ChannelCount) sourceChan));</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :         }</a>
 <a name="264"><span class="lineNum">     264 </span>            :     }</a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">   19166824 : }</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">   19168902 : }</span></a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineCov">       3752 : inline bool ConnectedNode::createLatencyNodes()</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : {</a>
