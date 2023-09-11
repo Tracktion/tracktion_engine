@@ -720,14 +720,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             return rackInstance;
         }
     }
-    // =8>
-    std::vector<std::string> test;
-    for (auto element : builtInTypes)
-    {
-        test.push_back(element->type.toStdString());
-    }
-    int breakpoint = 88;
-    // =8>
+
     for (auto builtIn : builtInTypes)
     {
         if (builtIn->type == type)
