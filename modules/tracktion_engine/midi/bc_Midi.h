@@ -18,7 +18,7 @@ namespace tracktion {
 
 			struct midiNoteValue
 			{
-				const int midiNote;
+				const unsigned int midiNote;
 				const double freqHz;
 				const juce::String noteName;
 			};
@@ -182,11 +182,19 @@ namespace tracktion {
 							}
 							else if (p_hz < midiNoteValues.begin()->freqHz)
 							{
+<<<<<<< HEAD
 								return midiNoteValues.begin()->midiNote;
 							}
 							else if (p_hz > midiNoteValues.back().freqHz)
 							{
 								return midiNoteValues.back().midiNote;
+=======
+								return (int)midiNoteValues.begin()->freqHz;
+							}
+							else if (p_hz > midiNoteValues.back().freqHz)
+							{
+								return (int)midiNoteValues.back().freqHz;
+>>>>>>> master
 							}
 						}
 					}

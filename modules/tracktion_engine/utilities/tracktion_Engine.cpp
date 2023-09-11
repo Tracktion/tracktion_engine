@@ -265,7 +265,7 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
 Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
 : m_PunchIn(p_PunchIn)
 {
-    for (const auto const p : p_Tracks)
+    for (const auto p : p_Tracks)
     {
         jassert(nullptr != p);
         if (nullptr != p)

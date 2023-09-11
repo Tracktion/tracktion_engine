@@ -596,6 +596,9 @@ namespace IDs
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
     DECLARE_ID (filterQ)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (filterGain)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
@@ -655,6 +658,7 @@ namespace IDs
     DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
+    DECLARE_ID(PresetCategories)
     DECLARE_ID(isInstrument)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
