@@ -423,7 +423,7 @@ void PluginManager::initialise()
     createBuiltInType<SamplerPlugin>();
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
-    createBuiltInType<BeatConnect::BitCrusherPlugin>(); // =8> should be in its own list of BC Plugin types, not internal
+    createBuiltInType<BeatConnect::BitCrusherPlugin>();
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
