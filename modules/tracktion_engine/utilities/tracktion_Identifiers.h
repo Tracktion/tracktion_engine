@@ -658,6 +658,7 @@ namespace IDs
     DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)
     DECLARE_ID(Faceplate)
+    DECLARE_ID(PresetCategories)
     DECLARE_ID(isInstrument)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
