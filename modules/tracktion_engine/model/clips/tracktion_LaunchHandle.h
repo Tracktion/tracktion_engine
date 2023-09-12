@@ -85,6 +85,8 @@ private:
     //==============================================================================
     struct State
     {
+        State();
+
         PlayState status = PlayState::stopped;
         std::optional<BeatRange> playedRange;
 
