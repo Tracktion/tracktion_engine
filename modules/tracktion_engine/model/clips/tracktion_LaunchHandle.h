@@ -92,7 +92,7 @@ private:
         std::optional<MonotonicBeat> nextEventTime;
     };
 
-    std::atomic<State> state { State {} };
+    std::atomic<State> state { State() };
 
     State getState() const      { return state; }
     void setState (State s)     { state.store (std::move (s)); }
