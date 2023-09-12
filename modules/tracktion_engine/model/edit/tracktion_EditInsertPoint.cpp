@@ -143,10 +143,19 @@ EditInsertPoint::Placement EditInsertPoint::chooseInsertPoint (bool pasteAfterSe
                 track = firstSelectedTrack;
 
             // Then see if it's actually a Slot that's selected
-            if (auto cs = sm->getFirstItemOfType<ClipSlot>())
+            if (auto clipSlot = sm->getFirstItemOfType<ClipSlot>())
             {
-                clipOwner = cs;
-                track = &cs->track;
+                clipOwner = clipSlot;
+                track = &clipSlot->track;
+            }
+            else if (auto clip = sm->getFirstItemOfType<Clip>())
+            {
+                // Or a Clip in a ClipSlot
+                if (auto clipClipSlot = clip->getClipSlot())
+                {
+                    clipOwner = clipClipSlot;
+                    track = &clipClipSlot->track;
+                }
             }
 
             if (auto selectedClipTimeRange = getTimeRangeForSelectedItems (sm->getSelectedObjects());
