@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+LaunchHandle::State::State() = default;
+
 //==============================================================================
 LaunchHandle::PlayState LaunchHandle::getPlayingStatus() const
 {

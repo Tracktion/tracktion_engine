@@ -85,6 +85,8 @@ private:
     //==============================================================================
     struct State
     {
+        State();
+
         PlayState status = PlayState::stopped;
         std::optional<BeatRange> playedRange;
 
@@ -92,7 +94,7 @@ private:
         std::optional<MonotonicBeat> nextEventTime;
     };
 
-    std::atomic<State> state { State() };
+    std::atomic<State> state { State {} };
 
     State getState() const      { return state; }
     void setState (State s)     { state.store (std::move (s)); }
