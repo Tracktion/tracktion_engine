@@ -92,12 +92,17 @@ juce::Array<Track*> toTrackArray (Edit&, const juce::BigInteger&);
 template<typename TrackItemType>
 [[ nodiscard ]] juce::Array<TrackItemType*> getTrackItemsOfType (const Track&);
 
+/** Returns the ClipOwner with a given ID if it can be found in the Edit. */
+ClipOwner* findClipOwnerForID (const Edit&, EditItemID);
 
 //==============================================================================
 // ClipSlots
 //==============================================================================
+/** Returns the ClipSlot for the given ID. */
 ClipSlot* findClipSlotForID (const Edit&, EditItemID);
 
+/** Returns the index of the ClipSlot in the list it is owned by. */
+int findClipSlotIndex (ClipSlot&);
 
 //==============================================================================
 // Clips

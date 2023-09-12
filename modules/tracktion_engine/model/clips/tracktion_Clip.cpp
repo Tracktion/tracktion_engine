@@ -244,11 +244,14 @@ ClipOwner* Clip::getParent() const
 
 ClipTrack* Clip::getClipTrack() const
 {
-    return dynamic_cast<ClipTrack*> (parent);
+    return dynamic_cast<ClipTrack*> (getTrack());
 }
 
 Track* Clip::getTrack() const
 {
+    if (auto cs = getClipSlot())
+        return &cs->track;
+
     return dynamic_cast<Track*> (parent);
 }
 
@@ -518,7 +521,7 @@ void Clip::updateParent()
     else if (parentState.hasType (IDs::CLIPLIST) && parentState.getParent().hasType (IDs::CONTAINERCLIP))
         setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState.getParent()))));
     else if (parentState.hasType (IDs::CLIPSLOT))
-        setParent (dynamic_cast<ClipSlot*> (findClipSlotForID (edit, EditItemID::fromID (parentState.getParent()))));
+        setParent (dynamic_cast<ClipSlot*> (findClipSlotForID (edit, EditItemID::fromID (parentState))));
     else
         setParent ({});
 }

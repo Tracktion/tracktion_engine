@@ -29,6 +29,9 @@ public:
     /** Must return the state of this ClipOwner. */
     virtual juce::ValueTree& getClipOwnerState() = 0;
 
+    /** Must return the ID of this ClipOwner. */
+    virtual EditItemID getClipOwnerID() = 0;
+
     /** Must return the selectable if this ClipOwner is one. */
     virtual Selectable* getClipOwnerSelectable() = 0;
 

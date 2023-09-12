@@ -257,6 +257,9 @@ public:
     /** Creates a SafeSelectable that points at the given selectable. */
     SafeSelectable (SelectableType& selectable)                     : weakRef (&selectable) {}
 
+    /** Creates a SafeSelectable that points at the given selectable. */
+    SafeSelectable (SelectableType* selectable)                     : weakRef (selectable) {}
+
     /** Creates a copy of another SafeSelectable. */
     SafeSelectable (const SafeSelectable& other) noexcept           : weakRef (other.weakRef) {}
 

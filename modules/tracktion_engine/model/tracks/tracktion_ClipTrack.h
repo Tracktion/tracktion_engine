@@ -107,6 +107,8 @@ public:
     /** @internal */
     juce::ValueTree& getClipOwnerState() override;
     /** @internal */
+    EditItemID getClipOwnerID() override;
+    /** @internal */
     Selectable* getClipOwnerSelectable() override;
     /** @internal */
     Edit& getClipOwnerEdit() override;

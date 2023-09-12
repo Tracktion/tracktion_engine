@@ -175,6 +175,10 @@ juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList& 
             if (auto t = i->getTrack())
                 tracks.addIfNotAlreadyThere (t);
 
+    if (tracks.isEmpty())
+        for (auto& cs : items.getItemsOfType<ClipSlot>())
+            tracks.addIfNotAlreadyThere (&cs->track);
+
     std::sort (tracks.begin(), tracks.end(),
                [] (Track* t1, Track* t2)
                {
@@ -577,6 +581,21 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
 
 
 //==============================================================================
+ClipOwner* findClipOwnerForID (const Edit& edit, EditItemID id)
+{
+    if (auto clipTrack = dynamic_cast<ClipTrack*> (findTrackForID (edit, id)))
+        return clipTrack;
+
+    if (auto clipSlot = findClipSlotForID (edit, id))
+        return clipSlot;
+
+    if (auto containerClip = dynamic_cast<ContainerClip*> (findClipForID (edit, id)))
+        return containerClip;
+
+    return nullptr;
+}
+
+//==============================================================================
 ClipSlot* findClipSlotForID (const Edit& edit, EditItemID id)
 {
     ClipSlot* result = nullptr;
@@ -599,6 +618,15 @@ ClipSlot* findClipSlotForID (const Edit& edit, EditItemID id)
                                   });
 
     return result;
+}
+
+int findClipSlotIndex (ClipSlot& slot)
+{
+    if (auto at = dynamic_cast<AudioTrack*> (&slot.track))
+        return at->getClipSlotList().getClipSlots().indexOf (&slot);
+
+    jassertfalse; // This should never happen
+    return -1;
 }
 
 

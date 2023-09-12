@@ -129,6 +129,11 @@ juce::ValueTree& ContainerClip::getClipOwnerState()
     return clipListState;
 }
 
+EditItemID ContainerClip::getClipOwnerID()
+{
+    return itemID;
+}
+
 Selectable* ContainerClip::getClipOwnerSelectable()
 {
     return this;

@@ -17,6 +17,7 @@ ClipSlot::ClipSlot (const juce::ValueTree& v, Track& t)
       state (v), track (t)
 {
     assert (state.hasType (IDs::CLIPSLOT));
+    assert (itemID.isValid());
     initialiseClipOwner (track.edit, state);
 }
 
@@ -49,6 +50,11 @@ juce::String ClipSlot::getName() const
 juce::String ClipSlot::getSelectableDescription()
 {
     return TRANS("Clip Slot");
+}
+
+EditItemID ClipSlot::getClipOwnerID()
+{
+    return itemID;
 }
 
 juce::ValueTree& ClipSlot::getClipOwnerState()
@@ -92,6 +98,12 @@ ClipSlotList::ClipSlotList (const juce::ValueTree& v, Track& t)
       track (t)
 {
     assert (v.hasType (IDs::CLIPSLOTS));
+
+    for (auto child : state)
+        if (child.hasType (IDs::CLIPSLOT))
+            if (EditItemID::fromID (child).isInvalid())
+                track.edit.createNewItemID().writeID (child, nullptr);
+
     rebuildObjects();
 }
 
@@ -108,7 +120,11 @@ juce::Array<ClipSlot*> ClipSlotList::getClipSlots() const
 void ClipSlotList::ensureNumberOfSlots (int numSlots)
 {
     for (int i = size(); i < numSlots; ++i)
-        parent.appendChild (juce::ValueTree (IDs::CLIPSLOT), &track.edit.getUndoManager());
+    {
+        auto newSlotState = juce::ValueTree (IDs::CLIPSLOT);
+        track.edit.createNewItemID().writeID (newSlotState, nullptr);
+        parent.appendChild (newSlotState, &track.edit.getUndoManager());
+    }
 
     assert (objects.size() >= numSlots);
 }

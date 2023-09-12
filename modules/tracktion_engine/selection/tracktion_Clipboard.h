@@ -36,6 +36,7 @@ public:
             EditInsertPoint& insertPoint;
             Track::Ptr startTrack;
             TimePosition startTime;
+            EditItemID targetClipOwnerID;
             SelectionManager* selectionManager = nullptr;
             bool silent = false;
             FileDragList::PreferredLayout preferredLayout = FileDragList::horizontal;
@@ -80,7 +81,7 @@ public:
             no, /**< Don't copy autmation. */
             yes /**< Do copy autmation. */
         };
-        
+
         void addClip (int trackOffset, const juce::ValueTree& state);
         void addSelectedClips (const SelectableList&, TimeRange, AutomationLocked);
         void addAutomation (const juce::Array<TrackSection>&, TimeRange);

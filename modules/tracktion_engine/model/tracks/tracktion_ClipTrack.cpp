@@ -455,6 +455,11 @@ juce::ValueTree& ClipTrack::getClipOwnerState()
     return state;
 }
 
+EditItemID ClipTrack::getClipOwnerID()
+{
+    return itemID;
+}
+
 Selectable* ClipTrack::getClipOwnerSelectable()
 {
     return this;

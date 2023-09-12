@@ -365,6 +365,18 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                         acb->setResamplingQuality (defaults.resamplingQuality);
                 }
             }
+            else if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            {
+                if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
+                {
+                    acb->setUsesProxy (false);
+                    acb->setAutoTempo (true);
+                }
+                else if (auto mc = dynamic_cast<MidiClip*> (newClip))
+                {
+                    mc->setUsesProxy (false);
+                }
+            }
 
             return newClip;
         }
