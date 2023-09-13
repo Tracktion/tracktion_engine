@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -419,6 +421,10 @@ void PluginManager::initialise()
     createBuiltInType<PitchShiftPlugin>();
     createBuiltInType<LowPassPlugin>();
     createBuiltInType<SamplerPlugin>();
+    // BEATCONNECT MODIFICATION START
+    createBuiltInType<DrumMachinePlugin>();
+    createBuiltInType<BeatConnect::BitCrusherPlugin>();
+    // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
     createBuiltInType<MidiPatchBayPlugin>();
@@ -710,6 +716,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
 
             // BEATCONNECT MODIFICATIONS START
             rackType->state.getOrCreateChildWithName(IDs::Faceplate, nullptr);
+            rackType->state.getOrCreateChildWithName(IDs::PresetCategories, nullptr);
             // BEATCONNECT MODIFICATIONS END
             return rackInstance;
         }
@@ -724,13 +731,11 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 IDs::name, desc.name
             );
 
-
-
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
-            if (type == "sampler")
+            if (type == "drum machine")
                 addInitialSamplerDrumPadValueTree(v);
             // BEATCONNECT MODIFICATIONS END
 
@@ -756,7 +761,8 @@ void PluginManager::addPluginParametersToValueTree(Plugin::Ptr plugin)
             juce::ValueTree v(IDs::PluginParameter.toString());
 
             v.setProperty(IDs::paramId, juce::String(param->paramID).replaceCharacters(" ", "_"), nullptr);
-            v.setProperty(IDs::value, param->getCurrentValue(), nullptr);
+            v.setProperty(IDs::baseValue, param->getCurrentBaseValue(), nullptr);
+            v.setProperty(IDs::currentValue, param->getCurrentValue(), nullptr);
             v.setProperty(IDs::defaultValue, param->getDefaultValue().has_value() ? param->getDefaultValue().value() : 0, nullptr);
             v.setProperty(IDs::minimumValue, param->getValueRange().getStart(), nullptr);
             v.setProperty(IDs::maximumValue, param->getValueRange().getEnd(), nullptr);
@@ -774,7 +780,7 @@ void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
             return IDs::Tambourine.toString();
         }
         else if (i >= 4 && i <= 7) {
-            return IDs::Cymbol.toString();
+            return IDs::Cymbal.toString();
         }
         else if (i >= 8 && i <= 11) {
             return IDs::Snare.toString();
@@ -996,13 +1002,13 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
-
     // BEATCONNECT MODIFICATIONS START
-    std::string test = p.get()->getPluginType().toStdString();
+    p.get()->state.setProperty(IDs::isInstrument, desc.isInstrument, nullptr);
+
     if (p.get()->getPluginType() == type) {
         p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
     }
-    // BEATCONNECT MODIFICATIONS START
+    // BEATCONNECT MODIFICATIONS END
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);

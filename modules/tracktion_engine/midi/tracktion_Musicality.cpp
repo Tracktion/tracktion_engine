@@ -1485,7 +1485,7 @@ void PatternGenerator::clearPattern()
         mc->getSequence().clear (um);
 }
 
-void PatternGenerator::generatePattern()
+void PatternGenerator::generatePattern(bool clear)
 {
     if (auto mc = getMidiClip())
     {
@@ -1496,22 +1496,23 @@ void PatternGenerator::generatePattern()
         switch (mode)
         {
             case Mode::off:      clearPattern();          clearHash();    break;
-            case Mode::arpeggio: generateArpPattern();    updateHash();   break;
-            case Mode::chords:   generateChordPattern();  updateHash();   break;
-            case Mode::bass:     generateBassPattern();   updateHash();   break;
-            case Mode::melody:   generateMelodyPattern(); updateHash();   break;
+            case Mode::arpeggio: generateArpPattern(clear);    updateHash();   break;
+            case Mode::chords:   generateChordPattern(clear);  updateHash();   break;
+            case Mode::bass:     generateBassPattern(clear);   updateHash();   break;
+            case Mode::melody:   generateMelodyPattern(clear); updateHash();   break;
         }
     }
 }
 
-void PatternGenerator::generateArpPattern()
+void PatternGenerator::generateArpPattern(bool clear)
 {
     auto mc = getMidiClip();
 
     if (mc == nullptr)
         return;
 
-    clearPattern();
+    if (clear)
+        clearPattern();
 
     CRASH_TRACER
 
@@ -1628,13 +1629,14 @@ struct ChordNote
     float velocity = 0;
 };
 
-void PatternGenerator::generateChordPattern()
+void PatternGenerator::generateChordPattern(bool clear)
 {
     auto mc = getMidiClip();
     if (mc == nullptr)
         return;
 
-    clearPattern();
+    if (clear)
+        clearPattern();
 
     CRASH_TRACER
 
@@ -1762,7 +1764,7 @@ void PatternGenerator::generateChordPattern()
     }
 }
 
-void PatternGenerator::generateMelodyPattern()
+void PatternGenerator::generateMelodyPattern(bool clear)
 {
     auto mc = getMidiClip();
 
@@ -1770,7 +1772,8 @@ void PatternGenerator::generateMelodyPattern()
         return;
 
     CRASH_TRACER
-    clearPattern();
+    if (clear)
+        clearPattern();
 
     juce::OwnedArray<ProgressionItem> progressionItems;
     auto progressionOffset = getFlattenedChordProgression (progressionItems);
@@ -1921,7 +1924,7 @@ struct BassNote
     int octave = 0;
 };
 
-void PatternGenerator::generateBassPattern()
+void PatternGenerator::generateBassPattern(bool clear)
 {
     auto mc = getMidiClip();
 
@@ -1929,7 +1932,8 @@ void PatternGenerator::generateBassPattern()
         return;
 
     CRASH_TRACER
-    clearPattern();
+    if (clear)
+        clearPattern();
 
     juce::OwnedArray<ProgressionItem> progressionItems;
     auto progressionOffset = getFlattenedChordProgression (progressionItems);

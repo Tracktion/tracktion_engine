@@ -38,6 +38,9 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     juce::CachedValue<float> depth, rate, feedbackGain;
+    // BEATCONNECT MODIFICATION START
+    AutomatableParameter::Ptr depthParam, rateParam, feedbackGainParam;
+    // BEATCONNECT MODIFICATION END
 
 private:
     //==============================================================================

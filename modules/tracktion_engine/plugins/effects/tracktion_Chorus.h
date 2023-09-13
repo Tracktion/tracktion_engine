@@ -41,6 +41,9 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     juce::CachedValue<float> depthMs, width, mixProportion, speedHz;
+    // BEATCONNECT MODIFICATION START
+    AutomatableParameter::Ptr depthMsParam, widthPram, mixProportionParam, speedHzParam;
+    // BEATCONNECT MODIFICATION END
 
 private:
     //==============================================================================

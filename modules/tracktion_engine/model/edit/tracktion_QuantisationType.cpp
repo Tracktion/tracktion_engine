@@ -150,6 +150,13 @@ void QuantisationType::setProportion (float prop)
     proportion = juce::jlimit (0.0f, 1.0f, prop);
 }
 
+// BEATCONNECT MODIFICATION START
+double QuantisationType::getFractionOfBeat() const
+{
+    return  quantisationTypes[typeIndex].beatFraction;
+}
+// BEATCONNECT MODIFICATION END
+
 TimePosition QuantisationType::roundToNearest (TimePosition time, const Edit& edit) const
 {
     return roundTo (time, 0.5 - 1.0e-10, edit);

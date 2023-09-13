@@ -133,6 +133,10 @@ namespace IDs
     DECLARE_ID (index)
     DECLARE_ID (layout)
     DECLARE_ID (parameters)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (parameterIDs)
+    DECLARE_ID (Component)
+    // BEAT CONNECT MODIFICATION END
     DECLARE_ID (CURVESECTION)
     DECLARE_ID (TEMPOCURVESECTION)
     DECLARE_ID (AUTOMATIONCURVE)
@@ -592,6 +596,9 @@ namespace IDs
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
     DECLARE_ID (filterQ)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (filterGain)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
@@ -646,20 +653,33 @@ namespace IDs
     DECLARE_ID (resamplingQuality)
 
     // BEATCONNECT MODIFICATIONS START HERE
-    DECLARE_ID(SamplerDrumPad)
-    DECLARE_ID(Tambourine)
-    DECLARE_ID(Cymbol)
-    DECLARE_ID(Snare)
-    DECLARE_ID(Kick)
-    DECLARE_ID(PluginParameters)
-    DECLARE_ID(PluginParameter)
-    DECLARE_ID(paramId)
+    // Generic IDs
+    DECLARE_ID(baseValue)
+    DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)
+    DECLARE_ID(Faceplate)
+    DECLARE_ID(PresetCategories)
+    DECLARE_ID(isInstrument)
     DECLARE_ID(minimumValue)
     DECLARE_ID(maximumValue)
-    DECLARE_ID(Faceplate)
-    DECLARE_ID(RecordingMidiClip)
+    DECLARE_ID(paramId)
     DECLARE_ID(PatternChannel)
+    DECLARE_ID(PluginParameter)
+    DECLARE_ID(PluginParameters)
+    DECLARE_ID(RecordingMidiClip)
+    
+    // Sampler IDs
+    DECLARE_ID(keyNoteOffset)
+    DECLARE_ID(keyNoteOffsets)
+    DECLARE_ID(tremolo)
+    DECLARE_ID(tremolos)
+
+    // Drum Machine IDs
+    DECLARE_ID(Cymbal)
+    DECLARE_ID(Kick)
+    DECLARE_ID(SamplerDrumPad)
+    DECLARE_ID(Snare)
+    DECLARE_ID(Tambourine)
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID

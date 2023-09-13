@@ -15,15 +15,37 @@ ChorusPlugin::ChorusPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     auto um = getUndoManager();
 
+    // BEATCONNECT MODIFICATION START
+    // This appears missing for some reason?
+    speedHzParam = addParam("speedHz", TRANS("Speed"), {0.1f, 10.0f});
+    depthMsParam = addParam("depthMs", TRANS("Depth"), {0.1f, 20.0f});
+    widthPram = addParam("width", TRANS("Width"), { 0.0f, 1.0f });
+    mixProportionParam = addParam("mixProportion", TRANS("Mix"), { 0.0f, 1.0f });
+    // BEATCONNECT MODIFICATION END
+
     depthMs.referTo (state, IDs::depthMs, um, 3.0f);
     speedHz.referTo (state, IDs::speedHz, um, 1.0f);
     width.referTo (state, IDs::width, um, 0.5f);
     mixProportion.referTo (state, IDs::mixProportion, um, 0.5f);
+
+    // BEATCONNECT MODIFICATION START
+    speedHzParam->attachToCurrentValue(speedHz);
+    depthMsParam->attachToCurrentValue(depthMs);
+    widthPram->attachToCurrentValue(width);
+    mixProportionParam->attachToCurrentValue(mixProportion);
+    // BEATCONNECT MODIFICATION END
 }
 
 ChorusPlugin::~ChorusPlugin()
 {
     notifyListenersOfDeletion();
+
+    // BEATCONNECT MODIFICATION START
+    speedHzParam->detachFromCurrentValue();
+    depthMsParam->detachFromCurrentValue();
+    widthPram->detachFromCurrentValue();
+    mixProportionParam->detachFromCurrentValue();
+    // BEATCONNECT MODIFICATION END
 }
 
 const char* ChorusPlugin::xmlTypeName = "chorus";
@@ -63,7 +85,10 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     delayBuffer.ensureMaxBufferSize (lengthInSamples);
 
-    const float feedbackGain = 0.0f; // xxx not sure why this value was here..
+    // BEATCONNECT MODIFICATION START
+    // const float feedbackGain = 0.0f; // xxx not sure why this value was here..
+    // this is weird. commenting out. note that this is copied form 4OSC chorus, and this was added for some reason.
+    // BEATCONNECT MODIFICATION END
     const float lfoFactor = 0.5f * (maxSweepSamples - minSweepSamples);
     const float lfoOffset = minSweepSamples + lfoFactor;
 
@@ -96,7 +121,10 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
             const float out = buf[(intSweepPos - 1) % lengthInSamples] * interp
                               + buf[intSweepPos % lengthInSamples] * (1.0f - interp);
 
-            float n = in + out * feedbackGain;
+            // BEATCONNECT MODIFICATION START
+            //float n = in + out * feedbackGain;
+            float n = in;
+            // BEATCONNECT MODIFICATION END
 
             JUCE_UNDENORMALISE (n);
 

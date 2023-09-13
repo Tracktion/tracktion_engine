@@ -154,8 +154,11 @@ void CompressorPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             if (currentLevel > thresh)
             {
-                r *= (float)((thresh + (currentLevel - thresh) * rat)
-                              / currentLevel);
+                // BEATCONNECT MODIFICATION START
+                // It looks like their formula here is wrong, ratio is inverted
+                //   r *= (float)((thresh + (currentLevel - thresh) * rat) / currentLevel);
+                r *= (float)((thresh + (currentLevel - thresh) * (1.0 - rat)) / currentLevel);
+                // BEATCONNECT MODIFICATION END
             }
 
             *b1++ = samp1 * r;
@@ -181,7 +184,13 @@ void CompressorPlugin::applyToBuffer (const PluginRenderContext& fc)
             float r = outputGain;
 
             if (currentLevel > thresh)
-                r *= (float)((thresh + (currentLevel - thresh) * rat) / currentLevel);
+            {
+                // BEATCONNECT MODIFICATION START
+                // It looks like their formula here is wrong, ratio is inverted
+                //   r *= (float)((thresh + (currentLevel - thresh) * rat) / currentLevel);
+                r *= (float)((thresh + (currentLevel - thresh) * (1.0 - rat)) / currentLevel);
+                // BEATCONNECT MODIFICATION END
+            }
 
             *b1++ = samp * r;
         }
