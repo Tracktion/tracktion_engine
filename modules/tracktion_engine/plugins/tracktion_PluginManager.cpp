@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -421,6 +423,7 @@ void PluginManager::initialise()
     createBuiltInType<SamplerPlugin>();
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
+    createBuiltInType<BeatConnect::BitCrusherPlugin>();
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();

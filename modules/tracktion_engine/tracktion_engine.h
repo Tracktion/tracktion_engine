@@ -637,7 +637,6 @@ namespace tracktion { inline namespace engine
 #include "midi/bc_Midi.h"
 // BEATCONNECT MODIFICATION END
 
-
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
