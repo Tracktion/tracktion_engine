@@ -770,24 +770,56 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
             aux->setMute (! aux->isMute());
 }
 
-std::shared_ptr<LaunchHandle> ExternalControllerManager::getLaunchHandle (int channelNum, int clip)
+std::shared_ptr<LaunchHandle> ExternalControllerManager::getLaunchHandle (int channelNum, int sceneNum)
 {
     if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
-        if (auto s = t->getClipSlotList().getClipSlots()[clip])
+        if (auto s = t->getClipSlotList().getClipSlots()[sceneNum])
             if (auto c = s->getClip())
                 return c->getLaunchHandle();
 
     return nullptr;
 }
 
-void ExternalControllerManager::userLaunchedClip (int channelNum, int clip)
+void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum)
 {
-    if (auto lh = getLaunchHandle (channelNum, clip))
+    if (auto lh = getLaunchHandle (channelNum, sceneNum))
     {
         lh->play (getLaunchPosition (*currentEdit));
 
         if (! currentEdit->getTransport().isPlaying())
             currentEdit->getTransport().play (false);
+    }
+}
+
+void ExternalControllerManager::userLaunchedScene (int sceneNum)
+{
+    for (auto at : getAudioTracks (*currentEdit))
+    {
+        auto slots = at->getClipSlotList().getClipSlots();
+
+        for (int i = 0; i < slots.size(); ++i)
+        {
+            if (auto slot = slots[i])
+            {
+                if (auto c = slot->getClip())
+                {
+                    if (auto lh = c->getLaunchHandle())
+                    {
+                        if (i == sceneNum)
+                        {
+                            lh->play (getLaunchPosition (*currentEdit));
+
+                            if (! currentEdit->getTransport().isPlaying())
+                                currentEdit->getTransport().play (false);
+                        }
+                        else 
+                        {
+                            lh->stop (getLaunchPosition (c->edit));
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

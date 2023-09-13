@@ -240,11 +240,18 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
     }
 }
 
-void ControlSurface::userLaunchedClip (int channelNum, int clip)
+void ControlSurface::userLaunchedClip (int channelNum, int sceneNum)
 {
     RETURN_IF_SAFE_RECORDING
 
-    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, clip);
+    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, sceneNum);
+}
+
+void ControlSurface::userLaunchedScene (int sceneNum)
+{
+    RETURN_IF_SAFE_RECORDING
+
+    externalControllerManager.userLaunchedScene (sceneNum);
 }
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }
