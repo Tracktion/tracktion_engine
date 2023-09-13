@@ -104,6 +104,53 @@ private:
 };
 
 //==============================================================================
+static BeatDuration getLaunchOffset (const LaunchQuantisation& lq, const BeatPosition pos,
+                                     std::optional<tracktion::BeatRange> loopRange)
+{
+    // Quantise position first
+    auto quantisedPos = lq.getNext (pos);
+
+    if (! loopRange || quantisedPos < loopRange->getEnd())
+        return quantisedPos - pos;
+
+    // If it's after the loop range, quantise the start loop position
+    quantisedPos = lq.getNext (loopRange->getStart());
+
+    // If it still doesn't contain the position, just use the loop start pos
+    if (! loopRange->contains (quantisedPos))
+        quantisedPos = loopRange->getStart();
+
+    // Find the duration from the given position to the loop end + the quantised position from the loop start
+    if (loopRange->contains (pos))
+        return (loopRange->getEnd() - pos) + (quantisedPos - loopRange->getStart());
+
+    return quantisedPos - pos;
+}
+
+static MonotonicBeat getLaunchPosition (Edit& e)
+{
+    auto epc = e.getTransport().getCurrentPlaybackContext();
+
+    if (! epc)
+        return {};
+
+    auto syncPoint = epc->getSyncPoint();
+
+    if (! syncPoint)
+        return {};
+
+    auto& t = e.getTransport();
+    auto& ts = e.tempoSequence;
+    auto currentBeat = syncPoint->beat;
+    const auto offset = getLaunchOffset (e.getLaunchQuantisation(),
+                                         currentBeat,
+                                         t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
+                                                         : std::nullopt);
+
+    return { syncPoint->monotonicBeat.v + offset };
+}
+
+//==============================================================================
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
     blinkTimer.reset (new BlinkTimer (*this));
@@ -721,6 +768,27 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
     if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
         if (auto aux = t->getAuxSendPlugin (auxNum))
             aux->setMute (! aux->isMute());
+}
+
+std::shared_ptr<LaunchHandle> ExternalControllerManager::getLaunchHandle (int channelNum, int clip)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
+        if (auto s = t->getClipSlotList().getClipSlots()[clip])
+            if (auto c = s->getClip())
+                return c->getLaunchHandle();
+
+    return nullptr;
+}
+
+void ExternalControllerManager::userLaunchedClip (int channelNum, int clip)
+{
+    if (auto lh = getLaunchHandle (channelNum, clip))
+    {
+        lh->play (getLaunchPosition (*currentEdit));
+
+        if (! currentEdit->getTransport().isPlaying())
+            currentEdit->getTransport().play (false);
+    }
 }
 
 void ExternalControllerManager::userMovedQuickParam (float newLevel)

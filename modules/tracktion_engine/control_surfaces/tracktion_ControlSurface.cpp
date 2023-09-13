@@ -43,8 +43,6 @@ ControlSurface::ControlSurface (ExternalControllerManager& ecm)
 
 ControlSurface::~ControlSurface()
 {
-    jassert (owner != nullptr);
-
     notifyListenersOfDeletion();
 }
 
@@ -240,6 +238,13 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
             }
         }
     }
+}
+
+void ControlSurface::userLaunchedClip (int channelNum, int clip)
+{
+    RETURN_IF_SAFE_RECORDING
+
+    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, clip);
 }
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }

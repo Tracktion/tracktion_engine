@@ -135,6 +135,7 @@ public:
     void userMovedAux (int channelNum, int auxNum, float newPosition);
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
+    void userLaunchedClip (int channelNum, int clip);
 
     void updateDeviceState();
 
@@ -148,6 +149,8 @@ public:
     Engine& engine;
 
 private:
+    std::shared_ptr<LaunchHandle> getLaunchHandle (int channelNum, int clip);
+
     friend class Engine;
     ExternalControllerManager (Engine&);
 

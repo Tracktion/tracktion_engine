@@ -78,6 +78,7 @@ void CustomControlSurface::init()
         needsOSCSocket              = false;
     }
     numberOfFaderChannels           = 8;
+    numberOfTrackPads               = 8;
     numCharactersForTrackNames      = needsOSCSocket ? 12 : 0;
     numParameterControls            = 18;
     numCharactersForParameterLabels = needsOSCSocket ? 12 : 0;

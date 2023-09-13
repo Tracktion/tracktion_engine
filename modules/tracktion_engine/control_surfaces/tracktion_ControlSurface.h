@@ -246,6 +246,7 @@ public:
     void userSelectedClipInTrack (int channelNum);
     void userSelectedPluginInTrack (int channelNum);
     void userPressedRecEnable (int channelNum, bool enableEtoE);
+    void userLaunchedClip (int channelNum, int clip);
     void userPressedPlay();
     void userPressedRecord();
     void userPressedStop();
@@ -378,6 +379,9 @@ public:
     // number of physical faders
     int numberOfFaderChannels = 0;
     int numCharactersForTrackNames = 0;
+
+    // number of physical pads per channel
+    int numberOfTrackPads = 0;
 
     // is banking to the right allowed to show empty tracks
     bool allowBankingOffEnd = false;
