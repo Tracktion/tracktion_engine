@@ -244,14 +244,14 @@ void ControlSurface::userLaunchedClip (int channelNum, int sceneNum)
 {
     RETURN_IF_SAFE_RECORDING
 
-    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, sceneNum);
+    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, owner->padStart + sceneNum);
 }
 
 void ControlSurface::userLaunchedScene (int sceneNum)
 {
     RETURN_IF_SAFE_RECORDING
 
-    externalControllerManager.userLaunchedScene (sceneNum);
+    externalControllerManager.userLaunchedScene (owner->padStart + sceneNum);
 }
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }

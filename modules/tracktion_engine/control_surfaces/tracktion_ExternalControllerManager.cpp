@@ -33,10 +33,16 @@ private:
 
     juce::Array<juce::ValueTree, juce::CriticalSection> pluginsToUpdate;
     juce::Atomic<int> updateAux;
+    juce::Atomic<bool> updatePads;
 
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
-        if (v.hasType (IDs::PLUGIN))
+        if (v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP))
+        {
+            if (i == IDs::colour)
+                updatePads.set (true);
+        }
+        else if (v.hasType (IDs::PLUGIN))
         {
             if (i == IDs::volume || i == IDs::pan)
                 pluginsToUpdate.addIfNotAlreadyThere (v);
@@ -95,6 +101,9 @@ private:
 
         if (updateAux.compareAndSetBool (0, 1))
             owner.auxSendLevelsChanged();
+
+        if (updatePads.compareAndSetBool (false, true))
+            owner.updatePadColours();
     }
 
     void handleAsyncUpdate() override
@@ -407,6 +416,7 @@ void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_ACTIVE_DE
 void ExternalControllerManager::updatePunchLights()         { FOR_EACH_ACTIVE_DEVICE (updatePunchLights()); }
 void ExternalControllerManager::updateScrollLights()        { FOR_EACH_ACTIVE_DEVICE (updateScrollLights()); }
 void ExternalControllerManager::updateUndoLights()          { FOR_EACH_ACTIVE_DEVICE (updateUndoLights()); }
+void ExternalControllerManager::updatePadColours()          { FOR_EACH_ACTIVE_DEVICE (updatePadColours()); }
 
 void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* source)
 {
@@ -416,6 +426,7 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
     {
         playStateChanged (tc->isPlaying());
         recordStateChanged (tc->isRecording());
+        updatePadColours();
     }
     else if (currentSelectionManager != nullptr)
     {
@@ -812,7 +823,7 @@ void ExternalControllerManager::userLaunchedScene (int sceneNum)
                             if (! currentEdit->getTransport().isPlaying())
                                 currentEdit->getTransport().play (false);
                         }
-                        else 
+                        else
                         {
                             lh->stop (getLaunchPosition (c->edit));
                         }

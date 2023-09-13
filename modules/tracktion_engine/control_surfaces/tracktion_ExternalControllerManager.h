@@ -110,6 +110,7 @@ public:
     void updatePunchLights();
     void updateScrollLights();
     void updateUndoLights();
+    void updatePadColours();
 
     int getNumChannelTracks() const;
     Track* getChannelTrack (int channel) const;

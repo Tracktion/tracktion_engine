@@ -919,6 +919,50 @@ void ExternalController::updateUndoLights()
                                    ed->getUndoManager().canRedo());
 }
 
+void ExternalController::updatePadColours()
+{
+    auto& ecm = getExternalControllerManager();
+    auto& cs = getControlSurface();
+
+    if (cs.numberOfTrackPads > 0)
+    {
+        for (auto track = 0; track < cs.numberOfFaderChannels; track++)
+        {
+            for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
+            {
+                auto colourIdx = 0;
+                auto blink = false;
+                
+                if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
+                    {
+                        if (auto c = slot->getClip())
+                        {
+                            auto col = c->getColour();
+                            
+                            if (! col.isTransparent())
+                            {
+                                auto numColours = 19;
+                                auto newHue = col.getHue();
+                                
+                                colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                            }
+
+                            if (auto tc = getTransport(); tc->isPlaying())
+                                if (auto lh = c->getLaunchHandle())
+                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                        blink = true;
+                        }
+                    }
+                }
+
+                cs.padStateChanged (track, scene, colourIdx, blink);
+            }
+        }
+    }
+}
+
 void ExternalController::updateDeviceState()
 {
     if (controlSurface != nullptr)
@@ -1008,6 +1052,8 @@ void ExternalController::updateDeviceState()
                 }
 
                 cs.faderBankChanged (channelStart, trackNames);
+
+                updatePadColours();
 
                 if (cs.showingMarkers())
                     ecm.updateMarkers();
