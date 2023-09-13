@@ -443,7 +443,7 @@ public:
         setAudioOutput (input.get(), source.audio);
 
         // If the source only outputs to this node, we can steal its data
-        if (numOutputNodes == 1)
+        if (input->numOutputNodes == 1)
             pc.buffers.midi.swapWith (source.midi);
         else
             pc.buffers.midi.copyFrom (source.midi);
@@ -508,15 +508,15 @@ public:
         return { input.get() };
     }
     
-    bool transform (Node& rootNode) override
+    TransformResult transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
     {
         if (! hasInitialised)
         {
-            findSendNodes (rootNode);
-            return true;
+            findSendNodes (rootNode, postOrderedNodes, cache);
+            return TransformResult::connectionsMade;
         }
         
-        return false;
+        return TransformResult::none;
     }
 
     bool isReadyToProcess() override
@@ -547,8 +547,8 @@ private:
     std::unique_ptr<Node> input;
     const int busID;
     bool hasInitialised = false;
-    
-    void findSendNodes (Node& rootNode)
+
+    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache& cache)
     {
         // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
@@ -556,15 +556,29 @@ private:
         if (hasInitialised)
             return;
         
+        std::vector<SendNode*> allSends;
+
+        constexpr size_t cacheKey = 3399892065; // Random number
+
+        if (auto cachedVec = cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
+        {
+            allSends = *cachedVec;
+        }
+        else
+        {
+            for (auto n : postOrderedNodes)
+               if (auto send = dynamic_cast<SendNode*> (n))
+                   allSends.push_back (send);
+
+            cache.cacheProperty (cacheKey, allSends);
+        }
+
         std::vector<SendNode*> sends;
-        visitNodes (rootNode,
-                    [&] (Node& n)
-                    {
-                       if (auto send = dynamic_cast<SendNode*> (&n))
-                           if (send->getBusID() == busID)
-                               sends.push_back (send);
-                    }, true);
-        
+
+        for (auto send : allSends)
+            if (send->getBusID() == busID)
+                sends.push_back (send);
+
         // Remove any send nodes that feed back in to this
         std::vector<Node*> sendsToRemove;
         

@@ -19,7 +19,7 @@ class WaveAudioClip  : public AudioClipBase
 {
 public:
     /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */
-    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     
     /** Destructor. */
     ~WaveAudioClip() override;

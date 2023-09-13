@@ -94,12 +94,14 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_UNIT_TESTS
- #include <tracktion_core/tracktion_TestConfig.h>
-#endif
+#include <tracktion_core/tracktion_TestConfig.h>
 
 #include <tracktion_graph/tracktion_graph.h>
 
@@ -114,15 +116,15 @@ extern "C"
 
 //==============================================================================
 //==============================================================================
-#if __has_include(<samplerate.h>)
- #include <samplerate.h>
-#else
-
 #undef VERSION
 #define PACKAGE ""
-#define VERSION "0.1.9"
+#define VERSION "0.2.2"
 #define CPU_CLIPS_NEGATIVE 0
 #define CPU_CLIPS_POSITIVE 0
+
+#define ENABLE_SINC_BEST_CONVERTER
+#define ENABLE_SINC_MEDIUM_CONVERTER
+#define ENABLE_SINC_FAST_CONVERTER
 
 #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
 
@@ -130,30 +132,28 @@ extern "C"
  #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
-extern "C"
+namespace tracktion
 {
-    #include "../3rd_party/libsamplerate/samplerate.h"
+    namespace src
+    {
+        #include "../3rd_party/libsamplerate/samplerate.h"
+        #include "../3rd_party/libsamplerate/src_linear.c"
+        #include "../3rd_party/libsamplerate/src_sinc.c"
+        #include "../3rd_party/libsamplerate/src_zoh.c"
+        #include "../3rd_party/libsamplerate/samplerate.c"
+    }
 }
-
-#if TRACKTION_BUILD_LIBSAMPLERATE
- extern "C"
- {
-     #include "../3rd_party/libsamplerate/src_linear.c"
-     #include "../3rd_party/libsamplerate/src_sinc.c"
-     #include "../3rd_party/libsamplerate/src_zoh.c"
-     #include "../3rd_party/libsamplerate/samplerate.c"
- }
-#endif //TRACKTION_BUILD_LIBSAMPLERATE
 
 #undef PACKAGE
 #undef VERSION
 #undef CPU_CLIPS_NEGATIVE
 #undef CPU_CLIPS_POSITIVE
 
+#undef ENABLE_SINC_BEST_CONVERTER
+#undef ENABLE_SINC_MEDIUM_CONVERTER
+#undef ENABLE_SINC_FAST_CONVERTER
+
 #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
-
-#endif //__has_include(<samplerate.h>)
-
 
 //==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS
@@ -182,6 +182,12 @@ using namespace std::literals;
 
 #include "playback/graph/tracktion_CombiningNode.h"
 #include "playback/graph/tracktion_CombiningNode.cpp"
+
+#include "playback/graph/tracktion_ContainerClipNode.h"
+#include "playback/graph/tracktion_ContainerClipNode.cpp"
+
+#include "playback/graph/tracktion_DynamicOffsetNode.h"
+#include "playback/graph/tracktion_DynamicOffsetNode.cpp"
 
 #include "playback/graph/tracktion_FadeInOutNode.h"
 #include "playback/graph/tracktion_FadeInOutNode.cpp"
@@ -229,6 +235,7 @@ using namespace std::literals;
 #include "playback/graph/tracktion_RackReturnNode.h"
 #include "playback/graph/tracktion_RackReturnNode.cpp"
 #include "playback/graph/tracktion_PluginNode.cpp"
+#include "playback/graph/tracktion_PluginNodeBenchmarks.test.cpp"
 #include "playback/graph/tracktion_ModifierNode.cpp"
 
 #include "playback/graph/tracktion_TrackMutingNode.cpp"
@@ -351,6 +358,10 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #include "control_surfaces/types/tracktion_NovationAutomap.cpp"
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
 #endif
 
 #endif

@@ -278,13 +278,15 @@ void LoopInfo::duplicateIfShared()
         auto parent = state.getParent();
         int index = -1;
 
+        auto stateCopy = state.createCopy();
+
         if (parent.isValid())
         {
             index = parent.indexOf (state);
             parent.removeChild (index, um);
         }
 
-        state = state.createCopy();
+        state = stateCopy;
 
         if (parent.isValid())
             parent.addChild (state, index, um);

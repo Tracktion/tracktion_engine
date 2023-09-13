@@ -118,8 +118,8 @@ private:
     RealTimeSpinLock clearNodesLock;
 
     //==============================================================================
-    std::atomic<double> sampleRate { 44100.0 };
-    int blockSize = 512;
+    std::atomic<double> sampleRate { 0.0 };
+    int blockSize = 0;
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */

@@ -375,9 +375,14 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     const auto blockLength = TimeDuration::fromSamples (samplesPerBlock, sampleRate);
     auto streamTime = r.time.getStart();
 
-    auto nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
-                                                             sampleRate, samplesPerBlock,
-                                                             getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+    std::unique_ptr<TracktionNodePlayer> nodePlayer;
+    callBlocking ([&]
+                  {
+                      nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
+                                                                          sampleRate, samplesPerBlock,
+                                                                          getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+                  });
+
     nodePlayer->setNumThreads ((size_t) r.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
     
     //TODO: Should really purge any non-MIDI nodes here then return if no MIDI has been found

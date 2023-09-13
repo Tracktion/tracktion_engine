@@ -433,6 +433,10 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
         // This ensures the referenceSampleRange of the new context has been synced
         edit.engine.getDeviceManager().addContext (this);
+
+        // Set the playhead position as early as possible so it doesn't revert to 0 in the TransportControl
+        nodePlaybackContext->playHead.setPosition (toSamples (transport.getPosition(),
+                                                              edit.engine.getDeviceManager().getSampleRate()));
     }
 
     rebuildDeviceList();

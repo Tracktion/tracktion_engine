@@ -169,7 +169,7 @@ public:
         {
             auto track = audioTracks.getUnchecked (i);
             auto inputInstance = inputInstances.getUnchecked (i);
-            inputInstance->setTargetTrack (*track, 0, true);
+            inputInstance->setTargetTrack (*track, 0, true, nullptr);
             inputInstance->setRecordingEnabled (*track, true);
         }
 

@@ -42,7 +42,7 @@ public:
         fileTempoSlider.onDragEnd = [this] { updateClipBPM(); };
 
         tempoSlider.setRange (30.0, 220.0, 0.1);
-        tempoSlider.onDragEnd = [this] { edit.tempoSequence.getTempo (0)->setBpm (tempoSlider.getValue()); };
+        tempoSlider.onValueChange = [this] { edit.tempoSequence.getTempo (0)->setBpm (tempoSlider.getValue()); };
 
         quantisationSlider.setRange (1.0, 8.0, 1.0);
         quantisationSlider.onDragEnd = [this] { thumbnail.setQuantisation (static_cast<int> (quantisationSlider.getValue())); };

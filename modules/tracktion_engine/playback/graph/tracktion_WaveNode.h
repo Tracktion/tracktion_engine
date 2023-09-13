@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 #include "tracktion_SpeedRampWaveNode.h"
 
 namespace tracktion { inline namespace engine
@@ -95,7 +97,8 @@ private:
     An Node that plays back a wave file.
 */
 class WaveNodeRealTime final    : public graph::Node,
-                                  public TracktionEngineNode
+                                  public TracktionEngineNode,
+                                  public DynamicallyOffsettableNodeBase
 {
 public:
     /** offset is a time added to the start of the file, e.g. an offset of 10.0
@@ -157,6 +160,12 @@ public:
                       std::optional<tempo::Sequence> chordPitchSequence);
 
     //==============================================================================
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    void setDynamicOffsetBeats (BeatDuration) override;
+
+    //==============================================================================
     graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
@@ -190,6 +199,7 @@ private:
     PitchAdjustReader* pitchAdjustReader = nullptr;
     std::shared_ptr<SpeedFadeEditReader> editReader;
     std::shared_ptr<std::vector<float>> channelState;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats = std::make_shared<BeatDuration>();
 
     std::shared_ptr<tempo::Sequence> fileTempoSequence;
     std::shared_ptr<tempo::Sequence::Position> fileTempoPosition;

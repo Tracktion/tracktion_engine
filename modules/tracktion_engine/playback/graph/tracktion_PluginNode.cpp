@@ -58,6 +58,9 @@ PluginNode::~PluginNode()
 //==============================================================================
 tracktion::graph::NodeProperties PluginNode::getNodeProperties()
 {
+    if (cachedNodeProperties)
+        return *cachedNodeProperties;
+
     auto props = input->getNodeProperties();
 
     // Assume a stereo output here to corretly initialise plugins
@@ -72,6 +75,9 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
     props.latencyNumSamples = props.latencyNumSamples + latencyNumSamples;
     props.nodeID = (size_t) plugin->itemID.getRawID();
 
+    if (isPrepared)
+        cachedNodeProperties = props;
+
     return props;
 }
 
@@ -79,7 +85,8 @@ void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationIn
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
-    
+    jassert (! isPrepared); // Is this being called multiple times?
+
     auto props = getNodeProperties();
 
     if (props.latencyNumSamples > 0)
@@ -103,6 +110,8 @@ void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationIn
             latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, props.numberOfChannels);
         }
     }
+
+    isPrepared = true;
 }
 
 void PluginNode::prefetchBlock (juce::Range<int64_t>)

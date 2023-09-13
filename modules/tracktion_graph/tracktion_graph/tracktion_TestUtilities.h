@@ -99,6 +99,20 @@ namespace test_utilities
                                                        [=] (auto, auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
     }
 
+    static inline auto createSquareBuffer (int numChannels, int numFrames, double phaseIncrement)
+    {
+        return choc::buffer::createChannelArrayBuffer (numChannels, numFrames,
+                                                       [=] (auto, auto frame)
+                                                       {
+                                                           const auto sinValue = std::sin ((float) (frame * phaseIncrement));
+      
+                                                           if (sinValue > 0.0f) return 1.0f;
+                                                           if (sinValue < 0.0f) return -1.0f;
+      
+                                                           return 0.0f;
+                                                       });
+    }
+
     /** Logs a MidiMessageSequence. */
     static inline void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
@@ -140,15 +154,28 @@ namespace test_utilities
     }
 
     /** Writes an audio buffer to a file. */
-    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
+    template<typename AudioFormatType>
+    void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex)
     {
-        if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
-                                                                                                            sampleRate,
-                                                                                                            block.getNumChannels(),
-                                                                                                            16, {}, 0)))
+        AudioFormatType type;
+
+        if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (type.createWriterFor (file.createOutputStream().release(),
+                                                                                          sampleRate,
+                                                                                          block.getNumChannels(),
+                                                                                          16, {}, qualityOptionIndex)))
         {
             writer->writeFromAudioSampleBuffer (toAudioBuffer (block), 0, (int) block.getNumFrames());
         }
+    }
+
+    /** Writes an audio buffer to a file. */
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> writeToTemporaryFile (choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex)
+    {
+        auto f = std::make_unique<juce::TemporaryFile> (AudioFormatType().getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), block, sampleRate, qualityOptionIndex);
+
+        return f;
     }
 
     //==============================================================================
@@ -227,14 +254,55 @@ namespace test_utilities
     //==============================================================================
     template<typename AudioFormatType>
     std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds,
-                                                     int numChannels = 1, float frequency = 220.0f)
+                                                     int numChannels = 1, float frequency = 220.0f,
+                                                     int qualityOptionIndex = -1)
     {
         auto buffer = createSineBuffer (numChannels, (int) (sampleRate * durationInSeconds),
                                         getPhaseIncrement (frequency, sampleRate));
 
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
-        writeToFile (f->getFile(), buffer, sampleRate);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getSquareFile (double sampleRate, double durationInSeconds,
+                                                        int numChannels = 1, float frequency = 220.0f,
+                                                        int qualityOptionIndex = -1)
+    {
+        auto buffer = createSquareBuffer (numChannels, (int) (sampleRate * durationInSeconds),
+                                          getPhaseIncrement (frequency, sampleRate));
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTimeEncodedFile (double sampleRate, TimeDuration duration,
+                                                             TimeDuration stepDuration,
+                                                             int numChannels = 1,
+                                                             int qualityOptionIndex = -1)
+    {
+        const auto stepNumFrames = toSamples (stepDuration, sampleRate);
+        const auto numSteps = duration / stepDuration;
+        const auto valPerStep = static_cast<float> (1.0 / numSteps);
+
+        auto buffer = choc::buffer::createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                              [=] (auto, auto frame)
+                                                              {
+                                                                  const int stepNum = static_cast<int> (frame / stepNumFrames) + 1;
+                                                                  const float f = stepNum * valPerStep;
+
+                                                                  return f;
+                                                              });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
         return f;
     }
 
@@ -329,6 +397,21 @@ namespace test_utilities
                                                 buffer.getNumChannels(),
                                                 (int) sampleRange.getStart(), (int) sampleRange.getLength());
         expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
+    }
+
+    static inline void expectAudioBuffer (juce::UnitTest& ut, const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        ut.expect (a.getNumChannels() == b.getNumChannels());
+        ut.expect (a.getNumSamples() == b.getNumSamples());
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            ut.expect (std::vector<float> (aPtr, aPtr + a.getNumSamples())
+                       == std::vector<float> (bPtr, bPtr + b.getNumSamples()));
+        }
     }
 
     /** Checks that there are no duplicate nodeIDs in a Node. */

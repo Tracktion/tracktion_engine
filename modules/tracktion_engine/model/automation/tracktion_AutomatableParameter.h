@@ -132,6 +132,9 @@ public:
     /** Removes assignments for a ModifierSource. */
     void removeModifier (ModifierSource&);
 
+    /** Returns true if any ModifierSources are currently in use by assignments. */
+    bool hasActiveModifierAssignments() const;
+
     /** Returns all the current ModifierAssignments. */
     juce::ReferenceCountedArray<ModifierAssignment> getAssignments() const;
 

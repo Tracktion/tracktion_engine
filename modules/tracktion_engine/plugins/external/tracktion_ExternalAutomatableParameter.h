@@ -331,6 +331,15 @@ private:
 
     void handleAsyncUpdate() override
     {
+        // Some plugins send spurious parameter value changes (e.g. when their UI is opened)
+        // which can reset modifier base values so disable these from coming through if there
+        // are active modifiers etc.
+        // It would be nice to be able to rely on the begin/end gestures to figure out if the user
+        // is actively changing the parameter but as this isn't mandated by the plguin APIs, we can't
+        // do this and we just have to disable control from the plugin UI when there are active Modifiers
+        if (hasActiveModifierAssignments())
+            return;
+
         valueChangedByPlugin();
     }
 

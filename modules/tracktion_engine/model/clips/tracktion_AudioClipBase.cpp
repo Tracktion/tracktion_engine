@@ -197,11 +197,11 @@ private:
 };
 
 //==============================================================================
-AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, t),
+AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, t),
       loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
-      pluginList (targetTrack.edit),
-      lastProxy (targetTrack.edit.engine)
+      pluginList (edit),
+      lastProxy (edit.engine)
 {
     auto um = getUndoManager();
 
@@ -297,7 +297,8 @@ void AudioClipBase::initialise()
             setCurrentSourceFile (audioFile.getFile());
     }
 
-    callBlocking ([this] { setLoopDefaults(); });
+    if (! edit.getUndoManager().isPerformingUndoRedo())
+        callBlocking ([this] { setLoopDefaults(); });
 }
 
 void AudioClipBase::cloneFrom (Clip* c)
@@ -378,16 +379,16 @@ PatternGenerator* AudioClipBase::getPatternGenerator()
 }
 
 //==============================================================================
-void AudioClipBase::setTrack (ClipTrack* t)
+void AudioClipBase::setParent (ClipOwner* co)
 {
-    Clip::setTrack (t);
+    Clip::setParent (co);
 
-    pluginList.setTrackAndClip (track != nullptr ? getTrack() : nullptr, this);
+    pluginList.setTrackAndClip (nullptr, this);
 }
 
-bool AudioClipBase::canGoOnTrack (Track& t)
+bool AudioClipBase::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainAudio();
+    return canContainAudio (co);
 }
 
 void AudioClipBase::changed()
@@ -535,6 +536,8 @@ bool AudioClipBase::setFadeOut (TimeDuration out)
 
 TimeDuration AudioClipBase::getFadeIn() const
 {
+    asyncFunctionCaller.handleUpdateNowIfNeeded();
+
     if (autoCrossfade && getOverlappingClip (ClipDirection::previous) != nullptr)
         return autoFadeIn;
 
@@ -548,6 +551,8 @@ TimeDuration AudioClipBase::getFadeIn() const
 
 TimeDuration AudioClipBase::getFadeOut() const
 {
+    asyncFunctionCaller.handleUpdateNowIfNeeded();
+
     if (autoCrossfade && getOverlappingClip (ClipDirection::next) != nullptr)
         return autoFadeOut;
 
@@ -601,8 +606,7 @@ void AudioClipBase::reverseLoopPoints()
     AudioFileInfo wi = getWaveInfo();
 
     if (isReversed)
-        if (auto sourceItem = sourceFileReference.getSourceProjectItem())
-            wi = AudioFile (edit.engine, sourceItem->getSourceFile()).getInfo();
+        wi = AudioFile (edit.engine, sourceFileReference.getFile()).getInfo();
 
     if (wi.lengthInSamples == 0)
         return;
@@ -693,16 +697,16 @@ AudioClipBase* AudioClipBase::getOverlappingClip (ClipDirection direction) const
 {
     CRASH_TRACER
 
-    if (auto ct = getClipTrack())
+    if (auto ct = getParent())
     {
-        auto clips = ct->getClips();
+        const auto& clips = ct->getClips();
         auto ourIndex = clips.indexOf (const_cast<AudioClipBase*> (this));
 
         if (direction == ClipDirection::next)
         {
             for (int i = ourIndex + 1; i < clips.size(); ++i)
                 if (auto c = dynamic_cast<AudioClipBase*> (clips[i]))
-                    if (getPosition().time.contains (c->getPosition().getStart() + TimeDuration::fromSeconds (0.001))
+                    if (getPosition().time.contains (c->getPosition().getStart() + 0.001s)
                          && ! getPosition().time.contains (c->getPosition().getEnd()))
                         return c;
         }
@@ -710,7 +714,7 @@ AudioClipBase* AudioClipBase::getOverlappingClip (ClipDirection direction) const
         {
             for (int i = ourIndex; --i >= 0;)
                 if (auto c = dynamic_cast<AudioClipBase*> (clips[i]))
-                    if (getPosition().time.contains (c->getPosition().getEnd() - TimeDuration::fromSeconds (0.001))
+                    if (getPosition().time.contains (c->getPosition().getEnd() - 0.001s)
                          && ! getPosition().time.contains (c->getPosition().getStart()))
                         return c;
         }
@@ -1842,10 +1846,8 @@ void AudioClipBase::setUsesProxy (bool canUseProxy) noexcept
 
 bool AudioClipBase::usesTimeStretchedProxy() const
 {
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     if (! proxyAllowed)
         return false;
-   #endif
 
     return getAutoTempo() || getAutoPitch()
            || getPitchChange() != 0.0f
@@ -2330,8 +2332,9 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
 
             if (id == IDs::mute)
             {
-                if (auto f = track->getParentFolderTrack())
-                    f->setDirtyClips();
+                if (auto track = getTrack())
+                    if (auto f = track->getParentFolderTrack())
+                        f->setDirtyClips();
             }
             else if (id == IDs::autoCrossfade)
             {
@@ -2379,9 +2382,9 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
     }
 }
 
-void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTree& child)
+void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parentState, juce::ValueTree& child)
 {
-    if (parent == state)
+    if (parentState == state)
     {
         if (child.hasType (IDs::PLUGIN))
             Selectable::changed();
@@ -2389,20 +2392,22 @@ void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTre
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator.reset (new PatternGenerator (*this, child));
+        else if (child.hasType (IDs::LOOPINFO) && isInitialised)
+            loopInfo.state = child;
     }
-    else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
+    else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
         changed();
     }
     else
     {
-        Clip::valueTreeChildAdded (parent, child);
+        Clip::valueTreeChildAdded (parentState, child);
     }
 }
 
-void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueTree& child, int oldIndex)
+void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parentState, juce::ValueTree& child, int oldIndex)
 {
-    if (parent == state)
+    if (parentState == state)
     {
         if (child.hasType (IDs::PLUGIN))
             Selectable::changed();
@@ -2410,20 +2415,22 @@ void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueT
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator = nullptr;
+        else if (child.hasType (IDs::LOOPINFO) && isInitialised)
+            copyValueTree (loopInfo.state, LoopInfo (edit.engine).state, nullptr); // Resets to default
     }
-    else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
+    else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
         changed();
     }
     else
     {
-        Clip::valueTreeChildRemoved (parent, child, oldIndex);
+        Clip::valueTreeChildRemoved (parentState, child, oldIndex);
     }
 }
 
-void AudioClipBase::valueTreeChildOrderChanged (juce::ValueTree& parent, int oldIndex, int newIndex)
+void AudioClipBase::valueTreeChildOrderChanged (juce::ValueTree& parentState, int oldIndex, int newIndex)
 {
-    Clip::valueTreeChildOrderChanged (parent, oldIndex, newIndex);
+    Clip::valueTreeChildOrderChanged (parentState, oldIndex, newIndex);
 }
 
 void AudioClipBase::valueTreeParentChanged (juce::ValueTree& child)

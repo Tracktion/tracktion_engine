@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "tracktion_Time.h"
+#include "tracktion_TimeRange.h"
 #include "tracktion_Bezier.h"
 
 namespace tracktion { inline namespace core
@@ -216,19 +217,19 @@ namespace tempo
             void set (TimePosition);
 
             /** Sets the Position to a new number of beats. */
-            void set (BeatPosition);
+            TimePosition set (BeatPosition);
 
             /** Sets the Position to a new number of bars and beats. */
-            void set (BarsAndBeats);
+            TimePosition set (BarsAndBeats);
 
             /** Increments the position by a time duration. */
-            void add (TimeDuration);
+            TimePosition add (TimeDuration);
 
             /** Increments the position by a number of beats. */
-            void add (BeatDuration);
+            TimePosition add (BeatDuration);
 
             /** Increments the position by a number of bars. */
-            void addBars (int bars);
+            TimePosition addBars (int bars);
 
             /** Moves the position to the next change.
                 @returns true if the position was actually changed.
@@ -311,6 +312,13 @@ namespace tempo
 /** Compares two Keys. */
 [[ nodiscard ]] constexpr bool operator!= (tempo::Key k1, tempo::Key k2) { return ! (k1 == k2); }
 
+/** Converts a BeatRange to a TimeRange. */
+[[ nodiscard ]] TimeRange toTime (const tempo::Sequence&, BeatRange);
+
+/** Converts a TimeRange to a BeatRange. */
+[[ nodiscard ]] BeatRange toBeats (const tempo::Sequence&, TimeRange);
+
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -321,6 +329,19 @@ namespace tempo
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+
+inline TimeRange toTime (const tempo::Sequence& seq, BeatRange range)
+{
+    return { seq.toTime (range.getStart()),
+             seq.toTime (range.getEnd()) };
+}
+
+inline BeatRange toBeats (const tempo::Sequence& seq, TimeRange range)
+{
+    return { seq.toBeats (range.getStart()),
+             seq.toBeats (range.getEnd()) };
+}
+
 
 namespace tempo
 {
@@ -792,17 +813,19 @@ inline void Sequence::Position::set (TimePosition t)
     time = t;
 }
 
-inline void Sequence::Position::set (BeatPosition t)
+inline TimePosition Sequence::Position::set (BeatPosition t)
 {
     set (details::toTime (sequence.sections, t));
+    return time;
 }
 
-inline void Sequence::Position::set (BarsAndBeats t)
+inline TimePosition Sequence::Position::set (BarsAndBeats t)
 {
     set (details::toTime (sequence.sections, t));
+    return time;
 }
 
-inline void Sequence::Position::addBars (int bars)
+inline TimePosition Sequence::Position::addBars (int bars)
 {
     if (bars > 0)
     {
@@ -814,6 +837,8 @@ inline void Sequence::Position::addBars (int bars)
         while (++bars <= 0)
             add (BeatDuration::fromBeats (-sequence.sections[index].numerator));
     }
+
+    return time;
 }
 
 inline bool Sequence::Position::next()
@@ -827,7 +852,7 @@ inline bool Sequence::Position::next()
     return true;
 }
 
-inline void Sequence::Position::add (BeatDuration beats)
+inline TimePosition Sequence::Position::add (BeatDuration beats)
 {
     if (beats > BeatDuration())
     {
@@ -838,7 +863,7 @@ inline void Sequence::Position::add (BeatDuration beats)
             auto beatTime = it.secondsPerBeat * beats;
 
             if (index >= maxIndex
-                 || sequence.sections[index + 1].startTime > (time + beatTime))
+                || sequence.sections[index + 1].startTime > (time + beatTime))
             {
                 time = time + beatTime;
                 break;
@@ -858,7 +883,7 @@ inline void Sequence::Position::add (BeatDuration beats)
             const auto beatTime = it.secondsPerBeat * beats;
 
             if (index <= 0
-                 || sequence.sections[index].startTime <= (time + beatTime))
+                || sequence.sections[index].startTime <= (time + beatTime))
             {
                 time = time + beatTime;
                 break;
@@ -869,11 +894,14 @@ inline void Sequence::Position::add (BeatDuration beats)
             --index;
         }
     }
+
+    return time;
 }
 
-inline void Sequence::Position::add (TimeDuration d)
+inline TimePosition Sequence::Position::add (TimeDuration d)
 {
     set (time + d);
+    return time;
 }
 
 //==============================================================================

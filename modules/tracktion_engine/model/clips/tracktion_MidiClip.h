@@ -19,7 +19,7 @@ class MidiClip  : public Clip
 public:
     //==============================================================================
     MidiClip() = delete;
-    MidiClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    MidiClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     ~MidiClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<MidiClip>;
@@ -106,7 +106,7 @@ public:
     void initialise() override;
     bool isMidi() const override                    { return true; }
     void rescale (TimePosition pivotTimeInEdit, double factor) override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
 

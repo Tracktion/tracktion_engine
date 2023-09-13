@@ -355,9 +355,8 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     if (outputSequence.getNumEvents() == 0)
         return false;
 
-    juce::FileOutputStream out (destFile);
-
-    if (out.openedOk())
+    if (juce::FileOutputStream out (destFile);
+        out.openedOk())
     {
         juce::MidiMessageSequence midiTempoSequence;
         auto currentTempoPosition = createPosition (tempoSequence);
@@ -462,6 +461,11 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
     turnOffAllPlugins (edit);
 
     return outputFile.existsAsFile();
+}
+
+bool Renderer::renderToFile (Edit& edit, const juce::File& f, bool useThread)
+{
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, {}, useThread);
 }
 
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)

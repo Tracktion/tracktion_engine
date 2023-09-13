@@ -116,7 +116,7 @@ private:
             auto sel = selectionManager.getSelectedObject (0);
             if (auto clip = dynamic_cast<te::Clip*> (sel))
             {
-                clip->removeFromParentTrack();
+                clip->removeFromParent();
             }
             else if (auto track = dynamic_cast<te::Track*> (sel))
             {
@@ -232,7 +232,7 @@ private:
                 {
                     if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                     {
-                        instance->setTargetTrack (*t, 0, true);
+                        instance->setTargetTrack (*t, 0, true, &edit->getUndoManager());
                         instance->setRecordingEnabled (*t, true);
                     
                         trackNum++;

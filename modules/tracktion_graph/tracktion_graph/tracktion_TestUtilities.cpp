@@ -34,6 +34,13 @@ namespace tracktion { inline namespace graph { namespace test_utilities
 
     std::string createGraphDescription (Node& node)
     {
+        struct NodeInfo
+        {
+            std::string label;
+            size_t memorySizeBytes = 0;
+            bool containsInternalNodes = false;
+        };
+
         struct Visitor
         {
             static std::pair<std::string, std::string> getNodeName (Node& n)
@@ -42,24 +49,31 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                          demangle (typeid (n).name()) };
             }
 
-            static void visitInputs (Node& n, std::vector<std::string>& edges, std::map<std::string, std::string>& map)
+            static void visitInputs (Node& n, std::vector<std::string>& edges, std::map<std::string, NodeInfo>& map)
             {
-                const auto [ destNodeID, destNodeString] = getNodeName (n);
-                map[destNodeID] = destNodeString;
-                
+                const auto [destNodeID, destNodeString] = getNodeName (n);
+                auto& destNodeInfo = map[destNodeID];
+                destNodeInfo.label = destNodeString;
+                destNodeInfo.memorySizeBytes = n.getAllocatedBytes();
+                destNodeInfo.containsInternalNodes = ! n.getInternalNodes().empty();
+
                 for (auto input : n.getDirectInputNodes())
                 {
-                    const auto [ sourceNodeID, sourceNodeString] = getNodeName (*input);
-                    map[sourceNodeID] = sourceNodeString;
+                    const auto [sourceNodeID, sourceNodeString] = getNodeName (*input);
+                    auto& sourceNodeInfo = map[sourceNodeID];
+                    sourceNodeInfo.label = sourceNodeString;
 
-                    edges.push_back (sourceNodeID + "->" + destNodeID);
-                    
+                    const auto edge = sourceNodeID + "->" + destNodeID;
+
+                    if (std::find (edges.begin(), edges.end(), edge) == edges.end())
+                        edges.push_back (edge);
+
                     visitInputs (*input, edges, map);
                 }
             }
         };
         
-        std::map<std::string, std::string> idNameMap;
+        std::map<std::string, NodeInfo> idNameMap;
         std::vector<std::string> edges;
         Visitor::visitInputs (node, edges, idNameMap);
         
@@ -67,9 +81,19 @@ namespace tracktion { inline namespace graph { namespace test_utilities
         std::string output;
         output += "digraph {\n";
         
-        for (auto [id, name] : idNameMap)
-            output += id + "[label=\"" + name + "\"]\n";
-            
+        for (auto [id, info] : idNameMap)
+        {
+            std::string colourString, shapeString;
+
+            if (info.memorySizeBytes > 0)
+                colourString += "color=red ";
+
+            if (info.containsInternalNodes)
+                shapeString += "shape=box";
+
+            output += id + "[label=\"" + info.label + "\" " + colourString + shapeString + "]\n";
+        }
+
         for (auto edge : edges)
             output += edge += "\n";
         

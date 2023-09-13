@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-ArrangerClip::ArrangerClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-   : Clip (v, targetTrack, id, Type::arranger)
+ArrangerClip::ArrangerClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+   : Clip (v, targetParent, id, Type::arranger)
 {
 }
 
@@ -37,9 +37,9 @@ juce::Colour ArrangerClip::getDefaultColour() const
 }
 
 //==============================================================================
-bool ArrangerClip::canGoOnTrack (Track& t)
+bool ArrangerClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isArrangerTrack();
+    return isArrangerTrack (co);
 }
 
 void ArrangerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

@@ -10,6 +10,8 @@
 
 #include "tracktion_LoopingMidiNode.h"
 
+#define USE_PARTITION_INSERTION 1
+
 namespace tracktion { inline namespace engine
 {
 
@@ -17,7 +19,7 @@ namespace combining_node_utils
 {
     // how much extra time to give a track before it gets cut off - to allow for plugins
     // that ring on.
-    static constexpr double decayTimeAllowance = 5.0;
+    static constexpr BeatDuration decayTimeAllowance { 8_bd };
     static constexpr int secondsPerGroup = 8;
 
     static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
@@ -29,17 +31,17 @@ namespace combining_node_utils
 //==============================================================================
 struct CombiningNode::TimedNode
 {
-    TimedNode (std::unique_ptr<Node> sourceNode, TimeRange t)
+    TimedNode (std::unique_ptr<Node> sourceNode, BeatRange t)
         : time (t), node (std::move (sourceNode))
     {
         for (auto n = node.get();;)
         {
             nodesToProcess.insert (nodesToProcess.begin(), n);
             auto inputNodes = n->getDirectInputNodes();
-            
+
             if (inputNodes.empty())
                 break;
-            
+
             // This doesn't work with parallel input Nodes
             assert (inputNodes.size() == 1);
             n = inputNodes.front();
@@ -75,19 +77,18 @@ struct CombiningNode::TimedNode
 
     void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     {
-        if (hasPrefetched)
-            return;
-        
         for (auto n : nodesToProcess)
             n->prepareForNextBlock (referenceSampleRange);
 
+       #if JUCE_DEBUG
         hasPrefetched = true;
+       #endif
     }
 
     void process (ProcessContext& pc)
     {
         jassert (hasPrefetched);
-        
+
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.numSamples, pc.referenceSampleRange);
@@ -102,8 +103,10 @@ struct CombiningNode::TimedNode
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
         
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
-        
+
+       #if JUCE_DEBUG
         hasPrefetched = false;
+       #endif
     }
 
     size_t getAllocatedBytes() const
@@ -116,12 +119,14 @@ struct CombiningNode::TimedNode
         return size;
     }
     
-    TimeRange time;
+    const BeatRange time;
 
 private:
     const std::unique_ptr<Node> node;
     std::vector<Node*> nodesToProcess;
+   #if JUCE_DEBUG
     bool hasPrefetched = false;
+   #endif
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
@@ -131,6 +136,7 @@ CombiningNode::CombiningNode (EditItemID id, ProcessState& ps)
     : TracktionEngineNode (ps),
       itemID (id)
 {
+    jassert (getProcessState().getTempoSequence());
     hash_combine (nodeProperties.nodeID, itemID);
 }
 
@@ -138,31 +144,49 @@ CombiningNode::~CombiningNode() {}
 
 void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
 {
+    jassert (time.getEnd() <= Edit::getMaximumEditEnd());
+    addInput (std::move (input), toBeats (*getProcessState().getTempoSequence(), time));
+}
+
+void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
+{
     assert (input != nullptr);
 
-    if (time.isEmpty())
+    if (beatRange.isEmpty())
         return;
 
     auto props = input->getNodeProperties();
-    
+
     nodeProperties.hasAudio |= props.hasAudio;
     nodeProperties.hasMidi |= props.hasMidi;
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
     hash_combine (nodeProperties.nodeID, props.nodeID);
+    hash_combine (nodeProperties.nodeID, beatRange);
 
+   #if USE_PARTITION_INSERTION
+    const auto lower = std::partition_point (inputs.begin(), inputs.end(),
+                                             [&] (const auto& i)
+                                             {
+                                                return i->time.getStart() < beatRange.getStart();
+                                            });
+    int i = static_cast<int> (std::distance (inputs.begin(), lower));
+   #else
     int i;
     for (i = 0; i < inputs.size(); ++i)
-        if (inputs.getUnchecked (i)->time.getStart() >= time.getStart())
+        if (inputs.getUnchecked (i)->time.getStart() >= beatRange.getStart())
             break;
+   #endif
 
-    auto tan = inputs.insert (i, new TimedNode (std::move (input), time));
-
-    jassert (time.getEnd() <= Edit::getMaximumEditEnd());
+    beatRange = BeatRange (beatRange.getStart(), beatRange.getLength() + combining_node_utils::decayTimeAllowance);
+    auto tan = inputs.insert (i, new TimedNode (std::move (input), beatRange));
 
     // add the node to any groups it's near to.
-    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.getStart() - TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
-    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.getEnd()   + TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
+    const auto& ts = *getProcessState().getTempoSequence();
+    const auto overlapTime = TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2);
+    const auto timeRange = toTime (ts, beatRange).expanded (overlapTime);
+    const auto start = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getStart()));
+    const auto end   = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getEnd()));
 
     while (groups.size() <= end)
         groups.add (new juce::Array<TimedNode*>());
@@ -171,10 +195,19 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     {
         auto g = groups.getUnchecked (i);
 
+       #if USE_PARTITION_INSERTION
+        const auto lowerGroup = std::partition_point (g->begin(), g->end(),
+                                                      [&] (auto in)
+                                                      {
+                                                          return in->time.getStart() < beatRange.getStart();
+                                                      });
+        const int j = static_cast<int> (std::distance (g->begin(), lowerGroup));
+       #else
         int j;
         for (j = 0; j < g->size(); ++j)
-            if (g->getUnchecked (j)->time.getStart() >= time.getStart())
+            if (g->getUnchecked (j)->time.getStart() >= beatRange.getStart())
                 break;
+       #endif
 
         jassert (tan != nullptr);
         g->insert (j, tan);
@@ -242,7 +275,7 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     SCOPED_REALTIME_CHECK
 
     const auto editTime = getEditTimeRange();
-    prefetchGroup (referenceSampleRange, editTime);
+    prefetchGroup (referenceSampleRange, editTime, getEditBeatRange());
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
@@ -262,21 +295,22 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 
 void CombiningNode::process (ProcessContext& pc)
 {
+    const auto editBeats = getEditBeatRange();
+
     SCOPED_REALTIME_CHECK
-    const auto editTime = getEditTimeRange();
     const auto initialEvents = pc.buffers.midi.size();
 
     // Merge any note-offs from clips that have been deleted
     pc.buffers.midi.mergeFromAndClear (noteOffEventsToSend);
 
     // Then process the list
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    if (auto g = groups[combining_node_utils::timeToGroupIndex (getEditTimeRange().getStart())])
     {
         for (auto tan : *g)
         {
-            if (tan->time.getEnd() > editTime.getStart())
+            if (tan->time.getEnd() > editBeats.getStart())
             {
-                if (tan->time.getStart() >= editTime.getEnd())
+                if (tan->time.getStart() >= editBeats.getEnd())
                     break;
 
                 // Clear the allocated storage
@@ -303,15 +337,15 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime, BeatRange editBeats)
 {
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
-            if (tan->time.getEnd() > editTime.getStart())
+            if (tan->time.getEnd() > editBeats.getStart())
             {
-                if (tan->time.getStart() >= editTime.getEnd())
+                if (tan->time.getStart() >= editBeats.getEnd())
                     break;
 
                 tan->prefetchBlock (referenceSampleRange);

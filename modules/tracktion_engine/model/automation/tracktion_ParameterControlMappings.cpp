@@ -427,7 +427,7 @@ juce::PopupMenu ParameterControlMappings::buildMenu (juce::Array<ParameterAndInd
     }
 
     if (masterPluginsSubMenu.getNumItems())
-        m.addSubMenu ("master plugins", masterPluginsSubMenu);
+        m.addSubMenu (TRANS("Master Plugins"), masterPluginsSubMenu);
 
     // Build the menu for the rack parameters
     auto& rackTypes = edit.getRackList();
@@ -462,7 +462,7 @@ juce::PopupMenu ParameterControlMappings::buildMenu (juce::Array<ParameterAndInd
         }
 
         if (racksSubMenu.getNumItems())
-            m.addSubMenu ("rack filters", racksSubMenu);
+            m.addSubMenu (TRANS("Plugin Racks"), racksSubMenu);
     }
 
     // Build the menu for each track

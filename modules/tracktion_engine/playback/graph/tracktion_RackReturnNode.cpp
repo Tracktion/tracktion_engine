@@ -53,11 +53,11 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     return props;
 }
 
-bool RackReturnNode::transform (Node&)
+TransformResult RackReturnNode::transform (Node&, const std::vector<Node*>&, TransformCache&)
 {
     if (hasTransformed)
-        return false;
-    
+        return TransformResult::none;
+
     hasTransformed = true;
     auto wetProps = wetInput->getNodeProperties();
     auto dryProps = dryInput->getNodeProperties();
@@ -69,10 +69,10 @@ bool RackReturnNode::transform (Node&)
         dryLatencyNode = tracktion::graph::makeNode<tracktion::graph::LatencyNode> (dryInput, numLatencySamples);
         dryInput = dryLatencyNode.get();
         
-        return true;
+        return TransformResult::connectionsMade;
     }
 
-    return false;
+    return TransformResult::none;
 }
 
 void RackReturnNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)

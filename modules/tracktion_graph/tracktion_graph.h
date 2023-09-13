@@ -63,12 +63,13 @@
 #include <cassert>
 #include <thread>
 #include <optional>
+#include <any>
 
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDISequence.h>
- #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
+ #include <choc/containers/choc_MultipleReaderMultipleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
@@ -80,6 +81,11 @@
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>
 #include "../tracktion_core/tracktion_core.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 #include "utilities/tracktion_MidiMessageArray.h"
@@ -115,3 +121,7 @@ namespace tracktion_engine = tracktion::engine;
 #include "tracktion_graph/nodes/tracktion_SummingNode.h"
 
 #include "tracktion_graph/players/tracktion_SimpleNodePlayer.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif

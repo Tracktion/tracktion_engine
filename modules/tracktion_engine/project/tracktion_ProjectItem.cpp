@@ -789,14 +789,10 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
         for (auto exp : Exportable::addAllExportables (ed))
         {
-            int i = 0;
-
             for (auto& item : exp->getReferencedItems())
             {
                  if (item.itemID.getProjectID() == oldID)
                      exp->reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);
-
-                ++i;
             }
         }
 

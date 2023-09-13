@@ -629,6 +629,7 @@ namespace IDs
     DECLARE_ID (chorusMix)
     DECLARE_ID (ARRANGERTRACK)
     DECLARE_ID (ARRANGERCLIP)
+    DECLARE_ID (CONTAINERCLIP)
     DECLARE_ID (apply)
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
@@ -641,6 +642,8 @@ namespace IDs
     DECLARE_ID (lowPassMidiNoteNumber)
     DECLARE_ID (proxyAllowed)
     DECLARE_ID (resamplingQuality)
+    DECLARE_ID (CLIPLIST)
+    DECLARE_ID (defaultValue)
 
     #undef DECLARE_ID
 }

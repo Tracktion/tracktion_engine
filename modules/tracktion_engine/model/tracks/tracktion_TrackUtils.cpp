@@ -231,9 +231,9 @@ void TrackList::sortTracksByType (juce::ValueTree& editState, juce::UndoManager*
         {
             if (isMovableTrack (v))     return 6;
             if (isMasterTrack (v))      return 5;
-            if (isChordTrack (v))       return 4;
+            if (isTempoTrack (v))       return 4;
             if (isMarkerTrack (v))      return 3;
-            if (isTempoTrack (v))       return 2;
+            if (isChordTrack (v))       return 2;
             if (isArrangerTrack (v))    return 1;
             return 0;
         }

@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_WAVENODE
 
 using namespace tracktion::graph;
 
@@ -27,8 +27,8 @@ public:
     
     void runTest() override
     {
-        using namespace tracktion::graph;
-        test_utilities::TestSetup ts;
+        using namespace tracktion::graph::test_utilities;
+        TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
         const double fileDuration = 20.0;
@@ -39,6 +39,7 @@ public:
         opts.testSetup = ts;
         opts.poolType = ThreadPoolStrategy::lightweightSemaphore;
         opts.isMultiThreaded = MultiThreaded::no;
+        opts.isLockFree = LockFree::yes;
         opts.poolMemoryAllocations = PoolMemoryAllocations::no;
 
         bool singleFile = true;
@@ -56,7 +57,7 @@ public:
         {
             opts.isMultiThreaded = MultiThreaded::yes;
 
-            for (auto strategy : test_utilities::getThreadPoolStrategies())
+            for (auto strategy : graph::test_utilities::getThreadPoolStrategies())
             {
                 opts.poolType = strategy;
 
@@ -98,7 +99,7 @@ private:
         // Create 12 5s files per track
         // Render the whole thing
         using namespace tracktion::graph;
-        using namespace test_utilities;
+        using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = benchmark_utilities::getDescription (opts)
                                     + juce::String (useSingleFile ? ", single file" : ", multiple files");
@@ -164,6 +165,9 @@ private:
 
 static WaveNodeBenchmarks waveNodeBenchmarks;
 
+#endif
+
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_RESAMPLING
 
 //==============================================================================
 //==============================================================================
@@ -194,10 +198,11 @@ private:
 
         beginTest (qualityName);
 
-        using namespace test_utilities;
+        using namespace graph::test_utilities;
 
         auto& engine = *Engine::getEngines()[0];
         auto edit = Edit::createSingleTrackEdit (engine);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
         edit->ensureNumberOfAudioTracks (1);
         auto t = getAudioTracks (*edit)[0];
 

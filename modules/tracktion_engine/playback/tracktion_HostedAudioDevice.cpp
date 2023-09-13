@@ -388,9 +388,9 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
     auto newMaxChannels = std::max (parameters.inputChannels,
                                     parameters.outputChannels);
 
-    if (parameters.sampleRate != sampleRate ||
-        parameters.blockSize != blockSize   ||
-        maxChannels != newMaxChannels)
+    if (parameters.sampleRate != sampleRate
+        || parameters.blockSize != blockSize
+        || maxChannels != newMaxChannels)
     {
         maxChannels = newMaxChannels;
         parameters.sampleRate = sampleRate;

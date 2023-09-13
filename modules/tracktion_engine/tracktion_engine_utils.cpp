@@ -37,8 +37,6 @@
 //==============================================================================
 #include "tracktion_engine.h"
 
-#include "../tracktion_core/tracktion_TestConfig.h"
-
 //==============================================================================
 #if JUCE_MAC && TRACKTION_ENABLE_REX
 extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
@@ -53,6 +51,11 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
     return FSPathMakeRef ((const UInt8*) f.getFullPathName().toRawUTF8(), fsRef, 0) == noErr;
    #pragma clang diagnostic pop
 }
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
 
 //==============================================================================
@@ -74,5 +77,9 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #include "utilities/tracktion_TemporaryFileManager.cpp"
 #include "utilities/tracktion_Engine.cpp"
 #include "utilities/tracktion_BinaryData.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

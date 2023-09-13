@@ -670,6 +670,15 @@ public:
 
     bool handleIncomingMidiMessage (const juce::MidiMessage& message)
     {
+        {
+            juce::ScopedLock sl (activeNotesLock);
+
+            if (message.isNoteOn())
+                activeNotes.startNote (message.getChannel(), message.getNoteNumber());
+            else if (message.isNoteOff())
+                activeNotes.clearNote (message.getChannel(), message.getNoteNumber());
+        }
+
         if (recording)
             recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds()));
 
@@ -1093,14 +1102,43 @@ public:
     juce::MidiMessageSequence recorded;
 
 private:
-    juce::CriticalSection consumerLock;
+    juce::CriticalSection consumerLock, activeNotesLock;
     juce::Array<Consumer*> consumers;
     double lastEditTime = -1.0;
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    ActiveNoteList activeNotes;
 
     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
+
+    void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int index) override
+    {
+        if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
+            injectNoteOffsToTrack();
+
+        InputDeviceInstance::valueTreeChildRemoved (p, c, index);
+    }
+
+    void injectNoteOffsToTrack()
+    {
+        ActiveNoteList notes;
+
+        // The lock isn't great here but it's mostly uncontended and when it is, it's between the MIDI and message threads
+        // The lock time is also constant so low-risk
+        {
+            const juce::ScopedLock sl (activeNotesLock);
+            notes = activeNotes;
+        }
+
+        for (auto t : getTargetTracks())
+        {
+            notes.iterate ([&] (auto channel, auto noteNumber)
+                           {
+                               t->injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, noteNumber), midiSourceID);
+                           });
+        }
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };

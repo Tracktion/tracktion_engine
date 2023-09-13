@@ -76,6 +76,12 @@ public:
     */
     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }
 
+    /** Whether or not to include muted track contents in aux send plugins.
+        Returning true here enables you to still listen to return busses when send tracks are
+        muted or other tracks are soloed.
+    */
+    virtual bool shouldProcessAuxSendWhenTrackIsMuted (AuxSendPlugin&)            { return true; }
+
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 

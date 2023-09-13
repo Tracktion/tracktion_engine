@@ -1058,6 +1058,8 @@ bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, TimeRange t
     return true;
 }
 
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPBOARD
+
 //==============================================================================
 //==============================================================================
 class ClipboardTempoTests   : public juce::UnitTest
@@ -1217,6 +1219,7 @@ private:
 
 static ClipboardTempoTests clipboardTempoTests;
 
+#endif
 
 //==============================================================================
 //==============================================================================

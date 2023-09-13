@@ -17,7 +17,7 @@ juce::Array<Exportable*> Exportable::addAllExportables (Edit& edit)
 
     for (auto t : getAudioTracks (edit))
     {
-        for (auto& c : t->getClips())
+        for (auto& c : getClipsOfTypeRecursive<Clip> (*t))
         {
             list.add (c);
 

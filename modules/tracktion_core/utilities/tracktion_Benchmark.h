@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 #include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
 namespace tracktion { inline namespace engine
@@ -175,5 +177,27 @@ private:
     Benchmark benchmark;
 };
 
+//==============================================================================
+/**
+    Helper class for starting/stopping a benchmark measurement.
+*/
+struct ScopedMeasurement
+{
+    /** Constructs and starts a Benchmark. */
+    ScopedMeasurement (Benchmark& bm)
+        : benchmark (bm)
+    {
+        benchmark.start();
+    }
+
+    /** Stops the Benchmark. */
+    ~ScopedMeasurement()
+    {
+        benchmark.stop();
+    }
+
+private:
+    Benchmark& benchmark;
+};
 
 }} // namespace tracktion { inline namespace engine

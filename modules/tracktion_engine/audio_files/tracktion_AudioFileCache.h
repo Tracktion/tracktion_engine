@@ -11,6 +11,19 @@
 namespace tracktion { inline namespace engine
 {
 
+struct FallbackReader  : public juce::AudioFormatReader
+{
+    /** Constructor. */
+    FallbackReader();
+
+    /** Subclassed must override this to set the timeout.
+        A value of less than 0 means wait forever,
+        A value of 0 means don't wait
+        A value greater than 0 means wait for the given number of ms
+    */
+    virtual void setReadTimeout (int timeoutMilliseconds) = 0;
+};
+
 //==============================================================================
 /**
 */
@@ -60,14 +73,24 @@ public:
         AudioFileCache& cache;
         void* file;
         std::atomic<SampleCount> readPos { 0 }, loopStart { 0 }, loopLength { 0 };
-        std::unique_ptr<juce::BufferingAudioReader> fallbackReader;
+        std::unique_ptr<FallbackReader> fallbackReader;
 
-        Reader (AudioFileCache&, void*, juce::BufferingAudioReader* fallback);
+        Reader (AudioFileCache&, void*, std::unique_ptr<FallbackReader>);
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Reader)
     };
 
+    /** Creates a Reader to read an AudioFile.
+        This will use a memoery mapped reader for uncompressed formats.
+    */
     Reader::Ptr createReader (const AudioFile&);
+
+    /** @internal */
+    Reader::Ptr createReader (const AudioFile&,
+                              const std::function<std::unique_ptr<FallbackReader> (juce::AudioFormatReader* sourceReader,
+                                                                                   juce::TimeSliceThread& timeSliceThread,
+                                                                                   int samplesToBuffer)>&
+                              createFallbackReader);
 
     //==============================================================================
     void setCacheSizeSamples (SampleCount samplesPerFile);

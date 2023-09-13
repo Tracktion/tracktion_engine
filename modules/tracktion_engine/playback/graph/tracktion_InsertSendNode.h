@@ -31,7 +31,7 @@ public:
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    bool transform (Node&) override;
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;

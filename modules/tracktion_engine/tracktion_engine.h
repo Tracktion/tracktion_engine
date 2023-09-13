@@ -178,24 +178,6 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH 0
 #endif
 
-/** Config: TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
-    Enables real-time time-stretching without having to generate proxy files.
-    N.B. This is experimental and not ready for production yet.
-*/
-#ifndef TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
- #define TRACKTION_ENABLE_REALTIME_TIMESTRETCHING 1
-#endif
-
-/** Config: TRACKTION_BUILD_LIBSAMPLERATE
-    Enables building of the libsamplerate sources.
-    For simplicity these are included but if you are using these elsewhere in your
-    code you can disable building them. If you disable building them, you should
-    link them yourself and include samplerate.h in the header search paths.
-*/
-#ifndef TRACKTION_BUILD_LIBSAMPLERATE
- #define TRACKTION_BUILD_LIBSAMPLERATE 1
-#endif
-
 /** Config: TRACKTION_ENABLE_ABLETON_LINK
     Enables Ableton Link support.
     You must have Link in your search path if you enable this.
@@ -281,6 +263,7 @@ namespace tracktion { inline namespace engine
     class Edit;
     class Track;
     class Clip;
+    class ClipOwner;
     class Plugin;
     struct AudioRenderContext;
     struct PluginRenderContext;
@@ -317,6 +300,7 @@ namespace tracktion { inline namespace engine
     struct ARADocumentHolder;
     class ClipEffects;
     class WaveAudioClip;
+    class ContainerClip;
     class CollectionClip;
     class MidiClip;
     class EditClip;
@@ -387,8 +371,13 @@ namespace tracktion { inline namespace engine
     class Clipboard;
     class PropertyStorage;
     class TrackOutput;
+    class BufferedFileReader;
 }} // namespace tracktion { inline namespace engine
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
@@ -537,6 +526,7 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_OutputDevice.h"
 
 #include "model/tracks/tracktion_TrackOutput.h"
+#include "model/clips/tracktion_ClipOwner.h"
 #include "model/tracks/tracktion_ClipTrack.h"
 #include "model/tracks/tracktion_AudioTrack.h"
 
@@ -557,6 +547,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_ChordClip.h"
 #include "model/clips/tracktion_ClipEffects.h"
 #include "model/clips/tracktion_CollectionClip.h"
+#include "model/clips/tracktion_ContainerClip.h"
 #include "model/clips/tracktion_MarkerClip.h"
 #include "model/clips/tracktion_MidiClip.h"
 #include "model/clips/tracktion_ReverseRenderJob.h"
@@ -650,5 +641,9 @@ namespace tracktion { inline namespace engine
 #endif
 
 #include "model/automation/tracktion_MidiLearn.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

@@ -42,6 +42,7 @@
  #pragma clang diagnostic ignored "-Wextra-semi"
  #pragma clang diagnostic ignored "-Wextra-semi"
  #pragma clang diagnostic ignored "-Wmissing-prototypes"
+ #pragma clang diagnostic ignored "-Wfloat-equal"
 #endif
 
 #ifdef __GNUC__
@@ -56,12 +57,15 @@
  #pragma GCC diagnostic ignored "-Wunused-parameter"
  #pragma GCC diagnostic ignored "-Wpedantic"
  #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
 
 #ifdef JUCE_MSVC
  #pragma warning (push)
  #pragma warning (disable: 4005 4189 4189 4267 4702 4458 4100)
 #endif
+
+#include <tracktion_core/tracktion_TestConfig.h>
 
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"

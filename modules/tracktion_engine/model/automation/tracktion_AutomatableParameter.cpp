@@ -747,6 +747,12 @@ void AutomatableParameter::removeModifier (ModifierSource& source)
         jassertfalse;
 }
 
+bool AutomatableParameter::hasActiveModifierAssignments() const
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    return getAutomationSourceList().isActive();
+}
+
 juce::ReferenceCountedArray<AutomatableParameter::ModifierAssignment> AutomatableParameter::getAssignments() const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
