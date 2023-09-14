@@ -56,7 +56,7 @@ public:
 
     struct Listener
     {
-        virtual ~Listener() {};
+        virtual ~Listener() {}
         virtual void slotUpdated (int, int) {}
     };
 
