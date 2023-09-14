@@ -44,6 +44,42 @@ private:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 };
 
+//==============================================================================
+//==============================================================================
+/**
+    Notifies UI components of changes to the scenes and clips
+*/
+class SceneWatcher : public juce::Timer
+{
+public:
+    SceneWatcher (Edit&);
+
+    struct Listener
+    {
+        virtual ~Listener() {};
+        virtual void slotUpdated (int, int) {}
+    };
+
+    void addListener (Listener* l);
+    void removeListener (Listener* l);
+
+private:
+    void timerCallback() override;
+
+    Edit& edit;
+    uint32_t callback = 0;
+
+    struct Value
+    {
+        uint32_t lastSeen = 0;
+        LaunchHandle::PlayState playState;
+        std::optional<LaunchHandle::QueueState> queueState;
+    };
+
+    std::map<std::pair<int, int>, Value> lastStates;
+
+    juce::ListenerList<Listener> listeners;
+};
 
 //==============================================================================
 //==============================================================================
@@ -76,6 +112,8 @@ public:
 
     juce::ValueTree state;  /**< The state of this SceneList. */
     Edit& edit;             /**< The Edit this SceneList belongs to. */
+
+    SceneWatcher sceneWatcher { edit };
 
 private:
     //==============================================================================

@@ -42,6 +42,78 @@ void Scene::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
         changed();
 }
 
+//==============================================================================
+SceneWatcher::SceneWatcher (Edit& e)
+    : edit (e)
+{
+    startTimerHz (30);
+}
+
+void SceneWatcher::timerCallback()
+{
+    auto trackIdx = 0;
+    for (auto at : getAudioTracks (edit))
+    {
+        auto slotIdx = 0;
+        for (auto slot : at->getClipSlotList().getClipSlots())
+        {
+            if (auto c = slot->getClip())
+            {
+                if (auto lh = c->getLaunchHandle())
+                {
+                    auto p = lh->getPlayingStatus();
+                    auto q = lh->getQueuedStatus();
+
+                    auto key = std::pair<int,int> (trackIdx, slotIdx);
+                    auto itr = lastStates.find (key);
+                    if (itr == lastStates.end())
+                    {
+                        lastStates[key] = { callback, p, q };
+                        listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
+                    }
+                    else if (itr->second.playState != p || itr->second.queueState != q)
+                    {
+                        itr->second.lastSeen    = callback;
+                        itr->second.playState   = p;
+                        itr->second.queueState  = q;
+                        listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
+                    }
+                    else
+                    {
+                        itr->second.lastSeen    = callback;
+                    }
+                }
+            }
+            slotIdx++;
+        }
+        trackIdx++;
+    }
+
+    for (auto itr = lastStates.cbegin(); itr != lastStates.cend();)
+    {
+        if (itr->second.lastSeen != callback)
+        {
+            listeners.call ([itr] (Listener& l) { l.slotUpdated (itr->first.first, itr->first.second); });
+            lastStates.erase (itr++);
+        }
+        else
+        {
+            itr++;
+        }
+    }
+
+    callback++;
+}
+
+void SceneWatcher::addListener (Listener* l)
+{
+    listeners.add (l);
+}
+
+void SceneWatcher::removeListener (Listener* l)
+{
+    listeners.remove (l);
+}
 
 //==============================================================================
 SceneList::SceneList (const juce::ValueTree& v, Edit& e)

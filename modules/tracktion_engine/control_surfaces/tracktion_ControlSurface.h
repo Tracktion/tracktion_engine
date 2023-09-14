@@ -116,7 +116,12 @@ public:
     virtual void faderBankChanged ([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray& trackNames) {}
 
     // tells the device that a pad has changed colour
-    virtual void padStateChanged ([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] bool blinking) {}
+    // colour 0: off
+    // colour 1 - 18: hue = (colour - 1) / 18
+    // state 0: solid
+    // state 1: blink
+    // state 2: pulse
+    virtual void padStateChanged ([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] int state) {}
 
     // if the device has per-channel level meters, this should update one of them.
     // the channel number is the physical channel on the device, regardless of bank selection

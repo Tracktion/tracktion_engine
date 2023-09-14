@@ -479,6 +479,7 @@ namespace tracktion { inline namespace engine
 #include "plugins/internal/tracktion_AuxSend.h"
 #include "plugins/effects/tracktion_Equaliser.h"
 
+#include "model/clips/tracktion_LaunchHandle.h"
 #include "model/edit/tracktion_EditSnapshot.h"
 #include "model/edit/tracktion_EditInsertPoint.h"
 #include "model/tracks/tracktion_TrackItem.h"
@@ -557,7 +558,6 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_CollectionClip.h"
 #include "model/clips/tracktion_ContainerClip.h"
 #include "model/clips/tracktion_LauncherClipPlaybackHandle.h"
-#include "model/clips/tracktion_LaunchHandle.h"
 #include "model/clips/tracktion_MarkerClip.h"
 #include "model/clips/tracktion_MidiClip.h"
 #include "model/clips/tracktion_ReverseRenderJob.h"

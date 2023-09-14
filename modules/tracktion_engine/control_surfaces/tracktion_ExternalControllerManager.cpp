@@ -13,17 +13,25 @@ namespace tracktion { inline namespace engine
 
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private juce::Timer,
-                                                      private juce::AsyncUpdater
+                                                      private juce::AsyncUpdater,
+                                                      private SceneWatcher::Listener 
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
         edit.state.addListener (this);
+        edit.getSceneList().sceneWatcher.addListener (this);
         startTimer (40);
     }
 
     ~EditTreeWatcher() override
     {
         edit.state.removeListener (this);
+        edit.getSceneList().sceneWatcher.removeListener (this);
+    }
+
+    void slotUpdated (int, int) override
+    {
+        updatePads.set (true);
     }
 
 private:

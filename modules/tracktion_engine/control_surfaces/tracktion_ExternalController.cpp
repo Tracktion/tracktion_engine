@@ -940,7 +940,7 @@ void ExternalController::updatePadColours()
             for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
             {
                 auto colourIdx = 0;
-                auto blink = false;
+                auto state = 0;
                 
                 if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
                 {
@@ -959,14 +959,20 @@ void ExternalController::updatePadColours()
                             }
 
                             if (auto tc = getTransport(); tc->isPlaying())
+                            {
                                 if (auto lh = c->getLaunchHandle())
-                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
-                                        blink = true;
+                                {
+                                    if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                        state = 1;
+                                    else if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                                        state = 2;
+                                }
+                            }
                         }
                     }
                 }
 
-                cs.padStateChanged (track, scene, colourIdx, blink);
+                cs.padStateChanged (track, scene, colourIdx, state);
             }
         }
     }
