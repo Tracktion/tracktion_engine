@@ -41,6 +41,12 @@ public:
     /** Callback that can be set allow surfaces to show the scroll status of an Edit. */
     std::function<bool (Edit&)> isScrollingEnabled;
 
+	/** Launch clip by track and index */
+	std::function<void (Edit&, AudioTrack&, int)> launchClip;
+
+	/** Launch scene by index */
+	std::function<void (Edit&, int)> launchScene;
+
     //==============================================================================
     void setCurrentEdit (Edit*, SelectionManager*);
     void detachFromEdit (Edit*);

@@ -113,53 +113,6 @@ private:
 };
 
 //==============================================================================
-static BeatDuration getLaunchOffset (const LaunchQuantisation& lq, const BeatPosition pos,
-                                     std::optional<tracktion::BeatRange> loopRange)
-{
-    // Quantise position first
-    auto quantisedPos = lq.getNext (pos);
-
-    if (! loopRange || quantisedPos < loopRange->getEnd())
-        return quantisedPos - pos;
-
-    // If it's after the loop range, quantise the start loop position
-    quantisedPos = lq.getNext (loopRange->getStart());
-
-    // If it still doesn't contain the position, just use the loop start pos
-    if (! loopRange->contains (quantisedPos))
-        quantisedPos = loopRange->getStart();
-
-    // Find the duration from the given position to the loop end + the quantised position from the loop start
-    if (loopRange->contains (pos))
-        return (loopRange->getEnd() - pos) + (quantisedPos - loopRange->getStart());
-
-    return quantisedPos - pos;
-}
-
-static MonotonicBeat getLaunchPosition (Edit& e)
-{
-    auto epc = e.getTransport().getCurrentPlaybackContext();
-
-    if (! epc)
-        return {};
-
-    auto syncPoint = epc->getSyncPoint();
-
-    if (! syncPoint)
-        return {};
-
-    auto& t = e.getTransport();
-    auto& ts = e.tempoSequence;
-    auto currentBeat = syncPoint->beat;
-    const auto offset = getLaunchOffset (e.getLaunchQuantisation(),
-                                         currentBeat,
-                                         t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
-                                                         : std::nullopt);
-
-    return { syncPoint->monotonicBeat.v + offset };
-}
-
-//==============================================================================
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
     blinkTimer.reset (new BlinkTimer (*this));
@@ -781,57 +734,17 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
             aux->setMute (! aux->isMute());
 }
 
-std::shared_ptr<LaunchHandle> ExternalControllerManager::getLaunchHandle (int channelNum, int sceneNum)
-{
-    if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
-        if (auto s = t->getClipSlotList().getClipSlots()[sceneNum])
-            if (auto c = s->getClip())
-                return c->getLaunchHandle();
-
-    return nullptr;
-}
-
 void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum)
 {
-    if (auto lh = getLaunchHandle (channelNum, sceneNum))
-    {
-        lh->play (getLaunchPosition (*currentEdit));
-
-        if (! currentEdit->getTransport().isPlaying())
-            currentEdit->getTransport().play (false);
-    }
+	if (launchClip && currentEdit)
+		if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
+			launchClip (*currentEdit, *t, sceneNum);
 }
 
 void ExternalControllerManager::userLaunchedScene (int sceneNum)
 {
-    for (auto at : getAudioTracks (*currentEdit))
-    {
-        auto slots = at->getClipSlotList().getClipSlots();
-
-        for (int i = 0; i < slots.size(); ++i)
-        {
-            if (auto slot = slots[i])
-            {
-                if (auto c = slot->getClip())
-                {
-                    if (auto lh = c->getLaunchHandle())
-                    {
-                        if (i == sceneNum)
-                        {
-                            lh->play (getLaunchPosition (*currentEdit));
-
-                            if (! currentEdit->getTransport().isPlaying())
-                                currentEdit->getTransport().play (false);
-                        }
-                        else
-                        {
-                            lh->stop (getLaunchPosition (c->edit));
-                        }
-                    }
-                }
-            }
-        }
-    }
+	if (launchScene && currentEdit)
+		launchScene (*currentEdit, sceneNum);
 }
 
 void ExternalControllerManager::userMovedQuickParam (float newLevel)
