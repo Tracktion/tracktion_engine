@@ -183,6 +183,8 @@ public:
 
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+    void valueTreeParentChanged (juce::ValueTree& v) override;
+
     bool isTrackAudible (bool areAnyTracksSolo) const override;
 
     void timerCallback() override   { turnOffGuideNotes(); }

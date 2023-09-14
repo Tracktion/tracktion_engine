@@ -129,6 +129,19 @@ void ClipSlotList::ensureNumberOfSlots (int numSlots)
     assert (objects.size() >= numSlots);
 }
 
+void ClipSlotList::setNumberOfSlots (int numSlots)
+{
+    if (numSlots > size())
+    {
+        ensureNumberOfSlots (numSlots);
+    }
+    else if (size() > numSlots)
+    {
+        while (size() > numSlots)
+            deleteSlot (*getClipSlots().getLast());
+    }
+}
+
 void ClipSlotList::deleteSlot (ClipSlot& cs)
 {
     assert (&cs.track == &track);

@@ -716,6 +716,12 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
     ClipTrack::valueTreePropertyChanged (v, i);
 }
 
+void AudioTrack::valueTreeParentChanged (juce::ValueTree& v)
+{
+    ClipTrack::valueTreeParentChanged (v);
+
+    getClipSlotList().setNumberOfSlots (edit.getSceneList().getNumScenes());
+}
 
 //==============================================================================
 bool AudioTrack::hasAnyLiveInputs()

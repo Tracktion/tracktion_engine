@@ -76,6 +76,9 @@ public:
     /** Adds Slots to ensure at least numSlots exist. */
     void ensureNumberOfSlots (int numSlots);
 
+    /** Adds or removes Slots to ensure the exact number of slots exist. */
+    void setNumberOfSlots (int numSlots);
+
     juce::ValueTree state;  /**< The state of this ClipSlotList. */
     Track& track;           /**< The Track this ClipSlotList belongs to. */
 

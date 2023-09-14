@@ -58,6 +58,9 @@ public:
     /** Destructor. */
     ~SceneList() override;
 
+    /** Returns the number of Scenes in the Edit. */
+    int getNumScenes() { return size(); }
+
     /** Returns the Scenes in the Edit. */
     juce::Array<Scene*> getScenes();
 
