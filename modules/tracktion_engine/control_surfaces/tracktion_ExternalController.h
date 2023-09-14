@@ -209,6 +209,7 @@ private:
     int getParamBankOffset() const    { return startParamNumber;  }
 
     void changeFaderBank (int delta, bool moveSelection);
+    void changePadBank (int delta);
     void changeParamBank (int delta);
     void updateParamList();
     void changeMarkerBank (int delta);

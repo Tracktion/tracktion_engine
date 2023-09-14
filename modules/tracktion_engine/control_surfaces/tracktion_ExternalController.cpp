@@ -597,6 +597,15 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
     }
 }
 
+void ExternalController::changePadBank (int delta)
+{
+    if (controlSurface != nullptr)
+    {
+        padStart = std::max (0, padStart + delta);
+        updatePadColours();
+    }
+}
+
 void ExternalController::changeParamBank (int delta)
 {
     if (controlSurface != nullptr)

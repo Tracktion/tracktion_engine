@@ -324,6 +324,11 @@ public:
     // device what its new state is.
     void userChangedFaderBanks (int channelNumDelta);
 
+    // tells tracktion to move the pad bank up or down by the specified number of channels.
+    // After calling this, tracktion will call back the onPadStateChanged() method for each pad
+    // to tell the device what its new state is.
+    void userChangedPadBanks (int padDelta);
+
     // tells tracktion to move the cursor.
     //
     // amount < 0 means moving backwards, amount > 0 forwards

@@ -309,6 +309,12 @@ void ControlSurface::userChangedFaderBanks (int channelNumDelta)
     owner->changeFaderBank (channelNumDelta, followsTrackSelection);
 }
 
+void ControlSurface::userChangedPadBanks (int padDelta)
+{
+    RETURN_IF_SAFE_RECORDING
+    owner->changePadBank (padDelta);
+}
+
 void ControlSurface::userChangedAuxBank (int delta)
 {
     RETURN_IF_SAFE_RECORDING
