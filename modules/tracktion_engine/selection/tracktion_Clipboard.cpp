@@ -400,6 +400,10 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                         sourceItem->verifyLength();
                         jassert (sourceItem->getLength() > 0);
 
+                        if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner->getClipOwnerSelectable()))
+                            if (auto existingClip = clipSlot->getClip())
+                                existingClip->removeFromParent();
+
                         if (auto newClip = insertWaveClip (*clipOwner,
                                                            sourceItem->getName(), sourceItem->getID(),
                                                            { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },

@@ -338,6 +338,10 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
     if (clipOwner.getClips().size() < engineBehaviour.getEditLimits().maxClipsInTrack)
     {
+        if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            if (auto existingClip = clipSlot->getClip())
+                existingClip->removeFromParent();
+
         clipOwner.getClipOwnerState().addChild (clipState, -1, &edit.getUndoManager());
 
         if (auto newClip = findClipForState (clipOwner, clipState))

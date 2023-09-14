@@ -79,6 +79,7 @@ void ClipSlot::clipCreated (Clip&)
 
 void ClipSlot::clipAddedOrRemoved()
 {
+    jassert (getClips().size() <= 1);
 }
 
 void ClipSlot::clipOrderChanged()
