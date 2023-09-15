@@ -890,8 +890,8 @@ void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int&
     }
         
     // all channels will always have the same number of samples for a thumbnail
-    startTime = (float)startThumbSampleIndex * samplesPerThumbSample / sampleRate;
-    endTime = (float)channels[0]->getSize() * samplesPerThumbSample / sampleRate;
+    startTime = (float)startThumbSampleIndex * samplesPerThumbSample / (float)sampleRate;
+    endTime = (float)channels[0]->getSize() * samplesPerThumbSample / (float)sampleRate;
     //numberOfThumbSamplesPerChannelToRead is a state variable for getThumbnailAverageValues that will be called later on
     numberOfThumbSamplesPerChannelToRead = numChannels > 0 ? getNumberOfThumbSamples(0) : 0;
     sizeInBytes = getNumberOfTotalThumbSamples();
@@ -920,7 +920,8 @@ bool TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
     const juce::ScopedLock sl(lock);
 
     //The length that unity assigns should match the current thumbnail state
-    if (length != numChannels * numberOfThumbSamplesPerChannelToRead)
+    uint32_t curLength = numChannels * numberOfThumbSamplesPerChannelToRead;
+    if (length != curLength)
         return false;
 
     //channel interleaved implementation

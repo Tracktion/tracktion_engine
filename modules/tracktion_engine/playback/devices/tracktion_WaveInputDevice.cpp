@@ -335,7 +335,7 @@ public:
             // BEATCONNECT MODIFICATION START
             auto format = getFormatToUse();
             juce::File recordedFile = edit.recordFileRetriever();
-            auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile, punchIn.inSeconds(), getTargetTracks());
+            auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile);
             // BEATCONNECT MODIFICATION END
 
             rc->sampleRate = sr;
@@ -500,11 +500,7 @@ public:
     struct RecordingContext
     {
         // BEATCONNECT MODIFICATION START
-        RecordingContext (
-            Engine& p_Engine,
-            const juce::File& p_File, 
-            const double punchIn, 
-            const juce::Array<AudioTrack*>&& p_TrackList)
+        RecordingContext (Engine& p_Engine, const juce::File& p_File)
             : engine (p_Engine)
             , file (p_File)
             , diskSpaceChecker (p_Engine, p_File)

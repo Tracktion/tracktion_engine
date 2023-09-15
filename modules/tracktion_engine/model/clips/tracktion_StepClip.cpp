@@ -409,7 +409,7 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         
                         // BEATCONNECT MODIFICATION START
                         if (cache->getKeyNoteOffset(i) != 0) {
-                            float pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), DrumMachinePlugin::pitchWheelSemitoneRange);
+                            int pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), DrumMachinePlugin::pitchWheelSemitoneRange);
                             result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
                         }
                         // BEATCONNECT MODIFICATION END

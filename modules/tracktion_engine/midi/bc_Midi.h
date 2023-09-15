@@ -18,7 +18,7 @@ namespace tracktion {
 
 			struct midiNoteValue
 			{
-				const unsigned int midiNote;
+				const int midiNote;
 				const double freqHz;
 				const juce::String noteName;
 			};
@@ -204,7 +204,7 @@ namespace tracktion {
 				static double getNoteFrequency(int p_midiNote)
 				{
 					for (auto element : midiNoteValues)
-						if (element.midiNote == (int)p_midiNote)
+						if (element.midiNote == p_midiNote)
 							return element.freqHz;
 					return -1;
 				}
