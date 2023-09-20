@@ -39,6 +39,16 @@ juce::StringArray getLaunchQTypeChoices()
              NEEDS_TRANS("1/64 D") };
 }
 
+std::optional<LaunchQType> launchQTypeFromName (const juce::String& name)
+{
+    auto index = getLaunchQTypeChoices().indexOf (name);
+
+    if (juce::isPositiveAndNotGreaterThan (index, static_cast<int> (LaunchQType::sixtyFourthD)))
+        return static_cast<LaunchQType> (index);
+
+    return {};
+}
+
 juce::String getName (LaunchQType t)
 {
     assert (t >= LaunchQType::none || t <= LaunchQType::sixtyFourthD);

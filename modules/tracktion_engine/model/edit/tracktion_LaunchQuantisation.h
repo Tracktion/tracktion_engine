@@ -44,6 +44,9 @@ enum class LaunchQType
 /** Returns a list of quantisation type options in the order of LaunchQType. */
 juce::StringArray getLaunchQTypeChoices();
 
+/** Returns a the launch Q from a string returned from getLaunchQTypeChoices(). */
+std::optional<LaunchQType> launchQTypeFromName (const juce::String&);
+
 /** Retuns the name of a LaunchQType for display purposes. */
 juce::String getName (LaunchQType);
 
