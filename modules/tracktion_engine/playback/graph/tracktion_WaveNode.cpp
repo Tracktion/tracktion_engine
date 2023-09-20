@@ -956,9 +956,9 @@ public:
                double playbackSpeedRatio)
     {
         // Apply offset first
-        br = br + offset - *dynamicOffset;
+        const auto beatRangeToRead = br + offset - *dynamicOffset;
 
-        return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
+        return readLoopedBeatRange (beatRangeToRead, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }

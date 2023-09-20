@@ -198,7 +198,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     if (playStartTime)
     {
         const auto clipEditOffset = editBeatRange.getStart() - unloopedClipBeatRange.getStart();
-        const auto offset = clipEditOffset - toDuration (*playStartTime);
+        const auto offset = clipEditOffset + toDuration (*playStartTime);
 
         if (lastOffset != offset)
         {
