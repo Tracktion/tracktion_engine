@@ -33,7 +33,11 @@ public:
 
     juce::String getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp = true) const;
 
-    bool isConnectedToExternalController() const;
+    bool isConnectedToExternalController() const { return externalController != nullptr; }
+
+    /** sets the external controller messages are coming from */
+    void setExternalController (ExternalController*);
+    void removeExternalController (ExternalController*);
 
     //==============================================================================
     void updateMidiTC (Edit*);
@@ -98,6 +102,7 @@ protected:
     bool sendControllerMidiClock = false;
     bool defaultMidiDevice = false;
     bool softDevice = false;
+    ExternalController* externalController = nullptr;
 
     juce::BigInteger midiNotesOn, channelsUsed;
     int sustain = 0;

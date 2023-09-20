@@ -288,14 +288,21 @@ void ExternalController::midiInOutDevicesChanged()
         CRASH_TRACER
         auto mo = dm.getMidiOutDevice (i);
 
+        bool used = false;
         for (int j = 0; j < numDevices; j++)
         {
             if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceName[j]))
             {
                 outputDevices[j] = mo;
                 mo->setSendControllerMidiClock (wantsClock);
+                used = true;
             }
         }
+
+        if (used)
+            mo->setExternalController (this);
+        else
+            mo->removeExternalController (this);
     }
 
     startTimer (100);
@@ -958,14 +965,14 @@ void ExternalController::updatePadColours()
                                 colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
                             }
 
-                            if (auto tc = getTransport(); tc->isPlaying())
+                            if (auto tc = getTransport())
                             {
                                 if (auto lh = c->getLaunchHandle())
                                 {
-                                    if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                                        state = tc->isPlaying() ? 2 : 1;
+                                    else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
                                         state = 1;
-                                    else if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
-                                        state = 2;
                                 }
                             }
                         }
