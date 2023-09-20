@@ -941,8 +941,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
                 else
                     assert (false);
 
+                const std::optional<BeatDuration> clipDuration = clip->isLooping() ? std::optional<BeatDuration>()
+                                                                                   : clip->getLengthInBeats();
                 auto controlNode = std::make_unique<SlotControlNode> (params.processState,
                                                                       std::move (launchHandle),
+                                                                      clipDuration,
                                                                       slot->itemID,
                                                                       std::move (clipNode));
 

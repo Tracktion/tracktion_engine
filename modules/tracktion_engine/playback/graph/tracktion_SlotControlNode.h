@@ -23,6 +23,7 @@ class SlotControlNode final : public tracktion::graph::Node,
 public:
     SlotControlNode (ProcessState& editProcessState,
                      std::shared_ptr<LaunchHandle>,
+                     std::optional<BeatDuration> stopDuration,
                      EditItemID slotID,
                      std::unique_ptr<Node> input);
 
@@ -38,6 +39,7 @@ public:
 private:
     //==============================================================================
     std::shared_ptr<LaunchHandle> launchHandle;
+    std::optional<BeatDuration> stopDuration;
     bool wasPlaying = false;
 
     const EditItemID slotID;

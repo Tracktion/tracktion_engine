@@ -15,10 +15,12 @@ namespace tracktion { inline namespace engine
 
 SlotControlNode::SlotControlNode (ProcessState& ps,
                                   std::shared_ptr<LaunchHandle> launchHandle_,
+                                  std::optional<BeatDuration> stopDuration_,
                                   EditItemID slotID_,
                                   std::unique_ptr<Node> input_)
     : TracktionEngineNode (ps),
       launchHandle (std::move (launchHandle_)),
+      stopDuration (stopDuration_),
       slotID (slotID_),
       input (std::move (input_)),
       localPlayheadState (ps.playHeadState.playHead),
@@ -110,7 +112,20 @@ void SlotControlNode::process (ProcessContext& pc)
 
     if (const auto editBeatRange = getEditBeatRange(); ! editBeatRange.isEmpty())
     {
-        if (auto splitStatus = launchHandle->advance (getProcessState().getSyncPoint(), editBeatRange.getLength());
+        const auto syncPoint = getProcessState().getSyncPoint();
+
+        if (stopDuration)
+        {
+            if (auto playedRange = launchHandle->getPlayedRange())
+            {
+                const auto beatsUntilStop = *stopDuration - playedRange->getLength();
+
+                if (beatsUntilStop <= editBeatRange.getLength())
+                    launchHandle->stop (MonotonicBeat { syncPoint.monotonicBeat.v + beatsUntilStop });
+            }
+        }
+
+        if (auto splitStatus = launchHandle->advance (syncPoint, editBeatRange.getLength());
             ! splitStatus.range1.isEmpty())
            processSplitSection (pc, splitStatus);
     }
@@ -282,6 +297,9 @@ void SlotControlNode::processStop (ProcessContext& pc)
             }
         }
     }
+
+    if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
+        launchHandle->stop ({});
 }
 
 }} // namespace tracktion { inline namespace engine
