@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 TempoTrack::TempoTrack (Edit& e, const juce::ValueTree& v)
-    : Track (e, v, 40, 13, 200)
+    : Track (e, v)
 {
 }
 

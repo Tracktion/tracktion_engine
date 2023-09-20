@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 AutomationTrack::AutomationTrack (Edit& e, const juce::ValueTree& v)
-    : Track (e, v, 50, 13, 2000)
+    : Track (e, v)
 {
 }
 

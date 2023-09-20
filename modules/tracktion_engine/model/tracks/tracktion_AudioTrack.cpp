@@ -93,7 +93,7 @@ private:
 
 //==============================================================================
 AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
-    : ClipTrack (ed, v, 50, 13, 2000)
+    : ClipTrack (ed, v)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     soloIsolated.referTo (state, IDs::soloIsolate, nullptr);
@@ -289,7 +289,7 @@ void AudioTrack::updateMidiNoteMapCache()
         for (int i = 0; i < l.length(); i++)
         {
             auto c = l[i];
-            
+
             if (juce::CharacterFunctions::isDigit (c))
                 digits++;
             else
@@ -383,7 +383,7 @@ bool AudioTrack::isMuted (bool includeMutingByDestination) const
     {
         if (auto p = getParentFolderTrack())
             return p->isMuted (true);
-        
+
         if (auto dest = output->getDestinationTrack())
             return dest->isMuted (true);
     }
@@ -621,7 +621,7 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
 void AudioTrack::turnOffGuideNotes()
 {
     stopTimer();
-    
+
     for (int ch = 1; ch <= 16; ch++)
         turnOffGuideNotes (MidiChannel (ch));
 }
@@ -691,7 +691,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
         else if (i == IDs::name)
         {
             auto devName = getName();
-            
+
             waveInputDevice->setAlias (devName);
             midiInputDevice->setAlias (devName);
         }
@@ -867,10 +867,10 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
                 {
                     if (auto folder = getParentFolderTrack())
                         return folder->isSubmixFolder();
-                        
+
                     return false;
                 };
-                
+
                 if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
                 {
                     edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
@@ -944,7 +944,7 @@ void AudioTrack::freezeTrack()
     const Edit::ScopedRenderStatus srs (edit, true);
     const auto desc = TRANS("Creating track freeze for \"XDVX\"")
                         .replace ("XDVX", getName()) + "...";
-    
+
     if (r.engine->getProjectManager().getProject (edit) != nullptr)
         Renderer::renderToProjectItem (desc, r);
     else

@@ -24,8 +24,7 @@ class Track   : public EditItem,
 {
 public:
     /** Creates a track with a given state. */
-    Track (Edit&, const juce::ValueTree&,
-           double defaultTrackHeight, double minTrackHeight, double maxTrackHeight);
+    Track (Edit&, const juce::ValueTree&);
 
     /** Destructor. */
     ~Track() override;
@@ -40,12 +39,12 @@ public:
         @see Edit::insertTrack
     */
     virtual void initialise();
-    
+
     /** Flushes all plugin states on the track to the state object.
         This is usually called automatically when an Edit is saved.
     */
     virtual void flushStateToValueTree();
-    
+
     /** Updates the current parameter bases on the set IDs.
         This is usually called automatically by the Edit when the ID changes or an
         Edit is loaded.
@@ -59,13 +58,13 @@ public:
 
     /** Sets the name of the Track. */
     void setName (const juce::String&);
-    
+
     /** Sets the name of the Track to an empty string.
         Base classes may then use this an an indication to return a name based on
         the track type and index
     */
     void resetName();
-    
+
     /** Sub-classes can impliment this to avoid certain characters being used in a name. */
     virtual void sanityCheckName()                              {}
 
@@ -178,10 +177,10 @@ public:
         May be nullptr if it doesn't.
     */
     TrackList* getSubTrackList() const                          { return trackList.get(); }
-    
+
     /** Returns true if this track has any subtracks. */
     bool hasSubTracks() const                                   { return trackList != nullptr; }
-    
+
     /** Returns a clip one with a matching ID can be found on this Track. */
     virtual Clip* findClipForID (EditItemID) const;
 
@@ -238,7 +237,7 @@ public:
         Useful for naming Tracks.
     */
     int getIndexInEditTrackList() const;
-    
+
     /** Returns the number of parents within which this track is nested */
     int getTrackDepth() const;
 
@@ -319,12 +318,12 @@ public:
         @see Plugin, Modifier
     */
     juce::Array<AutomatableEditItem*> getAllAutomatableEditItems() const;
-    
+
     /** Returns all pugins on this Track.
         Subclasses may implement this to also return Plugin[s] on Clip[s]
     */
     virtual Plugin::Array getAllPlugins() const;
-    
+
     /** Sends a message to all plugins that the given plugin has changed. */
     virtual void sendMirrorUpdateToAllPlugins (Plugin& changedPlugin) const;
 
@@ -339,10 +338,6 @@ public:
     static const int minTrackHeightForDetail = 10;  /**< The minimim height to show track contents at. */
     static const int trackHeightForEditor = 180;    /**< The height at which inline editors should be shown. */
     static const int frozenTrackHeight = 15;        /**< The height to show group frozen tracks. */
-
-    const double defaultTrackHeight;    /**< The default height of this Track. */
-    const double minTrackHeight;        /**< The minimum height of this Track. */
-    const double maxTrackHeight;        /**< The maximum height of this Track. */
 
     //==============================================================================
     /** Sets a colour for this track to use. */

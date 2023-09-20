@@ -11,12 +11,9 @@
 namespace tracktion { inline namespace engine
 {
 
-Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
+Track::Track (Edit& ed, const juce::ValueTree& v)
     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
       MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
-      defaultTrackHeight (defaultHeight),
-      minTrackHeight (minHeight),
-      maxTrackHeight (maxHeight),
       state (v),
       pluginList (ed)
 {
@@ -464,7 +461,7 @@ void Track::updateTrackList()
     {
         trackList.reset();
     }
-    
+
     changed();
 }
 
@@ -492,7 +489,7 @@ void Track::updateCachedParent()
 
         if (newFolder != nullptr)
             newFolder->setDirtyClips();
-        
+
         changed();
     }
 
@@ -535,7 +532,7 @@ void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
         else if (i == IDs::name)
         {
             changed();
-            
+
             if (! edit.isLoading())
                 juce::MessageManager::callAsync ([trackRef = getWeakRef()]
                                                  {

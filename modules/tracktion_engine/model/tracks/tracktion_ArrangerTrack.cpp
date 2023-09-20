@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 ArrangerTrack::ArrangerTrack (Edit& e, const juce::ValueTree& v)
-    : ClipTrack (e, v, 30, 13, 60)
+    : ClipTrack (e, v)
 {
 }
 

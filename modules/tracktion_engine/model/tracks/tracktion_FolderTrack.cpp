@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
-    : Track (ed, v, 50, 13, 2000)
+    : Track (ed, v)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     muted.referTo (state, IDs::mute, nullptr);
@@ -102,7 +102,7 @@ TrackOutput* FolderTrack::getOutput() const noexcept
 {
     if (! isSubmixFolder())
         return nullptr;
-    
+
     for (auto t : getAllAudioSubTracks (true))
         if (auto at = dynamic_cast<AudioTrack*> (t))
             return &at->getOutput();
@@ -113,7 +113,7 @@ TrackOutput* FolderTrack::getOutput() const noexcept
 juce::Array<Track*> FolderTrack::getInputTracks() const
 {
     juce::Array<Track*> tracks;
-    
+
     for (auto track : getAllSubTracks (false))
     {
         if (dynamic_cast<AudioTrack*> (track) != nullptr)
@@ -123,7 +123,7 @@ juce::Array<Track*> FolderTrack::getInputTracks() const
             if (ft->isSubmixFolder())
                 tracks.add (track);
     }
-    
+
     return tracks;
 }
 
@@ -457,7 +457,7 @@ bool FolderTrack::isFrozen (FreezeType t) const
     // Submix tracks can't be frozen as they can't contain clips
     if (isSubmixFolder())
         return false;
-    
+
     for (auto at : getAllAudioSubTracks (true))
         if (at->isFrozen (t))
             return true;

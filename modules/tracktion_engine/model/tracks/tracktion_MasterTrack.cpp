@@ -12,14 +12,14 @@ namespace tracktion { inline namespace engine
 {
 
 MasterTrack::MasterTrack (Edit& e, const juce::ValueTree& v)
-    : Track (e, v, 40, 13, 500)
-{    
+    : Track (e, v)
+{
 }
 
 void MasterTrack::initialise()
 {
     Track::initialise();
-    
+
     pluginList.initialise (edit.getMasterPluginList().state);
 }
 
