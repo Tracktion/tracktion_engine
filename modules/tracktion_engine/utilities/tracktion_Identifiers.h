@@ -650,6 +650,7 @@ namespace IDs
     DECLARE_ID (CLIPSLOTS)
     DECLARE_ID (CLIPSLOT)
     DECLARE_ID (launchQuantisation)
+    DECLARE_ID (useClipLaunchQuantisation)
 
     #undef DECLARE_ID
 }

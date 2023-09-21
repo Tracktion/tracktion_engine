@@ -255,6 +255,8 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
     checkFadeLengthsForOverrun();
 
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
+
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
     updateClipEffectsState();
 
@@ -915,7 +917,7 @@ void AudioClipBase::disableLooping()
 
     setLoopRange ({});
     setPosition (pos);
-    
+
     if (getPosition().getLength() > getMaximumLength())
         setLength (getMaximumLength(), true);
 }
@@ -1001,7 +1003,7 @@ void AudioClipBase::setLoopRangeBeats (BeatRange newRangeBeats)
     {
         Clip::setSpeedRatio (1.0);
         setAutoTempo (true);
-        
+
         loopStartBeats  = newStartBeat;
         loopLengthBeats = newLengthBeat;
     }
@@ -1540,6 +1542,14 @@ std::shared_ptr<LaunchHandle> AudioClipBase::getLaunchHandle()
     return launchHandle;
 }
 
+LaunchQuantisation* AudioClipBase::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
+}
+
 //==============================================================================
 juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
 {
@@ -1880,7 +1890,7 @@ AudioFile AudioClipBase::getProxyFileToCreate (bool renderTimestretched)
 struct StretchSegment
 {
     static constexpr int maxNumChannels = 8;
-    
+
     StretchSegment (Engine& engine, const AudioFile& file,
                     const AudioClipBase::ProxyRenderingInfo& info,
                     double sampleRate, const AudioSegmentList::Segment& s)
@@ -1969,13 +1979,13 @@ struct StretchSegment
     {
         CRASH_TRACER
         float* outs[maxNumChannels] = {};
-        
+
         for (int i = 0; i < numChannelsToUse; ++i)
             outs[i] = fifo.getWritePointer (i);
 
         const int needed = timestretcher.getFramesNeeded();
         int numRead = 0;
-        
+
         if (needed >= 0)
         {
             AudioScratchBuffer scratch (numChannelsToUse, needed);
@@ -1993,7 +2003,7 @@ struct StretchSegment
             }
 
             const float* ins[maxNumChannels] = {};
-            
+
             for (int i = 0; i < numChannelsToUse; ++i)
                 ins[i] = scratch.buffer.getReadPointer (i);
 
@@ -2007,7 +2017,7 @@ struct StretchSegment
 
         readySamplesStart = 0;
         readySamplesEnd = numRead;
-        
+
         return numRead;
     }
 
@@ -2135,7 +2145,7 @@ bool AudioClipBase::ProxyRenderingInfo::render (Engine& engine, const AudioFile&
     return true;
 }
 
-AudioFile AudioClipBase::getPlaybackFile() 
+AudioFile AudioClipBase::getPlaybackFile()
 {
     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway
     const AudioFile af (getAudioFile());
@@ -2197,13 +2207,13 @@ void AudioClipBase::beginRenderingNewProxyIfNeeded()
 {
     if (! canUseProxy())
         return;
-    
+
     if (isTimerRunning())
     {
         startTimer (1);
         return;
     }
-    
+
     const AudioFile playFile (getPlaybackFile());
 
     if (playFile.isNull())
@@ -2313,12 +2323,13 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             || id == IDs::transpose || id == IDs::pitchChange
             || id == IDs::elastiqueMode || id == IDs::autoPitch
             || id == IDs::elastiqueOptions || id == IDs::warpTime
-            || id == IDs::effectsVisible || id == IDs::autoPitchMode)
+            || id == IDs::effectsVisible || id == IDs::autoPitchMode
+            || id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
         {
             if (id == IDs::warpTime)
             {
                 warpTime.forceUpdateOfCachedValue();
-                
+
                 if (! getWarpTime())
                 {
                     if (shouldAttemptRender())
@@ -2327,7 +2338,7 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
                         setCurrentSourceFile (getOriginalFile());
                 }
             }
-            
+
             changed();
         }
         else if (id == IDs::gain)

@@ -48,6 +48,12 @@ public:
     //==============================================================================
     /** @internal */
     std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+    /** @internal */
+    void setUsesGlobalLaunchQuatisation (bool useGlobal) override           { useClipLaunchQuantisation = ! useGlobal; }
+    /** @internal */
+    bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
+    /** @internal */
+    LaunchQuantisation* getLaunchQuantisation() override;
 
     //==============================================================================
     void scaleVerticallyToFit();
@@ -176,6 +182,8 @@ private:
     juce::OwnedArray<MidiList> channelSequence;
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
     std::shared_ptr<LaunchHandle> launchHandle;
+    juce::CachedValue<bool> useClipLaunchQuantisation;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
 
     juce::CachedValue<int> proxyAllowed, currentTake;
     juce::CachedValue<float> grooveStrength;

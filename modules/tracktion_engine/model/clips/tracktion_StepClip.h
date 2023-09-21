@@ -286,6 +286,12 @@ public:
 
     /** @internal */
     std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+    /** @internal */
+    void setUsesGlobalLaunchQuatisation (bool useGlobal) override           { useClipLaunchQuantisation = ! useGlobal; }
+    /** @internal */
+    bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
+    /** @internal */
+    LaunchQuantisation* getLaunchQuantisation() override;
 
 private:
     void generateMidiSequenceForChannels (juce::MidiMessageSequence&, bool convertToSeconds,
@@ -300,6 +306,8 @@ private:
     juce::CachedValue<BeatPosition> loopStartBeats;
     juce::CachedValue<BeatDuration> loopLengthBeats, originalLength;
     std::shared_ptr<LaunchHandle> launchHandle;
+    juce::CachedValue<bool> useClipLaunchQuantisation;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
 
     const PatternInstance::Ptr getPatternInstance (int index, bool repeatSequence) const;
     void updatePatternList();

@@ -62,6 +62,8 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetPa
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, 0_bd);
     originalLength.referTo (state, IDs::originalLength, um, 0_bd);
 
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
+
     if (getChannels().isEmpty())
     {
         for (int i = defaultNumChannels; --i >= 0;)
@@ -818,5 +820,14 @@ std::shared_ptr<LaunchHandle> StepClip::getLaunchHandle()
 
     return launchHandle;
 }
+
+LaunchQuantisation* StepClip::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
+}
+
 
 }} // namespace tracktion { inline namespace engine

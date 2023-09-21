@@ -102,6 +102,8 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetPa
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, BeatDuration());
     originalLength.referTo (state, IDs::originalLength, um, BeatDuration());
 
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
+
     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);
     currentTake.referTo (state, IDs::currentTake, um);
 
@@ -392,6 +394,14 @@ std::shared_ptr<LaunchHandle> MidiClip::getLaunchHandle()
         launchHandle = std::make_shared<LaunchHandle>();
 
     return launchHandle;
+}
+
+LaunchQuantisation* MidiClip::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
 }
 
 //==============================================================================
@@ -787,6 +797,10 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
                     sm->deselectAll();
 
             clearCachedLoopSequence();
+        }
+        else if (id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
+        {
+            changed();
         }
         else
         {
