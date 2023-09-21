@@ -364,13 +364,12 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                                                                                       [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
     auto startTime = time.value_or (0_tp);
 
-    if (insertPointTrack == nullptr)
+    if (insertPointTrack == nullptr || clipOwner == nullptr)
     {
         jassertfalse;
         return false;
     }
 
-    assert (clipOwner);
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
     SelectableList itemsAdded;
 

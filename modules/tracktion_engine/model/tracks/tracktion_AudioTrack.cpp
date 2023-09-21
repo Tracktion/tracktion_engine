@@ -721,7 +721,8 @@ void AudioTrack::valueTreeParentChanged (juce::ValueTree& v)
     ClipTrack::valueTreeParentChanged (v);
 
     if (state.getParent().isValid())
-        edit.getSceneList().ensureNumberOfScenes (getClipSlotList().getClipSlots().size());
+        if (int numScenes = getClipSlotList().getClipSlots().size(); numScenes > 0)
+            edit.getSceneList().ensureNumberOfScenes (getClipSlotList().getClipSlots().size());
 }
 
 //==============================================================================

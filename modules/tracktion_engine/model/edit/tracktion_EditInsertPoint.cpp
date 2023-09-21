@@ -188,6 +188,7 @@ EditInsertPoint::Placement EditInsertPoint::chooseInsertPoint (bool pasteAfterSe
         {
             edit.ensureNumberOfAudioTracks (1);
             track = getAudioTracks (edit).getFirst();
+            clipOwner = dynamic_cast<ClipOwner*> (track);
         }
     }
 
