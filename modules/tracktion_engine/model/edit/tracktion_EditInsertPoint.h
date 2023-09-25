@@ -79,8 +79,8 @@ public:
         @param SelectionManger      The SelectionManager to use
         @returns Placement          Where to insert content
     */
-    Placement chooseInsertPoint (bool pasteAfterSelection, SelectionManager*,
-                                 std::function<bool (Track&)> allowedTrackPredicate);
+    virtual Placement chooseInsertPoint (bool pasteAfterSelection, SelectionManager*,
+                                         std::function<bool (Track&)> allowedTrackPredicate);
 
 protected:
     Edit& edit;

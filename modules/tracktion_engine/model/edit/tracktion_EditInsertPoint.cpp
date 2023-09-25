@@ -27,7 +27,9 @@ bool EditInsertPoint::setNextInsertPoint (ClipOwner* clipOwner, std::optional<Ti
     nextInsertPointClipOwner = clipOwner != nullptr ? clipOwner->getClipOwnerID()
                                                     : EditItemID();
 
-    if (dynamic_cast<Track*> (clipOwner) != nullptr)
+    if (auto cs = dynamic_cast<ClipSlot*> (clipOwner))
+        nextInsertPointTrack = cs->track.itemID;
+    else if (dynamic_cast<Track*> (clipOwner) != nullptr)
         nextInsertPointTrack = nextInsertPointClipOwner;
 
     return true;
