@@ -495,7 +495,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         auto warpMap = getWarpMap (clip);
         std::optional<tempo::Sequence::Position> editTempoPosition (speedFadeDesc.isEmpty() ? std::optional<tempo::Sequence::Position>() : createPosition (clip.edit.tempoSequence));
 
-        if (clip.getAutoTempo() || clip.getAutoPitch())
+        if (clip.getAutoTempo() || clip.getAutoPitch() || role == ClipRole::launcher)
         {
             assert (clipTimeRangeToUse.isBeats());
             std::vector<tempo::TempoChange> tempos;
@@ -620,7 +620,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params, role);
     }
 
-    if (clip.getAutoTempo() || clip.getAutoPitch())
+    if (clip.getAutoTempo() || clip.getAutoPitch() || role == ClipRole::launcher)
         return createNodeForAudioClip (clip, clip.itemID, clip.getEditBeatRange(), includeMelodyne, params, role);
 
     assert (role == ClipRole::arranger);
