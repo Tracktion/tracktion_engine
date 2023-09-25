@@ -749,6 +749,16 @@ void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum)
 			launchClip (*currentEdit, *t, sceneNum);
 }
 
+void ExternalControllerManager::userStoppedClip (int channelNum)
+{
+    if (stopClip && currentEdit)
+    {
+        auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum));
+        stopClip (*currentEdit, t);
+    }
+}
+
+
 void ExternalControllerManager::userLaunchedScene (int sceneNum)
 {
 	if (launchScene && currentEdit)

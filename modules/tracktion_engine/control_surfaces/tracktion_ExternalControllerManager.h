@@ -44,6 +44,9 @@ public:
 	/** Launch clip by track and index */
 	std::function<void (Edit&, AudioTrack&, int)> launchClip;
 
+    /** Stop all clips on track. If track is nullptr, stop all tracks */
+    std::function<void (Edit&, AudioTrack*)> stopClip;
+
 	/** Launch scene by index */
 	std::function<void (Edit&, int)> launchScene;
 
@@ -143,6 +146,7 @@ public:
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
     void userLaunchedClip (int channelNum, int clip);
+    void userStoppedClip (int channelNum);
     void userLaunchedScene (int scene);
 
     void updateDeviceState();

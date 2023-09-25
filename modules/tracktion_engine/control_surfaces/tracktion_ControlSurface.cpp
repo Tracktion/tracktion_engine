@@ -247,6 +247,13 @@ void ControlSurface::userLaunchedClip (int channelNum, int sceneNum)
     externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, owner->padStart + sceneNum);
 }
 
+void ControlSurface::userStoppedClip (int channelNum)
+{
+    RETURN_IF_SAFE_RECORDING
+
+    externalControllerManager.userStoppedClip (owner->channelStart + channelNum);
+}
+
 void ControlSurface::userLaunchedScene (int sceneNum)
 {
     RETURN_IF_SAFE_RECORDING
