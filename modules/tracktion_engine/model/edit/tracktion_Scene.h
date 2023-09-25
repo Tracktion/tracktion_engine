@@ -49,23 +49,34 @@ private:
 /**
     Notifies UI components of changes to the scenes and clips
 */
-class SceneWatcher : public juce::Timer
+class SceneWatcher : private juce::ValueTree::Listener,
+                     private juce::Timer
 {
 public:
-    SceneWatcher (Edit&);
+    /** Creates a SceneWatcher.
+        You don't need to create one of these manually, use the instance in SceneList
+       @see SceneList::sceneWatcher
+    */
+    SceneWatcher (const juce::ValueTree& scenesState, Edit&);
 
+    /** A listener interface. */
     struct Listener
     {
-        virtual ~Listener() {}
-        virtual void slotUpdated (int, int) {}
+        /** Destructor. */
+        virtual ~Listener() = default;
+
+        /** Destructor. */
+        virtual void slotUpdated (int audioTrackIndex, int slotIndex) = 0;
     };
 
-    void addListener (Listener* l);
-    void removeListener (Listener* l);
+    /** Adds a Listener. */
+    void addListener (Listener*);
+
+    /** Removes a previously added Listener. */
+    void removeListener (Listener*);
 
 private:
-    void timerCallback() override;
-
+    juce::ValueTree scenesState;
     Edit& edit;
     uint32_t callback = 0;
 
@@ -79,6 +90,13 @@ private:
     std::map<std::pair<int, int>, Value> lastStates;
 
     juce::ListenerList<Listener> listeners;
+
+    void checkForScenes();
+
+    void timerCallback() override;
+
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 };
 
 //==============================================================================
@@ -91,6 +109,7 @@ class SceneList : private ValueTreeObjectList<Scene>
 public:
     /** Creates a SceneList for an Edit with a given state. */
     SceneList (const juce::ValueTree&, Edit&);
+
     /** Destructor. */
     ~SceneList() override;
 
@@ -113,7 +132,8 @@ public:
     juce::ValueTree state;  /**< The state of this SceneList. */
     Edit& edit;             /**< The Edit this SceneList belongs to. */
 
-    SceneWatcher sceneWatcher { edit };
+    /** A SceneWatcher you can listen to in order to be notified of changes to Slots. */
+    SceneWatcher sceneWatcher { state, edit };
 
 private:
     //==============================================================================

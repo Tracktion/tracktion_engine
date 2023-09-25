@@ -43,18 +43,42 @@ void Scene::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
 }
 
 //==============================================================================
-SceneWatcher::SceneWatcher (Edit& e)
-    : edit (e)
+SceneWatcher::SceneWatcher (const juce::ValueTree& scenesState_, Edit& e)
+    : scenesState (scenesState_), edit (e)
 {
-    startTimerHz (30);
+    checkForScenes();
+}
+
+void SceneWatcher::addListener (Listener* l)
+{
+    listeners.add (l);
+}
+
+void SceneWatcher::removeListener (Listener* l)
+{
+    listeners.remove (l);
+}
+
+void SceneWatcher::checkForScenes()
+{
+    if (scenesState.getNumChildren() == 0)
+    {
+        stopTimer();
+        return;
+    }
+
+    if (! isTimerRunning())
+        startTimerHz (30);
 }
 
 void SceneWatcher::timerCallback()
 {
     auto trackIdx = 0;
+
     for (auto at : getAudioTracks (edit))
     {
         auto slotIdx = 0;
+
         for (auto slot : at->getClipSlotList().getClipSlots())
         {
             if (auto c = slot->getClip())
@@ -66,6 +90,7 @@ void SceneWatcher::timerCallback()
 
                     auto key = std::pair<int,int> (trackIdx, slotIdx);
                     auto itr = lastStates.find (key);
+
                     if (itr == lastStates.end())
                     {
                         lastStates[key] = { callback, p, q };
@@ -84,8 +109,10 @@ void SceneWatcher::timerCallback()
                     }
                 }
             }
+
             slotIdx++;
         }
+
         trackIdx++;
     }
 
@@ -105,16 +132,20 @@ void SceneWatcher::timerCallback()
     callback++;
 }
 
-void SceneWatcher::addListener (Listener* l)
+void SceneWatcher::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
-    listeners.add (l);
+    if (p == scenesState && c.hasType (IDs::SCENE))
+        checkForScenes();
 }
 
-void SceneWatcher::removeListener (Listener* l)
+void SceneWatcher::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
 {
-    listeners.remove (l);
+    if (p == scenesState && c.hasType (IDs::SCENE))
+        checkForScenes();
 }
 
+
+//==============================================================================
 //==============================================================================
 SceneList::SceneList (const juce::ValueTree& v, Edit& e)
     : ValueTreeObjectList (v),
