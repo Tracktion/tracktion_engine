@@ -46,7 +46,7 @@ public:
     juce::String getShortName (int) override            { return TRANS("Patch"); }
     juce::String getSelectableDescription() override    { return TRANS("Patch Bay Plugin"); }
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override                 { return uniqueId; }
+    juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     bool canBeAddedToClip() override                    { return false; }
     bool canBeAddedToRack() override                    { return false; }

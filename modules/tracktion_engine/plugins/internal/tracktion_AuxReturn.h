@@ -28,7 +28,7 @@ public:
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getSelectableDescription() override                        { return TRANS("Aux Return Plugin"); }
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override                                     { return uniqueId; }
+    juce::String getUniqueId() override                                     { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
 

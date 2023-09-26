@@ -31,7 +31,7 @@ public:
     juce::String getName() override                     { return textTitle.get().isNotEmpty() ? textTitle : TRANS("Text Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override                 { return uniqueId; }
+    juce::String getUniqueId() override                 { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     void initialise (const PluginInitialisationInfo&) override {}
     void deinitialise() override                        {}
