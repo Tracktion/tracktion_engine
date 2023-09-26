@@ -146,10 +146,9 @@ public:
     /** default returns the name, others can return special stuff if needed */
     virtual juce::String getTooltip();
 
-    // Todo: put back in once ticket 907 is completed
-    //// BEATCONNECT MODIFICATION START
-    //virtual juce::String getUniqueId() = 0;
-    //// BEATCONNECT MODIFICATION END
+    // BEATCONNECT MODIFICATION START
+    virtual juce::String getUniqueId() = 0;
+    // BEATCONNECT MODIFICATION END
 
     //==============================================================================
     /** Enable/disable the plugin.  */

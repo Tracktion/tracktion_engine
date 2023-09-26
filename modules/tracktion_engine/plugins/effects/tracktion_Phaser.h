@@ -33,7 +33,7 @@ public:
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
     // BEATCONNECT MODIFICATION START
-    // juce::String getUniqueId() override                     { return uniqueId; }
+    juce::String getUniqueId() override                     { return uniqueId; }
     // BEATCONNECT MODIFICATION END
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
