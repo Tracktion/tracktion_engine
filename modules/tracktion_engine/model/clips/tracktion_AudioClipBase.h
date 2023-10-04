@@ -242,7 +242,7 @@ public:
     TimeRange getLoopRange() const;
 
     /** @internal */
-    bool canLoop() const override                       { return ! isUsingMelodyne(); }
+    bool canLoop() const override;
     /** @internal */
     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats > BeatDuration()) : (loopLength > TimeDuration()); }
     /** @internal */

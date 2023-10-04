@@ -881,7 +881,7 @@ void AudioClipBase::setNumberOfLoops (int num)
     auto pos = getPosition();
     auto len = std::min (getSourceLength() / speedRatio, pos.getLength());
 
-    if (len <= TimeDuration())
+    if (len <= 0_td)
         return;
 
     if (autoTempo)
@@ -931,6 +931,12 @@ TimeRange AudioClipBase::getLoopRange() const
 
     return { TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps),
              TimePosition::fromSeconds ((loopStartBeats + loopLengthBeats).inBeats() / bps) };
+}
+
+bool AudioClipBase::canLoop() const
+{
+    return isUsingMelodyne() ? false
+                             : loopInfo.isLoopable();
 }
 
 TimePosition AudioClipBase::getLoopStart() const
@@ -996,8 +1002,8 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
 
 void AudioClipBase::setLoopRangeBeats (BeatRange newRangeBeats)
 {
-    auto newStartBeat  = juce::jlimit (BeatPosition(), BeatPosition::fromBeats (loopInfo.getNumBeats()), newRangeBeats.getStart());
-    auto newLengthBeat = juce::jlimit (BeatDuration(), BeatDuration::fromBeats (loopInfo.getNumBeats() * 2), newRangeBeats.getLength());
+    auto newStartBeat  = juce::jlimit (0_bp, BeatPosition::fromBeats (loopInfo.getNumBeats()), newRangeBeats.getStart());
+    auto newLengthBeat = juce::jlimit (0_bd, BeatDuration::fromBeats (loopInfo.getNumBeats() * 2), newRangeBeats.getLength());
 
     if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
     {
