@@ -404,7 +404,11 @@ class StringDictionary
 {
 public:
     StringDictionary() = default;
+    StringDictionary (const StringDictionary&) = default;
+
     virtual ~StringDictionary() = default;
+
+    StringDictionary& operator=(const StringDictionary&) = default;
 
     struct Handle
     {
