@@ -266,6 +266,8 @@ public:
     bool canLoop() const override;
 
     /** @internal */
+    ClipPosition getPosition() const override;
+    /** @internal */
     bool isLooping() const override                 { return canLoop() && loopLengthBeats > 0_bd; }
     /** @internal */
     void setNumberOfLoops (int) override;

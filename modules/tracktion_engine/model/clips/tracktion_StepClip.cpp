@@ -459,12 +459,8 @@ juce::MidiMessageSequence StepClip::generateMidiSequence (MidiList::TimeBase tim
 
     juce::MidiMessageSequence result;
     auto& tempoSequence = edit.tempoSequence;
-    auto pos = getPosition();
-
-    auto clipBeatRange = tempoSequence.toBeats (pos.time);
-
-    if (timeBase == MidiList::TimeBase::beatsRaw)
-        clipBeatRange = clipBeatRange.movedToStartAt (0_bp);
+    const auto pos = getPosition();
+    const auto clipBeatRange = tempoSequence.toBeats (pos.time);
 
     const bool repeatSeq = repeatSequence;
     const auto starts = getBeatTimesOfPatternStarts();
@@ -726,6 +722,12 @@ void StepClip::setCell (int patternIndex, int channelIndex,
 }
 
 //==============================================================================
+ClipPosition StepClip::getPosition() const
+{
+    const auto s = getClipSlot() != nullptr ? 0_tp : clipStart.get();
+    return { { s, s + length.get() }, offset.get() };
+}
+
 bool StepClip::canLoop() const
 {
     return getClipSlot() != nullptr;
