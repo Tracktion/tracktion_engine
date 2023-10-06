@@ -53,7 +53,7 @@ public:
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPotInt (int dev, int channelNum, float newPan);
     void movePanPot (int channelNum, float newPan) override;
-    void moveAux (int channelNum, const char* bus, float newPos) override;
+    void moveAux (int channelNum, int auxNum, const char* bus, float newPos) override;
     void lightUpButton (int dev, int buttonNum, bool on);
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
@@ -83,7 +83,7 @@ public:
     void markerChanged (int parameterNumber, const MarkerSetting&) override;
     void clearMarker (int parameterNumber) override;
     void auxBankChanged (int bank) override;
-    void clearAux (int channel) override;
+    void clearAux (int channel, int auxNum) override;
 
     //==============================================================================
     void registerXT (MackieXT*);

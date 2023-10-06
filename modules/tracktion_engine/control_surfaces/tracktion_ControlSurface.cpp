@@ -122,17 +122,17 @@ void ControlSurface::userMovedPanPot (int channelNum, float newPan, bool delta)
         externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan, delta);
 }
 
-void ControlSurface::userMovedAux (int channelNum, float newPosition)
+void ControlSurface::userMovedAux (int channelNum, int auxNum, float newPosition)
 {
     RETURN_IF_SAFE_RECORDING
     if (pickedUp (ctrlAux, channelNum, newPosition))
-        externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank, newPosition);
+        externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank + auxNum, auxMode, newPosition);
 }
 
-void ControlSurface::userPressedAux (int channelNum)
+void ControlSurface::userPressedAux (int channelNum, int auxNum)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userPressedAux (owner->channelStart + channelNum, owner->auxBank);
+    externalControllerManager.userPressedAux (owner->channelStart + channelNum, owner->auxBank + auxNum);
 }
 
 void ControlSurface::userPressedSolo (int channelNum)
@@ -521,11 +521,11 @@ void ControlSurface::movePanPot (int channelNum, float newPan)
         info.pickedUp = false;
 }
 
-void ControlSurface::moveAux (int channel, const char*, float newPos)
+void ControlSurface::moveAux (int channel, int auxNum, const char*, float newPos)
 {
     if (! pickUpMode) return;
 
-    auto& info = pickUpMap[{ctrlAux, channel}];
+    auto& info = pickUpMap[{ControlType (ctrlAux + auxNum), channel}];
     info.lastOut = newPos;
 
     if (info.lastIn.has_value())
@@ -551,7 +551,7 @@ void ControlSurface::parameterChanged (int parameterNumber, const ParameterSetti
 {
     if (! pickUpMode) return;
 
-    auto& info = pickUpMap[{ctrlAux, parameterNumber}];
+    auto& info = pickUpMap[{ctrlParam, parameterNumber}];
     info.lastOut = newValue.value;
 
     if (info.lastIn.has_value())

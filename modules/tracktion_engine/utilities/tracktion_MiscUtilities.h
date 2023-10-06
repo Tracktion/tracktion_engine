@@ -122,4 +122,10 @@ public:
     }
 };
 
+enum class AuxPosition
+{
+    byBus,
+    byPosition,
+};
+
 }} // namespace tracktion { inline namespace engine

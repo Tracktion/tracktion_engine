@@ -714,9 +714,9 @@ void CustomControlSurface::movePanPot (int faderIndex, float v)
     sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
-void CustomControlSurface::moveAux (int faderIndex, const char* bus, float v)
+void CustomControlSurface::moveAux (int faderIndex, int num, const char* bus, float v)
 {
-    ControlSurface::moveAux (faderIndex, bus, v);
+    ControlSurface::moveAux (faderIndex, num, bus, v);
 
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
 
@@ -1536,7 +1536,7 @@ void CustomControlSurface::soloTrack (float val, int param) { if (shouldActOnVal
 void CustomControlSurface::armTrack (float val, int param)      { if (shouldActOnValue (val)) userPressedRecEnable (param, false); }
 void CustomControlSurface::selectTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedTrack (param); }
 
-void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, val); }
+void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, 0, val); }
 void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
 void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
 

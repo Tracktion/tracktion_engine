@@ -226,12 +226,31 @@ VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPlu
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
 EqualiserPlugin* AudioTrack::getEqualiserPlugin()     { return pluginList.getPluginsOfType<EqualiserPlugin>().getLast(); }
 
-AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
+AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus, AuxPosition ap) const
 {
-    for (auto p : pluginList)
-        if (auto f = dynamic_cast<AuxSendPlugin*> (p))
-            if (bus < 0 || bus == f->getBusNumber())
-                return f;
+    if (ap == AuxPosition::byBus)
+    {
+        for (auto p : pluginList)
+            if (auto f = dynamic_cast<AuxSendPlugin*> (p))
+                if (bus < 0 || bus == f->getBusNumber())
+                    return f;
+    }
+    else if (ap == AuxPosition::byPosition)
+    {
+        jassert(bus >= 0);
+
+        int idx = 0;
+        for (auto p : pluginList)
+        {
+            if (auto f = dynamic_cast<AuxSendPlugin*> (p))
+            {
+                if (idx == bus)
+                    return f;
+
+                idx++;
+            }
+        }
+    }
 
     return {};
 }

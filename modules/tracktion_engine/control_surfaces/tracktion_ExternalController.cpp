@@ -26,7 +26,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     wantsClock = cs.wantsClock;
     followsTrackSelection = cs.followsTrackSelection;
     deletable = cs.deletable;
-    auxBank = cs.wantsAuxBanks ? 0 : -1;
+    auxBank = cs.wantsAuxBanks || cs.auxMode == AuxPosition::byPosition ? 0 : -1;
     allowBankingOffEnd = cs.allowBankingOffEnd;
 
     numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
@@ -1126,24 +1126,42 @@ void ExternalController::auxSendLevelsChanged()
             {
                 auto at = dynamic_cast<AudioTrack*> (t);
 
-                if (auto aux = at ? at->getAuxSendPlugin (auxBank) : nullptr)
+                if (cs.auxMode == AuxPosition::byPosition)
+                {
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                    {
+                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
+                        {
+                            auto nm = aux->getBusName();
+
+                            if (nm.length() > cs.numCharactersForAuxLabels)
+                                nm = shortenName (nm, 7);
+
+                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                        }
+                        else
+                        {
+                            cs.clearAux (chan - channelStart, i);
+                        }
+                    }
+                }
+                else if (auto aux = at ? at->getAuxSendPlugin (auxBank) : nullptr)
                 {
                     auto nm = aux->getBusName();
 
                     if (nm.length() > cs.numCharactersForAuxLabels)
                         nm = shortenName (nm, 7);
 
-                    cs.moveAux (chan - channelStart, nm.toRawUTF8(),
-                                decibelsToVolumeFaderPosition (aux->getGainDb()));
+                    cs.moveAux (chan - channelStart, 0, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
                 }
                 else
                 {
-                    cs.clearAux (chan - channelStart);
+                    cs.clearAux (chan - channelStart, 0);
                 }
             }
             else
             {
-                cs.clearAux (chan - channelStart);
+                cs.clearAux (chan - channelStart, 0);
             }
         }
     }
@@ -1373,7 +1391,10 @@ void ExternalController::changeAuxBank (int delta)
 {
     if (controlSurface != nullptr)
     {
-        auxBank = juce::jlimit (-1, 7, auxBank + delta);
+        if (getControlSurface().auxMode == AuxPosition::byPosition)
+            auxBank = juce::jlimit (0, 15, auxBank + delta);
+        else
+            auxBank = juce::jlimit (-1, 31, auxBank + delta);
 
         getControlSurface().auxBankChanged (auxBank);
         auxSendLevelsChanged();

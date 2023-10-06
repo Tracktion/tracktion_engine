@@ -728,10 +728,10 @@ void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, b
     }
 }
 
-void ExternalControllerManager::userMovedAux (int channelNum, int auxNum, float newPosition)
+void ExternalControllerManager::userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition)
 {
     if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
-        if (auto aux = t->getAuxSendPlugin (auxNum))
+        if (auto aux = t->getAuxSendPlugin (auxNum, ap))
             aux->setGainDb (volumeFaderPositionToDB (newPosition));
 }
 

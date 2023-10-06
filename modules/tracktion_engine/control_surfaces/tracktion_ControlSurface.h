@@ -86,9 +86,9 @@ public:
     // pan is -1.0 to 1.0
     virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan);
 
-    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
+    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] int auxNum, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
 
-    virtual void clearAux (int) {}
+    virtual void clearAux ([[maybe_unused]] int channel, [[maybe_unused]] int auxNum) {}
 
     // the channel number is the physical channel on the device, regardless of bank selection
     virtual void updateSoloAndMute ([[maybe_unused]] int channelNum, Track::MuteAndSoloLightState, [[maybe_unused]] bool isBright) {}
@@ -242,8 +242,8 @@ public:
     void userMovedMasterLevelFader (float newLevel, bool delta = false);
     void userMovedMasterPanPot (float newLevel);
 
-    void userMovedAux (int channelNum, float newPosition);
-    void userPressedAux (int channelNum);
+    void userMovedAux (int channelNum, int auxNum, float newPosition);
+    void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
 
     // these tell tracktion about buttons being pressed
@@ -417,6 +417,7 @@ public:
     int numCharactersForAuxLabels = 0;
     bool wantsAuxBanks = false;
     bool followsTrackSelection = false;
+    AuxPosition auxMode = AuxPosition::byBus;
 
     Engine& engine;
     ExternalControllerManager& externalControllerManager;
@@ -428,8 +429,8 @@ private:
         ctrlFader,
         ctrlMasterFader,
         ctrlPan,
-        ctrlAux,
         ctrlParam,
+        ctrlAux,    // aux must be last because there can be several of them
     };
 
     struct PickUpInfo

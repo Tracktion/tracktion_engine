@@ -46,7 +46,7 @@ public:
     VolumeAndPanPlugin* getVolumePlugin();
     LevelMeterPlugin* getLevelMeterPlugin();
     EqualiserPlugin* getEqualiserPlugin();
-    AuxSendPlugin* getAuxSendPlugin (int bus = -1) const; // -1 == any bus, first aux found
+    AuxSendPlugin* getAuxSendPlugin (int bus = -1, AuxPosition ap = AuxPosition::byBus) const; // -1 == any bus, first aux found
 
     //==============================================================================
     /** looks for a name for a midi note by trying all the plugins, and returning a
