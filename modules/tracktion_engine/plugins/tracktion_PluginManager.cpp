@@ -9,7 +9,7 @@
 */
 
 #include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
-#include "../../../../Source/Plugin/bc_ConvolutionReverbPlugin.h"
+#include "../../../../Source/Plugin/ConvolutionReverb/bc_ConvolutionReverbPlugin.h"
 
 namespace tracktion { inline namespace engine
 {
@@ -425,7 +425,7 @@ void PluginManager::initialise()
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
     createBuiltInType<BeatConnect::BitCrusherPlugin>();
-    createBuiltInType<BeatConnect::ConvolutionReverbPlugin>();
+    createBuiltInType<BeatConnect::reverb::ConvolutionReverbPlugin>();
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
