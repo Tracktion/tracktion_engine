@@ -629,6 +629,49 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
             filterType == (int)FilterType::peak)
                 v.setProperty(IDs::filterGain, filterGain, nullptr);
     }
+
+    auto getRandomColour = []() -> juce::String
+    {
+        // This list comes from Figma. Format is RGB
+        StringArray availableColours;
+        availableColours.add("#9C4302");    // Brown
+        availableColours.add("#FF7D34");    // Brownish Orange
+        availableColours.add("#FFC839");    // Mustard
+        availableColours.add("#FBFF35");     // Dim Yellow
+
+        availableColours.add("#C2FF41");     // Yellow
+        availableColours.add("#37FF4B");     // Green
+        availableColours.add("#33FFDA");     // Cyan
+        availableColours.add("#00B1FD");     // Light Blue
+
+        availableColours.add("#1C69FF");     // Steel Blue
+        availableColours.add("#4131FF");     // Deep Blue
+        availableColours.add("#7432FF");     // Purple
+        availableColours.add("#AC42FF");     // Magenta
+
+        availableColours.add("#FF65E6");     // Pink
+        availableColours.add("#FF12AE");     // Fuscia
+        availableColours.add("#FF2372");     // Reddish
+        availableColours.add("#FF0606");     // Red
+
+        auto randomInt = juce::Random::getSystemRandom().nextInt(availableColours.size());
+
+        return availableColours[randomInt] + "FF";
+    };
+
+    for (int i = 0; i < state.getNumChildren(); ++i)
+    {
+        ValueTree child = state.getChild(i);
+
+        if (child.hasType("SamplerDrumPad") && 
+            (int)child.getProperty("note") == keyNote)
+        {
+            child.setProperty(te::IDs::name, name, nullptr);
+            child.setProperty(te::IDs::colour, getRandomColour(), nullptr);
+            break;
+        }
+    }
+
     // BEATCONNECT MODIFICATION END
 
     state.addChild (v, -1, getUndoManager());
