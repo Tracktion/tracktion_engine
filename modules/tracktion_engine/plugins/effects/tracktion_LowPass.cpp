@@ -16,13 +16,18 @@ LowPassPlugin::LowPassPlugin (PluginCreationInfo info) : Plugin (info)
     auto um = getUndoManager();
 
     frequencyValue.referTo (state, IDs::frequency, um, 4000.0f);
-    mode.referTo (state, IDs::mode, um, "lowpass");
+    modeValue.referTo (state, IDs::mode, um, 0);
 
     frequency = addParam ("frequency", TRANS("Frequency"), { 10.0f, 22000.0f },
                           [] (float value)              { return juce::String (juce::roundToInt (value)) + " Hz"; },
                           [] (const juce::String& s)    { return s.getFloatValue(); });
 
+    mode = addParam("mode", TRANS("mode"), { 0, 1 },
+        [](float value) { return juce::String(juce::roundToInt(value)); },
+        [](const juce::String& s) { return s.getFloatValue(); });
+
     frequency->attachToCurrentValue (frequencyValue);
+    mode->attachToCurrentValue(modeValue);
 }
 
 LowPassPlugin::~LowPassPlugin()
@@ -30,6 +35,7 @@ LowPassPlugin::~LowPassPlugin()
     notifyListenersOfDeletion();
 
     frequency->detachFromCurrentValue();
+    mode->detachFromCurrentValue();
 }
 
 const char* LowPassPlugin::xmlTypeName = "lowpass";
@@ -40,7 +46,7 @@ const char* LowPassPlugin::uniqueId = "b82be959-2b55-43ec-8207-6b8b899dc0dc";
 void LowPassPlugin::updateFilters()
 {
     const float newFreq = frequency->getCurrentValue();
-    const bool nowLowPass = isLowPass();
+    const bool nowLowPass = mode->getCurrentValue() == 0;
 
     if (currentFilterFreq != newFreq || nowLowPass != isCurrentlyLowPass)
     {

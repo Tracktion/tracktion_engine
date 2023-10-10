@@ -18,7 +18,7 @@ public:
     ~LowPassPlugin() override;
 
     //==============================================================================
-    static const char* getPluginName()                  { return NEEDS_TRANS("Low/High-Pass Filter"); }
+    static const char* getPluginName()                  { return NEEDS_TRANS("Filter"); }
     static const char* xmlTypeName;
     // BEATCONNECT MODIFICATION START
     static const char* uniqueId;
@@ -39,11 +39,12 @@ public:
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }
     void applyToBuffer (const PluginRenderContext&) override;
 
-    bool isLowPass() const noexcept                     { return mode.get() != "highpass"; }
+    bool isLowPass() const noexcept                     { return mode.get() == 0; }
 
     juce::CachedValue<float> frequencyValue;
-    juce::CachedValue<juce::String> mode;
+    juce::CachedValue<float> modeValue;
     AutomatableParameter::Ptr frequency;
+    AutomatableParameter::Ptr mode;
 
 private:
     juce::IIRFilter filter[2];
