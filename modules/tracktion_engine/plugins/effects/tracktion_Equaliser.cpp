@@ -89,21 +89,23 @@ EqualiserPlugin::EqualiserPlugin (PluginCreationInfo info) : Plugin (info)
 
     auto um = getUndoManager();
 
-    loFreqValue.referTo (state, IDs::loFreq, um, 80.0f);
+    // BEATCONNECT MODIFICATION START
+    loFreqValue.referTo (state, IDs::loFreq, um, 100.0f);
     loGainValue.referTo (state, IDs::loGain, um);
-    loQValue.referTo (state, IDs::loQ, um, 0.5f);
+    loQValue.referTo (state, IDs::loQ, um, 0.6f);
 
-    hiFreqValue.referTo (state, IDs::hiFreq, um, 17000.0f);
+    hiFreqValue.referTo (state, IDs::hiFreq, um, 10000.0f);
     hiGainValue.referTo (state, IDs::hiGain, um);
-    hiQValue.referTo (state, IDs::hiQ, um, 0.5f);
+    hiQValue.referTo (state, IDs::hiQ, um, 0.4f);
 
-    midFreqValue1.referTo (state, IDs::midFreq1, um, 3000.0f);
+    midFreqValue1.referTo (state, IDs::midFreq1, um, 1000.0f);
     midGainValue1.referTo (state, IDs::midGain1, um);
     midQValue1.referTo (state, IDs::midQ1, um, 0.5f);
 
     midFreqValue2.referTo (state, IDs::midFreq2, um, 5000.0f);
     midGainValue2.referTo (state, IDs::midGain2, um);
     midQValue2.referTo (state, IDs::midQ2, um, 0.5f);
+    // BEATCONNECT MODIFICATION END
 
     phaseInvert.referTo (state, IDs::phaseInvert, um);
 
@@ -152,21 +154,23 @@ juce::String EqualiserPlugin::getTooltip()
 
 void EqualiserPlugin::resetToDefault()
 {
+    // BEATCONNECT MODIFICATION START
     loGain->setParameter (0.0f, juce::dontSendNotification);
-    loFreq->setParameter (80.0f, juce::dontSendNotification);
-    loQ   ->setParameter (0.5f, juce::dontSendNotification);
+    loFreq->setParameter (100.0f, juce::dontSendNotification);
+    loQ   ->setParameter (0.4f, juce::dontSendNotification);
 
     hiGain->setParameter (0.0f, juce::dontSendNotification);
-    hiFreq->setParameter (17000.0f, juce::dontSendNotification);
-    hiQ   ->setParameter (0.5f, juce::dontSendNotification);
+    hiFreq->setParameter (10000.0f, juce::dontSendNotification);
+    hiQ   ->setParameter (0.6f, juce::dontSendNotification);
 
     midGain1->setParameter (0.0f, juce::dontSendNotification);
-    midFreq1->setParameter (3000.0f, juce::dontSendNotification);
+    midFreq1->setParameter (1000.0f, juce::dontSendNotification);
     midQ1   ->setParameter (0.5f, juce::dontSendNotification);
 
     midGain2->setParameter (0.0f, juce::dontSendNotification);
     midFreq2->setParameter (5000.0f, juce::dontSendNotification);
     midQ2   ->setParameter (0.5f, juce::dontSendNotification);
+    // BEATCONNECT MODIFICATION END
 
     curveNeedsUpdating = true;
 }
@@ -292,7 +296,7 @@ void EqualiserPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             if (loGain->getCurrentValue() != 0)       low[i] .processSamples (data, fc.bufferNumSamples);
             if (midGain1->getCurrentValue() != 0)     mid1[i].processSamples (data, fc.bufferNumSamples);
-            if (midGain2->getCurrentValue() != 0)     mid2[i].processSamples (data, fc.bufferNumSamples);
+             if (midGain2->getCurrentValue() != 0)     mid2[i].processSamples (data, fc.bufferNumSamples);
             if (hiGain->getCurrentValue() != 0)       high[i].processSamples (data, fc.bufferNumSamples);
         }
 
