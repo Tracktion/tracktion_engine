@@ -27,7 +27,7 @@ public:
 	juce::String getPluginType() override { return xmlTypeName; }
 	juce::String getShortName(int) override { return "DrmMchn"; }
 	juce::String getSelectableDescription() override { return TRANS("Drum Machine"); }
-	// juce::String getUniqueId() override			    { return uniqueId; } // To be incorporated with bc_unity_daw #797
+	juce::String getUniqueId() override { return uniqueId; }
 };
 
 }} // namespace tracktion { inline namespace engine
