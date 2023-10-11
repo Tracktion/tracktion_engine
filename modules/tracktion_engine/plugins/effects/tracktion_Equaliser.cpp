@@ -164,7 +164,7 @@ void EqualiserPlugin::resetToDefault()
     hiQ   ->setParameter (0.6f, juce::dontSendNotification);
 
     midGain1->setParameter (0.0f, juce::dontSendNotification);
-    midFreq1->setParameter (3000.0f, juce::dontSendNotification);
+    midFreq1->setParameter (1000.0f, juce::dontSendNotification);
     midQ1   ->setParameter (0.5f, juce::dontSendNotification);
 
     midGain2->setParameter (0.0f, juce::dontSendNotification);
