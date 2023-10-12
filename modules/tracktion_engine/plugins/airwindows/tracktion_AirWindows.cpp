@@ -206,9 +206,9 @@ void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
 
-        for (auto p : parameters)
-            if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
-                impl->setParameter (awp->index, awp->getCurrentValue());
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            impl->setParameter (awp->index, awp->getCurrentValue());
 
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);
