@@ -991,11 +991,8 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
     // BEATCONNECT MODIFICATIONS START
-    std::string test = p.get()->getPluginType().toStdString();
     if (p.get()->getPluginType() == v.getType().toString()) 
-    {
         p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
-    }
     // BEATCONNECT MODIFICATIONS END
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
