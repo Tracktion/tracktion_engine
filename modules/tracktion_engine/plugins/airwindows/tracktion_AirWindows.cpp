@@ -149,10 +149,6 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
     addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
 
-    // BEATCONNECT MODIFICATION START
-    info.state.setProperty(IDs::manufacturer, "AirWindows", um);
-    // BEATCONNECT MODIFICATION END
-
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);
 
@@ -192,6 +188,7 @@ int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
 void AirWindowsPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
+    getVendor();
 }
 
 void AirWindowsPlugin::deinitialise()
@@ -210,9 +207,10 @@ void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     SCOPED_REALTIME_CHECK
 
-    for (auto p : parameters)
-        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
-            impl->setParameter (awp->index, awp->getCurrentValue());
+        for (auto p : parameters) {
+            if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+                impl->setParameter (awp->index, awp->getCurrentValue());
+    }
 
     juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
                                   fc.bufferStartSample, fc.bufferNumSamples);
