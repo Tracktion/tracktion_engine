@@ -149,6 +149,10 @@ AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<Air
     addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
     addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
 
+    // BEATCONNECT MODIFICATION START
+    info.state.setProperty(IDs::manufacturer, "AirWindows", um);
+    // BEATCONNECT MODIFICATION END
+
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);
 
