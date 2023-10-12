@@ -70,6 +70,7 @@ void Engine::initialise()
         deviceManager->initialise();
 
     pluginManager->initialise();
+    pluginManager->initialiseAirWindows(); // =8> Debug
     getProjectManager().initialise();
 
     externalControllerManager->initialise();
