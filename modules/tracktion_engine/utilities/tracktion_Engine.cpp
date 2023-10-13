@@ -70,6 +70,9 @@ void Engine::initialise()
         deviceManager->initialise();
 
     pluginManager->initialise();
+    // BEAT CONNECT MODIFICATION START
+    pluginManager->initialiseAirWindows();
+    // BEAT CONNECT MODIFICATION END
     getProjectManager().initialise();
 
     externalControllerManager->initialise();

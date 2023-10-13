@@ -737,12 +737,16 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
+            if (desc.category.startsWith("airwindows"))
+                v.setProperty(IDs::manufacturer, "AirWindows", nullptr);
+
             if (type == "drum machine")
                 addInitialSamplerDrumPadValueTree(v);
             // BEATCONNECT MODIFICATIONS END
 
             if (auto p = builtIn->create(PluginCreationInfo(ed, v, true)))
             {
+                std::string debug = p->edit.state.createXml().get()->toString().toStdString();
                 addPluginParametersToValueTree(p);
                 return p;
             }
@@ -987,11 +991,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
     // BEATCONNECT MODIFICATIONS START
-    std::string test = p.get()->getPluginType().toStdString();
-    if (p.get()->getPluginType() == v.getType().toString()) { // untested
+    if (p.get()->getPluginType() == v.getType().toString()) 
         p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
-    }
-    // BEATCONNECT MODIFICATIONS START
+    // BEATCONNECT MODIFICATIONS END
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);
