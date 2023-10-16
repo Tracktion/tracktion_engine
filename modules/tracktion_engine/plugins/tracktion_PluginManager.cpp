@@ -737,8 +737,8 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
                 v.setProperty (IDs::windowLocked, true, nullptr);
 
             // BEATCONNECT MODIFICATIONS START
-            if (desc.category.startsWith("airwindows"))
-                v.setProperty(IDs::manufacturer, "AirWindows", nullptr);
+            //if (desc.category.startsWith("airwindows"))
+            //    v.setProperty(IDs::manufacturer, "AirWindows", nullptr);
 
             if (type == "drum machine")
                 addInitialSamplerDrumPadValueTree(v);
@@ -746,7 +746,6 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
 
             if (auto p = builtIn->create(PluginCreationInfo(ed, v, true)))
             {
-                std::string debug = p->edit.state.createXml().get()->toString().toStdString();
                 addPluginParametersToValueTree(p);
                 return p;
             }
@@ -1012,6 +1011,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     if (p.get()->getPluginType() == type) {
         p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
+        p.get()->state.setProperty(IDs::manufacturer, p.get()->getVendor(), nullptr);
     }
     // BEATCONNECT MODIFICATIONS END
 
