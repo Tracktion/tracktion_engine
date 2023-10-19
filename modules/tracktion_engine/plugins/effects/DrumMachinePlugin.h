@@ -28,6 +28,7 @@ public:
 	juce::String getShortName(int) override { return "DrmMchn"; }
 	juce::String getSelectableDescription() override { return TRANS("Drum Machine"); }
 	juce::String getUniqueId() override { return uniqueId; }
+	virtual juce::String getVendor() override { return "BeatConnect"; }
 };
 
 }} // namespace tracktion { inline namespace engine
