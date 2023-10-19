@@ -73,7 +73,7 @@ public:
     //==============================================================================
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
     void flushPluginStateToValueTree() override;
-    virtual juce::String getVendor() { return "AirWindows"; }
+    virtual juce::String getVendor() override { return "AirWindows"; }
 
 protected:
     //==============================================================================
