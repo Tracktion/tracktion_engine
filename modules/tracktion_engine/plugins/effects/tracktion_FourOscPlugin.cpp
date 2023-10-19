@@ -969,7 +969,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
 
     // Effects: Distortion
     distortionOnValue.referTo (state, IDs::distortionOn, um);
-    distortionValue.referTo (state, IDs::distortion, um, 0.0f);
+    distortionValue.referTo (state, IDs::distortion, um, 0.5f);
 
     distortion = addParam ("distortion", TRANS("Distortion"), {0.0f, 1.0f});
 
@@ -980,7 +980,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     reverbSizeValue.referTo (state, IDs::reverbSize, um, 0.0f);
     reverbDampingValue.referTo (state, IDs::reverbDamping, um, 0.0f);
     reverbWidthValue.referTo (state, IDs::reverbWidth, um, 0.0f);
-    reverbMixValue.referTo (state, IDs::reverbMix, um, 0.0);
+    reverbMixValue.referTo (state, IDs::reverbMix, um, 0.5);
 
     reverbSize      = addParam ("reverbSize",     TRANS("Size"),    {0.0f, 1.0f});
     reverbDamping   = addParam ("reverbDamping",  TRANS("Damping"), {0.0f, 1.0f});
@@ -996,7 +996,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     delayOnValue.referTo (state, IDs::delayOn, um);
     delayFeedbackValue.referTo (state, IDs::delayFeedback, um, -10.0f);
     delayCrossfeedValue.referTo (state, IDs::delayCrossfeed, um, -100.0f);
-    delayMixValue.referTo (state, IDs::delayMix, um, 0.0f);
+    delayMixValue.referTo (state, IDs::delayMix, um, 0.5f);
     delayValue.referTo (state, IDs::delay, um, 1.0f);
 
     delayFeedback   = addParam ("delayFeedback",    TRANS("Feedback"),  {-100.0f, 0.0f, 0.0f, 4.0f}, "dB");
@@ -1012,7 +1012,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     chorusSpeedValue.referTo (state, IDs::chosusSpeed, um, 1.0f);
     chorusDepthValue.referTo (state, IDs::chorusDepth, um, 3.0f);
     chorusWidthValue.referTo (state, IDs::chrousWidth, um, 0.5f);
-    chorusMixValue.referTo (state, IDs::chorusMix, um, 0.0f);
+    chorusMixValue.referTo (state, IDs::chorusMix, um, 0.5f);
 
     chorusSpeed    = addParam ("chorusSpeed",      TRANS("Speed"),       {0.1f, 10.0f}, "Hz");
     chorusDepth    = addParam ("chorusDepth",      TRANS("Depth"),       {0.1f, 20.0f}, "ms");
@@ -1066,6 +1066,8 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
         state.setProperty(IDs::chorusOn, "0", um);
     if (!state.hasProperty(IDs::distortionOn))
         state.setProperty(IDs::distortionOn, "0", um);
+    if (!state.hasProperty(IDs::voiceMode))
+        state.setProperty(IDs::voiceMode, "2", um);
     // BEATCONNECT MODIFICATION END
 
     valueTreePropertyChanged (state, IDs::voiceMode);
@@ -1306,6 +1308,11 @@ void FourOscPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
         if (i == IDs::voiceMode
             || i == IDs::voices)
         {
+            // BEATCONNECT MODIFICATION START
+            // Fixes an async issue where the voiceMode would get updated afterwards
+            voiceModeValue.forceUpdateOfCachedValue();
+            // BEATCONNECT MODIFICATION END
+
             juce::ScopedLock sl (voicesLock);
             if (voiceModeValue == 2)
             {

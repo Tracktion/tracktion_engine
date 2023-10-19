@@ -183,6 +183,7 @@ public:
     juce::String getSelectableDescription() override    { return TRANS("4OSC"); }
     // BEATCONNECT MODIFICATION START
     juce::String getUniqueId() override                 { return uniqueId; }
+    virtual juce::String getVendor() override           { return "BeatConnect"; }
     // BEATCONNECT MODIFICATION END
     bool needsConstantBufferSize() override             { return false; }
 

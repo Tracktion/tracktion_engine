@@ -53,7 +53,7 @@ public:
     // BEATCONNECT MODIFICATION START
     FilterType getFilterType(const int index) const;
     double getFilterFrequency(const int index) const;
-    double getFilterGain(const int index) const;    
+    double getFilterGain(const int index) const;
     // BEATCONNECT MODIFICATION END
 
     // returns an error
@@ -93,6 +93,7 @@ public:
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
     // BEATCONNECT MODIFICATION START
     juce::String getUniqueId() override                 { return uniqueId; }
+    virtual juce::String getVendor() override           { return "BeatConnect"; }
     // BEATCONNECT MODIFICATION END
     bool isSynth() override                             { return true; }
     bool needsConstantBufferSize() override             { return false; }
