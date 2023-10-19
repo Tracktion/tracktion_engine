@@ -1011,7 +1011,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
     std::string vendorName = p->getVendor().toStdString(); // =8>
     if (p.get()->getPluginType() == type) {
         p.get()->state.setProperty(IDs::uniqueId, p.get()->getUniqueId(), nullptr);
-        if (p->getVendor() == "AirWindows" || p->getVendor() == "BeatConnect")
+        if (p->getVendor() == "AirWindows")
             p.get()->state.setProperty(IDs::manufacturer, p.get()->getVendor(), nullptr);
     }
     // BEATCONNECT MODIFICATIONS END
