@@ -1057,7 +1057,12 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
     // This is needed in order to set initial state in Unity
     if (!state.hasProperty(IDs::waveShape + "1"))
         state.setProperty(IDs::waveShape + "1", 1, um);
-    // We also need on states for the "On"
+    if (!state.hasProperty(IDs::waveShape + "2"))
+        state.setProperty(IDs::waveShape + "2", 0, um);
+    if (!state.hasProperty(IDs::waveShape + "3"))
+        state.setProperty(IDs::waveShape + "3", 0, um);
+    if (!state.hasProperty(IDs::waveShape + "4"))
+        state.setProperty(IDs::waveShape + "4", 0, um);
     if (!state.hasProperty(IDs::reverbOn))
         state.setProperty(IDs::reverbOn, "0", um);
     if (!state.hasProperty(IDs::delayOn))
