@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['backgroundjobmanager_6732',['BackgroundJobManager',['../classtracktion_1_1engine_1_1BackgroundJobManager.html',1,'tracktion::BackgroundJobManager'],['../classtracktion_1_1engine_1_1BackgroundJobManager.html',1,'tracktion::engine::BackgroundJobManager']]],
-  ['bandlimitedwavelookuptables_6733',['BandlimitedWaveLookupTables',['../classtracktion_1_1engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion::BandlimitedWaveLookupTables'],['../classtracktion_1_1engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion::engine::BandlimitedWaveLookupTables']]],
-  ['base_6734',['Base',['../structtracktion_1_1engine_1_1VSTXML_1_1Base.html',1,'tracktion::engine::VSTXML']]],
-  ['basicsummingnode_6735',['BasicSummingNode',['../classtracktion_1_1graph_1_1BasicSummingNode.html',1,'tracktion::BasicSummingNode'],['../classtracktion_1_1graph_1_1BasicSummingNode.html',1,'tracktion::graph::BasicSummingNode']]],
-  ['beatdetect_6736',['BeatDetect',['../structtracktion_1_1engine_1_1BeatDetect.html',1,'tracktion::BeatDetect'],['../structtracktion_1_1engine_1_1BeatDetect.html',1,'tracktion::engine::BeatDetect']]],
-  ['benchmarkoptions_6737',['BenchmarkOptions',['../structtracktion_1_1engine_1_1benchmark__utilities_1_1BenchmarkOptions.html',1,'tracktion::engine::benchmark_utilities']]],
-  ['blockingfunction_6738',['BlockingFunction',['../structtracktion_1_1engine_1_1BlockingFunction.html',1,'tracktion::BlockingFunction'],['../structtracktion_1_1engine_1_1BlockingFunction.html',1,'tracktion::engine::BlockingFunction']]],
-  ['breakpointoscillatormodifier_6739',['BreakpointOscillatorModifier',['../classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html',1,'tracktion::BreakpointOscillatorModifier'],['../classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html',1,'tracktion::engine::BreakpointOscillatorModifier']]],
-  ['bufferedfilereader_6740',['BufferedFileReader',['../classtracktion_1_1engine_1_1BufferedFileReader.html',1,'tracktion::BufferedFileReader'],['../classtracktion_1_1engine_1_1BufferedFileReader.html',1,'tracktion::engine::BufferedFileReader']]],
-  ['builtintype_6741',['BuiltInType',['../structtracktion_1_1engine_1_1PluginManager_1_1BuiltInType.html',1,'tracktion::engine::PluginManager']]],
-  ['builtintypebase_6742',['BuiltInTypeBase',['../structtracktion_1_1engine_1_1PluginManager_1_1BuiltInTypeBase.html',1,'tracktion::engine::PluginManager']]]
+  ['backgroundjobmanager_6741',['BackgroundJobManager',['../classtracktion_1_1engine_1_1BackgroundJobManager.html',1,'tracktion::BackgroundJobManager'],['../classtracktion_1_1engine_1_1BackgroundJobManager.html',1,'tracktion::engine::BackgroundJobManager']]],
+  ['bandlimitedwavelookuptables_6742',['BandlimitedWaveLookupTables',['../classtracktion_1_1engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion::BandlimitedWaveLookupTables'],['../classtracktion_1_1engine_1_1BandlimitedWaveLookupTables.html',1,'tracktion::engine::BandlimitedWaveLookupTables']]],
+  ['base_6743',['Base',['../structtracktion_1_1engine_1_1VSTXML_1_1Base.html',1,'tracktion::engine::VSTXML']]],
+  ['basicsummingnode_6744',['BasicSummingNode',['../classtracktion_1_1graph_1_1BasicSummingNode.html',1,'tracktion::BasicSummingNode'],['../classtracktion_1_1graph_1_1BasicSummingNode.html',1,'tracktion::graph::BasicSummingNode']]],
+  ['beatdetect_6745',['BeatDetect',['../structtracktion_1_1engine_1_1BeatDetect.html',1,'tracktion::BeatDetect'],['../structtracktion_1_1engine_1_1BeatDetect.html',1,'tracktion::engine::BeatDetect']]],
+  ['benchmarkoptions_6746',['BenchmarkOptions',['../structtracktion_1_1engine_1_1benchmark__utilities_1_1BenchmarkOptions.html',1,'tracktion::engine::benchmark_utilities']]],
+  ['blockingfunction_6747',['BlockingFunction',['../structtracktion_1_1engine_1_1BlockingFunction.html',1,'tracktion::BlockingFunction'],['../structtracktion_1_1engine_1_1BlockingFunction.html',1,'tracktion::engine::BlockingFunction']]],
+  ['breakpointoscillatormodifier_6748',['BreakpointOscillatorModifier',['../classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html',1,'tracktion::BreakpointOscillatorModifier'],['../classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html',1,'tracktion::engine::BreakpointOscillatorModifier']]],
+  ['bufferedfilereader_6749',['BufferedFileReader',['../classtracktion_1_1engine_1_1BufferedFileReader.html',1,'tracktion::BufferedFileReader'],['../classtracktion_1_1engine_1_1BufferedFileReader.html',1,'tracktion::engine::BufferedFileReader']]],
+  ['builtintype_6750',['BuiltInType',['../structtracktion_1_1engine_1_1PluginManager_1_1BuiltInType.html',1,'tracktion::engine::PluginManager']]],
+  ['builtintypebase_6751',['BuiltInTypeBase',['../structtracktion_1_1engine_1_1PluginManager_1_1BuiltInTypeBase.html',1,'tracktion::engine::PluginManager']]]
 ];

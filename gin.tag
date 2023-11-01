@@ -51131,6 +51131,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>checkNodesForAudio</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>aa4d0132b0be08cea591d47eb36f29883</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>int</type>
       <name>quality</name>
       <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
@@ -85302,11 +85309,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -85314,6 +85316,11 @@
     <subgroup>tracktion_graph-docs</subgroup>
     <subgroup>tracktion_graph-tracktion_graph</subgroup>
     <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
