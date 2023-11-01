@@ -104,7 +104,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
 
         videoPosition.referTo (transientState, IDs::videoPosition, um);
         forceVideoJump.referTo (transientState, IDs::forceVideoJump, um);
-        
+
         // CachedValues need to be set so they aren't using their default values
         // to avoid spurious listener callbacks
         playing = playing.get();
@@ -339,12 +339,12 @@ struct TransportControl::FileFlushTimer  : private Timer
             hasBeenDeactivated = true;
             active = false;
         }
-        
+
         auto canPurge = [this]
         {
             if (owner.isPlaying() || owner.isRecording())
                 return false;
-            
+
             return SmartThumbnail::areThumbnailsFullyLoaded (owner.engine);
         };
 
@@ -478,13 +478,13 @@ struct TransportControl::PlayHeadWrapper
     PlayHeadWrapper (TransportControl& t)
         : transport (t)
     {}
-    
+
     tracktion::graph::PlayHead* getNodePlayHead() const
     {
         return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
                                          : nullptr;
     }
-    
+
     double getSampleRate() const
     {
         return transport.playbackContext ? transport.playbackContext->getSampleRate()
@@ -502,24 +502,24 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
     }
-    
+
     void setRollInToLoop (TimePosition prerollStartTime)
     {
         if (auto ph = getNodePlayHead())
             ph->setRollInToLoop (tracktion::toSamples (prerollStartTime, getSampleRate()));
     }
-    
+
     void stop()
     {
         if (auto ph = getNodePlayHead())
             ph->stop();
     }
-    
+
     bool isPlaying() const
     {
         if (auto ph = getNodePlayHead())
             return ph->isPlaying();
-        
+
         return false;
     }
 
@@ -536,52 +536,52 @@ struct TransportControl::PlayHeadWrapper
     {
         if (auto ph = getNodePlayHead())
             return TimePosition::fromSamples (ph->getPosition(), getSampleRate());
-        
+
         return {};
     }
-    
+
     TimePosition getUnloopedPosition() const
     {
         if (auto ph = getNodePlayHead())
             return TimePosition::fromSamples (ph->getUnloopedPosition(), getSampleRate());
-        
+
         return {};
     }
-    
+
     void setPosition (TimePosition newPos)
     {
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
     }
-    
+
     bool isLooping() const
     {
         if (auto ph = getNodePlayHead())
             return ph->isLooping();
-        
+
         return false;
     }
-    
+
     TimeRange getLoopTimes() const
     {
         if (auto ph = getNodePlayHead())
             return tracktion::timeRangeFromSamples (ph->getLoopRange(), getSampleRate());
-        
+
         return {};
     }
-    
+
     void setLoopTimes (bool loop, TimeRange newRange)
     {
         if (auto ph = getNodePlayHead())
             ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
     }
-    
+
     void setUserIsDragging (bool isDragging)
     {
          if (auto ph = getNodePlayHead())
              ph->setUserIsDragging (isDragging);
     }
-                              
+
 private:
     TransportControl& transport;
 };
@@ -649,7 +649,7 @@ void TransportControl::stopAllTransports (Engine& engine, bool discardRecordings
 std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
 {
     std::vector<std::unique_ptr<ScopedContextAllocator>> restartHandles;
-    
+
     for (auto tc : getAllActiveTransports (engine))
     {
         std::unique_ptr<ScopedPlaybackRestarter> spr;
@@ -667,7 +667,7 @@ std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> Transport
 
         tc->edit.restartPlayback();
     }
-    
+
     return restartHandles;
 }
 
@@ -982,10 +982,7 @@ void TransportControl::timerCallback()
         }
 
         if (isPlaying())
-        {
-            clearPlayingFlags();
-            startedOrStopped();
-        }
+            stop (false, false);
     }
     else if (! isPlaying())
     {
@@ -1437,7 +1434,7 @@ bool TransportControl::performRecord()
                     playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
                     playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
                 }
-                
+
                 playHeadWrapper->setPosition (prerollStart);
                 position = prerollStart;
 
@@ -1458,7 +1455,7 @@ bool TransportControl::performRecord()
                 {
                     edit.setClickTrackRange ({});
                 }
-                
+
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
             }
