@@ -67,6 +67,7 @@ public:
         bool ditheringEnabled = false;
         bool separateTracks = false;
         bool addAntiDenormalisationNoise = false;
+        bool checkNodesForAudio = true;             /**< If true, attempting to render an Edit that doesn't produce audio will fail. */
 
         int quality = 0;
         juce::StringPairArray metadata;
@@ -88,7 +89,7 @@ public:
                     const Renderer::Parameters&,
                     std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-        
+
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
                     std::unique_ptr<tracktion::graph::Node>,
