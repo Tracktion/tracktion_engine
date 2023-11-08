@@ -738,10 +738,11 @@ void Edit::initialise()
         t->cancelAnyPendingUpdates();
 
     initialiseControllerMappings();
-    TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (*this);
 
     callBlocking ([this]
                   {
+                      TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (*this);
+
                       // Must be set to false before curve updates
                       // but set inside here to give the message loop some time to dispatch async updates
                       isLoadInProgress = false;
