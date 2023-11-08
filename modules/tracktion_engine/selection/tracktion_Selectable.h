@@ -26,6 +26,7 @@ public:
     virtual void selectableObjectAboutToBeDeleted (Selectable*) = 0;
 };
 
+
 //==============================================================================
 /**
     Base class for things that can be selected, and whose properties can appear
@@ -291,6 +292,62 @@ SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
 {
     return SafeSelectable<SelectableType> (selectable);
 }
+
+
+//==============================================================================
+//==============================================================================
+/**
+    A SelectableListener that safely handles listener to a Selectable and uses
+    a lambda for its callback.
+*/
+class LambdaSelectableListener  : public SelectableListener
+{
+public:
+    /** Constructs an empty listener. */
+    LambdaSelectableListener() = default;
+
+    /** Destructor. */
+    ~LambdaSelectableListener() override
+    {
+        reset();
+    }
+
+    /** Constructs a listener for a Selectable. */
+    LambdaSelectableListener (Selectable& s)
+    {
+        reset (&s);
+    }
+
+    /** Resets the Selectable. */
+    void reset (Selectable* s = nullptr)
+    {
+        if (ref)
+            ref->removeSelectableListener (this);
+
+        ref = s;
+
+        if (ref)
+            ref->addSelectableListener (this);
+    }
+
+    std::function<void()> onSelectableChanged;          /*<< Assignable callback for change events. */
+    std::function<void()> onSelectableAboutToBeDeleted; /*<< Assignable callback for deletion events. */
+
+private:
+    Selectable::WeakRef ref;
+
+    void selectableObjectChanged (Selectable*) override
+    {
+        if (onSelectableChanged)
+            onSelectableChanged();
+    }
+
+    void selectableObjectAboutToBeDeleted (Selectable*) override
+    {
+        if (onSelectableAboutToBeDeleted)
+            onSelectableAboutToBeDeleted();
+    }
+};
 
 
 }} // namespace tracktion { inline namespace engine
