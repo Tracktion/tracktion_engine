@@ -163,12 +163,12 @@ juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
         return {};
 
     juce::Array<AudioTrack*> tracks;
-    
+
     if (owner.isEnabled())
         for (auto dest : destTracks)
             if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, dest->targetTrack)))
                 tracks.add (at);
-    
+
     return tracks;
 }
 
@@ -179,9 +179,9 @@ juce::Array<int> InputDeviceInstance::getTargetIndexes() const
 
     if (ref.wasObjectDeleted())
         return {};
-    
+
     juce::Array<int> indexes;
-    
+
     if (owner.isEnabled())
         for (auto dest : destTracks)
             indexes.add (dest->targetIndex);
@@ -196,7 +196,7 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
         return;
     }
-    
+
     if (owner.isTrackDevice() || moveToTrack)
     {
         for (auto t : getTargetTracks())
@@ -208,11 +208,9 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
     }
 
     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
+    v.setProperty (IDs::targetTrack, track.itemID, nullptr);
+    v.setProperty (IDs::targetIndex, index, nullptr);
     state.addChild (v, -1, um);
-
-    auto& dest = *destTracks[destTracks.size() - 1];
-    dest.targetTrack = track.itemID;
-    dest.targetIndex = index;
 
     trackDeviceEnabler.triggerAsyncUpdate();
 }
@@ -224,7 +222,7 @@ void InputDeviceInstance::removeTargetTrack (AudioTrack& track, juce::UndoManage
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
         return;
     }
-    
+
     for (int i = destTracks.size(); --i >= 0;)
     {
         auto& dt = *destTracks[i];
@@ -261,7 +259,7 @@ void InputDeviceInstance::clearFromTracks (juce::UndoManager* um)
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
         return;
     }
-    
+
     for (int i = destTracks.size(); --i >= 0;)
     {
         auto& dt = *destTracks[i];
@@ -303,13 +301,22 @@ InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination
     return {};
 }
 
+InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const juce::ValueTree& destinationState)
+{
+    for (auto dest : destTracks)
+        if (dest->state == destinationState)
+            return dest;
+
+    return {};
+}
+
 bool InputDeviceInstance::isRecordingActive() const
 {
     for (auto dest : destTracks)
         if (dest->recordEnabled)
             if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, dest->targetTrack)))
                 return at->acceptsInput();
-    
+
     return false;
 }
 
@@ -319,7 +326,7 @@ bool InputDeviceInstance::isRecordingActive (const Track& t) const
         if (t.itemID == dest->targetTrack)
             if (dest->recordEnabled)
                 return t.acceptsInput();
-    
+
     return false;
 }
 
@@ -329,7 +336,7 @@ bool InputDeviceInstance::isRecordingEnabled (const Track& t) const
         if (dest->targetTrack == t.itemID)
             if (dest->recordEnabled)
                 return true;
-    
+
     return false;
 }
 
@@ -379,20 +386,38 @@ void InputDeviceInstance::prepareAndPunchRecord()
 void InputDeviceInstance::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)
 {
     if (v.getParent() == state)
+    {
         if (id == IDs::armed || id == IDs::targetTrack)
+        {
+            if (id == IDs::targetTrack)
+                if (auto t = findTrackForID (edit, EditItemID::fromVar (v[IDs::targetTrack])))
+                    t->changed();
+
             updateRecordingStatus();
+        }
+    }
 }
 
 void InputDeviceInstance::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
+    {
+        if (auto t = findTrackForID (edit, EditItemID::fromVar (c[IDs::targetTrack])))
+            t->changed();
+
         updateRecordingStatus();
+    }
 }
 
 void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
+    {
+        if (auto t = findTrackForID (edit, EditItemID::fromVar (c[IDs::targetTrack])))
+            t->changed();
+
         updateRecordingStatus();
+    }
 }
 
 void InputDeviceInstance::updateRecordingStatus()

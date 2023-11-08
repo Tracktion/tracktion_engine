@@ -98,10 +98,10 @@ public:
 
     juce::Array<AudioTrack*> getTargetTracks() const;
     juce::Array<int> getTargetIndexes() const;
-    
+
     bool isOnTargetTrack (const Track&);
     bool isOnTargetTrack (const Track&, int idx);
-    
+
     void setTargetTrack (AudioTrack&, int index, bool moveToTrack, juce::UndoManager*);
     void removeTargetTrack (AudioTrack&, juce::UndoManager*);
     void removeTargetTrack (AudioTrack&, int index, juce::UndoManager*);
@@ -162,37 +162,37 @@ public:
             targetTrack.referTo (state, IDs::targetTrack, nullptr);
             targetIndex.referTo (state, IDs::targetIndex, nullptr, -1);
         }
-        
+
         ~InputDeviceDestination() override
         {
             notifyListenersOfDeletion();
         }
-        
+
         juce::String getSelectableDescription() override
         {
             return input.getInputDevice().getSelectableDescription();
         }
-        
+
         InputDeviceInstance& input;
         juce::ValueTree state;
-        
+
         juce::CachedValue<bool> recordEnabled;
         juce::CachedValue<EditItemID> targetTrack;
         juce::CachedValue<int> targetIndex;
     };
-    
+
     struct WaveInputDeviceDestination : public InputDeviceDestination
     {
         WaveInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
         ~WaveInputDeviceDestination() override { notifyListenersOfDeletion(); }
     };
-    
+
     struct MidiInputDeviceDestination : public InputDeviceDestination
     {
         MidiInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
         ~MidiInputDeviceDestination() override { notifyListenersOfDeletion(); }
     };
-    
+
     struct VirtualMidiInputDeviceDestination : public InputDeviceDestination
     {
         VirtualMidiInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
@@ -246,8 +246,9 @@ public:
 
         InputDeviceInstance& input;
     };
-    
+
     InputDeviceDestination* getDestination (const Track& track, int index);
+    InputDeviceDestination* getDestination (const juce::ValueTree& destinationState);
 
     InputDeviceDestinationList destTracks {*this, state};
 
