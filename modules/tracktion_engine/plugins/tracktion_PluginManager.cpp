@@ -715,12 +715,6 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
         {
             Plugin::Ptr rackInstance = new RackInstance(PluginCreationInfo(ed, RackInstance::create(*rackType), true));
             addPluginParametersToValueTree(rackInstance);
-
-            // BEATCONNECT MODIFICATIONS START
-            rackType->state.getOrCreateChildWithName(IDs::PresetCategories, nullptr);
-            auto fp = rackType->state.getOrCreateChildWithName(IDs::Faceplate, nullptr);
-            fp.getOrCreateChildWithName(IDs::Images, nullptr);
-            // BEATCONNECT MODIFICATIONS END
             return rackInstance;
         }
     }

@@ -1328,6 +1328,13 @@ RackType::Ptr RackTypeList::addNewRack()
     auto newID = edit.createNewItemID();
 
     juce::ValueTree v (IDs::RACK);
+
+    // BEATCONNECT MODIFICATIONS START
+    v.getOrCreateChildWithName(IDs::PresetCategories, nullptr);
+    auto fp = v.getOrCreateChildWithName(IDs::Faceplate, nullptr);
+    fp.getOrCreateChildWithName(IDs::Images, nullptr);
+    // BEATCONNECT MODIFICATIONS END
+
     newID.writeID (v, nullptr);
     state.addChild (v, -1, &edit.getUndoManager());
 

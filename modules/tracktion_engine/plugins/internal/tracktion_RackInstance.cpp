@@ -123,9 +123,11 @@ RackInstance::~RackInstance()
 
 juce::ValueTree RackInstance::create (RackType& type)
 {
-    return createValueTree (IDs::PLUGIN,
+    auto v = createValueTree (IDs::PLUGIN,
                             IDs::type, RackInstance::xmlTypeName,
                             IDs::rackType, type.rackID);
+
+    return v;
 }
 
 juce::String RackInstance::getTooltip()
