@@ -1137,4 +1137,41 @@ InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const Ed
     return params;
 }
 
+juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID targetID)
+{
+    CRASH_TRACER
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    InputDeviceInstance::InputDeviceDestination* dest = nullptr;
+
+    for (auto inputDest : instance.destTracks)
+    {
+        if (inputDest->getTarget() == targetID)
+        {
+            dest = inputDest;
+            break;
+        }
+    }
+
+    if (! dest)
+        return juce::Result::fail (TRANS("Input not assigned to this destination"));
+
+    if (! instance.edit.getTransport().isRecording())
+        return juce::Result::fail (TRANS("Transport must be recording to punch record"));
+
+    if (! dest->recordEnabled)
+        return juce::Result::fail (TRANS("Input must be armed to punch record"));
+
+    // Punch in at the current play time don't punch out until recording is stopped
+    InputDeviceInstance::RecordingParameters params;
+    params.punchRange   = { instance.context.getPosition(), Edit::getMaximumEditTimeRange().getEnd() };
+
+    if (auto [recContexts, errors] = extract (instance.prepareToRecord (params)); errors.isEmpty())
+        instance.startRecording (std::move (recContexts));
+    else
+        return juce::Result::fail (errors[0]);
+
+    return juce::Result::ok();
+}
+
+
 }} // namespace tracktion { inline namespace engine

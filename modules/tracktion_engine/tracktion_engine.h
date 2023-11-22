@@ -65,6 +65,8 @@
  #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
 
+ #include "../3rd_party/expected/expected.hpp"
+
 #undef __TEXT
 
 /** Config: TRACKTION_ENABLE_SINGLETONS

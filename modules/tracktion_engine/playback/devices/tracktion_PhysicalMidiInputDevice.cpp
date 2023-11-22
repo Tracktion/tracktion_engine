@@ -88,7 +88,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
 
                     if (auto epc = transport.getCurrentPlaybackContext())
                         epc->setSpeedCompensation (speedComp);
-                        
+
                     break;
                 }
 
@@ -271,34 +271,35 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         return timecodeReader->processMessage (message);
     }
 
-    juce::String prepareToRecord (RecordingParameters params) override
+    std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> prepareToRecord (RecordingParameters params) override
     {
-        MidiInputDeviceInstanceBase::prepareToRecord (params);
-
         if (getPhysicalMidiInput().inputDevice != nullptr)
-            return {};
+            return MidiInputDeviceInstanceBase::prepareToRecord (params);
 
-        return TRANS("Couldn't open the MIDI port");
+        std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> res;
+        res.emplace_back (tl::unexpected (TRANS("Couldn't open the MIDI port")));
+        return res;
     }
 
-    bool startRecording() override
-    {
-        // We need to keep a list of tracks the are being recorded to
-        // here, since user may un-arm track to stop recording
-        activeTracks.clear();
-
-        for (auto destTrack : getTargetTracks())
-            if (isRecordingActive (*destTrack))
-                activeTracks.add (destTrack);
-        
-        if (getPhysicalMidiInput().inputDevice != nullptr)
-        {
-            getPhysicalMidiInput().masterTimeUpdate (startTime.inSeconds());
-            recording = true;
-        }
-
-        return recording;
-    }
+    //ddd I'm not sure what the masterTimeUpdate call here is for... Can it be removed?
+    // bool startRecording() override
+    // {
+    //     // We need to keep a list of tracks the are being recorded to
+    //     // here, since user may un-arm track to stop recording
+    //     activeTracks.clear();
+    //
+    //     for (auto destTrack : getTargetTracks())
+    //         if (isRecordingActive (*destTrack))
+    //             activeTracks.add (destTrack);
+    //
+    //     if (getPhysicalMidiInput().inputDevice != nullptr)
+    //     {
+    //         getPhysicalMidiInput().masterTimeUpdate (startTime.inSeconds());
+    //         recording = true;
+    //     }
+    //
+    //     return recording;
+    // }
 
     PhysicalMidiInputDevice& getPhysicalMidiInput() const   { return static_cast<PhysicalMidiInputDevice&> (owner); }
 

@@ -95,6 +95,7 @@ template<typename TrackItemType>
 /** Returns the ClipOwner with a given ID if it can be found in the Edit. */
 ClipOwner* findClipOwnerForID (const Edit&, EditItemID);
 
+
 //==============================================================================
 // ClipSlots
 //==============================================================================
@@ -103,6 +104,7 @@ ClipSlot* findClipSlotForID (const Edit&, EditItemID);
 
 /** Returns the index of the ClipSlot in the list it is owned by. */
 int findClipSlotIndex (ClipSlot&);
+
 
 //==============================================================================
 // Clips
@@ -265,6 +267,11 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit&);
 InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext&,
                                                                         TimePosition playStart,
                                                                         TimePosition punchIn);
+
+/** Starts an InputDeviceInstance recording to the given target without any count-in etc.
+    N.B. The input must already be assigned to the target and armed for the punch to start.
+*/
+juce::Result prepareAndPunchRecord (InputDeviceInstance&, EditItemID);
 
 
 //==============================================================================

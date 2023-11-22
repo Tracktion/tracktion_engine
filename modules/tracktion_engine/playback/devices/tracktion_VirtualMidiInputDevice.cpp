@@ -18,24 +18,25 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
     {
     }
 
-    bool startRecording() override
-    {
-        // We need to keep a list of tracks the are being recorded to
-        // here, since user may un-arm track to stop recording
-        activeTracks.clear();
-
-        for (auto destTrack : getTargetTracks())
-            if (isRecordingActive (*destTrack))
-                activeTracks.add (destTrack);
-
-        if (! recording)
-        {
-            getVirtualMidiInput().masterTimeUpdate (startTime.inSeconds());
-            recording = true;
-        }
-
-        return recording;
-    }
+    //ddd I'm not sure what the masterTimeUpdate call here is for... Can it be removed?
+    // bool startRecording() override
+    // {
+    //     // We need to keep a list of tracks the are being recorded to
+    //     // here, since user may un-arm track to stop recording
+    //     activeTracks.clear();
+    //
+    //     for (auto destTrack : getTargetTracks())
+    //         if (isRecordingActive (*destTrack))
+    //             activeTracks.add (destTrack);
+    //
+    //     if (! recording)
+    //     {
+    //         getVirtualMidiInput().masterTimeUpdate (startTime.inSeconds());
+    //         recording = true;
+    //     }
+    //
+    //     return recording;
+    // }
 
     VirtualMidiInputDevice& getVirtualMidiInput() const   { return static_cast<VirtualMidiInputDevice&> (owner); }
 

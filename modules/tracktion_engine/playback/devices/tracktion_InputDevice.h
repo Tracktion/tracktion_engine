@@ -87,20 +87,27 @@ private:
     juce::String type, name, alias, defaultAlias;
 };
 
+
+//==============================================================================
 //==============================================================================
 class InputDeviceInstance   : protected juce::ValueTree::Listener
 {
 public:
+    struct InputDeviceDestination;
+
     InputDeviceInstance (InputDevice&, EditPlaybackContext&);
     ~InputDeviceInstance() override;
 
     InputDevice& getInputDevice() noexcept      { return owner; }
+
+    juce::Array<EditItemID> getTargets() const;
 
     juce::Array<AudioTrack*> getTargetTracks() const;
     juce::Array<int> getTargetIndexes() const;
 
     bool isOnTargetTrack (const Track&);
     bool isOnTargetTrack (const Track&, int idx);
+    bool isOnTargetSlot (const ClipSlot&);
 
     void setTargetTrack (AudioTrack&, int index, bool moveToTrack, juce::UndoManager*);
     void removeTargetTrack (AudioTrack&, juce::UndoManager*);
@@ -109,44 +116,101 @@ public:
     void clearFromTracks (juce::UndoManager*);
     bool isAttachedToTrack() const;
 
-    virtual bool isLivePlayEnabled (const Track& t) const;
+    InputDeviceDestination* setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*);
+    void removeTarget (EditItemID targetID, juce::UndoManager*);
+
+    virtual bool isLivePlayEnabled (const Track&) const;
 
     // true if recording is enabled and the input's connected to a track
     virtual bool isRecordingActive() const;
     virtual bool isRecordingActive (const Track&) const;
 
-    bool isRecordingEnabled (const Track&) const;
+    bool isRecordingEnabled (EditItemID) const;
     void setRecordingEnabled (const Track&, bool b);
 
-    /** should return true if this input is currently actively recording into a track
+    /** Should return true if this input is currently actively recording into a track
         and it wants the existing track contents to be muted.
     */
-    virtual bool shouldTrackContentsBeMuted()   { return false; }
+    virtual bool shouldTrackContentsBeMuted (const Track&)   { return false; }
 
-    /** The parameters used to configure a recording operation. */
+    //==============================================================================
+    //** The parameters used to configure a recording operation. */
     struct RecordingParameters
     {
-        TimeRange punchRange;       /**< The transport time range at which the recording should happen. */
+        TimeRange punchRange;               /**< The transport time range at which the recording should happen. */
+        std::vector<EditItemID> targets;    /**< The targets to record to, if this is empty, all armed targets will be added. */
     };
 
-    virtual juce::String prepareToRecord (RecordingParameters) = 0;
-    virtual bool startRecording() = 0;
+    /**
+        Base class for RecordingContexts.
+        These are essentially handles returned from prepareToRecord and
+        then passed to startRecording where they are consumed.
+    */
+    class RecordingContext
+    {
+    public:
+        /** Destructor. */
+        virtual ~RecordingContext() = default;
+
+        const EditItemID targetID; /**< The ID of the recording target, track or clip. */
+
+    protected:
+        RecordingContext (EditItemID targetID_)
+            : targetID (targetID_)
+        {}
+    };
+
+    /** An array of either valid RecordingContexts or an error message if the recording couldn't be started.
+        @see
+    */
+    using PreparedContext = std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>>;
+
+    /** Prepares a recording operation.
+        @param      RecordingParameters  Determines the destinations and punch ranges
+        @returns    An array of either valid RecordingContexts or error messages
+    */
+    [[nodiscard]] virtual PreparedContext prepareToRecord (RecordingParameters) = 0;
+
+    /** Starts a recording.
+        @param      The prepared recording contexts to start.
+        @returns    Any recording contexts that couldn't be started by this device.
+                    E.g. If the contexts are mixed MIDI and audio and this is an audio device,
+                    it will returns the MIDI contexts to pass to a MIDI device.
+    */
+    virtual std::vector<std::unique_ptr<RecordingContext>> startRecording (std::vector<std::unique_ptr<RecordingContext>>) = 0;
+
+    /**
+        The params passed to stopRecording.
+    */
+    struct StopRecordingParameters
+    {
+        std::vector<EditItemID> targetsToStop;      /**< The targets to stop, others will continue allowing you to punch out
+                                                         only specific targets. If this is empty, all active recordings will be stopped. */
+        TimePosition unloopedTimeToEndRecording;    /**< The TimePosition this recording should be stopped at
+                                                         @see EditPlaybackContext::getUnloopedPosition. */
+        bool isLooping = false;                     /**< Whether to treat the stopped recordings as looped or not. */
+        TimeRange markedRange;                      /**< The marked range used for either loop or punch times. */
+        bool discardRecordings = false;             /**< Whether to discard recordings or keep them. */
+    };
+
+    /** Stops a recording.
+        @param StopRecordingParameters determines how stopped recordings are treated.
+    */
+    virtual Clip::Array stopRecording (StopRecordingParameters) = 0;
+
+    /** Returns true if there are any active recordings for this device. */
     virtual bool isRecording() = 0;
-    virtual void stop() = 0;
 
-    // called if not all devices started correctly when recording started.
-    virtual void recordWasCancelled() = 0;
-    virtual juce::File getRecordingFile() const     { return {}; }
+    //ddd Delete this and just use the targetID
+    virtual juce::File getRecordingFile (EditItemID) const     { return {}; }
 
-    virtual void prepareAndPunchRecord();
-    virtual TimePosition getPunchInTime() = 0;
-    virtual Clip::Array stopRecording() = 0;
-    virtual Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,
-                                                  bool isLooping, TimeRange loopRange,
-                                                  bool discardRecordings,
-                                                  SelectionManager*) = 0;
+    /** Returns the time that a given target started recording. */
+    virtual TimePosition getPunchInTime (EditItemID) = 0;
 
-    virtual juce::Array<Clip*> applyRetrospectiveRecord (SelectionManager*) = 0;
+    /** Takes the retrospective buffer and creates clips from it, as if recording had been
+        triggered in the past and stopped at the time of calling this function.
+    */
+    virtual juce::Array<Clip*> applyRetrospectiveRecord() = 0;
 
     juce::ValueTree state;
     InputDevice& owner;
@@ -159,8 +223,8 @@ public:
             : input (i), state (v)
         {
             recordEnabled.referTo (state, IDs::armed, nullptr, false);
-            targetTrack.referTo (state, IDs::targetTrack, nullptr);
-            targetIndex.referTo (state, IDs::targetIndex, nullptr, -1);
+            assert (targetTrack.isValid() != targetSlot.isValid()
+                    && "One target must be valid!");
         }
 
         ~InputDeviceDestination() override
@@ -173,12 +237,20 @@ public:
             return input.getInputDevice().getSelectableDescription();
         }
 
+        EditItemID getTarget() const
+        {
+            return targetTrack.isValid() ? targetTrack : targetSlot;
+        }
+
         InputDeviceInstance& input;
         juce::ValueTree state;
 
         juce::CachedValue<bool> recordEnabled;
-        juce::CachedValue<EditItemID> targetTrack;
-        juce::CachedValue<int> targetIndex;
+
+    //dddprivate:
+        const EditItemID targetTrack = EditItemID::fromProperty (state, IDs::targetTrack);
+        const EditItemID targetSlot = EditItemID::fromProperty (state, IDs::targetSlot);
+        const int targetIndex = state[IDs::targetIndex];
     };
 
     struct WaveInputDeviceDestination : public InputDeviceDestination
@@ -248,6 +320,7 @@ public:
     };
 
     InputDeviceDestination* getDestination (const Track& track, int index);
+    InputDeviceDestination* getDestination (const ClipSlot&);
     InputDeviceDestination* getDestination (const juce::ValueTree& destinationState);
 
     InputDeviceDestinationList destTracks {*this, state};
@@ -281,18 +354,51 @@ protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
-    void valueTreeParentChanged (juce::ValueTree&) override {}
-
-    juce::Array<AudioTrack*> activeTracks;
 
 private:
     mutable AsyncCaller trackDeviceEnabler;
     bool wasLivePlayActive = false;
-    void updateRecordingStatus();
+    void updateRecordingStatus (EditItemID);
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (InputDeviceInstance)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputDeviceInstance)
 };
+
+
+//==============================================================================
+//==============================================================================
+/** Returns true if all the targets were fully prepared. */
+[[ nodiscard ]] inline bool hasErrors (const InputDeviceInstance::PreparedContext& pc)
+{
+    for (auto& res : pc)
+        if (! res)
+            return true;
+
+    return false;
+}
+
+inline InputDeviceInstance::PreparedContext& append (InputDeviceInstance::PreparedContext& dest, InputDeviceInstance::PreparedContext&& src)
+{
+    std::move (src.begin(), src.end(), std::back_inserter(dest));
+    return dest;
+}
+
+/** Splits the PreparedContext in to valid RecordingContexts and an array of error messages. */
+[[ nodiscard ]] inline std::pair<std::vector<std::unique_ptr<InputDeviceInstance::RecordingContext>>, juce::StringArray> extract (InputDeviceInstance::PreparedContext&& pc)
+{
+    std::vector<std::unique_ptr<InputDeviceInstance::RecordingContext>> recContexts;
+    juce::StringArray errors;
+
+    for (auto& res : pc)
+    {
+        if (res)
+            recContexts.emplace_back (std::move (res.value()));
+        else
+            errors.add (res.error());
+    }
+
+    return { std::move (recContexts), std::move (errors) };
+}
+
 
 }} // namespace tracktion { inline namespace engine

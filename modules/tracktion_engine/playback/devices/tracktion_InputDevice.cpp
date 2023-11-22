@@ -154,6 +154,30 @@ InputDeviceInstance::~InputDeviceInstance()
     jassert (Selectable::isSelectableValid (&edit));
 }
 
+juce::Array<EditItemID> InputDeviceInstance::getTargets() const
+{
+    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    trackDeviceEnabler.handleUpdateNowIfNeeded();
+
+    if (ref.wasObjectDeleted())
+        return {};
+
+    if (! owner.isEnabled())
+        return {};
+
+    juce::Array<EditItemID> targets;
+
+    for (auto dest : destTracks)
+    {
+        if (dest->targetTrack.isValid())
+            targets.add (dest->targetTrack);
+        else if (dest->targetSlot.isValid())
+            targets.add (dest->targetSlot);
+    }
+
+    return targets;
+}
+
 juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
 {
     juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
@@ -213,6 +237,68 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
     state.addChild (v, -1, um);
 
     trackDeviceEnabler.triggerAsyncUpdate();
+}
+
+InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManager* um)
+{
+    auto track = findTrackForID (edit, targetID);
+    ClipSlot* clipSlot = track != nullptr ? nullptr
+                                          : findClipSlotForID (edit, targetID);
+
+    if (! (track || clipSlot))
+        return {};
+
+    if (isRecording())
+    {
+        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
+        return {};
+    }
+
+    if (owner.isTrackDevice() || move)
+    {
+        for (auto t : getTargets())
+            removeTarget (t, um);
+    }
+    else
+    {
+        removeTarget (targetID, um);
+    }
+
+    auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
+
+    if (track)
+    {
+        v.setProperty (IDs::targetTrack, targetID, nullptr);
+        v.setProperty (IDs::targetIndex, 0, nullptr);
+    }
+    else if (clipSlot)
+    {
+        v.setProperty (IDs::targetSlot, targetID, nullptr);
+    }
+
+    state.addChild (v, -1, um);
+    jassert (destTracks[destTracks.size() - 1]->getTarget() == targetID);
+
+    trackDeviceEnabler.triggerAsyncUpdate();
+
+    return destTracks[destTracks.size() - 1];
+}
+
+void InputDeviceInstance::removeTarget (EditItemID targetID, juce::UndoManager* um)
+{
+    if (isRecording())
+    {
+        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't change tracks whilst recording is active"));
+        return;
+    }
+
+    for (int i = destTracks.size(); --i >= 0;)
+    {
+        auto& dt = *destTracks[i];
+
+        if (dt.getTarget() == targetID)
+            state.removeChild (dt.state, um);
+    }
 }
 
 void InputDeviceInstance::removeTargetTrack (AudioTrack& track, juce::UndoManager* um)
@@ -292,10 +378,28 @@ bool InputDeviceInstance::isOnTargetTrack (const Track& t, int idx)
     return false;
 }
 
+bool InputDeviceInstance::isOnTargetSlot (const ClipSlot& cs)
+{
+    for (auto dest : destTracks)
+        if (dest->targetSlot == cs.itemID)
+            return true;
+
+    return false;
+}
+
 InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const Track& track, int index)
 {
     for (auto dest : destTracks)
         if (dest->targetTrack == track.itemID && dest->targetIndex == index)
+            return dest;
+
+    return {};
+}
+
+InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const ClipSlot& cs)
+{
+    for (auto dest : destTracks)
+        if (dest->targetSlot == cs.itemID)
             return dest;
 
     return {};
@@ -330,10 +434,10 @@ bool InputDeviceInstance::isRecordingActive (const Track& t) const
     return false;
 }
 
-bool InputDeviceInstance::isRecordingEnabled (const Track& t) const
+bool InputDeviceInstance::isRecordingEnabled (EditItemID targetID) const
 {
     for (auto dest : destTracks)
-        if (dest->targetTrack == t.itemID)
+        if (dest->getTarget() == targetID)
             if (dest->recordEnabled)
                 return true;
 
@@ -362,38 +466,19 @@ bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
     return false;
 }
 
-void InputDeviceInstance::prepareAndPunchRecord()
-{
-    CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
-
-    if (auto t = getTargetTracks().getFirst())
-    {
-        if (! (isRecordingEnabled (*t) && edit.getTransport().isRecording()))
-            return;
-
-        // Punch in at the current play time don't punch out until recording is stopped
-        InputDeviceInstance::RecordingParameters params;
-        params.punchRange   = { context.getPosition(), Edit::getMaximumEditTimeRange().getEnd() };
-
-        if (const auto error = prepareToRecord (params); error.isNotEmpty())
-            edit.engine.getUIBehaviour().showWarningMessage (error);
-        else
-            startRecording();
-    }
-}
-
 void InputDeviceInstance::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)
 {
     if (v.getParent() == state)
     {
         if (id == IDs::armed || id == IDs::targetTrack)
         {
+            const auto targetTrackID = EditItemID::fromVar (v[IDs::targetTrack]);
+
             if (id == IDs::targetTrack)
-                if (auto t = findTrackForID (edit, EditItemID::fromVar (v[IDs::targetTrack])))
+                if (auto t = findTrackForID (edit, targetTrackID))
                     t->changed();
 
-            updateRecordingStatus();
+            updateRecordingStatus (targetTrackID);
         }
     }
 }
@@ -402,10 +487,12 @@ void InputDeviceInstance::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTr
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
     {
-        if (auto t = findTrackForID (edit, EditItemID::fromVar (c[IDs::targetTrack])))
+        const auto targetTrackID = EditItemID::fromVar (c[IDs::targetTrack]);
+
+        if (auto t = findTrackForID (edit, targetTrackID))
             t->changed();
 
-        updateRecordingStatus();
+        updateRecordingStatus (targetTrackID);
     }
 }
 
@@ -413,27 +500,49 @@ void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::Value
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
     {
-        if (auto t = findTrackForID (edit, EditItemID::fromVar (c[IDs::targetTrack])))
+        const auto targetTrackID = EditItemID::fromVar (c[IDs::targetTrack]);
+
+        if (auto t = findTrackForID (edit, targetTrackID))
             t->changed();
 
-        updateRecordingStatus();
+        updateRecordingStatus (targetTrackID);
     }
 }
 
-void InputDeviceInstance::updateRecordingStatus()
+void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
 {
-    if (auto t = getTargetTracks().getFirst())
+    for (auto dest : destTracks)
     {
-        const bool wasRecording = ! stopRecording().isEmpty();
-        const bool isLivePlayActive = isLivePlayEnabled (*t);
+        if (dest->getTarget() != targetID)
+            continue;
+
+        auto track = findTrackForID (edit, targetID);
+
+        if (! track)
+            continue;
+
+        context.transport.callRecordingAboutToStopListeners (*this);
+
+        InputDeviceInstance::StopRecordingParameters params;
+        params.targetsToStop = { targetID };
+        params.unloopedTimeToEndRecording = context.getUnloopedPosition();
+        params.isLooping = context.transport.looping;
+        params.markedRange = context.transport.getLoopRange();
+        params.discardRecordings = false;
+        auto clips = stopRecording (params);
+
+        context.transport.callRecordingFinishedListeners (*this, clips);
+
+        const bool wasRecording = ! clips.isEmpty();
+        const bool isLivePlayActive = isLivePlayEnabled (*track);
 
         if (! wasRecording && wasLivePlayActive != isLivePlayActive)
             edit.restartPlayback();
 
         wasLivePlayActive = isLivePlayActive;
 
-        if (! wasRecording && isRecordingEnabled (*t))
-            prepareAndPunchRecord();
+        if (! wasRecording && isRecordingEnabled (targetID))
+            prepareAndPunchRecord (*this, targetID);
     }
 }
 

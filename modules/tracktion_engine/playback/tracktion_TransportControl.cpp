@@ -1508,8 +1508,7 @@ void TransportControl::performStop()
 
         clearPlayingFlags();
         playHeadWrapper->stop();
-        playbackContext->recordingFinished ({ transportState->startTime, std::max (recEndTime, transportState->startTime.get()) },
-                                            transportState->discardRecordings);
+        playbackContext->stopRecording (transportState->discardRecordings);
 
         position = transportState->discardRecordings ? transportState->startTime.get()
                                                      : (looping ? recEndPos

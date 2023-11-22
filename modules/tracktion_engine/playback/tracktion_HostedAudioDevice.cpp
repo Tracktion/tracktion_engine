@@ -226,25 +226,6 @@ private:
         {
         }
 
-        bool startRecording() override
-        {
-            // We need to keep a list of tracks the are being recorded to
-            // here, since user may un-arm track to stop recording
-            activeTracks.clear();
-
-            for (auto destTrack : getTargetTracks())
-                if (isRecordingActive (*destTrack))
-                    activeTracks.add (destTrack);
-
-            if (! recording)
-            {
-                getHostedMidiInputDevice().masterTimeUpdate (startTime.inSeconds());
-                recording = true;
-            }
-
-            return recording;
-        }
-
         void processBlock (juce::MidiBuffer& midi)
         {
             const auto globalStreamTime = edit.engine.getDeviceManager().getCurrentStreamTime();
@@ -261,13 +242,13 @@ private:
                 handleIncomingMidiMessage (std::move (msg));
             }
         }
-        
+
     private:
         const double sampleRate = context.getSampleRate();
 
         HostedMidiInputDevice& getHostedMidiInputDevice() const   { return static_cast<HostedMidiInputDevice&> (owner); }
     };
-    
+
     //==============================================================================
     HostedAudioDeviceInterface& audioIf;
     juce::MidiBuffer pendingMidiMessages;
@@ -300,7 +281,7 @@ public:
             auto t = m.getTimeStamp() * audioIf.parameters.sampleRate;
             midi.addEvent (m, int (t));
         }
-        
+
         toSend.clear();
     }
 

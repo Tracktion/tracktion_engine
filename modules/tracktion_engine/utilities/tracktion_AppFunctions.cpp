@@ -24,7 +24,7 @@ namespace AppFunctions
     {
         if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
             return e;
-        
+
         jassertfalse;
         return nullptr;
     }
@@ -318,7 +318,7 @@ namespace AppFunctions
     {
         if (auto ed = getCurrentlyFocusedEdit())
             return EditFileOperations (*ed).save (true, true, false);
-        
+
         return false;
     }
 
@@ -343,7 +343,7 @@ namespace AppFunctions
                 {
                     for (auto t : in->getTargetTracks())
                     {
-                        if (in->isRecordingEnabled (*t))
+                        if (in->isRecordingEnabled (t->itemID))
                             ++numArmed;
                         else
                             ++numDisarmed;

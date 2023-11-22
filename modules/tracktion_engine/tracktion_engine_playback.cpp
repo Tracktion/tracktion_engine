@@ -10,6 +10,7 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
+#include <shared_mutex>
 
 #if TRACKTION_ENABLE_ABLETON_LINK
  #include <juce_core/system/juce_TargetPlatform.h>

@@ -29,7 +29,7 @@ public:
     void createPlayAudioNodes (TimePosition startTime);
     void createPlayAudioNodesIfNeeded (TimePosition startTime);
     void reallocate();
-    
+
     /** Returns true if a playback graph is currently allocated. */
     bool isPlaybackGraphAllocated() const       { return isAllocated; }
 
@@ -40,8 +40,8 @@ public:
     // Plays this context in sync with another context
     void syncToContext (EditPlaybackContext* contextToSyncTo, TimePosition previousBarTime, TimeDuration syncInterval);
 
-    Clip::Array stopRecording (InputDeviceInstance&, TimeRange recordedRange, bool discardRecordings);
-    Clip::Array recordingFinished (TimeRange recordedRange, bool discardRecordings);
+    Clip::Array stopRecording (InputDeviceInstance&, bool discardRecordings);
+    Clip::Array stopRecording (bool discardRecordings);
     juce::Result applyRetrospectiveRecord (juce::Array<Clip*>* clipsCreated = nullptr);
 
     juce::Array<InputDeviceInstance*> getAllInputs();
@@ -91,7 +91,7 @@ public:
     TimePosition getPosition() const;
     TimePosition getUnloopedPosition() const;
     TimeRange getLoopTimes() const;
-    
+
     /** Returns the overall latency of the currently prepared graph. */
     int getLatencySamples() const;
     TimePosition getAudibleTimelineTime();
@@ -124,7 +124,7 @@ public:
 
     /** Returns the last reference sample position and the edit time and beat that it corresponded to. */
     std::optional<SyncPoint> getSyncPoint() const;
-    
+
     TimePosition globalStreamTimeToEditTime (double) const;
     TimePosition globalStreamTimeToEditTimeUnlooped (double) const;
     void resyncToGlobalStreamTime (juce::Range<double>, double sampleRate);
@@ -136,7 +136,7 @@ public:
     static void setThreadPoolStrategy (int);
     /** @see tracktion::graph::ThreadPoolStrategy */
     static int getThreadPoolStrategy();
-    
+
     /** Enables reusing of audio buffers during graph processing
         which may reduce the memory use at the cost of some additional overhead.
     */
@@ -163,7 +163,7 @@ private:
     void rebuildDeviceList();
 
     void prepareOutputDevices (TimePosition start);
-    void startRecording (TimePosition start, TimePosition punchIn);
+    juce::Result startRecording (TimePosition start, TimePosition punchIn);
     void startPlaying (TimePosition start);
 
     friend class DeviceManager;
@@ -176,7 +176,7 @@ private:
 
     struct ContextSyncroniser;
     std::unique_ptr<ContextSyncroniser> contextSyncroniser;
-    
+
     struct NodePlaybackContext;
     std::unique_ptr<NodePlaybackContext> nodePlaybackContext;
 

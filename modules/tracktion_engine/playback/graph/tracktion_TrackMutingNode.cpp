@@ -17,7 +17,7 @@ TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool 
 {
     processMidiWhileMuted = true;
     callInputWhileMuted = t.processAudioNodesWhileMuted();
-    
+
     if (muteForInputsWhenRecording)
         if (auto at = dynamic_cast<AudioTrack*> (&t))
             for (auto in : edit.getAllInputDevices())
@@ -64,7 +64,7 @@ bool TrackMuteState::isBeingPlayed() const
         return false;
 
     for (int i = inputDevicesToMuteFor.size(); --i >= 0;)
-        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted())
+        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted (*track))
             return false;
 
     return true;
@@ -120,7 +120,7 @@ void TrackMutingNode::process (ProcessContext& pc)
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioView = pc.buffers.audio;
     jassert (sourceBuffers.audio.getSize() == destAudioView.getSize());
-    
+
     const bool ignoreMuteStates = dontMuteIfTrackContentsShouldBeProcessed && trackMuteState->shouldTrackContentsBeProcessed();
     const bool wasJustMuted     = ! ignoreMuteStates && trackMuteState->wasJustMuted();
     const bool wasJustUnMuted   = ! ignoreMuteStates && trackMuteState->wasJustUnMuted();
@@ -128,7 +128,7 @@ void TrackMutingNode::process (ProcessContext& pc)
     if (trackMuteState->shouldTrackBeAudible() || ignoreMuteStates)
     {
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        
+
         // If we've just been muted/unmuted we need to copy the data to
         // apply a fade to, otherwise we can just pass on the view
         if (wasJustMuted || wasJustUnMuted)
@@ -153,7 +153,7 @@ void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float> view, flo
 {
     if (view.getNumChannels() == 0)
         return;
-    
+
     auto buffer = tracktion::graph::toAudioBuffer (view);
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
 }

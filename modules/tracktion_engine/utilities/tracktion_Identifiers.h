@@ -73,6 +73,7 @@ namespace IDs
     DECLARE_ID (sourceTrack)
     DECLARE_ID (targetTrack)
     DECLARE_ID (targetIndex)
+    DECLARE_ID (targetSlot)
     DECLARE_ID (armed)
     DECLARE_ID (ID3VORBISMETADATA)
     DECLARE_ID (TRACK)

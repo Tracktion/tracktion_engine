@@ -35,7 +35,7 @@ struct EditPlaybackContext::ContextSyncroniser
 {
     //==============================================================================
     ContextSyncroniser() = default;
-    
+
     //==============================================================================
     enum class SyncAction
     {
@@ -43,20 +43,20 @@ struct EditPlaybackContext::ContextSyncroniser
         rollInToLoop,   /**< Set the dest playhead to roll in to the loop. */
         breakSync       /**< Break the sync and don't call this again. */
     };
-    
+
     struct SyncAndPosition
     {
         SyncAction action;
         TimePosition position;
     };
-    
+
     //==============================================================================
     SyncAndPosition getSyncAction (tracktion::graph::PlayHead& sourcePlayHead, tracktion::graph::PlayHead& destPlayHead,
                                    double sampleRate)
     {
         if (! isValid)
             return  { SyncAction::none, {} };
-        
+
         const auto sourceTimelineTime = TimePosition::fromSamples (sourcePlayHead.getPosition(), sampleRate);
         const auto millisecondsSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds> (sourcePlayHead.getLastUserInteractionTime().time_since_epoch()).count();
         const juce::Time sourceLastInteractionTime (static_cast<int64_t> (millisecondsSinceEpoch));
@@ -67,7 +67,7 @@ struct EditPlaybackContext::ContextSyncroniser
         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,
                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);
     }
-    
+
     void reset (TimePosition previousBarTime_, TimeDuration syncInterval_)
     {
         hasSynced = false;
@@ -75,7 +75,7 @@ struct EditPlaybackContext::ContextSyncroniser
         syncInterval = syncInterval_;
         isValid = true;
     }
-        
+
 private:
     //==============================================================================
     TimePosition previousBarTime;
@@ -94,7 +94,7 @@ private:
             const auto sourceDurationSinceLastBarStart = TimeDuration::fromSeconds (std::fmod ((sourceTimelineTime - previousBarTime).inSeconds(), syncInterval.inSeconds()));
             jassert (sourceTimelineTime - previousBarTime >= TimeDuration());
             jassert (sourceDurationSinceLastBarStart > TimeDuration());
-            
+
             auto newTimelineTime = sourceDurationSinceLastBarStart - syncInterval;
 
             // If the next bar is too far away, start playing now
@@ -106,7 +106,7 @@ private:
 
             return { SyncAction::rollInToLoop, toPosition (newTimelineTime) };
         }
-        
+
         if (! sourceIsPlaying || std::abs (lastSourceTimelineTime.inSeconds() - sourceTimelineTime.inSeconds()) > 0.2)
         {
             auto rt = juce::Time::getCurrentTime() - sourceLastInteractionTime;
@@ -115,7 +115,7 @@ private:
             {
                 // user has moved  or stopped the playhead -- break the sync
                 isValid = false;
-                
+
                 return { SyncAction::breakSync, {} };
             }
             else
@@ -146,34 +146,34 @@ private:
          setNumThreads (numThreads);
          player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
      }
-     
+
      void setNumThreads (size_t numThreads)
      {
          CRASH_TRACER
          player.setNumThreads (std::min (numThreads, maxNumThreads));
      }
-     
+
      void setNode (std::unique_ptr<Node> node, double sampleRate, int blockSize)
      {
          jassert (sampleRate > 0.0);
          jassert (blockSize > 0);
          blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
          player.setNode (std::move (node), sampleRate, blockSize);
-         
+
          if (auto currentNode = player.getNode())
              latencySamples = currentNode->getNodeProperties().latencyNumSamples;
      }
-     
+
      void clearNode()
      {
          player.clearNode();
      }
-     
+
      int getLatencySamples() const
      {
          return latencySamples;
      }
-     
+
      void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
      {
          pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
@@ -247,7 +247,7 @@ private:
          // This needs to be called after the playhead reference range has been set above
          checkForTempoSequenceChanges();
      }
-     
+
      void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
      {
          const double sampleRate = getSampleRate();
@@ -257,7 +257,7 @@ private:
          playHead.setReferenceSampleRange (getReferenceSampleRange());
          playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
      }
-     
+
      void process (float* const* allChannels, int numChannels, int destNumSamples)
      {
          const auto referenceSampleRange = getReferenceSampleRange();
@@ -319,17 +319,17 @@ private:
              // Initialise interpolators
              isUsingInterpolator = true;
              ensureNumInterpolators (numChannels);
-             
+
              // Process required num samples
              scratchAudioBuffer.setSize (numChannels, (int) numSamplesToProcess, false, false, true);
              scratchAudioBuffer.clear();
-             
+
              tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
              player.process (pc);
-             
+
              // Then resample them to the dest num samples
              const double ratio = numSamplesToProcess / (double) destNumSamples;
-             
+
              for (int channel = 0; channel < numChannels; ++channel)
              {
                  const auto src = scratchAudioBuffer.getReadPointer (channel);
@@ -350,7 +350,7 @@ private:
          tempoState = { tempoSequence.getInternalSequence().hash(),
                         processState.editBeatRange.getEnd() };
      }
-     
+
      double getSampleRate() const
      {
          return player.getSampleRate();
@@ -365,13 +365,13 @@ private:
      tracktion::graph::PlayHead playHead;
      tracktion::graph::PlayHeadState playHeadState { playHead };
      ProcessState processState { playHeadState, tempoSequence };
-     
+
  private:
      juce::AudioBuffer<float> scratchAudioBuffer;
      MidiMessageArray scratchMidiBuffer;
      TracktionNodePlayer player;
      const size_t maxNumThreads;
-     
+
      int latencySamples = 0;
      choc::buffer::FrameCount numSamplesToProcess = 0;
      juce::Range<double> referenceStreamRange;
@@ -394,7 +394,7 @@ private:
          return { static_cast<int64_t> (std::llround (referenceStreamRange.getStart())),
                   static_cast<int64_t> (std::llround (referenceStreamRange.getEnd())) };
      }
-     
+
      void ensureNumInterpolators (int numRequired)
      {
          for (size_t i = interpolators.size(); i < (size_t) numRequired; ++i)
@@ -551,11 +551,16 @@ void EditPlaybackContext::clearNodes()
     for (auto mo : midiOutputs)
         mo->stop();
 
-    for (auto mi : midiInputs)
-        mi->stop();
+    {
+        InputDeviceInstance::StopRecordingParameters params;
+        params.discardRecordings = true;
 
-    for (auto wi : waveInputs)
-        wi->stop();
+        for (auto mi : midiInputs)
+            mi->stopRecording (params);
+
+        for (auto wi : waveInputs)
+            wi->stopRecording (params);
+    }
 
     priorityBooster = nullptr;
     isAllocated = false;
@@ -575,20 +580,20 @@ void EditPlaybackContext::createNode()
     CRASH_TRACER
     // Reset this until it's updated by the play graph
     audiblePlaybackTime = transport.getCurrentPosition();
-    
+
     isAllocated = true;
-    
+
     auto& dm = edit.engine.getDeviceManager();
     CreateNodeParams cnp { nodePlaybackContext->processState };
     cnp.sampleRate = dm.getSampleRate();
     cnp.blockSize = dm.getBlockSize();
-    
+
     if (cnp.sampleRate <= 0.0 || cnp.blockSize <= 0)
     {
         clearNodes();
         return;
     }
-    
+
     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
@@ -624,44 +629,42 @@ void EditPlaybackContext::startPlaying (TimePosition start)
         mo->start();
 }
 
-void EditPlaybackContext::startRecording (TimePosition start, TimePosition punchIn)
+juce::Result EditPlaybackContext::startRecording (TimePosition start, TimePosition punchIn)
 {
-    juce::String error;
+    InputDeviceInstance::PreparedContext preparedContext;
 
-    for (int i = waveInputs.size(); --i >= 0 && error.isEmpty();)
+    for (int i = waveInputs.size(); --i >= 0 && ! hasErrors (preparedContext);)
         if (auto wi = waveInputs.getUnchecked (i))
             if (wi->isRecordingActive())
-                error = wi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn));
+                append (preparedContext,
+                        wi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)));
 
-    for (int i = midiInputs.size(); --i >= 0 && error.isEmpty();)
+    for (int i = midiInputs.size(); --i >= 0 && ! hasErrors (preparedContext);)
         if (auto mi = midiInputs.getUnchecked (i))
             if (mi->isRecordingActive())
-                error = mi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn));
+                append (preparedContext,
+                        mi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)));
 
-    if (error.isNotEmpty())
-    {
-        for (auto wi : waveInputs)
-            if (wi->isRecordingActive())
-                wi->recordWasCancelled();
+    if (preparedContext.empty())
+        return juce::Result::fail (TRANS("Failed to start recording: No input devices"));
 
-        for (auto mi : midiInputs)
-            if (mi->isRecordingActive())
-                mi->recordWasCancelled();
+    auto [preparedContexts, errors] = extract (std::move (preparedContext));
 
-        edit.engine.getUIBehaviour().showWarningAlert (TRANS("Record Error"), error);
-    }
-    else
-    {
-        startPlaying (start);
+    if (! errors.isEmpty())
+        return juce::Result::fail (errors[0]);
 
-        for (auto wi : waveInputs)
-            if (wi->isRecordingActive())
-                wi->startRecording();
+    startPlaying (start);
 
-        for (auto mi : midiInputs)
-            if (mi->isRecordingActive())
-                mi->startRecording();
-    }
+    for (auto wi : waveInputs)
+        if (wi->isRecordingActive())
+            preparedContexts = wi->startRecording (std::move (preparedContexts));
+
+    for (auto mi : midiInputs)
+        if (mi->isRecordingActive())
+            preparedContexts = mi->startRecording (std::move (preparedContexts));
+
+    jassert (preparedContexts.empty()); // Recording context type not handled?
+    return juce::Result::ok();
 }
 
 void EditPlaybackContext::prepareOutputDevices (TimePosition start)
@@ -710,33 +713,43 @@ static SelectionManager* findAppropriateSelectionManager (Edit& ed)
     return found;
 }
 
-Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, TimeRange recordedRange, bool discardRecordings)
+Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, bool discardRecordings)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
     transport.callRecordingAboutToStopListeners (in);
 
-    const auto loopRange = transport.getLoopRange();
-    in.stop();
+    InputDeviceInstance::StopRecordingParameters params;
+    params.unloopedTimeToEndRecording = getUnloopedPosition();
+    params.isLooping = transport.looping;
+    params.markedRange = transport.getLoopRange();
+    params.discardRecordings = discardRecordings;
+    auto clips = in.stopRecording (params);
 
-    auto clips = in.applyLastRecordingToEdit (recordedRange,
-                                              transport.looping, loopRange,
-                                              discardRecordings,
-                                              findAppropriateSelectionManager (edit));
     transport.callRecordingFinishedListeners (in, clips);
-    
+
     return clips;
 }
 
-Clip::Array EditPlaybackContext::recordingFinished (TimeRange recordedRange, bool discardRecordings)
+Clip::Array EditPlaybackContext::stopRecording (bool discardRecordings)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     Clip::Array clips;
 
+    InputDeviceInstance::StopRecordingParameters params;
+    params.unloopedTimeToEndRecording = getUnloopedPosition();
+    params.isLooping = transport.looping;
+    params.markedRange = transport.getLoopRange();
+    params.discardRecordings = discardRecordings;
+
     for (auto in : getAllInputs())
-        clips.addArray (stopRecording (*in, recordedRange, discardRecordings));
+    {
+        transport.callRecordingAboutToStopListeners (*in);
+        clips.addArray (in->stopRecording (params));
+        transport.callRecordingFinishedListeners (*in, clips);
+    }
 
     return clips;
 }
@@ -766,7 +779,7 @@ juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* 
 
     for (auto in : getAllInputs())
     {
-        for (auto clip : in->applyRetrospectiveRecord (findAppropriateSelectionManager (edit)))
+        for (auto clip : in->applyRetrospectiveRecord())
         {
             if (clips != nullptr)
                 clips->add (clip);
@@ -779,6 +792,15 @@ juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* 
 
     if (! clipCreated)
         return juce::Result::fail (TRANS("Unable to perform retrospective record, all input buffers are empty"));
+
+    if (clips != nullptr)
+    {
+        if (auto sm = findAppropriateSelectionManager (edit))
+        {
+            sm->select (*clips);
+            sm->keepSelectedObjectsOnScreen();
+        }
+    }
 
     return juce::Result::ok();
 }
@@ -805,7 +827,7 @@ void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numC
         return;
 
     nodePlaybackContext->updateReferenceSampleRange (numSamples);
-    
+
     // Sync this playback context with a master context
     if (nodeContextToSyncTo && nodePlaybackContext->playHead.isPlaying() && nodeContextToSyncTo->getNodePlayHead() != nullptr)
     {
@@ -814,7 +836,7 @@ void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numC
         const auto[action, newTimelineTime] = contextSyncroniser->getSyncAction (*nodeContextToSyncTo->getNodePlayHead(),
                                                                                  nodePlaybackContext->playHead,
                                                                                  nodeContextToSyncTo->getSampleRate());
-        
+
         switch (action)
         {
             case ContextSyncroniser::SyncAction::none:
@@ -843,7 +865,7 @@ void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numC
    #endif
 
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
-    
+
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
     midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
@@ -1035,11 +1057,11 @@ TimePosition EditPlaybackContext::globalStreamTimeToEditTime (double globalStrea
 {
     if (! nodePlaybackContext)
         return TimePosition();
-    
+
     const auto sampleRate = getSampleRate();
     const auto globalSamplePos = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (globalSamplePos);
-    
+
     return TimePosition::fromSamples (timelinePosition, sampleRate);
 }
 
@@ -1047,11 +1069,11 @@ TimePosition EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double glo
 {
     if (! nodePlaybackContext)
         return TimePosition();
-    
+
     const auto sampleRate = getSampleRate();
     const auto globalSamplePos = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePositionUnlooped (globalSamplePos);
-    
+
     return TimePosition::fromSamples (timelinePosition, sampleRate);
 }
 
@@ -1059,7 +1081,7 @@ void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalSt
 {
     if (! nodePlaybackContext)
         return;
-    
+
     const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
@@ -1078,7 +1100,7 @@ int EditPlaybackContext::getThreadPoolStrategy()
     const int type = juce::jlimit (static_cast<int> (tracktion::graph::ThreadPoolStrategy::conditionVariable),
                                    static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),
                                    EditPlaybackContextInternal::getThreadPoolStrategyType());
-    
+
     return type;
 }
 
