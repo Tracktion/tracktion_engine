@@ -199,6 +199,9 @@ public:
     virtual Clip::Array stopRecording (StopRecordingParameters) = 0;
 
     /** Returns true if there are any active recordings for this device. */
+    virtual bool isRecording (EditItemID) = 0;
+
+    /** Returns true if there are any active recordings for this device. */
     virtual bool isRecording() = 0;
 
     //ddd Delete this and just use the targetID

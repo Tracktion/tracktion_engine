@@ -46,10 +46,10 @@ void freePlaybackContextIfNotRecording (TransportControl&);
     This is responsible for starting/stopping playback and recording and changing
     the position etc. It deals with looping/fast forward etc. and is resonsible
     for managing the EditPlaybackContext which attaches the Edit to the DeviceManager.
-    
+
     It also has higher level user concepts such as dragging/scrubbing.
     @see EditPlaybackContext, DeviceManager
- 
+
     You shouldn't need to directly create one of these, create an Edit and then
     obtain it from there. @see Edit::getTransport
 */
@@ -93,7 +93,7 @@ public:
                bool clearDevices,
                bool canSendMMCStop = true,
                bool invertReturnToStartPosSelection = false);
-    
+
     /** Stops playback only if recording is currently in progress.
         @see isRecording
     */
@@ -104,7 +104,7 @@ public:
         for any historical input.
     */
     juce::Result applyRetrospectiveRecord();
-    
+
     /** Perfoms a retrospective record operation and returns any new files. */
     juce::Array<juce::File> getRetrospectiveRecordAsAudioFiles();
 
@@ -118,10 +118,10 @@ public:
     //==============================================================================
     /** Returns true if the transport is playing. (This is also true during recording). */
     bool isPlaying() const;
-    
+
     /** Returns true if recording is in progress. */
     bool isRecording() const;
-    
+
     /** Returns true if safe-recording is in progress. */
     bool isSafeRecording() const;
 
@@ -151,12 +151,12 @@ public:
         While dragging, a short section of the play position is looped repeatedly.
     */
     void setUserDragging (bool);
-    
+
     /** Returns true if a drag/scrub operation has been enabled.
         @see setUserDragging
     */
     bool isUserDragging() const noexcept;
-    
+
     /** Returns true if the current position change was triggered from an update
         directly from the playhead (rather than a call to setCurrentPosition).
     */
@@ -183,14 +183,14 @@ public:
 
     /** Sets a snap type to use. */
     void setSnapType (TimecodeSnapType);
-    
+
     /** Returns the current snap type. */
     TimecodeSnapType getSnapType() const noexcept               { return currentSnapType; }
 
     //==============================================================================
     /** Returns the active EditPlaybackContext if this Edit is attached to the DeviceManager for playback. */
     EditPlaybackContext* getCurrentPlaybackContext() const      { return playbackContext.get(); }
-    
+
     /** Returns true if this Edit is attached to the DeviceManager for playback. */
     bool isPlayContextActive() const                            { return playbackContext != nullptr; }
 
@@ -198,7 +198,7 @@ public:
         @param alwaysReallocate If true, this will always create a new playback graph.
     */
     void ensureContextAllocated (bool alwaysReallocate = false);
-    
+
     /** Detaches the current EditPlaybackContext, removing it from the DeviceManager.
         Can be used to free up resources if you have multiple Edits open.
     */
@@ -208,7 +208,7 @@ public:
         latency in response to plugin reported latency changes.
     */
     void triggerClearDevicesOnStop();
-    
+
     /** Triggers a cleanup of any unused freeze and proxy files. */
     void forceOrphanFreezeAndProxyFilesPurge();
 
@@ -238,7 +238,7 @@ public:
     {
         /** Stops an Edit creating a new playback graph. */
         ReallocationInhibitor (TransportControl&);
-        
+
         /** Enables playback graph regeneration. */
         ~ReallocationInhibitor();
 
@@ -256,7 +256,7 @@ public:
     {
         /** Saves the playback state. */
         ScopedPlaybackRestarter (TransportControl& o) : tc (o), wasPlaying (tc.isPlaying()) {}
-        
+
         /** Starts playback if playing when constructed. */
         ~ScopedPlaybackRestarter()   { if (wasPlaying) tc.play (false); }
 
@@ -274,7 +274,7 @@ public:
         ScopedContextAllocator (TransportControl& o)
             : tc (o), wasAllocated (tc.isPlayContextActive())
         {}
-        
+
         /** Allocated the Edit if it was allocated on construction. */
         ~ScopedContextAllocator()
         {
@@ -292,13 +292,13 @@ public:
     //==============================================================================
     /** Returns all the active TransportControl[s] in the Engine. */
     static juce::Array<TransportControl*> getAllActiveTransports (Engine&);
-    
+
     /** Returns the number of Edits currently playing. */
     static int getNumPlayingTransports (Engine&);
-    
+
     /** Stops all TransportControl[s] in the Engine playing. @see stop. */
     static void stopAllTransports (Engine&, bool discardRecordings, bool clearDevices);
-    
+
     /** Restarts all TransportControl[s] in the Edit. @see stop. */
     static std::vector<std::unique_ptr<ScopedContextAllocator>> restartAllTransports (Engine&, bool clearDevices);
 
@@ -310,33 +310,38 @@ public:
         virtual ~Listener() {}
 
         /** Called when an EditPlaybackContext is created or deleted. */
-        virtual void playbackContextChanged() = 0;
+        virtual void playbackContextChanged() {}
 
         /** Called periodically to indicate the Edit has changed in an audible way and should be auto-saved. */
-        virtual void autoSaveNow() = 0;
+        virtual void autoSaveNow() {}
 
         /** If false, levels should be cleared. */
-        virtual void setAllLevelMetersActive (bool metersBecameInactive) = 0;
+        virtual void setAllLevelMetersActive (bool /*metersBecameInactive*/) {}
 
         /** Should set a new position for any playing video. */
-        virtual void setVideoPosition (TimePosition, bool forceJump) = 0;
-        
+        virtual void setVideoPosition (TimePosition, bool /*forceJump*/) {}
+
         /** Should start video playback. */
-        virtual void startVideo() = 0;
+        virtual void startVideo() {}
 
         /** Should stop video playback. */
-        virtual void stopVideo() = 0;
+        virtual void stopVideo()  {}
+
+        /** Called before recording start for a specific input instance. */
+        virtual void recordingAboutToStart (InputDeviceInstance&, EditItemID /*targetID*/) {}
 
         /** Called before recording stops for a specific input instance.
             recordingFinished will be called shortly after with newly created clips.
         */
-        virtual void recordingAboutToStop (InputDeviceInstance&) {}
+        virtual void recordingAboutToStop (InputDeviceInstance&, EditItemID /*targetID*/) {}
 
         /** Called when recording stops for a specific input instance.
             @param InputDeviceInstance  The device instance that just stopped.
+            @param targetID             The target that has just finished.
             @param recordedClips        The clips resulting from the recording.
         */
         virtual void recordingFinished (InputDeviceInstance&,
+                                        EditItemID /*targetID*/,
                                         const juce::ReferenceCountedArray<Clip>& /*recordedClips*/)
         {}
     };
@@ -361,9 +366,11 @@ public:
 
     //==============================================================================
     /** @internal */
-    void callRecordingAboutToStopListeners (InputDeviceInstance&);
+    void callRecordingAboutToStartListeners (InputDeviceInstance&, EditItemID);
     /** @internal */
-    void callRecordingFinishedListeners (InputDeviceInstance&, juce::ReferenceCountedArray<Clip> recordedClips);
+    void callRecordingAboutToStopListeners (InputDeviceInstance&, EditItemID);
+    /** @internal */
+    void callRecordingFinishedListeners (InputDeviceInstance&, EditItemID, juce::ReferenceCountedArray<Clip>);
 
 private:
     //==============================================================================
@@ -393,7 +400,7 @@ private:
 
     struct SectionPlayer;
     std::unique_ptr<SectionPlayer> sectionPlayer;
-    
+
     struct PlayHeadWrapper;
     std::unique_ptr<PlayHeadWrapper> playHeadWrapper;
 

@@ -706,6 +706,8 @@ public:
         {
             if (auto midiContext = dynamic_cast<MidiRecordingContext*> (recContext.get()))
             {
+                const auto targetID = midiContext->targetID;
+
                 {
                     const std::unique_lock sl (contextLock);
                     recordingContexts.push_back (std::unique_ptr<MidiRecordingContext> (midiContext));
@@ -713,6 +715,7 @@ public:
 
                 hasAddedContexts = true;
                 recContext.release();
+                context.transport.callRecordingAboutToStartListeners (*this, targetID);
             }
         }
 
@@ -758,10 +761,16 @@ public:
         Clip::Array clips;
 
         for (auto& recContext : contextsToStop)
-            clips.addArray (applyRecording (std::move (recContext),
-                                            params.unloopedTimeToEndRecording,
-                                            params.isLooping, params.markedRange,
-                                            params.discardRecordings));
+        {
+            const auto targetID = recContext->targetID;
+            context.transport.callRecordingAboutToStopListeners (*this, targetID);
+            auto contextClips = applyRecording (std::move (recContext),
+                                                params.unloopedTimeToEndRecording,
+                                                params.isLooping, params.markedRange,
+                                                params.discardRecordings);
+            context.transport.callRecordingFinishedListeners (*this, targetID, contextClips);
+            clips.addArray (std::move (contextClips));
+        }
 
         return clips;
     }
@@ -775,6 +784,11 @@ public:
                 return recContext->punchRange.getStart();
 
         return edit.getTransport().getTimeWhenStarted();
+    }
+
+    bool isRecording (EditItemID targetID) override
+    {
+        return getContextForID (targetID) != nullptr;
     }
 
     bool isRecording() override

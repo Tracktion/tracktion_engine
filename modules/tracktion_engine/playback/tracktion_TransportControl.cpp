@@ -671,14 +671,19 @@ std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> Transport
     return restartHandles;
 }
 
-void TransportControl::callRecordingAboutToStopListeners (InputDeviceInstance& in)
+void TransportControl::callRecordingAboutToStartListeners (InputDeviceInstance& in, EditItemID targetID)
 {
-    listeners.call (&Listener::recordingAboutToStop, in);
+    listeners.call (&Listener::recordingAboutToStart, in, targetID);
 }
 
-void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, Clip::Array recordedClips)
+void TransportControl::callRecordingAboutToStopListeners (InputDeviceInstance& in, EditItemID targetID)
 {
-    listeners.call (&Listener::recordingFinished, in, recordedClips);
+    listeners.call (&Listener::recordingAboutToStop, in, targetID);
+}
+
+void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, EditItemID targetID, Clip::Array recordedClips)
+{
+    listeners.call (&Listener::recordingFinished, in, targetID, recordedClips);
 }
 
 TransportControl::PlayingFlag::PlayingFlag (Engine& e) noexcept : engine (e)    { ++engine.getActiveEdits().numTransportsPlaying; }

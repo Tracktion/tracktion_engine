@@ -718,16 +718,12 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, bool di
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    transport.callRecordingAboutToStopListeners (in);
-
     InputDeviceInstance::StopRecordingParameters params;
     params.unloopedTimeToEndRecording = getUnloopedPosition();
     params.isLooping = transport.looping;
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = discardRecordings;
     auto clips = in.stopRecording (params);
-
-    transport.callRecordingFinishedListeners (in, clips);
 
     return clips;
 }
@@ -745,11 +741,7 @@ Clip::Array EditPlaybackContext::stopRecording (bool discardRecordings)
     params.discardRecordings = discardRecordings;
 
     for (auto in : getAllInputs())
-    {
-        transport.callRecordingAboutToStopListeners (*in);
         clips.addArray (in->stopRecording (params));
-        transport.callRecordingFinishedListeners (*in, clips);
-    }
 
     return clips;
 }

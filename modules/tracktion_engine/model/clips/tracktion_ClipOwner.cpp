@@ -173,12 +173,12 @@ private:
     void startVideo() override {}
     void stopVideo() override {}
 
-    void recordingAboutToStop (InputDeviceInstance&) override
+    void recordingAboutToStop (InputDeviceInstance&, EditItemID) override
     {
         recordingIsStopping = true;
     }
 
-    void recordingFinished (InputDeviceInstance&, const juce::ReferenceCountedArray<Clip>&) override
+    void recordingFinished (InputDeviceInstance&, EditItemID, const juce::ReferenceCountedArray<Clip>&) override
     {
         recordingIsStopping = false;
     }

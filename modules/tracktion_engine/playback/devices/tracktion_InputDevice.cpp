@@ -521,8 +521,6 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
         if (! track)
             continue;
 
-        context.transport.callRecordingAboutToStopListeners (*this);
-
         InputDeviceInstance::StopRecordingParameters params;
         params.targetsToStop = { targetID };
         params.unloopedTimeToEndRecording = context.getUnloopedPosition();
@@ -530,8 +528,6 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
         params.markedRange = context.transport.getLoopRange();
         params.discardRecordings = false;
         auto clips = stopRecording (params);
-
-        context.transport.callRecordingFinishedListeners (*this, clips);
 
         const bool wasRecording = ! clips.isEmpty();
         const bool isLivePlayActive = isLivePlayEnabled (*track);
