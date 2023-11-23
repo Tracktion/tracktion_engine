@@ -1173,5 +1173,14 @@ juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID ta
     return juce::Result::ok();
 }
 
+bool isRecording (EditPlaybackContext& epc)
+{
+    for (auto input : epc.getAllInputs())
+        if (input->isRecording())
+            return true;
+
+    return false;
+}
+
 
 }} // namespace tracktion { inline namespace engine

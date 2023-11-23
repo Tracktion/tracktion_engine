@@ -273,6 +273,9 @@ InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const Ed
 */
 juce::Result prepareAndPunchRecord (InputDeviceInstance&, EditItemID);
 
+/** Returns true if any inputs are currently recording. */
+bool isRecording (EditPlaybackContext&);
+
 
 //==============================================================================
 /** @internal */

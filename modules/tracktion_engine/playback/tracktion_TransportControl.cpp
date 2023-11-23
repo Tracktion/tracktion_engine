@@ -1503,7 +1503,7 @@ void TransportControl::performStop()
     if (! juce::Component::isMouseButtonDownAnywhere())
         setUserDragging (false); // in case it gets stuck
 
-    if (isRecording())
+    if (isRecording() || tracktion::isRecording (*playbackContext))
     {
         CRASH_TRACER
 
@@ -1513,7 +1513,8 @@ void TransportControl::performStop()
 
         clearPlayingFlags();
         playHeadWrapper->stop();
-        playbackContext->stopRecording (transportState->discardRecordings);
+        playbackContext->stopRecording (transportState->discardRecordings)
+            .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
 
         position = transportState->discardRecordings ? transportState->startTime.get()
                                                      : (looping ? recEndPos

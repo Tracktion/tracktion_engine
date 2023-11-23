@@ -726,7 +726,7 @@ public:
         return std::move (erase_if_null (newContexts));
     }
 
-    Clip::Array stopRecording (StopRecordingParameters params) override
+    tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters params) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         // Reserve to avoid allocating whilst

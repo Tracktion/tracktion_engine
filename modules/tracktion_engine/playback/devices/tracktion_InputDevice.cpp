@@ -527,7 +527,8 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
         params.isLooping = context.transport.looping;
         params.markedRange = context.transport.getLoopRange();
         params.discardRecordings = false;
-        auto clips = stopRecording (params);
+        auto res = stopRecording (params);
+        Clip::Array clips = res.value_or (Clip::Array());
 
         const bool wasRecording = ! clips.isEmpty();
         const bool isLivePlayActive = isLivePlayEnabled (*track);

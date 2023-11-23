@@ -713,7 +713,7 @@ static SelectionManager* findAppropriateSelectionManager (Edit& ed)
     return found;
 }
 
-Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, bool discardRecordings)
+tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (InputDeviceInstance& in, bool discardRecordings)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -723,16 +723,15 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, bool di
     params.isLooping = transport.looping;
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = discardRecordings;
-    auto clips = in.stopRecording (params);
-
-    return clips;
+    return in.stopRecording (params);
 }
 
-Clip::Array EditPlaybackContext::stopRecording (bool discardRecordings)
+tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (bool discardRecordings)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     Clip::Array clips;
+    juce::String error;
 
     InputDeviceInstance::StopRecordingParameters params;
     params.unloopedTimeToEndRecording = getUnloopedPosition();
@@ -741,7 +740,12 @@ Clip::Array EditPlaybackContext::stopRecording (bool discardRecordings)
     params.discardRecordings = discardRecordings;
 
     for (auto in : getAllInputs())
-        clips.addArray (in->stopRecording (params));
+        in->stopRecording (params)
+            .map ([&] (auto c) { clips.addArray (std::move (c)); })
+            .map_error ([&] (auto err) { error = err; });
+
+    if (! error.isEmpty())
+        return tl::unexpected (error);
 
     return clips;
 }

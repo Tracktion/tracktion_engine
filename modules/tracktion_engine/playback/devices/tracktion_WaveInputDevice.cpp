@@ -463,15 +463,15 @@ public:
         return ! recordingContexts.empty();
     }
 
-    Clip::Array stopRecording (StopRecordingParameters params) override
+    tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters params) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         // Reserve to avoid allocating whilst
         const auto numContextsRecording = [this]
-        {
-            const std::shared_lock sl (contextLock);
-            return recordingContexts.size();
-        }();
+                                          {
+                                              const std::shared_lock sl (contextLock);
+                                              return recordingContexts.size();
+                                          }();
 
         std::vector<std::unique_ptr<WaveRecordingContext>> contextsToStop;
         contextsToStop.reserve (numContextsRecording);
@@ -497,18 +497,25 @@ public:
 
         // Now apply those stop contexts whilst not holding the lock
         Clip::Array clips;
+        juce::String error;
 
         for (auto& recContext : contextsToStop)
         {
             const auto targetID = recContext->targetID;
             context.transport.callRecordingAboutToStopListeners (*this, targetID);
-            auto contextClips = applyRecording (std::move (recContext),
-                                                params.unloopedTimeToEndRecording,
-                                                params.isLooping, params.markedRange,
-                                                params.discardRecordings);
-            context.transport.callRecordingFinishedListeners (*this, targetID, contextClips);
-            clips.addArray (std::move (contextClips));
+            auto res = applyRecording (std::move (recContext),
+                                       params.unloopedTimeToEndRecording,
+                                       params.isLooping, params.markedRange,
+                                       params.discardRecordings);
+            context.transport.callRecordingFinishedListeners (*this, targetID,
+                                                              res.value_or (Clip::Array()));
+
+            res.map ([&] (auto c) { clips.addArray (std::move (c)); })
+               .map_error ([&] (auto err) { error = err; });
         }
+
+        if (! error.isEmpty())
+            return tl::unexpected (error);
 
         return clips;
     }
@@ -566,10 +573,10 @@ public:
         }
     };
 
-    Clip::Array applyRecording (std::unique_ptr<WaveRecordingContext> rc,
-                                TimePosition unloopedEndTime,
-                                bool isLooping, TimeRange loopRange,
-                                bool discardRecordings)
+    tl::expected<Clip::Array, juce::String> applyRecording (std::unique_ptr<WaveRecordingContext> rc,
+                                                            TimePosition unloopedEndTime,
+                                                            bool isLooping, TimeRange loopRange,
+                                                            bool discardRecordings)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
@@ -607,10 +614,10 @@ public:
                                    isLooping, loopRange.getEnd());
     }
 
-    Clip::Array applyLastRecording (const WaveRecordingContext& rc,
-                                    const AudioFile& recordedFile, ClipOwner& destClipOwner,
-                                    TimeRange recordedRange,
-                                    bool isLooping, TimePosition loopEnd)
+    tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc,
+                                                                const AudioFile& recordedFile, ClipOwner& destClipOwner,
+                                                                TimeRange recordedRange,
+                                                                bool isLooping, TimePosition loopEnd)
     {
         CRASH_TRACER
         auto& engine = edit.engine;
@@ -641,10 +648,9 @@ public:
                 s = TRANS("The device \"XZZX\" \nrecorded a zero-length file which won't be added to the edit")
                       .replace ("XZZX", getWaveInput().getName());
 
-            engine.getUIBehaviour().showWarningMessage (s);
-
             recordedFile.deleteFile();
-            return {};
+
+            return tl::unexpected (s);
         }
 
         if (auto proj = engine.getProjectManager().getProject (edit))
@@ -658,8 +664,8 @@ public:
                                            recordedFileLength, newClipLen, isLooping, loopEnd);
             }
 
-            engine.getUIBehaviour().showWarningMessage (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
-                                                                           : TRANS("Couldn't add the new recording to the project!"));
+            return tl::unexpected (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
+                                                      : TRANS("Couldn't add the new recording to the project!"));
         }
         else
         {
@@ -670,10 +676,10 @@ public:
         return {};
     }
 
-    Clip::Array applyLastRecording (const WaveRecordingContext& rc, const ProjectItem::Ptr projectItem,
-                                    const AudioFile& recordedFile, ClipOwner& destClipOwner,
-                                    TimeDuration recordedFileLength, TimeDuration newClipLen,
-                                    bool isLooping, TimePosition loopEnd)
+    tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc, const ProjectItem::Ptr projectItem,
+                                                                const AudioFile& recordedFile, ClipOwner& destClipOwner,
+                                                                TimeDuration recordedFileLength, TimeDuration newClipLen,
+                                                                bool isLooping, TimePosition loopEnd)
     {
         CRASH_TRACER
         jassert (projectItem == nullptr || projectItem->getID().isValid());
@@ -685,14 +691,8 @@ public:
         filesCreated.add (recordedFile.getFile());
 
         if (isLooping)
-        {
             if (! splitRecordingIntoMultipleTakes (context, recordedFile, projectItem, recordedFileLength, extraTakes, filesCreated))
-            {
-                engine.getUIBehaviour().showWarningAlert (TRANS("Recording"),
-                                                          TRANS("Couldn't create audio files for multiple takes"));
-                return {};
-            }
-        }
+                return tl::unexpected (TRANS("Couldn't create audio files for multiple takes"));
 
         auto endPos = rc.punchTimes.getStart() + newClipLen;
 

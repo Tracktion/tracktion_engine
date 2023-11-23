@@ -40,8 +40,8 @@ public:
     // Plays this context in sync with another context
     void syncToContext (EditPlaybackContext* contextToSyncTo, TimePosition previousBarTime, TimeDuration syncInterval);
 
-    Clip::Array stopRecording (InputDeviceInstance&, bool discardRecordings);
-    Clip::Array stopRecording (bool discardRecordings);
+    tl::expected<Clip::Array, juce::String> stopRecording (InputDeviceInstance&, bool discardRecordings);
+    tl::expected<Clip::Array, juce::String> stopRecording (bool discardRecordings);
     juce::Result applyRetrospectiveRecord (juce::Array<Clip*>* clipsCreated = nullptr);
 
     juce::Array<InputDeviceInstance*> getAllInputs();

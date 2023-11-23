@@ -196,7 +196,7 @@ public:
     /** Stops a recording.
         @param StopRecordingParameters determines how stopped recordings are treated.
     */
-    virtual Clip::Array stopRecording (StopRecordingParameters) = 0;
+    virtual tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters) = 0;
 
     /** Returns true if there are any active recordings for this device. */
     virtual bool isRecording (EditItemID) = 0;
