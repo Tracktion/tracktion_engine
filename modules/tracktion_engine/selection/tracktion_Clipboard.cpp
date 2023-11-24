@@ -79,7 +79,7 @@ bool Clipboard::ContentType::pasteIntoEdit (const EditPastingOptions&) const    
 Clipboard::ProjectItems::ProjectItems() {}
 Clipboard::ProjectItems::~ProjectItems() {}
 
-static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
 {
     int i = 0;
 

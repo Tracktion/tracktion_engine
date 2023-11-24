@@ -265,4 +265,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clipboard)
 };
 
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex);
+
 }} // namespace tracktion { inline namespace engine
