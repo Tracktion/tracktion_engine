@@ -32,6 +32,9 @@ public:
     /** Returns the currently set clip. */
     Clip* getClip();
 
+    /** Returns slot index on track */
+    int getIndex();
+
     //==============================================================================
     /** @internal. */
     juce::String getName() const override;

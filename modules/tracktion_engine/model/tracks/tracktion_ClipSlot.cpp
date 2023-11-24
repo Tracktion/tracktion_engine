@@ -41,6 +41,15 @@ Clip* ClipSlot::getClip()
     return getClips()[0];
 }
 
+int ClipSlot::getIndex()
+{
+    if (auto at = dynamic_cast<AudioTrack*> (&track))
+        return at->getClipSlotList().getClipSlots().indexOf (this);
+
+    jassertfalse;
+    return -1;
+}
+
 //==============================================================================
 juce::String ClipSlot::getName() const
 {
