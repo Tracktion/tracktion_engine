@@ -370,6 +370,8 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
         return false;
     }
 
+    const bool pastingInToClipLauncher = dynamic_cast<ClipSlot*> (clipOwner) != nullptr;
+
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
     SelectableList itemsAdded;
 
@@ -384,6 +386,9 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
             {
                 if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
                 {
+                    if (! pastingInToClipLauncher)
+                        clipOwner = targetTrack;
+
                     if (sourceItem->isMidi())
                     {
                         int targetSlotIndex = -1;
@@ -448,10 +453,13 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                     anythingPasted = true;
 
-                    if (pastingOptions.separateTracks)
-                        ++targetTrackIndex;
-                    else
-                        startTime = newClipEndTime;
+                    if (! pastingInToClipLauncher)
+                    {
+                        if (pastingOptions.separateTracks)
+                            ++targetTrackIndex;
+                        else
+                            startTime = newClipEndTime;
+                    }
                 }
             }
         }
