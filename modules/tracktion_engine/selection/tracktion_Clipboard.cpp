@@ -375,7 +375,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
     SelectableList itemsAdded;
 
-    for (auto& item : itemIDs)
+    for (auto [index, item] : juce::enumerate (itemIDs))
     {
         if (auto sourceItem = pm.getProjectItem (item.itemID))
         {
@@ -386,9 +386,6 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
             {
                 if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
                 {
-                    if (! pastingInToClipLauncher)
-                        clipOwner = targetTrack;
-
                     if (sourceItem->isMidi())
                     {
                         int targetSlotIndex = -1;
@@ -453,12 +450,48 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                     anythingPasted = true;
 
-                    if (! pastingInToClipLauncher)
+                    if (int (index) < int (itemIDs.size() - 1))
                     {
-                        if (pastingOptions.separateTracks)
-                            ++targetTrackIndex;
+                        if (pastingInToClipLauncher)
+                        {
+                            if (juce::ModifierKeys::currentModifiers.isCommandDown())
+                            {
+                                ++targetTrackIndex;
+                                auto newTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+
+                                auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                                auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                                auto& list = at.getClipSlotList();
+
+                                auto idx = list.getClipSlots().indexOf (slot);
+
+                                newTrack->getClipSlotList().ensureNumberOfSlots (list.getClipSlots().size());
+
+                                clipOwner = newTrack->getClipSlotList().getClipSlots()[idx];
+                            }
+                            else
+                            {
+                                auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                                auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                                auto& list = at.getClipSlotList();
+
+                                auto idx = list.getClipSlots().indexOf (slot) + 1;
+
+                                for (auto t : getAudioTracks (at.edit))
+                                    t->getClipSlotList().ensureNumberOfSlots (idx + 1);
+
+                                clipOwner = list.getClipSlots()[idx];
+                            }
+                        }
                         else
-                            startTime = newClipEndTime;
+                        {
+                            if (pastingOptions.separateTracks)
+                                ++targetTrackIndex;
+                            else
+                                startTime = newClipEndTime;
+
+                            clipOwner = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+                        }
                     }
                 }
             }
