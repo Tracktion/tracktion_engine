@@ -369,7 +369,7 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                         acb->setResamplingQuality (defaults.resamplingQuality);
                 }
             }
-            else if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            else if (dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
             {
                 if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
                 {
