@@ -125,8 +125,10 @@ public:
     virtual bool isRecordingActive() const;
     virtual bool isRecordingActive (const Track&) const;
 
+    virtual bool isRecordingQueuedToStop (EditItemID) = 0;
+
     bool isRecordingEnabled (EditItemID) const;
-    void setRecordingEnabled (const Track&, bool b);
+    void setRecordingEnabled (const Track&, bool);
 
     /** Should return true if this input is currently actively recording into a track
         and it wants the existing track contents to be muted.
@@ -197,6 +199,15 @@ public:
         @param StopRecordingParameters determines how stopped recordings are treated.
     */
     virtual tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters) = 0;
+
+    /** Stops a recording asyncronously.
+        This can be used to trigger a recording to stop at a time in the future.
+        This function will return immidiately and call the provided callback when the recording actually stops.
+        @param StopRecordingParameters      Determines how stopped recordings are treated.
+        @param recordingStoppedCallback     A callback to call when the recording stops.
+    */
+    virtual void stopRecording (StopRecordingParameters,
+                                std::function<void (tl::expected<Clip::Array, juce::String>)>) = 0;
 
     /** Returns true if there are any active recordings for this device. */
     virtual bool isRecording (EditItemID) = 0;

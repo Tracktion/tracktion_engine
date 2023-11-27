@@ -779,12 +779,9 @@ void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageA
     injectLiveMidiMessage ({ m, source });
 }
 
-bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original, TimePosition startTime,
+bool AudioTrack::mergeInMidiSequence (juce::MidiMessageSequence ms, TimePosition startTime,
                                       MidiClip* mc, MidiList::NoteAutomationType automationType)
 {
-    auto ms = original;
-    ms.addTimeToMessages (startTime.inSeconds());
-
     const auto start = TimePosition::fromSeconds (ms.getStartTime());
     const auto end = TimePosition::fromSeconds (ms.getEndTime());
 
@@ -804,15 +801,7 @@ bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original,
 
     if (mc != nullptr)
     {
-        auto pos = mc->getPosition();
-
-        if (pos.getStart() > start)
-            mc->extendStart (std::max (TimePosition(), start - TimeDuration::fromSeconds (0.1)));
-
-        if (pos.getEnd() < end)
-            mc->setEnd (end + TimeDuration::fromSeconds (0.1), true);
-
-        mc->mergeInMidiSequence (ms, automationType);
+        tracktion::mergeInMidiSequence (*mc, std::move (ms), toDuration (startTime), automationType);
         return true;
     }
 

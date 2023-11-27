@@ -27,6 +27,7 @@ struct SyncPoint
 {
     int64_t referenceSamplePosition = 0;    /**< The reference sample position */
     MonotonicBeat monotonicBeat;            /**< The unlooped, elapsed number of beats. */
+    TimePosition unloopedTime;              /**< The Edit timeline time as if no looping had happened. */
     TimePosition time;                      /**< The Edit timeline time. */
     BeatPosition beat;                      /**< The Edit timeline beat. */
 };

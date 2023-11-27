@@ -129,7 +129,7 @@ public:
 
         @returns False if there's no existing clips in the places it needs them.
     */
-    bool mergeInMidiSequence (const juce::MidiMessageSequence&, TimePosition startTime,
+    bool mergeInMidiSequence (juce::MidiMessageSequence, TimePosition startTime,
                               MidiClip*, MidiList::NoteAutomationType);
 
     void playGuideNote (int note, MidiChannel midiChannel, int velocity,
@@ -177,7 +177,7 @@ public:
 
     /** Removes a Listener. */
     void removeListener (Listener*);
-    
+
     /** Returns the listener list so Nodes can manually call them. */
     juce::ListenerList<Listener>& getListeners()            { return listeners; }
 

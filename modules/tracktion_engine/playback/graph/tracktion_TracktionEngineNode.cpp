@@ -32,7 +32,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
 {
     if (sampleRate != newSampleRate)
         playHeadState.playHead.setScrubbingBlockLength (toSamples (TimeDuration (0.08s), newSampleRate));
-    
+
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
 
     if (updateContinuityFlags == UpdateContinuityFlags::yes)
@@ -41,7 +41,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     sampleRate = newSampleRate;
     numSamples = (int) newReferenceSampleRange.getLength();
     referenceSampleRange = newReferenceSampleRange;
-    
+
     const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, newReferenceSampleRange);
     jassert (! splitTimelineRange.isSplit);
     timelineSampleRange = splitTimelineRange.timelineRange1;
@@ -65,6 +65,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     {
         syncPoint = { referenceSampleRange.getEnd(),
                       { oldSyncPoint.monotonicBeat.v + editBeatRange.getLength() },
+                      TimePosition::fromSamples (playHeadState.playHead.getUnloopedPosition(), sampleRate),
                       editTimeRange.getEnd(),
                       beatEnd };
     }

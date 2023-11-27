@@ -885,4 +885,25 @@ void MidiClip::pitchTempoTrackChanged()
     state.sendPropertyChangeMessage (IDs::mute);
 }
 
+//==============================================================================
+//==============================================================================
+void mergeInMidiSequence (MidiClip& mc, juce::MidiMessageSequence ms, TimeDuration startTime,
+                          MidiList::NoteAutomationType automationType)
+{
+    ms.addTimeToMessages (startTime.inSeconds());
+
+    const auto start = TimePosition::fromSeconds (ms.getStartTime());
+    const auto end = TimePosition::fromSeconds (ms.getEndTime());
+
+    auto pos = mc.getPosition();
+
+    if (pos.getStart() > start)
+        mc.extendStart (std::max (0_tp, start - 0.1s));
+
+    if (pos.getEnd() < end)
+        mc.setEnd (end + 0.1s, true);
+
+    mc.mergeInMidiSequence (ms, automationType);
+}
+
 }} // namespace tracktion { inline namespace engine

@@ -210,6 +210,20 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiClip)
 };
 
+
+//==============================================================================
+//==============================================================================
+/** Copies a zero-time origin based MIDI sequence in to a MidiClip.
+    This zill extend the start and end of the clip to fit the whole sequence.
+    @param MidiClip             The destination clip
+    @param MidiMessageSequence  The zero-based MIDI sequence
+    @param offsetToApply        An offset to apply to all MIDI message timestamps
+    @param NoteAutomationType   Whether to use standard MIDI or MPE
+*/
+void mergeInMidiSequence (MidiClip&, juce::MidiMessageSequence, TimeDuration offsetToApply,
+                          MidiList::NoteAutomationType);
+
+
 }} // namespace tracktion { inline namespace engine
 
 namespace juce

@@ -205,6 +205,8 @@ struct RetrospectiveRecordBuffer
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RetrospectiveRecordBuffer)
 };
 
+
+//==============================================================================
 //==============================================================================
 class WaveInputDeviceInstance  : public InputDeviceInstance
 {
@@ -240,6 +242,11 @@ public:
     bool isRecordingActive (const Track& t) const override
     {
         return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (t);
+    }
+
+    bool isRecordingQueuedToStop (EditItemID targetID) override
+    {
+        return getRecordStopper().isQueued (targetID);
     }
 
     bool shouldTrackContentsBeMuted (const Track& t) override
@@ -347,6 +354,7 @@ public:
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
                 rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
                 rc->adjustSamples += context.getLatencySamples();
+                rc->adjustDurationAtStart = TimeDuration::fromSamples (rc->adjustSamples, rc->sampleRate);
 
                 if (edit.recordingPunchInOut)
                 {
@@ -397,6 +405,8 @@ public:
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
+        assert (params.punchRange.getEnd() < TimePosition::fromSeconds (std::numeric_limits<double>::max()));
+
         std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> results;
 
         if (params.targets.empty())
@@ -520,6 +530,60 @@ public:
         return clips;
     }
 
+    void stopRecording (StopRecordingParameters params,
+                        std::function<void (tl::expected<Clip::Array, juce::String>)> callback) override
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        // Reserve to avoid allocating whilst
+        const auto getNumContextsRecording = [this]
+                                             {
+                                                const std::shared_lock sl (contextLock);
+                                                return recordingContexts.size();
+                                             };
+
+        if (params.targetsToStop.empty())
+        {
+            params.targetsToStop.reserve (getNumContextsRecording());
+
+            const std::shared_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+                params.targetsToStop.push_back (recContext->targetID);
+        }
+
+        // Set the punch out time for the contexts
+        {
+            const std::unique_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+            {
+                if (! contains_v (params.targetsToStop, recContext->targetID))
+                    continue;
+
+                recContext->unloopedStopTime = params.unloopedTimeToEndRecording;
+
+                // Set the recordingBlockRange to the stop time plus the adjust time when recording started as this number
+                // of samples will have been dropped. To ensure the final file has the correct number of samples, we need
+                // to record this many samples past the "real" end
+                recContext->recordingBlockRange = recContext->recordingBlockRange.withEnd (recContext->unloopedStopTime
+                                                                                           + recContext->adjustDurationAtStart);
+
+                // Unlock whilst doing potentially allocating ops to avoid priority inversion
+                {
+                    contextLock.unlock();
+                    recContext->stopCallback = callback;
+                    recContext->stopParams = params;
+                    recContext->stopParams.targetsToStop = { recContext->targetID };
+                    contextLock.lock();
+                }
+            }
+        }
+
+        // Add the rec context to a timer list to poll if the recording can be stopped
+        for (auto targetID : params.targetsToStop)
+            getRecordStopper().addTargetToStop (targetID);
+    }
+
     juce::File getRecordingFile (EditItemID targetID) const override
     {
         const std::shared_lock sl (contextLock);
@@ -546,6 +610,7 @@ public:
         TimeRange recordingBlockRange;  /**< The Edit time range that blocks should be recorded for.
                                              This might be different to the punch range as it accounts for device and graph latency. */
         TimePosition unloopedStopTime;  /**< When the reecording is stopped, this should be the end time. */
+        TimeDuration adjustDurationAtStart;
         bool hasHitThreshold = false, firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
 
@@ -553,6 +618,9 @@ public:
         DiskSpaceCheckTask diskSpaceChecker;
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
         WaveInputRecordingThread::ScopedInitialiser threadInitialiser;
+
+        std::function<void (tl::expected<Clip::Array, juce::String>)> stopCallback;
+        StopRecordingParameters stopParams;
 
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
@@ -1114,6 +1182,7 @@ public:
 protected:
     mutable std::shared_mutex contextLock;
     std::vector<std::unique_ptr<WaveRecordingContext>> recordingContexts;
+    std::unique_ptr<RecordStopper> recordStopper;
 
     volatile bool muteTrackNow = false;
     juce::AudioBuffer<float> inputBuffer;
@@ -1127,6 +1196,40 @@ protected:
                 return context.get();
 
         return nullptr;
+    }
+
+    RecordStopper& getRecordStopper()
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        if (! recordStopper)
+            recordStopper = std::make_unique<RecordStopper> ([this] (auto targetID)
+                                                             {
+                                                                 const auto unloopedTimeNow = context.getUnloopedPosition();
+
+                                                                 const std::shared_lock sl (contextLock);
+
+                                                                 if (auto recContext = getContextForID (targetID))
+                                                                 {
+                                                                     if (unloopedTimeNow >= recContext->recordingBlockRange.getEnd())
+                                                                     {
+                                                                         auto stopParams = recContext->stopParams;
+
+                                                                         // Temp unlock as stopRecording takes a unique lock
+                                                                         contextLock.unlock_shared();
+                                                                         auto res = stopRecording (stopParams);
+                                                                         contextLock.lock_shared();
+
+                                                                         if (recContext->stopCallback)
+                                                                             recContext->stopCallback (std::move (res));
+
+                                                                         return RecordStopper::HasFinished::yes;
+                                                                     }
+                                                                 }
+
+                                                                  return RecordStopper::HasFinished::no;
+                                                             });
+
+        return *recordStopper;
     }
 
     WaveInputDevice& getWaveInput() const noexcept    { return static_cast<WaveInputDevice&> (owner); }

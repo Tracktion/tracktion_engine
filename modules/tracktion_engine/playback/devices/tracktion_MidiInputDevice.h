@@ -70,7 +70,7 @@ public:
     enum class MergeMode { always, never, optional };
 
     Clip* addMidiAsTransaction (Edit&, EditItemID targetID,
-                                Clip* takeClip, juce::MidiMessageSequence&,
+                                Clip* takeClip, juce::MidiMessageSequence,
                                 TimeRange markedRange, MergeMode, MidiChannel);
 
     juce::MidiKeyboardState keyboardState;
