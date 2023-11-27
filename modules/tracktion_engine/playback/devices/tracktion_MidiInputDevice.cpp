@@ -656,9 +656,14 @@ Clip* MidiInputDevice::addMidiAsTransaction (Edit& ed, EditItemID targetID,
         if (auto mc = insertMIDIClip (*clipOwner, getNameForNewClip (*clipOwner), position))
         {
             if (track)
+            {
                 track->mergeInMidiSequence (std::move (ms), mc->getPosition().getStart(), mc.get(), automationType);
+                mc->setLength (position.getLength(), true); // Reset the length here as it migh thave been changed by mergeInMidiSequence above
+            }
             else if (clipSlot)
+            {
                 mergeInMidiSequence (*mc, std::move (ms), toDuration (mc->getPosition().getStart()), automationType);
+            }
 
             if (recordToNoteAutomation)
                 mc->setMPEMode (true);
@@ -668,8 +673,6 @@ Clip* MidiInputDevice::addMidiAsTransaction (Edit& ed, EditItemID targetID,
             if (programToUse > 0)
                 mc->getSequence().addControllerEvent ({}, MidiControllerEvent::programChangeType,
                                                       (programToUse - 1) << 7, &ed.getUndoManager());
-
-            mc->setLength (position.getLength(), true);
 
             createdClip = mc.get();
         }
