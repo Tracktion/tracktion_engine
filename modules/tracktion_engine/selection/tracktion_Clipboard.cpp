@@ -384,114 +384,111 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
             if (file.exists())
             {
-                if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
+                if (sourceItem->isMidi())
                 {
-                    if (sourceItem->isMidi())
+                    int targetSlotIndex = -1;
+
+                    if (auto targetSlot = dynamic_cast<ClipSlot*> (clipOwner))
+                        targetSlotIndex = findClipSlotIndex (*targetSlot);
+
+                    newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
+                                                            startTime, pastingOptions.shouldImportTempoChangesFromMIDI);
+                }
+                else if (sourceItem->isWave())
+                {
+                    sourceItem->verifyLength();
+                    jassert (sourceItem->getLength() > 0);
+
+                    if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner->getClipOwnerSelectable()))
+                        if (auto existingClip = clipSlot->getClip())
+                            existingClip->removeFromParent();
+
+                    if (auto newClip = insertWaveClip (*clipOwner,
+                                                       sourceItem->getName(), sourceItem->getID(),
+                                                       { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },
+                                                       DeleteExistingClips::no))
                     {
-                        int targetSlotIndex = -1;
+                        newClipEndTime = newClip->getPosition().getEnd();
+                        itemsAdded.add (newClip.get());
 
-                        if (auto targetSlot = dynamic_cast<ClipSlot*> (clipOwner))
-                            targetSlotIndex = findClipSlotIndex (*targetSlot);
+                        if (pastingOptions.snapBWavsToOriginalTime)
+                            newClip->snapToOriginalBWavTime();
 
-                        newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
-                                                                startTime, pastingOptions.shouldImportTempoChangesFromMIDI);
-                    }
-                    else if (sourceItem->isWave())
-                    {
-                        sourceItem->verifyLength();
-                        jassert (sourceItem->getLength() > 0);
-
-                        if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner->getClipOwnerSelectable()))
-                            if (auto existingClip = clipSlot->getClip())
-                                existingClip->removeFromParent();
-
-                        if (auto newClip = insertWaveClip (*clipOwner,
-                                                           sourceItem->getName(), sourceItem->getID(),
-                                                           { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },
-                                                           DeleteExistingClips::no))
+                        // Set sensible defaults for new launcher clips
+                        if (auto clipSlot = newClip->getClipSlot())
                         {
-                            newClipEndTime = newClip->getPosition().getEnd();
-                            itemsAdded.add (newClip.get());
-
-                            if (pastingOptions.snapBWavsToOriginalTime)
-                                newClip->snapToOriginalBWavTime();
-
-                            // Set sensible defaults for new launcher clips
-                            if (auto clipSlot = newClip->getClipSlot())
-                            {
-                                newClip->setUsesProxy (false);
-                                newClip->setAutoTempo (true);
-                                newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
-                            }
-                        }
-
-                    }
-                    else if (sourceItem->isEdit())
-                    {
-                        sourceItem->verifyLength();
-                        jassert (sourceItem->getLength() > 0);
-
-                        if (auto newClip = insertEditClip (*clipOwner,
-                                                           { startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
-                                                             sourceItem->getID()))
-                        {
-                            newClipEndTime = newClip->getPosition().getEnd();
-                            itemsAdded.add (newClip.get());
-
-                            // Set sensible defaults for new launcher clips
-                            if (auto clipSlot = newClip->getClipSlot())
-                            {
-                                newClip->setUsesProxy (false);
-                                newClip->setAutoTempo (true);
-                                newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
-                            }
+                            newClip->setUsesProxy (false);
+                            newClip->setAutoTempo (true);
+                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
                         }
                     }
 
-                    anythingPasted = true;
+                }
+                else if (sourceItem->isEdit())
+                {
+                    sourceItem->verifyLength();
+                    jassert (sourceItem->getLength() > 0);
 
-                    if (int (index) < int (itemIDs.size() - 1))
+                    if (auto newClip = insertEditClip (*clipOwner,
+                                                       { startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
+                                                         sourceItem->getID()))
                     {
-                        if (pastingInToClipLauncher)
+                        newClipEndTime = newClip->getPosition().getEnd();
+                        itemsAdded.add (newClip.get());
+
+                        // Set sensible defaults for new launcher clips
+                        if (auto clipSlot = newClip->getClipSlot())
                         {
-                            if (juce::ModifierKeys::currentModifiers.isCommandDown())
-                            {
-                                ++targetTrackIndex;
-                                auto newTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+                            newClip->setUsesProxy (false);
+                            newClip->setAutoTempo (true);
+                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
+                        }
+                    }
+                }
 
-                                auto slot = dynamic_cast<ClipSlot*> (clipOwner);
-                                auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
-                                auto& list = at.getClipSlotList();
+                anythingPasted = true;
 
-                                auto idx = list.getClipSlots().indexOf (slot);
+                if (int (index) < int (itemIDs.size() - 1))
+                {
+                    if (pastingInToClipLauncher)
+                    {
+                        if (juce::ModifierKeys::currentModifiers.isCommandDown())
+                        {
+                            ++targetTrackIndex;
+                            auto newTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
 
-                                newTrack->getClipSlotList().ensureNumberOfSlots (list.getClipSlots().size());
+                            auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                            auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                            auto& list = at.getClipSlotList();
 
-                                clipOwner = newTrack->getClipSlotList().getClipSlots()[idx];
-                            }
-                            else
-                            {
-                                auto slot = dynamic_cast<ClipSlot*> (clipOwner);
-                                auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
-                                auto& list = at.getClipSlotList();
+                            auto idx = list.getClipSlots().indexOf (slot);
 
-                                auto idx = list.getClipSlots().indexOf (slot) + 1;
+                            newTrack->getClipSlotList().ensureNumberOfSlots (list.getClipSlots().size());
 
-                                for (auto t : getAudioTracks (at.edit))
-                                    t->getClipSlotList().ensureNumberOfSlots (idx + 1);
-
-                                clipOwner = list.getClipSlots()[idx];
-                            }
+                            clipOwner = newTrack->getClipSlotList().getClipSlots()[idx];
                         }
                         else
                         {
-                            if (pastingOptions.separateTracks)
-                                ++targetTrackIndex;
-                            else
-                                startTime = newClipEndTime;
+                            auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                            auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                            auto& list = at.getClipSlotList();
 
-                            clipOwner = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+                            auto idx = list.getClipSlots().indexOf (slot) + 1;
+
+                            for (auto t : getAudioTracks (at.edit))
+                                t->getClipSlotList().ensureNumberOfSlots (idx + 1);
+
+                            clipOwner = list.getClipSlots()[idx];
                         }
+                    }
+                    else
+                    {
+                        if (pastingOptions.separateTracks)
+                            ++targetTrackIndex;
+                        else
+                            startTime = newClipEndTime;
+
+                        clipOwner = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
                     }
                 }
             }
