@@ -203,9 +203,9 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
 
             for (auto in : ed->getAllInputDevices())
             {
-                if (in->isOnTargetTrack (*track))
+                if (in->getTargets().contains (track->itemID))
                 {
-                    if (in->isRecordingActive (*track))
+                    if (in->isRecordingActive (track->itemID))
                         activeDev.add (in);
                     else
                         inactiveDev.add (in);
@@ -225,12 +225,12 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
                 if (activeDev.size() > 0)
                 {
                     for (auto dev : activeDev)
-                        dev->setRecordingEnabled (*track, false);
+                        dev->setRecordingEnabled (track->itemID, false);
                 }
                 else
                 {
                     for (auto dev : inactiveDev)
-                        dev->setRecordingEnabled (*track, true);
+                        dev->setRecordingEnabled (track->itemID, true);
                 }
 
                 if (activeDev.size() > 0 || inactiveDev.size() > 0)

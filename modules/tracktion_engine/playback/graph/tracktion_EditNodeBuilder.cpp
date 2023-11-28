@@ -1070,7 +1070,7 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputsNode (AudioTrack& track,
     if (! params.forRendering)
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
-                if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->isOnTargetTrack (track))
+                if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->getTargets().contains (track.itemID))
                     if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))
                         nodes.push_back (std::move (node));
 

@@ -109,17 +109,17 @@ public:
                           audioFiles.size(), "Some files don't have an impulse in them");
 
             int fileIndex = 0;
-            
+
             for (auto index : sampleIndicies)
             {
                 expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
-                
+
                 if (index != sampleIndicies[0])
                     expect (false, juce::String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
                                     .replace ("FIRST", juce::String (index))
                                     .replace ("SECOND", juce::String (sampleIndicies[0]))
                                     .replace ("DIFF", juce::String (index - sampleIndicies[0])));
-                
+
                 ++fileIndex;
             }
         }
@@ -140,11 +140,11 @@ public:
         while (Clock::now() < sleep_time)
             std::this_thread::yield();
     }
-    
+
     void waitUntilPlayheadPosition (const EditPlaybackContext& epc, TimePosition time)
     {
         using namespace std::chrono_literals;
-        
+
         while (epc.getUnloopedPosition() < time)
             std::this_thread::sleep_for (1ms);
     }
@@ -169,8 +169,8 @@ public:
         {
             auto track = audioTracks.getUnchecked (i);
             auto inputInstance = inputInstances.getUnchecked (i);
-            inputInstance->setTargetTrack (*track, 0, true, nullptr);
-            inputInstance->setRecordingEnabled (*track, true);
+            [[ maybe_unused ]] auto res = inputInstance->setTarget (track->itemID, true, nullptr, 0);
+            inputInstance->setRecordingEnabled (track->itemID, true);
         }
 
         return edit;
@@ -189,7 +189,7 @@ public:
             processThread = std::thread ([&, msPerBlock]
                                          {
                                              hasStarted = true;
-                
+
                                              while (! shouldStop.load())
                                              {
                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);
@@ -212,7 +212,7 @@ public:
             shouldStop.store (true);
             processThread.join();
         }
-        
+
         void waitForThreadToStart()
         {
             while (! hasStarted)
@@ -223,7 +223,7 @@ public:
         {
             insertImpulse.store (true);
         }
-        
+
         bool needsToInsertImpulse() const
         {
             return insertImpulse;
@@ -303,7 +303,7 @@ public:
 
         return sampleIndicies;
     }
-    
+
     double getFileLength (Engine& engine, const juce::File& file)
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))

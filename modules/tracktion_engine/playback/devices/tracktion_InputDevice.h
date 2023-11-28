@@ -90,45 +90,56 @@ private:
 
 //==============================================================================
 //==============================================================================
+/**
+    An instance of an InputDevice that's available to an Edit.
+    Whereas InputDevice[s] are Engine level objects, instances apply to an Edit
+    and can therefore be assigned to slots/tracks etc.
+    @see EditInputDevices
+*/
 class InputDeviceInstance   : protected juce::ValueTree::Listener
 {
 public:
     struct InputDeviceDestination;
 
+    //==============================================================================
+    //==============================================================================
+    /** @internal */
     InputDeviceInstance (InputDevice&, EditPlaybackContext&);
+    /** Destructor. */
     ~InputDeviceInstance() override;
 
+    /** Returns the InputDevice this instance belongs to. */
     InputDevice& getInputDevice() noexcept      { return owner; }
 
+    /** Returns the targets this instance is assigned to. */
     juce::Array<EditItemID> getTargets() const;
 
-    juce::Array<AudioTrack*> getTargetTracks() const;
-    juce::Array<int> getTargetIndexes() const;
+    /** Assigns this input to either an AudioTrack or a ClipSlot. */
+    [[ nodiscard ]] tl::expected<InputDeviceDestination*, juce::String> setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*,
+                                                                                   std::optional<int> index = std::nullopt);
 
-    bool isOnTargetTrack (const Track&);
-    bool isOnTargetTrack (const Track&, int idx);
-    bool isOnTargetSlot (const ClipSlot&);
+    /** Removes the destination with the given targetID. */
+    [[ nodiscard ]] juce::Result removeTarget (EditItemID targetID, juce::UndoManager*);
 
-    void setTargetTrack (AudioTrack&, int index, bool moveToTrack, juce::UndoManager*);
-    void removeTargetTrack (AudioTrack&, juce::UndoManager*);
-    void removeTargetTrack (AudioTrack&, int index, juce::UndoManager*);
-    void removeTargetTrack (EditItemID, int index, juce::UndoManager*);
-    void clearFromTracks (juce::UndoManager*);
-    bool isAttachedToTrack() const;
-
-    InputDeviceDestination* setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*);
-    void removeTarget (EditItemID targetID, juce::UndoManager*);
-
+    /** Whether the track should monitor the input or not. */
     virtual bool isLivePlayEnabled (const Track&) const;
 
-    // true if recording is enabled and the input's connected to a track
+    /** Returns true if recording is enabled and the input is connected to any target. */
     virtual bool isRecordingActive() const;
-    virtual bool isRecordingActive (const Track&) const;
 
+    /** Returns true if recording is enabled and the input is connected the given target. */
+    virtual bool isRecordingActive (EditItemID) const;
+
+    /** Returns true if the async stopRecording function has been used and this target is waiting to stop. */
     virtual bool isRecordingQueuedToStop (EditItemID) = 0;
 
+    /** Returns true if recording is enabled for the given target. */
     bool isRecordingEnabled (EditItemID) const;
-    void setRecordingEnabled (const Track&, bool);
+
+    /** Enabled/disables recording for a given target.
+        If the transport is currently recording, this will start a punch-in recording.
+    */
+    void setRecordingEnabled (EditItemID, bool);
 
     /** Should return true if this input is currently actively recording into a track
         and it wants the existing track contents to be muted.
@@ -226,13 +237,34 @@ public:
     */
     virtual juce::Array<Clip*> applyRetrospectiveRecord() = 0;
 
+    //==============================================================================
     juce::ValueTree state;
     InputDevice& owner;
     EditPlaybackContext& context;
     Edit& edit;
 
+    //==============================================================================
     struct InputDeviceDestination : public Selectable
     {
+        /** Destructor. */
+        ~InputDeviceDestination() override
+        {
+            notifyListenersOfDeletion();
+        }
+
+        /** Returns the target for this destination, either an AudioTrack or ClipSlot. */
+        EditItemID getTarget() const
+        {
+            return targetTrack.isValid() ? targetTrack : targetSlot;
+        }
+
+        InputDeviceInstance& input; /**< The instance this belongs to. */
+        juce::ValueTree state;      /**< The state of this destination. */
+
+        /** Property to control whether the destination is armed to record or not. */
+        juce::CachedValue<bool> recordEnabled;
+
+        /** @internal */
         InputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v)
             : input (i), state (v)
         {
@@ -241,32 +273,21 @@ public:
                     && "One target must be valid!");
         }
 
-        ~InputDeviceDestination() override
-        {
-            notifyListenersOfDeletion();
-        }
-
+        //==============================================================================
+        /** @internal */
         juce::String getSelectableDescription() override
         {
             return input.getInputDevice().getSelectableDescription();
         }
 
-        EditItemID getTarget() const
-        {
-            return targetTrack.isValid() ? targetTrack : targetSlot;
-        }
+        const int targetIndex = state[IDs::targetIndex];
 
-        InputDeviceInstance& input;
-        juce::ValueTree state;
-
-        juce::CachedValue<bool> recordEnabled;
-
-    //dddprivate:
+    private:
         const EditItemID targetTrack = EditItemID::fromProperty (state, IDs::targetTrack);
         const EditItemID targetSlot = EditItemID::fromProperty (state, IDs::targetSlot);
-        const int targetIndex = state[IDs::targetIndex];
     };
 
+    //==============================================================================
     struct WaveInputDeviceDestination : public InputDeviceDestination
     {
         WaveInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
@@ -381,6 +402,23 @@ private:
 
 //==============================================================================
 //==============================================================================
+/** Returns the AudioTracks and their indexes this instance is assigned to. */
+[[ nodiscard ]] juce::Array<std::pair<AudioTrack*, int>> getTargetTracksAndIndexes (InputDeviceInstance&);
+
+/** Returns the AudioTracks this instance is assigned to. */
+[[ nodiscard ]] juce::Array<AudioTrack*> getTargetTracks (InputDeviceInstance&);
+
+/** Returns true if this instance is assigned to the given Track at the given index . */
+[[ nodiscard ]] bool isOnTargetTrack (InputDeviceInstance&, const Track&, int idx);
+
+/** Returns true if this input is assigned to a target. */
+[[ nodiscard ]] bool isAttached (InputDeviceInstance&);
+
+/** Removes this instance from all assigned targets. */
+[[ nodiscard ]] juce::Result clearFromTargets (InputDeviceInstance&, juce::UndoManager*);
+
+
+//==============================================================================
 /** Returns true if all the targets were fully prepared. */
 [[ nodiscard ]] inline bool hasErrors (const InputDeviceInstance::PreparedContext& pc)
 {
@@ -391,6 +429,7 @@ private:
     return false;
 }
 
+/** Appends a PreparedContent to another. */
 inline InputDeviceInstance::PreparedContext& append (InputDeviceInstance::PreparedContext& dest, InputDeviceInstance::PreparedContext&& src)
 {
     std::move (src.begin(), src.end(), std::back_inserter(dest));

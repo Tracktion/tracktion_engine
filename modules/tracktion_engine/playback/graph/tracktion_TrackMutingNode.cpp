@@ -21,7 +21,7 @@ TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool 
     if (muteForInputsWhenRecording)
         if (auto at = dynamic_cast<AudioTrack*> (&t))
             for (auto in : edit.getAllInputDevices())
-                if (in->isRecordingActive (t) && in->getTargetTracks().contains (at))
+                if (in->isRecordingActive (t.itemID) && in->getTargets().contains (at->itemID))
                     inputDevicesToMuteFor.add (in);
 
     wasBeingPlayedFlag = t.shouldBePlayed();

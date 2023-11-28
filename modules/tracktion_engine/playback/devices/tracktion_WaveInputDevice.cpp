@@ -239,9 +239,9 @@ public:
         return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive();
     }
 
-    bool isRecordingActive (const Track& t) const override
+    bool isRecordingActive (EditItemID targetID) const override
     {
-        return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (t);
+        return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (targetID);
     }
 
     bool isRecordingQueuedToStop (EditItemID targetID) override
@@ -930,7 +930,7 @@ public:
     {
         juce::Array<Clip*> clips;
 
-        for (auto dstTrack : getTargetTracks())
+        for (auto dstTrack : getTargetTracks (*this))
         {
             auto& wi = getWaveInput();
 

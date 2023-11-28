@@ -759,7 +759,7 @@ juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* 
 
     for (auto in : getAllInputs())
     {
-        if (in->isAttachedToTrack())
+        if (isAttached (*in))
         {
             inputAssigned = true;
             break;

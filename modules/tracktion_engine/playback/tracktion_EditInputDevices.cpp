@@ -60,7 +60,7 @@ bool EditInputDevices::isInputDeviceAssigned (const InputDevice& d)
 void EditInputDevices::clearAllInputs (AudioTrack& at, juce::UndoManager* um)
 {
     for (auto idi : getDevicesForTargetTrack (at))
-        idi->removeTargetTrack (at, um);
+        [[ maybe_unused]] auto res = idi->removeTarget (at.itemID, um);
 }
 
 static bool isInstanceRecording (InputDeviceInstance* idi)
@@ -79,13 +79,13 @@ void EditInputDevices::clearInputsOfDevice (AudioTrack& at, const InputDevice& d
     for (auto idi : getDevicesForTargetTrack (at))
         if (&idi->owner == &d)
             if (! isInstanceRecording (idi))
-                idi->removeTargetTrack (at, um);
+                [[ maybe_unused ]] auto res = idi->removeTarget (at.itemID, um);
 }
 
 InputDeviceInstance* EditInputDevices::getInputInstance (const AudioTrack& at, int index) const
 {
-    for (auto* idi : getDevicesForTargetTrack (at))
-        if (idi->isOnTargetTrack (at, index))
+    for (auto idi : getDevicesForTargetTrack (at))
+        if (isOnTargetTrack (*idi, at, index))
             return idi;
 
     return {};
@@ -96,7 +96,7 @@ juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (co
     juce::Array<InputDeviceInstance*> devices;
 
     for (auto idi : edit.getAllInputDevices())
-        if (idi->isOnTargetTrack (at))
+        if (idi->getTargets().contains (at.itemID))
             devices.add (idi);
 
     return devices;

@@ -311,7 +311,7 @@ void ExternalController::midiInOutDevicesChanged()
 void ExternalController::timerCallback()
 {
     stopTimer();
-    
+
     CRASH_TRACER
     if (controlSurface != nullptr)
         getControlSurface().initialiseDevice (isEnabled());
@@ -358,7 +358,7 @@ bool ExternalController::isUsingMidiOutputDevice (const MidiOutputDevice* d) con
     for (auto od : outputDevices)
         if (od == d)
             return true;
-    
+
     return false;
 }
 
@@ -900,7 +900,7 @@ void ExternalController::updateTrackRecordLights()
                 {
                     if (auto at = dynamic_cast<AudioTrack*> (t))
                     {
-                        if (in->isRecordingActive (*at) && in->getTargetTracks().contains (at))
+                        if (in->isRecordingActive (at->itemID) && in->getTargets().contains (at->itemID))
                         {
                             isRecording = true;
                             break;
@@ -948,7 +948,7 @@ void ExternalController::updatePadColours()
             {
                 auto colourIdx = 0;
                 auto state = 0;
-                
+
                 if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
                 {
                     if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
@@ -956,12 +956,12 @@ void ExternalController::updatePadColours()
                         if (auto c = slot->getClip())
                         {
                             auto col = c->getColour();
-                            
+
                             if (! col.isTransparent())
                             {
                                 auto numColours = 19;
                                 auto newHue = col.getHue();
-                                
+
                                 colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
                             }
 

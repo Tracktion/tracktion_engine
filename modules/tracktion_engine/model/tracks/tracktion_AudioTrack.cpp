@@ -748,7 +748,7 @@ void AudioTrack::valueTreeParentChanged (juce::ValueTree& v)
 bool AudioTrack::hasAnyLiveInputs()
 {
     for (auto in : edit.getAllInputDevices())
-        if (in->isRecordingActive (*this) && in->isOnTargetTrack (*this))
+        if (in->isRecordingActive (itemID) && in->getTargets().contains (itemID))
             return true;
 
     return false;

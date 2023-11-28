@@ -339,9 +339,9 @@ namespace AppFunctions
 
             for (auto in : ed->getAllInputDevices())
             {
-                if (in->isAttachedToTrack())
+                if (isAttached (*in))
                 {
-                    for (auto t : in->getTargetTracks())
+                    for (auto t : getTargetTracks (*in))
                     {
                         if (in->isRecordingEnabled (t->itemID))
                             ++numArmed;
@@ -352,9 +352,9 @@ namespace AppFunctions
             }
 
             for (auto in : ed->getAllInputDevices())
-                if (in->isAttachedToTrack())
-                    for (auto t : in->getTargetTracks())
-                        in->setRecordingEnabled (*t, numArmed <= numDisarmed);
+                if (isAttached (*in))
+                    for (auto t : getTargetTracks (*in))
+                        in->setRecordingEnabled (t->itemID, numArmed <= numDisarmed);
         }
     }
 
