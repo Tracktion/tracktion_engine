@@ -512,6 +512,7 @@ public:
         for (auto& recContext : contextsToStop)
         {
             const auto targetID = recContext->targetID;
+            auto stopCallback = std::move (recContext->stopCallback);
             context.transport.callRecordingAboutToStopListeners (*this, targetID);
             auto res = applyRecording (std::move (recContext),
                                        params.unloopedTimeToEndRecording,
@@ -519,6 +520,9 @@ public:
                                        params.discardRecordings);
             context.transport.callRecordingFinishedListeners (*this, targetID,
                                                               res.value_or (Clip::Array()));
+
+            if (stopCallback)
+                stopCallback (res);
 
             res.map ([&] (auto c) { clips.addArray (std::move (c)); })
                .map_error ([&] (auto err) { error = err; });
@@ -1218,9 +1222,6 @@ protected:
                                                                          contextLock.unlock_shared();
                                                                          auto res = stopRecording (stopParams);
                                                                          contextLock.lock_shared();
-
-                                                                         if (recContext->stopCallback)
-                                                                             recContext->stopCallback (std::move (res));
 
                                                                          return RecordStopper::HasFinished::yes;
                                                                      }
