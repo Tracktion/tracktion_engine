@@ -1143,7 +1143,7 @@ juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID ta
     TRACKTION_ASSERT_MESSAGE_THREAD
     InputDeviceInstance::InputDeviceDestination* dest = nullptr;
 
-    for (auto inputDest : instance.destTracks)
+    for (auto inputDest : instance.destinations)
     {
         if (inputDest->getTarget() == targetID)
         {

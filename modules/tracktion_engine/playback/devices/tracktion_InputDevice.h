@@ -105,6 +105,7 @@ public:
     //==============================================================================
     /** @internal */
     InputDeviceInstance (InputDevice&, EditPlaybackContext&);
+
     /** Destructor. */
     ~InputDeviceInstance() override;
 
@@ -226,7 +227,7 @@ public:
     /** Returns true if there are any active recordings for this device. */
     virtual bool isRecording() = 0;
 
-    //ddd Delete this and just use the targetID
+    /** Returns the File that the given target is currently recording to. */
     virtual juce::File getRecordingFile (EditItemID) const     { return {}; }
 
     /** Returns the time that a given target started recording. */
@@ -238,10 +239,10 @@ public:
     virtual juce::Array<Clip*> applyRetrospectiveRecord() = 0;
 
     //==============================================================================
-    juce::ValueTree state;
-    InputDevice& owner;
-    EditPlaybackContext& context;
-    Edit& edit;
+    juce::ValueTree state;          /** The state of this instance. */
+    InputDevice& owner;             /**< The InputDevice this is an instance of. */
+    EditPlaybackContext& context;   /**< The EditPlaybackContext this instance belongs to. */
+    Edit& edit;                     /**< The Edit this instance belongs to. */
 
     //==============================================================================
     struct InputDeviceDestination : public Selectable
@@ -354,11 +355,8 @@ public:
         InputDeviceInstance& input;
     };
 
-    InputDeviceDestination* getDestination (const Track& track, int index);
-    InputDeviceDestination* getDestination (const ClipSlot&);
-    InputDeviceDestination* getDestination (const juce::ValueTree& destinationState);
-
-    InputDeviceDestinationList destTracks {*this, state};
+    /** The list of assigned destinations. */
+    InputDeviceDestinationList destinations { *this, state };
 
     //==============================================================================
     /** Base class for classes that want to listen to an InputDevice and get a callback for each block of input.
@@ -416,6 +414,16 @@ private:
 
 /** Removes this instance from all assigned targets. */
 [[ nodiscard ]] juce::Result clearFromTargets (InputDeviceInstance&, juce::UndoManager*);
+
+//==============================================================================
+/** Returns the destination if one has been assigned for the given arguments. */
+[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const Track& track, int index);
+
+/** Returns the destination if one has been assigned for the given arguments. */
+[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const ClipSlot&);
+
+/** Returns the destination if one has been assigned for the given arguments. */
+[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const juce::ValueTree& destinationState);
 
 
 //==============================================================================

@@ -79,7 +79,7 @@ public:
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        for (auto* t : thumbs)
+        for (auto t : thumbs)
             if (t->file == f)
                 return *t;
 

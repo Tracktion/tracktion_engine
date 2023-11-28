@@ -410,7 +410,7 @@ public:
         std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> results;
 
         if (params.targets.empty())
-            for (auto dest : destTracks)
+            for (auto dest : destinations)
                 if (dest->recordEnabled)
                     params.targets.push_back (dest->getTarget());
 

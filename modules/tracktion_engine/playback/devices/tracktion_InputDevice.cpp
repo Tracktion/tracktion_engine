@@ -139,7 +139,7 @@ InputDeviceInstance::InputDeviceInstance (InputDevice& d, EditPlaybackContext& c
                                         // be one instance and this stops the device getting added to the EditPlaybackContext
                                         if (owner.isTrackDevice())
                                         {
-                                            owner.setEnabled (destTracks.size() > 0);
+                                            owner.setEnabled (destinations.size() > 0);
 
                                             if (! owner.isEnabled())
                                                 state.getParent().removeChild (state, nullptr);
@@ -167,7 +167,7 @@ juce::Array<EditItemID> InputDeviceInstance::getTargets() const
 
     juce::Array<EditItemID> targets;
 
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (auto tID = dest->getTarget(); tID.isValid())
             targets.add (tID);
 
@@ -213,11 +213,11 @@ InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManage
     }
 
     state.addChild (v, -1, um);
-    jassert (destTracks[destTracks.size() - 1]->getTarget() == targetID);
+    jassert (destinations[destinations.size() - 1]->getTarget() == targetID);
 
     trackDeviceEnabler.triggerAsyncUpdate();
 
-    return destTracks[destTracks.size() - 1];
+    return destinations[destinations.size() - 1];
 }
 
 juce::Result InputDeviceInstance::removeTarget (EditItemID targetID, juce::UndoManager* um)
@@ -225,9 +225,9 @@ juce::Result InputDeviceInstance::removeTarget (EditItemID targetID, juce::UndoM
     if (isRecording())
         return juce::Result::fail (TRANS("Can't change tracks whilst recording is active"));
 
-    for (int i = destTracks.size(); --i >= 0;)
+    for (int i = destinations.size(); --i >= 0;)
     {
-        auto& dt = *destTracks[i];
+        auto& dt = *destinations[i];
 
         if (dt.getTarget() == targetID)
             state.removeChild (dt.state, um);
@@ -236,36 +236,9 @@ juce::Result InputDeviceInstance::removeTarget (EditItemID targetID, juce::UndoM
     return juce::Result::ok();
 }
 
-InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const Track& track, int index)
-{
-    for (auto dest : destTracks)
-        if (dest->getTarget() == track.itemID && dest->targetIndex == index)
-            return dest;
-
-    return {};
-}
-
-InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const ClipSlot& cs)
-{
-    for (auto dest : destTracks)
-        if (dest->getTarget() == cs.itemID)
-            return dest;
-
-    return {};
-}
-
-InputDeviceInstance::InputDeviceDestination* InputDeviceInstance::getDestination (const juce::ValueTree& destinationState)
-{
-    for (auto dest : destTracks)
-        if (dest->state == destinationState)
-            return dest;
-
-    return {};
-}
-
 bool InputDeviceInstance::isRecordingActive() const
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (dest->recordEnabled)
             return true;
 
@@ -274,7 +247,7 @@ bool InputDeviceInstance::isRecordingActive() const
 
 bool InputDeviceInstance::isRecordingActive (EditItemID targetID) const
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (targetID == dest->getTarget())
             return dest->recordEnabled;
 
@@ -283,7 +256,7 @@ bool InputDeviceInstance::isRecordingActive (EditItemID targetID) const
 
 bool InputDeviceInstance::isRecordingEnabled (EditItemID targetID) const
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (dest->getTarget() == targetID)
             if (dest->recordEnabled)
                 return true;
@@ -293,14 +266,14 @@ bool InputDeviceInstance::isRecordingEnabled (EditItemID targetID) const
 
 void InputDeviceInstance::setRecordingEnabled (EditItemID targetID, bool b)
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (dest->getTarget() == targetID)
             dest->recordEnabled = b;
 }
 
 bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
         if (dest->getTarget() == t.itemID)
             return t.acceptsInput();
 
@@ -352,7 +325,7 @@ void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::Value
 
 void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
 {
-    for (auto dest : destTracks)
+    for (auto dest : destinations)
     {
         if (dest->getTarget() != targetID)
             continue;
@@ -389,7 +362,7 @@ juce::Array<std::pair<AudioTrack*, int>> getTargetTracksAndIndexes (InputDeviceI
 {
     juce::Array<std::pair<AudioTrack*, int>> tracks;
 
-    for (auto dest : instance.destTracks)
+    for (auto dest : instance.destinations)
         if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (instance.edit, dest->getTarget())))
             tracks.add ({ at, dest->targetIndex });
 
@@ -433,5 +406,34 @@ bool isAttached (InputDeviceInstance& instance)
 {
     return ! instance.getTargets().isEmpty();
 }
+
+//==============================================================================
+InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const Track& track, int index)
+{
+    for (auto dest : instance.destinations)
+        if (dest->getTarget() == track.itemID && dest->targetIndex == index)
+            return dest;
+
+    return {};
+}
+
+InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const ClipSlot& cs)
+{
+    for (auto dest : instance.destinations)
+        if (dest->getTarget() == cs.itemID)
+            return dest;
+
+    return {};
+}
+
+InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const juce::ValueTree& destinationState)
+{
+    for (auto dest : instance.destinations)
+        if (dest->state == destinationState)
+            return dest;
+
+    return {};
+}
+
 
 }} // namespace tracktion { inline namespace engine
