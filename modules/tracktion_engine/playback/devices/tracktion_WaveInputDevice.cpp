@@ -251,17 +251,33 @@ public:
 
     bool shouldTrackContentsBeMuted (const Track& t) override
     {
-        bool isTrackRecordingWithPunch = false;
+        bool isTrackRecordingWithPunch = false, muteTrackNow = false,
+            muteTrackContentsWhilstRecording = false, isActivelyRecording = false;
 
-        const std::shared_lock sl (contextLock);
+        {
+            const std::shared_lock sl (contextLock);
 
-        if (auto recContext = getContextForID (t.itemID))
-            isTrackRecordingWithPunch = recContext->recordingWithPunch;
+            if (recordingContexts.empty())
+                return false;
 
-        return ! recordingContexts.empty()
-                && isTrackRecordingWithPunch
-                && muteTrackNow
-                && getWaveInput().mergeMode == 1;
+            if (auto recContext = getContextForID (t.itemID))
+            {
+                isTrackRecordingWithPunch = recContext->recordingWithPunch;
+                muteTrackNow = recContext->muteTargetNow;
+                muteTrackContentsWhilstRecording = recContext->muteTrackContentsWhilstRecording;
+                isActivelyRecording = recContext->hasHitThreshold;
+            }
+        }
+
+        if (muteTrackContentsWhilstRecording && isActivelyRecording)
+            return true;
+
+        if (isTrackRecordingWithPunch
+            && muteTrackNow
+            && getWaveInput().mergeMode == 1)
+           return true;
+
+        return false;
     }
 
     juce::AudioFormat* getFormatToUse() const
@@ -349,7 +365,6 @@ public:
             {
                 CRASH_TRACER
                 rc->firstRecCallback = true;
-                muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
                 rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
@@ -615,8 +630,11 @@ public:
                                              This might be different to the punch range as it accounts for device and graph latency. */
         TimePosition unloopedStopTime;  /**< When the reecording is stopped, this should be the end time. */
         TimeDuration adjustDurationAtStart;
-        bool hasHitThreshold = false, firstRecCallback = false, recordingWithPunch = false;
+        std::atomic<bool> hasHitThreshold { false };
+        bool firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
+        std::atomic<bool> muteTargetNow { false };
+        const bool muteTrackContentsWhilstRecording = engine.getEngineBehaviour().muteTrackContentsWhilstRecording();
 
         std::unique_ptr<AudioFileWriter> fileWriter;
         DiskSpaceCheckTask diskSpaceChecker;
@@ -1124,7 +1142,7 @@ public:
             {
                 const TimeRange blockRange (blockStart, TimeDuration::fromSamples (numSamples, recordingContext->sampleRate));
 
-                muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);
+                recordingContext->muteTargetNow = recordingContext->muteTimes.overlaps (blockRange);
 
                 if (recordingContext->recordingBlockRange.overlaps (blockRange))
                 {
@@ -1188,7 +1206,6 @@ protected:
     std::vector<std::unique_ptr<WaveRecordingContext>> recordingContexts;
     std::unique_ptr<RecordStopper> recordStopper;
 
-    volatile bool muteTrackNow = false;
     juce::AudioBuffer<float> inputBuffer;
 
     WaveRecordingContext* getContextForID (EditItemID targetID) const
