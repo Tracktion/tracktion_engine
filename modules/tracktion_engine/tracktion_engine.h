@@ -46,6 +46,7 @@
 #include <random>
 #include <optional>
 #include <variant>
+#include <any>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
@@ -413,6 +414,7 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_PluginComponent.h"
 #include "utilities/tracktion_BinaryData.h"
 #include "utilities/tracktion_SettingID.h"
+#include "utilities/tracktion_ScopedListener.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"
 #include "utilities/tracktion_Envelope.h"
