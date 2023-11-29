@@ -346,12 +346,12 @@ namespace
         return {};
     }
 
-    bool shouldMonitorTrackDevice (InputDeviceInstance& instance, EditItemID trackID)
+    bool shouldMonitorTrackDevice (InputDeviceInstance& instance)
     {
         switch (instance.owner.getMonitorMode())
         {
             case InputDevice::MonitorMode::on:          return true;
-            case InputDevice::MonitorMode::automatic:   return instance.isRecordingEnabled (trackID);
+            case InputDevice::MonitorMode::automatic:   return instance.isRecordingActive();
             case InputDevice::MonitorMode::off:         return false;
         };
 
@@ -1055,7 +1055,7 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
         if (midiDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
                 return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState,
-                                                           shouldMonitorTrackDevice (inputDeviceInstance, sourceTrack->itemID));
+                                                           shouldMonitorTrackDevice (inputDeviceInstance));
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
             return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState, params.processState);
@@ -1067,7 +1067,7 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
         if (waveDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
                 return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
-                                                           shouldMonitorTrackDevice (inputDeviceInstance, sourceTrack->itemID));
+                                                           shouldMonitorTrackDevice (inputDeviceInstance));
 
         // For legacy reasons, we always need a stereo output from our live inputs
         return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice,
