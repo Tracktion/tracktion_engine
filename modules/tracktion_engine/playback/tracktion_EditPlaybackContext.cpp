@@ -726,7 +726,7 @@ tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (Inpu
     return in.stopRecording (params);
 }
 
-tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (bool discardRecordings)
+tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (TimePosition unloopedEnd, bool discardRecordings)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -734,7 +734,7 @@ tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (bool
     juce::String error;
 
     InputDeviceInstance::StopRecordingParameters params;
-    params.unloopedTimeToEndRecording = getUnloopedPosition();
+    params.unloopedTimeToEndRecording = unloopedEnd;
     params.isLooping = transport.looping;
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = discardRecordings;

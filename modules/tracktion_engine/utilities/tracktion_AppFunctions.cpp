@@ -222,7 +222,7 @@ namespace AppFunctions
             if (! wasRecording)
             {
                 getCurrentUIBehaviour().stopPreviewPlayback();
-                transport->record (true);
+                transport->record (true, true);
             }
         }
     }
@@ -443,7 +443,7 @@ namespace AppFunctions
             if (transport->isRecording())
             {
                 transport->stop (true, true);
-                transport->record (true);
+                transport->record (true, true);
             }
         }
     }

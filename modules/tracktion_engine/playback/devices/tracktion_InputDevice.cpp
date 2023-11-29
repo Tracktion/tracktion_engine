@@ -284,20 +284,20 @@ void InputDeviceInstance::setRecordingEnabled (EditItemID targetID, bool b)
 
 bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 {
+    if (! t.acceptsInput())
+        return false;
+
     for (auto dest : destinations)
     {
-        if (dest->getTarget() == t.itemID)
+        if (dest->getTarget() != t.itemID)
+            continue;
+
+        switch (owner.getMonitorMode())
         {
-            if (t.acceptsInput())
-            {
-                switch (owner.getMonitorMode())
-                {
-                    case InputDevice::MonitorMode::on:          return true;
-                    case InputDevice::MonitorMode::automatic:   return isRecordingEnabled (t.itemID);
-                    case InputDevice::MonitorMode::off:         return false;
-                };
-            }
-        }
+            case InputDevice::MonitorMode::on:          return true;
+            case InputDevice::MonitorMode::automatic:   return isRecordingEnabled (t.itemID);
+            case InputDevice::MonitorMode::off:         return false;
+        };
     }
 
     return false;

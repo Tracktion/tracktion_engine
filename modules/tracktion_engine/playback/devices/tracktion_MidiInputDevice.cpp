@@ -707,8 +707,7 @@ public:
     class MidiRecordingContext : public RecordingContext
     {
     public:
-        MidiRecordingContext (EditItemID target,
-                              TimeRange punchRange_)
+        MidiRecordingContext (EditItemID target, TimeRange punchRange_)
             : RecordingContext (target),
               punchRange (punchRange_)
         {
@@ -1403,9 +1402,11 @@ private:
 
                                                                          return RecordStopper::HasFinished::yes;
                                                                      }
+
+                                                                     return RecordStopper::HasFinished::no;
                                                                  }
 
-                                                                  return RecordStopper::HasFinished::no;
+                                                                  return RecordStopper::HasFinished::yes;
                                                              });
 
         return *recordStopper;

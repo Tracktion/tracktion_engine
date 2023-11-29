@@ -1504,7 +1504,7 @@ void TransportControl::performStop()
 
         clearPlayingFlags();
         playHeadWrapper->stop();
-        playbackContext->stopRecording (transportState->discardRecordings)
+        playbackContext->stopRecording (recEndTime, transportState->discardRecordings)
             .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
 
         position = transportState->discardRecordings ? transportState->startTime.get()
