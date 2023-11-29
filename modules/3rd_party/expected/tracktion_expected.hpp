@@ -21,7 +21,7 @@
 #include "../choc/text/choc_OpenSourceLicenseList.h"
 
 #ifdef CHOC_REGISTER_OPEN_SOURCE_LICENCE
- CHOC_REGISTER_OPEN_SOURCE_LICENCE (magic_enum, R"(
+ CHOC_REGISTER_OPEN_SOURCE_LICENCE (expected, R"(
 ///
 // expected - An implementation of std::expected with extensions
 // Written in 2017 by Sy Brand (tartanllama@gmail.com, @TartanLlama)

@@ -469,7 +469,7 @@ void PhysicalMidiInputDevice::loadProps()
     if (n != nullptr)
         isTakingControllerMessages = n->getBoolAttribute ("controllerMessages", isTakingControllerMessages);
 
-    MidiInputDevice::loadProps (n.get());
+    MidiInputDevice::loadMidiProps (n.get());
 }
 
 void PhysicalMidiInputDevice::saveProps()
@@ -480,7 +480,7 @@ void PhysicalMidiInputDevice::saveProps()
     juce::XmlElement n ("SETTINGS");
     n.setAttribute ("controllerMessages", isTakingControllerMessages);
 
-    MidiInputDevice::saveProps (n);
+    MidiInputDevice::saveMidiProps (n);
 
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);
 }

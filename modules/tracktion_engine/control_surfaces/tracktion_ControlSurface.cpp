@@ -11,6 +11,24 @@
 namespace tracktion { inline namespace engine
 {
 
+namespace control_surface_utils
+{
+void flipEndToEndIfNotAuto (InputDevice& in)
+{
+    switch (in.getMonitorMode())
+    {
+        case InputDevice::MonitorMode::automatic:
+            return;
+        case InputDevice::MonitorMode::on:
+            in.setMonitorMode (InputDevice::MonitorMode::off);
+        break;
+        case InputDevice::MonitorMode::off:
+            in.setMonitorMode (InputDevice::MonitorMode::on);
+        return;
+    }
+}
+}
+
 ParameterSetting::ParameterSetting() noexcept
 {
     clear();
@@ -215,10 +233,10 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
             if (enableEtoE)
             {
                 for (auto dev : activeDev)
-                    dev->owner.flipEndToEnd();
+                    control_surface_utils::flipEndToEndIfNotAuto (dev->owner);
 
                 for (auto dev : inactiveDev)
-                    dev->owner.flipEndToEnd();
+                    control_surface_utils::flipEndToEndIfNotAuto (dev->owner);
             }
             else
             {

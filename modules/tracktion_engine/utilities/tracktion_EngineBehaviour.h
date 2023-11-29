@@ -138,9 +138,6 @@ public:
     /** Should muted tracks processing be disabled to save CPU */
     virtual bool shouldProcessMutedTracks()                                         { return false; }
 
-    /** Should audio inputs be audible when monitor-enabled but not record enabled.  */
-    virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }
-
     /** Should track contents be audible whilst a recording is in progress. */
     virtual bool muteTrackContentsWhilstRecording()                                 { return false; }
 

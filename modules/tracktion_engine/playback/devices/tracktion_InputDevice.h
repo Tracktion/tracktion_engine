@@ -58,8 +58,16 @@ public:
 
     virtual bool isMidi() const                 { return false; }
 
-    bool isEndToEndEnabled() const              { return endToEndEnabled; }
-    virtual void flipEndToEnd() = 0;
+    /** Enum to describe monitor modes. */
+    enum class MonitorMode
+    {
+        off,        ///< Live input is never audible
+        automatic,  ///< Live input is audible when record is enabled
+        on          ///< Live input is always audible
+    };
+
+    MonitorMode getMonitorMode() const          { return monitorMode; }
+    void setMonitorMode (MonitorMode);
 
     /** Creates an instance to use for a given playback context. */
     virtual InputDeviceInstance* createInstance (EditPlaybackContext&) = 0;
@@ -78,9 +86,11 @@ public:
 
     juce::String getGlobalPropertyName() const;
 
+    virtual void saveProps() = 0;
+
 protected:
     std::atomic<bool> enabled { false };
-    bool endToEndEnabled = false;
+    MonitorMode monitorMode = MonitorMode::automatic;
     bool retrospectiveRecordLock = false;
 
 private:

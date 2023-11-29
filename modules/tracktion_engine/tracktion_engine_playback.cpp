@@ -10,6 +10,8 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
+
 #include <shared_mutex>
 
 #if TRACKTION_ENABLE_ABLETON_LINK

@@ -346,6 +346,18 @@ namespace
         return {};
     }
 
+    bool shouldMonitorTrackDevice (InputDeviceInstance& instance, EditItemID trackID)
+    {
+        switch (instance.owner.getMonitorMode())
+        {
+            case InputDevice::MonitorMode::on:          return true;
+            case InputDevice::MonitorMode::automatic:   return instance.isRecordingEnabled (trackID);
+            case InputDevice::MonitorMode::off:         return false;
+        };
+
+        return false;
+    }
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
@@ -1042,7 +1054,8 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
     {
         if (midiDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
-                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState);
+                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState,
+                                                           shouldMonitorTrackDevice (inputDeviceInstance, sourceTrack->itemID));
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
             return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState, params.processState);
@@ -1053,7 +1066,8 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
     {
         if (waveDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
-                return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)));
+                return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
+                                                           shouldMonitorTrackDevice (inputDeviceInstance, sourceTrack->itemID));
 
         // For legacy reasons, we always need a stereo output from our live inputs
         return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice,

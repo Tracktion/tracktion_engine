@@ -246,7 +246,6 @@ MidiInputDevice::MidiInputDevice (Engine& e, const juce::String& deviceType, con
 {
     levelMeasurer.setShowMidi (true);
 
-    endToEndEnabled = true;
     std::memset (keysDown, 0, sizeof (keysDown));
     std::memset (keysUp, 0, sizeof (keysUp));
     std::memset (keyDownVelocities, 0, sizeof (keyDownVelocities));
@@ -300,9 +299,9 @@ void MidiInputDevice::setEnabled (bool b)
     }
 }
 
-void MidiInputDevice::loadProps (const juce::XmlElement* n)
+void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
 {
-    endToEndEnabled = true;
+    monitorMode = MonitorMode::automatic;
     recordingEnabled = true;
     mergeRecordings = true;
     replaceExistingClips = false;
@@ -320,7 +319,7 @@ void MidiInputDevice::loadProps (const juce::XmlElement* n)
         if (! isTrackDevice())
             enabled = n->getBoolAttribute ("enabled", enabled);
 
-        endToEndEnabled = n->getBoolAttribute ("endToEnd", endToEndEnabled);
+        monitorMode = magic_enum::enum_cast<MonitorMode> (n->getStringAttribute ("monitorMode").toStdString()).value_or (MonitorMode::automatic);
         recordingEnabled = n->getBoolAttribute ("recEnabled", recordingEnabled);
         mergeRecordings = n->getBoolAttribute ("mergeRecordings", mergeRecordings);
         replaceExistingClips = n->getBoolAttribute ("replaceExisting", replaceExistingClips);
@@ -337,10 +336,10 @@ void MidiInputDevice::loadProps (const juce::XmlElement* n)
     }
 }
 
-void MidiInputDevice::saveProps (juce::XmlElement& n)
+void MidiInputDevice::saveMidiProps (juce::XmlElement& n)
 {
     n.setAttribute ("enabled", enabled);
-    n.setAttribute ("endToEnd", endToEndEnabled);
+    n.setAttribute ("monitorMode", std::string (magic_enum::enum_name (monitorMode)));
     n.setAttribute ("recEnabled", recordingEnabled);
     n.setAttribute ("mergeRecordings", mergeRecordings);
     n.setAttribute ("replaceExisting", replaceExistingClips);
@@ -368,17 +367,6 @@ void MidiInputDevice::setChannelAllowed (int midiChannel, bool b)
     disallowedChannels.setBit (midiChannel - 1, ! b);
     changed();
     saveProps();
-}
-
-void MidiInputDevice::setEndToEndEnabled (bool b)
-{
-    if (endToEndEnabled != b)
-    {
-        endToEndEnabled = b;
-        TransportControl::restartAllTransports (engine, false);
-        changed();
-        saveProps();
-    }
 }
 
 void MidiInputDevice::setChannelToUse (int newChan)
@@ -557,14 +545,6 @@ void MidiInputDevice::timerCallback()
 }
 
 //==============================================================================
-void MidiInputDevice::flipEndToEnd()
-{
-    endToEndEnabled = ! endToEndEnabled;
-    TransportControl::restartAllTransports (engine, false);
-    changed();
-    saveProps();
-}
-
 static bool trackContainsClipWithName (const AudioTrack& track, const juce::String& name)
 {
     for (auto& c : track.getClips())
@@ -728,16 +708,13 @@ public:
     {
     public:
         MidiRecordingContext (EditItemID target,
-                              TimeRange punchRange_,
-                              bool livePlayOver_)
+                              TimeRange punchRange_)
             : RecordingContext (target),
-              punchRange (punchRange_),
-              livePlayOver (livePlayOver_)
+              punchRange (punchRange_)
         {
         }
 
         const TimeRange punchRange;
-        const bool livePlayOver;
         juce::MidiMessageSequence recorded;
         TimePosition unloopedStopTime;
 
@@ -758,8 +735,7 @@ public:
         for (auto targetID : params.targets)
         {
             auto recContext = std::make_unique<MidiRecordingContext> (targetID,
-                                                                      params.punchRange,
-                                                                      context.transport.looping);
+                                                                      params.punchRange);
             results.emplace_back (std::move (recContext));
         }
 
@@ -1346,11 +1322,6 @@ public:
         {
             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
         }
-    }
-
-    bool isLivePlayEnabled (const Track& t) const override
-    {
-        return owner.isEndToEndEnabled() && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
     MidiInputDevice& getMidiInput() const   { return static_cast<MidiInputDevice&> (owner); }

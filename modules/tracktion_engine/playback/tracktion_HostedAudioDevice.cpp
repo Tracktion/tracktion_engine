@@ -178,14 +178,14 @@ public:
     void loadProps() override
     {
         auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::midiin, getName());
-        MidiInputDevice::loadProps (n.get());
+        MidiInputDevice::loadMidiProps (n.get());
     }
 
     void saveProps() override
     {
         juce::XmlElement n ("SETTINGS");
 
-        MidiInputDevice::saveProps (n);
+        MidiInputDevice::saveMidiProps (n);
 
         engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);
     }
@@ -358,7 +358,7 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
     {
         if (auto wi = dm.getWaveInDevice (i))
         {
-            wi->setEndToEnd (true);
+            wi->setMonitorMode (InputDevice::MonitorMode::on);
             wi->setEnabled (true);
         }
     }

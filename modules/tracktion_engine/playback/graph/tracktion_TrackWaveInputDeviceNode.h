@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 class TrackWaveInputDeviceNode final    : public tracktion::graph::Node
 {
 public:
-    TrackWaveInputDeviceNode (WaveInputDevice&, std::unique_ptr<Node>);
+    TrackWaveInputDeviceNode (WaveInputDevice&, std::unique_ptr<Node>, bool copyInputsToOutputs);
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion::graph::NodeProperties getNodeProperties() override;

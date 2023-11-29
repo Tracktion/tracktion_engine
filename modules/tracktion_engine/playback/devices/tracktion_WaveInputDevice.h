@@ -34,8 +34,6 @@ public:
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     //==============================================================================
-    void flipEndToEnd() override;
-    void setEndToEnd (bool);
     void setRecordAdjustmentMs (double ms);
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;
@@ -92,7 +90,7 @@ private:
     std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
 
     void loadProps();
-    void saveProps();
+    void saveProps() override;
     juce::AudioFormat* getFormatToUse() const;
 
     juce::Array<WaveInputDeviceInstance*> instances;

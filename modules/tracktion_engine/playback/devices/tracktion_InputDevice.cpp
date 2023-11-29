@@ -116,6 +116,17 @@ bool InputDevice::isEnabled() const
     return enabled;
 }
 
+void InputDevice::setMonitorMode (MonitorMode newMode)
+{
+    if (monitorMode == newMode)
+        return;
+
+    monitorMode = newMode;
+    TransportControl::restartAllTransports (engine, false);
+    changed();
+    saveProps();
+}
+
 juce::String InputDevice::getSelectableDescription()
 {
     return name + " (" + type + ")";
@@ -274,8 +285,20 @@ void InputDeviceInstance::setRecordingEnabled (EditItemID targetID, bool b)
 bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 {
     for (auto dest : destinations)
+    {
         if (dest->getTarget() == t.itemID)
-            return t.acceptsInput();
+        {
+            if (t.acceptsInput())
+            {
+                switch (owner.getMonitorMode())
+                {
+                    case InputDevice::MonitorMode::on:          return true;
+                    case InputDevice::MonitorMode::automatic:   return isRecordingEnabled (t.itemID);
+                    case InputDevice::MonitorMode::off:         return false;
+                };
+            }
+        }
+    }
 
     return false;
 }

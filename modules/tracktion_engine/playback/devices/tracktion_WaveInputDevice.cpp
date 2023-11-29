@@ -1067,13 +1067,6 @@ public:
         return clips;
     }
 
-    bool isLivePlayEnabled (const Track& t) const override
-    {
-        return owner.isEndToEndEnabled()
-                && (isRecordingEnabled (t.itemID) || edit.engine.getEngineBehaviour().monitorAudioInputsWithoutRecordEnable())
-                && InputDeviceInstance::isLivePlayEnabled (t);
-    }
-
     void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)
     {
         if (numChannels == 0)
@@ -1360,7 +1353,7 @@ void WaveInputDevice::loadProps()
 {
     filenameMask = getDefaultMask();
     inputGainDb = 0.0f;
-    endToEndEnabled = false;
+    monitorMode = MonitorMode::automatic;
     outputFormat = engine.getAudioFileFormatManager().getDefaultFormat()->getFormatName();
 
     recordTriggerDb = -50.0f;
@@ -1374,7 +1367,8 @@ void WaveInputDevice::loadProps()
     {
         filenameMask = n->getStringAttribute ("filename", filenameMask);
         inputGainDb = (float) n->getDoubleAttribute ("gainDb", inputGainDb);
-        endToEndEnabled = n->getBoolAttribute ("etoe", endToEndEnabled);
+        monitorMode = magic_enum::enum_cast<MonitorMode> (n->getStringAttribute ("monitorMode").toStdString()).value_or (MonitorMode::automatic);
+
         outputFormat = n->getStringAttribute ("format", outputFormat);
         bitDepth = n->getIntAttribute ("bits", bitDepth);
 
@@ -1398,7 +1392,7 @@ void WaveInputDevice::saveProps()
 
     n.setAttribute ("filename", filenameMask);
     n.setAttribute ("gainDb", inputGainDb);
-    n.setAttribute ("etoe", endToEndEnabled);
+    n.setAttribute ("monitorMode", std::string (magic_enum::enum_name (monitorMode)));
     n.setAttribute ("format", outputFormat);
     n.setAttribute ("bits", bitDepth);
     n.setAttribute ("triggerDb", recordTriggerDb);
@@ -1438,22 +1432,6 @@ void WaveInputDevice::setStereoPair (bool stereo)
         dm.setDeviceInChannelStereo (std::max (deviceChannels[0].indexInDevice, deviceChannels[1].indexInDevice), stereo);
     else if (deviceChannels.size() == 1)
         dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
-}
-
-void WaveInputDevice::setEndToEnd (bool newEtoE)
-{
-    if (endToEndEnabled != newEtoE)
-    {
-        endToEndEnabled = newEtoE;
-        TransportControl::restartAllTransports (engine, false);
-        changed();
-        saveProps();
-    }
-}
-
-void WaveInputDevice::flipEndToEnd()
-{
-    setEndToEnd (! endToEndEnabled);
 }
 
 void WaveInputDevice::setRecordAdjustmentMs (double ms)

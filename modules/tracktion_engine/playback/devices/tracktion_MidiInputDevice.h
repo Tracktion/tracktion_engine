@@ -36,9 +36,6 @@ public:
     void setChannelAllowed (int midiChannel, bool);
     bool isChannelAllowed (int midiChannel) const   { return ! disallowedChannels[midiChannel - 1]; }
 
-    void setEndToEndEnabled (bool);
-    bool isEndToEndEnabled() const                  { return endToEndEnabled; }
-
     void setOverridingNoteVelocities (bool);
     bool isOverridingNoteVelocities() const         { return overrideNoteVels; }
 
@@ -49,7 +46,6 @@ public:
     bool isMPEDevice() const;
 
     //==============================================================================
-    void flipEndToEnd() override;
     void masterTimeUpdate (double time) override;
     void connectionStateChanged();
 
@@ -58,12 +54,10 @@ public:
     void removeInstance (MidiInputDeviceInstanceBase*);
 
     virtual void loadProps() = 0;
-    virtual void saveProps() = 0;
 
     bool mergeRecordings = true;
     bool recordingEnabled = true;
     bool replaceExistingClips = false;
-    bool livePlayOver = false;
     bool recordToNoteAutomation = false;
     QuantisationType quantisation;
 
@@ -135,8 +129,8 @@ protected:
 
     void sendNoteOnToMidiKeyListeners (juce::MidiMessage&);
 
-    void loadProps (const juce::XmlElement*);
-    void saveProps (juce::XmlElement&);
+    void loadMidiProps (const juce::XmlElement*);
+    void saveMidiProps (juce::XmlElement&);
 
     void sendMessageToInstances (const juce::MidiMessage&);
 

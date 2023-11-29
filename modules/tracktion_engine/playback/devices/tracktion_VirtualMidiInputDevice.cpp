@@ -84,7 +84,7 @@ void VirtualMidiInputDevice::loadProps()
         useAllInputs = n->getBoolAttribute ("useAllInputs", false);
     }
 
-    MidiInputDevice::loadProps (n.get());
+    MidiInputDevice::loadMidiProps (n.get());
 }
 
 void VirtualMidiInputDevice::saveProps()
@@ -93,7 +93,7 @@ void VirtualMidiInputDevice::saveProps()
 
     n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
     n.setAttribute ("useAllInputs", useAllInputs);
-    MidiInputDevice::saveProps (n);
+    MidiInputDevice::saveMidiProps (n);
 
     juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 

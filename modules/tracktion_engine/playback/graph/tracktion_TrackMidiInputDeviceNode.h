@@ -18,7 +18,8 @@ class TrackMidiInputDeviceNode final    : public tracktion::graph::Node,
                                           private TracktionEngineNode
 {
 public:
-    TrackMidiInputDeviceNode (MidiInputDevice&, std::unique_ptr<Node>, ProcessState&);
+    TrackMidiInputDeviceNode (MidiInputDevice&, std::unique_ptr<Node>, ProcessState&,
+                              bool copyInputsToOutputs);
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion::graph::NodeProperties getNodeProperties() override;
