@@ -131,6 +131,11 @@ public:
     */
     bool isStopping() const;
 
+    /** Returns true if a recording is currently being stopped.
+        You can use this to determine if a clip being added is from a recording or not.
+    */
+    bool isRecordingStopping() const;
+
     /** Returns the time when the transport was started. */
     TimePosition getTimeWhenStarted() const;
 
@@ -383,6 +388,7 @@ private:
     bool isDelayedChangePending = false;
     int loopUpdateCounter = 10;
     bool isStopInProgress = false;
+    bool recordingIsStoppingFlag = false;
 
     struct ScreenSaverDefeater;
     std::unique_ptr<ScreenSaverDefeater> screenSaverDefeater;

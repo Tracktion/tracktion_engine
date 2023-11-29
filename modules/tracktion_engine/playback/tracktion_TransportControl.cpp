@@ -678,11 +678,13 @@ void TransportControl::callRecordingAboutToStartListeners (InputDeviceInstance& 
 
 void TransportControl::callRecordingAboutToStopListeners (InputDeviceInstance& in, EditItemID targetID)
 {
+    recordingIsStoppingFlag = true;
     listeners.call (&Listener::recordingAboutToStop, in, targetID);
 }
 
 void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, EditItemID targetID, Clip::Array recordedClips)
 {
+    recordingIsStoppingFlag = false;
     listeners.call (&Listener::recordingFinished, in, targetID, recordedClips);
 }
 
@@ -939,6 +941,8 @@ bool TransportControl::isPlaying() const                { return transportState-
 bool TransportControl::isRecording() const              { return transportState->recording; }
 bool TransportControl::isSafeRecording() const          { return isRecording() && transportState->safeRecording; }
 bool TransportControl::isStopping() const               { return isStopInProgress; }
+bool TransportControl::isRecordingStopping() const      { return recordingIsStoppingFlag; }
+
 
 TimePosition TransportControl::getTimeWhenStarted() const   { return transportState->startTime.get(); }
 
