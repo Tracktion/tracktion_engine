@@ -289,7 +289,6 @@ struct TransportControl::SectionPlayer  : private Timer
 {
     SectionPlayer (TransportControl& tc, TimeRange sectionToPlay)
         : transport (tc), section (sectionToPlay),
-          originalTransportTime (tc.getCurrentPosition()),
           wasLooping (tc.looping)
     {
         jassert (! sectionToPlay.isEmpty());
@@ -308,7 +307,6 @@ struct TransportControl::SectionPlayer  : private Timer
 
     TransportControl& transport;
     const TimeRange section;
-    const double originalTransportTime;
     const bool wasLooping;
 
     void timerCallback() override
@@ -1061,20 +1059,9 @@ void TransportControl::nudgeRight()
 
 
 //==============================================================================
-double TransportControl::getCurrentPosition() const
-{
-    return position.get().inSeconds();
-}
-
 TimePosition TransportControl::getPosition() const
 {
     return position.get();
-}
-
-void TransportControl::setCurrentPosition (double newPos)
-{
-    CRASH_TRACER
-    setPosition (TimePosition::fromSeconds (newPos));
 }
 
 void TransportControl::setPosition (TimePosition t)

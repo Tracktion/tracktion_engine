@@ -145,11 +145,9 @@ public:
         introduces latency.
         @see EditPlaybackContext::getAudibleTimelineTime, EditPlaybackContext::getLatencySamples
     */
-    double getCurrentPosition() const;
     TimePosition getPosition() const;
 
     /** Sets a new transport position. */
-    void setCurrentPosition (double time);
     void setPosition (TimePosition);
 
     /** Signifies a scrub-drag operation has started/stopped.

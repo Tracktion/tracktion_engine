@@ -285,7 +285,7 @@ void ControlSurface::userPressedStop()
         if (tc->isPlaying() || tc->isRecording())
             tc->stop (false, false);
         else
-            tc->setCurrentPosition (0.0);
+            tc->setPosition (0s);
     }
 }
 

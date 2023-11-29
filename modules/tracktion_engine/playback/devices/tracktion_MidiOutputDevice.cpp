@@ -54,7 +54,7 @@ public:
         {
             auto len = blockEnd - blockStart;
 
-            blockStart = tc != nullptr ? tc->getCurrentPosition() : 0.0;
+            blockStart = tc != nullptr ? tc->getPosition().inSeconds() : 0.0;
             blockEnd = blockStart + len;
         }
 
@@ -266,7 +266,7 @@ MidiOutputDevice::MidiOutputDevice (Engine& e, const juce::String& deviceName, i
       deviceIndex (index)
 {
     enabled = true;
-	
+
     timecodeGenerator = std::make_unique<MidiTimecodeGenerator>();
     midiClockGenerator = std::make_unique<MidiClockGenerator>();
     programNameSet = getMidiProgramManager().getDefaultCustomName();

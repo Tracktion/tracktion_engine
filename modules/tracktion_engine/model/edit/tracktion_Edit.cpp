@@ -194,7 +194,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             else if (v.hasType (IDs::CHANNEL))
             {
                 if (i == IDs::pattern || i == IDs::channel
-                    || i == IDs::velocities || i == IDs::gates || i == IDs::probabilities 
+                    || i == IDs::velocities || i == IDs::gates || i == IDs::probabilities
                      || i == IDs::note || i == IDs::velocity || i == IDs::groove
                      || i == IDs::grooveStrength)
                     restart();
@@ -2520,12 +2520,12 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
     {
         // Skip the MasterTrack as that is covered by the masterPluginList above
         auto masterTrack = getMasterTrack();
-        
+
         for (auto t : getAllTracks (*this))
         {
             if (t == masterTrack)
                 continue;
-            
+
             list.addArray (t->macroParameterList.getMacroParameters());
             list.addArray (t->getAllAutomatableParams());
         }
@@ -2606,7 +2606,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 
     edit->ensureNumberOfAudioTracks (2);
     edit->isPreviewEdit = true;
-    edit->getTransport().setCurrentPosition (0);
+    edit->getTransport().setPosition (0s);
 
     if (couldMatchTempo != nullptr)
         *couldMatchTempo = false;
@@ -2798,7 +2798,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 
     edit->ensureNumberOfAudioTracks (3);
     edit->isPreviewEdit = true;
-    edit->getTransport().setCurrentPosition (0);
+    edit->getTransport().setPosition (0s);
 
     if (couldMatchTempo != nullptr)
         *couldMatchTempo = false;

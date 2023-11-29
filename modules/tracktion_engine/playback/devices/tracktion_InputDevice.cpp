@@ -191,11 +191,11 @@ InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManage
     if (owner.isTrackDevice() || move)
     {
         for (auto t : getTargets())
-            removeTarget (t, um);
+            [[ maybe_unused ]] auto res = removeTarget (t, um);
     }
     else
     {
-        removeTarget (targetID, um);
+        [[ maybe_unused ]] auto res = removeTarget (targetID, um);
     }
 
     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);

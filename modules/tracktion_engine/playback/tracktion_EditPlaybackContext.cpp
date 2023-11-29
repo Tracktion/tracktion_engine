@@ -579,7 +579,7 @@ void EditPlaybackContext::createNode()
 {
     CRASH_TRACER
     // Reset this until it's updated by the play graph
-    audiblePlaybackTime = transport.getCurrentPosition();
+    audiblePlaybackTime = transport.getPosition().inSeconds();
 
     isAllocated = true;
 

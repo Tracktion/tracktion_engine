@@ -136,7 +136,7 @@ private:
         if (transport.isPlaying())
         {
             transport.stop (false, false, false);
-            transport.setCurrentPosition (correctedTime);
+            transport.setPosition (TimePosition::fromSeconds (correctedTime));
             averageDrift = 0.0;
             averageDriftNumSamples = 0;
         }
@@ -162,7 +162,7 @@ private:
                 if (transport.isPlaying())
                 {
                     transport.stop (false, false, false);
-                    transport.setCurrentPosition (correctedTime);
+                    transport.setPosition (TimePosition::fromSeconds (correctedTime));
                     averageDrift = 0.0;
                     averageDriftNumSamples = 0;
                 }
@@ -179,7 +179,7 @@ private:
             }
             else if (m->type == 3) // goto last time
             {
-                transport.setCurrentPosition (correctedTime);
+                transport.setPosition (TimePosition::fromSeconds (correctedTime));
 
                 averageDrift = 0.0;
                 averageDriftNumSamples = 0;
@@ -221,7 +221,7 @@ private:
     void handleMMCGoto (int hours_, int minutes_, int seconds_, int frames_)
     {
         const int fps = owner.edit.getTimecodeFormat().getFPS();
-        transport.setCurrentPosition (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_));
+        transport.setPosition (TimePosition::fromSeconds (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_)));
     }
 
     double getFPS() const noexcept

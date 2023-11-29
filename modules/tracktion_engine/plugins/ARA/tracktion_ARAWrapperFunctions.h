@@ -90,7 +90,7 @@ struct EditProxyFunctions
     {
         CRASH_TRACER
         if (auto tc = (TransportControl*) ref)
-            tc->setCurrentPosition (timePosition);
+            tc->setPosition (TimePosition::fromSeconds (timePosition));
     }
 
     static void ARA_CALL requestSetCycleRange (ARAPlaybackControllerHostRef ref, ARATimePosition startTime, ARATimeDuration duration)
