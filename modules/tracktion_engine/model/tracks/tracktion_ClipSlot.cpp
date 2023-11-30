@@ -19,11 +19,13 @@ ClipSlot::ClipSlot (const juce::ValueTree& v, Track& t)
     assert (state.hasType (IDs::CLIPSLOT));
     assert (itemID.isValid());
     initialiseClipOwner (track.edit, state);
+    edit.clipSlotCache.addItem (*this);
 }
 
 ClipSlot::~ClipSlot()
 {
     notifyListenersOfDeletion();
+    edit.clipSlotCache.removeItem (*this);
 }
 
 //==============================================================================

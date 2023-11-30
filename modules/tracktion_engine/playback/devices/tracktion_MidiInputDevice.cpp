@@ -977,11 +977,16 @@ public:
         if (! track && ! clipSlot)
             return {};
 
+        // Never add takes for slot recordings
+        if (clipSlot)
+            isLooping = false;
+
         auto clipOwner = track != nullptr ? static_cast<ClipOwner*> (track)
                                           : static_cast<ClipOwner*> (clipSlot);
         Clip::Array createdClips;
         auto& mi = getMidiInput();
         auto& recorded = recContext->recorded;
+        const bool wasPunchRecording = clipSlot ? false : edit.recordingPunchInOut;
 
         recorded.updateMatchedPairs();
         auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
@@ -1100,7 +1105,7 @@ public:
             auto endPos    = recordingEnd;
             auto maxEndPos = endPos + 0.5s;
 
-            if (edit.recordingPunchInOut)
+            if (wasPunchRecording)
             {
                 if (startPos < loopRange.getEnd())
                 {

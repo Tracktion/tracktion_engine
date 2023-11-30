@@ -22,7 +22,7 @@ public:
                          MidiInputDevice&, MidiMessageArray::MPESourceID,
                          tracktion::graph::PlayHeadState&);
     ~MidiInputDeviceNode() override;
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
@@ -35,7 +35,7 @@ private:
     //==============================================================================
     InputDeviceInstance& instance;
     MidiInputDevice& midiInputDevice;
-    const  MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
+    const MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
     tracktion::graph::PlayHeadState& playHeadState;
 
     juce::CriticalSection bufferLock;
@@ -46,11 +46,15 @@ private:
     juce::CriticalSection liveInputLock;
     unsigned int lastReadTime = juce::Time::getApproximateMillisecondCounter(), maxExpectedMsPerBuffer = 0;
     double sampleRate = 44100.0, lastPlayheadTime = 0;
+    std::atomic<bool> canLoop { true };
+
+    LambdaTimer loopOverdubsChecker { [this] { updateLoopOverdubs(); } };
 
     //==============================================================================
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
     void createProgramChanges (MidiMessageArray&);
     bool isLivePlayOverActive();
+    void updateLoopOverdubs();
 };
 
 }} // namespace tracktion { inline namespace engine

@@ -370,6 +370,7 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
         const bool wasRecording = ! clips.isEmpty();
         const bool isLivePlayActive = isLivePlayEnabled (*track);
 
+        // This logic rebuilds the audio graph if the monitor state changes as it's a static node-type in the graph
         if (! wasRecording && wasLivePlayActive != isLivePlayActive)
             edit.restartPlayback();
 

@@ -27,7 +27,7 @@ namespace tracktion { inline namespace engine
     To create an Edit to you need construct one with an Edit::Options instance
     supplying at least the Engine to use, the ValueTree state and a ProjectItemID
     to uniquely identify this Edit.
- 
+
     This is a high level overview of the Edit structure and the relevant objects.
     Note that this isn't an exhaustive list but should help you find the most relevant classes.
     - Edit
@@ -143,7 +143,7 @@ public:
     //==============================================================================
     /** Returns the EditRole. */
     EditRole getEditRole() const noexcept   { return editRole; }
-    
+
     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */
     bool shouldPlay() const noexcept        { return (editRole & playDisabled) == 0; }
 
@@ -159,7 +159,7 @@ public:
     //==============================================================================
     /** The maximum length an Edit can be. */
     static constexpr double maximumLength = 48.0 * 60.0 * 60.0;
-    
+
     /** Returns the maximum length an Edit can be. */
     static TimeDuration getMaximumLength()          { return TimeDuration::fromSeconds (maximumLength); }
 
@@ -173,7 +173,7 @@ public:
     //==============================================================================
     /** Saves the plugin, automap and ARA states to the state ValueTree. */
     void flushState();
-    
+
     /** Saves the specified plugin state to the state ValueTree. */
     void flushPluginStateIfNeeded (Plugin&);
 
@@ -217,13 +217,16 @@ public:
     /** Quick way to find and iterate all Track[s] in the Edit. */
     EditItemCache<Track> trackCache;
 
+    /** Quick way to find and iterate all ClipSlot[s] in the Edit. */
+    EditItemCache<ClipSlot> clipSlotCache;
+
     /** Quick way to find and iterate all Clip[s] in the Edit. */
     EditItemCache<Clip> clipCache;
 
     //==============================================================================
     /** Returns the EditInputDevices for the Edit. */
     EditInputDevices& getEditInputDevices() noexcept;
-    
+
     /** Returns an InputDeviceInstance for a global InputDevice. */
     InputDeviceInstance* getCurrentInstanceForInputDevice (InputDevice*) const;
 
@@ -264,7 +267,7 @@ public:
             @param shouldReallocateOnDestruction Re-attaches the Edit to the output when this goes out of scope
         */
         ScopedRenderStatus (Edit&, bool shouldReallocateOnDestruction);
-        
+
         /** Destructor.
             Re-allocates an EditPlaybackContext if this is the last object for this Edit.
         */
@@ -305,7 +308,7 @@ public:
     {
         /** Creates an UndoTransactionInhibitor for an Edit. */
         UndoTransactionInhibitor (Edit&);
-        
+
         /** Creates a copy of UndoTransactionInhibitor for an Edit. */
         UndoTransactionInhibitor (const UndoTransactionInhibitor&);
 
@@ -390,7 +393,7 @@ public:
 
     /** Creates a ChordTrack if there isn't currently one. */
     void ensureMasterTrack();
-    
+
     /** Returns the global ArrangerTrack. */
     ArrangerTrack* getArrangerTrack() const;
 
@@ -452,7 +455,7 @@ public:
         Not intended for public use as it will be called automatically by the TransportControl.
     */
     void sendStartStopMessageToPlugins();
-    
+
     /** Returns the master PluginList. */
     PluginList& getMasterPluginList() const noexcept            { return *masterPluginList; }
 
@@ -767,7 +770,7 @@ public:
 
     /** Removes a previously added WastedMidiMessagesListener. */
     void removeWastedMidiMessagesListener (WastedMidiMessagesListener*);
-    
+
     /** Triggers a callback to any registered WastedMidiMessagesListener[s]. */
     void warnOfWastedMidiMessages (InputDevice*, Track*);
 
@@ -858,11 +861,11 @@ private:
     std::atomic<TimePosition> clickMark1Time { TimePosition() }, clickMark2Time { TimePosition() };
     std::atomic<bool> isFullyConstructed { false };
     mutable std::atomic<uint64_t> nextID { 0 }; // 0 is used as flag to initialise the next ID count
-    
+
    #if JUCE_DEBUG
     mutable std::unordered_set<EditItemID> usedIDs;
    #endif
-    
+
     const EditRole editRole;
 
     struct TreeWatcher;

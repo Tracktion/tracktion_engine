@@ -699,15 +699,20 @@ public:
             return {};
         }
 
+        // Never loop or punch record to slots
+        const bool isClipSlot = dynamic_cast<ClipSlot*> (clipOwner) != nullptr;
+        const bool wasPunchRecording = isClipSlot ? false : edit.recordingPunchInOut;
+        const bool wasLoopRecording = isClipSlot ? false : isLooping;
+
         return applyLastRecording (*rc, recordedFile, *clipOwner,
                                    { rc->punchTimes.getStart(), unloopedEndTime },
-                                   isLooping, loopRange.getEnd());
+                                   wasLoopRecording, wasPunchRecording, loopRange.getEnd());
     }
 
     tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc,
                                                                 const AudioFile& recordedFile, ClipOwner& destClipOwner,
                                                                 TimeRange recordedRange,
-                                                                bool isLooping, TimePosition loopEnd)
+                                                                bool isLooping, bool isPunching, TimePosition loopEnd)
     {
         CRASH_TRACER
         auto& engine = edit.engine;
@@ -731,7 +736,7 @@ public:
                 s = TRANS("The device \"XZZX\" \nnever reached the trigger threshold set for recording (THRX).")
                       .replace ("XZZX", getWaveInput().getName())
                       .replace ("THRX", gainToDbString (dbToGain (getWaveInput().recordTriggerDb)));
-            else if (edit.recordingPunchInOut && rc.punchTimes.getStart() >= recordedRange.getEnd())
+            else if (isPunching && rc.punchTimes.getStart() >= recordedRange.getEnd())
                 s = TRANS("The device \"XZZX\" \nnever got as far as the punch-in marker, so didn't start recording!")
                       .replace ("XZZX", getWaveInput().getName());
             else
@@ -751,7 +756,7 @@ public:
                                                         {}, ProjectItem::Category::recorded, true))
             {
                 return applyLastRecording (rc, projectItem, recordedFile, destClipOwner,
-                                           recordedFileLength, newClipLen, isLooping, loopEnd);
+                                           recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
             }
 
             return tl::unexpected (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
@@ -760,7 +765,7 @@ public:
         else
         {
             return applyLastRecording (rc, nullptr, recordedFile, destClipOwner,
-                                       recordedFileLength, newClipLen, isLooping, loopEnd);
+                                       recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
         }
 
         return {};
@@ -769,7 +774,7 @@ public:
     tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc, const ProjectItem::Ptr projectItem,
                                                                 const AudioFile& recordedFile, ClipOwner& destClipOwner,
                                                                 TimeDuration recordedFileLength, TimeDuration newClipLen,
-                                                                bool isLooping, TimePosition loopEnd)
+                                                                bool isLooping, bool isPunching, TimePosition loopEnd)
     {
         CRASH_TRACER
         jassert (projectItem == nullptr || projectItem->getID().isValid());
@@ -786,14 +791,14 @@ public:
 
         auto endPos = rc.punchTimes.getStart() + newClipLen;
 
-        if (edit.recordingPunchInOut || context.transport.looping)
+        if (isPunching || context.transport.looping)
             endPos = juce::jlimit (rc.punchTimes.getStart() + 0.5s, loopEnd, endPos);
 
         Clip::Ptr newClip;
         bool replaceOldClips = getWaveInput().mergeMode == 1;
         const auto loopRange = edit.getTransport().getLoopRange();
 
-        if (replaceOldClips && edit.recordingPunchInOut)
+        if (replaceOldClips && isPunching)
         {
             if (projectItem != nullptr)
                 newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getID(),
@@ -832,7 +837,7 @@ public:
 
         CRASH_TRACER
 
-        if (edit.recordingPunchInOut)
+        if (isPunching)
         {
             if (newClip->getPosition().getStart() < loopRange.getStart())
                 newClip->setStart (loopRange.getStart(), true, false);

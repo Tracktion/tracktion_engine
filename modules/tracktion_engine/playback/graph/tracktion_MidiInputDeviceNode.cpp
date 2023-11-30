@@ -58,6 +58,7 @@ void MidiInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitial
     }
 
     instance.addConsumer (this);
+    loopOverdubsChecker.startTimerHz (1);
 }
 
 bool MidiInputDeviceNode::isReadyToProcess()
@@ -71,7 +72,7 @@ void MidiInputDeviceNode::process (ProcessContext& pc)
 
     const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
     jassert (! splitTimelineRange.isSplit); // This should be handled by the NodePlayer
-    
+
     processSection (pc, splitTimelineRange.timelineRange1);
 }
 
@@ -98,6 +99,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
     if (playHead.isPlaying() && isLivePlayOverActive())
     {
+        const bool isLooping = canLoop && playHead.isLooping();
         const auto loopTimes = timeRangeFromSamples (playHead.getLoopRange(), sampleRate);
         const auto messageReferenceSamplePosition = tracktion::graph::timeToSample (message.getTimeStamp(), sampleRate);
         const auto timelinePosition = playHead.referenceSamplePositionToTimelinePosition (messageReferenceSamplePosition);
@@ -108,7 +110,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
         else if (message.isNoteOn())
             sourceTime = midiInputDevice.quantisation.roundToNearest (sourceTime, instance.edit);
 
-        if (playHead.isLooping())
+        if (isLooping)
             if (sourceTime >= loopTimes.getEnd())
                 sourceTime = loopTimes.getStart();
 
@@ -199,7 +201,19 @@ void MidiInputDeviceNode::createProgramChanges (MidiMessageArray& bufferForMidiM
 
 bool MidiInputDeviceNode::isLivePlayOverActive()
 {
-    return instance.isRecording() && instance.context.transport.looping;
+    return instance.isRecording() && canLoop && instance.context.transport.looping;
+}
+
+void MidiInputDeviceNode::updateLoopOverdubs()
+{
+    bool canLoopFlag = false;
+
+    // Only enable overdubs if a track is being recorded
+    for (auto targetID : instance.getTargets())
+        if (instance.isRecording (targetID) && instance.edit.trackCache.findItem (targetID) != nullptr)
+            canLoopFlag = true;
+
+    canLoop = canLoopFlag;
 }
 
 void MidiInputDeviceNode::discardRecordings()
