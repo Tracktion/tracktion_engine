@@ -601,7 +601,7 @@ Clip* MidiInputDevice::addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack& 
 }
 
 //==============================================================================
-class MidiInputDeviceInstanceBase  : public InputDeviceInstance, /*BEATCONNECT MODIFICATION START*/private juce::Timer/*BEATCONNECT MODIFICATION END*/
+class MidiInputDeviceInstanceBase  : public InputDeviceInstance
 {
 public:
     MidiInputDeviceInstanceBase (MidiInputDevice& d, EditPlaybackContext& c)
@@ -643,23 +643,11 @@ public:
     {
         recording = false;
         livePlayOver = false;
-        //BEATCONNECT MODIFICATION START
-        stopTimer();
-        //clear RECORDINGMIDICLIP state nodes at this point
-        for (const auto& track : getTargetTracks())
-            track->state.removeChild(track->state.getChildWithName(IDs::RecordingMidiClip), nullptr);
-        //BEATCONNECT MODIFICATION END
     }
 
     void recordWasCancelled() override
     {
         recording = false;
-        //BEATCONNECT MODIFICATION START
-        stopTimer();
-        //clear RECORDINGMIDICLIP state nodes at this point
-        for (const auto& track : getTargetTracks())
-            track->state.removeChild(track->state.getChildWithName(IDs::RecordingMidiClip), nullptr);
-        //BEATCONNECT MODIFICATION END
     }
 
     TimePosition getPunchInTime() override
@@ -683,25 +671,8 @@ public:
     bool handleIncomingMidiMessage (const juce::MidiMessage& message)
     {               
         if (recording)
-        {
-            /*BEATCONNECT MODIFICATION START*/
-            if (!isTimerRunning())
-                startTimer(60);
-            /*BEATCONNECT MODIFICATION END*/
-            
+        {   
             recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds()));
-
-            /*BEATCONNECT MODIFICATION START*/
-            inMidiMessageHandler = true;
-
-            if (!inMidiTimer)
-            {
-                recordedCopy = recorded;               
-                isNewRecordedCopy = true;
-            }
-                           
-            inMidiMessageHandler = false;
-            /*BEATCONNECT MODIFICATION END*/
         }
             
         juce::ScopedLock sl (consumerLock);
@@ -1130,66 +1101,8 @@ private:
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
-    /*BEATCONNECT MODIFICATION START*/
-    // midi thread / message thread concurrency
-    std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false }, isNewRecordedCopy{ false };
-    juce::MidiMessageSequence recordedCopy;
-    /*BEATCONNECT MODIFICATION END*/
-    //-----------------------------------------
-
     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
-
-    /*BEATCONNECT MODIFICATION START*/
-    void timerCallback() override
-    {
-        // on message thread
-        inMidiTimer = true;
-        if (!inMidiMessageHandler)
-        {
-            auto& mi = getMidiInput();
-            auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
-                : applyChannel(recorded, mi.getChannelToUse());
-
-            MidiList ml;
-            ml.setMidiChannel(MidiChannel(channelToApply));
-
-            recordedCopy.updateMatchedPairs();
-            ml.importMidiSequence(recordedCopy, &edit, getPunchInTime(), nullptr);
-
-            if (isNewRecordedCopy)
-            {
-                for (const auto& track : getTargetTracks())
-                {
-                    auto recordingMidiClip = track->state.getChildWithName(IDs::RecordingMidiClip);
-                    if (recordingMidiClip.isValid())
-                    {
-                        // see if there is a sequence with the associated channelNumber
-                        juce::ValueTree sequence;
-                        sequence = recordingMidiClip.getChildWithProperty("channelNumber", channelToApply);
-                        if (sequence.isValid())
-                        {
-                            sequence.removeAllChildren(nullptr);
-                        }                            
-                        else
-                        {
-                            sequence = juce::ValueTree(ml.state.getType());
-                            for (int i = 0; i < ml.state.getNumProperties(); ++i)
-                                sequence.setProperty(ml.state.getPropertyName(i), ml.state.getProperty(ml.state.getPropertyName(i)), nullptr);
-                            recordingMidiClip.appendChild(sequence, nullptr);
-                        }
-                        
-                        jassert(sequence.isValid());
-                        for (int i = 0; i < ml.state.getNumChildren(); ++i)
-                            sequence.addChild(ml.state.getChild(i).createCopy(), i, nullptr);                            
-                    }
-                }
-                isNewRecordedCopy = false;
-            }
-        }
-        inMidiTimer = false; 
-    }
-    /*BEATCONNECT MODIFICATION END*/
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };
