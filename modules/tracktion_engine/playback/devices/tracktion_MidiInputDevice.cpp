@@ -1377,9 +1377,9 @@ private:
     {
         const std::shared_lock sl (contextLock);
 
-        for (auto& context : recordingContexts)
-            if (context->targetID == targetID)
-                return context.get();
+        for (auto& recContext : recordingContexts)
+            if (recContext->targetID == targetID)
+                return recContext.get();
 
         return nullptr;
     }
