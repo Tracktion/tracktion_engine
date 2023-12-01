@@ -118,7 +118,7 @@ namespace
         const auto beats = tempoPosition.getBeats().inBeats();
         int beat = static_cast<int> (std::floor (beats));
         const auto beatTime = sequence.toTime (BeatPosition::fromBeats (beat));
-        const bool isFirstBeatOfBar = sequence.toBarsAndBeats (beatTime).getWholeBeats() == 0;
+        const bool isFirstBeatOfBar = tempoPosition.getBarsBeats().getWholeBeats() == 0;
 
         return { beatTime, isFirstBeatOfBar };
     }
