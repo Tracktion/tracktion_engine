@@ -19,7 +19,7 @@
 
 #if TRACKTION_AIR_WINDOWS
 
-#include "plugins/airwindows/tracktion_AirWindowsBase.cpp"
+#include "plugins/airwindows/tracktion_AirWindowsBase.h"
 
 #if JUCE_CLANG
  #pragma clang diagnostic push
@@ -412,7 +412,7 @@ namespace pressure4
  #pragma warning (pop)
 #endif
 
-#include "plugins/airwindows/tracktion_AirWindows.cpp"
+#include "plugins/airwindows/tracktion_AirWindows2.cpp"
 
 #endif
 #endif

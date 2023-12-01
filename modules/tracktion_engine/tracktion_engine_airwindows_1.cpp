@@ -19,6 +19,7 @@
 
 #if TRACKTION_AIR_WINDOWS
 
+#include "plugins/airwindows/tracktion_AirWindowsBase.h"
 #include "plugins/airwindows/tracktion_AirWindowsBase.cpp"
 
 #if JUCE_CLANG
@@ -372,7 +373,7 @@ namespace ditherbox
  #pragma warning (pop)
 #endif
 
-#include "plugins/airwindows/tracktion_AirWindows.cpp"
+#include "plugins/airwindows/tracktion_AirWindows1.cpp"
 
 #endif
 #endif
