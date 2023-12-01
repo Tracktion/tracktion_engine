@@ -670,6 +670,7 @@ private:
             }
 
             convertLegacyTimecodes (xml);
+            convertLegacyInputTargets (xml);
         }
         else
         {
@@ -840,6 +841,15 @@ private:
             else
                 renameAttribute (xml, "initialPitchbend", IDs::bend);
         }
+    }
+
+    static void convertLegacyInputTargets (juce::XmlElement& xml)
+    {
+        for (auto e : xml.getChildIterator())
+            convertLegacyInputTargets (*e);
+
+        if (xml.hasTagName (IDs::INPUTDEVICEDESTINATION))
+            renameAttribute (xml, "targetTrack", IDs::targetID);
     }
 
     static void recurseDoingLegacyConversions (juce::XmlElement& xml)

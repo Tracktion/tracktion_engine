@@ -75,6 +75,10 @@ public:
     void playSectionAndReset (TimeRange rangeToPlay);
 
     /** Starts recording. This will also start playback if stopped.
+        The main difference between playback and recording is that if the playback
+        is stopped, recording will pre-roll to count in.
+        If playback is already playing, this will just start recording any armed
+        inputs from the current time.
         @param justSendMMCIfEnabled             If this is true, playback isn't actually started,
                                                 an MMC message is just output and recording will start
                                                 when the input MIDI device recieves one.

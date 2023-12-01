@@ -1330,7 +1330,7 @@ bool TransportControl::performRecord()
     CRASH_TRACER
     sectionPlayer.reset();
 
-    stop (false, false);
+    //ddd stop (false, false);
 
     if (! transportState->userDragging)
     {
@@ -1339,121 +1339,135 @@ bool TransportControl::performRecord()
 
         if (transportState->allowRecordingIfNoInputsArmed || areAnyInputsRecording())
         {
-            const auto loopRange = getLoopRange();
-            transportState->startTime   = position.get();
-            transportState->endTime     = Edit::getMaximumEditEnd();
-
-            if (looping)
+            // If we're already playing, just start the armed inputs recording and enable the click track
+            if (isPlaying())
             {
-                if (loopRange.getLength() < 2.0s)
-                {
-                    engine.getUIBehaviour().showWarningMessage (TRANS("To record in loop mode, the length of loop must be greater than 2 seconds."));
-                    return false;
-                }
+                assert (playbackContext);
 
-                if (edit.recordingPunchInOut)
-                {
-                    engine.getUIBehaviour().showWarningMessage (TRANS("Recording can be done in either loop mode or punch in/out mode, but not both at the same time!"));
-                    return false;
-                }
+                const auto currentPos = playbackContext->getPosition();
+                const auto punchInTime = edit.recordingPunchInOut ? getLoopRange().getStart() : currentPos;
 
-                transportState->startTime = loopRange.getStart();
-            }
-            else if (edit.recordingPunchInOut)
-            {
-                if ((loopRange.getEnd() + 0.1s) <= transportState->startTime)
-                    transportState->startTime = (loopRange.getStart() - 1.0s);
+                playbackContext->prepareForRecording (currentPos, punchInTime);
+                transportState->safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);
             }
             else
             {
-                if (abs (transportState->startTime) < 0.005s)
-                    transportState->startTime = 0s;
-            }
-
-            auto prerollStart = transportState->startTime.get();
-            double numCountInBeats = edit.getNumCountInBeats();
-            const auto& ts = edit.tempoSequence;
-
-            if (numCountInBeats > 0)
-            {
-                auto currentBeat = ts.toBeats (transportState->startTime);
-                prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
-                // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.
-                // If this changes, that will also need to change.
-            }
-
-            if (edit.getAbletonLink().isConnected())
-            {
-                double barLength = ts.getTimeSig (0)->numerator;
-                double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
-
-                if (numCountInBeats > 0)
-                    beatsUntilNextLinkCycle -= 0.5;
-
-                prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
-            }
-
-            transportState->cursorPosAtPlayStart = position.get();
-
-            playingFlag = std::make_unique<PlayingFlag> (engine);
-            transportState->safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);
-
-            edit.updateMidiTimecodeDevices();
-
-            ensureContextAllocated();
-
-            if (playbackContext)
-            {
-                if (edit.getNumCountInBeats() > 0)
-                    playHeadWrapper->setLoopTimes (true, { transportState->startTime.get(), Edit::getMaximumEditEnd() });
-
-                // if we're playing from near time = 0, roll back a fraction so we
-                // don't miss the first block - this won't be noticable further along
-                // in the edit.
-                if (prerollStart < 0.2s)
-                    prerollStart = prerollStart - 0.2s;
+                const auto loopRange = getLoopRange();
+                transportState->startTime   = position.get();
+                transportState->endTime     = Edit::getMaximumEditEnd();
 
                 if (looping)
                 {
-                    // The order of this is critical as the audio thread might jump in and reset the
-                    // roll-in-to-loop status of the loop-range is not set first
-                    auto lr = getLoopRange();
-                    lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
-                    playHeadWrapper->setLoopTimes (true, lr);
-                    playHeadWrapper->setRollInToLoop (prerollStart);
-                    playHeadWrapper->play();
+                    if (loopRange.getLength() < 2s)
+                    {
+                        engine.getUIBehaviour().showWarningMessage (TRANS("To record in loop mode, the length of loop must be greater than 2 seconds."));
+                        return false;
+                    }
+
+                    if (edit.recordingPunchInOut)
+                    {
+                        engine.getUIBehaviour().showWarningMessage (TRANS("Recording can be done in either loop mode or punch in/out mode, but not both at the same time!"));
+                        return false;
+                    }
+
+                    transportState->startTime = loopRange.getStart();
+                }
+                else if (edit.recordingPunchInOut)
+                {
+                    if ((loopRange.getEnd() + 0.1s) <= transportState->startTime)
+                        transportState->startTime = (loopRange.getStart() - 1.0s);
                 }
                 else
                 {
-                    // Set the playhead loop times before preparing the context as this will be used by
-                    // the RecordingContext to initialise itself
-                    playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
-                    playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
+                    if (abs (transportState->startTime) < 0.005s)
+                        transportState->startTime = 0s;
                 }
 
-                playHeadWrapper->setPosition (prerollStart);
-                position = prerollStart;
+                auto prerollStart = transportState->startTime.get();
+                double numCountInBeats = edit.getNumCountInBeats();
+                const auto& ts = edit.tempoSequence;
 
-                // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
-                playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
-
-                if (edit.getNumCountInBeats() > 0)
+                if (numCountInBeats > 0)
                 {
-                    // As the pre-roll will be "num count in beats - 0.5" we have to add that back on before our calculation
-                    // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat
-                    const auto clickStartBeat = ts.toBeats (prerollStart);
-                    const auto clickEndBeat = ts.toBeats (transportState->startTime.get());
-
-                    edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
-                                                          BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
+                    auto currentBeat = ts.toBeats (transportState->startTime);
+                    prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
+                    // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.
+                    // If this changes, that will also need to change.
                 }
-                else
+
+                if (edit.getAbletonLink().isConnected())
                 {
-                    edit.setClickTrackRange ({});
+                    double barLength = ts.getTimeSig (0)->numerator;
+                    double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
+
+                    if (numCountInBeats > 0)
+                        beatsUntilNextLinkCycle -= 0.5;
+
+                    prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
                 }
 
-                transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
-                screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
+                transportState->cursorPosAtPlayStart = position.get();
+
+                playingFlag = std::make_unique<PlayingFlag> (engine);
+                transportState->safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);
+
+                edit.updateMidiTimecodeDevices();
+
+                ensureContextAllocated();
+
+                if (playbackContext)
+                {
+                    if (edit.getNumCountInBeats() > 0)
+                        playHeadWrapper->setLoopTimes (true, { transportState->startTime.get(), Edit::getMaximumEditEnd() });
+
+                    // if we're playing from near time = 0, roll back a fraction so we
+                    // don't miss the first block - this won't be noticable further along
+                    // in the edit.
+                    if (prerollStart < 0.2s)
+                        prerollStart = prerollStart - 0.2s;
+
+                    if (looping)
+                    {
+                        // The order of this is critical as the audio thread might jump in and reset the
+                        // roll-in-to-loop status of the loop-range is not set first
+                        auto lr = getLoopRange();
+                        lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
+                        playHeadWrapper->setLoopTimes (true, lr);
+                        playHeadWrapper->setRollInToLoop (prerollStart);
+                        playHeadWrapper->play();
+                    }
+                    else
+                    {
+                        // Set the playhead loop times before preparing the context as this will be used by
+                        // the RecordingContext to initialise itself
+                        playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
+                        playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
+                    }
+
+                    playHeadWrapper->setPosition (prerollStart);
+                    position = prerollStart;
+
+                    // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
+                    playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
+
+                    if (edit.getNumCountInBeats() > 0)
+                    {
+                        // As the pre-roll will be "num count in beats - 0.5" we have to add that back on before our calculation
+                        // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat
+                        const auto clickStartBeat = ts.toBeats (prerollStart);
+                        const auto clickEndBeat = ts.toBeats (transportState->startTime.get());
+
+                        edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
+                                                              BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
+                    }
+                    else
+                    {
+                        edit.setClickTrackRange ({});
+                    }
+
+                    transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
+                    screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
+                }
             }
         }
         else
