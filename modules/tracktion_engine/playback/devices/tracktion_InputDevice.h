@@ -109,7 +109,7 @@ private:
 class InputDeviceInstance   : protected juce::ValueTree::Listener
 {
 public:
-    struct InputDeviceDestination;
+    struct Destination;
 
     //==============================================================================
     //==============================================================================
@@ -126,7 +126,7 @@ public:
     juce::Array<EditItemID> getTargets() const;
 
     /** Assigns this input to either an AudioTrack or a ClipSlot. */
-    [[ nodiscard ]] tl::expected<InputDeviceDestination*, juce::String> setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*,
+    [[ nodiscard ]] tl::expected<Destination*, juce::String> setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*,
                                                                                    std::optional<int> index = std::nullopt);
 
     /** Removes the destination with the given targetID. */
@@ -255,10 +255,10 @@ public:
     Edit& edit;                     /**< The Edit this instance belongs to. */
 
     //==============================================================================
-    struct InputDeviceDestination : public Selectable
+    struct Destination : public Selectable
     {
         /** Destructor. */
-        ~InputDeviceDestination() override
+        ~Destination() override
         {
             notifyListenersOfDeletion();
         }
@@ -276,7 +276,7 @@ public:
         juce::CachedValue<bool> recordEnabled;
 
         /** @internal */
-        InputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v)
+        Destination (InputDeviceInstance& i, juce::ValueTree v)
             : input (i), state (v)
         {
             recordEnabled.referTo (state, IDs::armed, nullptr, false);
@@ -299,34 +299,34 @@ public:
     };
 
     //==============================================================================
-    struct WaveInputDeviceDestination : public InputDeviceDestination
+    struct WaveInputDestination : public Destination
     {
-        WaveInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
-        ~WaveInputDeviceDestination() override { notifyListenersOfDeletion(); }
+        WaveInputDestination (InputDeviceInstance& i, juce::ValueTree v) : Destination (i, v) {}
+        ~WaveInputDestination() override { notifyListenersOfDeletion(); }
     };
 
-    struct MidiInputDeviceDestination : public InputDeviceDestination
+    struct MidiInputDestination : public Destination
     {
-        MidiInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
-        ~MidiInputDeviceDestination() override { notifyListenersOfDeletion(); }
+        MidiInputDestination (InputDeviceInstance& i, juce::ValueTree v) : Destination (i, v) {}
+        ~MidiInputDestination() override { notifyListenersOfDeletion(); }
     };
 
-    struct VirtualMidiInputDeviceDestination : public InputDeviceDestination
+    struct VirtualMidiInputDestination : public Destination
     {
-        VirtualMidiInputDeviceDestination (InputDeviceInstance& i, juce::ValueTree v) : InputDeviceDestination (i, v) {}
-        ~VirtualMidiInputDeviceDestination() override { notifyListenersOfDeletion(); }
+        VirtualMidiInputDestination (InputDeviceInstance& i, juce::ValueTree v) : Destination (i, v) {}
+        ~VirtualMidiInputDestination() override { notifyListenersOfDeletion(); }
     };
 
     //==============================================================================
-    struct InputDeviceDestinationList  : public ValueTreeObjectList<InputDeviceDestination>
+    struct DestinationList  : public ValueTreeObjectList<Destination>
     {
-        InputDeviceDestinationList (InputDeviceInstance& i, const juce::ValueTree& v)
-            : ValueTreeObjectList<InputDeviceDestination> (v), input (i)
+        DestinationList (InputDeviceInstance& i, const juce::ValueTree& v)
+            : ValueTreeObjectList<Destination> (v), input (i)
         {
             rebuildObjects();
         }
 
-        ~InputDeviceDestinationList() override
+        ~DestinationList() override
         {
             freeObjects();
         }
@@ -336,37 +336,37 @@ public:
             return v.hasType (IDs::INPUTDEVICEDESTINATION);
         }
 
-        InputDeviceDestination* createNewObject (const juce::ValueTree& v) override
+        Destination* createNewObject (const juce::ValueTree& v) override
         {
             switch (input.getInputDevice().getDeviceType())
             {
                 case InputDevice::waveDevice:           [[ fallthrough ]];
-                case InputDevice::trackWaveDevice:      return new WaveInputDeviceDestination (input, v);
+                case InputDevice::trackWaveDevice:      return new WaveInputDestination (input, v);
                 case InputDevice::physicalMidiDevice:   [[ fallthrough ]];
-                case InputDevice::trackMidiDevice:      return new MidiInputDeviceDestination (input, v);
-                case InputDevice::virtualMidiDevice:    return new VirtualMidiInputDeviceDestination (input, v);
+                case InputDevice::trackMidiDevice:      return new MidiInputDestination (input, v);
+                case InputDevice::virtualMidiDevice:    return new VirtualMidiInputDestination (input, v);
                 default:
                 {
                     jassertfalse;
-                    return new InputDeviceDestination (input, v);
+                    return new Destination (input, v);
                 }
             }
         }
 
-        void deleteObject (InputDeviceDestination* c) override
+        void deleteObject (Destination* c) override
         {
             delete c;
         }
 
-        void newObjectAdded (InputDeviceDestination*) override {}
-        void objectRemoved (InputDeviceDestination*) override {}
+        void newObjectAdded (Destination*) override {}
+        void objectRemoved (Destination*) override {}
         void objectOrderChanged() override {}
 
         InputDeviceInstance& input;
     };
 
     /** The list of assigned destinations. */
-    InputDeviceDestinationList destinations { *this, state };
+    DestinationList destinations { *this, state };
 
     //==============================================================================
     /** Base class for classes that want to listen to an InputDevice and get a callback for each block of input.
@@ -427,13 +427,13 @@ private:
 
 //==============================================================================
 /** Returns the destination if one has been assigned for the given arguments. */
-[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const Track& track, int index);
+[[ nodiscard ]] InputDeviceInstance::Destination* getDestination (InputDeviceInstance&, const Track& track, int index);
 
 /** Returns the destination if one has been assigned for the given arguments. */
-[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const ClipSlot&);
+[[ nodiscard ]] InputDeviceInstance::Destination* getDestination (InputDeviceInstance&, const ClipSlot&);
 
 /** Returns the destination if one has been assigned for the given arguments. */
-[[ nodiscard ]] InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance&, const juce::ValueTree& destinationState);
+[[ nodiscard ]] InputDeviceInstance::Destination* getDestination (InputDeviceInstance&, const juce::ValueTree& destinationState);
 
 
 //==============================================================================

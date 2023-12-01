@@ -1141,7 +1141,7 @@ juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID ta
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
-    InputDeviceInstance::InputDeviceDestination* dest = nullptr;
+    InputDeviceInstance::Destination* dest = nullptr;
 
     for (auto inputDest : instance.destinations)
     {

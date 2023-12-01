@@ -185,7 +185,7 @@ juce::Array<EditItemID> InputDeviceInstance::getTargets() const
     return targets;
 }
 
-tl::expected<InputDeviceInstance::InputDeviceDestination*, juce::String>
+tl::expected<InputDeviceInstance::Destination*, juce::String>
 InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManager* um,
                                 std::optional<int> index)
 {
@@ -432,7 +432,7 @@ bool isAttached (InputDeviceInstance& instance)
 }
 
 //==============================================================================
-InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const Track& track, int index)
+InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance, const Track& track, int index)
 {
     for (auto dest : instance.destinations)
         if (dest->getTarget() == track.itemID && dest->targetIndex == index)
@@ -441,7 +441,7 @@ InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance
     return {};
 }
 
-InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const ClipSlot& cs)
+InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance, const ClipSlot& cs)
 {
     for (auto dest : instance.destinations)
         if (dest->getTarget() == cs.itemID)
@@ -450,7 +450,7 @@ InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance
     return {};
 }
 
-InputDeviceInstance::InputDeviceDestination* getDestination (InputDeviceInstance& instance, const juce::ValueTree& destinationState)
+InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance, const juce::ValueTree& destinationState)
 {
     for (auto dest : instance.destinations)
         if (dest->state == destinationState)
