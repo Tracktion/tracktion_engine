@@ -263,39 +263,32 @@ public:
             notifyListenersOfDeletion();
         }
 
-        /** Returns the target for this destination, either an AudioTrack or ClipSlot. */
-        EditItemID getTarget() const
-        {
-            return targetTrack.isValid() ? targetTrack : targetSlot;
-        }
-
         InputDeviceInstance& input; /**< The instance this belongs to. */
         juce::ValueTree state;      /**< The state of this destination. */
+
+        /** The target for this destination, either an AudioTrack or ClipSlot. */
+        const EditItemID targetID = EditItemID::fromProperty (state, IDs::targetID);
+
+        /** The target index for this destination, if it is an AudioTrack. */
+        const int targetIndex = state[IDs::targetIndex];
 
         /** Property to control whether the destination is armed to record or not. */
         juce::CachedValue<bool> recordEnabled;
 
+        //==============================================================================
         /** @internal */
         Destination (InputDeviceInstance& i, juce::ValueTree v)
             : input (i), state (v)
         {
             recordEnabled.referTo (state, IDs::armed, nullptr, false);
-            assert (targetTrack.isValid() != targetSlot.isValid()
-                    && "One target must be valid!");
+            assert (targetID.isValid() && "Must have a valid ID!");
         }
 
-        //==============================================================================
         /** @internal */
         juce::String getSelectableDescription() override
         {
             return input.getInputDevice().getSelectableDescription();
         }
-
-        const int targetIndex = state[IDs::targetIndex];
-
-    private:
-        const EditItemID targetTrack = EditItemID::fromProperty (state, IDs::targetTrack);
-        const EditItemID targetSlot = EditItemID::fromProperty (state, IDs::targetSlot);
     };
 
     //==============================================================================

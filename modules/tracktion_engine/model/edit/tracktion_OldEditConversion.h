@@ -22,7 +22,7 @@ struct OldEditConversion
     static juce::ValueTree convert (const juce::ValueTree& v)
     {
         jassert (v.isValid());
-        
+
         if (auto xml = v.createXml())
         {
             convert (*xml);
@@ -500,10 +500,10 @@ private:
                 continue;
 
             auto tagsString = e->getStringAttribute (IDs::tags);
-            
+
             if (tagsString.contains (","))
                 tagsString = juce::StringArray::fromTokens (tagsString, ",", "\"").joinIntoString ("|");
-            
+
             auto tags = juce::StringArray::fromTokens (tagsString, "|", "\"");
 
             for (auto& tag : tags)
@@ -742,6 +742,10 @@ private:
                 xml.setAttribute (IDs::type, name.endsWith (" M") ? "MIDI" : "audio");
                 xml.removeAttribute ("name");
             }
+        }
+        else if (xml.hasTagName (IDs::INPUTDEVICEDESTINATION))
+        {
+            renameAttribute (xml, "targetTrack", IDs::targetID);
         }
         else if (xml.hasTagName ("RENDER"))
         {

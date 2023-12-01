@@ -427,7 +427,7 @@ public:
         if (params.targets.empty())
             for (auto dest : destinations)
                 if (dest->recordEnabled)
-                    params.targets.push_back (dest->getTarget());
+                    params.targets.push_back (dest->targetID);
 
         for (auto target : params.targets)
             results.emplace_back (prepareToRecordTarget (target, params.punchRange));
@@ -1307,7 +1307,6 @@ juce::StringArray WaveInputDevice::getRecordFormatNames()
 
     return s;
 }
-
 
 InputDeviceInstance* WaveInputDevice::createInstance (EditPlaybackContext& ed)
 {

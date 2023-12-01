@@ -729,7 +729,7 @@ public:
         if (params.targets.empty())
             for (auto dest : destinations)
                 if (dest->recordEnabled)
-                    params.targets.push_back (dest->getTarget());
+                    params.targets.push_back (dest->targetID);
 
         for (auto targetID : params.targets)
         {

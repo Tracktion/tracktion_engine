@@ -171,7 +171,7 @@ struct IDRemapping
     static bool isIDReference (const juce::Identifier& parentType, juce::StringRef att)
     {
         for (auto p : { IDs::currentAutoParamPluginID, IDs::currentAutoParamTag,
-                        IDs::targetTrack, IDs::sourceTrack, IDs::src, IDs::dst,
+                        IDs::targetID, IDs::sourceTrack, IDs::src, IDs::dst,
                         IDs::pluginID, IDs::rackType, IDs::paramID })
             if (p == att)
                 return true;

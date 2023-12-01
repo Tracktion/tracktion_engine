@@ -179,7 +179,7 @@ juce::Array<EditItemID> InputDeviceInstance::getTargets() const
     juce::Array<EditItemID> targets;
 
     for (auto dest : destinations)
-        if (auto tID = dest->getTarget(); tID.isValid())
+        if (auto tID = dest->targetID; tID.isValid())
             targets.add (tID);
 
     return targets;
@@ -210,21 +210,13 @@ InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManage
     }
 
     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
+    v.setProperty (IDs::targetID, targetID, nullptr);
 
-    if (track)
-    {
-        v.setProperty (IDs::targetTrack, targetID, nullptr);
-
-        if (index)
-            v.setProperty (IDs::targetIndex, 0, nullptr);
-    }
-    else if (clipSlot)
-    {
-        v.setProperty (IDs::targetSlot, targetID, nullptr);
-    }
+    if (index)
+        v.setProperty (IDs::targetIndex, 0, nullptr);
 
     state.addChild (v, -1, um);
-    jassert (destinations[destinations.size() - 1]->getTarget() == targetID);
+    jassert (destinations[destinations.size() - 1]->targetID == targetID);
 
     trackDeviceEnabler.triggerAsyncUpdate();
 
@@ -240,7 +232,7 @@ juce::Result InputDeviceInstance::removeTarget (EditItemID targetID, juce::UndoM
     {
         auto& dt = *destinations[i];
 
-        if (dt.getTarget() == targetID)
+        if (dt.targetID == targetID)
             state.removeChild (dt.state, um);
     }
 
@@ -259,7 +251,7 @@ bool InputDeviceInstance::isRecordingActive() const
 bool InputDeviceInstance::isRecordingActive (EditItemID targetID) const
 {
     for (auto dest : destinations)
-        if (targetID == dest->getTarget())
+        if (targetID == dest->targetID)
             return dest->recordEnabled;
 
     return false;
@@ -268,7 +260,7 @@ bool InputDeviceInstance::isRecordingActive (EditItemID targetID) const
 bool InputDeviceInstance::isRecordingEnabled (EditItemID targetID) const
 {
     for (auto dest : destinations)
-        if (dest->getTarget() == targetID)
+        if (dest->targetID == targetID)
             if (dest->recordEnabled)
                 return true;
 
@@ -278,7 +270,7 @@ bool InputDeviceInstance::isRecordingEnabled (EditItemID targetID) const
 void InputDeviceInstance::setRecordingEnabled (EditItemID targetID, bool b)
 {
     for (auto dest : destinations)
-        if (dest->getTarget() == targetID)
+        if (dest->targetID == targetID)
             dest->recordEnabled = b;
 }
 
@@ -289,7 +281,7 @@ bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 
     for (auto dest : destinations)
     {
-        if (dest->getTarget() != t.itemID)
+        if (dest->targetID != t.itemID)
             continue;
 
         switch (owner.getMonitorMode())
@@ -307,15 +299,15 @@ void InputDeviceInstance::valueTreePropertyChanged (juce::ValueTree& v, const ju
 {
     if (v.getParent() == state)
     {
-        if (id == IDs::armed || id == IDs::targetTrack)
+        if (id == IDs::armed || id == IDs::targetID)
         {
-            const auto targetTrackID = EditItemID::fromVar (v[IDs::targetTrack]);
+            const auto targetID = EditItemID::fromVar (v[IDs::targetID]);
 
-            if (id == IDs::targetTrack)
-                if (auto t = findTrackForID (edit, targetTrackID))
+            if (id == IDs::targetID)
+                if (auto t = findTrackForID (edit, targetID))
                     t->changed();
 
-            updateRecordingStatus (targetTrackID);
+            updateRecordingStatus (targetID);
         }
     }
 }
@@ -324,12 +316,12 @@ void InputDeviceInstance::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTr
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
     {
-        const auto targetTrackID = EditItemID::fromVar (c[IDs::targetTrack]);
+        const auto targetID = EditItemID::fromVar (c[IDs::targetID]);
 
-        if (auto t = findTrackForID (edit, targetTrackID))
+        if (auto t = findTrackForID (edit, targetID))
             t->changed();
 
-        updateRecordingStatus (targetTrackID);
+        updateRecordingStatus (targetID);
     }
 }
 
@@ -337,12 +329,12 @@ void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::Value
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
     {
-        const auto targetTrackID = EditItemID::fromVar (c[IDs::targetTrack]);
+        const auto targetID = EditItemID::fromVar (c[IDs::targetID]);
 
-        if (auto t = findTrackForID (edit, targetTrackID))
+        if (auto t = findTrackForID (edit, targetID))
             t->changed();
 
-        updateRecordingStatus (targetTrackID);
+        updateRecordingStatus (targetID);
     }
 }
 
@@ -350,7 +342,7 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
 {
     for (auto dest : destinations)
     {
-        if (dest->getTarget() != targetID)
+        if (dest->targetID != targetID)
             continue;
 
         auto track = findTrackForID (edit, targetID);
@@ -387,7 +379,7 @@ juce::Array<std::pair<AudioTrack*, int>> getTargetTracksAndIndexes (InputDeviceI
     juce::Array<std::pair<AudioTrack*, int>> tracks;
 
     for (auto dest : instance.destinations)
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (instance.edit, dest->getTarget())))
+        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (instance.edit, dest->targetID)))
             tracks.add ({ at, dest->targetIndex });
 
     return tracks;
@@ -435,7 +427,7 @@ bool isAttached (InputDeviceInstance& instance)
 InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance, const Track& track, int index)
 {
     for (auto dest : instance.destinations)
-        if (dest->getTarget() == track.itemID && dest->targetIndex == index)
+        if (dest->targetID == track.itemID && dest->targetIndex == index)
             return dest;
 
     return {};
@@ -444,7 +436,7 @@ InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance,
 InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance, const ClipSlot& cs)
 {
     for (auto dest : instance.destinations)
-        if (dest->getTarget() == cs.itemID)
+        if (dest->targetID == cs.itemID)
             return dest;
 
     return {};

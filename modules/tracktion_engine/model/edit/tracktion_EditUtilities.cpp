@@ -1145,7 +1145,7 @@ juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID ta
 
     for (auto inputDest : instance.destinations)
     {
-        if (inputDest->getTarget() == targetID)
+        if (inputDest->targetID == targetID)
         {
             dest = inputDest;
             break;
