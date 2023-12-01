@@ -1173,6 +1173,26 @@ juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID ta
     return juce::Result::ok();
 }
 
+tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance& instance)
+{
+    auto& transport = instance.edit.getTransport();
+    jassert (transport.isPlaying()); // If this isn't playing the getUnloopedPosition call below will be incorrect
+
+    InputDeviceInstance::StopRecordingParameters params;
+
+    for (auto targetID : instance.getTargets())
+        params.targetsToStop.push_back (targetID);
+
+    if (auto epc = transport.getCurrentPlaybackContext())
+        params.unloopedTimeToEndRecording = epc->getUnloopedPosition();
+
+    params.isLooping = transport.looping;
+    params.markedRange = transport.getLoopRange();
+    params.discardRecordings = false;
+
+    return instance.stopRecording (params);
+}
+
 bool isRecording (EditPlaybackContext& epc)
 {
     for (auto input : epc.getAllInputs())

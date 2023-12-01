@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 
 //==============================================================================
 /**
-    ID for objects of type EditElement - e.g. clips, tracks, plguins, etc
+    ID for objects of type EditElement - e.g. clips, tracks, plugins, etc
 */
 struct EditItemID
 {

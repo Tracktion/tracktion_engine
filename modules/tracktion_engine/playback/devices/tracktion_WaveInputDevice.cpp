@@ -285,21 +285,21 @@ public:
         return edit.engine.getAudioFileFormatManager().getNamedFormat (getWaveInput().outputFormat);
     }
 
-    static tl::expected<juce::File, juce::String> getDestinationRecordingFile (Edit& edit, EditItemID targetID,
-                                                                        const juce::AudioFormat& format, juce::String filenameMask)
+    static tl::expected<juce::File, juce::String> getDestinationRecordingFile (Edit& ed, EditItemID targetID,
+                                                                               const juce::AudioFormat& format, juce::String filenameMask)
     {
         juce::File recordedFile;
         int take = 1;
 
-        Track* track = findTrackForID (edit, targetID);
+        Track* track = findTrackForID (ed, targetID);
 
         if (! track)
-            if (auto cs = findClipSlotForID (edit, targetID))
+            if (auto cs = findClipSlotForID (ed, targetID))
                 track = &cs->track;
 
         do
         {
-            recordedFile = juce::File (expandPatterns (edit, filenameMask, track, take++)
+            recordedFile = juce::File (expandPatterns (ed, filenameMask, track, take++)
                                          + format.getFileExtensions()[0]);
         } while (recordedFile.exists());
 

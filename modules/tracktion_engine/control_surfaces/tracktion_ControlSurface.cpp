@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 
 namespace control_surface_utils
 {
-void flipEndToEndIfNotAuto (InputDevice& in)
+inline void flipEndToEndIfNotAuto (InputDevice& in)
 {
     switch (in.getMonitorMode())
     {

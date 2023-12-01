@@ -23,7 +23,7 @@ public:
         : engine (e)
     {
         newEditButton.onClick = [this] { createOrLoadEdit(); };
-        
+
         updatePlayButtonText();
         updateRecordButtonText();
         editNameLabel.setJustificationType (Justification::centred);
@@ -31,20 +31,20 @@ public:
                                              &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton, &undoButton, &redoButton });
 
         deleteButton.setEnabled (false);
-        
+
         auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("RecordingDemo");
         d.createDirectory();
-        
+
         auto f = Helpers::findRecentEdit (d);
         if (f.existsAsFile())
             createOrLoadEdit (f);
         else
             createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
-        
+
         selectionManager.addChangeListener (this);
-        
+
         setupButtons();
-        
+
         setSize (700, 500);
     }
 
@@ -78,7 +78,7 @@ public:
         topR = r.removeFromTop (30);
         showWaveformButton.setBounds (topR.removeFromLeft (w * 2).reduced (2));
         editNameLabel.setBounds (topR);
-        
+
         if (editComponent != nullptr)
             editComponent->setBounds (r);
     }
@@ -121,7 +121,7 @@ private:
         {
             for (auto t : te::getAudioTracks (*edit))
                 edit->deleteTrack (t);
-                
+
         };
         deleteButton.onClick = [this]
         {
@@ -151,13 +151,13 @@ private:
             edit->getUndoManager().redo();
         };
     }
-    
+
     void updatePlayButtonText()
     {
         if (edit != nullptr)
             playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Stop" : "Play");
     }
-    
+
     void updateRecordButtonText()
     {
         if (edit != nullptr)
@@ -174,36 +174,36 @@ private:
             else
                 return;
         }
-        
+
         selectionManager.deselectAll();
         editComponent = nullptr;
-        
+
         if (editFile.existsAsFile())
             edit = te::loadEditFromFile (engine, editFile);
         else
             edit = te::createEmptyEdit (engine, editFile);
-        
+
         edit->playInStopEnabled = true;
-        
+
         auto& transport = edit->getTransport();
         transport.addChangeListener (this);
-        
+
         editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
         showEditButton.onClick = [this, editFile]
         {
             te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
-        
+
         createTracksAndAssignInputs();
-        
+
         te::EditFileOperations (*edit).save (true, true, false);
-        
+
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         addAndMakeVisible (*editComponent);
         resized();
     }
-    
+
     void createTracksAndAssignInputs()
     {
         auto& dm = engine.getDeviceManager();
@@ -211,18 +211,18 @@ private:
         for (int i = 0; i < dm.getNumWaveInDevices(); i++)
             if (auto wip = dm.getWaveInDevice (i))
                 wip->setStereoPair (false);
-        
+
         for (int i = 0; i < dm.getNumWaveInDevices(); i++)
         {
             if (auto wip = dm.getWaveInDevice (i))
             {
-                wip->setEndToEnd (true);
+                wip->setMonitorMode (te::InputDevice::MonitorMode::automatic);
                 wip->setEnabled (true);
             }
         }
-        
+
         edit->getTransport().ensureContextAllocated();
-        
+
         int trackNum = 0;
         for (auto instance : edit->getAllInputDevices())
         {
@@ -230,17 +230,17 @@ private:
             {
                 if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                 {
-                    instance->setTargetTrack (*t, 0, true, &edit->getUndoManager());
-                    instance->setRecordingEnabled (*t, true);
-                    
+                    [[ maybe_unused ]] auto result = instance->setTarget (t->itemID, true, &edit->getUndoManager(), 0);
+                    instance->setRecordingEnabled (t->itemID, true);
+
                     trackNum++;
                 }
             }
         }
-        
+
         edit->restartPlayback();
     }
-    
+
     void changeListenerCallback (ChangeBroadcaster* source) override
     {
         if (edit != nullptr && source == &edit->getTransport())

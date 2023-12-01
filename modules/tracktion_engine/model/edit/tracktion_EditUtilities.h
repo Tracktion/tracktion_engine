@@ -273,6 +273,11 @@ InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const Ed
 */
 juce::Result prepareAndPunchRecord (InputDeviceInstance&, EditItemID);
 
+/** If the instance is currently recording, this will stop it and return any
+    created clips or an error message.
+*/
+tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance&);
+
 /** Returns true if any inputs are currently recording. */
 bool isRecording (EditPlaybackContext&);
 

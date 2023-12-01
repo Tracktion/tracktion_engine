@@ -35,7 +35,7 @@ public:
         addUIComponents();
 
         startTimerHz (2);
-        
+
         setSize (600, 400);
     }
 
@@ -60,17 +60,17 @@ public:
             refreshMidiDevicesButton.setBounds (topR.removeFromLeft (w).reduced (2));
             playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
             midiInputsBox.setBounds (topR.removeFromLeft (w).reduced (2));
-            
+
             r.removeFromTop (8);
             topR = r.removeFromTop (30);
             modeBox.setBounds (topR.removeFromLeft (w).reduced (2));
             keyBox.setBounds (topR.removeFromLeft (w).reduced (2));
             scaleBox.setBounds (topR.removeFromLeft (w).reduced (2));
-            
+
             r.removeFromTop (8);
             topR = r.removeFromTop (30);
             int cw = topR.getWidth() / 8;
-            
+
             for (auto b : chordBoxes)
                 b->setBounds (topR.removeFromLeft (cw).reduced (2));
 
@@ -83,7 +83,7 @@ public:
             tempoSlider.setBounds (bottomR.reduced (2));
         }
     }
-    
+
     //==============================================================================
     void comboBoxChanged (ComboBox* b) override
     {
@@ -94,7 +94,7 @@ public:
                 if (auto dev = dm.getMidiInDevice (midiInputsBox.getSelectedItemIndex()))
                     for (auto instance : edit.getAllInputDevices())
                         if (&instance->getInputDevice() == dev)
-                            instance->setTargetTrack (*t, 0, true, &edit.getUndoManager());
+                            [[ maybe_unused ]] auto res = instance->setTarget (t->itemID, true, &edit.getUndoManager(), 0);
 
             edit.restartPlayback();
         }
@@ -121,23 +121,23 @@ public:
             auto& pg = getPatternGenerator();
             if (auto item = pg.getChordProgression()[chordBoxes.indexOf (b)])
                 item->setChordName (indexToChord (b->getSelectedItemIndex()));
-            
+
             updatePattern();
         }
     }
-    
+
     void timerCallback() override
     {
         auto& dm = engine.getDeviceManager();
         cpuUsage.setText (String::formatted ("%d%% CPU", int (dm.getCpuUsage() * 100)), dontSendNotification);
     }
-    
+
     void sliderValueChanged (Slider*) override
     {
         if (! ModifierKeys::getCurrentModifiers().isAnyMouseButtonDown())
             edit.tempoSequence.getTempos()[0]->setBpm (tempoSlider.getValue());
     }
-    
+
     void sliderDragEnded (Slider*) override
     {
         edit.tempoSequence.getTempos()[0]->setBpm (tempoSlider.getValue());
@@ -147,51 +147,51 @@ private:
     void addUIComponents()
     {
         transport.addChangeListener (this);
-        
+
         Helpers::addAndMakeVisible (*this, { &refreshMidiDevicesButton, &playPauseButton, &midiInputsBox, &modeBox, &keyBox, &scaleBox, &cpuUsage, &tempoSlider });
-        
+
         refreshMidiDevicesButton.onClick  = [this] { refreshMidiInputs(); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
-        
+
         midiInputsBox.addListener (this);
         modeBox.addListener (this);
         keyBox.addListener (this);
         scaleBox.addListener (this);
-        
+
         modeBox.addItemList ({"Arpeggios", "Chords", "Bass"}, 1);
-        
+
         for (int i = 0; i < 12; i++)
             keyBox.addItem (MidiMessage::getMidiNoteName (i, true, false, 4), i + 1);
-        
+
         scaleBox.addItemList (te::Scale::getScaleStrings(), 1);
-        
+
         modeBox.setSelectedItemIndex (0);
         keyBox.setSelectedItemIndex (0);
         scaleBox.setSelectedItemIndex (0);
-        
+
         for (int i = 0; i < 8; i++)
         {
             auto* cb = new ComboBox();
             addAndMakeVisible (cb);
-            
+
             cb->addListener (this);
-            
+
             for (int j = 0; j < 7; j++)
                 cb->addItem (indexToChord (j), j + 1);
-            
+
             auto& pg = getPatternGenerator();
             auto chords = pg.getChordProgressionChordNames (true);
-            
+
             cb->setSelectedItemIndex (chordToIndex (chords[i]));
-            
+
             chordBoxes.add (cb);
         }
-        
+
         tempoSlider.setRange (30.0, 220.0, 0.1);
         tempoSlider.setValue (edit.tempoSequence.getTempos()[0]->getBpm(), dontSendNotification);
         tempoSlider.addListener (this);
     }
-    
+
     void setupEdit()
     {
         auto& dm = engine.getDeviceManager();
@@ -199,12 +199,12 @@ private:
         {
             auto dev = dm.getMidiInDevice (i);
             dev->setEnabled (true);
-            dev->setEndToEndEnabled (true);
+            dev->setMonitorMode (te::InputDevice::MonitorMode::automatic);
         }
-        
+
         edit.playInStopEnabled = true;
     }
-    
+
     void create4OSCPlugins()
     {
         //==============================================================================
@@ -217,11 +217,11 @@ private:
                 if (vt.isValid())
                     synth->restorePluginStateFromValueTree (vt);
             }
-            
+
             if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
                 t->pluginList.insertPlugin (*synth, 0, nullptr);
         }
-        
+
         //==============================================================================
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
@@ -232,12 +232,12 @@ private:
                 if (vt.isValid())
                     synth->restorePluginStateFromValueTree (vt);
             }
-            
+
             if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
                 t->pluginList.insertPlugin (*synth, 0, nullptr);
         }
     }
-    
+
     te::MidiClip::Ptr createMIDIClip()
     {
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
@@ -245,7 +245,7 @@ private:
             // Find length of 8 bars
             const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.toTime ({ 8, {} }));
             track->insertNewClip (te::TrackItem::Type::midi, "MIDI Clip", editTimeRange, nullptr);
-            
+
             if (auto midiClip = getClip())
             {
                 auto& pg = *midiClip->getPatternGenerator();
@@ -255,38 +255,38 @@ private:
                 pg.octave = 7;
                 pg.velocity = 30;
                 pg.generatePattern();
-                
+
                 return EngineHelpers::loopAroundClip (*midiClip);
             }
         }
-        
+
         return {};
     }
-    
+
     void updatePattern()
     {
         auto& pg = getPatternGenerator();
         pg.generatePattern();
     }
-    
+
     te::MidiClip::Ptr getClip()
     {
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto clip = dynamic_cast<te::MidiClip*> (track->getClips()[0]))
                 return *clip;
-        
+
         return {};
     }
-    
+
     te::PatternGenerator& getPatternGenerator()
     {
         return *getClip()->getPatternGenerator();
     }
-    
+
     void refreshMidiInputs()
     {
         auto& dm = engine.getDeviceManager();
-        
+
         midiInputsBox.clear();
         for (int i = 0; i < dm.getNumMidiInDevices(); i++)
         {
@@ -306,24 +306,24 @@ private:
     ComboBox midiInputsBox { "MIDI Inputs" }, modeBox, keyBox, scaleBox;
     OwnedArray<ComboBox> chordBoxes;
     Slider tempoSlider;
-    
+
     Label cpuUsage;
 
     void changeListenerCallback (ChangeBroadcaster*) override
     {
         updatePlayButtonText();
     }
-    
+
     void updatePlayButtonText()
     {
         playPauseButton.setButtonText (transport.isPlaying() ? "Pause" : "Play");
     }
-    
+
     //==============================================================================
     int chordToIndex (String chord)
     {
         chord = chord.toUpperCase();
-        
+
         if (chord == "I")   return 0;
         if (chord == "II")  return 1;
         if (chord == "III") return 2;
@@ -348,7 +348,7 @@ private:
         jassertfalse;
         return "I";
     }
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGeneratorComponent)
 };
 

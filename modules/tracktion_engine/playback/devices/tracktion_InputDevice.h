@@ -127,7 +127,7 @@ public:
 
     /** Assigns this input to either an AudioTrack or a ClipSlot. */
     [[ nodiscard ]] tl::expected<Destination*, juce::String> setTarget (EditItemID targetID, bool moveToTrack, juce::UndoManager*,
-                                                                                   std::optional<int> index = std::nullopt);
+                                                                        std::optional<int> index = std::nullopt);
 
     /** Removes the destination with the given targetID. */
     [[ nodiscard ]] juce::Result removeTarget (EditItemID targetID, juce::UndoManager*);
