@@ -95,7 +95,11 @@ void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, TimePosition& start,
         if (track == nullptr)
         {
             edit.ensureNumberOfAudioTracks (1);
-            track = getAudioTracks (edit).getFirst();
+
+            // BEATCONNECT MODIFICATION START
+            // track = getAudioTracks (edit).getFirst();
+            track = getAudioTracks(edit).getLast();
+            // BEATCONNECT MODIFICATION END
         }
     }
 
