@@ -132,7 +132,7 @@ struct ModifierAutomationSource : public AutomationModifierSource
     // Modifiers will be updated at the start of each block so can't be repositioned
     float getValueAt (TimePosition) override          { return getCurrentValue(); }
     bool isEnabledAt (TimePosition) override          { return true; }
-    
+
     void setPosition (TimePosition newEditTime) override
     {
         editTimeToReturn = newEditTime;
@@ -149,10 +149,10 @@ struct ModifierAutomationSource : public AutomationModifierSource
 
         const auto currentTime = modifier->getCurrentTime();
         const auto deltaTime = currentTime - editTimeToReturn;
-        
+
         if (deltaTime > TimeDuration() && deltaTime < Modifier::maxHistoryTime)
             baseValue = modifier->getValueAt (deltaTime);
-        
+
         return AutomationScaleHelpers::mapValue (baseValue, assignment->offset, assignment->value, assignment->curve);
     }
 
@@ -355,7 +355,8 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
         : ValueTreeObjectList<AutomationModifierSource, juce::CriticalSection> (ap.modifiersState),
           parameter (ap)
     {
-        jassert (! ap.getEdit().isLoading());
+        jassert (! ap.getEdit().isLoading()); // This can't be created before the Edit has loaded
+                                              // or it won't be able to find the sources
         rebuildObjects();
         updateCachedSources();
 
@@ -849,7 +850,7 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
     {
         // N.B.You shouldn't be directly setting the value of an attachedValue managed parameter.
         // To avoid feedback loops of sync issues, always go via setParameter
-        
+
         SCOPED_REALTIME_CHECK
         // N.B. we shouldn't call attachedValue->updateParameterFromValue here as this
         // will set the base value of the parameter. The change in property could be due

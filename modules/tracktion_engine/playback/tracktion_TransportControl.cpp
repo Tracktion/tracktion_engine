@@ -243,8 +243,10 @@ private:
                     juce::ScopedValueSetter<bool> svs (isInsideRecordingCallback, true);
                     recording = transport.performRecord();
                 }
-
-                transport.startedOrStopped();
+                else
+                {
+                    transport.performStopRecording();
+                }
             }
             else if (i == IDs::playbackContextAllocation)
             {
@@ -277,11 +279,6 @@ private:
             }
         }
     }
-
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override {}
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
-    void valueTreeParentChanged (juce::ValueTree&) override {}
 };
 
 //==============================================================================
@@ -841,6 +838,15 @@ void TransportControl::stopIfRecording()
         stop (false, false);
 }
 
+void TransportControl::stopRecording (bool discardRecordings)
+{
+    if (! isRecording())
+        return;
+
+    transportState->discardRecordings = discardRecordings;
+    transportState->recording = false;
+}
+
 juce::Result TransportControl::applyRetrospectiveRecord()
 {
     if (static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::retrospectiveRecord, 30)) == 0)
@@ -1330,8 +1336,6 @@ bool TransportControl::performRecord()
     CRASH_TRACER
     sectionPlayer.reset();
 
-    //ddd stop (false, false);
-
     if (! transportState->userDragging)
     {
         if (transportState->justSendMMCIfEnabled && sendMMCStartRecord())
@@ -1349,6 +1353,8 @@ bool TransportControl::performRecord()
 
                 playbackContext->prepareForRecording (currentPos, punchInTime);
                 transportState->safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);
+
+                sendChangeMessage();
             }
             else
             {
@@ -1486,6 +1492,21 @@ bool TransportControl::performRecord()
         engine.getUIBehaviour().showSafeRecordDialog (*this);
 
     return true;
+}
+
+void TransportControl::performStopRecording ()
+{
+    if (isRecording() || tracktion::isRecording (*playbackContext))
+    {
+        CRASH_TRACER
+
+        const bool discardRecordings = transportState->discardRecordings;
+        const auto recEndTime = playHeadWrapper->getUnloopedPosition();
+        playbackContext->stopRecording (recEndTime, discardRecordings)
+            .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
+
+        sendChangeMessage();
+    }
 }
 
 void TransportControl::performStop()

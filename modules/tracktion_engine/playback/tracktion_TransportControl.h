@@ -103,6 +103,9 @@ public:
     */
     void stopIfRecording();
 
+    /** Stops recording without stopping playback. */
+    void stopRecording (bool discardRecordings = false);
+
     //==============================================================================
     /** Applys a retrospective record to any assigned input devices, creating clips
         for any historical input.
@@ -419,6 +422,7 @@ private:
     void performPlay();
     bool performRecord();
     void performStop();
+    void performStopRecording();
 
     void performPositionChange();
     void performRewindButtonChanged();
