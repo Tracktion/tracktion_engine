@@ -245,7 +245,7 @@ private:
                     if (auto res = transport.performRecord())
                     {
                         recording = true;
-                        transport.listeners.call (&TransportControl::Listener::recordingStarted, *res);
+                        transport.listeners.call (&TransportControl::Listener::recordingStarted, res->first, res->second);
                     }
                     else
                     {
@@ -1337,7 +1337,7 @@ void TransportControl::performPlay()
     }
 }
 
-std::optional<SyncPoint> TransportControl::performRecord()
+std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::performRecord()
 {
     if (! edit.shouldPlay())
         return std::nullopt;
@@ -1345,6 +1345,7 @@ std::optional<SyncPoint> TransportControl::performRecord()
     CRASH_TRACER
     sectionPlayer.reset();
     std::optional<SyncPoint> punchInPoint;
+    std::optional<TimeRange> punchRange;
 
     if (! transportState->userDragging)
     {
@@ -1359,6 +1360,10 @@ std::optional<SyncPoint> TransportControl::performRecord()
                 assert (playbackContext);
 
                 punchInPoint = playbackContext->getSyncPoint();
+
+                if (edit.recordingPunchInOut)
+                    punchRange = getLoopRange();
+
                 const auto currentPos = playbackContext->getPosition();
                 const auto punchInTime = edit.recordingPunchInOut ? getLoopRange().getStart() : currentPos;
 
@@ -1469,6 +1474,9 @@ std::optional<SyncPoint> TransportControl::performRecord()
                         while (playbackContext->getPendingPositionChange())
                             std::this_thread::yield();
 
+                        if (edit.recordingPunchInOut)
+                            punchRange = getLoopRange();
+
                         const auto currentSyncPoint = playbackContext->getSyncPoint();
                         const auto punchInTime = transportState->startTime.get();
                         const auto punchInBeat = ts.toBeats (punchInTime);
@@ -1521,7 +1529,8 @@ std::optional<SyncPoint> TransportControl::performRecord()
     if (transportState->safeRecording)
         engine.getUIBehaviour().showSafeRecordDialog (*this);
 
-    return punchInPoint;
+    assert (punchInPoint);
+    return std::make_pair (*punchInPoint, punchRange);
 }
 
 std::optional<SyncPoint> TransportControl::performStopRecording()

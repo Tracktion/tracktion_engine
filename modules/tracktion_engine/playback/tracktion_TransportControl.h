@@ -338,7 +338,7 @@ public:
         virtual void stopVideo()  {}
 
         /** Called when global recording starts. */
-        virtual void recordingStarted (SyncPoint)  {}
+        virtual void recordingStarted (SyncPoint /*start*/, std::optional<TimeRange> /*punchRange*/)  {}
 
         /** Called when global recording stops. */
         virtual void recordingStopped (SyncPoint)  {}
@@ -426,7 +426,7 @@ private:
     void releaseAudioNodes();
 
     void performPlay();
-    std::optional<SyncPoint> performRecord();
+    std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> performRecord();
     void performStop();
     std::optional<SyncPoint> performStopRecording();
 
