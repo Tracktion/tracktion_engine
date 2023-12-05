@@ -241,7 +241,16 @@ private:
                 if (recording)
                 {
                     juce::ScopedValueSetter<bool> svs (isInsideRecordingCallback, true);
-                    recording = transport.performRecord();
+
+                    if (auto res = transport.performRecord())
+                    {
+                        recording = true;
+                        transport.listeners.call (&TransportControl::Listener::recordingStarted, *res);
+                    }
+                    else
+                    {
+                        recording = false;
+                    }
                 }
                 else
                 {
@@ -1328,18 +1337,19 @@ void TransportControl::performPlay()
     }
 }
 
-bool TransportControl::performRecord()
+std::optional<SyncPoint> TransportControl::performRecord()
 {
     if (! edit.shouldPlay())
-        return true;
+        return std::nullopt;
 
     CRASH_TRACER
     sectionPlayer.reset();
+    std::optional<SyncPoint> punchInPoint;
 
     if (! transportState->userDragging)
     {
         if (transportState->justSendMMCIfEnabled && sendMMCStartRecord())
-            return true;
+            return std::nullopt;
 
         if (transportState->allowRecordingIfNoInputsArmed || areAnyInputsRecording())
         {
@@ -1348,6 +1358,7 @@ bool TransportControl::performRecord()
             {
                 assert (playbackContext);
 
+                punchInPoint = playbackContext->getSyncPoint();
                 const auto currentPos = playbackContext->getPosition();
                 const auto punchInTime = edit.recordingPunchInOut ? getLoopRange().getStart() : currentPos;
 
@@ -1367,13 +1378,13 @@ bool TransportControl::performRecord()
                     if (loopRange.getLength() < 2s)
                     {
                         engine.getUIBehaviour().showWarningMessage (TRANS("To record in loop mode, the length of loop must be greater than 2 seconds."));
-                        return false;
+                        return std::nullopt;
                     }
 
                     if (edit.recordingPunchInOut)
                     {
                         engine.getUIBehaviour().showWarningMessage (TRANS("Recording can be done in either loop mode or punch in/out mode, but not both at the same time!"));
-                        return false;
+                        return std::nullopt;
                     }
 
                     transportState->startTime = loopRange.getStart();
@@ -1440,20 +1451,38 @@ bool TransportControl::performRecord()
                         lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
                         playHeadWrapper->setLoopTimes (true, lr);
                         playHeadWrapper->setRollInToLoop (prerollStart);
-                        playHeadWrapper->play();
+                        //ddd playHeadWrapper->play();
                     }
                     else
                     {
                         // Set the playhead loop times before preparing the context as this will be used by
                         // the RecordingContext to initialise itself
                         playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
-                        playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
+                        //ddd playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
                     }
 
                     playHeadWrapper->setPosition (prerollStart);
                     position = prerollStart;
 
                     // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
+                    {
+                        while (playbackContext->getPendingPositionChange())
+                            std::this_thread::yield();
+
+                        const auto currentSyncPoint = playbackContext->getSyncPoint();
+                        const auto punchInTime = transportState->startTime.get();
+                        const auto punchInBeat = ts.toBeats (punchInTime);
+                        const auto timeNow = currentSyncPoint->time;
+                        const auto beatNow = ts.toBeats (timeNow);
+                        const auto beatsUntilPunchIn = punchInBeat - beatNow;
+                        const auto samplesUntilPunchIn = toSamples (punchInTime - timeNow, playbackContext->getSampleRate());
+                        punchInPoint = SyncPoint { .referenceSamplePosition = currentSyncPoint->referenceSamplePosition + samplesUntilPunchIn,
+                                                   .monotonicBeat = { currentSyncPoint->monotonicBeat.v + beatsUntilPunchIn },
+                                                   .unloopedTime = punchInTime,
+                                                   .time = transportState->startTime.get(),
+                                                   .beat = ts.toBeats (transportState->startTime.get()) } ;
+                        jassert (juce::approximatelyEqual (currentSyncPoint->time.inSeconds(), currentSyncPoint->unloopedTime.inSeconds()));
+                    }
                     playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
 
                     if (edit.getNumCountInBeats() > 0)
@@ -1471,6 +1500,7 @@ bool TransportControl::performRecord()
                         edit.setClickTrackRange ({});
                     }
 
+                    playHeadWrapper->play();
                     transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                     screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
                 }
@@ -1481,7 +1511,7 @@ bool TransportControl::performRecord()
             engine.getUIBehaviour().showWarningMessage (
                 TRANS("Recording is only possible  when at least one active input device is assigned to a track"));
 
-            return false;
+            return std::nullopt;
         }
     }
 
@@ -1491,22 +1521,33 @@ bool TransportControl::performRecord()
     if (transportState->safeRecording)
         engine.getUIBehaviour().showSafeRecordDialog (*this);
 
-    return true;
+    return punchInPoint;
 }
 
-void TransportControl::performStopRecording ()
+std::optional<SyncPoint> TransportControl::performStopRecording()
 {
-    if (isRecording() || tracktion::isRecording (*playbackContext))
+    if (! playbackContext)
+        return std::nullopt;
+
+    // This "! isRecording()" is backwards as  it's in response to the recording state being turned off
+    // This is messy and will be cleaned up soon
+    if (! isRecording() || tracktion::isRecording (*playbackContext))
     {
         CRASH_TRACER
 
         const bool discardRecordings = transportState->discardRecordings;
-        const auto recEndTime = playHeadWrapper->getUnloopedPosition();
-        playbackContext->stopRecording (recEndTime, discardRecordings)
+        const auto syncPoint = playbackContext->getSyncPoint();
+        assert (syncPoint);
+        playbackContext->stopRecording (syncPoint->unloopedTime, discardRecordings)
             .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
 
         sendChangeMessage();
+        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
+
+        return syncPoint;
     }
+
+    return std::nullopt;
 }
 
 void TransportControl::performStop()
@@ -1539,12 +1580,16 @@ void TransportControl::performStop()
 
         clearPlayingFlags();
         playHeadWrapper->stop();
+        auto syncPoint = playbackContext->getSyncPoint();
+        assert (syncPoint);
         playbackContext->stopRecording (recEndTime, transportState->discardRecordings)
             .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
 
         position = transportState->discardRecordings ? transportState->startTime.get()
                                                      : (looping ? recEndPos
                                                                 : recEndTime);
+
+        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
     }
     else
     {

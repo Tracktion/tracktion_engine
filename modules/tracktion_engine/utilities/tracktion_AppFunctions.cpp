@@ -205,16 +205,9 @@ namespace AppFunctions
         if (auto transport = getActiveTransport())
         {
             if (transport->isPlaying())
-            {
-                if (transport->isRecording())
-                    transport->stopRecording();
-                else
-                    stop();
-            }
+                stop();
             else
-            {
                 start();
-            }
         }
     }
 
@@ -222,7 +215,13 @@ namespace AppFunctions
     {
         if (auto transport = getActiveTransport())
         {
-            if (! transport->isRecording())
+            const bool wasRecording = transport->isRecording();
+
+            if (wasRecording)
+            {
+                transport->stop (false, false);
+            }
+            else
             {
                 getCurrentUIBehaviour().stopPreviewPlayback();
                 transport->record (true, true);

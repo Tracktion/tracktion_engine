@@ -337,6 +337,12 @@ public:
         /** Should stop video playback. */
         virtual void stopVideo()  {}
 
+        /** Called when global recording starts. */
+        virtual void recordingStarted (SyncPoint)  {}
+
+        /** Called when global recording stops. */
+        virtual void recordingStopped (SyncPoint)  {}
+
         /** Called before recording start for a specific input instance. */
         virtual void recordingAboutToStart (InputDeviceInstance&, EditItemID /*targetID*/) {}
 
@@ -420,9 +426,9 @@ private:
     void releaseAudioNodes();
 
     void performPlay();
-    bool performRecord();
+    std::optional<SyncPoint> performRecord();
     void performStop();
-    void performStopRecording();
+    std::optional<SyncPoint> performStopRecording();
 
     void performPositionChange();
     void performRewindButtonChanged();
