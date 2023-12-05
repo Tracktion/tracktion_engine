@@ -418,6 +418,10 @@ public:
 
     juce::ValueTree state;                      /**< The ValueTree of the Clip state. */
     juce::CachedValue<juce::Colour> colour;     /**< The colour property. */
+    juce::CachedValue<bool> disabled;           /**< Whether the Clip is disabled or not.
+                                                     Changed to disabled clips won't rebuild the
+                                                     audio graph and they won't get added to
+                                                     playback graph. */
 
     /** @internal.
         Not intended for public use!

@@ -27,6 +27,7 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     length.referTo (state, IDs::length, um);
     offset.referTo (state, IDs::offset, um);
     colour.referTo (state, IDs::colour, um);
+    disabled.referTo (state, IDs::disabled, um);
     speedRatio.referTo (state, IDs::speed, um, 1.0);
     syncType.referTo (state, IDs::sync, um);
     showingTakes.referTo (state, IDs::showingTakes, nullptr, false);

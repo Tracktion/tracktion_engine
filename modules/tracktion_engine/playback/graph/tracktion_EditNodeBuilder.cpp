@@ -848,6 +848,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState,
                                                            const CreateNodeParams& params, ClipRole role)
 {
+    if (clip.disabled)
+        return {};
+
     // N.B. This must be checked first as a ContainerClip is an AudioClipBase
     if (auto containerClip = dynamic_cast<ContainerClip*> (&clip))
         return createNodeForContainerClip (*containerClip, trackMuteState, params, role);
