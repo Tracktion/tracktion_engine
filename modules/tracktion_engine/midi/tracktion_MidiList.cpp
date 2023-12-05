@@ -13,14 +13,6 @@ namespace tracktion { inline namespace engine
 
 namespace
 {
-    template<typename VarType>
-    inline void convertPropertyToType (juce::ValueTree& v, const juce::Identifier& id)
-    {
-        if (const auto* prop = v.getPropertyPointer (id))
-            if (prop->isString())
-                (*const_cast<juce::var*> (prop)) = static_cast<VarType> (*prop);
-    }
-
     void convertMidiPropertiesFromStrings (juce::ValueTree& midi)
     {
         if (midi.hasType (IDs::NOTE))
@@ -1894,7 +1886,7 @@ juce::MidiMessageSequence MidiList::exportToPlaybackMidiSequence (MidiClip& clip
 juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const MidiList& list, MidiClip& clip, TimeBase timeBase, bool generateMPE)
 {
     juce::MidiMessageSequence destSequence;
-    
+
     auto& ts = clip.edit.tempoSequence;
     auto midiStartBeat = clip.getContentStartBeat();
     auto channelNumber = list.getMidiChannel().getChannelNumber();
@@ -2006,7 +1998,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         if (beat >= firstNoteBeat && beat < lastNoteBeat)
             addToSequence (destSequence, clip, timeBase, *e);
     }
-    
+
     return destSequence;
 }
 

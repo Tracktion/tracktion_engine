@@ -22,6 +22,17 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
+/** Ensures a property is a given type which can avoid having to parse a string
+    every time it is read after loading from XML.
+*/
+template<typename VarType>
+inline void convertPropertyToType (juce::ValueTree& v, const juce::Identifier& id)
+{
+    if (const auto* prop = v.getPropertyPointer (id))
+        if (prop->isString())
+            (*const_cast<juce::var*> (prop)) = static_cast<VarType> (*prop);
+}
+
 /** Sets a value if it is different and returns true, otherwise simply returns false. */
 template <typename T>
 static bool setIfDifferent (T& val, T newVal) noexcept

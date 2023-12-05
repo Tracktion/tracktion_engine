@@ -34,6 +34,8 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     groupID.referTo (state, IDs::groupID, um);
     linkID.referTo (state, IDs::linkID, um);
 
+    convertPropertyToType<bool> (state, IDs::disabled);
+
     if (! (length >= 0_td && length < 1.0e10s)) // reverse logic to check for NANs
     {
         jassertfalse;
