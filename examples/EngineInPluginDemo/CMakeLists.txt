@@ -35,7 +35,7 @@ juce_add_pip (${TARGET_NAME}.h)
 
 juce_generate_juce_header(${TARGET_NAME})
 
-target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden

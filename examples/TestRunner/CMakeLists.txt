@@ -37,7 +37,7 @@ juce_add_console_app(${TARGET_NAME})
 
 juce_generate_juce_header(${TARGET_NAME})
 
-target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
@@ -90,7 +90,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
 endif()
-    
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
