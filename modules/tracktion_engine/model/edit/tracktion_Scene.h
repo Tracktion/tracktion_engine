@@ -55,7 +55,7 @@ class SceneWatcher : private juce::ValueTree::Listener,
 public:
     /** Creates a SceneWatcher.
         You don't need to create one of these manually, use the instance in SceneList
-       @see SceneList::sceneWatcher
+        @see SceneList::sceneWatcher
     */
     SceneWatcher (const juce::ValueTree& scenesState, Edit&);
 

@@ -81,6 +81,14 @@ public:
     */
     std::optional<BeatRange> getPlayedRange() const;
 
+    /** Returns the monotonic beat range this has been playing for.
+        N.B. This is really only useful for syncing to other timeline events.
+    */
+    std::optional<MonotonicBeatRange> getPlayedMonotonicRange() const;
+
+    /** @internal */
+    std::optional<BeatRange> getLastPlayedRange() const;
+
 private:
     //==============================================================================
     struct State
@@ -88,7 +96,8 @@ private:
         State();
 
         PlayState status = PlayState::stopped;
-        std::optional<BeatRange> playedRange;
+        std::optional<BeatRange> playedRange, lastPlayedRange;
+        std::optional<MonotonicBeatRange> playedMonotonicRange;
 
         std::optional<QueueState> nextStatus;
         std::optional<MonotonicBeat> nextEventTime;
