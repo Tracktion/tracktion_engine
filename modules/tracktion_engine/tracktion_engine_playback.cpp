@@ -179,6 +179,9 @@ using namespace std::literals;
 
 #include "playback/graph/tracktion_TrackMutingNode.h"
 
+#include "playback/graph/tracktion_ArrangerLauncherSwitchingNode.h"
+#include "playback/graph/tracktion_ArrangerLauncherSwitchingNode.cpp"
+
 #include "playback/graph/tracktion_AuxSendNode.h"
 #include "playback/graph/tracktion_AuxSendNode.cpp"
 

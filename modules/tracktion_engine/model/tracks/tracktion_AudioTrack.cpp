@@ -106,6 +106,7 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     midiVisibleProportion.referTo (state, IDs::midiVProp, nullptr);
     midiVerticalOffset.referTo (state, IDs::midiVOffset, nullptr);
     midiNoteMap.referTo (state, IDs::midiNoteMap, nullptr);
+    playSlotClips.referTo (state, IDs::playSlotClips, nullptr);
 
     updateMidiNoteMapCache();
 

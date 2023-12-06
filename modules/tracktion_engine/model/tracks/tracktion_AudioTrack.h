@@ -38,6 +38,9 @@ public:
     bool canContainPlugin (Plugin*) const override;
     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }
 
+    /** Determines if the track's arrange clips or clip slots should be audible. */
+    juce::CachedValue<AtomicWrapper<bool>> playSlotClips;
+
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
     juce::String getTrackPlayabilityWarning() const;

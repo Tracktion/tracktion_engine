@@ -1028,26 +1028,35 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const TrackMuteState& trackMuteState,
                                                          const CreateNodeParams& params)
 {
-    std::vector<std::unique_ptr<Node>> nodes;
+    std::vector<std::unique_ptr<Node>> arrangerNodes, launcherNodes;
     const auto trackID = at.itemID;
     const auto& clips = at.getClips();
 
     if (auto clipsNode = createNodeForClips (trackID, clips, trackMuteState, params))
-        nodes.push_back (std::move (clipsNode));
+        arrangerNodes.push_back (std::move (clipsNode));
 
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
-        nodes.push_back (std::move (araNode));
+        arrangerNodes.push_back (std::move (araNode));
 
     if (auto launcherNode = createNodeForLauncherClips (at.getClipSlotList(), trackMuteState, params))
-        nodes.push_back (std::move (launcherNode));
+        launcherNodes.push_back (std::move (launcherNode));
 
-    if (nodes.empty())
+    if (arrangerNodes.empty() && launcherNodes.empty())
         return {};
 
-    if (nodes.size() == 1)
-        return std::move (nodes.front());
+    std::unique_ptr<Node> arrangerNode, launcherNode;
 
-    return std::make_unique<SummingNode> (std::move (nodes));
+    if (arrangerNodes.size() == 1)
+        arrangerNode = std::move (arrangerNodes.front());
+    else if (arrangerNodes.size() > 1)
+        arrangerNode = std::make_unique<SummingNode> (std::move (arrangerNodes));
+
+    if (launcherNodes.size() == 1)
+        launcherNode = std::move (launcherNodes.front());
+    else if (launcherNodes.size() > 1)
+        launcherNode = std::make_unique<SummingNode> (std::move (launcherNodes));
+
+    return makeNode<ArrangerLauncherSwitchingNode> (at, std::move (arrangerNode), std::move (launcherNode));
 }
 
 std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion::graph::PlayHeadState& playHeadState,
