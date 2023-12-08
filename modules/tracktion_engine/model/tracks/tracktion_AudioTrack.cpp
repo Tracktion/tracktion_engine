@@ -690,7 +690,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
 
             changed();
         }
-        else if (i == IDs::compGroup)
+        else if (i == IDs::compGroup || i == IDs::playSlotClips)
         {
             changed();
         }
