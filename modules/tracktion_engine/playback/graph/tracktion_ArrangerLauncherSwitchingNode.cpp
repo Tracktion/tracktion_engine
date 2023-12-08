@@ -98,9 +98,9 @@ bool ArrangerLauncherSwitchingNode::isReadyToProcess()
 void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
 {
     auto destAudioView = pc.buffers.audio;
-    const auto numChannels = destAudioView.getNumChannels();
+    const auto numDestChannels = destAudioView.getNumChannels();
     const auto numFrames = destAudioView.getNumFrames();
-    assert (numChannels == channelState->size());
+    assert (numDestChannels == channelState->size());
     const bool isPlayingSlots = track->playSlotClips.get();
 
     if (isPlayingSlots)
@@ -108,8 +108,12 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
         if (launcherNode)
         {
             auto sourceBuffers = launcherNode->getProcessedOutput();
+            const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
+            copyIfNotAliased (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
             pc.buffers.midi.copyFrom (sourceBuffers.midi);
-            copyIfNotAliased (destAudioView, sourceBuffers.audio);
+
+            if (auto numChansToClear = numDestChannels - numSourceChannels; numChansToClear > 0)
+                destAudioView.getChannelRange ({ numSourceChannels, numSourceChannels + numChansToClear }).clear();
 
             // Ramp in track
             if (! wasPlayingSlots)
@@ -128,8 +132,12 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
         if (arrangerNode)
         {
             auto sourceBuffers = arrangerNode->getProcessedOutput();
+            const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
+            copyIfNotAliased (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
             pc.buffers.midi.copyFrom (sourceBuffers.midi);
-            copyIfNotAliased (destAudioView, sourceBuffers.audio);
+
+            if (auto numChansToClear = numDestChannels - numSourceChannels; numChansToClear > 0)
+                destAudioView.getChannelRange ({ numSourceChannels, numSourceChannels + numChansToClear }).clear();
 
             // Ramp in launcher
             if (wasPlayingSlots)
@@ -147,7 +155,7 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
     const auto fadeLength = wasPlayingSlots != isPlayingSlots ? std::min (10u, numFrames) : 0;
     wasPlayingSlots = isPlayingSlots;
 
-    for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
+    for (choc::buffer::ChannelCount channel = 0; channel < numDestChannels; ++channel)
     {
         const auto dest = pc.buffers.audio.getIterator (channel).sample;
         auto& lastSample = (*channelState)[(size_t) channel];
