@@ -45,7 +45,7 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     props.latencyNumSamples = std::max (wetProps.latencyNumSamples, dryProps.latencyNumSamples);
     hash_combine (props.nodeID, dryProps.nodeID);
 
-    constexpr size_t rackReturnNodeMagicHash = 0x726b52657475726e;
+    constexpr size_t rackReturnNodeMagicHash = size_t (0x726b52657475726e);
     
     if (props.nodeID != 0)
         hash_combine (props.nodeID, rackReturnNodeMagicHash);

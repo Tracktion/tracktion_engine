@@ -169,7 +169,7 @@ inline NodeProperties ConnectedNode::getNodeProperties()
     props.numberOfChannels = 0;
     props.nodeID = nodeID;
 
-    constexpr size_t connectedNodeMagicHash = 0x636f6e6e656374;
+    constexpr size_t connectedNodeMagicHash = size_t (0x636f6e6e656374);
     
     if (props.nodeID != 0)
         hash_combine (props.nodeID, connectedNodeMagicHash);

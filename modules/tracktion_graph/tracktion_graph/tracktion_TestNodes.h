@@ -335,7 +335,7 @@ public:
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        constexpr size_t gainNodeMagicHash = 0x6761696e4e6f6465;
+        constexpr size_t gainNodeMagicHash = size_t (0x6761696e4e6f6465);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, gainNodeMagicHash);
@@ -415,7 +415,7 @@ public:
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        constexpr size_t sendNodeMagicHash = 0x73656e644e6f6465;
+        constexpr size_t sendNodeMagicHash = size_t (0x73656e644e6f6465);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, sendNodeMagicHash);
@@ -492,7 +492,7 @@ public:
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
         
-        constexpr size_t returnNodeMagicHash = 0x72657475726e;
+        constexpr size_t returnNodeMagicHash = size_t (0x72657475726e);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, returnNodeMagicHash);
@@ -663,7 +663,7 @@ public:
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
         }
         
-        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c;
+        constexpr size_t channelNodeMagicHash = size_t (0x6368616e6e656c);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, channelNodeMagicHash);
@@ -728,7 +728,7 @@ public:
         
     NodeProperties getNodeProperties() override
     {
-        constexpr size_t sinkNodeMagicHash = 0x95ab5e9dcd;
+        constexpr size_t sinkNodeMagicHash = size_t (0x95ab5e9dcd);
         auto props = input->getNodeProperties();
         hash_combine (props.nodeID, sinkNodeMagicHash);
         

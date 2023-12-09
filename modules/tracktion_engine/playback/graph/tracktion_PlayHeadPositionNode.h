@@ -30,7 +30,7 @@ public:
     {
         auto props = input->getNodeProperties();
         
-        constexpr size_t playHeadPositionNodeMagicHash = 0x706c617948656164;
+        constexpr size_t playHeadPositionNodeMagicHash = size_t (0x706c617948656164);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, playHeadPositionNodeMagicHash);

@@ -50,7 +50,7 @@ public:
         auto props = input->getNodeProperties();
         props.latencyNumSamples += latencyProcessor->getLatencyNumSamples();
         
-        constexpr size_t latencyNodeMagicHash = 0x95ab5e9dcc;
+        constexpr size_t latencyNodeMagicHash = size_t (0x95ab5e9dcc);
         
         if (props.nodeID != 0)
             hash_combine (props.nodeID, latencyNodeMagicHash);
