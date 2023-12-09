@@ -187,7 +187,12 @@ void SceneList::deleteScene (Scene& scene)
     for (auto at : getAudioTracks (edit))
     {
         auto& csl = at->getClipSlotList();
-        assert (csl.getClipSlots()[index] != nullptr);
+        auto cs = csl.getClipSlots()[index];
+        assert (cs != nullptr);
+        
+        if (auto clip = cs->getClip())
+            clip->removeFromParent();
+        
         csl.deleteSlot (*csl.getClipSlots()[index]);
     }
 }
