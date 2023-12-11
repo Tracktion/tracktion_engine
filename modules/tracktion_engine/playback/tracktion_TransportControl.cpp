@@ -1579,6 +1579,8 @@ void TransportControl::performStop()
     if (! juce::Component::isMouseButtonDownAnywhere())
         setUserDragging (false); // in case it gets stuck
 
+    bool canChangePosition = true;
+
     if (isRecording() || tracktion::isRecording (*playbackContext))
     {
         CRASH_TRACER
@@ -1599,6 +1601,7 @@ void TransportControl::performStop()
                                                                 : recEndTime);
 
         listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
+        canChangePosition = false;
     }
     else
     {
@@ -1616,7 +1619,9 @@ void TransportControl::performStop()
 
     transportState->clearDevicesOnStop = false;
 
-    if ((transportState->invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))
+
+    if (canChangePosition
+         && (transportState->invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))
          && transportState->cursorPosAtPlayStart >= 0_tp)
         setPosition (transportState->cursorPosAtPlayStart);
 
