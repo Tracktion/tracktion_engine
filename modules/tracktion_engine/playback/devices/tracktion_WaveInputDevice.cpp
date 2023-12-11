@@ -673,7 +673,7 @@ public:
 
         if (! rc || discardRecordings)
             for (auto c : consumers)
-                c->discardRecordings();
+                c->discardRecordings (rc ? rc->targetID : EditItemID());
 
         if (! rc)
             return {};

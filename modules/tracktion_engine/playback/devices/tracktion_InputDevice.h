@@ -377,7 +377,7 @@ public:
         virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
 
         /** This is called when a recording is aborted so listeners should trash their temp data */
-        virtual void discardRecordings() {}
+        virtual void discardRecordings (EditItemID /*targetID*/) {}
     };
 
     /** Base classes should override this to add any Consumers internally. */

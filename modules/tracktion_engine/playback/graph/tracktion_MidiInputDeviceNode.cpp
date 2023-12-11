@@ -12,14 +12,13 @@ namespace tracktion { inline namespace engine
 {
 
 MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice& owner, MidiMessageArray::MPESourceID msi,
-                                          tracktion::graph::PlayHeadState& phs)
+                                          tracktion::graph::PlayHeadState& phs, EditItemID targetID_)
     : instance (idi),
       midiInputDevice (owner),
       midiSourceID (msi),
-      playHeadState (phs)
+      playHeadState (phs),
+      targetID (targetID_)
 {
-    for (int i = 256; --i >= 0;)
-        incomingMessages.add (new juce::MidiMessage (0x80, 0, 0));
 }
 
 MidiInputDeviceNode::~MidiInputDeviceNode()
@@ -31,19 +30,23 @@ tracktion::graph::NodeProperties MidiInputDeviceNode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;
     props.hasMidi = true;
+    props.nodeID = nodeID;
     return props;
 }
 
 void MidiInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    lastPlayheadTime = 0.0;
-    numMessages = 0;
     maxExpectedMsPerBuffer = (unsigned int) (((info.blockSize * 1000) / info.sampleRate) * 2 + 100);
+    assert (getNodeProperties().nodeID == nodeID);
+
+    if (auto oldNode = findNodeWithIDIfNonZero<MidiInputDeviceNode> (info.nodeGraphToReplace, nodeID))
+        state = oldNode->state;
+
+    if (! state)
+        state = std::make_shared<NodeState>();
 
     {
-        const juce::ScopedLock sl (bufferLock);
-
         auto channelToUse = midiInputDevice.getChannelToUse();
         auto programToUse = midiInputDevice.getProgramToUse();
 
@@ -52,9 +55,9 @@ void MidiInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitial
     }
 
     {
-        const juce::ScopedLock sl (bufferLock);
-        liveRecordedMessages.clear();
-        numLiveMessagesToPlay = 0;
+        const std::lock_guard sl (state->liveMessagesMutex);
+        state->liveRecordedMessages.clear();
+        state->numLiveMessagesToPlay = 0;
     }
 
     instance.addConsumer (this);
@@ -81,17 +84,17 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
     auto channelToUse = midiInputDevice.getChannelToUse().getChannelNumber();
 
     {
-        const juce::ScopedLock sl (bufferLock);
+        const std::lock_guard sl (state->incomingMessagesMutex);
 
-        if (numMessages < incomingMessages.size())
+        if (state->numIncomingMessages < state->incomingMessages.size())
         {
-            auto& m = *incomingMessages.getUnchecked (numMessages);
+            auto& m = *state->incomingMessages.getUnchecked (state->numIncomingMessages);
             m = message;
 
             if (channelToUse > 0)
                 m.setChannel (channelToUse);
 
-            ++numMessages;
+            ++(state->numIncomingMessages);
         }
     }
 
@@ -99,7 +102,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
     if (playHead.isPlaying() && isLivePlayOverActive())
     {
-        const bool isLooping = canLoop && playHead.isLooping();
+        const bool isLooping = state->canLoop && playHead.isLooping();
         const auto loopTimes = timeRangeFromSamples (playHead.getLoopRange(), sampleRate);
         const auto messageReferenceSamplePosition = tracktion::graph::timeToSample (message.getTimeStamp(), sampleRate);
         const auto timelinePosition = playHead.referenceSamplePositionToTimelinePosition (messageReferenceSamplePosition);
@@ -119,8 +122,8 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
         if (channelToUse > 0)
             newMess.setChannel (channelToUse);
 
-        const juce::ScopedLock sl (liveInputLock);
-        liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), midiSourceID);
+        const std::lock_guard sl (state->liveMessagesMutex);
+        state->liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), midiSourceID);
     }
 }
 
@@ -130,57 +133,59 @@ void MidiInputDeviceNode::processSection (ProcessContext& pc, juce::Range<int64_
     const auto timeNow = juce::Time::getApproximateMillisecondCounter();
     auto& destMidi = pc.buffers.midi;
 
-    const juce::ScopedLock sl (bufferLock);
-
     if (! playHeadState.isContiguousWithPreviousBlock())
         createProgramChanges (destMidi);
 
-    // if it's been a long time since the last block, clear the buffer because
-    // it means we were muted or glitching
-    if (timeNow > lastReadTime + maxExpectedMsPerBuffer)
     {
-        //jassertfalse
-        numMessages = 0;
-    }
+        const std::lock_guard sl (state->incomingMessagesMutex);
 
-    lastReadTime = timeNow;
-
-    jassert (numMessages <= incomingMessages.size());
-
-    if (int num = juce::jmin (numMessages, incomingMessages.size()))
-    {
-        // not quite right as the first event won't be at the start of the buffer, but near enough for live stuff
-        auto timeAdjust = incomingMessages.getUnchecked (0)->getTimeStamp();
-
-        for (int i = 0; i < num; ++i)
+        // if it's been a long time since the last block, clear the buffer because
+        // it means we were muted or glitching
+        if (timeNow > state->lastReadTime + maxExpectedMsPerBuffer)
         {
-            auto m = incomingMessages.getUnchecked (i);
-            destMidi.addMidiMessage (*m,
-                                     juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m->getTimeStamp() - timeAdjust),
-                                     midiSourceID);
+            //jassertfalse;
+            state->numIncomingMessages = 0;
         }
+
+        state->lastReadTime = timeNow;
+
+        jassert (state->numIncomingMessages <= state->incomingMessages.size());
+
+        if (int num = juce::jmin (state->numIncomingMessages, state->incomingMessages.size()))
+        {
+            // not quite right as the first event won't be at the start of the buffer, but near enough for live stuff
+            const auto timeAdjust = state->incomingMessages.getUnchecked (0)->getTimeStamp();
+
+            for (int i = 0; i < num; ++i)
+            {
+                auto m = state->incomingMessages.getUnchecked (i);
+                destMidi.addMidiMessage (*m,
+                                         juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m->getTimeStamp() - timeAdjust),
+                                         midiSourceID);
+            }
+        }
+
+        state->numIncomingMessages = 0;
     }
 
-    numMessages = 0;
+    const std::lock_guard sl (state->liveMessagesMutex);
 
-    if (lastPlayheadTime > editTime.getStart())
+    if (state->lastPlayheadTime > editTime.getStart())
         // when we loop, we can assume all the messages in here are now from the previous time round, so are playable
-        numLiveMessagesToPlay = liveRecordedMessages.size();
+        state->numLiveMessagesToPlay = state->liveRecordedMessages.size();
 
-    lastPlayheadTime = editTime.getStart();
+    state->lastPlayheadTime = editTime.getStart();
 
     auto& mi = midiInputDevice;
     const bool createTakes = mi.recordingEnabled && ! (mi.mergeRecordings || mi.replaceExistingClips);
 
     if ((! createTakes && ! mi.replaceExistingClips)
-        && numLiveMessagesToPlay > 0
+        && state->numLiveMessagesToPlay > 0
         && playHeadState.playHead.isPlaying())
     {
-        const juce::ScopedLock sl2 (liveInputLock);
-
-        for (int i = 0; i < numLiveMessagesToPlay; ++i)
+        for (int i = 0; i < state->numLiveMessagesToPlay; ++i)
         {
-            auto& m = liveRecordedMessages[i];
+            auto& m = state->liveRecordedMessages[i];
             auto t = m.getTimeStamp();
 
             if (editTime.contains (t))
@@ -201,7 +206,9 @@ void MidiInputDeviceNode::createProgramChanges (MidiMessageArray& bufferForMidiM
 
 bool MidiInputDeviceNode::isLivePlayOverActive()
 {
-    return instance.isRecording() && canLoop && instance.context.transport.looping;
+    return instance.isRecording()
+        && state->canLoop
+        && instance.context.transport.looping;
 }
 
 void MidiInputDeviceNode::updateLoopOverdubs()
@@ -209,17 +216,20 @@ void MidiInputDeviceNode::updateLoopOverdubs()
     bool canLoopFlag = false;
 
     // Only enable overdubs if a track is being recorded
-    for (auto targetID : instance.getTargets())
-        if (instance.isRecording (targetID) && instance.edit.trackCache.findItem (targetID) != nullptr)
+    for (auto tID : instance.getTargets())
+        if (instance.isRecording (tID) && instance.edit.trackCache.findItem (tID) != nullptr)
             canLoopFlag = true;
 
-    canLoop = canLoopFlag;
+    state->canLoop = canLoopFlag;
 }
 
-void MidiInputDeviceNode::discardRecordings()
+void MidiInputDeviceNode::discardRecordings (EditItemID targetIDToDiscard)
 {
-    const juce::ScopedLock sl (liveInputLock);
-    liveRecordedMessages.clear();
+    if (targetIDToDiscard != targetID)
+        return;
+
+    const std::lock_guard sl (state->liveMessagesMutex);
+    state->liveRecordedMessages.clear();
 }
 
 }} // namespace tracktion { inline namespace engine

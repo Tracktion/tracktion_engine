@@ -962,8 +962,8 @@ public:
         CRASH_TRACER
         if (! recContext || discardRecordings)
         {
-            for (auto c : consumers)
-                c->discardRecordings();
+            for (juce::ScopedLock sl (consumerLock); auto c : consumers)
+                c->discardRecordings (recContext ? recContext->targetID : EditItemID());
 
             return {};
         }
@@ -1224,6 +1224,9 @@ public:
                 }
             }
         }
+
+        for (juce::ScopedLock sl (consumerLock); auto c : consumers)
+            c->discardRecordings (recContext->targetID);
 
         return createdClips;
     }
