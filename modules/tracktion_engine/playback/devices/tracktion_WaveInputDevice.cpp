@@ -505,20 +505,9 @@ public:
             , file (p_File)
             , diskSpaceChecker (p_Engine, p_File)
             , threadInitialiser(p_Engine.getWaveInputRecordingThread())
-        {
-            m_SampleID = p_File.getFileNameWithoutExtension();
-
-            // TODO: Remove when S3 is finallized 
-            //  engine.createFifoBundle(
-            //      m_SampleID,
-            //      punchIn, 
-            //      std::forward<const juce::Array<AudioTrack*>>(p_TrackList));
-        }
+        {}
         ~RecordingContext()
-        {
-            // TODO: Remove when S3 is finallized 
-            // engine.destroyFifoBundle(m_SampleID);
-        }
+        {}
         // BEATCONNECT MODIFICATION END
 
         Engine& engine;
@@ -533,37 +522,10 @@ public:
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
         WaveInputRecordingThread::ScopedInitialiser threadInitialiser;
 
-        // BEATCONNECT MODIFICATION START
-        // Create sample ID (juce::Uuid)
-        // The juce::Uuid constructor will create a random id.
-        juce::Uuid m_SampleID;
-        // BEATCONNECT MODIFICATION END
-
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
             if (fileWriter != nullptr)
             {
-                // BEATCONNECT MODIFICATION START
-                if (start > 0)
-                {
-                    jassert(numSamples < buffer.getNumSamples());
-                    juce::AudioBuffer<float> newbuffer;
-                    newbuffer.setSize(buffer.getNumChannels(), numSamples);
-                    for(int i = 0; i < buffer.getNumChannels(); i++)
-                        newbuffer.copyFrom(i, 0, buffer, i, start, numSamples);
-
-                    // TODO: Remove when S3 is finallized 
-                    // engine.addBlockToAudioFifo(m_SampleID, newbuffer);
-                }
-                else
-                {
-                    jassert(numSamples == buffer.getNumSamples());
-
-                    // TODO: Remove when S3 is finallized 
-                    // engine.addBlockToAudioFifo(m_SampleID, buffer);
-                }
-                // BEATCONNECT MODIFICATION END
-
                 engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);
             }
         }

@@ -70,7 +70,7 @@ install/tracktion/Tracktion6
 install/tracktion/Tracktion7
 tracktion*.deb
 
-examples/projects
+examples
 bin
 doxygen/doc
 **/3rd_party/rubberband
