@@ -704,6 +704,16 @@ public:
     virtual void handleMMCMessage (const juce::MidiMessage&) {}
     virtual bool handleTimecodeMessage (const juce::MidiMessage&) { return false; }
 
+    choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>* getRecordingNotes (EditItemID targetID) const override
+    {
+        const std::shared_lock sl (contextLock);
+
+        if (auto rc = getContextForID (targetID))
+            return &rc->liveNotes;
+
+        return {};
+    }
+
     class MidiRecordingContext : public RecordingContext
     {
     public:
@@ -711,11 +721,14 @@ public:
             : RecordingContext (target),
               punchRange (punchRange_)
         {
+            liveNotes.reset (100);
         }
 
         const TimeRange punchRange;
         juce::MidiMessageSequence recorded;
         TimePosition unloopedStopTime;
+
+        choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage> liveNotes;
 
         std::function<void (tl::expected<Clip::Array, juce::String>)> stopCallback;
         StopRecordingParameters stopParams;
@@ -909,7 +922,11 @@ public:
 
         if (recording)
         {
+            auto m1 = juce::MidiMessage (message, context.globalStreamTimeToEditTime (message.getTimeStamp()).inSeconds());
             auto m2 = juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds());
+
+            for (auto& recContext : recordingContexts)
+                recContext->liveNotes.push (m1);
 
             const std::shared_lock sl (contextLock);
 
@@ -1333,7 +1350,7 @@ public:
 
     MidiInputDevice& getMidiInput() const   { return static_cast<MidiInputDevice&> (owner); }
 
-    std::shared_mutex contextLock;
+    mutable std::shared_mutex contextLock;
     std::vector<std::unique_ptr<MidiRecordingContext>> recordingContexts;
 
 private:
@@ -1376,7 +1393,7 @@ private:
         }
     }
 
-    MidiRecordingContext* getContextForID (EditItemID targetID)
+    MidiRecordingContext* getContextForID (EditItemID targetID) const
     {
         const std::shared_lock sl (contextLock);
 
