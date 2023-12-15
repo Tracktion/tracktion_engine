@@ -48,6 +48,9 @@ public:
     /** Returns the current queue state. */
     std::optional<QueueState> getQueuedStatus() const;
 
+    /** Returns the current queued event time. */
+    std::optional<MonotonicBeat> getQueuedEventPosition() const;
+
     /** Start playing, optionally at a given beat position. */
     void play (std::optional<MonotonicBeat>);
 

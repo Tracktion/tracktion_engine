@@ -301,6 +301,7 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.includeMasterPlugins = r.useMasterPlugins;
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
+        cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
         std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });

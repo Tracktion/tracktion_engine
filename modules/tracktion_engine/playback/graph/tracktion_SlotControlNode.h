@@ -27,6 +27,8 @@ public:
                      EditItemID slotID,
                      std::unique_ptr<Node> input);
 
+    const LaunchHandle& getLaunchHandle() const;
+
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;

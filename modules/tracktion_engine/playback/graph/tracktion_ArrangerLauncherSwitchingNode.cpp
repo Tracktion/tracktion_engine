@@ -8,22 +8,24 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_ArrangerLauncherSwitchingNode.h"
-
 namespace tracktion { inline namespace engine
 {
 
+
+
 //==============================================================================
 //==============================================================================
-ArrangerLauncherSwitchingNode::ArrangerLauncherSwitchingNode (AudioTrack& at,
+ArrangerLauncherSwitchingNode::ArrangerLauncherSwitchingNode (ProcessState& ps,
+                                                              AudioTrack& at,
                                                               std::unique_ptr<Node> arrangerNode_,
-                                                              std::unique_ptr<Node> launcherNode_)
-    : track (at),
+                                                              std::vector<std::unique_ptr<SlotControlNode>> launcherNodes_)
+    : TracktionEngineNode (ps),
+      track (at),
       arrangerNode (std::move (arrangerNode_)),
-      launcherNode (std::move (launcherNode_))
+      launcherNodes (std::move (launcherNodes_))
 {
-    assert (arrangerNode || launcherNode);
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+    assert (arrangerNode || ! launcherNodes.empty());
+    setOptimisations ({ tracktion::graph::ClearBuffers::yes,
                         tracktion::graph::AllocateAudioBuffer::yes });
 }
 
@@ -33,7 +35,11 @@ tracktion::graph::NodeProperties ArrangerLauncherSwitchingNode::getNodePropertie
     constexpr size_t seed = 7653239033668669842; // std::hash<std::string_view>{} ("ArrangerLauncherSwitchingNode"sv)
     NodeProperties props = { .nodeID = hash (seed, track->itemID) };
 
-    for (auto n : getDirectInputNodes())
+    std::vector<Node*> nodes;
+    for (auto n : getDirectInputNodes())    nodes.push_back (n);
+    for (auto n : getInternalNodes())       nodes.push_back (n);
+
+    for (auto n : nodes)
     {
         auto nodeProps = n->getNodeProperties();
         props.hasAudio = props.hasAudio || nodeProps.hasAudio;
@@ -53,8 +59,15 @@ std::vector<tracktion::graph::Node*> ArrangerLauncherSwitchingNode::getDirectInp
     if (arrangerNode)
         nodes.push_back (arrangerNode.get());
 
-    if (launcherNode)
-        nodes.push_back (launcherNode.get());
+    return nodes;
+}
+
+std::vector<Node*> ArrangerLauncherSwitchingNode::getInternalNodes()
+{
+    std::vector<tracktion::graph::Node*> nodes;
+
+    for (auto& n : launcherNodes)
+        nodes.push_back (static_cast<Node*> (n.get()));
 
     return nodes;
 }
@@ -68,108 +81,299 @@ void ArrangerLauncherSwitchingNode::prepareToPlay (const PlaybackInitialisationI
     {
         if (auto oldNode = findNodeWithID<ArrangerLauncherSwitchingNode> (*oldGraph, props.nodeID))
         {
-            wasPlayingSlots = oldNode->wasPlayingSlots;
+            if (oldNode->launcherSampleFader && oldNode->launcherSampleFader->getNumChannels() == static_cast<size_t> (numChannels))
+               launcherSampleFader = oldNode->launcherSampleFader;
 
-            if (oldNode->channelState && ssize (*oldNode->channelState) == numChannels)
-               channelState = oldNode->channelState;
+            if (oldNode->arrangerSampleFader && oldNode->arrangerSampleFader->getNumChannels() == static_cast<size_t> (numChannels))
+                arrangerSampleFader = oldNode->arrangerSampleFader;
+
+            if (oldNode->arrangerActiveNoteList)
+                arrangerActiveNoteList = oldNode->arrangerActiveNoteList;
+
+            midiSourceID = oldNode->midiSourceID;
         }
     }
 
-    if (! channelState)
-    {
-        channelState = std::make_shared<std::vector<float>>();
+    if (! launcherSampleFader)
+        launcherSampleFader = std::make_shared<SampleFader> (numChannels);
 
-        for (int i = numChannels; --i >= 0;)
-            channelState->emplace_back (0.0f);
-    }
+    if (! arrangerSampleFader)
+        arrangerSampleFader = std::make_shared<SampleFader> (numChannels);
+
+    if (! arrangerActiveNoteList)
+        arrangerActiveNoteList = std::make_shared<ActiveNoteList>();
+
+    for (auto& launcherNode : launcherNodes)
+        launcherNode->initialise (info);
 }
 
 bool ArrangerLauncherSwitchingNode::isReadyToProcess()
 {
-    if (! launcherNode)
-        return arrangerNode->hasProcessed();
+    return ! arrangerNode || arrangerNode->hasProcessed();
+}
 
-    if (! arrangerNode)
-        return launcherNode->hasProcessed();
-
-    return arrangerNode->hasProcessed() && launcherNode->hasProcessed();
+void ArrangerLauncherSwitchingNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
+{
+    for (auto& launcherNode : launcherNodes)
+        launcherNode->prepareForNextBlock (referenceSampleRange);
 }
 
 void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
 {
     auto destAudioView = pc.buffers.audio;
-    const auto numDestChannels = destAudioView.getNumChannels();
+    assert (destAudioView.getNumChannels() == launcherSampleFader->getNumChannels());
+
+    // Logic for determining what slots/arranger to play
+    // - Iterate the slots to see if any are playing or are queued to play this block
+    // - If they are playing, only play the slots and skip the arranger
+    // - If a slot is queued, and its start position is within this block:
+    //      - Play the slot
+    //      - If the playSlotClips prop is false, play the arranger, but fade out at the slot start position
+    // - If no slots are playing or queued AND the playSlotClips prop is false
+    //      - Play the arranger
+    //      - If we've just started playing the arranger, fade out the last slot samples and fade in the arranger
+    const auto editBeatRange = getEditBeatRange();
+    const auto playArranger = ! track->playSlotClips.get();
+    const auto slotStatus = getSlotsStatus (launcherNodes,
+                                            editBeatRange,
+                                            getProcessState().getSyncPoint().monotonicBeat);
+
+    launcherSampleFader->apply (destAudioView);
+    arrangerSampleFader->apply (destAudioView);
+
+    processLauncher (pc, slotStatus);
+
+     if (playArranger)
+        processArranger (pc, slotStatus);
+}
+
+//==============================================================================
+void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const SlotClipStatus& slotStatus)
+{
+    auto destAudioView = pc.buffers.audio;
     const auto numFrames = destAudioView.getNumFrames();
-    assert (numDestChannels == channelState->size());
-    const bool isPlayingSlots = track->playSlotClips.get();
+    const auto editBeatRange = getEditBeatRange();
 
-    if (isPlayingSlots)
+    if (! launcherNodes.empty())
     {
-        if (launcherNode)
+        sortPlayingOrQueuedClipsFirst();
+
+        if (slotStatus.anyClipsPlaying || slotStatus.anyClipsQueued)
         {
-            auto sourceBuffers = launcherNode->getProcessedOutput();
-            const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
-            copyIfNotAliased (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
-            pc.buffers.midi.copyFrom (sourceBuffers.midi);
-
-            if (auto numChansToClear = numDestChannels - numSourceChannels; numChansToClear > 0)
-                destAudioView.getChannelRange ({ numSourceChannels, numSourceChannels + numChansToClear }).clear();
-
-            // Ramp in track
-            if (! wasPlayingSlots)
+            for (auto& launcherNode : launcherNodes)
             {
-                auto buffer = tracktion::graph::toAudioBuffer (destAudioView);
-                buffer.applyGainRamp (0, std::min (10, buffer.getNumSamples()), 0.0f, 1.0f);
+                using enum LaunchHandle::PlayState;
+                using enum LaunchHandle::QueueState;
+                const auto& lh = launcherNode->getLaunchHandle();
+                const bool slotWasPlaying = lh.getPlayingStatus() == playing;
+                const bool slotWasQueued = lh.getQueuedStatus() == playQueued;
+
+                if (! (slotWasPlaying || slotWasQueued))
+                    continue;
+
+                launcherNode->Node::process (pc.numSamples, pc.referenceSampleRange);
+
+                const bool slotIsPlaying = lh.getPlayingStatus() == playing;
+                auto sourceBuffers = launcherNode->getProcessedOutput();
+                const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
+
+                // We can add the whole block here as if the slot is stopped, part of the buffer will just be silent
+                choc::buffer::add (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
+                pc.buffers.midi.mergeFrom (sourceBuffers.midi);
+
+                if (slotWasPlaying && ! slotIsPlaying)
+                {
+                    // Ramp out last 10 samples
+                    const auto endFrame = beatToSamplePosition (slotStatus.beatsUntilQueuedStopTrimmedToBlock,
+                                                                editBeatRange.getLength(), numFrames);
+                    launcherSampleFader->trigger (10);
+                    launcherSampleFader->applyAt (destAudioView,  endFrame);
+                }
             }
         }
-        else
+    }
+
+    launcherSampleFader->push (destAudioView);
+}
+
+void ArrangerLauncherSwitchingNode::processArranger (ProcessContext& pc, const SlotClipStatus& slotStatus)
+{
+    if (! arrangerNode)
+        return;
+
+    auto destAudioView = pc.buffers.audio;
+    const auto editBeatRange = getEditBeatRange();
+    const auto numFrames = destAudioView.getNumFrames();
+
+    auto sourceBuffers = arrangerNode->getProcessedOutput();
+    const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
+
+    if (slotStatus.beatsUntilQueuedStartTrimmedToBlock)
+    {
+        // Arranger about to stop so only use some of the buffer and trigger fade out
+        if (numSourceChannels > 0)
         {
-            destAudioView.clear();
+            const auto endFrame = beatToSamplePosition (slotStatus.beatsUntilQueuedStartTrimmedToBlock,
+                                                        editBeatRange.getLength(), numFrames);
+
+            auto destSubView = destAudioView.getFirstChannels (numSourceChannels).getStart (endFrame);
+            auto sourceSubView = sourceBuffers.audio.getStart (endFrame);
+            arrangerSampleFader->trigger (10);
+
+            if (sourceSubView.getNumFrames() > 0)
+            {
+                arrangerSampleFader->push (sourceSubView);
+
+                choc::buffer::add (destSubView, sourceSubView);
+                launcherSampleFader->applyAt (destAudioView,  endFrame);
+            }
+
+            const auto endTime = TimePosition::fromSamples (endFrame, getSampleRate());
+
+            if (sourceBuffers.midi.isNotEmpty())
+            {
+                pc.buffers.midi.isAllNotesOff = sourceBuffers.midi.isAllNotesOff;
+
+                for (auto& m : sourceBuffers.midi)
+                {
+                    if (m.getTimeStamp() > endTime.inSeconds())
+                        continue;
+
+                    pc.buffers.midi.add (m);
+
+                    if (m.isNoteOn())
+                        arrangerActiveNoteList->startNote (m.getChannel(), m.getNoteNumber());
+                    else if (m.isNoteOff())
+                        arrangerActiveNoteList->clearNote (m.getChannel(), m.getNoteNumber());
+                }
+            }
+
+            arrangerActiveNoteList->iterate ([dest = &pc.buffers.midi, end = endTime.inSeconds(), sourceID = midiSourceID] (auto chan, auto note)
+                                             {
+                                                 dest->addMidiMessage (juce::MidiMessage::noteOff (chan, note).withTimeStamp (end),
+                                                     sourceID);
+                                             });
+            arrangerActiveNoteList->reset();
         }
     }
     else
     {
-        if (arrangerNode)
+        if (numSourceChannels > 0)
         {
-            auto sourceBuffers = arrangerNode->getProcessedOutput();
-            const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
-            copyIfNotAliased (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
-            pc.buffers.midi.copyFrom (sourceBuffers.midi);
+            arrangerSampleFader->push (sourceBuffers.audio);
+            choc::buffer::add (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
+        }
 
-            if (auto numChansToClear = numDestChannels - numSourceChannels; numChansToClear > 0)
-                destAudioView.getChannelRange ({ numSourceChannels, numSourceChannels + numChansToClear }).clear();
+        if (sourceBuffers.midi.isNotEmpty())
+        {
+            pc.buffers.midi.isAllNotesOff = sourceBuffers.midi.isAllNotesOff;
 
-            // Ramp in launcher
-            if (wasPlayingSlots)
+            for (auto& m : sourceBuffers.midi)
             {
-                auto buffer = tracktion::graph::toAudioBuffer (destAudioView);
-                buffer.applyGainRamp (0, std::min (10, buffer.getNumSamples()), 0.0f, 1.0f);
+                pc.buffers.midi.add (m);
+
+                if (m.isNoteOn())
+                    arrangerActiveNoteList->startNote (m.getChannel(), m.getNoteNumber());
+                else if (m.isNoteOff())
+                    arrangerActiveNoteList->clearNote (m.getChannel(), m.getNoteNumber());
             }
         }
-        else
-        {
-            destAudioView.clear();
-        }
     }
+}
 
-    const auto fadeLength = wasPlayingSlots != isPlayingSlots ? std::min (10u, numFrames) : 0;
-    wasPlayingSlots = isPlayingSlots;
+void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
+{
+    using enum LaunchHandle::PlayState;
+    using enum LaunchHandle::QueueState;
+    std::ranges::sort (launcherNodes,
+                       [] (auto& n1, auto& n2)
+                       {
+                           auto& lh1 = n1->getLaunchHandle();
+                           auto& lh2 = n2->getLaunchHandle();
 
-    for (choc::buffer::ChannelCount channel = 0; channel < numDestChannels; ++channel)
+                           if (lh1.getPlayingStatus() == playing)
+                               return true;
+
+                           if (auto q1 = lh1.getQueuedStatus(); q1 == playQueued)
+                               return lh2.getPlayingStatus() != playing;
+
+                           return false;
+                       });
+}
+
+void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
+{
+    for (auto& n : launcherNodes)
     {
-        const auto dest = pc.buffers.audio.getIterator (channel).sample;
-        auto& lastSample = (*channelState)[(size_t) channel];
-        lastSample = dest[numFrames - 1];
-
-        if (fadeLength == 0)
-            continue;
-
-        for (uint32_t i = 0; i < fadeLength; ++i)
+        if (n->getLaunchHandle().getPlayingStatus() == LaunchHandle::PlayState::playing)
         {
-            auto alpha = i / (float) fadeLength;
-            dest[i] = alpha * dest[i] + lastSample * (1.0f - alpha);
+            track->playSlotClips = true;
+            return;
         }
     }
+}
+
+//==============================================================================
+choc::buffer::FrameCount ArrangerLauncherSwitchingNode::beatToSamplePosition (std::optional<BeatDuration> beat, BeatDuration numBeats, choc::buffer::FrameCount numFrames)
+{
+    if (! beat)
+        return 0;
+
+    assert (numBeats.inBeats() > 0);
+    const auto framesPerBeats = numFrames / numBeats.inBeats();
+    return static_cast<choc::buffer::FrameCount> (std::round (beat->inBeats() * framesPerBeats));
+}
+
+ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::getSlotsStatus (const std::vector<std::unique_ptr<SlotControlNode>>& launcherNodes,
+                                                                                             BeatRange editBeatRange, MonotonicBeat monotonicBeat)
+{
+    SlotClipStatus status;
+
+    const BeatRange blockRange (monotonicBeat.v, editBeatRange.getLength());
+
+    for (auto& n : launcherNodes)
+    {
+        const auto& lh = n->getLaunchHandle();
+
+        if (lh.getPlayingStatus() == LaunchHandle::PlayState::playing)
+            status.anyClipsPlaying = true;
+
+        if (lh.getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+        {
+            status.anyClipsQueued = true;
+
+            const auto queuedPos = lh.getQueuedEventPosition();
+
+            if (! queuedPos)
+            {
+                status.beatsUntilQueuedStartTrimmedToBlock = 0_bd;
+                status.beatsUntilQueuedStart = 0_bd;
+            }
+
+            if (blockRange.contains (queuedPos->v))
+                status.beatsUntilQueuedStartTrimmedToBlock = queuedPos->v - blockRange.getStart();
+        }
+
+        if (lh.getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
+        {
+            status.anyClipsQueued = true;
+            const auto queuedPos = lh.getQueuedEventPosition();
+
+            if (! queuedPos)
+                status.beatsUntilQueuedStopTrimmedToBlock = 0_bd;
+
+            if (blockRange.contains (queuedPos->v))
+                status.beatsUntilQueuedStopTrimmedToBlock = queuedPos->v - blockRange.getStart();
+        }
+    }
+
+    return status;
+}
+
+//==============================================================================
+void ArrangerLauncherSwitchingNode::sharedTimerCallback()
+{
+    updatePlaySlotsState();
 }
 
 }} // namespace tracktion { inline namespace engine

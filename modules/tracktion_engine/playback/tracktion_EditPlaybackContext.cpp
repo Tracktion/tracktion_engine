@@ -594,7 +594,9 @@ void EditPlaybackContext::createNode()
         return;
     }
 
-    cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+    auto& engineBehaviour = edit.engine.getEngineBehaviour();
+    cnp.includeBypassedPlugins = ! engineBehaviour.shouldBypassedPluginsBeRemovedFromPlaybackGraph();
+    cnp.allowClipSlots = engineBehaviour.areClipSlotsEnabled();
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
     nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);

@@ -27,6 +27,7 @@ SlotControlNode::SlotControlNode (ProcessState& ps,
       localProcessState (localPlayheadState, *ps.getTempoSequence())
 {
     assert (getProcessState().getTempoSequence() != nullptr);
+    assert (launchHandle);
 
     for (auto n : transformNodes (*input))
     {
@@ -44,6 +45,11 @@ SlotControlNode::SlotControlNode (ProcessState& ps,
         if (auto mn = dynamic_cast<LoopingMidiNode*> (n))
             midiNode = mn;
     }
+}
+
+const LaunchHandle& SlotControlNode::getLaunchHandle() const
+{
+    return *launchHandle;
 }
 
 tracktion::graph::NodeProperties SlotControlNode::getNodeProperties()

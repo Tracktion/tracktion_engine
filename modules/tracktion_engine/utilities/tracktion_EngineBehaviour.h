@@ -82,6 +82,11 @@ public:
     */
     virtual bool shouldProcessAuxSendWhenTrackIsMuted (AuxSendPlugin&)            { return true; }
 
+    /** If this returns false, ClipSlot Clips won't be included in the playback graph
+        and arranger track clips will always be audible.
+    */
+    virtual bool areClipSlotsEnabled()                                            { return true; }
+
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 

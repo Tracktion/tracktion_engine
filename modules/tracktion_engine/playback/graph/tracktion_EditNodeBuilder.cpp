@@ -929,10 +929,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
     return combiner;
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSlotList& slotList,
-                                                                    const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::vector<std::unique_ptr<SlotControlNode>> createNodeForLauncherClips (const ClipSlotList& slotList,
+                                                                          const TrackMuteState& trackMuteState, const CreateNodeParams& params)
 {
-    auto combiner = std::make_unique<SummingNode>();
+    std::vector<std::unique_ptr<SlotControlNode>> nodes;
 
     for (auto slot : slotList.getClipSlots())
     {
@@ -964,12 +964,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForLauncherClips (const ClipSl
                                                                       slot->itemID,
                                                                       std::move (clipNode));
 
-                combiner->addInput (std::move (controlNode));
+                nodes.push_back (std::move (controlNode));
             }
         }
     }
 
-    return combiner;
+    return nodes;
 }
 
 
@@ -1028,7 +1028,7 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const TrackMuteState& trackMuteState,
                                                          const CreateNodeParams& params)
 {
-    std::vector<std::unique_ptr<Node>> arrangerNodes, launcherNodes;
+    std::vector<std::unique_ptr<Node>> arrangerNodes;
     const auto trackID = at.itemID;
     const auto& clips = at.getClips();
 
@@ -1038,8 +1038,18 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         arrangerNodes.push_back (std::move (araNode));
 
-    if (auto launcherNode = createNodeForLauncherClips (at.getClipSlotList(), trackMuteState, params))
-        launcherNodes.push_back (std::move (launcherNode));
+    if (! params.allowClipSlots)
+    {
+        if (arrangerNodes.empty())
+            return {};
+
+        if (arrangerNodes.size() == 1)
+            return std::move (arrangerNodes.front());
+
+        return  std::make_unique<SummingNode> (std::move (arrangerNodes));
+    }
+
+    auto launcherNodes = createNodeForLauncherClips (at.getClipSlotList(), trackMuteState, params);
 
     if (arrangerNodes.empty() && launcherNodes.empty())
         return {};
@@ -1051,12 +1061,7 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     else if (arrangerNodes.size() > 1)
         arrangerNode = std::make_unique<SummingNode> (std::move (arrangerNodes));
 
-    if (launcherNodes.size() == 1)
-        launcherNode = std::move (launcherNodes.front());
-    else if (launcherNodes.size() > 1)
-        launcherNode = std::make_unique<SummingNode> (std::move (launcherNodes));
-
-    return makeNode<ArrangerLauncherSwitchingNode> (at, std::move (arrangerNode), std::move (launcherNode));
+    return makeNode<ArrangerLauncherSwitchingNode> (params.processState, at, std::move (arrangerNode), std::move (launcherNodes));
 }
 
 std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion::graph::PlayHeadState& playHeadState,

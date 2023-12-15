@@ -31,7 +31,8 @@ struct CreateNodeParams
     bool includeMasterPlugins = true;                   /**< Whether to include master plugins, fades and volume. */
     bool addAntiDenormalisationNoise = false;           /**< Whether to add low level anti-denormalisation noise to the output. */
     bool includeBypassedPlugins = true;                 /**< If false, bypassed plugins will be completely ommited from the graph. */
-    bool implicitlyIncludeSubmixChildTracks = true;     /**< If true, chid track in submixes will be included regardless of the allowedTracks param. Only relevent when forRendering is also true. */
+    bool implicitlyIncludeSubmixChildTracks = true;     /**< If true, child track in submixes will be included regardless of the allowedTracks param. Only relevent when forRendering is also true. */
+    bool allowClipSlots = true;                         /**< If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient Node). */
 };
 
 //==============================================================================

@@ -24,6 +24,11 @@ std::optional<LaunchHandle::QueueState> LaunchHandle::getQueuedStatus() const
     return getState().nextStatus;
 }
 
+std::optional<MonotonicBeat> LaunchHandle::getQueuedEventPosition() const
+{
+    return getState().nextEventTime;
+}
+
 void LaunchHandle::play (std::optional<MonotonicBeat> pos)
 {
     auto s = getState();

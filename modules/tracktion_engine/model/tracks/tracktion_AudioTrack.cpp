@@ -690,7 +690,17 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
 
             changed();
         }
-        else if (i == IDs::compGroup || i == IDs::playSlotClips)
+        if (i == IDs::playSlotClips)
+        {
+            playSlotClips.forceUpdateOfCachedValue();
+
+            if (! playSlotClips.get())
+                for (auto cs : getClipSlotList().getClipSlots())
+                    if (auto c = cs->getClip())
+                        if (auto lh = c->getLaunchHandle(); lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                            lh->stop ({});
+        }
+        else if (i == IDs::compGroup)
         {
             changed();
         }

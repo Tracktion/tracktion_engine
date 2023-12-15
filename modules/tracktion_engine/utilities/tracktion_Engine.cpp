@@ -48,7 +48,7 @@ void Engine::initialise()
 {
     Selectable::initialise();
     AudioScratchBuffer::initialise();
-    
+
     projectManager.reset (new ProjectManager (*this));
     activeEdits.reset (new ActiveEdits());
     temporaryFileManager.reset (new TemporaryFileManager (*this));
@@ -259,6 +259,14 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
         warpTimeFactory = std::make_unique<WarpTimeFactory>();
 
     return *warpTimeFactory;
+}
+
+SharedTimer& Engine::getBackToArrangerUpdateTimer() const
+{
+    if (! backToArrangerUpdateTimer)
+        backToArrangerUpdateTimer = std::make_unique<SharedTimer> (HertzTag_t, 10);
+
+    return *backToArrangerUpdateTimer;
 }
 
 bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
