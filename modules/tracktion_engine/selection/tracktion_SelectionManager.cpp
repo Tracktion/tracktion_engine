@@ -282,6 +282,7 @@ juce::String SelectableClass::getDescriptionOfSelectedGroup (const SelectableLis
             .replace ("123", juce::String (selectedObjects.size()));
 }
 
+bool SelectableClass::canBeSelected (const Selectable&) { return true; }
 void SelectableClass::deleteSelected (const SelectableList&, bool) {}
 void SelectableClass::addClipboardEntriesFor (AddClipboardEntryParams&) {}
 
@@ -418,6 +419,12 @@ void SelectionManager::deselectAll()
     }
 }
 
+static bool canBeSelected (Selectable& newItem)
+{
+    auto newItemClass = SelectableClass::findClassFor (newItem);
+    return newItemClass->canBeSelected (newItem);
+}
+
 static bool canSelectAtTheSameTime (const SelectableList& selected, Selectable& newItem)
 {
     auto newItemClass = SelectableClass::findClassFor (newItem);
@@ -456,6 +463,9 @@ void SelectionManager::select (Selectable& s, bool addToCurrentSelection)
         return;
     }
 
+	if (! canBeSelected (s))
+        return;
+
     if (! selected.contains (&s))
     {
         addToCurrentSelection = addToCurrentSelection
@@ -477,8 +487,13 @@ void SelectionManager::select (Selectable& s, bool addToCurrentSelection)
     }
 }
 
-void SelectionManager::select (const SelectableList& list)
+void SelectionManager::select (const SelectableList& listSrc)
 {
+    SelectableList list;
+    for (auto s : listSrc)
+        if (Selectable::isSelectableValid (s) && canBeSelected (*s))
+            list.add (s);
+
     if (list != selected)
     {
         deselectAll();

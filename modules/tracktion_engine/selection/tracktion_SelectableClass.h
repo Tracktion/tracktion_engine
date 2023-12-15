@@ -33,6 +33,11 @@ public:
     */
     virtual juce::String getDescriptionOfSelectedGroup (const SelectableList&);
 
+    /** If it's possible for an object to be selected. Things like currently recording
+        clips should not be selectable
+    */
+    virtual bool canBeSelected (const Selectable& object);
+
     /** if it's possible for an object of this class to be selected at the same
         time as an object of the class passed in, this should return true. Default
         is only to be true if the other object is actually this one.
