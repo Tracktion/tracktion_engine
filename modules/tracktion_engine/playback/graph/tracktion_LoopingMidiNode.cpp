@@ -353,37 +353,6 @@ namespace MidiHelpers
         }
     }
 
-    inline void createNoteOffs (ActiveNoteList& activeNoteList,
-                                MidiMessageArray& destination,
-                                MidiMessageArray::MPESourceID midiSourceID,
-                                double midiTimeOffset, bool isPlaying)
-    {
-        int activeChannels = 0;
-
-        // First send note-off events for currently playing notes
-        activeNoteList.iterate ([&] (int channel, int noteNumber)
-                                {
-                                    activeChannels |= (1 << channel);
-                                    destination.addMidiMessage (juce::MidiMessage::noteOff (channel, noteNumber), midiTimeOffset, midiSourceID);
-                                });
-        activeNoteList.reset();
-
-        // Send controller off events for used channels
-        for (int i = 1; i <= 16; ++i)
-        {
-            if ((activeChannels & (1 << i)) != 0)
-            {
-                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
-                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
-
-                // NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
-                // by an all-notes-off, so avoid this while playing.
-                if (! isPlaying)
-                    destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
-            }
-        }
-    }
-
     inline choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
     {
         for (auto meh : src)
@@ -1281,11 +1250,11 @@ public:
         if (clipIntersection.isEmpty())
         {
             if (activeNoteList->areAnyNotesActive())
-                MidiHelpers::createNoteOffs (*activeNoteList,
-                                             destBuffer,
-                                             midiSourceID,
-                                             timePositionOfLastSample,
-                                             isPlaying);
+                MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                                 destBuffer,
+                                                 midiSourceID,
+                                                 timePositionOfLastSample,
+                                                 isPlaying);
 
             return;
         }
@@ -1315,11 +1284,11 @@ public:
         if (! isContiguousWithPreviousBlock
             || blockStartBeatRelativeToClip <= 0.00001_bd)
         {
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         timePositionOfLastSample,
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             timePositionOfLastSample,
+                                             isPlaying);
             shouldCreateMessagesForTime = true;
         }
 
@@ -1379,11 +1348,11 @@ public:
         }
 
         if (lastBlockOfLoop)
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         timePositionOfLastSample,
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             timePositionOfLastSample,
+                                             isPlaying);
 
         if (isLastBlockOfClip)
         {
@@ -1392,11 +1361,11 @@ public:
             // If the section ends right at the end of the clip, we need to nudge the note-offs back so they get played in this buffer
             auto eventTimeSeconds = (endOfClipBeats.inBeats() - beatDurationOfOneSample) * secondsPerBeat.inSeconds();
 
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         eventTimeSeconds,
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             eventTimeSeconds,
+                                             isPlaying);
         }
     }
 
@@ -1494,11 +1463,11 @@ void LoopingMidiNode::setDynamicOffsetBeats (BeatDuration newOffset)
 
 void LoopingMidiNode::killActiveNotes (MidiMessageArray& dest, double timestampForNoteOffs)
 {
-    MidiHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
-                                 dest,
-                                 midiSourceID,
-                                 timestampForNoteOffs,
-                                 false);
+    MidiNodeHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
+                                     dest,
+                                     midiSourceID,
+                                     timestampForNoteOffs,
+                                     false);
 }
 
 //==============================================================================
@@ -1553,11 +1522,11 @@ void LoopingMidiNode::process (ProcessContext& pc)
         if (mute != wasMute)
         {
             wasMute = mute;
-            MidiHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
-                                         pc.buffers.midi,
-                                         midiSourceID,
-                                         (getEditTimeRange().getLength() - 10us).inSeconds(),
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
+                                             pc.buffers.midi,
+                                             midiSourceID,
+                                             (getEditTimeRange().getLength() - 10us).inSeconds(),
+                                             isPlaying);
         }
 
         return;

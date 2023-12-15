@@ -8,10 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "tracktion_MidiNodeHelpers.h"
+
 namespace tracktion { inline namespace engine
 {
-
-
 
 //==============================================================================
 //==============================================================================
@@ -248,12 +248,11 @@ void ArrangerLauncherSwitchingNode::processArranger (ProcessContext& pc, const S
                 }
             }
 
-            arrangerActiveNoteList->iterate ([dest = &pc.buffers.midi, end = endTime.inSeconds(), sourceID = midiSourceID] (auto chan, auto note)
-                                             {
-                                                 dest->addMidiMessage (juce::MidiMessage::noteOff (chan, note).withTimeStamp (end),
-                                                     sourceID);
-                                             });
-            arrangerActiveNoteList->reset();
+            MidiNodeHelpers::createNoteOffs (*arrangerActiveNoteList,
+                                             pc.buffers.midi,
+                                             midiSourceID,
+                                             endTime.inSeconds(),
+                                             getPlayHead().isPlaying());
         }
     }
     else
