@@ -284,20 +284,20 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
 {
     using enum LaunchHandle::PlayState;
     using enum LaunchHandle::QueueState;
-    std::ranges::sort (launcherNodes,
-                       [] (auto& n1, auto& n2)
-                       {
-                           auto& lh1 = n1->getLaunchHandle();
-                           auto& lh2 = n2->getLaunchHandle();
+    sort (launcherNodes,
+          [](auto& n1, auto& n2)
+              {
+                  auto& lh1 = n1->getLaunchHandle();
+                  auto& lh2 = n2->getLaunchHandle();
 
-                           if (lh1.getPlayingStatus() == playing)
-                               return true;
+                  if (lh1.getPlayingStatus() == playing)
+                      return true;
 
-                           if (auto q1 = lh1.getQueuedStatus(); q1 == playQueued)
-                               return lh2.getPlayingStatus() != playing;
+                  if (auto q1 = lh1.getQueuedStatus(); q1 == playQueued)
+                      return lh2.getPlayingStatus() != playing;
 
-                           return false;
-                       });
+                  return false;
+              });
 }
 
 void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
