@@ -135,6 +135,10 @@ void SlotControlNode::process (ProcessContext& pc)
             ! splitStatus.range1.isEmpty())
            processSplitSection (pc, splitStatus);
     }
+    else if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
+    {
+        launchHandle->advance (getProcessState().getSyncPoint(), {});
+    }
 }
 
 //==============================================================================
@@ -306,6 +310,8 @@ void SlotControlNode::processStop (ProcessContext& pc)
 
     if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
         launchHandle->stop ({});
+
+    launchHandle->advance (getProcessState().getSyncPoint(), {});
 }
 
 }} // namespace tracktion { inline namespace engine

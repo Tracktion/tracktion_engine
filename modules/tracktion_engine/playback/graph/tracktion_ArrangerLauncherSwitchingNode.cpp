@@ -319,7 +319,9 @@ choc::buffer::FrameCount ArrangerLauncherSwitchingNode::beatToSamplePosition (st
     if (! beat)
         return 0;
 
-    assert (numBeats.inBeats() > 0);
+    if (numBeats == 0_bd)
+        return 0;
+
     const auto framesPerBeats = numFrames / numBeats.inBeats();
     return static_cast<choc::buffer::FrameCount> (std::round (beat->inBeats() * framesPerBeats));
 }

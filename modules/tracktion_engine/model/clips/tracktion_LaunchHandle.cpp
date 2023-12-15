@@ -78,9 +78,30 @@ std::optional<BeatRange> LaunchHandle::getLastPlayedRange() const
 
 auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> SplitStatus
 {
-    assert (duration > 0_bd);
-
     auto s = getState();
+
+    // Playhead isn't moving so just apply stop queued states straight away
+    if (duration == 0_bd)
+    {
+        SplitStatus splitStatus;
+
+        if (s.nextStatus == QueueState::stopQueued)
+        {
+            splitStatus.playing1 = false;
+
+            if (s.playedRange)
+                s.lastPlayedRange = s.playedRange;
+
+            s.playedRange = std::nullopt;
+            s.playedMonotonicRange = std::nullopt;
+            s.status = PlayState::stopped;
+            s.nextStatus = std::nullopt;
+
+            setState (s);
+        }
+
+        return splitStatus;
+    }
 
     SplitStatus splitStatus;
     const auto monotonicBeatRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, duration) };
