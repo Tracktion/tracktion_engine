@@ -704,12 +704,12 @@ public:
     virtual void handleMMCMessage (const juce::MidiMessage&) {}
     virtual bool handleTimecodeMessage (const juce::MidiMessage&) { return false; }
 
-    choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>* getRecordingNotes (EditItemID targetID) const override
+    std::shared_ptr<choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>> getRecordingNotes (EditItemID targetID) const override
     {
         const std::shared_lock sl (contextLock);
 
         if (auto rc = getContextForID (targetID))
-            return &rc->liveNotes;
+            return rc->liveNotes;
 
         return {};
     }
@@ -721,14 +721,15 @@ public:
             : RecordingContext (target),
               punchRange (punchRange_)
         {
-            liveNotes.reset (100);
+            liveNotes = std::make_shared<choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>>();
+            liveNotes->reset (100);
         }
 
         const TimeRange punchRange;
         juce::MidiMessageSequence recorded;
         TimePosition unloopedStopTime;
 
-        choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage> liveNotes;
+        std::shared_ptr<choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>> liveNotes;
 
         std::function<void (tl::expected<Clip::Array, juce::String>)> stopCallback;
         StopRecordingParameters stopParams;
@@ -926,7 +927,7 @@ public:
             auto m2 = juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp()).inSeconds());
 
             for (auto& recContext : recordingContexts)
-                recContext->liveNotes.push (m1);
+                recContext->liveNotes->push (m1);
 
             const std::shared_lock sl (contextLock);
 

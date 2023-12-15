@@ -241,7 +241,7 @@ public:
     virtual juce::File getRecordingFile (EditItemID) const     { return {}; }
 
     /** Returns a fifo of recorded MIDInotes that can be used for drawing UI components */
-    virtual choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>* getRecordingNotes (EditItemID targetID) const { return nullptr; }
+    virtual std::shared_ptr<choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>> getRecordingNotes (EditItemID) const { return nullptr; }
 
     /** Returns the time that a given target started recording. */
     virtual TimePosition getPunchInTime (EditItemID) = 0;
