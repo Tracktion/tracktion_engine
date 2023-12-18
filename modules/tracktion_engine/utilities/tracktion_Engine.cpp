@@ -106,6 +106,7 @@ Engine::~Engine()
     audioFileManager.reset();
     midiLearnState.reset();
     audioFileFormatManager.reset();
+    backToArrangerUpdateTimer.reset();
 
     instance = nullptr;
     engines.removeFirstMatchingValue (this);

@@ -633,39 +633,64 @@ void EditPlaybackContext::startPlaying (TimePosition start)
 
 juce::Result EditPlaybackContext::startRecording (TimePosition start, TimePosition punchIn)
 {
-    InputDeviceInstance::PreparedContext preparedContext;
+    struct InputAndContext
+    {
+        InputDeviceInstance* input = nullptr;
+        InputDeviceInstance::PreparedContext preparedContext;
+    };
 
-    for (int i = waveInputs.size(); --i >= 0 && ! hasErrors (preparedContext);)
+    std::vector<InputAndContext> inputAndContexts;
+
+    auto anyContextHasErrors = [&inputAndContexts]
+    {
+        for (auto& inputAndContext : inputAndContexts)
+            if (hasErrors (inputAndContext.preparedContext))
+                return true;
+
+        return false;
+    };
+
+    for (int i = waveInputs.size(); --i >= 0 && ! anyContextHasErrors();)
         if (auto wi = waveInputs.getUnchecked (i))
             if (wi->isRecordingActive())
-                append (preparedContext,
-                        wi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)));
+                inputAndContexts.push_back ({ wi, wi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)) });
 
-    for (int i = midiInputs.size(); --i >= 0 && ! hasErrors (preparedContext);)
+    for (int i = midiInputs.size(); --i >= 0 && ! anyContextHasErrors();)
         if (auto mi = midiInputs.getUnchecked (i))
             if (mi->isRecordingActive())
-                append (preparedContext,
-                        mi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)));
+                inputAndContexts.push_back ({ mi, mi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn)) });
 
-    if (preparedContext.empty())
-        return juce::Result::fail (TRANS("Failed to start recording: No input devices"));
+    // Check if any devices started
+    {
+        bool anyContexts = false;
 
-    auto [preparedContexts, errors] = extract (std::move (preparedContext));
+        for (auto& inputAndContext : inputAndContexts)
+            if (! inputAndContext.preparedContext.empty())
+                anyContexts = true;
 
-    if (! errors.isEmpty())
-        return juce::Result::fail (errors[0]);
+        if (! anyContexts)
+            return juce::Result::fail (TRANS("Failed to start recording: No input devices"));
+    }
 
+    // Check if any had errors
+    for (auto& inputAndContext : inputAndContexts)
+        for (auto& res : inputAndContext.preparedContext)
+            if (! res)
+                return juce::Result::fail (res.error());
+
+    // Now start the recordings
     startPlaying (start);
 
-    for (auto wi : waveInputs)
-        if (wi->isRecordingActive())
-            preparedContexts = wi->startRecording (std::move (preparedContexts));
+    for (auto& inputAndContext : inputAndContexts)
+    {
+        if (! inputAndContext.input->isRecordingActive())
+            continue;
 
-    for (auto mi : midiInputs)
-        if (mi->isRecordingActive())
-            preparedContexts = mi->startRecording (std::move (preparedContexts));
+        [[ maybe_unused ]] auto [preparedContext, error] = extract (std::move (inputAndContext.preparedContext));
+        [[ maybe_unused ]] auto contextsLeft = inputAndContext.input->startRecording (std::move (preparedContext));
+        jassert (contextsLeft.empty());
+    }
 
-    jassert (preparedContexts.empty()); // Recording context type not handled?
     return juce::Result::ok();
 }
 
