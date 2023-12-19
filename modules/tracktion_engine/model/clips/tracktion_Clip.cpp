@@ -33,6 +33,8 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     showingTakes.referTo (state, IDs::showingTakes, nullptr, false);
     groupID.referTo (state, IDs::groupID, um);
     linkID.referTo (state, IDs::linkID, um);
+    followAction.referTo (state, IDs::followAction, um);
+    followActionTime.referTo (state, IDs::followActionTime, um);
 
     convertPropertyToType<bool> (state, IDs::disabled);
 
@@ -489,7 +491,8 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
             sourceMediaChanged();
         }
         else if (id == IDs::colour || id == IDs::speed
-                 || id == IDs::sync || id == IDs::linkID)
+                 || id == IDs::sync || id == IDs::linkID
+                 || id == IDs::followAction)
         {
             changed();
         }

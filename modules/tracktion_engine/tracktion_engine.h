@@ -509,6 +509,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_LoopInfo.h"
 #include "audio_files/tracktion_AudioFile.h"
 #include "model/edit/tracktion_SourceFileReference.h"
+#include "model/clips/tracktion_FollowActions.h"
 #include "model/clips/tracktion_Clip.h"
 
 #include "utilities/tracktion_EngineBehaviour.h"

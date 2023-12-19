@@ -24,6 +24,7 @@ public:
     SlotControlNode (ProcessState& editProcessState,
                      std::shared_ptr<LaunchHandle>,
                      std::optional<BeatDuration> stopDuration,
+                     std::function<void (MonotonicBeat)> stopFunction,
                      EditItemID slotID,
                      std::unique_ptr<Node> input);
 
@@ -42,6 +43,7 @@ private:
     //==============================================================================
     std::shared_ptr<LaunchHandle> launchHandle;
     std::optional<BeatDuration> stopDuration;
+    std::function<void (MonotonicBeat)> stopFunction;
     bool wasPlaying = false;
 
     const EditItemID slotID;

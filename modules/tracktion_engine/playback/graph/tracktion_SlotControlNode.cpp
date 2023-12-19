@@ -16,11 +16,13 @@ namespace tracktion { inline namespace engine
 SlotControlNode::SlotControlNode (ProcessState& ps,
                                   std::shared_ptr<LaunchHandle> launchHandle_,
                                   std::optional<BeatDuration> stopDuration_,
+                                  std::function<void (MonotonicBeat)> stopFunction_,
                                   EditItemID slotID_,
                                   std::unique_ptr<Node> input_)
     : TracktionEngineNode (ps),
       launchHandle (std::move (launchHandle_)),
       stopDuration (stopDuration_),
+      stopFunction (std::move (stopFunction_)),
       slotID (slotID_),
       input (std::move (input_)),
       localPlayheadState (ps.playHeadState.playHead),
@@ -122,12 +124,19 @@ void SlotControlNode::process (ProcessContext& pc)
 
         if (stopDuration)
         {
-            if (auto playedRange = launchHandle->getPlayedRange())
+            if (auto playedMonotonicRange = launchHandle->getPlayedMonotonicRange())
             {
-                const auto beatsUntilStop = *stopDuration - playedRange->getLength();
+                const auto blockRange = MonotonicBeatRange { BeatRange (syncPoint.monotonicBeat.v, editBeatRange.getLength()) };
+                const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
-                if (beatsUntilStop <= editBeatRange.getLength())
-                    launchHandle->stop (MonotonicBeat { syncPoint.monotonicBeat.v + beatsUntilStop });
+                if (blockRange.v.getEnd() > stopPoint.v)
+                {
+                    launchHandle->stop (stopPoint);
+
+                    // This extra check is to ensure we only start a single clip
+                    if (stopFunction && blockRange.v.contains (stopPoint.v))
+                        stopFunction (stopPoint);
+                }
             }
         }
 

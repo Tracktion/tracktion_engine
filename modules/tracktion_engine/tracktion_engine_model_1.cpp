@@ -13,6 +13,8 @@
 #include <future>
 #include <chrono>
 
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
+
 using namespace std::literals;
 
 #ifdef __GNUC__
@@ -62,6 +64,7 @@ using namespace std::literals;
 #include "model/clips/tracktion_WaveAudioClip.cpp"
 #include "model/clips/tracktion_ChordClip.cpp"
 #include "model/clips/tracktion_EditClip.cpp"
+#include "model/clips/tracktion_FollowActions.cpp"
 #include "model/clips/tracktion_LauncherClipPlaybackHandle.cpp"
 #include "model/clips/tracktion_LauncherClipPlaybackHandle.test.cpp"
 #include "model/clips/tracktion_LaunchHandle.cpp"

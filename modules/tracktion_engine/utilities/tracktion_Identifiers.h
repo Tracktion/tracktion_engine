@@ -652,6 +652,8 @@ namespace IDs
     DECLARE_ID (launchQuantisation)
     DECLARE_ID (useClipLaunchQuantisation)
     DECLARE_ID (playSlotClips)
+    DECLARE_ID (followAction)
+    DECLARE_ID (followActionTime)
 
     #undef DECLARE_ID
 }

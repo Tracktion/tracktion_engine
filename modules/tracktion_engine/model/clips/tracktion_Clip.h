@@ -166,6 +166,13 @@ public:
     */
     virtual LaunchQuantisation* getLaunchQuantisation()         { return {}; }
 
+    /** Some clip types can be launched, if that's possible, this can be used to determine the
+        action to perform after a clip has played.
+    */
+    juce::CachedValue<FollowAction> followAction;
+
+    juce::CachedValue<BeatDuration> followActionTime;
+
     //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
     ClipPosition getPosition() const override;
