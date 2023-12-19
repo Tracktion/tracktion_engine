@@ -561,7 +561,10 @@ Edit::Edit (Options options)
 
     undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
 
-    initialise();
+    // BEATCONNECT MODIFICATION START
+    // initialise();
+    initialise(options.createDefaultTrack);
+    // BEATCONNECT MODIFICATION END
 
     undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
 
@@ -683,7 +686,10 @@ Edit::ScopedRenderStatus::~ScopedRenderStatus()
 
 
 //==============================================================================
-void Edit::initialise()
+// BEATCONNECT MODIFICATION START
+// void Edit::initialise()
+void Edit::initialise(bool createDefaultTrack)
+// BEATCONNECT MODIFICATION END
 {
     CRASH_TRACER
     const StopwatchTimer loadTimer;
@@ -719,7 +725,11 @@ void Edit::initialise()
     if (loadContext != nullptr)
         loadContext->progress = 1.0f;
 
-    initialiseTracks();
+    // BEATCONNECT MODIFICATION START
+    // initialiseTracks();
+    initialiseTracks(createDefaultTrack);
+    // BEATCONNECT MODIFICATION END
+
     initialiseARA();
     updateMuteSoloStatuses();
     readFrozenTracksFiles();
@@ -901,10 +911,16 @@ void Edit::removeZeroLengthClips()
         c->removeFromParentTrack();
 }
 
-void Edit::initialiseTracks()
+// BEATCONNECT MODIFICATION START
+// void Edit::initialiseTracks()
+void Edit::initialiseTracks(bool createDefaultTrack)
+// BEATCONNECT MODIFICATION END
 {
     // If the tempo track hasn't been created yet this is a new Edit
-    if (getTempoTrack() == nullptr)
+    // BEATCONNECT MODIFICATION START
+    // if (getTempoTrack() == nullptr)
+    if (getTempoTrack() == nullptr && createDefaultTrack)
+    // BEATCONNECT MODIFICATION END
     {
         ensureNumberOfAudioTracks (getProjectItemID().getProjectID() == 0 ? 1 : 8);
         updateTrackStatuses();
