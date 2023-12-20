@@ -71,8 +71,49 @@ void SceneWatcher::checkForScenes()
         startTimerHz (30);
 }
 
+SceneWatcher::RecordingState SceneWatcher::getRecordingState (ClipSlot& slot)
+{
+    auto dest = slot.getInputDestination();
+
+    if (dest && dest->input.isRecording (dest->targetID))
+    {
+        auto epc = dest->input.edit.getTransport().getCurrentPlaybackContext();
+        const auto currentTime = epc ? epc->getUnloopedPosition() : dest->input.edit.getTransport().getPosition();
+
+        if (currentTime < dest->input.getPunchInTime (dest->targetID))
+            return RecordingState::pending;
+        else
+            return RecordingState::recording;
+    }
+    return RecordingState::none;
+}
+
 void SceneWatcher::timerCallback()
 {
+    auto update = [&] (int trackIdx, int slotIdx, LaunchHandle::PlayState p, std::optional<LaunchHandle::QueueState> q, RecordingState r)
+    {
+        auto key = std::pair<int,int> (trackIdx, slotIdx);
+        auto itr = lastStates.find (key);
+
+        if (itr == lastStates.end())
+        {
+            lastStates[key] = { callback, p, q, r };
+            listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
+        }
+        else if (itr->second.playState != p || itr->second.queueState != q || itr->second.recordingState != r)
+        {
+            itr->second.lastSeen        = callback;
+            itr->second.playState       = p;
+            itr->second.queueState      = q;
+            itr->second.recordingState  = r;
+            listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
+        }
+        else
+        {
+            itr->second.lastSeen    = callback;
+        }
+    };
+
     auto trackIdx = 0;
 
     for (auto at : getAudioTracks (edit))
@@ -81,32 +122,18 @@ void SceneWatcher::timerCallback()
 
         for (auto slot : at->getClipSlotList().getClipSlots())
         {
-            if (auto c = slot->getClip())
+            if (auto r = getRecordingState (*slot); r != RecordingState::none)
+            {
+                update (trackIdx, slotIdx, LaunchHandle::PlayState::stopped, {}, r);
+            }
+            else if (auto c = slot->getClip())
             {
                 if (auto lh = c->getLaunchHandle())
                 {
                     auto p = lh->getPlayingStatus();
                     auto q = lh->getQueuedStatus();
 
-                    auto key = std::pair<int,int> (trackIdx, slotIdx);
-                    auto itr = lastStates.find (key);
-
-                    if (itr == lastStates.end())
-                    {
-                        lastStates[key] = { callback, p, q };
-                        listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
-                    }
-                    else if (itr->second.playState != p || itr->second.queueState != q)
-                    {
-                        itr->second.lastSeen    = callback;
-                        itr->second.playState   = p;
-                        itr->second.queueState  = q;
-                        listeners.call ([trackIdx, slotIdx] (Listener& l) { l.slotUpdated (trackIdx, slotIdx); });
-                    }
-                    else
-                    {
-                        itr->second.lastSeen    = callback;
-                    }
+                    update (trackIdx, slotIdx, p, q, r);
                 }
             }
 

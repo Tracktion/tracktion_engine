@@ -35,6 +35,8 @@ public:
     /** Returns slot index on track */
     int getIndex();
 
+    InputDeviceInstance::Destination* getInputDestination();
+
     //==============================================================================
     /** @internal. */
     juce::String getName() const override;

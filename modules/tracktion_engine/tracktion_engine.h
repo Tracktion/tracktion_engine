@@ -541,7 +541,6 @@ namespace tracktion { inline namespace engine
 
 #include "model/tracks/tracktion_TrackOutput.h"
 #include "model/clips/tracktion_ClipOwner.h"
-#include "model/tracks/tracktion_ClipSlot.h"
 #include "model/tracks/tracktion_ClipTrack.h"
 #include "model/tracks/tracktion_AudioTrack.h"
 
@@ -598,6 +597,8 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_MidiOutputDevice.h"
 #include "playback/devices/tracktion_WaveInputDevice.h"
 #include "playback/devices/tracktion_WaveOutputDevice.h"
+
+#include "model/tracks/tracktion_ClipSlot.h"
 
 #include "model/edit/tracktion_EditUtilities.h"
 

@@ -953,7 +953,23 @@ void ExternalController::updatePadColours()
                 {
                     if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
                     {
-                        if (auto c = slot->getClip())
+                        if (auto dest = slot->getInputDestination(); dest && dest->input.isRecording (dest->targetID))
+                        {
+                            auto epc = dest->input.edit.getTransport().getCurrentPlaybackContext();
+                            const auto currentTime = epc ? epc->getUnloopedPosition() : dest->input.edit.getTransport().getPosition();
+
+                            if (currentTime < dest->input.getPunchInTime (dest->targetID))
+                            {
+                                colourIdx = 1;
+                                state = 1;
+                            }
+                            else
+                            {
+                                colourIdx = 1;
+                                state = 2;
+                            }
+                        }
+                        else if (auto c = slot->getClip())
                         {
                             auto col = c->getColour();
 
@@ -970,9 +986,15 @@ void ExternalController::updatePadColours()
                                 if (auto lh = c->getLaunchHandle())
                                 {
                                     if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                                    {
+                                        colourIdx = 8;
                                         state = tc->isPlaying() ? 2 : 1;
+                                    }
                                     else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                    {
+                                        colourIdx = 8;
                                         state = 1;
+                                    }
                                 }
                             }
                         }

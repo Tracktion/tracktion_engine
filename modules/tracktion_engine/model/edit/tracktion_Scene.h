@@ -80,11 +80,19 @@ private:
     Edit& edit;
     uint32_t callback = 0;
 
+    enum class RecordingState
+    {
+        none,
+        pending,
+        recording,
+    };
+
     struct Value
     {
         uint32_t lastSeen = 0;
         LaunchHandle::PlayState playState;
         std::optional<LaunchHandle::QueueState> queueState;
+        RecordingState recordingState = RecordingState::none;
     };
 
     std::map<std::pair<int, int>, Value> lastStates;
@@ -92,6 +100,7 @@ private:
     juce::ListenerList<Listener> listeners;
 
     void checkForScenes();
+    RecordingState getRecordingState (ClipSlot& slot);
 
     void timerCallback() override;
 
