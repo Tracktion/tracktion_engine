@@ -222,6 +222,8 @@ private:
     Plugin* getCurrentPlugin() const;
 
     bool wantsClock;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExternalController)
 };
 
 }} // namespace tracktion { inline namespace engine

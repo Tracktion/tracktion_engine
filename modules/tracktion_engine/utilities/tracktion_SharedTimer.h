@@ -71,6 +71,8 @@ private:
     {
         listeners.call (&Listener::sharedTimerCallback);
     }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SharedTimer)
 };
 
 }} // namespace tracktion { inline namespace engine

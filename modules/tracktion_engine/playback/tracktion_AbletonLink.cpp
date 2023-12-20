@@ -208,6 +208,8 @@ struct AbletonLink::ImplBase  : public juce::Timer
     std::atomic<double> linkBarPhase { 0.0 }, chaseProportion { 0.0 };
 
     juce::Range<double> allowedTempos { 0.0, 999.0 };
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImplBase)
 };
 
 #if TRACKTION_ENABLE_ABLETON_LINK
