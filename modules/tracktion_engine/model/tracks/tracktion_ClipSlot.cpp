@@ -56,7 +56,7 @@ InputDeviceInstance::Destination* ClipSlot::getInputDestination()
 {
     for (auto in : track.edit.getAllInputDevices())
         for (auto dest : in->destinations)
-            if (dest->state[IDs::targetID] == state[IDs::id])
+            if (dest->targetID == state[IDs::id])
                 return dest;
 
     return nullptr;
