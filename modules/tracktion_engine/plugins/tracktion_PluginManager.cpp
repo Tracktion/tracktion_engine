@@ -8,9 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-//#include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
-//#include "../../../../Source/Plugin/ConvolutionReverb/bc_ConvolutionReverbPlugin.h"
-
 namespace tracktion { inline namespace engine
 {
 
