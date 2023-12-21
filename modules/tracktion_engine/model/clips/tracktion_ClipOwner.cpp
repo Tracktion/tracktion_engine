@@ -326,7 +326,7 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
             {
                 if (newClip->getColour() == newClip->getDefaultColour())
                 {
-                    float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
+                    float hue = at->getColour().getHue();
                     newClip->setColour (newClip->getDefaultColour().withHue (hue));
                 }
 
@@ -345,8 +345,14 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                         acb->setResamplingQuality (defaults.resamplingQuality);
                 }
             }
-            else if (dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
             {
+                if (newClip->getColour() == newClip->getDefaultColour())
+                {
+                    float hue = cs->track.getColour().getHue();
+                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
+                }
+
                 if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
                 {
                     acb->setUsesProxy (false);
