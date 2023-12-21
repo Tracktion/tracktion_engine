@@ -421,8 +421,6 @@ void PluginManager::initialise()
     createBuiltInType<SamplerPlugin>();
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
-    //createBuiltInType<BeatConnect::BitCrusherPlugin>();
-    //createBuiltInType<BeatConnect::reverb::ConvolutionReverbPlugin>();
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
