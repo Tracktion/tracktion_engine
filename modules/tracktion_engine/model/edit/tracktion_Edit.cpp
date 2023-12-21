@@ -163,7 +163,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                          || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
                          || i == IDs::loopedSequenceType || i == IDs::grooveStrength
                          || i == IDs::proxyAllowed || i == IDs::resamplingQuality || i == IDs::warpTime
-                         || i == IDs::disabled || i == IDs::followAction || i == IDs::followActionTime)
+                         || i == IDs::disabled || i == IDs::followActionBeats)
                 {
                     restart();
                 }
@@ -278,6 +278,11 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                     restart();
                 }
             }
+            else if (v.hasType (IDs::ACTION) && Clip::isClipState (v.getParent()))
+            {
+                if (i == IDs::type || i == IDs::probability)
+                    restart();
+            }
         }
     }
 
@@ -341,6 +346,10 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
             edit.invalidateStoredLength();
         }
         else if (p.hasType (IDs::NOTE))
+        {
+            restart();
+        }
+        else if (p.hasType (IDs::FOLLOWACTIONS) && c.hasType (IDs::ACTION))
         {
             restart();
         }

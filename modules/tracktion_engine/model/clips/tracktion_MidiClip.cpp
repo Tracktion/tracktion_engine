@@ -404,6 +404,14 @@ LaunchQuantisation* MidiClip::getLaunchQuantisation()
     return launchQuantisation.get();
 }
 
+FollowActions* MidiClip::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
+}
+
 //==============================================================================
 MidiCompManager& MidiClip::getCompManager()
 {

@@ -294,6 +294,8 @@ public:
     bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
     /** @internal */
     LaunchQuantisation* getLaunchQuantisation() override;
+    /** @internal */
+    FollowActions* getFollowActions() override;
 
 private:
     void generateMidiSequenceForChannels (juce::MidiMessageSequence&, bool convertToSeconds,
@@ -310,6 +312,7 @@ private:
     std::shared_ptr<LaunchHandle> launchHandle;
     juce::CachedValue<bool> useClipLaunchQuantisation;
     std::unique_ptr<LaunchQuantisation> launchQuantisation;
+    std::unique_ptr<FollowActions> followActions;
 
     const PatternInstance::Ptr getPatternInstance (int index, bool repeatSequence) const;
     void updatePatternList();

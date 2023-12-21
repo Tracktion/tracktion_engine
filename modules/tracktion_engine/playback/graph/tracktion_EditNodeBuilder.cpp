@@ -959,9 +959,8 @@ std::vector<std::unique_ptr<SlotControlNode>> createNodeForLauncherClips (const 
                 std::optional<BeatDuration> clipDuration = clip->isLooping() ? std::optional<BeatDuration>()
                                                                              : clip->getLengthInBeats();
 
-                if (auto afterBeats = clip->followActionTime.get(); afterBeats > 0_bd)
-                    if (auto fa = clip->followAction.get(); fa != FollowAction::none)
-                        clipDuration = afterBeats;
+                if (auto afterBeats = clip->followActionBeats.get(); afterBeats > 0_bd)
+                    clipDuration = afterBeats;
 
                 auto controlNode = std::make_unique<SlotControlNode> (params.processState,
                                                                       std::move (launchHandle),

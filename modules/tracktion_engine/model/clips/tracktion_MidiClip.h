@@ -54,6 +54,8 @@ public:
     bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
     /** @internal */
     LaunchQuantisation* getLaunchQuantisation() override;
+    /** @internal */
+    FollowActions* getFollowActions() override;
 
     //==============================================================================
     void scaleVerticallyToFit();
@@ -184,6 +186,7 @@ private:
     std::shared_ptr<LaunchHandle> launchHandle;
     juce::CachedValue<bool> useClipLaunchQuantisation;
     std::unique_ptr<LaunchQuantisation> launchQuantisation;
+    std::unique_ptr<FollowActions> followActions;
 
     juce::CachedValue<int> proxyAllowed, currentTake;
     juce::CachedValue<float> grooveStrength;

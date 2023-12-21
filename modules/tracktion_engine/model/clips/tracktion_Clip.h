@@ -169,9 +169,10 @@ public:
     /** Some clip types can be launched, if that's possible, this can be used to determine the
         action to perform after a clip has played.
     */
-    juce::CachedValue<FollowAction> followAction;
+    virtual FollowActions* getFollowActions()                   { return {}; }
 
-    juce::CachedValue<BeatDuration> followActionTime;
+    /** Determines the time for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<BeatDuration> followActionBeats;
 
     //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
@@ -468,6 +469,10 @@ protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
+    /** @internal */
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
+    /** @internal */
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 
 private:
     void updateParent();

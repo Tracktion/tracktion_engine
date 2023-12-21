@@ -33,8 +33,7 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     showingTakes.referTo (state, IDs::showingTakes, nullptr, false);
     groupID.referTo (state, IDs::groupID, um);
     linkID.referTo (state, IDs::linkID, um);
-    followAction.referTo (state, IDs::followAction, um);
-    followActionTime.referTo (state, IDs::followActionTime, um);
+    followActionBeats.referTo (state, IDs::followActionBeats, um);
 
     convertPropertyToType<bool> (state, IDs::disabled);
 
@@ -491,8 +490,7 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
             sourceMediaChanged();
         }
         else if (id == IDs::colour || id == IDs::speed
-                 || id == IDs::sync || id == IDs::linkID
-                 || id == IDs::followAction)
+                 || id == IDs::sync || id == IDs::linkID)
         {
             changed();
         }
@@ -508,6 +506,17 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
                     SelectionManager::refreshAllPropertyPanels();
             });
         }
+        else if (id == IDs::followActionBeats)
+        {
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                followActionBeats.forceUpdateOfCachedValue();
+
+                if (followActionBeats.get() > 0_bd)
+                    if (auto fa = getFollowActions(); fa && fa->getActions().empty())
+                        fa->addAction();
+            }
+        }
     }
 }
 
@@ -515,6 +524,18 @@ void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
         updateParent();
+}
+
+void Clip::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree&)
+{
+    if (p.hasType (IDs::FOLLOWACTIONS))
+        propertiesChanged();
+}
+
+void Clip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree&, int)
+{
+    if (p.hasType (IDs::FOLLOWACTIONS))
+        propertiesChanged();
 }
 
 void Clip::updateParent()

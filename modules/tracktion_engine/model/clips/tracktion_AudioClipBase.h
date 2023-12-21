@@ -600,6 +600,8 @@ public:
     bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
     /** @internal */
     LaunchQuantisation* getLaunchQuantisation() override;
+    /** @internal */
+    FollowActions* getFollowActions() override;
 
     //==============================================================================
     /** @internal */
@@ -681,6 +683,7 @@ private:
     std::shared_ptr<LaunchHandle> launchHandle;
     juce::CachedValue<bool> useClipLaunchQuantisation;
     std::unique_ptr<LaunchQuantisation> launchQuantisation;
+    std::unique_ptr<FollowActions> followActions;
 
     void updateReversedState();
     void updateAutoTempoState();

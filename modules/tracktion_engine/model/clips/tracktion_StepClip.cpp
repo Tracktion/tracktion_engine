@@ -831,5 +831,12 @@ LaunchQuantisation* StepClip::getLaunchQuantisation()
     return launchQuantisation.get();
 }
 
+FollowActions* StepClip::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
+}
 
 }} // namespace tracktion { inline namespace engine

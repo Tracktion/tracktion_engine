@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <span>
+
 namespace tracktion::inline engine
 {
 
@@ -64,6 +66,34 @@ juce::String toString (FollowAction);
 
 /** Creates a follow action for a Clip. */
 std::function<void (MonotonicBeat)> createFollowAction (Clip&);
+
+//==============================================================================
+//==============================================================================
+class FollowActions : public juce::ChangeBroadcaster
+{
+public:
+    struct Action
+    {
+        juce::ValueTree state;
+        juce::CachedValue<FollowAction> action;
+        juce::CachedValue<double> probability;
+    };
+
+    FollowActions (juce::ValueTree, juce::UndoManager*);
+    ~FollowActions() override;
+
+    Action& addAction();
+
+    void removeAction (Action&);
+
+    std::span<Action*> getActions() const;
+
+private:
+    juce::ValueTree state;
+    juce::UndoManager* undoManager = nullptr;
+    class List;
+    std::unique_ptr<List> list;
+};
 
 }
 

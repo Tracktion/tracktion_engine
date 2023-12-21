@@ -1556,6 +1556,15 @@ LaunchQuantisation* AudioClipBase::getLaunchQuantisation()
     return launchQuantisation.get();
 }
 
+FollowActions* AudioClipBase::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
+}
+
+
 //==============================================================================
 juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
 {

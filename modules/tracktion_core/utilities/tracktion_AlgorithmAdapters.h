@@ -70,6 +70,16 @@ inline void stable_sort (Container& container, Compare comp)
     return std::stable_sort (std::begin (container), std::end (container), comp);
 }
 
+template<class Container>
+inline std::optional<size_t> index_of (const Container& container, typename Container::value_type v)
+{
+    if (auto iter = std::find (container.begin(), container.end(), v);
+        iter != container.end())
+       return std::distance (container.begin(), iter);
+
+    return {};
+}
+
 template<class Type>
 bool assign_if_valid (Type& dest, const std::optional<Type>& src)
 {
