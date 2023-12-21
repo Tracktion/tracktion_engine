@@ -8,9 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "../../../../Source/Plugin/bc_BitCrusherPlugin.h"
-#include "../../../../Source/Plugin/ConvolutionReverb/bc_ConvolutionReverbPlugin.h"
-
 namespace tracktion { inline namespace engine
 {
 
@@ -424,8 +421,6 @@ void PluginManager::initialise()
     createBuiltInType<SamplerPlugin>();
     // BEATCONNECT MODIFICATION START
     createBuiltInType<DrumMachinePlugin>();
-    createBuiltInType<BeatConnect::BitCrusherPlugin>();
-    createBuiltInType<BeatConnect::reverb::ConvolutionReverbPlugin>();
     // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
@@ -800,7 +795,7 @@ void PluginManager::addInitialSamplerDrumPadValueTree(juce::ValueTree& v)
         d.setProperty(IDs::colour, "#FFFFFF", nullptr);
         d.setProperty(IDs::name, "Pad", nullptr);
         d.setProperty(IDs::icon, "Kick", nullptr);
-        d.setProperty(IDs::name, "Drum Pad " + String(i + 1), nullptr);
+        d.setProperty(IDs::name, "Drum Pad " + juce::String(i + 1), nullptr);
         d.setProperty(IDs::note, juce::String(i + 36), nullptr);
 
         v.addChild(d, -1, nullptr);
