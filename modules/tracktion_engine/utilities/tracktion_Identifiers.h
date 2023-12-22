@@ -654,7 +654,7 @@ namespace IDs
     DECLARE_ID (playSlotClips)
     DECLARE_ID (FOLLOWACTIONS)
     DECLARE_ID (ACTION)
-    DECLARE_ID (probability)
+    DECLARE_ID (weight)
     DECLARE_ID (followActionBeats)
 
     #undef DECLARE_ID

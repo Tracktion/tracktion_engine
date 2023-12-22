@@ -316,7 +316,7 @@ std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
     for (auto action : actions)
     {
         FollowActionContainer container;
-        container.probabilityRange = { maxProbability, maxProbability + action->probability };
+        container.probabilityRange = { maxProbability, maxProbability + action->weight };
         container.action = createFollowAction (ctx, action->action);
         followActionContainers.push_back (std::move (container));
 
@@ -362,7 +362,7 @@ public:
 
         auto v = newState;
         a->action.referTo (v, IDs::type, followActions.undoManager, FollowAction::currentGroupRoundRobin);
-        a->probability.referTo (v, IDs::probability, followActions.undoManager, 1.0);
+        a->weight.referTo (v, IDs::weight, followActions.undoManager, 1.0);
         a->state = std::move (v);
 
         return a;

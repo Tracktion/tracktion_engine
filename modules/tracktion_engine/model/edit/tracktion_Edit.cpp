@@ -278,9 +278,9 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                     restart();
                 }
             }
-            else if (v.hasType (IDs::ACTION) && Clip::isClipState (v.getParent()))
+            else if (v.hasType (IDs::ACTION) && v.getParent().hasType (IDs::FOLLOWACTIONS))
             {
-                if (i == IDs::type || i == IDs::probability)
+                if (i == IDs::type || i == IDs::weight)
                     restart();
             }
         }
