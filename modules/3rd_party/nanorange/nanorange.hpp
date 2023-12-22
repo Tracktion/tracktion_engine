@@ -80,12 +80,6 @@
 #ifndef NANORANGE_DETAIL_MACROS_HPP_INCLUDED
 #define NANORANGE_DETAIL_MACROS_HPP_INCLUDED
 
-#if __has_include (<ciso646>)
-#include <ciso646>
-#else
-#include <iso646.h>
-#endif
-
 #ifdef NANORANGE_NO_DEPRECATION_WARNINGS
 #define NANO_DEPRECATED
 #define NANO_DEPRECATED_FOR(x)
@@ -1942,7 +1936,7 @@ NANO_CONCEPT input_or_output_iterator =
 
 template <typename S, typename I>
 NANO_CONCEPT sentinel_for =
-    semiregular<S> && input_or_output_iterator<I> && 
+    semiregular<S> && input_or_output_iterator<I> &&
     detail::weakly_equality_comparable_with<S, I>;
 
 // [iterator.concept.sizedsentinel]
