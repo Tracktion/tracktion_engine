@@ -80,7 +80,11 @@
 #ifndef NANORANGE_DETAIL_MACROS_HPP_INCLUDED
 #define NANORANGE_DETAIL_MACROS_HPP_INCLUDED
 
+#if __has_include (<ciso646>)
 #include <ciso646>
+#else
+#include <iso646.h>
+#endif
 
 #ifdef NANORANGE_NO_DEPRECATION_WARNINGS
 #define NANO_DEPRECATED
