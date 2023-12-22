@@ -76,7 +76,7 @@ public:
     {
         juce::ValueTree state;
         juce::CachedValue<FollowAction> action;
-        juce::CachedValue<double> weight;
+        juce::CachedValue<double> probability;
     };
 
     FollowActions (juce::ValueTree, juce::UndoManager*);
