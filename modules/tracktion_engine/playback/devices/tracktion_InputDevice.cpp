@@ -212,8 +212,8 @@ InputDeviceInstance::setTarget (EditItemID targetID, bool move, juce::UndoManage
     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
     v.setProperty (IDs::targetID, targetID, nullptr);
 
-    if (index)
-        v.setProperty (IDs::targetIndex, 0, nullptr);
+    if (index.has_value())
+        v.setProperty (IDs::targetIndex, *index, nullptr);
 
     state.addChild (v, -1, um);
     jassert (destinations[destinations.size() - 1]->targetID == targetID);
