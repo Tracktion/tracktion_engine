@@ -70,7 +70,7 @@ struct ClipContext
     }
 };
 
-std::shared_ptr<ClipContext> createClipContext (Clip& c)
+inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
 {
     auto sc = makeSafeRef (c);
     auto audioTrack = dynamic_cast<AudioTrack*> (c.getTrack());
@@ -136,8 +136,8 @@ std::shared_ptr<ClipContext> createClipContext (Clip& c)
 }
 
 
-std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<follow_action_utils::ClipContext> ctx,
-                                                        FollowAction followAction)
+inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<follow_action_utils::ClipContext> ctx,
+                                                               FollowAction followAction)
 {
     using enum FollowAction;
 
@@ -286,7 +286,7 @@ std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<follow_a
     return {};
 }
 
-std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
+inline std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 {
     auto followActions = c.getFollowActions();
 
@@ -339,8 +339,8 @@ std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 class FollowActions::List : public ValueTreeObjectList<Action>
 {
 public:
-    List (FollowActions& fa, juce::ValueTree state)
-        : ValueTreeObjectList<Action> (std::move (state)),
+    List (FollowActions& fa, juce::ValueTree listState)
+        : ValueTreeObjectList<Action> (std::move (listState)),
           followActions (fa)
     {
         rebuildObjects();
@@ -417,7 +417,7 @@ void FollowActions::removeAction (Action& actionToRemove)
 
 std::span<FollowActions::Action*> FollowActions::getActions() const
 {
-    return *list;
+    return { list->begin(), list->end() };
 }
 
 }
