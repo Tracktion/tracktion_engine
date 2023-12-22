@@ -949,7 +949,29 @@ void ExternalController::updatePadColours()
                 auto colourIdx = 0;
                 auto state = 0;
 
-                if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
+                if (auto ft = dynamic_cast<FolderTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    for (auto at : ft->getAllAudioSubTracks (true))
+                    {
+                        if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
+                        {
+                            if (auto c = slot->getClip())
+                            {
+                                auto col = c->getColour();
+
+                                if (! col.isTransparent())
+                                {
+                                    auto numColours = 19;
+                                    auto newHue = col.getHue();
+
+                                    colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
                 {
                     if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
                     {
