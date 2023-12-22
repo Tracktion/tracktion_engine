@@ -151,7 +151,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         case globalReturnToArrangement:
             return [ctx] (auto)
             { ctx->track->playSlotClips = true; };
-        case globalplayAgain:
+        case globalPlayAgain:
             return [ctx] (auto b)
             { ctx->launchHandle->play (b); };
 

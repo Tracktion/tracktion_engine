@@ -23,7 +23,7 @@ enum class FollowAction
 
     globalStop,
     globalReturnToArrangement,
-    globalplayAgain,
+    globalPlayAgain,
 
     scenePrevious,
     sceneNext,
