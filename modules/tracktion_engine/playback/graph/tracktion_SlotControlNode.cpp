@@ -129,14 +129,13 @@ void SlotControlNode::process (ProcessContext& pc)
                 const auto blockRange = MonotonicBeatRange { BeatRange (syncPoint.monotonicBeat.v, editBeatRange.getLength()) };
                 const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
-                if (blockRange.v.getEnd() > stopPoint.v)
+                if (blockRange.v.contains (stopPoint.v))
                 {
                     const auto stopQueued = launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued;
                     launchHandle->stop (stopPoint);
 
-                    // This extra check is to ensure we only start a single clip
                     // If there was a stop already queued, ignore the follow action
-                    if (! stopQueued && stopFunction && blockRange.v.contains (stopPoint.v))
+                    if (! stopQueued && stopFunction)
                         stopFunction (stopPoint);
                 }
             }
