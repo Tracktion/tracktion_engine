@@ -286,7 +286,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
     return {};
 }
 
-inline std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
+std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 {
     auto followActions = c.getFollowActions();
 
