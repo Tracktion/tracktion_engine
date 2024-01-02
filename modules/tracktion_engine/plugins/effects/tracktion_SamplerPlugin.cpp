@@ -8,8 +8,6 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "../Source/Data/Repo.h"
-
 namespace tracktion { inline namespace engine
 {
 
@@ -155,7 +153,8 @@ public:
     // BEAT CONNECT MODIFICATION START
     void setCoefficients(const FilterType filter, const double frequency, const double gainFactor = 0)
     {
-        const double engineSampleRate = Repo::getInstance().getEdit()->engine.getDeviceManager().getSampleRate();
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        const double engineSampleRate = engine.getDeviceManager().getSampleRate();
         switch (filter) {
             case FilterType::noFilter: {
                 return;
@@ -212,8 +211,8 @@ public:
     bool openEnded, isFinished = false;
     // BEATCONNECT MODIFICATION START
     FilterType filterType;
-    IIRFilter iirFilterR;
-    IIRFilter iirFilterL;
+    juce::IIRFilter iirFilterR;
+    juce::IIRFilter iirFilterL;
     juce::IIRCoefficients coefs;
     double iirFilterQuotient = 0.710624337;
     // BEATCONNECT MODIFICATION END
@@ -633,7 +632,7 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     auto getRandomColour = []() -> juce::String
     {
         // This list comes from Figma. Format is RGB
-        StringArray availableColours;
+        juce::StringArray availableColours;
         availableColours.add("#9C4302");    // Brown
         availableColours.add("#FF7D34");    // Brownish Orange
         availableColours.add("#FFC839");    // Mustard
@@ -661,13 +660,13 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
 
     for (int i = 0; i < state.getNumChildren(); ++i)
     {
-        ValueTree child = state.getChild(i);
+        juce::ValueTree child = state.getChild(i);
 
         if (child.hasType("SamplerDrumPad") && 
             (int)child.getProperty("note") == keyNote)
         {
-            child.setProperty(te::IDs::name, name, nullptr);
-            child.setProperty(te::IDs::colour, getRandomColour(), nullptr);
+            child.setProperty(IDs::name, name, nullptr);
+            child.setProperty(IDs::colour, getRandomColour(), nullptr);
             break;
         }
     }
