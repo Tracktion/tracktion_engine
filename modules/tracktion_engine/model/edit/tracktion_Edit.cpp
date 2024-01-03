@@ -838,7 +838,9 @@ void Edit::initialiseMasterVolume()
     if (! masterVolState.isValid())
     {
         masterVolState = VolumeAndPanPlugin::create();
-        masterVolState.setProperty (IDs::volume, decibelsToVolumeFaderPosition (-3.0f), nullptr);
+        // BEATCONNECT MODIFICATION START
+        masterVolState.setProperty(IDs::volume, decibelsToVolumeFaderPosition(-4.0f), nullptr);
+        // BEATCONNECT MODIFICATION END
         mvTree.addChild (masterVolState, -1, nullptr);
     }
 
