@@ -355,7 +355,7 @@ public:
     juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*);
     // BEATCONNECT MODIFICATION START
     juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrackWithType (TrackInsertPoint, SelectionManager*, juce::String type);
-    Track::Ptr insertNewTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type);
+    Track::Ptr NewTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type);
     // BEATCONNECT MODIFICATION END
 
     /** Inserts a new FolderTrack in the Edit, optionally as a submix. */
