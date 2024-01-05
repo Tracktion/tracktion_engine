@@ -704,13 +704,6 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);
 
-        //BEATCONNECT MODIFICATION START
-        auto isDragging = newClipState.getProperty("isDragging");
-        if (!isDragging.isVoid())
-            if (isDragging)
-                newClipState.setProperty("draggingPreviousUUID", clip.state.getProperty("uuid"), nullptr);
-        //BEATCONNECT MODIFICATION END
-
         if (newClipState.hasType (IDs::MARKERCLIP))
         {
             if (auto markerTrack = options.edit.getMarkerTrack())
