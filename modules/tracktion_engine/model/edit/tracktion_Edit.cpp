@@ -1718,7 +1718,7 @@ Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
 // BEATCONNECT MODIFICATION START
 AudioTrack::Ptr Edit::insertNewAudioTrackWithType(TrackInsertPoint insertPoint, SelectionManager* sm, juce::String type)
 {
-    if (auto newTrack = NewTrackWithType(insertPoint, IDs::TRACK, sm, type))
+    if (auto newTrack = newTrackWithType(insertPoint, IDs::TRACK, sm, type))
     {
         newTrack->pluginList.addDefaultTrackPlugins(false);
         return dynamic_cast<AudioTrack*> (newTrack.get());
@@ -1727,7 +1727,7 @@ AudioTrack::Ptr Edit::insertNewAudioTrackWithType(TrackInsertPoint insertPoint, 
     return {};
 }
 
-Track::Ptr Edit::NewTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type)
+Track::Ptr Edit::newTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type)
 {
     auto v = juce::ValueTree(xmlType);
     v.setProperty(IDs::type, type, nullptr);
