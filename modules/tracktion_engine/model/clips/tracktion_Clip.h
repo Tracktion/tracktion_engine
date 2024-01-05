@@ -171,8 +171,21 @@ public:
     */
     virtual FollowActions* getFollowActions()                   { return {}; }
 
+    /** Defines the types of duration follow actions can use. */
+    enum class FollowActionDurationType
+    {
+        beats,  /**< A number of beats */
+        loops   /**< A number of loops */
+    };
+
+    /** The type of duration to use for when to trigger the follow action. */
+    juce::CachedValue<FollowActionDurationType> followActionDurationType;
+
     /** Determines the time for which a launched clip will play before a follow action is taken. */
     juce::CachedValue<BeatDuration> followActionBeats;
+
+    /** Determines the number of loops for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<double> followActionNumLoops;
 
     //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
@@ -489,14 +502,34 @@ namespace ClipConstants
     const double speedRatioMax = 20.0;  /**< Maximum speed ratio. */
 }
 
+namespace details
+{
+    Clip::FollowActionDurationType followActionDurationTypeFromString (juce::String);
+    juce::String toString (Clip::FollowActionDurationType);
+}
+
 }} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
-    template <>
+    template<>
     struct VariantConverter<tracktion::engine::Clip::SyncType>
     {
         static tracktion::engine::Clip::SyncType fromVar (const var& v)   { return (tracktion::engine::Clip::SyncType) static_cast<int> (v); }
         static var toVar (tracktion::engine::Clip::SyncType v)            { return static_cast<int> (v); }
+    };
+
+    template<>
+    struct VariantConverter<tracktion::engine::Clip::FollowActionDurationType>
+    {
+        static tracktion::engine::Clip::FollowActionDurationType fromVar (const var& v)
+        {
+            return tracktion::engine::details::followActionDurationTypeFromString (v);
+        }
+
+        static var toVar (tracktion::engine::Clip::FollowActionDurationType v)
+        {
+            return tracktion::engine::details::toString (v);
+        }
     };
 }

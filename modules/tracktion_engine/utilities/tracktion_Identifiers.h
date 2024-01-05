@@ -655,7 +655,9 @@ namespace IDs
     DECLARE_ID (FOLLOWACTIONS)
     DECLARE_ID (ACTION)
     DECLARE_ID (weight)
+    DECLARE_ID (followActionDurationType)
     DECLARE_ID (followActionBeats)
+    DECLARE_ID (followActionNumLoops)
 
     #undef DECLARE_ID
 }

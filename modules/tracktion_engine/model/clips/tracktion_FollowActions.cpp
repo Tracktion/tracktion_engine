@@ -333,9 +333,9 @@ std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
                           continue;
 
                       if (actionContainer.action)
-                          continue;
+                          return actionContainer.action (beat);
 
-                      return actionContainer.action (beat);
+                      return;
                   }
               };
 }

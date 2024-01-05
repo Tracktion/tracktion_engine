@@ -33,7 +33,9 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     showingTakes.referTo (state, IDs::showingTakes, nullptr, false);
     groupID.referTo (state, IDs::groupID, um);
     linkID.referTo (state, IDs::linkID, um);
+    followActionDurationType.referTo (state, IDs::followActionDurationType, um);
     followActionBeats.referTo (state, IDs::followActionBeats, um);
+    followActionNumLoops.referTo (state, IDs::followActionNumLoops, um, 1.0);
 
     convertPropertyToType<bool> (state, IDs::disabled);
 
@@ -506,6 +508,11 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
                     SelectionManager::refreshAllPropertyPanels();
             });
         }
+        else if (id == IDs::followActionDurationType)
+        {
+            changed();
+            propertiesChanged();
+        }
         else if (id == IDs::followActionBeats)
         {
             if (! getUndoManager()->isPerformingUndoRedo())
@@ -513,6 +520,17 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
                 followActionBeats.forceUpdateOfCachedValue();
 
                 if (followActionBeats.get() > 0_bd)
+                    if (auto fa = getFollowActions(); fa && fa->getActions().empty())
+                        fa->addAction();
+            }
+        }
+        else if (id == IDs::followActionNumLoops)
+        {
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                followActionNumLoops.forceUpdateOfCachedValue();
+
+                if (followActionNumLoops.get() > 0.0)
                     if (auto fa = getFollowActions(); fa && fa->getActions().empty())
                         fa->addAction();
             }
@@ -629,6 +647,20 @@ void Clip::removeListener (Listener* l)
 
     if (listeners.isEmpty())
         edit.restartPlayback();
+}
+
+//==============================================================================
+namespace details
+{
+    Clip::FollowActionDurationType followActionDurationTypeFromString (juce::String s)
+    {
+        return magic_enum::enum_cast<Clip::FollowActionDurationType> (s.toRawUTF8()).value_or (Clip::FollowActionDurationType::beats);
+    }
+
+    juce::String toString (Clip::FollowActionDurationType t)
+    {
+        return std::string (magic_enum::enum_name (t));
+    }
 }
 
 }} // namespace tracktion { inline namespace engine
