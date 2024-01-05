@@ -544,18 +544,6 @@ void Clip::valueTreeParentChanged (juce::ValueTree& v)
         updateParent();
 }
 
-void Clip::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree&)
-{
-    if (p.hasType (IDs::FOLLOWACTIONS))
-        propertiesChanged();
-}
-
-void Clip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree&, int)
-{
-    if (p.hasType (IDs::FOLLOWACTIONS))
-        propertiesChanged();
-}
-
 void Clip::updateParent()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD

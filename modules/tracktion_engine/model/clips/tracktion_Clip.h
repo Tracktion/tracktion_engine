@@ -482,10 +482,6 @@ protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
-    /** @internal */
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
-    /** @internal */
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 
 private:
     void updateParent();

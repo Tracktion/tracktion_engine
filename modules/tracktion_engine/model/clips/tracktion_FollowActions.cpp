@@ -35,7 +35,8 @@ struct ClipContext
     Clip::Ptr clip;
     AudioTrack::Ptr track;
     std::shared_ptr<LaunchHandle> launchHandle;
-    std::vector<std::shared_ptr<LaunchHandle>> sceneHandles;
+    std::vector<std::shared_ptr<LaunchHandle>> allSceneHandles;
+    std::vector<std::shared_ptr<LaunchHandle>> validSceneHandles;
     std::vector<std::vector<std::shared_ptr<LaunchHandle>>> groups;
     size_t sceneIndex = 0, groupIndex = 0, indexInGroup = 0;
     juce::Random random;
@@ -93,7 +94,7 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
             allSceneHandles.push_back (lh);
 
             if (lh)
-                ctx->sceneHandles.emplace_back (std::move (lh));
+                ctx->validSceneHandles.emplace_back (std::move (lh));
         }
         else
         {
@@ -101,7 +102,7 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
         }
     }
 
-    if (ctx->sceneHandles.empty())
+    if (ctx->validSceneHandles.empty())
         return {};
 
     // Create groups
@@ -130,6 +131,7 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
     }
 
     assert (! ctx->groups.empty());
+    ctx->allSceneHandles = std::move (allSceneHandles);
 
     return ctx;
 }
@@ -157,41 +159,44 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
         case scenePrevious:
             if (ctx->sceneIndex > 0)
-                return [ctx] (auto b)
-                { ctx->sceneHandles[ctx->sceneIndex - 1]->play (b); };
+                if (auto prevHandle = ctx->allSceneHandles[ctx->sceneIndex - 1]; prevHandle)
+                    return [prevHandle] (auto b)
+                           { prevHandle->play (b); };
         case sceneNext:
-            if (ctx->sceneIndex < (ctx->sceneHandles.size() - 1))
-                return [ctx] (auto b)
-                { ctx->sceneHandles[ctx->sceneIndex + 1]->play (b); };
+            if (ctx->sceneIndex < (ctx->validSceneHandles.size() - 1))
+                if (auto nextHandle = ctx->allSceneHandles[ctx->sceneIndex + 1]; nextHandle)
+                    return [nextHandle] (auto b)
+                    { nextHandle->play (b); };
         case sceneFirst:
             return [ctx] (auto b)
-            { ctx->sceneHandles.front()->play (b); };
+            { ctx->validSceneHandles.front()->play (b); };
         case sceneLast:
             return [ctx] (auto b)
-            { ctx->sceneHandles.back()->play (b); };
+            { ctx->validSceneHandles.back()->play (b); };
         case sceneAny:
             return [ctx] (auto b)
             {
-                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->sceneHandles.size()) }));
-                ctx->sceneHandles[index]->play (b);
+                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+                ctx->validSceneHandles[index]->play (b);
             };
         case sceneOther:
-            if (ctx->sceneHandles.size() > 1)
+            if (ctx->validSceneHandles.size() > 1)
                 return [ctx] (auto b)
                 {
                     for (;;)
                     {
-                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->sceneHandles.size()) }));
+                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
 
                         if (index == ctx->sceneIndex)
                             continue;
 
-                        ctx->sceneHandles[index]->play (b);
+                        ctx->validSceneHandles[index]->play (b);
+                        break;
                     }
                 };
         case sceneRoundRobin:
             return [ctx] (auto b)
-            { ctx->sceneHandles[(ctx->sceneIndex + 1) % ctx->sceneHandles.size()]->play (b); };
+            { ctx->validSceneHandles[(ctx->sceneIndex + 1) % ctx->validSceneHandles.size()]->play (b); };
 
         case currentGroupPrevious:
             if (ctx->indexInGroup > 0)
@@ -225,6 +230,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                             continue;
 
                         group[index]->play (b);
+                        break;
                     }
                 };
         case currentGroupRoundRobin:
