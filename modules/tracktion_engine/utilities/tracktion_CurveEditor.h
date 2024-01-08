@@ -115,7 +115,8 @@ public:
     virtual bool isShowingCurve() const = 0;
     virtual void updateFromTrack() = 0;
 
-    virtual juce::Colour getCurrentLineColour() const = 0;
+    virtual juce::Colour getCurrentLineColour() = 0;
+    virtual juce::Colour getCurrentFillColour();
     virtual juce::Colour getDefaultLineColour() const = 0;
     virtual juce::Colour getSelectedLineColour() const = 0;
     virtual juce::Colour getBackgroundColour() const = 0;

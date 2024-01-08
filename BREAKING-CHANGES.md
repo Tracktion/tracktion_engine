@@ -2,6 +2,19 @@
 
 ## Develop
 
+### Change
+`CurveEditor::getCurrentLineColour()` is no longer `const`
+
+#### Possible Issues
+Code implementing `CurveEditor::getCurrentLineColour()` will fail to compile.
+
+#### Workaround
+Remove `const` qualifier in sub classes.
+
+#### Rationale
+Better API design.
+
+---
 
 ### Change
 Removed the TRACKTION_ENABLE_REALTIME_TIMESTRETCHING option.

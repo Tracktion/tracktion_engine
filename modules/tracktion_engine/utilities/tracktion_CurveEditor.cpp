@@ -195,6 +195,18 @@ void CurveEditor::paint (juce::Graphics& g)
 
         curvePath.lineTo ((float) getWidth(), lastY);
 
+        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent())
+        {
+            juce::Path fillPath (curvePath);
+            const auto y = getHeight() + 1.0f;
+            fillPath.lineTo ((float) getWidth(), y);
+            fillPath.lineTo (0.0f, y);
+            fillPath.closeSubPath();
+
+            g.setColour (fillCol);
+            g.fillPath (fillPath);
+        }
+
         g.setColour (getCurrentLineColour());
         g.strokePath (curvePath, juce::PathStrokeType (lineThickness));
     }
@@ -356,6 +368,11 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
     {
         selectionManager.select (getItem(), e.mods.isShiftDown());
     }
+}
+
+juce::Colour CurveEditor::getCurrentFillColour()
+{
+    return juce::Colours::transparentWhite;
 }
 
 void CurveEditor::selectPoint (int pointIdx, bool addToSelection)
