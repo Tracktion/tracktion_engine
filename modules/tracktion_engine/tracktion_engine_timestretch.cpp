@@ -20,6 +20,7 @@
 
   // If you get a build error here you'll need to add the Elastique SDK to your header search path!
   #include "elastique_pro/incl/elastiqueProV3API.h"
+  #include "elastique_pro/incl/elastiqueProV3DirectAPI.h"
 
  #ifdef __GNUC__
   #pragma GCC diagnostic pop

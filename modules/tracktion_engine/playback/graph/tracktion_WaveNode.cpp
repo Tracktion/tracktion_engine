@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 0
+
 namespace tracktion { inline namespace engine
 {
 
@@ -44,6 +46,17 @@ namespace utils
           if (numSamplesToClearAtEnd)
               buffer.getEnd (numSamplesToClearAtEnd).clear();
         }
+    }
+
+    inline TimeStretcher::Mode replaceElastiqueWithDirectMode (TimeStretcher::Mode m)
+    {
+       #if REPLACE_ELASTIQUE_WITH_DIRECT_MODE
+        if (m == TimeStretcher::elastiquePro)           return TimeStretcher::elastiqueDirectPro;
+        if (m == TimeStretcher::elastiqueEfficient)     return TimeStretcher::elastiqueDirectEfficient;
+        if (m == TimeStretcher::elastiqueMobile)        return TimeStretcher::elastiqueDirectMobile;
+       #endif
+
+        return m;
     }
 }
 
@@ -504,11 +517,13 @@ public:
 class TimeStretchReader final   : public SingleInputAudioReader
 {
 public:
-    TimeStretchReader (std::unique_ptr<AudioReader> input)
+    TimeStretchReader (std::unique_ptr<AudioReader> input,
+                       TimeStretcher::Mode mode,
+                       TimeStretcher::ElastiqueProOptions elastiqueProOptions)
         : SingleInputAudioReader (std::move (input)), numChannels ((int) source->getNumChannels())
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
-                                  TimeStretcher::defaultMode, {}, false);
+                                  mode, elastiqueProOptions, false);
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
 
@@ -569,6 +584,8 @@ public:
     {
         playbackSpeedRatio = speedRatio;
         semitonesShift = semitones;
+
+
         [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) (1.0 / speedRatio), (float) semitonesShift);
         assert (ok);
     }
@@ -688,8 +705,10 @@ class WarpReader final  : public SingleInputAudioReader
 {
 public:
     WarpReader (std::unique_ptr<AudioReader> input,
-                WarpMap warpMap)
-        : SingleInputAudioReader (std::make_unique<TimeStretchReader> (std::move (input))),
+                WarpMap warpMap,
+                TimeStretcher::Mode mode,
+                TimeStretcher::ElastiqueProOptions options)
+        : SingleInputAudioReader (std::make_unique<TimeStretchReader> (std::move (input), mode, options)),
           reader (static_cast<TimeStretchReader*> (source.get())), map (std::move (warpMap))
     {
     }
@@ -1604,7 +1623,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       audioFile (af),
       speedFadeDescription (std::move (speedDesc)),
       editTempoSequence (std::move (editTempoSeq)),
-      timeStretcherMode (mode),
+      timeStretcherMode (utils::replaceElastiqueWithDirectMode (mode)),
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
@@ -1663,7 +1682,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       speedFadeDescription (std::move (speedDesc)),
       editTempoSequence (std::move (editTempoSeq)),
       warpMap (std::move (warp)),
-      timeStretcherMode (mode),
+      timeStretcherMode (utils::replaceElastiqueWithDirectMode (mode)),
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
@@ -1779,7 +1798,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
                                                                                       destChannels, channelsToUse);
 
     if (warpMap)
-        loopReader = std::make_unique<WarpReader> (std::move (loopReader), std::move (*warpMap));
+        loopReader = std::make_unique<WarpReader> (std::move (loopReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
 
     if (! loopSectionTime.isEmpty())
         loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
@@ -1796,7 +1815,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     std::unique_ptr<TimeStretchReader> timeStretchReader;
 
     if (! timestretchDisabled)
-        timeStretchReader = std::make_unique<TimeStretchReader> (std::move (resamplerAudioReader));
+        timeStretchReader = std::make_unique<TimeStretchReader> (std::move (resamplerAudioReader), timeStretcherMode, elastiqueProOptions);
 
     auto timeStretcher = timeStretchReader.get();
     std::unique_ptr<TimeRangeReader> timeRangeReader;
