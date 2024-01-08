@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 0
+#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
 
 namespace tracktion { inline namespace engine
 {
@@ -57,6 +57,11 @@ namespace utils
        #endif
 
         return m;
+    }
+
+    inline TimeStretcher::Mode replaceElastiqueWithDirectModeIfNotRendering (TimeStretcher::Mode m, bool isRendering)
+    {
+        return isRendering ? m: replaceElastiqueWithDirectMode (m);
     }
 }
 
@@ -1623,7 +1628,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       audioFile (af),
       speedFadeDescription (std::move (speedDesc)),
       editTempoSequence (std::move (editTempoSeq)),
-      timeStretcherMode (utils::replaceElastiqueWithDirectMode (mode)),
+      timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (mode, isRendering)),
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
@@ -1682,7 +1687,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       speedFadeDescription (std::move (speedDesc)),
       editTempoSequence (std::move (editTempoSeq)),
       warpMap (std::move (warp)),
-      timeStretcherMode (utils::replaceElastiqueWithDirectMode (mode)),
+      timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (mode, isRendering)),
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
