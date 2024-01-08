@@ -90,6 +90,16 @@ inline choc::buffer::ChannelRange channelRangeWithStartAndLength (choc::buffer::
 
 
 //==============================================================================
+template<typename Buffer>
+void sanitise (Buffer& buffer)
+{
+    choc::buffer::setAllSamples (buffer,
+        [] (auto s)
+        {
+            return std::isnan (s) ? typename Buffer::Sample() : s;
+        });
+}
+
 /** Checks that the channels have valid pointers if they have a non-zero number of frames. */
 template <typename SampleType, template<typename> typename LayoutType>
 void sanityCheckView (const choc::buffer::BufferView<SampleType, LayoutType>& view)
