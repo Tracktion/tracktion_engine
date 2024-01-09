@@ -71,6 +71,9 @@ public:
     */
     void play (bool justSendMMCIfEnabled);
 
+    /** Sets the position to the startPosition and begins playback from there. */
+    void playFromStart (bool justSendMMCIfEnabled);
+
     /** Plays a section of an Edit then stops playback, useful for previewing clips. */
     void playSectionAndReset (TimeRange rangeToPlay);
 
@@ -91,12 +94,10 @@ public:
         @param discardRecordings    If true, recordings will be discarded
         @param clearDevices         If true, the playback graph will be cleared
         @param canSendMMCStop       If true, an MMC stop message will also be sent
-        @param invertReturnToStartPosSelection  If true, the return to start behaviour will be inverted
     */
     void stop (bool discardRecordings,
                bool clearDevices,
-               bool canSendMMCStop = true,
-               bool invertReturnToStartPosSelection = false);
+               bool canSendMMCStop = true);
 
     /** Stops playback only if recording is currently in progress.
         @see isRecording
@@ -372,6 +373,8 @@ public:
     Engine& engine;         /**< The Engine this Edit belongs to. */
     Edit& edit;             /**< The Edit this transport belongs to. @see Edit::getTransport. */
     juce::ValueTree state;  /**< The state of this transport. */
+
+    juce::CachedValue<TimePosition> startPosition; /**< The position to start playing from. */
 
     /** @internal. */
     juce::CachedValue<TimePosition> position;

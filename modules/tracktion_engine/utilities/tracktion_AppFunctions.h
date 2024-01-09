@@ -32,6 +32,7 @@ namespace AppFunctions
     void start();
     void stop();
     void startStopPlay();
+    void continueStopPlay();
     void record();
 
     void toggleTimecode();

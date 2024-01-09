@@ -197,10 +197,21 @@ namespace AppFunctions
     void stop()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (false, false, true, juce::ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
+            transport->stop (false, false, true);
     }
 
     void startStopPlay()
+    {
+        if (auto transport = getActiveTransport())
+        {
+            if (transport->isPlaying())
+                stop();
+            else
+                transport->playFromStart (true);
+        }
+    }
+
+    void continueStopPlay()
     {
         if (auto transport = getActiveTransport())
         {

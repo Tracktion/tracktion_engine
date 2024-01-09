@@ -271,6 +271,7 @@ private:
     juce::Array<ClipPos> clips;
     juce::Array<AutomationPos> automation;
     BeatRange loopPositionBeats;
+    BeatPosition startPositionBeats;
 };
 
 

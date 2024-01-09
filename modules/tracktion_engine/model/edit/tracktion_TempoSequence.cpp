@@ -383,7 +383,7 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 void TempoSequence::deleteRegion (TimeRange range)
 {
     const auto beatRange = toBeats (range);
-    
+
     removeTemposBetween (range, false);
     removeTimeSigsBetween (range);
 
@@ -756,6 +756,8 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     const auto loopRange = ed.getTransport().getLoopRange();
     loopPositionBeats = { tempoSequence.toBeats (loopRange.getStart()),
                           tempoSequence.toBeats (loopRange.getEnd()) };
+
+    startPositionBeats = tempoSequence.toBeats (ed.getTransport().startPosition);
 }
 
 void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
@@ -764,6 +766,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
     tempoSequence.updateTempoData();
 
+    transport.startPosition = tempoSequence.toTime (startPositionBeats);
     transport.setLoopRange (tempoSequence.toTime (loopPositionBeats));
 
     for (auto& cp : clips)

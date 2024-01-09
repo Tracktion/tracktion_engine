@@ -20,7 +20,6 @@ namespace IDs
     DECLARE_ID (clearDevices)
     DECLARE_ID (justSendMMCIfEnabled)
     DECLARE_ID (canSendMMCStop)
-    DECLARE_ID (invertReturnToStartPosSelection)
     DECLARE_ID (allowRecordingIfNoInputsArmed)
     DECLARE_ID (clearDevicesOnStop)
     DECLARE_ID (updatingFromPlayHead)
@@ -62,6 +61,54 @@ namespace TransportHelpers
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeDown (t, tc.edit.tempoSequence)
                                                 : t;
     }
+
+    inline void resyncLauncherClips (TransportControl& tc)
+    {
+        auto epc = tc.getCurrentPlaybackContext();
+
+        if (! epc)
+            return;
+
+        auto& edit = tc.edit;
+        juce::Array<Clip*> launchedClips;
+
+        edit.clipSlotCache.visitItems ([&] (auto cs)
+        {
+            if (auto c = cs->getClip())
+            {
+                if (auto lh = c->getLaunchHandle())
+                {
+                    if (lh->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
+                        return;
+
+                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                        launchedClips.add (c);
+                }
+            }
+        });
+
+        if (launchedClips.isEmpty())
+            return;
+
+        const auto syncPoint = epc->getSyncPoint();
+
+        if (! syncPoint)
+            return;
+
+        auto& ts = edit.tempoSequence;
+        const auto currentBeat = ts.toBeats (tc.getPosition());
+        const auto currentBarsBeats = ts.toBarsAndBeats (tc.getPosition());
+        const auto barStartBeat = ts.toBeats (tempo::BarsAndBeats { .bars = currentBarsBeats.bars });
+        const auto launchBeatDiff = currentBeat - barStartBeat;
+        const auto startSyncBeat = MonotonicBeat { syncPoint->monotonicBeat.v - launchBeatDiff };
+
+        for (auto c : launchedClips)
+        {
+            auto lh = c->getLaunchHandle();
+            assert (lh);
+            lh->play (startSyncBeat);
+        }
+    }
 }
 
 
@@ -84,7 +131,6 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
         clearDevices.referTo (transientState, IDs::clearDevices, um);
         justSendMMCIfEnabled.referTo (transientState, IDs::justSendMMCIfEnabled, um);
         canSendMMCStop.referTo (transientState, IDs::canSendMMCStop, um);
-        invertReturnToStartPosSelection.referTo (transientState, IDs::invertReturnToStartPosSelection, um);
         allowRecordingIfNoInputsArmed.referTo (transientState, IDs::allowRecordingIfNoInputsArmed, um);
         clearDevicesOnStop.referTo (transientState, IDs::clearDevicesOnStop, um);
         updatingFromPlayHead.referTo (transientState, IDs::updatingFromPlayHead, um);
@@ -147,13 +193,11 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     /** Stop playback/recording. */
     void stop (bool discardRecordings_,
                bool clearDevices_,
-               bool canSendMMCStop_,
-               bool invertReturnToStartPosSelection_)
+               bool canSendMMCStop_)
     {
         discardRecordings = discardRecordings_;
         clearDevices = clearDevices_;
         canSendMMCStop = canSendMMCStop_;
-        invertReturnToStartPosSelection = invertReturnToStartPosSelection_;
         playing = false;
     }
 
@@ -177,7 +221,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     //==============================================================================
     juce::CachedValue<bool> playing, recording, safeRecording;
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
-                            invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
+                            allowRecordingIfNoInputsArmed, clearDevicesOnStop;
     juce::CachedValue<bool> userDragging, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
     juce::CachedValue<juce::int64> lastUserDragTime;
     juce::CachedValue<TimePosition> startTime, endTime, cursorPosAtPlayStart;
@@ -600,6 +644,7 @@ TransportControl::TransportControl (Edit& ed, const juce::ValueTree& v)
 {
     jassert (state.hasType (IDs::TRANSPORT));
     juce::UndoManager* um = nullptr;
+    startPosition.referTo (state, IDs::start, um);
     position.referTo (state, IDs::position, um);
     loopPoint1.referTo (state, IDs::loopPoint1, um);
     loopPoint2.referTo (state, IDs::loopPoint2, um);
@@ -817,6 +862,13 @@ void TransportControl::play (bool justSendMMCIfEnabled)
     transportState->play (justSendMMCIfEnabled);
 }
 
+void TransportControl::playFromStart (bool justSendMMCIfEnabled)
+{
+    setPosition (startPosition);
+    TransportHelpers::resyncLauncherClips (*this);
+    play (justSendMMCIfEnabled);
+}
+
 void TransportControl::playSectionAndReset (TimeRange rangeToPlay)
 {
     CRASH_TRACER
@@ -832,13 +884,11 @@ void TransportControl::record (bool justSendMMCIfEnabled, bool allowRecordingIfN
 
 void TransportControl::stop (bool discardRecordings,
                              bool clearDevices,
-                             bool canSendMMCStop,
-                             bool invertReturnToStartPosSelection)
+                             bool canSendMMCStop)
 {
     transportState->stop (discardRecordings,
                           clearDevices,
-                          canSendMMCStop,
-                          invertReturnToStartPosSelection);
+                          canSendMMCStop);
 }
 
 void TransportControl::stopIfRecording()
@@ -1579,8 +1629,6 @@ void TransportControl::performStop()
     if (! juce::Component::isMouseButtonDownAnywhere())
         setUserDragging (false); // in case it gets stuck
 
-    bool canChangePosition = true;
-
     if (isRecording() || tracktion::isRecording (*playbackContext))
     {
         CRASH_TRACER
@@ -1601,7 +1649,6 @@ void TransportControl::performStop()
                                                                 : recEndTime);
 
         listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
-        canChangePosition = false;
     }
     else
     {
@@ -1618,12 +1665,6 @@ void TransportControl::performStop()
         ensureContextAllocated();
 
     transportState->clearDevicesOnStop = false;
-
-
-    if (canChangePosition
-         && (transportState->invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))
-         && transportState->cursorPosAtPlayStart >= 0_tp)
-        setPosition (transportState->cursorPosAtPlayStart);
 
     if (transportState->canSendMMCStop)
         sendMMCCommand (juce::MidiMessage::mmc_stop);
