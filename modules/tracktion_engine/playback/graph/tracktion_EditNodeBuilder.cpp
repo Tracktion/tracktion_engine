@@ -970,7 +970,7 @@ std::vector<std::unique_ptr<SlotControlNode>> createNodeForLauncherClips (const 
                         if (clip->isLooping())
                         {
                             if (auto afterLoops = clip->followActionNumLoops.get(); afterLoops > 0.0)
-                                clipDuration = clip->getLoopLengthBeats() - clip->getOffsetInBeats();
+                                clipDuration = (clip->getLoopLengthBeats() * afterLoops) - clip->getOffsetInBeats();
                         }
                         else
                         {
