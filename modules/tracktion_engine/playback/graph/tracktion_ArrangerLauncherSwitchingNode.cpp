@@ -27,6 +27,12 @@ ArrangerLauncherSwitchingNode::ArrangerLauncherSwitchingNode (ProcessState& ps,
     assert (arrangerNode || ! launcherNodes.empty());
     setOptimisations ({ tracktion::graph::ClearBuffers::yes,
                         tracktion::graph::AllocateAudioBuffer::yes });
+
+    launcherNodesCopy.reserve (launcherNodes.size());
+    std::transform (launcherNodes.begin(), launcherNodes.end(), std::back_inserter (launcherNodesCopy),
+        [] (auto& n) { return n.get(); });
+    assert (launcherNodesCopy.size() == launcherNodes.size());
+    assert (! contains_v (launcherNodesCopy, nullptr));
 }
 
 //==============================================================================
@@ -302,7 +308,7 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
 
 void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
 {
-    for (auto& n : launcherNodes)
+    for (auto& n : launcherNodesCopy)
     {
         if (n->getLaunchHandle().getPlayingStatus() == LaunchHandle::PlayState::playing)
         {

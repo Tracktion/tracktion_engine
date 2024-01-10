@@ -132,6 +132,7 @@ private:
     AudioTrack::Ptr track;
     std::unique_ptr<Node> arrangerNode;
     std::vector<std::unique_ptr<SlotControlNode>> launcherNodes;
+    std::vector<SlotControlNode*> launcherNodesCopy;
     std::shared_ptr<SampleFader> launcherSampleFader, arrangerSampleFader;
     std::shared_ptr<ActiveNoteList> arrangerActiveNoteList;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
