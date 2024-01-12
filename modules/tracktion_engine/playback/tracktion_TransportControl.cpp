@@ -1774,7 +1774,7 @@ static TimeRange getLimitsOfSelectedClips (Edit& edit, const SelectableList& ite
 void toStart (TransportControl& tc, const SelectableList& items)
 {
     auto selectionStart = getLimitsOfSelectedClips (tc.edit, items).getStart();
-    tc.setPosition (tc.getPosition() < selectionStart + 0.001s ? TimePosition() : selectionStart);
+    tc.setPosition (tc.getPosition() < selectionStart + 0.001s ? 0_tp : selectionStart);
 }
 
 void toEnd (TransportControl& tc, const SelectableList& items)

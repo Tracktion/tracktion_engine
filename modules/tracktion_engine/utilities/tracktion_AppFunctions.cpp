@@ -172,13 +172,19 @@ namespace AppFunctions
     void goToStart()
     {
         if (auto transport = getActiveTransport())
+        {
             toStart (*transport, getSelectedItems());
+            transport->startPosition = transport->getPosition();
+        }
     }
 
     void goToEnd()
     {
         if (auto transport = getActiveTransport())
+        {
             toEnd (*transport, getSelectedItems());
+            transport->startPosition = transport->getPosition();
+        }
     }
 
     void markIn (bool forceAtCursor)
