@@ -158,6 +158,9 @@ public:
     /** Sets a new transport position. */
     void setPosition (TimePosition);
 
+    /** Sets a new transport position to take effect at a given time. */
+    void setPosition (TimePosition timeToMoveTo, TimePosition timeToPerformJump);
+
     /** Signifies a scrub-drag operation has started/stopped.
         While dragging, a short section of the play position is looped repeatedly.
     */

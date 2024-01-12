@@ -20,6 +20,13 @@ namespace AppFunctions
         return e->getUIBehaviour();
     }
 
+    inline PropertyStorage& getCurrentPropertyStorage()
+    {
+        auto e = Engine::getEngines()[0];
+        jassert (e != nullptr);
+        return e->getPropertyStorage();
+    }
+
     inline Edit* getCurrentlyFocusedEdit()
     {
         if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
@@ -197,7 +204,17 @@ namespace AppFunctions
     void stop()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (false, false, true);
+        {
+            if (transport->isPlaying())
+            {
+                transport->stop (false, false, true);
+            }
+            else
+            {
+                transport->startPosition = 0_tp;
+                transport->setPosition (0_tp);
+            }
+        }
     }
 
     void startStopPlay()
@@ -205,9 +222,16 @@ namespace AppFunctions
         if (auto transport = getActiveTransport())
         {
             if (transport->isPlaying())
+            {
                 stop();
+            }
             else
-                transport->playFromStart (true);
+            {
+                if (getCurrentPropertyStorage().getProperty (SettingID::resetCursorOnPlay))
+                    transport->playFromStart (true);
+                else
+                    transport->play (true);
+            }
         }
     }
 
@@ -218,7 +242,7 @@ namespace AppFunctions
             if (transport->isPlaying())
                 stop();
             else
-                start();
+                transport->play (true);
         }
     }
 

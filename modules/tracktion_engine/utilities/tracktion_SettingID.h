@@ -78,7 +78,7 @@ enum class SettingID
     renameClipRenamesSource,
     renameMode,
     renderRecentFilesList,
-    resetCursorOnStop,
+    resetCursorOnPlay,
     retrospectiveRecord,
     reWireEnabled,
     safeRecord,

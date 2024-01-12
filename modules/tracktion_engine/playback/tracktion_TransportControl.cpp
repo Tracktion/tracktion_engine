@@ -1137,6 +1137,14 @@ void TransportControl::setPosition (TimePosition t)
     position = t;
 }
 
+void TransportControl::setPosition (TimePosition timeToMoveTo, TimePosition timeToPerformJump)
+{
+    if (auto epc = getCurrentPlaybackContext())
+        epc->postPosition (timeToMoveTo, timeToPerformJump);
+
+    sendChangeMessage();
+}
+
 void TransportControl::setUserDragging (bool b)
 {
     CRASH_TRACER

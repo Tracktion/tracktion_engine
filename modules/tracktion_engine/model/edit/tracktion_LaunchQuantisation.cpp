@@ -109,7 +109,7 @@ LaunchQType fromBarFraction (double f) noexcept
     return ret;
 }
 
-BeatPosition getNext (LaunchQType q, const TempoSequence& ts, BeatPosition pos) noexcept
+BeatPosition getNext (LaunchQType q, const tempo::Sequence& ts, BeatPosition pos) noexcept
 {
     constexpr auto adjustment = 1.0 - 1.0e-10; // Round up adjustment
 
@@ -131,6 +131,11 @@ BeatPosition getNext (LaunchQType q, const TempoSequence& ts, BeatPosition pos) 
     barsBeats.beats = BeatDuration::fromBeats (qFraction * std::floor ((barsBeats.beats.inBeats() / qFraction) + adjustment));
 
     return ts.toBeats (barsBeats);
+}
+
+BeatPosition getNext (LaunchQType q, const TempoSequence& ts, BeatPosition pos) noexcept
+{
+    return getNext (q, ts.getInternalSequence(), pos);
 }
 
 

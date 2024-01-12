@@ -110,7 +110,7 @@ juce::String PropertyStorage::settingToString (SettingID setting)
         case SettingID::renameMode:                    return "renameMode";
         case SettingID::renderRecentFilesList:         return "renderRecentFilesList";
         case SettingID::safeRecord:                    return "safeRecord";
-        case SettingID::resetCursorOnStop:             return "resetCursorOnStop";
+        case SettingID::resetCursorOnPlay:             return "resetCursorOnPlay";
         case SettingID::retrospectiveRecord:           return "retrospectiveRecord";
         case SettingID::reWireEnabled:                 return "ReWireEnabled";
         case SettingID::simplifyAfterRecording:        return "simplifyAfterRecording";

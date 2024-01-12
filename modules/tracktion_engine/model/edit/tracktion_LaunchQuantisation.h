@@ -59,6 +59,8 @@ LaunchQType fromBarFraction (double) noexcept;
 /** Returns the next quantised position. */
 BeatPosition getNext (LaunchQType, const TempoSequence&, BeatPosition) noexcept;
 
+/** Returns the next quantised position. */
+BeatPosition getNext (LaunchQType, const tempo::Sequence&, BeatPosition) noexcept;
 
 //==============================================================================
 //==============================================================================
