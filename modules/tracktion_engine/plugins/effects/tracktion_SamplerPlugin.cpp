@@ -436,27 +436,33 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             adjustedMidiNote = bc::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
-                            highlightedNotes.setBit (note);
-                            playingNotes.add (new SampledNote 
-                                                               // BEATCONNECT MODIFICATION START
-                                                               (adjustedMidiNote,
-                                                               // BEATCONNECT MODIFICATION END
-                                                               ss->keyNote,
-                                                               m.getVelocity() / 127.0f,
-                                                               ss->audioFile,
-                                                               sampleRate,
-                                                               noteTimeSample,
-                                                               ss->audioData,
-                                                               ss->fileLengthSamples,
-                                                               ss->gainDb,
-                                                               ss->pan,
-                                                               ss->openEnded
-                                                               // BEATCONNECT MODIFICATION START
-                                                               , ss->filterType,
-                                                               ss->filterFrequency,
-                                                               ss->filterGain
-                                                               // BEATCONNECT MODIFICATION END
-                                                               ));
+
+                        highlightedNotes.setBit(note);
+
+                        // BEATCONNECT MODIFICATION START
+                        effectsModule.applyEffects(ss->audioData);
+                        // BEATCONNECT MODIFICATION END
+
+                        playingNotes.add(new SampledNote
+                            // BEATCONNECT MODIFICATION START
+                            (adjustedMidiNote,
+                                // BEATCONNECT MODIFICATION END
+                                ss->keyNote,
+                                m.getVelocity() / 127.0f,
+                                ss->audioFile,
+                                sampleRate,
+                                noteTimeSample,
+                                ss->audioData,
+                                ss->fileLengthSamples,
+                                ss->gainDb,
+                                ss->pan,
+                                ss->openEnded
+                                // BEATCONNECT MODIFICATION START
+                                , ss->filterType,
+                                ss->filterFrequency,
+                                ss->filterGain
+                                // BEATCONNECT MODIFICATION END
+                            ));
                         }
                     }
                 }

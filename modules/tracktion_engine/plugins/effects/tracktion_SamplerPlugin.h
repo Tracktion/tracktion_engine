@@ -155,6 +155,10 @@ private:
 
     juce::ValueTree getSound (int index) const;
 
+    // BEATCONNECT MODIFICATION START
+    EffectsModule effectsModule;
+    // BEATCONNECT MODIFICATION END
+
     void valueTreeChanged() override;
     void handleAsyncUpdate() override;
 
