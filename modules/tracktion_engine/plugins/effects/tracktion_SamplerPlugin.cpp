@@ -443,7 +443,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                         effectsModule.applyEffects(ss->audioData);
                         // BEATCONNECT MODIFICATION END
 
-                        playingNotes.add(new SampledNote
+                         playingNotes.add(new SampledNote
                             // BEATCONNECT MODIFICATION START
                             (adjustedMidiNote,
                                 // BEATCONNECT MODIFICATION END
