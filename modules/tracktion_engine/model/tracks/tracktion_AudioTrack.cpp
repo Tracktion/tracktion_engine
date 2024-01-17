@@ -169,6 +169,8 @@ void AudioTrack::initialise()
 
     ClipTrack::initialise();
 
+    getClipSlotList().ensureNumberOfSlots (edit.getSceneList().getNumScenes());
+
     if (frozenIndividually && ! getFreezeFile().existsAsFile())
         setFrozen (false, individualFreeze);
 
