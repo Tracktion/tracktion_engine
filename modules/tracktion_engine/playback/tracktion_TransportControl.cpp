@@ -504,7 +504,7 @@ private:
                     else
                         t = TransportHelpers::snapTimeUp (owner, t + 1.0e-5s, false);
 
-                    owner.setPosition (t);
+                    owner.setPosition (std::max (0_tp, t));
                 }
 
                 return;
@@ -1807,7 +1807,7 @@ void scrub (TransportControl& tc, double units)
     if (tc.isUserDragging() && tc.engine.getPropertyStorage().getProperty (SettingID::snapCursor, false))
         t = TransportHelpers::snapTimeDown (tc, t, false);
 
-    tc.setPosition (t);
+    tc.setPosition (std::max (0_tp, t));
 }
 
 void freePlaybackContextIfNotRecording (TransportControl& tc)
