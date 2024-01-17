@@ -2834,6 +2834,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
     while (master.size() > 0)
         master[0]->removeFromParent();
 
+    edit->setMasterVolumeSliderPos (decibelsToVolumeFaderPosition (0.0));
+
     auto audioTrack = tracks[0];
     auto midiTrack  = tracks[1];
     auto drumTrack  = tracks[2];
