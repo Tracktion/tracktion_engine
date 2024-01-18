@@ -224,7 +224,10 @@ private:
 //==============================================================================
 SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
-    triggerAsyncUpdate();
+    triggerAsyncUpdate(); // =8> Is the placement of this line important?
+    // =8> Try adding in the referTos and the addParams and the attachToCurrentValues here?
+    effectsModule.distortionOnValue.referTo(state, IDs::EffectsModule::Distortion::distorionOn, nullptr);
+    
 }
 
 SamplerPlugin::~SamplerPlugin()

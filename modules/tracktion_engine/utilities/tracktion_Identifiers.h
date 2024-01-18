@@ -684,6 +684,32 @@ namespace IDs
     DECLARE_ID(SamplerDrumPad)
     DECLARE_ID(Snare)
     DECLARE_ID(Tambourine)
+
+    // EffectsModule
+    namespace EffectsModule
+    {
+        namespace Chorus
+        {
+
+        } // namespace Chorus
+
+        namespace Delay
+        {
+
+        } // namespace Delay
+
+        namespace Distortion
+        {
+            DECLARE_ID(distorion)
+            DECLARE_ID(distorionOn)
+            DECLARE_ID(drive)
+        } // namespace Distortion
+
+        namespace Reverb
+        {
+
+        } // namespace Reverb
+    } // namespace EffectsModule
     // BEATCONNECT MODIFICATIONS END HERE
 
     #undef DECLARE_ID
