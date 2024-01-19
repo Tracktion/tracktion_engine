@@ -445,7 +445,7 @@ public:
         return true;
     }
 
-    static constexpr choc::buffer::FrameCount chunkSize = 1024;
+    static constexpr choc::buffer::FrameCount chunkSize = 256;
     const int numChannels;
     const double destSampleRate;
     const double sourceSampleRate { source->getSampleRate() };
@@ -528,7 +528,7 @@ public:
         : SingleInputAudioReader (std::move (input)), numChannels ((int) source->getNumChannels())
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
-                                  mode, elastiqueProOptions, false);
+                                  mode, elastiqueProOptions, true);
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
 
@@ -637,7 +637,7 @@ public:
         return true;
     }
 
-    static constexpr int chunkSize = 1024;
+    static constexpr int chunkSize = 256;
     const int numChannels;
     TimeStretcher timeStretcher;
     AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize };
