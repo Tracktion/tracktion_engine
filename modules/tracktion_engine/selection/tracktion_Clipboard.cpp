@@ -213,7 +213,8 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
                     {
                         if (mc->getClipSlot() != nullptr)
                         {
-                            mc->setUsesProxy(false);
+                            mc->setUsesProxy (false);
+                            mc->setStart (0_tp, false, true);
                             mc->setLoopRangeBeats (mc->getEditBeatRange());
                         }
 
@@ -419,6 +420,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                         {
                             newClip->setUsesProxy (false);
                             newClip->setAutoTempo (true);
+                            newClip->setStart (0_tp, false, true);
                             newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
                         }
                     }

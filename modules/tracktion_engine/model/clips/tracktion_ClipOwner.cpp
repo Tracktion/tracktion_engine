@@ -357,10 +357,25 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                 {
                     acb->setUsesProxy (false);
                     acb->setAutoTempo (true);
+                    acb->setStart (0_tp, false, true);
+
+                    if (! acb->isLooping())
+                        acb->setLoopRangeBeats ({ 0_bp, acb->getLengthInBeats() });
                 }
                 else if (auto mc = dynamic_cast<MidiClip*> (newClip))
                 {
                     mc->setUsesProxy (false);
+                    mc->setStart (0_tp, false, true);
+
+                    if (! mc->isLooping ())
+                        mc->setLoopRangeBeats (mc->getEditBeatRange());
+                }
+                else if (auto sc = dynamic_cast<StepClip*> (newClip))
+                {
+                    sc->setStart (0_tp, false, true);
+
+                    if (! sc->isLooping())
+                        sc->setLoopRangeBeats ({ 0_bp, sc->getLengthInBeats() });
                 }
             }
 
