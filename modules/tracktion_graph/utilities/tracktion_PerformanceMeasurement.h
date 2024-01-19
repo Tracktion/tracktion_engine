@@ -13,6 +13,7 @@
 
 #ifdef __APPLE__
  #include <sys/kdebug_signpost.h>
+ #include <os/signpost.h>
 #endif
 
 #include "../../tracktion_core/utilities/tracktion_CPU.h"
@@ -39,7 +40,7 @@ struct ScopedSignpost
         #pragma clang diagnostic pop
        #endif
     }
-    
+
     /** Stops the signpost previously started. */
     ~ScopedSignpost()
     {
@@ -50,10 +51,58 @@ struct ScopedSignpost
         #pragma clang diagnostic pop
        #endif
     }
-    
+
 private:
     //==============================================================================
     const uint32_t index;
+};
+
+
+//==============================================================================
+//==============================================================================
+struct NamedSignpost
+{
+    NamedSignpost (const char* nameToUse)
+        : name (nameToUse)
+    {
+       #ifdef __APPLE__
+        if (__builtin_available (macOS 10.14, *))
+            os_signpost_interval_begin (getLog(), id, "", "%s", name);
+       #endif
+    }
+
+    ~NamedSignpost()
+    {
+       #ifdef __APPLE__
+        if (__builtin_available (macOS 10.14, *))
+            os_signpost_interval_end (getLog(), id, "", "%s", name);
+       #endif
+    }
+
+private:
+    [[ maybe_unused ]] const char* name;
+   #ifdef __APPLE__
+    const os_signpost_id_t id  { generateID() };
+
+    static os_log_t getLog()
+    {
+        static os_log_t log;
+
+        if (__builtin_available (macOS 10.14, *))
+            if (log == nullptr)
+                log = os_log_create ("", OS_LOG_CATEGORY_POINTS_OF_INTEREST);
+
+        return log;
+    }
+
+    static os_signpost_id_t generateID()
+    {
+        if (__builtin_available (macOS 10.14, *))
+            return os_signpost_id_generate (getLog());
+
+        return {};
+    }
+   #endif
 };
 
 
@@ -81,7 +130,7 @@ class PerformanceMeasurement
 public:
     //==============================================================================
     /** Creates a PerformanceMeasurement object.
-     
+
         @param counterName      the name used when printing out the statistics
         @param runsPerPrintout  the number of start/stop iterations before calling
                                 printStatistics()
@@ -303,7 +352,7 @@ inline bool PerformanceMeasurement::stop()
 
     if (runsPerPrint < 0)
         return false;
-    
+
     if (stats.numRuns < runsPerPrint)
         return false;
 
