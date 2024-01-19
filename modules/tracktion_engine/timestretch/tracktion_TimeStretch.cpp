@@ -301,7 +301,8 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
                 AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
                 const int numPreProcessFrames = elastique->PreProcessData ((float **) inChannels, numSamples,
-                                                                           (float **) scratchBuffer.buffer.getArrayOfWritePointers());
+                                                                           (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
+                                                                           CElastiqueProV3DirectIf::kFastStartup);
 
                 assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
                 assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
