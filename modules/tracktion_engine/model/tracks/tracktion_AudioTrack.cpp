@@ -505,6 +505,49 @@ juce::String AudioTrack::getTrackPlayabilityWarning() const
     return {};
 }
 
+juce::String AudioTrack::getLauncherPlayabilityWarning() const
+{
+    bool hasMidi = false, hasWave = false;
+
+    if (clipSlotList)
+    {
+        for (auto slot : clipSlotList->getClipSlots())
+        {
+            if (slot)
+            {
+                if (auto c = slot->getClip())
+                {
+                    auto type = c->type;
+                    
+                    if (! hasMidi && (type == TrackItem::Type::midi || type == TrackItem::Type::step))
+                        hasMidi = true;
+                    
+                    if (! hasWave && type == TrackItem::Type::wave)
+                        hasWave = true;
+                    
+                    if (hasMidi && hasWave)
+                        break;
+                }
+            }
+        }
+    }
+
+    if (hasMidi && ! canPlayMidi())
+        return TRANS("This track contains MIDI-generating clips which may be inaudible as it doesn't output to a MIDI device or a plugin synthesiser.")
+                  + "\n\n" + TRANS("To change a track's destination, select the track and use its destination list.");
+
+    if (hasWave && ! canPlayAudio())
+    {
+        if (! getOutput().canPlayAudio())
+            return TRANS("This track contains wave clips which may be inaudible as it doesn't output to an audio device.")
+                        + "\n\n" + TRANS("To change a track's destination, select the track and use its destination list.");
+
+        return TRANS("This track contains wave clips which may be inaudible as the audio will be blocked by some of the track's plugins.");
+    }
+
+    return {};
+}
+
 bool AudioTrack::canPlayAudio() const
 {
     if (! getOutput().canPlayAudio())

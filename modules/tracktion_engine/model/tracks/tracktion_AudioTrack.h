@@ -44,6 +44,7 @@ public:
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
     juce::String getTrackPlayabilityWarning() const;
+    juce::String getLauncherPlayabilityWarning() const;
 
     //==============================================================================
     VolumeAndPanPlugin* getVolumePlugin();
