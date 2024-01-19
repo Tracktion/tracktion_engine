@@ -2378,8 +2378,11 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         }
         else if (id == IDs::autoTempo)
         {
-            autoTempo.forceUpdateOfCachedValue();
-            updateAutoTempoState();
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                autoTempo.forceUpdateOfCachedValue();
+                updateAutoTempoState();
+            }
         }
         else if (id == IDs::isReversed)
         {
