@@ -1008,8 +1008,9 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
     auto targetTrack = options.startTrack;
 
     // When pasting tracks, always paste after the selected group of tracks if the target is
-    // withing the selection
+    // within the selection
     auto allTracks = getAllTracks (options.edit);
+
     if (options.selectionManager != nullptr && options.selectionManager->isSelected (targetTrack.get()))
         for (auto t : options.selectionManager->getItemsOfType<Track>())
             if (allTracks.indexOf (t) > allTracks.indexOf (targetTrack.get()))
@@ -1037,8 +1038,7 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
         {
             newTracks.add (newTrack);
 
-            if (parentTrack == nullptr)
-                targetTrack = newTrack;
+            targetTrack = newTrack;
         }
         else
         {
@@ -1189,6 +1189,7 @@ public:
     {
         runCopyTests();
         runCopyTestsUsingBeatInsertion();
+        runTrackCopyPasteTests();
     }
 
 private:
@@ -1330,6 +1331,154 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 2, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
+        }
+    }
+
+    void runTrackCopyPasteTests()
+    {
+        beginTest ("Root tracks copy/paste");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+            edit->ensureNumberOfAudioTracks (3);
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+
+                Clipboard::Tracks clipboardTracks;
+
+                for (auto at : tracks)
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                tracks[0]->setName ("First Original");
+                tracks[1]->setName ("Second Original");
+                tracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = tracks[2];
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+            }
+        }
+
+        beginTest ("Root tracks paste in to folder");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+
+            {
+                edit->ensureNumberOfAudioTracks (3);
+                auto tracks = getAudioTracks (*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+            }
+
+            auto ft = edit->insertNewFolderTrack (TrackInsertPoint ({ *getAudioTracks (*edit).getLast(), false }), nullptr, false);
+
+            {
+                Clipboard::Tracks clipboardTracks;
+                auto tracks = getAudioTracks (*edit);
+
+                for (auto at : tracks)
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                tracks[0]->setName ("First Original");
+                tracks[1]->setName ("Second Original");
+                tracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = ft;
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto tracks = getAudioTracks (*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+            }
+        }
+
+        beginTest ("Tracks inside folder copy/paste");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+
+            {
+                edit->ensureNumberOfAudioTracks (3);
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+            }
+
+            auto ft = edit->insertNewFolderTrack (TrackInsertPoint ({}), nullptr, false);
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                edit->moveTrack (tracks[2], TrackInsertPoint (ft.get(), nullptr));
+                edit->moveTrack (tracks[1], TrackInsertPoint (ft.get(), nullptr));
+                edit->moveTrack (tracks[0], TrackInsertPoint (ft.get(), nullptr));
+            }
+
+            {
+                auto subTracks = ft->getInputTracks();
+                juce::UnitTest::expectEquals (subTracks.size(), 3);
+                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third");
+            }
+
+            {
+                Clipboard::Tracks clipboardTracks;
+
+                for (auto at : ft->getInputTracks())
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                auto subTracks = ft->getInputTracks();
+                subTracks[0]->setName ("First Original");
+                subTracks[1]->setName ("Second Original");
+                subTracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = subTracks[2];
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto subTracks = ft->getInputTracks();
+                juce::UnitTest::expectEquals (subTracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[5]->getName(), "Third");
+            }
         }
     }
 };
