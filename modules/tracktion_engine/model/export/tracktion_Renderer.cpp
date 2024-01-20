@@ -424,6 +424,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         tracks.add (getAllTracks (edit)[bit]);
 
     const FreezePointPlugin::ScopedTrackSoloIsolator isolator (edit, tracks);
+    const Renderer::ScopedClipSlotDisabler slotDisabler (edit, tracks);
 
     TransportControl::stopAllTransports (engine, false, true);
     turnOffAllPlugins (edit);

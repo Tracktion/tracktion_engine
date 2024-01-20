@@ -202,6 +202,37 @@ public:
         juce::Result result;
         juce::ReferenceCountedArray<ProjectItem> items;
     };
+
+    //==============================================================================
+    /** Temporarily disables clip slots. Useful for rendering */
+    struct ScopedClipSlotDisabler
+    {
+        ScopedClipSlotDisabler (Edit& e, Track::Array& ta)
+            : edit (e), tracks (ta)
+        {
+            for (auto t : tracks)
+            {
+                if (auto at = dynamic_cast<AudioTrack*> (t))
+                {
+                    playSlotClips.push_back (at->playSlotClips.get());
+                    at->playSlotClips = false;
+                }
+            }
+        }
+
+        ~ScopedClipSlotDisabler()
+        {
+            size_t i = 0;
+            for (auto t : tracks)
+                if (auto at = dynamic_cast<AudioTrack*> (t))
+                    at->playSlotClips = playSlotClips[i++];
+        }
+
+        Edit& edit;
+        Track::Array tracks;
+        std::vector<bool> playSlotClips;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedClipSlotDisabler)
+    };
 };
 
 namespace render_utils
