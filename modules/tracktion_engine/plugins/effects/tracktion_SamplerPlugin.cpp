@@ -27,17 +27,57 @@ public:
                  const juce::AudioBuffer<float>& data,
                  int lengthInSamples,
                  float gainDb,
-                 float pan,
-                 bool openEnded_
-                 , const FilterType filterType_ = FilterType::noFilter, 
+                 float pan
+                 // BEAT CONNECT MODIFICATION START
+                 , bool openEnded_,
+                 const FilterType filterType_ = FilterType::noFilter, 
                  const double filterFrequency_ = 0, 
-                 const double filterGain_ = 0
+                 const double filterGain_ = 0,
+                 // =8> make sure all these defaults are accurate later =8>
+                 const float chorusDepth_ = 0,
+                 const float chorusMix_ = 0,
+                 const bool chorusOn_ = false, // The chorus' bypass state
+                 const float chorusSpeed_ = 0,
+                 const float chrousWidth_ = 0,
+                 const float delayCrossfeed_ = 0,
+                 const float delayFeedback_ = 0,
+                 const float delay_ = 0, // The delay's length
+                 const float delayMix_ = 0,
+                 const bool delayOn_ = 0, // The delay's bypass state
+                 const float distortion_ = 0, // The distortion's intensity
+                 const bool distortionOn_ = false,
+                 const float reverbDamping_ = 0,
+                 const float reverbMix_ = 0,
+                 const bool reverbOn_ = false, // Reverb's bypass state
+                 const float reverbSize_ = 0,
+                 const float reverbWidth_ = 0
+                 // =8> make sure all these defaults are accurate later =8>
+                 // BEAT CONNECT MODIFICATION END
                  )
        : note (midiNote),
          offset (-sampleDelayFromBufferStart),
          audioData (data),
-         openEnded (openEnded_),
-        filterType (filterType_)
+         openEnded (openEnded_)
+         // BEAT CONNECT MODIFICATION START
+         , filterType (filterType_),
+         chorusDepth(chorusDepth_),
+         chorusMix(chorusMix_),
+         chorusOn(chorusOn_),
+         chorusSpeed(chorusSpeed_),
+         chorusWidth(chrousWidth_),
+         delayCrossfeed(delayCrossfeed_),
+         delayFeedback(delayFeedback_),
+         delay(delay_),
+         delayMix(delayMix_),
+         delayOn(delayOn_),
+         distortion(distortion_),
+         distortionOn(distortionOn_),
+         reverbDamping(reverbDamping_),
+         reverbMix(reverbMix_),
+         reverbOn(reverbOn_),
+         reverbSize(reverbSize_),
+         reverbWidth(reverbWidth_)
+         // BEAT CONNECT MODIFICATION END
     {
         resampler[0].reset();
         resampler[1].reset();
@@ -214,7 +254,24 @@ public:
     juce::IIRFilter iirFilterR;
     juce::IIRFilter iirFilterL;
     juce::IIRCoefficients coefs;
-    double iirFilterQuotient = 0.710624337;
+    double iirFilterQuotient = 0.710624337f;
+    float chorusDepth; // =8> make sure all these defaults are accurate later =8>
+    float chorusMix;
+    bool chorusOn; // The chorus' bypass state
+    float chorusSpeed;
+    float chorusWidth;
+    float delayCrossfeed;
+    float delayFeedback;
+    float delay; // The delay's length
+    float delayMix;
+    bool delayOn; // The delay's bypass state
+    float distortion;// The distortion's intensity
+    bool distortionOn;
+    float reverbDamping;
+    float reverbMix;
+    bool reverbOn; // Reverb's bypass state
+    float reverbSize;
+    float reverbWidth;
     // BEATCONNECT MODIFICATION END
 
 private:
@@ -596,13 +653,19 @@ double SamplerPlugin::getSoundLength (int index) const
     return l;
 }
 
-
 juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
                                       double startTime, double length, float gainDb,
                                       int keyNote, int minNote, int maxNote
                                       // BEATCONNECT MODIFICATION START
-                                      , bool openEnded, int filterType, 
-                                      double filterFrequency, double filterGain
+                                      , bool openEnded, 
+                                      int filterType, double filterFrequency, double filterGain,
+                                      float chorusDepth, float chorusMix, bool chorusOn,
+                                      float chorusSpeed, float chorusWidth,
+                                      float delayCrossfed, float delayFeedback, float delay,
+                                      float delayMix, bool delayOn,
+                                      float distortion, bool distortionOn,
+                                      float reverbDamping, float reverbMix, bool reverbOn,
+                                      float reverbSize, float reverbWidth
                                       // BEATCONNECT MODIFICATION END
                                       )
 {
@@ -622,7 +685,24 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::gainDb, gainDb,
                               IDs::pan, (double) 0
                               // BEATCONNECT MODIFICATION START
-                              , IDs::openEnded, openEnded
+                              , IDs::openEnded, openEnded,
+                              IDs::chorusDepth, chorusDepth,
+                              IDs::chorusMix, chorusMix,
+                              IDs::chorusOn, chorusOn,// The chorus' bypass state
+                              IDs::chorusSpeed, chorusSpeed,
+                              IDs::chrousWidth, chorusWidth,
+                              IDs::delayCrossfeed, delayCrossfed,
+                              IDs::delayFeedback, delayFeedback,
+                              IDs::delay, delay, // The delay's length
+                              IDs::delayMix, delayMix,
+                              IDs::delayOn, delayOn, // The delay's bypass state
+                              IDs::distortion, distortion, // The distortion's intensity
+                              IDs::distortionOn, distortionOn,
+                              IDs::reverbDamping, reverbDamping,
+                              IDs::reverbMix, reverbMix,
+                              IDs::reverbOn, reverbOn, // Reverb's bypass state
+                              IDs::reverbSize, reverbSize,
+                              IDs::reverbWidth, reverbWidth
                               // BEATCONNECT MODIFICATION END
                               );
 

@@ -61,7 +61,14 @@ public:
                             double startTime, double length, float gainDb,
                             int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true
                             // BEATCONNECT MODIFICATION START
-                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0
+                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0,
+                            float chorusDepth = 0, float chorusMix = 0, bool chorusOn = false,
+                            float chorusSpeed = 0, float chorusWidth = 0,
+                            float delayCrossfed = 0, float delayFeedback = 0, float delay = 0,
+                            float delayMix = 0, bool delayOn = false,
+                            float distortion = 0, bool distortionOn = false,
+                            float reverbDamping = 0, float reverbMix = 0, bool reverbOn = false,
+                            float reverbSize = 0, float reverbDepth = 0
                             // BEATCONNECT MODIFICATION END
                             );
     void removeSound (int index);
