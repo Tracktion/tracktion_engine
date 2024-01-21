@@ -90,6 +90,7 @@ public:
         {
             juce::ValueTree state;
             int trackOffset = 0;
+            std::optional<int> slotOffset;
             bool hasBeatTimes = false;
             BeatPosition startBeats;
             BeatDuration lengthBeats;
