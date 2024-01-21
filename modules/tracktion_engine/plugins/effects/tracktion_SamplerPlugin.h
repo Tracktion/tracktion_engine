@@ -92,8 +92,8 @@ public:
     static const char* xmlTypeName;
     // BEATCONNECT MODIFICATION START
     static const char* uniqueId;
-    // BEATCONNECT MODIFICATION END
 
+    // BEATCONNECT MODIFICATION END
     juce::String getName() override                     { return TRANS("Sampler"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
@@ -154,6 +154,10 @@ private:
     //==============================================================================
     struct SampledNote;
 
+    // BEATCONNECT MODIFICATION START
+    EffectsModule effectsModule;
+    // BEATCONNECT MODIFICATION END
+
     juce::Colour colour;
     juce::CriticalSection lock;
     juce::ReferenceCountedArray<SampledNote> playingNotes;
@@ -161,10 +165,6 @@ private:
     juce::BigInteger highlightedNotes;
 
     juce::ValueTree getSound (int index) const;
-
-    // BEATCONNECT MODIFICATION START
-    EffectsModule effectsModule;
-    // BEATCONNECT MODIFICATION END
 
     void valueTreeChanged() override;
     void handleAsyncUpdate() override;

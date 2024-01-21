@@ -636,7 +636,7 @@ namespace IDs
     DECLARE_ID (modItem)
     DECLARE_ID (modDepth)
     DECLARE_ID (masterLevel)
-    DECLARE_ID (chorusSpeed)
+    DECLARE_ID (chosusSpeed)
     DECLARE_ID (chorusDepth)
     DECLARE_ID (chrousWidth)
     DECLARE_ID (chorusMix)

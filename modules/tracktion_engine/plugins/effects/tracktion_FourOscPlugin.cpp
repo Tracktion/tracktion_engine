@@ -1009,7 +1009,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
 
     // Effects: Chorus
     chorusOnValue.referTo (state, IDs::chorusOn, um);
-    chorusSpeedValue.referTo (state, IDs::chorusSpeed, um, 1.0f);
+    chorusSpeedValue.referTo (state, IDs::chosusSpeed, um, 1.0f);
     chorusDepthValue.referTo (state, IDs::chorusDepth, um, 3.0f);
     chorusWidthValue.referTo (state, IDs::chrousWidth, um, 0.5f);
     chorusMixValue.referTo (state, IDs::chorusMix, um, 0.5f);

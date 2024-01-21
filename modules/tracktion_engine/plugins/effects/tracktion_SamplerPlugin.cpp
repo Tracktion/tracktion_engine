@@ -39,9 +39,9 @@ public:
                  const bool chorusOn_ = false, // The chorus' bypass state
                  const float chorusSpeed_ = 0,
                  const float chrousWidth_ = 0,
+                 const float delay_ = 0, // The delay's length
                  const float delayCrossfeed_ = 0,
                  const float delayFeedback_ = 0,
-                 const float delay_ = 0, // The delay's length
                  const float delayMix_ = 0,
                  const bool delayOn_ = 0, // The delay's bypass state
                  const float distortion_ = 0, // The distortion's intensity
@@ -65,9 +65,9 @@ public:
          chorusOn(chorusOn_),
          chorusSpeed(chorusSpeed_),
          chorusWidth(chrousWidth_),
+         delay(delay_),
          delayCrossfeed(delayCrossfeed_),
          delayFeedback(delayFeedback_),
-         delay(delay_),
          delayMix(delayMix_),
          delayOn(delayOn_),
          distortion(distortion_),
@@ -92,7 +92,7 @@ public:
         setCoefficients(filterType_, filterFrequency_, filterGain_);
     }
 
-    void addNextBlock (juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples)
+    void addNextBlock(juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples /*, EffectsModule& effectsModule_in*/)
     {
         jassert (! isFinished);
 
@@ -109,6 +109,10 @@ public:
         if (numSamps > 0)
         {       
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
+            // =8> Try applying the effects here
+            /*effectsModule_in.setParameters();
+            effectsModule_in.applyEffects(scratch.buffer);*/
+            // =8>
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
             if (filterType != FilterType::noFilter)
@@ -500,10 +504,10 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                         highlightedNotes.setBit(note);
 
                         // BEATCONNECT MODIFICATION START
-                        effectsModule.applyEffects(ss->audioData);
+                        // effectsModule.applyEffects(ss->audioData); // =8>
                         // BEATCONNECT MODIFICATION END
 
-                         playingNotes.add(new SampledNote
+                        playingNotes.add(new SampledNote
                             // BEATCONNECT MODIFICATION START
                             (adjustedMidiNote,
                                 // BEATCONNECT MODIFICATION END
@@ -689,7 +693,7 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::chorusDepth, chorusDepth,
                               IDs::chorusMix, chorusMix,
                               IDs::chorusOn, chorusOn,// The chorus' bypass state
-                              IDs::chorusSpeed, chorusSpeed,
+                              IDs::chosusSpeed, chorusSpeed,
                               IDs::chrousWidth, chorusWidth,
                               IDs::delayCrossfeed, delayCrossfed,
                               IDs::delayFeedback, delayFeedback,
