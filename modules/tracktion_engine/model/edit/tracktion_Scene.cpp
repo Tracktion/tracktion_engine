@@ -28,6 +28,11 @@ Scene::~Scene()
     notifyListenersOfDeletion();
 }
 
+int Scene::getIndex()
+{
+    return sceneList.getScenes().indexOf (this);
+}
+
 juce::String Scene::getSelectableDescription()
 {
     return TRANS("Scene");
@@ -203,6 +208,16 @@ void SceneList::ensureNumberOfScenes (int numScenes)
 
     for (auto at : getAudioTracks (edit))
         at->getClipSlotList().ensureNumberOfSlots (objects.size());
+}
+
+Scene* SceneList::insertScene (int idx)
+{
+    parent.addChild (juce::ValueTree (IDs::SCENE), idx, &edit.getUndoManager());
+
+    for (auto at : getAudioTracks (edit))
+        at->getClipSlotList().insertSlot (idx);
+
+    return getScenes()[idx];
 }
 
 void SceneList::deleteScene (Scene& scene)

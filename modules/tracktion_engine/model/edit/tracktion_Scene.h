@@ -29,6 +29,8 @@ public:
     /** Destructor. */
     ~Scene() override;
 
+    int getIndex();
+
     juce::ValueTree state;
     Edit& edit;
 
@@ -136,6 +138,11 @@ public:
         number of slots.
     */
     void ensureNumberOfScenes (int numScenes);
+
+    /** Inserts a new scene with the given index. If the index is < 0 or greater
+        than the current number of scenes, the new one will be added at the end of the list
+     */
+    Scene* insertScene (int index);
 
     /** Deletes a specific Scene. */
     void deleteScene (Scene&);

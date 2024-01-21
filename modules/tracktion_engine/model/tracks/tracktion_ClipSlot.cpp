@@ -164,6 +164,14 @@ void ClipSlotList::setNumberOfSlots (int numSlots)
     }
 }
 
+ClipSlot* ClipSlotList::insertSlot (int index)
+{
+    auto newSlotState = juce::ValueTree (IDs::CLIPSLOT);
+    track.edit.createNewItemID().writeID (newSlotState, nullptr);
+    parent.addChild (newSlotState, index, &track.edit.getUndoManager());
+    return getClipSlots()[index];
+}
+
 void ClipSlotList::deleteSlot (ClipSlot& cs)
 {
     assert (&cs.track == &track);

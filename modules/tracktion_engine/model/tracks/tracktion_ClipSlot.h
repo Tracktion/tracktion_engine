@@ -84,6 +84,11 @@ public:
     /** Adds or removes Slots to ensure the exact number of slots exist. */
     void setNumberOfSlots (int numSlots);
 
+    /** Inserts a new slot with the given index. If the index is < 0 or greater
+        than the current number of scenes, the new one will be added at the end of the list
+     */
+    ClipSlot* insertSlot (int index);
+
     juce::ValueTree state;  /**< The state of this ClipSlotList. */
     Track& track;           /**< The Track this ClipSlotList belongs to. */
 
