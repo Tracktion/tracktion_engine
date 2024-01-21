@@ -92,7 +92,7 @@ public:
         setCoefficients(filterType_, filterFrequency_, filterGain_);
     }
 
-    void addNextBlock(juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples /*, EffectsModule& effectsModule_in*/)
+    void addNextBlock(juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples, EffectsModule& effectsModule_in)
     {
         jassert (! isFinished);
 
@@ -109,12 +109,11 @@ public:
         if (numSamps > 0)
         {       
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
-            // =8> Try applying the effects here
-            /*effectsModule_in.setParameters();
-            effectsModule_in.applyEffects(scratch.buffer);*/
-            // =8>
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
+            // =8> Try applying the effects here
+            effectsModule_in.applyEffects(scratch.buffer);
+            // =8>
             if (filterType != FilterType::noFilter)
             {
                 iirFilterR.processSamples(scratch.buffer.getWritePointer(0), scratch.buffer.getNumSamples());
@@ -558,7 +557,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
         for (int i = playingNotes.size(); --i >= 0;)
         {
             auto sn = playingNotes.getUnchecked (i);
-            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
+            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, effectsModule);
 
             if (sn->isFinished)
                 playingNotes.remove (i);
