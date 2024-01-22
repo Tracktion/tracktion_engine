@@ -170,6 +170,13 @@ void ExportJob::copyEditFilesToTempDir()
                 }
             }
         }
+        
+        for (auto t : getAudioTracks (*edit))
+        {
+            for (auto s : t->getClipSlotList().getClipSlots())
+                if (auto c = s->getClip())
+                    c->removeFromParent();
+        }
     }
 
     auto allExportables = Exportable::addAllExportables (*edit);
