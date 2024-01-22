@@ -1038,6 +1038,67 @@ bool Clipboard::Clips::pasteInsertingAtCursorPos (Edit& edit, EditInsertPoint& i
 
 //==============================================================================
 //==============================================================================
+Clipboard::Scenes::Scenes() {}
+Clipboard::Scenes::~Scenes() {}
+
+bool Clipboard::Scenes::pasteIntoEdit (const EditPastingOptions& options) const
+{
+    auto& sceneList = options.edit.getSceneList();
+
+    auto insertIndex = sceneList.getNumScenes();
+    if (auto sm = options.selectionManager)
+    {
+        auto items = sm->getSelectedObjects().getItemsOfType<Scene>();
+        if (items.size() > 0)
+        {
+            insertIndex = 0;
+            for (auto s : items)
+                insertIndex = std::max (insertIndex, s->getIndex() + 1);
+        }
+        sm->deselectAll();
+    }
+
+    std::map<EditItemID, EditItemID> remappedIDs;
+    SelectableList itemsAdded;
+
+    for (auto info : scenes)
+    {
+        if (auto newScene = sceneList.insertScene (insertIndex))
+        {
+            newScene->state.copyPropertiesAndChildrenFrom (info.state, &options.edit.getUndoManager());
+
+            options.edit.ensureNumberOfAudioTracks (int (info.clips.size()));
+            auto tracks = getAudioTracks (options.edit);
+            for (auto [idx, clip] : juce::enumerate (info.clips))
+            {
+                auto track = tracks[int (idx)];
+                auto slot  = track->getClipSlotList().getClipSlots()[insertIndex];
+
+                if (clip.isValid())
+                {
+                    auto newClipState = clip.createCopy();
+                    EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
+                    
+                    insertClipWithState (*slot, newClipState);
+                }
+            }
+            itemsAdded.add (newScene);
+        }
+
+        insertIndex++;
+    }
+
+    if (itemsAdded.isEmpty())
+        return false;
+
+    if (auto sm = options.selectionManager)
+        sm->select (itemsAdded);
+
+    return true;
+}
+
+//==============================================================================
+//==============================================================================
 Clipboard::Tracks::Tracks() {}
 Clipboard::Tracks::~Tracks() {}
 

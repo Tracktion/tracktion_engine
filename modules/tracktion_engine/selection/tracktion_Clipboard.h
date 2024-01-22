@@ -110,6 +110,22 @@ public:
         std::vector<AutomationCurveSection> automationCurves;
     };
 
+    struct Scenes  : public ContentType
+    {
+        Scenes();
+        ~Scenes() override;
+
+        struct SceneInfo
+        {
+            juce::ValueTree state;
+            std::vector<juce::ValueTree> clips;
+        };
+
+        std::vector<SceneInfo> scenes;
+
+        bool pasteIntoEdit (const EditPastingOptions&) const override;
+    };
+
     struct Tracks  : public ContentType
     {
         Tracks();
