@@ -280,6 +280,12 @@ Clip* ClipTrack::findClipForID (EditItemID id) const
     for (auto c : getClips())
         if (c->itemID == id)
             return c;
+    
+    if (auto at = dynamic_cast<const AudioTrack*> (this))
+        for (auto slot : const_cast<AudioTrack*> (at)->getClipSlotList().getClipSlots())
+            if (auto c = slot->getClip())
+                if (c->itemID == id)
+                    return c;
 
     return {};
 }

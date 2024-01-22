@@ -686,6 +686,11 @@ bool containsClip (const Edit& edit, Clip* clip)
                                   {
                                       if (t.indexOfTrackItem (clip) >= 0)
                                           return true;
+        
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                          for (auto slot : at->getClipSlotList().getClipSlots())
+                                              if (clip == slot->getClip())
+                                                  return true;
 
                                       for (auto cc : getTrackItemsOfType<ContainerClip> (t))
                                           if (cc->getClips().contains (clip))
@@ -707,6 +712,12 @@ void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
                                               if (! f (*ti))
                                                   return false;
                                       }
+        
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                          for (auto slot : at->getClipSlotList().getClipSlots())
+                                              if (auto c = slot->getClip())
+                                                  if (! f (*c))
+                                                      return false;
 
                                       for (auto cc : getTrackItemsOfType<ContainerClip> (t))
                                           for (auto c : cc->getClips())
