@@ -146,10 +146,11 @@ void CurveEditor::paint (juce::Graphics& g)
     auto clipBounds = g.getClipBounds();
 
     {
+        const auto startX = std::max (0.0f, timeToX ({}));
         auto lastY = valueToY (getValueAt (leftTime));
 
         juce::Path curvePath;
-        curvePath.startNewSubPath (std::max (0.0f, timeToX ({})), lastY);
+        curvePath.startNewSubPath (startX, lastY);
         curvePath.preallocateSpace (numPoints * 5 + 1);
 
         if (numPoints > 0)
@@ -200,7 +201,7 @@ void CurveEditor::paint (juce::Graphics& g)
             juce::Path fillPath (curvePath);
             const auto y = getHeight() + 1.0f;
             fillPath.lineTo ((float) getWidth(), y);
-            fillPath.lineTo (0.0f, y);
+            fillPath.lineTo (startX, y);
             fillPath.closeSubPath();
 
             g.setColour (fillCol);
