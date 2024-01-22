@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-11-01 16:17:37</td>
+            <td class="headerValue">2024-01-22 11:22:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">50</td>
@@ -208,9 +208,9 @@
 <a name="146"><span class="lineNum">     146 </span>            :     /** Removes any meta-event messages from a sequence. */</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">         64 :     static inline juce::MidiMessageSequence stripMetaEvents (juce::MidiMessageSequence seq)</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :     {</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       4928 :         for (int i = seq.getNumEvents(); --i &gt;= 0;)</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       4864 :             if (! seq.getEventPointer (i)-&gt;message.isMetaEvent())</span></a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       4736 :                 seq.deleteEvent (i, false);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       5216 :         for (int i = seq.getNumEvents(); --i &gt;= 0;)</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       5152 :             if (! seq.getEventPointer (i)-&gt;message.isMetaEvent())</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       5024 :                 seq.deleteEvent (i, false);</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">         64 :         return seq;</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :     }</a>
@@ -606,41 +606,41 @@
 <a name="544"><span class="lineNum">     544 </span>            :         {</a>
 <a name="545"><span class="lineNum">     545 </span>            :             for (;;)</a>
 <a name="546"><span class="lineNum">     546 </span>            :             {</a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineCov">    3481266 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineCov">    3481467 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
 <a name="548"><span class="lineNum">     548 </span>            :                 </a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineCov">    5012587 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineCov">    5012788 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
 <a name="550"><span class="lineNum">     550 </span><span class="lineCov">    1531033 :                                                                     : std::min (testSetup.blockSize, numSamplesToDo);</span></a>
-<a name="551"><span class="lineNum">     551 </span><span class="lineCov">    3481266 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineCov">    3481266 :                 midi.clear();</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineCov">    3481467 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineCov">    3481467 :                 midi.clear();</span></a>
 <a name="553"><span class="lineNum">     553 </span>            : </a>
-<a name="554"><span class="lineNum">     554 </span><span class="lineCov">    3481266 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineCov">    3481266 :                 subSectionView.clear();</span></a>
+<a name="554"><span class="lineNum">     554 </span><span class="lineCov">    3481467 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineCov">    3481467 :                 subSectionView.clear();</span></a>
 <a name="556"><span class="lineNum">     556 </span>            : </a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">    3481266 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineCov">    3481467 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
 <a name="558"><span class="lineNum">     558 </span>            : </a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineCov">    3481266 :                 if (playHead)</span></a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineCov">     614264 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineCov">    3481467 :                 if (playHead)</span></a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineCov">     614246 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
 <a name="561"><span class="lineNum">     561 </span>            : </a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">    3481266 :                 numProcessMisses += player-&gt;process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">    3481467 :                 numProcessMisses += player-&gt;process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });</span></a>
 <a name="563"><span class="lineNum">     563 </span>            : </a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineCov">    3481266 :                 if (writer)</span></a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineCov">    3481467 :                 if (writer)</span></a>
 <a name="565"><span class="lineNum">     565 </span>            :                 {</a>
 <a name="566"><span class="lineNum">     566 </span>            :                     auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);</a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    2869070 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineCov">    2869289 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
 <a name="568"><span class="lineNum">     568 </span>            :                 }</a>
 <a name="569"><span class="lineNum">     569 </span>            : </a>
 <a name="570"><span class="lineNum">     570 </span>            :                 // Copy MIDI to buffer</a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineCov">    3482274 :                 for (const auto&amp; m : midi)</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineCov">    3482475 :                 for (const auto&amp; m : midi)</span></a>
 <a name="572"><span class="lineNum">     572 </span>            :                 {</a>
 <a name="573"><span class="lineNum">     573 </span><span class="lineCov">       1008 :                     const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);</span></a>
 <a name="574"><span class="lineNum">     574 </span><span class="lineCov">       1008 :                     context-&gt;midi.addEvent (m, numSamplesDone + sampleNumber);</span></a>
 <a name="575"><span class="lineNum">     575 </span>            :                 }</a>
 <a name="576"><span class="lineNum">     576 </span>            : </a>
-<a name="577"><span class="lineNum">     577 </span><span class="lineCov">    3481266 :                 numSamplesToDo -= numThisTime;</span></a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    3481266 :                 numSamplesDone += numThisTime;</span></a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineCov">    3481266 :                 maxNumSamples -=  numThisTime;</span></a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineCov">    3481467 :                 numSamplesToDo -= numThisTime;</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">    3481467 :                 numSamplesDone += numThisTime;</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineCov">    3481467 :                 maxNumSamples -=  numThisTime;</span></a>
 <a name="580"><span class="lineNum">     580 </span>            : </a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    3481266 :                 if (maxNumSamples &lt;= 0)</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">    3481467 :                 if (maxNumSamples &lt;= 0)</span></a>
 <a name="582"><span class="lineNum">     582 </span>            :                     break;</a>
 <a name="583"><span class="lineNum">     583 </span>            :             }</a>
 <a name="584"><span class="lineNum">     584 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-11-01 16:17:37</td>
+            <td class="headerValue">2024-01-22 11:22:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">128</td>
@@ -132,12 +132,12 @@
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">        284 :         startTimer (200);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :     }</a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         32 :     void timerCallback() override</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         23 :     void timerCallback() override</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :     {</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">         32 :         stopTimer();</span></a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">         32 :         edit.resetChangedStatus();</span></a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">         32 :         edit.changeResetterTimer.reset();</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         32 :     }</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">         23 :         stopTimer();</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">         23 :         edit.resetChangedStatus();</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">         23 :         edit.changeResetterTimer.reset();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         23 :     }</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
 <a name="80"><span class="lineNum">      80 </span>            :     Edit&amp; edit;</a>
 <a name="81"><span class="lineNum">      81 </span>            : };</a>
@@ -559,7 +559,7 @@
 <a name="497"><span class="lineNum">     497 </span>            : struct Edit::MirroredPluginUpdateTimer  : public Timer</a>
 <a name="498"><span class="lineNum">     498 </span>            : {</a>
 <a name="499"><span class="lineNum">     499 </span><span class="lineCov">        284 :     MirroredPluginUpdateTimer (Edit&amp; ed) : edit (ed) {}</span></a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineCov">         22 :     void timerCallback() override       { edit.updateMirroredPlugins(); }</span></a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineCov">         19 :     void timerCallback() override       { edit.updateMirroredPlugins(); }</span></a>
 <a name="501"><span class="lineNum">     501 </span>            : </a>
 <a name="502"><span class="lineNum">     502 </span>            :     Edit&amp; edit;</a>
 <a name="503"><span class="lineNum">     503 </span>            :     juce::Array&lt;Plugin::WeakRef&gt; changedPlugins;</a>
@@ -1110,8 +1110,8 @@
 <a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">          1 : void Edit::resetChangedStatus()</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            : {</a>
 <a name="1050"><span class="lineNum">    1050 </span>            :     // Dispatch pending changes syncronously or hasChanged will always get set to true</a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">         33 :     getUndoManager().dispatchPendingMessages();</span></a>
-<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">         32 :     hasChanged = false;</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">         24 :     getUndoManager().dispatchPendingMessages();</span></a>
+<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">         23 :     hasChanged = false;</span></a>
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">          1 : }</span></a>
 <a name="1054"><span class="lineNum">    1054 </span>            : </a>
 <a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">        311 : void Edit::markAsChanged()</span></a>
@@ -1248,8 +1248,8 @@
 <a name="1186"><span class="lineNum">    1186 </span>            : </a>
 <a name="1187"><span class="lineNum">    1187 </span><span class="lineCov">       3587 : void Edit::visitAllTracks (std::function&lt;bool(Track&amp;)&gt; f, bool recursive) const</span></a>
 <a name="1188"><span class="lineNum">    1188 </span>            : {</a>
-<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">      21073 :     if (trackList != nullptr)</span></a>
-<a name="1190"><span class="lineNum">    1190 </span><span class="lineCov">      21009 :         trackList-&gt;visitAllTracks (f, recursive);</span></a>
+<a name="1189"><span class="lineNum">    1189 </span><span class="lineCov">      21067 :     if (trackList != nullptr)</span></a>
+<a name="1190"><span class="lineNum">    1190 </span><span class="lineCov">      21003 :         trackList-&gt;visitAllTracks (f, recursive);</span></a>
 <a name="1191"><span class="lineNum">    1191 </span><span class="lineCov">       3587 : }</span></a>
 <a name="1192"><span class="lineNum">    1192 </span>            : </a>
 <a name="1193"><span class="lineNum">    1193 </span>            : template &lt;typename Predicate&gt;</a>
@@ -2050,32 +2050,32 @@
 <a name="1988"><span class="lineNum">    1988 </span>            : }</a>
 <a name="1989"><span class="lineNum">    1989 </span>            : </a>
 <a name="1990"><span class="lineNum">    1990 </span>            : //==============================================================================</a>
-<a name="1991"><span class="lineNum">    1991 </span><span class="lineCov">         65 : void Edit::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
+<a name="1991"><span class="lineNum">    1991 </span><span class="lineCov">         59 : void Edit::sendMirrorUpdateToAllPlugins (Plugin&amp; plugin) const</span></a>
 <a name="1992"><span class="lineNum">    1992 </span>            : {</a>
-<a name="1993"><span class="lineNum">    1993 </span><span class="lineCov">         65 :     CRASH_TRACER</span></a>
+<a name="1993"><span class="lineNum">    1993 </span><span class="lineCov">         59 :     CRASH_TRACER</span></a>
 <a name="1994"><span class="lineNum">    1994 </span>            : </a>
-<a name="1995"><span class="lineNum">    1995 </span><span class="lineCov">        539 :     for (auto t : getAllTracks (*this))</span></a>
-<a name="1996"><span class="lineNum">    1996 </span><span class="lineCov">        474 :         t-&gt;sendMirrorUpdateToAllPlugins (plugin);</span></a>
+<a name="1995"><span class="lineNum">    1995 </span><span class="lineCov">        497 :     for (auto t : getAllTracks (*this))</span></a>
+<a name="1996"><span class="lineNum">    1996 </span><span class="lineCov">        438 :         t-&gt;sendMirrorUpdateToAllPlugins (plugin);</span></a>
 <a name="1997"><span class="lineNum">    1997 </span>            : </a>
-<a name="1998"><span class="lineNum">    1998 </span><span class="lineCov">         68 :     for (auto r : getRackList().getTypes())</span></a>
+<a name="1998"><span class="lineNum">    1998 </span><span class="lineCov">         62 :     for (auto r : getRackList().getTypes())</span></a>
 <a name="1999"><span class="lineNum">    1999 </span><span class="lineCov">          6 :         for (auto p : r-&gt;getPlugins())</span></a>
 <a name="2000"><span class="lineNum">    2000 </span><span class="lineCov">          3 :             p-&gt;updateFromMirroredPluginIfNeeded (plugin);</span></a>
 <a name="2001"><span class="lineNum">    2001 </span>            : </a>
-<a name="2002"><span class="lineNum">    2002 </span><span class="lineCov">         65 :     masterPluginList-&gt;sendMirrorUpdateToAllPlugins (plugin);</span></a>
-<a name="2003"><span class="lineNum">    2003 </span><span class="lineCov">         65 : }</span></a>
+<a name="2002"><span class="lineNum">    2002 </span><span class="lineCov">         59 :     masterPluginList-&gt;sendMirrorUpdateToAllPlugins (plugin);</span></a>
+<a name="2003"><span class="lineNum">    2003 </span><span class="lineCov">         59 : }</span></a>
 <a name="2004"><span class="lineNum">    2004 </span>            : </a>
-<a name="2005"><span class="lineNum">    2005 </span><span class="lineCov">         22 : void Edit::updateMirroredPlugins()</span></a>
+<a name="2005"><span class="lineNum">    2005 </span><span class="lineCov">         19 : void Edit::updateMirroredPlugins()</span></a>
 <a name="2006"><span class="lineNum">    2006 </span>            : {</a>
-<a name="2007"><span class="lineNum">    2007 </span><span class="lineCov">         22 :     if (isLoading())</span></a>
+<a name="2007"><span class="lineNum">    2007 </span><span class="lineCov">         19 :     if (isLoading())</span></a>
 <a name="2008"><span class="lineNum">    2008 </span>            :         return;</a>
 <a name="2009"><span class="lineNum">    2009 </span>            : </a>
-<a name="2010"><span class="lineNum">    2010 </span><span class="lineCov">         22 :     mirroredPluginUpdateTimer-&gt;stopTimer();</span></a>
+<a name="2010"><span class="lineNum">    2010 </span><span class="lineCov">         19 :     mirroredPluginUpdateTimer-&gt;stopTimer();</span></a>
 <a name="2011"><span class="lineNum">    2011 </span>            : </a>
-<a name="2012"><span class="lineNum">    2012 </span><span class="lineCov">         87 :     for (auto changed : mirroredPluginUpdateTimer-&gt;changedPlugins)</span></a>
-<a name="2013"><span class="lineNum">    2013 </span><span class="lineCov">         65 :         if (auto p = dynamic_cast&lt;Plugin*&gt; (changed.get()))</span></a>
-<a name="2014"><span class="lineNum">    2014 </span><span class="lineCov">         65 :             sendMirrorUpdateToAllPlugins (*p);</span></a>
+<a name="2012"><span class="lineNum">    2012 </span><span class="lineCov">         78 :     for (auto changed : mirroredPluginUpdateTimer-&gt;changedPlugins)</span></a>
+<a name="2013"><span class="lineNum">    2013 </span><span class="lineCov">         59 :         if (auto p = dynamic_cast&lt;Plugin*&gt; (changed.get()))</span></a>
+<a name="2014"><span class="lineNum">    2014 </span><span class="lineCov">         59 :             sendMirrorUpdateToAllPlugins (*p);</span></a>
 <a name="2015"><span class="lineNum">    2015 </span>            : </a>
-<a name="2016"><span class="lineNum">    2016 </span><span class="lineCov">         22 :     mirroredPluginUpdateTimer-&gt;changedPlugins.clear();</span></a>
+<a name="2016"><span class="lineNum">    2016 </span><span class="lineCov">         19 :     mirroredPluginUpdateTimer-&gt;changedPlugins.clear();</span></a>
 <a name="2017"><span class="lineNum">    2017 </span>            : }</a>
 <a name="2018"><span class="lineNum">    2018 </span>            : </a>
 <a name="2019"><span class="lineNum">    2019 </span><span class="lineCov">       9322 : void Edit::updateMirroredPlugin (Plugin&amp; p)</span></a>
@@ -2106,13 +2106,13 @@
 <a name="2044"><span class="lineNum">    2044 </span><span class="lineCov">         16 :     modifierTimers.removeFirstMatchingValue (&amp;mt);</span></a>
 <a name="2045"><span class="lineNum">    2045 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2046"><span class="lineNum">    2046 </span>            : </a>
-<a name="2047"><span class="lineNum">    2047 </span><span class="lineCov">    3039181 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
+<a name="2047"><span class="lineNum">    2047 </span><span class="lineCov">    3037881 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
 <a name="2048"><span class="lineNum">    2048 </span>            : {</a>
 <a name="2049"><span class="lineNum">    2049 </span>            :     const juce::ScopedLock sl (modifierTimers.getLock());</a>
 <a name="2050"><span class="lineNum">    2050 </span>            : </a>
-<a name="2051"><span class="lineNum">    2051 </span><span class="lineCov">    3039197 :     for (auto mt : modifierTimers)</span></a>
+<a name="2051"><span class="lineNum">    2051 </span><span class="lineCov">    3037897 :     for (auto mt : modifierTimers)</span></a>
 <a name="2052"><span class="lineNum">    2052 </span><span class="lineCov">         16 :         mt-&gt;updateStreamTime (editTime, numSamples);</span></a>
-<a name="2053"><span class="lineNum">    2053 </span><span class="lineCov">    3039181 : }</span></a>
+<a name="2053"><span class="lineNum">    2053 </span><span class="lineCov">    3037881 : }</span></a>
 <a name="2054"><span class="lineNum">    2054 </span>            : </a>
 <a name="2055"><span class="lineNum">    2055 </span>            : //==============================================================================</a>
 <a name="2056"><span class="lineNum">    2056 </span><span class="lineNoCov">          0 : void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array&lt;EditItemID&gt;&amp; plugins)</span></a>
