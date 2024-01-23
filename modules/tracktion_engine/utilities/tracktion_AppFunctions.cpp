@@ -265,6 +265,10 @@ namespace AppFunctions
             else
             {
                 getCurrentUIBehaviour().stopPreviewPlayback();
+
+                if (getCurrentPropertyStorage().getProperty (SettingID::resetCursorOnPlay))
+                    transport->setPosition (transport->startPosition);
+
                 transport->record (true, true);
             }
         }

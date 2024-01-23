@@ -132,6 +132,9 @@ public:
     /** @internal. Will be removed in a future release. */
     tracktion::graph::PlayHead* getNodePlayHead() const;
 
+    /** @internal */
+    void blockUntilSyncPointChange();
+
     /** @see tracktion::graph::ThreadPoolStrategy */
     static void setThreadPoolStrategy (int);
     /** @see tracktion::graph::ThreadPoolStrategy */

@@ -967,6 +967,25 @@ tracktion::graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
                                : nullptr;
 }
 
+void EditPlaybackContext::blockUntilSyncPointChange()
+{
+    if (const auto startSyncPoint = getSyncPoint())
+    {
+        for (;;)
+        {
+            const auto syncPointNow = getSyncPoint();
+
+            if (! syncPointNow)
+                break;
+
+            if (syncPointNow->referenceSamplePosition != startSyncPoint->referenceSamplePosition)
+                break;
+
+            std::this_thread::sleep_for (1us);
+        }
+    }
+}
+
 bool EditPlaybackContext::isPlaying() const
 {
     return nodePlaybackContext ? nodePlaybackContext->playHead.isPlaying()

@@ -288,9 +288,9 @@ void Clip::sourceMediaChanged()
 void Clip::setPosition (ClipPosition newPosition)
 {
     const auto maxEnd = Edit::getMaximumEditEnd();
-    newPosition.time = { juce::jlimit (TimePosition(), maxEnd, newPosition.time.getStart()),
+    newPosition.time = { juce::jlimit (0_tp, maxEnd, newPosition.time.getStart()),
                          juce::jlimit (newPosition.time.getStart(), maxEnd, newPosition.time.getEnd()) };
-    newPosition.offset = juce::jmax (TimeDuration(), newPosition.offset);
+    newPosition.offset = juce::jmax (0_td, newPosition.offset);
 
     clipStart = newPosition.time.getStart();
     length = newPosition.time.getLength();

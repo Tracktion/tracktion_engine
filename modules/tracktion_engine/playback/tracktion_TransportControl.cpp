@@ -61,7 +61,7 @@ namespace TransportHelpers
                                                 : t;
     }
 
-    inline void resyncLauncherClips (TransportControl& tc)
+    inline void resyncLauncherClips (TransportControl& tc, std::optional<SyncPoint> startPoint, bool syncToStartOfBar)
     {
         auto epc = tc.getCurrentPlaybackContext();
 
@@ -89,17 +89,40 @@ namespace TransportHelpers
         if (launchedClips.isEmpty())
             return;
 
-        const auto syncPoint = epc->getSyncPoint();
+        // If clips are starting in the future, stop them now
+        if (startPoint)
+        {
+            for (auto c : launchedClips)
+                c->getLaunchHandle()->stop ({});
 
-        if (! syncPoint)
+            epc->blockUntilSyncPointChange();
+        }
+
+        const auto currentPoint = epc->getSyncPoint();
+
+        if (! currentPoint)
             return;
+
+        if (! startPoint)
+            startPoint = currentPoint;
 
         auto& ts = edit.tempoSequence;
         const auto currentBeat = ts.toBeats (tc.getPosition());
-        const auto currentBarsBeats = ts.toBarsAndBeats (tc.getPosition());
-        const auto barStartBeat = ts.toBeats (tempo::BarsAndBeats { .bars = currentBarsBeats.bars });
-        const auto launchBeatDiff = currentBeat - barStartBeat;
-        const auto startSyncBeat = MonotonicBeat { syncPoint->monotonicBeat.v - launchBeatDiff };
+
+        MonotonicBeat startSyncBeat;
+
+        if (syncToStartOfBar)
+        {
+            const auto currentBarsBeats = ts.toBarsAndBeats (tc.getPosition());
+            const auto barStartBeat = ts.toBeats (tempo::BarsAndBeats { .bars = currentBarsBeats.bars });
+            const auto launchBeatDiff = currentBeat - barStartBeat;
+            startSyncBeat = MonotonicBeat { currentPoint->monotonicBeat.v - launchBeatDiff };
+        }
+        else
+        {
+            const auto launchBeatDiff = currentPoint->beat - startPoint->beat;
+            startSyncBeat = MonotonicBeat { currentPoint->monotonicBeat.v - launchBeatDiff };
+        }
 
         for (auto c : launchedClips)
         {
@@ -863,7 +886,7 @@ void TransportControl::play (bool justSendMMCIfEnabled)
 void TransportControl::playFromStart (bool justSendMMCIfEnabled)
 {
     setPosition (startPosition);
-    TransportHelpers::resyncLauncherClips (*this);
+    TransportHelpers::resyncLauncherClips (*this, {}, true);
     play (justSendMMCIfEnabled);
 }
 
@@ -1508,14 +1531,12 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
                         lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
                         playHeadWrapper->setLoopTimes (true, lr);
                         playHeadWrapper->setRollInToLoop (prerollStart);
-                        //ddd playHeadWrapper->play();
                     }
                     else
                     {
                         // Set the playhead loop times before preparing the context as this will be used by
                         // the RecordingContext to initialise itself
                         playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
-                        //ddd playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
                     }
 
                     playHeadWrapper->setPosition (prerollStart);
@@ -1523,8 +1544,7 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
 
                     // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
                     {
-                        while (playbackContext->getPendingPositionChange())
-                            std::this_thread::yield();
+                        playbackContext->blockUntilSyncPointChange();
 
                         if (edit.recordingPunchInOut)
                             punchRange = getLoopRange();
@@ -1542,7 +1562,10 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
                                                    .time = transportState->startTime.get(),
                                                    .beat = ts.toBeats (transportState->startTime.get()) } ;
                         jassert (juce::approximatelyEqual (currentSyncPoint->time.inSeconds(), currentSyncPoint->unloopedTime.inSeconds()));
+
+                        TransportHelpers::resyncLauncherClips (*this, punchInPoint, false);
                     }
+
                     playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
 
                     if (edit.getNumCountInBeats() > 0)
