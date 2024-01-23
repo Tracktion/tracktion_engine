@@ -345,7 +345,7 @@ public:
         virtual void recordingStarted (SyncPoint /*start*/, std::optional<TimeRange> /*punchRange*/)  {}
 
         /** Called when global recording stops. */
-        virtual void recordingStopped (SyncPoint)  {}
+        virtual void recordingStopped (SyncPoint, bool /*discardRecordings*/)  {}
 
         /** Called before recording start for a specific input instance. */
         virtual void recordingAboutToStart (InputDeviceInstance&, EditItemID /*targetID*/) {}

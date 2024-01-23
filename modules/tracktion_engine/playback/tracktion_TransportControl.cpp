@@ -27,7 +27,6 @@ namespace IDs
 
     DECLARE_ID (userDragging)
     DECLARE_ID (lastUserDragTime)
-    DECLARE_ID (cursorPosAtPlayStart)
     DECLARE_ID (reallocationInhibitors)
     DECLARE_ID (playbackContextAllocation)
 
@@ -139,7 +138,6 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
         endTime.referTo (transientState, IDs::endTime, um);
         userDragging.referTo (transientState, IDs::userDragging, um);
         lastUserDragTime.referTo (transientState, IDs::lastUserDragTime, um);
-        cursorPosAtPlayStart.referTo (transientState, IDs::cursorPosAtPlayStart, um, -1000_tp);
         reallocationInhibitors.referTo (transientState, IDs::reallocationInhibitors, um);
         playbackContextAllocation.referTo (transientState, IDs::playbackContextAllocation, um);
 
@@ -224,7 +222,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
                             allowRecordingIfNoInputsArmed, clearDevicesOnStop;
     juce::CachedValue<bool> userDragging, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
     juce::CachedValue<juce::int64> lastUserDragTime;
-    juce::CachedValue<TimePosition> startTime, endTime, cursorPosAtPlayStart;
+    juce::CachedValue<TimePosition> startTime, endTime;
     juce::CachedValue<TimePosition> videoPosition;
     juce::CachedValue<int> reallocationInhibitors, playbackContextAllocation, nudgeLeftCount, nudgeRightCount;
 
@@ -1373,8 +1371,6 @@ void TransportControl::performPlay()
         transportState->safeRecording = false;
         playingFlag = std::make_unique<PlayingFlag> (engine);
 
-        transportState->cursorPosAtPlayStart = position.get();
-
         ensureContextAllocated();
 
         if (playbackContext)
@@ -1485,8 +1481,6 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
 
                     prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
                 }
-
-                transportState->cursorPosAtPlayStart = position.get();
 
                 playingFlag = std::make_unique<PlayingFlag> (engine);
                 transportState->safeRecording = engine.getPropertyStorage().getProperty (SettingID::safeRecord, false);
@@ -1609,7 +1603,7 @@ std::optional<SyncPoint> TransportControl::performStopRecording()
             .map_error ([this] (auto err) { engine.getUIBehaviour().showWarningAlert (TRANS("Recording"), err); });
 
         sendChangeMessage();
-        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
+        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint, discardRecordings);
 
         return syncPoint;
     }
@@ -1656,7 +1650,7 @@ void TransportControl::performStop()
                                                      : (looping ? recEndPos
                                                                 : recEndTime);
 
-        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint);
+        listeners.call (&TransportControl::Listener::recordingStopped, *syncPoint, transportState->discardRecordings);
     }
     else
     {
