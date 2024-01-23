@@ -710,6 +710,9 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               );
 
     // BEATCONNECT MODIFICATION START
+    // Add EffectsModule if the keyNote is unique
+    effectsModules.emplace((const int)keyNote, new EffectsModule);
+
     if (filterType != (int)FilterType::noFilter) 
     {
         v.setProperty(IDs::filterType, filterType, nullptr);
@@ -771,6 +774,27 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
 
 void SamplerPlugin::removeSound (int index)
 {
+    // BEATCONNECT MODIFICATION START
+    // If the keyNote is no longer in use, remove the corresponding EffectsModule
+    const int removeSoundsKeyNote = state.getChild(index).getProperty(IDs::keyNote);
+    bool keyNotePresisting = false;
+    int keyNoteAccumulator = 0;
+
+    for (auto element : state) 
+        if ((const int)element.getProperty(IDs::keyNote) == removeSoundsKeyNote)
+        {
+            keyNoteAccumulator++;
+            if (keyNoteAccumulator > 1)
+            {
+                keyNotePresisting = true;
+                break;
+            }
+        }
+
+    if (!keyNotePresisting)
+        effectsModules.erase(removeSoundsKeyNote);
+    // BEATCONNECT MODIFICATION END
+
     state.removeChild (index, getUndoManager());
 
     const juce::ScopedLock sl (lock);

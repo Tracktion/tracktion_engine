@@ -155,6 +155,7 @@ private:
     struct SampledNote;
 
     // BEATCONNECT MODIFICATION START
+    std::map<const int, std::unique_ptr<EffectsModule>> effectsModules;
     EffectsModule effectsModule;
     // BEATCONNECT MODIFICATION END
 
