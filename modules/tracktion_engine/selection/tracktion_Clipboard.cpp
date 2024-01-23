@@ -465,7 +465,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                             auto idx = list.getClipSlots().indexOf (slot);
 
-                            newTrack->getClipSlotList().ensureNumberOfSlots (list.getClipSlots().size());
+                            options.edit.getSceneList().ensureNumberOfScenes (list.getClipSlots().size());
 
                             clipOwner = newTrack->getClipSlotList().getClipSlots()[idx];
                         }
@@ -477,8 +477,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                             auto idx = list.getClipSlots().indexOf (slot) + 1;
 
-                            for (auto t : getAudioTracks (at.edit))
-                                t->getClipSlotList().ensureNumberOfSlots (idx + 1);
+                            options.edit.getSceneList().ensureNumberOfScenes (idx + 1);
 
                             clipOwner = list.getClipSlots()[idx];
                         }
