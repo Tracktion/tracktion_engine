@@ -112,7 +112,9 @@ public:
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
             // =8> Try applying the effects here
+            // BEATCONNECT MODIFICATION START
             effectsModule_in.applyEffects(scratch.buffer);
+            // BEATCONNECT MODIFICATION END
             // =8>
             if (filterType != FilterType::noFilter)
             {
@@ -557,7 +559,22 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
         for (int i = playingNotes.size(); --i >= 0;)
         {
             auto sn = playingNotes.getUnchecked (i);
-            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, effectsModule);
+
+            // BEATCONNECT MODIFICATIONS START
+            auto effectsModulesIterator = effectsModules.find(sn->note);
+            EffectsModule* effectsMod;
+
+            jassert(effectsModulesIterator != effectsModules.end());
+            if (effectsModulesIterator != effectsModules.end())
+                effectsMod = effectsModulesIterator->second.get();
+             
+            // BEATCONNECT MODIFICATIONS END
+
+            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
+            // BEATCONNECT MODIFICATIONS START
+                , *effectsMod
+            // BEATCONNECT MODIFICATIONS END
+            );
 
             if (sn->isFinished)
                 playingNotes.remove (i);
@@ -712,6 +729,7 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     // BEATCONNECT MODIFICATION START
     // Add EffectsModule if the keyNote is unique
     effectsModules.emplace((const int)keyNote, new EffectsModule);
+    // BEATCONNECT MODIFICATION END
 
     if (filterType != (int)FilterType::noFilter) 
     {
