@@ -106,9 +106,11 @@ private:
         std::optional<MonotonicBeat> nextEventTime;
     };
 
-    std::atomic<State> state { State {} };
+    static_assert (std::is_trivially_copyable_v<State>);
 
-    State getState() const      { return state; }
+    MultipleWriterSeqLock<State> state;
+
+    State getState() const      { return state.load(); }
     void setState (State s)     { state.store (std::move (s)); }
 };
 

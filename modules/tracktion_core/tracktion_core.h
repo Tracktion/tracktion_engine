@@ -47,6 +47,8 @@
 
 #include "audio/tracktion_AudioReader.h"
 
+#include "threads/tracktion_MultipleWriterSeqLock.h"
+
 #include "utilities/tracktion_AlgorithmAdapters.h"
 #include "utilities/tracktion_CPU.h"
 #include "utilities/tracktion_Hash.h"
