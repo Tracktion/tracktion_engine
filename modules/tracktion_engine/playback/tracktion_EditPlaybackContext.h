@@ -145,6 +145,13 @@ public:
     */
     static void enablePooledMemory (bool);
 
+    /** @internal */
+    int getNumActivelyRecordingDevices() const;
+    /** @internal */
+    void incrementNumActivelyRecordingDevices();
+    /** @internal */
+    void decrementNumActivelyRecordingDevices();
+
 private:
     bool isAllocated = false;
 
@@ -185,6 +192,7 @@ private:
 
     juce::WeakReference<EditPlaybackContext> nodeContextToSyncTo;
     std::atomic<double> audiblePlaybackTime { 0.0 };
+    std::atomic<int> activelyRecordingInputDevices { 0 };
 
     void createNode();
     void fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples);
@@ -192,5 +200,27 @@ private:
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)
 };
+
+//==============================================================================
+//==============================================================================
+/** @internal */
+namespace detail
+{
+    /** @internal */
+    struct ScopedActiveRecordingDevice
+    {
+        ScopedActiveRecordingDevice (EditPlaybackContext& e) : epc (e)
+        {
+            epc.incrementNumActivelyRecordingDevices();
+        }
+
+        ~ScopedActiveRecordingDevice()
+        {
+            epc.decrementNumActivelyRecordingDevices();
+        }
+
+        EditPlaybackContext& epc;
+    };
+}
 
 }} // namespace tracktion { inline namespace engine

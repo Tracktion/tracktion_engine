@@ -41,6 +41,7 @@ public:
 
 private:
     const Edit& edit;
+    const EditPlaybackContext& context { *edit.getTransport().getCurrentPlaybackContext() };
     bool midi = false;
     const tempo::Sequence& sequence { edit.tempoSequence.getInternalSequence() };
     tempo::Sequence::Position tempoPosition { sequence };

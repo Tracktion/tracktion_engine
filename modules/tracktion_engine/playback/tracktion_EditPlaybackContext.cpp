@@ -1151,6 +1151,21 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
     EditPlaybackContextInternal::getPooledMemoryFlag() = enable;
 }
 
+int EditPlaybackContext::getNumActivelyRecordingDevices() const
+{
+    return activelyRecordingInputDevices.load (std::memory_order_acquire);
+}
+
+void EditPlaybackContext::incrementNumActivelyRecordingDevices()
+{
+    activelyRecordingInputDevices.fetch_add (1, std::memory_order_acq_rel);
+}
+
+void EditPlaybackContext::decrementNumActivelyRecordingDevices()
+{
+    activelyRecordingInputDevices.fetch_sub (1, std::memory_order_acq_rel);
+}
+
 //==============================================================================
 static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;
 

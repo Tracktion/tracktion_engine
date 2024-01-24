@@ -350,7 +350,7 @@ public:
                 return tl::unexpected (res.error());
 
             auto recordedFile = res.value();
-            auto rc = std::make_unique<WaveRecordingContext> (edit.engine, targetID, recordedFile);
+            auto rc = std::make_unique<WaveRecordingContext> (context, targetID, recordedFile);
             rc->sampleRate = edit.engine.getDeviceManager().getSampleRate();
 
             juce::StringPairArray metadata;
@@ -615,13 +615,13 @@ public:
 
     struct WaveRecordingContext : public RecordingContext
     {
-        WaveRecordingContext (Engine& e, EditItemID targetID_, const juce::File& f)
+        WaveRecordingContext (EditPlaybackContext& epc, EditItemID targetID_, const juce::File& f)
             : RecordingContext (targetID_),
-              engine (e), file (f), diskSpaceChecker (e, f),
-              threadInitialiser (e.getWaveInputRecordingThread())
+              editPlaybackContext (epc), file (f)
         {}
 
-        Engine& engine;
+        EditPlaybackContext& editPlaybackContext;
+        Engine& engine { editPlaybackContext.edit.engine };
         juce::File file;
         double sampleRate = 44100.0;
         TimeRange punchTimes;           /**< The Edit time range that the recorded clip should start/stop. */
@@ -637,9 +637,10 @@ public:
         const bool muteTrackContentsWhilstRecording = engine.getEngineBehaviour().muteTrackContentsWhilstRecording();
 
         std::unique_ptr<AudioFileWriter> fileWriter;
-        DiskSpaceCheckTask diskSpaceChecker;
+        DiskSpaceCheckTask diskSpaceChecker { engine, file };
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
-        WaveInputRecordingThread::ScopedInitialiser threadInitialiser;
+        WaveInputRecordingThread::ScopedInitialiser threadInitialiser { engine.getWaveInputRecordingThread() };
+        const detail::ScopedActiveRecordingDevice scopedActiveRecordingDevice { editPlaybackContext };
 
         std::function<void (tl::expected<Clip::Array, juce::String>)> stopCallback;
         StopRecordingParameters stopParams;

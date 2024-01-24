@@ -717,14 +717,16 @@ public:
     class MidiRecordingContext : public RecordingContext
     {
     public:
-        MidiRecordingContext (EditItemID target, TimeRange punchRange_)
+        MidiRecordingContext (EditPlaybackContext& epc, EditItemID target, TimeRange punchRange_)
             : RecordingContext (target),
+              scopedActiveRecordingDevice (epc),
               punchRange (punchRange_)
         {
             liveNotes = std::make_shared<choc::fifo::SingleReaderSingleWriterFIFO<juce::MidiMessage>>();
             liveNotes->reset (100);
         }
 
+        detail::ScopedActiveRecordingDevice scopedActiveRecordingDevice;
         const TimeRange punchRange;
         juce::MidiMessageSequence recorded;
         TimePosition unloopedStopTime;
@@ -747,7 +749,8 @@ public:
 
         for (auto targetID : params.targets)
         {
-            auto recContext = std::make_unique<MidiRecordingContext> (targetID,
+            auto recContext = std::make_unique<MidiRecordingContext> (context,
+                                                                      targetID,
                                                                       params.punchRange);
             results.emplace_back (std::move (recContext));
         }

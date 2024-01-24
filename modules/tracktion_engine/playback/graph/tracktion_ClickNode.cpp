@@ -61,6 +61,7 @@ namespace
 ClickGenerator::ClickGenerator (Edit& e, bool isMidi)
     : edit (e), midi (isMidi)
 {
+    assert (edit.getTransport().getCurrentPlaybackContext());
 }
 
 void ClickGenerator::prepareToPlay (double newSampleRate, TimePosition startTime)
@@ -200,7 +201,7 @@ bool ClickGenerator::isMutedAtTime (TimePosition time) const
     const bool clickEnabled = edit.clickTrackEnabled.get();
 
     if (clickEnabled && edit.clickTrackRecordingOnly)
-        return ! edit.getTransport().isRecording();
+        return ! (edit.getTransport().isRecording() || context.getNumActivelyRecordingDevices() >= 1);
 
     if (! clickEnabled)
         return ! edit.getClickTrackRange().contains (time);
