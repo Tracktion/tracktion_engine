@@ -353,7 +353,7 @@ public:
     //==============================================================================
     /** Inserts a new AudioTrack in the Edit. */
     juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*);
-    // BEATCONNECT MODIFICATION START
+    // BEATCONNECT MODIFICATION START !?*&
     juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrackWithType (TrackInsertPoint, SelectionManager*, juce::String type);
     Track::Ptr newTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type);
     // BEATCONNECT MODIFICATION END

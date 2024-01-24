@@ -1715,7 +1715,7 @@ Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
     return newTrack;
 }
 
-// BEATCONNECT MODIFICATION START
+// BEATCONNECT MODIFICATION START !?*&
 AudioTrack::Ptr Edit::insertNewAudioTrackWithType(TrackInsertPoint insertPoint, SelectionManager* sm, juce::String type)
 {
     if (auto newTrack = newTrackWithType(insertPoint, IDs::TRACK, sm, type))

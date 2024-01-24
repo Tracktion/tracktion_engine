@@ -888,7 +888,7 @@ Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
         auto newClipState = clip.state.createCopy();
         edit.createNewItemID().writeID (newClipState, nullptr);
 
-        //BEATCONNECT MODIFICATION START
+        //BEATCONNECT MODIFICATION START !?*& - If this code can't be moved, we need to remove hard coded strings.
          //remove uuids
         auto removeUUID = [&](juce::ValueTree node, auto&& removeUUID) -> void
         {

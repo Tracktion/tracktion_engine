@@ -177,7 +177,7 @@ public:
     /** Returns the listener list so Nodes can manually call them. */
     juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
-    // BEATCONNECT MODIFICATION START
+    // BEATCONNECT MODIFICATION START !?*&
     // TODO: Remove when S3 is finallized 
     // RecordingThumbnailManager::Thumbnail::Ptr receivingThumbnail;
     // BEATCONNECT MODIFICATION END

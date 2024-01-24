@@ -322,7 +322,7 @@ public:
                 if (proj->isReadOnly())
                     return TRANS("The current project is read-only, so new clips can't be recorded into it!");
 
-            // BEATCONNECT MODIFICATION START
+            // BEATCONNECT MODIFICATION START !?*&
             //  auto format = getFormatToUse();
             //  juce::File recordedFile;
             //  
@@ -332,7 +332,7 @@ public:
             //      return res.getErrorMessage();
             // BEATCONNECT MODIFICATION END
 
-            // BEATCONNECT MODIFICATION START
+            // BEATCONNECT MODIFICATION START !?*&
             auto format = getFormatToUse();
             juce::File recordedFile = edit.recordFileRetriever();
             auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile);
@@ -499,7 +499,7 @@ public:
 
     struct RecordingContext
     {
-        // BEATCONNECT MODIFICATION START
+        // BEATCONNECT MODIFICATION START !?*&
         RecordingContext (Engine& p_Engine, const juce::File& p_File)
             : engine (p_Engine)
             , file (p_File)
@@ -1154,7 +1154,7 @@ public:
                         }
                         else
                         {
-                        // BEATCONNECT MODIFICATION START (RELAY)
+                        // BEATCONNECT MODIFICATION END (RELAY)
 
                             addBlockToRecord(inputBuffer, adjustSamples, numSamples - adjustSamples);
 

@@ -85,7 +85,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     delayBuffer.ensureMaxBufferSize (lengthInSamples);
 
-    // BEATCONNECT MODIFICATION START
+    // BEATCONNECT MODIFICATION START !?*&
     // const float feedbackGain = 0.0f; // xxx not sure why this value was here..
     // this is weird. commenting out. note that this is copied form 4OSC chorus, and this was added for some reason.
     // BEATCONNECT MODIFICATION END
