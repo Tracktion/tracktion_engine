@@ -169,7 +169,8 @@ void AudioTrack::initialise()
 
     ClipTrack::initialise();
 
-    getClipSlotList().ensureNumberOfSlots (edit.getSceneList().getNumScenes());
+    if (! edit.isLoading())
+        getClipSlotList().ensureNumberOfSlots (edit.getSceneList().getNumScenes());
 
     if (frozenIndividually && ! getFreezeFile().existsAsFile())
         setFrozen (false, individualFreeze);
@@ -518,13 +519,13 @@ juce::String AudioTrack::getLauncherPlayabilityWarning() const
                 if (auto c = slot->getClip())
                 {
                     auto type = c->type;
-                    
+
                     if (! hasMidi && (type == TrackItem::Type::midi || type == TrackItem::Type::step))
                         hasMidi = true;
-                    
+
                     if (! hasWave && type == TrackItem::Type::wave)
                         hasWave = true;
-                    
+
                     if (hasMidi && hasWave)
                         break;
                 }

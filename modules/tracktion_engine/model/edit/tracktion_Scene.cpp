@@ -52,6 +52,7 @@ SceneWatcher::SceneWatcher (const juce::ValueTree& scenesState_, Edit& e)
     : scenesState (scenesState_), edit (e)
 {
     checkForScenes();
+    scenesState.addListener (this);
 }
 
 void SceneWatcher::addListener (Listener* l)
@@ -231,10 +232,10 @@ void SceneList::deleteScene (Scene& scene)
         auto& csl = at->getClipSlotList();
         auto cs = csl.getClipSlots()[index];
         assert (cs != nullptr);
-        
+
         if (auto clip = cs->getClip())
             clip->removeFromParent();
-        
+
         csl.deleteSlot (*csl.getClipSlots()[index]);
     }
 }
