@@ -47,6 +47,7 @@
 #include <optional>
 #include <variant>
 #include <any>
+#include <shared_mutex>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
@@ -66,7 +67,8 @@
  #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
 
- #include "../3rd_party/expected/expected.hpp"
+#include "../3rd_party/expected/expected.hpp"
+#include "../tracktion_graph/utilities/tracktion_RealTimeSpinLock.h"
 
 #undef __TEXT
 

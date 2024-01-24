@@ -138,7 +138,7 @@ struct CrashStackTracer::CrashTraceThreads
         return "UnknownLocation";
     }
 
-    juce::Array<CrashStackTracer*, juce::CriticalSection, 100> entries;
+    juce::Array<CrashStackTracer*, juce::SpinLock, 100> entries;
 };
 
 static CrashStackTracer::CrashTraceThreads crashStack;

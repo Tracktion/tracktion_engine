@@ -287,7 +287,12 @@ void DeviceManager::closeDevices()
     deviceManager.removeAudioCallback (this);
 
     midiOutputs.clear();
-    midiInputs.clear();
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+        midiInputs.clear();
+    }
+
     waveInputs.clear();
     waveOutputs.clear();
 }
@@ -317,7 +322,11 @@ void DeviceManager::initialiseMidi()
     TRACKTION_ASSERT_MESSAGE_THREAD
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
-    midiInputs.clear();
+    {
+        const std::shared_lock sl (midiInputsMutex);
+        midiInputs.clear();
+    }
+
     midiOutputs.clear();
 
     auto& storage = engine.getPropertyStorage();
@@ -337,12 +346,21 @@ void DeviceManager::initialiseMidi()
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
     // create all the devices before initialising them..
-    for (int i = 0; i < lastMidiOutNames.size(); ++i)  midiOutputs.add (new MidiOutputDevice (engine, lastMidiOutNames[i], i));
-    for (int i = 0; i < lastMidiInNames.size(); ++i)   midiInputs.add (new PhysicalMidiInputDevice (engine, lastMidiInNames[i], i));
+    for (int i = 0; i < lastMidiOutNames.size(); ++i)
+        midiOutputs.add (new MidiOutputDevice (engine, lastMidiOutNames[i], i));
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+
+        for (int i = 0; i < lastMidiInNames.size(); ++i)
+            midiInputs.add (new PhysicalMidiInputDevice (engine, lastMidiInNames[i], i));
+    }
 
     if (hostedAudioDeviceInterface != nullptr)
     {
         midiOutputs.add (hostedAudioDeviceInterface->createMidiOutput());
+
+        const std::unique_lock sl (midiInputsMutex);
         midiInputs.add (hostedAudioDeviceInterface->createMidiInput());
     }
 
@@ -355,8 +373,12 @@ void DeviceManager::initialiseMidi()
     virtualDevices.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDevices.removeEmptyStrings();
 
-    for (int i = 0; i < virtualDevices.size(); ++i)
-        midiInputs.add (new VirtualMidiInputDevice (engine, virtualDevices[i], InputDevice::virtualMidiDevice));
+    {
+        const std::unique_lock sl (midiInputsMutex);
+
+        for (int i = 0; i < virtualDevices.size(); ++i)
+            midiInputs.add (new VirtualMidiInputDevice (engine, virtualDevices[i], InputDevice::virtualMidiDevice));
+    }
 
     for (auto mo : midiOutputs)
     {
@@ -372,19 +394,23 @@ void DeviceManager::initialiseMidi()
         JUCE_CATCH_EXCEPTION
     }
 
-    for (auto mi : midiInputs)
     {
-        TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
+        const std::shared_lock sl (midiInputsMutex);
 
-        JUCE_TRY
+        for (auto mi : midiInputs)
         {
-            mi->setEnabled (mi->isEnabled());
-            mi->initialiseDefaultAlias();
+            TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
 
-            if (mi->isEnabled())
-                ++enabledMidiIns;
+            JUCE_TRY
+            {
+                mi->setEnabled (mi->isEnabled());
+                mi->initialiseDefaultAlias();
+
+                if (mi->isEnabled())
+                    ++enabledMidiIns;
+            }
+            JUCE_CATCH_EXCEPTION
         }
-        JUCE_CATCH_EXCEPTION
     }
 
     const bool hasEnabledMidiDefaultDevs = storage.getProperty (SettingID::hasEnabledMidiDefaultDevs, false);
@@ -393,8 +419,12 @@ void DeviceManager::initialiseMidi()
 
     if (enabledMidiOuts + enabledMidiIns == 0 && ! hasEnabledMidiDefaultDevs)
     {
-        if (auto firstIn = midiInputs[0])
-            firstIn->setEnabled (true);
+        {
+            const std::shared_lock sl (midiInputsMutex);
+
+            if (auto firstIn = midiInputs[0])
+                firstIn->setEnabled (true);
+        }
 
         if (auto firstOut = midiOutputs[0])
             if (! isMicrosoftGSSynth (*firstOut))
@@ -517,7 +547,11 @@ juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
         ContextDeviceListRebuilder deviceRebuilder (*this);
 
         auto vmi = new VirtualMidiInputDevice (engine, name, InputDevice::virtualMidiDevice);
-        midiInputs.add (vmi);
+
+        {
+            const std::unique_lock sl (midiInputsMutex);
+            midiInputs.add (vmi);
+        }
 
         vmi->setEnabled (true);
         vmi->initialiseDefaultAlias();
@@ -537,7 +571,12 @@ void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice* vmi)
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
     engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, vmi->getName());
-    midiInputs.removeObject (vmi);
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+        midiInputs.removeObject (vmi);
+    }
+
     VirtualMidiInputDevice::refreshDeviceNames (engine);
     sendChangeMessage();
 }
@@ -977,6 +1016,8 @@ void DeviceManager::setDefaultMidiOutDevice (int index)
 
 void DeviceManager::setDefaultMidiInDevice (int index)
 {
+    const std::shared_lock sl (midiInputsMutex);
+
     if (midiInputs[index] != nullptr && midiInputs[index]->isEnabled())
     {
         defaultMidiInIndex = index;
@@ -989,18 +1030,20 @@ void DeviceManager::setDefaultMidiInDevice (int index)
 
 int DeviceManager::getNumMidiInDevices() const
 {
+    const std::shared_lock sl (midiInputsMutex);
     return midiInputs.size();
 }
 
 MidiInputDevice* DeviceManager::getMidiInDevice (int index) const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    const std::shared_lock sl (midiInputsMutex);
     return midiInputs[index];
 }
 
 void DeviceManager::broadcastStreamTimeToMidiDevices (double timeToBroadcast)
 {
-    const juce::ScopedLock sl (midiInputs.getLock());
+    const std::shared_lock sl (midiInputsMutex);
 
     for (auto mi : midiInputs)
         if (mi->isEnabled())

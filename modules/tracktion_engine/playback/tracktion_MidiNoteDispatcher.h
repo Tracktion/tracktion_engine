@@ -21,7 +21,7 @@ public:
     void setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>&);
 
     void dispatchPendingMessagesForDevices (TimePosition editTime);
-    
+
     void masterTimeUpdate (TimePosition editTime);
     void prepareToPlay (TimePosition editTime);
 
@@ -39,7 +39,8 @@ private:
 
     //==============================================================================
     juce::OwnedArray<DeviceState> devices;
-    juce::CriticalSection timeLock, deviceLock;
+    mutable RealTimeSpinLock timeLock;
+    std::shared_mutex deviceMutex;
     TimePosition masterTime;
     double hiResClockOfMasterTime = 0;
 

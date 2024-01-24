@@ -182,7 +182,7 @@ public:
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
     TracktionEngineAudioDeviceManager deviceManager { engine };
 
-    juce::OwnedArray<MidiInputDevice, juce::CriticalSection> midiInputs;
+    juce::OwnedArray<MidiInputDevice> midiInputs; // Only thread-safe from the message thread
     juce::OwnedArray<MidiOutputDevice> midiOutputs;
     juce::OwnedArray<WaveInputDevice> waveInputs;
     juce::OwnedArray<WaveOutputDevice> waveOutputs;
@@ -239,6 +239,8 @@ private:
     std::unique_ptr<juce::AudioProcessor> globalOutputAudioProcessor;
     juce::HeapBlock<const float*> inputChannelsScratch;
     juce::HeapBlock<float*> outputChannelsScratch;
+
+    mutable std::shared_mutex midiInputsMutex;
 
    #if JUCE_ANDROID
     ScopedSteadyLoad::Context steadyLoadContext;
