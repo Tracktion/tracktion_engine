@@ -111,11 +111,11 @@ public:
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
-            // =8> Try applying the effects here
+
             // BEATCONNECT MODIFICATION START
             effectsModule_in.applyEffects(scratch.buffer);
             // BEATCONNECT MODIFICATION END
-            // =8>
+
             if (filterType != FilterType::noFilter)
             {
                 iirFilterR.processSamples(scratch.buffer.getWritePointer(0), scratch.buffer.getNumSamples());
@@ -288,7 +288,7 @@ SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     triggerAsyncUpdate(); // =8> Is the placement of this line important?
     // =8> Try adding in the referTos and the addParams and the attachToCurrentValues here?
-    effectsModule.distortionOnValue.referTo(state, IDs::EffectsModule::Distortion::distorionOn, nullptr);
+    // effectsModule.distortionOnValue.referTo(state, IDs::EffectsModule::Distortion::distorionOn, nullptr);
     
 }
 
@@ -503,11 +503,6 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                         // BEATCONNECT MODIFICATION END
 
                         highlightedNotes.setBit(note);
-
-                        // BEATCONNECT MODIFICATION START
-                        // effectsModule.applyEffects(ss->audioData); // =8>
-                        // BEATCONNECT MODIFICATION END
-
                         playingNotes.add(new SampledNote
                             // BEATCONNECT MODIFICATION START
                             (adjustedMidiNote,
@@ -728,7 +723,8 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
 
     // BEATCONNECT MODIFICATION START
     // Add EffectsModule if the keyNote is unique
-    effectsModules.emplace((const int)keyNote, new EffectsModule);
+    // =8> this sampleRate might not be exactly correct, the sample rate of the audio file might need to be used!
+    effectsModules.emplace((const int)keyNote, new EffectsModule(sampleRate));
     // BEATCONNECT MODIFICATION END
 
     if (filterType != (int)FilterType::noFilter) 
@@ -783,7 +779,6 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
             break;
         }
     }
-
     // BEATCONNECT MODIFICATION END
 
     state.addChild (v, -1, getUndoManager());
