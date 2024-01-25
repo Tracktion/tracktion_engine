@@ -91,6 +91,7 @@ namespace benchmark_utilities
 
             BenchmarkResult bmr { createBenchmarkDescription ("Node", (editName + ": memory use").toStdString(), description.toStdString()) };
             bmr.totalSeconds = static_cast<double> (sizeInBytes);
+            bmr.totalCycles = static_cast<std::uint64_t> (sizeInBytes);
             BenchmarkList::getInstance().addResult (bmr);
 
             std::cout << "Num nodes: " << nodes.size() << "\n";

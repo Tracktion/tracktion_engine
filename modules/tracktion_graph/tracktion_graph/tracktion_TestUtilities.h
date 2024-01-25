@@ -182,10 +182,21 @@ namespace test_utilities
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
     {
-        return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
-                                [] (size_t total, Node* n)
+        auto nodesWithInternalNodes = createNodeMap (nodes);
+        return std::accumulate (nodesWithInternalNodes.begin(), nodesWithInternalNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
                                 {
-                                    return total + n->getAllocatedBytes();
+                                    return total + nodeAndID.node->getAllocatedBytes();
+                                });
+    }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (const NodeGraph& graph)
+    {
+        return std::accumulate (graph.sortedNodes.begin(), graph.sortedNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
+                                {
+                                    return total + nodeAndID.node->getAllocatedBytes();
                                 });
     }
 
