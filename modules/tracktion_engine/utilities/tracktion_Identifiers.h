@@ -609,6 +609,9 @@ namespace IDs
     DECLARE_ID (voices)
     DECLARE_ID (detune)
     DECLARE_ID (distortionOn)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (distortionMix)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (reverbOn)
     DECLARE_ID (delayOn)
     DECLARE_ID (chorusOn)

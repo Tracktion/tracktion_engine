@@ -287,9 +287,23 @@ private:
 SamplerPlugin::SamplerPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     triggerAsyncUpdate(); // =8> Is the placement of this line important?
-    // =8> Try adding in the referTos and the addParams and the attachToCurrentValues here?
-    // effectsModule.distortionOnValue.referTo(state, IDs::EffectsModule::Distortion::distorionOn, nullptr);
-    
+    // BEATCONNECT MODIFICATION START
+    // =8> Get the default values from FourOsc
+    /*chorusMixValue.referTo(state, IDs::chorusMix, nullptr, 0.0f);
+    delayMixValue.referTo(state, IDs::delayMix, nullptr, 0.0f);
+    distortionMixValue.referTo(state, IDs::distortionMix, nullptr, 0.0f);
+    reverbMixValue.referTo(state, IDs::reverbMix, nullptr, 0.0f);
+
+    chorusMix = addParam("chorusMix", TRANS("Chorus Mix"), {0.0f, 0.0f, 0.0f, 0.0f});
+    delayMix = addParam("delayMix", TRANS("Delay Mix"), {0.0f, 0.0f, 0.0f, 0.0f});
+    distortionMix = addParam("distortionMix", TRANS("Distortion Mix"), {0.0f, 0.0f, 0.0f, 0.0f});
+    reverbMix = addParam("reverbMix", TRANS("Reverb Mix"), {0.0f, 0.0f, 0.0f, 0.0f});
+
+    chorusMix->attachToCurrentValue(chorusMixValue);
+    delayMix->attachToCurrentValue(delayMixValue);
+    distortionMix->attachToCurrentValue(distortionMixValue);
+    reverbMix->attachToCurrentValue(reverbMixValue);*/
+    // BEATCONNECT MODIFICATION END
 }
 
 SamplerPlugin::~SamplerPlugin()
@@ -557,17 +571,22 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             // BEATCONNECT MODIFICATIONS START
             auto effectsModulesIterator = effectsModules.find(sn->note);
-            EffectsModule* effectsMod;
+            EffectsModule& effectsMod();
 
             jassert(effectsModulesIterator != effectsModules.end());
-            if (effectsModulesIterator != effectsModules.end())
-                effectsMod = effectsModulesIterator->second.get();
+            if (effectsModulesIterator == effectsModules.end())
+            {
+                // =8> fill in a proper failure case.
+                // Explode in flames
+            }
+                
              
             // BEATCONNECT MODIFICATIONS END
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
             // BEATCONNECT MODIFICATIONS START
-                , *effectsMod
+                             ,
+                             effectsModulesIterator->second
             // BEATCONNECT MODIFICATIONS END
             );
 
@@ -720,11 +739,48 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::reverbWidth, reverbWidth
                               // BEATCONNECT MODIFICATION END
                               );
-
+    
     // BEATCONNECT MODIFICATION START
     // Add EffectsModule if the keyNote is unique
     // =8> this sampleRate might not be exactly correct, the sample rate of the audio file might need to be used!
-    effectsModules.emplace((const int)keyNote, new EffectsModule(sampleRate));
+    // EffectsModule effectsModule(sampleRate, keyNote);
+    
+    // auto effectsModule = effectsModules.insert((const int)keyNote, test);
+    std::map<int, int> testMap;
+    testMap.insert(std::pair<int, int>(10, 11));
+    auto effectsModule = effectsModules.insert(std::pair<const int, EffectsModule&>((const int)keyNote, EffectsModule(sampleRate, keyNote)));
+    // =8> Add the AutomatableParameters here?
+
+                juce::ValueTree soundNode = v;
+                chorusMixValue.referTo(soundNode, IDs::chorusMix, nullptr,
+                0.0f); delayMixValue.referTo(soundNode, IDs::delayMix,
+                nullptr, 0.0f); distortionMixValue.referTo(soundNode,
+                IDs::distortionMix, nullptr, 0.0f);
+                reverbMixValue.referTo(soundNode, IDs::reverbMix, nullptr,
+                0.0f);
+
+                auto tests = effectsModule.first->second.chorusMix;
+                effectsModule.first->second.chorusMix = addParam(
+                    "chorusMix", TRANS("Chorus Mix"), {0.0f,
+                0.0f, 0.0f, 0.0f}); 
+                effectsModule.first->second.delayMix = addParam(
+                    "delayMix",
+                TRANS("Delay Mix"), {0.0f, 0.0f, 0.0f, 0.0f}); 
+                effectsModule.first->second.distortionMix =
+                addParam("distortionMix", TRANS("Distortion Mix"), {0.0f,
+                0.0f, 0.0f, 0.0f}); 
+                effectsModule.first->second.reverbMix = addParam(
+                    "reverbMix",
+                TRANS("Reverb Mix"), {0.0f, 0.0f, 0.0f, 0.0f});
+
+                effectsModule.first->second.chorusMix->attachToCurrentValue(
+                    chorusMixValue);
+                effectsModule.first->second.delayMix->attachToCurrentValue(
+                    delayMixValue);
+                effectsModule.first->second.distortionMix->attachToCurrentValue(
+                    distortionMixValue);
+                effectsModule.first->second.reverbMix->attachToCurrentValue(
+                    reverbMixValue);
     // BEATCONNECT MODIFICATION END
 
     if (filterType != (int)FilterType::noFilter) 

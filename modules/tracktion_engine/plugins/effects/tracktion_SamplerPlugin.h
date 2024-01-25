@@ -123,6 +123,20 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     //==============================================================================
+
+    // BEATCONNECT MODIFICATION START
+    // =8> example implementation for one EffectsModule control
+    juce::CachedValue<float> chorusMixValue;
+    juce::CachedValue<float> distortionMixValue;
+    juce::CachedValue<float> delayMixValue;
+    juce::CachedValue<float> reverbMixValue;
+
+    AutomatableParameter::Ptr chorusMix;
+    AutomatableParameter::Ptr delayMix;
+    AutomatableParameter::Ptr distortionMix;
+    AutomatableParameter::Ptr reverbMix;
+    // BEATCONNECT MODIFICATION END
+
     struct SamplerSound
     {
         SamplerSound (SamplerPlugin&, const juce::String& sourcePathOrProjectID, const juce::String& name,
@@ -155,7 +169,7 @@ private:
     struct SampledNote;
 
     // BEATCONNECT MODIFICATION START
-    std::map<const int, std::unique_ptr<EffectsModule>> effectsModules;
+    std::map < const int, EffectsModule&> effectsModules;
     // BEATCONNECT MODIFICATION END
 
     juce::Colour colour;
