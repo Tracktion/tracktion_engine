@@ -56,22 +56,6 @@ public:
     /** Returns the list of currently active engines. */
     static juce::Array<Engine*> getEngines();
 
-    // BEATCONNECT MODIFICATION START
-    // TODO: Remove when S3 is finallized 
-    //  struct FifoBundle
-    //  {
-    //      FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
-    //  
-    //      double m_PunchIn = 0;
-    //      std::vector<std::string> m_ListTracksID;
-    //      std::unique_ptr<AudioFifo> m_Fifo;
-    //  };
-    //  const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& getAudioFifo() const;
-    //  void addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
-    //  void createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
-    //  void destroyFifoBundle(const juce::Uuid& p_FifoID);
-    // BEATCONNECT MODIFICATION END
-
     TemporaryFileManager& getTemporaryFileManager() const;              ///< Returns the TemporaryFileManager allowing to handle the default app and user temporary folders.
     AudioFileFormatManager& getAudioFileFormatManager() const;          ///< Returns the AudioFileFormatManager that maintains a list of available audio file formats.
     PropertyStorage& getPropertyStorage() const;                        ///< Returns the PropertyStorage user settings customisable XML file.
@@ -98,11 +82,6 @@ public:
 
 private:
     void initialise();
-
-    // BEATCONNECT MODIFICATION START
-    // TODO: Remove when S3 is finallized 
-    //  std::map<juce::Uuid, std::unique_ptr<FifoBundle>> m_ListFifoBundle;
-    // BEATCONNECT MODIFICATION END
 
     std::unique_ptr<ProjectManager> projectManager;
     std::unique_ptr<TemporaryFileManager> temporaryFileManager;

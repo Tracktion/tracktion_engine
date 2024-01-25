@@ -184,7 +184,8 @@ void StepClip::Pattern::setNote (int channel, int index, bool value)
 }
 
 // BEATCONNECT MODIFICATION START
-int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const {
+int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const 
+{
     if (!getNote(channel, index))
         return noKeyNoteOffset;
 
@@ -199,7 +200,8 @@ int StepClip::Pattern::getKeyNoteOffset(int channel, int index) const {
     return defaultKeyNoteOffset;
 }
 
-juce::Array<int> StepClip::Pattern::getKeyNoteOffsets(int channel) const {
+juce::Array<int> StepClip::Pattern::getKeyNoteOffsets(int channel) const 
+{
     juce::Array<int> keyNoteOffSets;
     auto stringArray = juce::StringArray::fromTokens(state.getChild(channel)[IDs::keyNoteOffsets].toString(), false);
     keyNoteOffSets.ensureStorageAllocated(stringArray.size());
@@ -210,7 +212,8 @@ juce::Array<int> StepClip::Pattern::getKeyNoteOffsets(int channel) const {
     return keyNoteOffSets;
 }
 
-int StepClip::Pattern::getTremolo(int channel, int index) const {
+int StepClip::Pattern::getTremolo(int channel, int index) const 
+{
     if (!getNote (channel, index))
         return errorTremoloAttacks;
 
@@ -225,7 +228,8 @@ int StepClip::Pattern::getTremolo(int channel, int index) const {
     return errorTremoloAttacks;
 }
 
-juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
+juce::Array<int> StepClip::Pattern::getTremolos(int channel) const 
+{
     juce::Array<int> tremolos;
     auto stringArray = juce::StringArray::fromTokens(state.getChild(channel)[IDs::tremolos].toString(), false);
     tremolos.ensureStorageAllocated(stringArray.size());
@@ -236,7 +240,8 @@ juce::Array<int> StepClip::Pattern::getTremolos(int channel) const {
     return tremolos;
 }
 
-void StepClip::Pattern::setKeyNoteOffset(int channel, int index, int value) {
+void StepClip::Pattern::setKeyNoteOffset(int channel, int index, int value) 
+{
     if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
         return; // Out of range
 
@@ -254,7 +259,8 @@ void StepClip::Pattern::setKeyNoteOffset(int channel, int index, int value) {
     return;
 }
 
-void StepClip::Pattern::setKeyNoteOffsets(int channel, const juce::Array<int>& values) {
+void StepClip::Pattern::setKeyNoteOffsets(int channel, const juce::Array<int>& values) 
+{
     if (channel >= state.getNumChildren())
     {
         jassertfalse;
@@ -270,7 +276,8 @@ void StepClip::Pattern::setKeyNoteOffsets(int channel, const juce::Array<int>& v
     state.getChild(channel).setProperty(IDs::keyNoteOffsets, stringArray.joinIntoString(" "), clip.getUndoManager());
 }
 
-void StepClip::Pattern::setTremolo(int channel, int index, int value) {
+void StepClip::Pattern::setTremolo(int channel, int index, int value) 
+{
     if (!juce::isPositiveAndBelow(channel, (int)maxNumChannels))
         return; // Out of range
 
@@ -288,7 +295,8 @@ void StepClip::Pattern::setTremolo(int channel, int index, int value) {
     return;
 }
 
-void StepClip::Pattern::setTremolos(int channel, const juce::Array<int>& values) {
+void StepClip::Pattern::setTremolos(int channel, const juce::Array<int>& values) 
+{
     if (channel >= state.getNumChildren())
     {
         jassertfalse;

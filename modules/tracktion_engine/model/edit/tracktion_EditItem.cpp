@@ -311,7 +311,7 @@ struct IDRemapping
                 EditItemID::applyNewIDsToExternalValueTree (v, propName, newIDsToApply, um);
         }
 
-        // BEATCONNECT MODIFICATION START !?*&
+        // BEATCONNECT MODIFICATION START !?*& - This need to go.
         // Need to remove the current BC properties or else there will be duplicates
         v.removeProperty("uuid", nullptr);
         v.removeProperty("armedBy", nullptr);

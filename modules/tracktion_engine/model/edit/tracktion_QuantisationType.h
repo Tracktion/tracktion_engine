@@ -54,7 +54,7 @@ public:
     bool isQuantisingNoteOffs() const                       { return quantiseNoteOffs; }
     void setIsQuantisingNoteOffs (bool isQuantising)        { quantiseNoteOffs = isQuantising; }
 
-    // BEATCONNECT MODIFICATION START !?*& - Very similar to updateFraction()
+    // BEATCONNECT MODIFICATION START
     double getFractionOfBeat() const;
     // BEATCONNECT MODIFICATION END
 

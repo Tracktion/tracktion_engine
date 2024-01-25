@@ -875,8 +875,7 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
-/*BEATCONNECT MODIFICATION START*/
-
+// BEATCONNECT MODIFICATION START !?*&
 void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel)
 {
     const juce::ScopedLock sl(lock);
@@ -889,10 +888,11 @@ void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int&
         return;
     }
         
-    // all channels will always have the same number of samples for a thumbnail
+    // All channels will always have the same number of samples for a thumbnail
     startTime = (float)startThumbSampleIndex * samplesPerThumbSample / (float)sampleRate;
     endTime = (float)channels[0]->getSize() * samplesPerThumbSample / (float)sampleRate;
-    //numberOfThumbSamplesPerChannelToRead is a state variable for getThumbnailAverageValues that will be called later on
+
+    // NumberOfThumbSamplesPerChannelToRead is a state variable for getThumbnailAverageValues that will be called later on
     numberOfThumbSamplesPerChannelToRead = numChannels > 0 ? getNumberOfThumbSamples(0) : 0;
     sizeInBytes = getNumberOfTotalThumbSamples();
     numberOfThumbSamplesPerChannel = numberOfThumbSamplesPerChannelToRead;
@@ -902,9 +902,7 @@ int TracktionThumbnail::getNumberOfTotalThumbSamples()
 {    
     int totalNumberOfThumbSamples = 0;
     for (int ch = 0; ch < numChannels; ch++)
-    {
         totalNumberOfThumbSamples += getNumberOfThumbSamples(ch);
-    }
     return totalNumberOfThumbSamples;
 }
 
@@ -940,12 +938,7 @@ bool TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
     }
 
     return true;
-
-    //update thumbnail state
-    // Commented this out as it was making subsequent calls to this never return the values
-    //startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
-    //numberOfThumbSamplesPerChannelToRead = 0;
 }
-/*BEATCONNECT MODIFICATION END*/
+// BEATCONNECT MODIFICATION END
 
 }} // namespace tracktion { inline namespace engine

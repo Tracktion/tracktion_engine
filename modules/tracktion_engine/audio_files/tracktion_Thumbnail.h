@@ -57,10 +57,10 @@ public:
     void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
                        TimeRange time, float verticalZoomFactor);
 
-    /*BEATCONNECT MODIFICATION START*/
+    // BEATCONNECT MODIFICATION START
     void getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel);
     bool getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length);
-    /*BEATCONNECT MODIFICATION END*/
+    // BEATCONNECT MODIFICATION END
 
 private:
     //==============================================================================
@@ -82,10 +82,10 @@ private:
     double sampleRate = 0;
     juce::CriticalSection lock, sourceLock;
 
-    /*BEATCONNECT MODIFICATION START*/
+    // BEATCONNECT MODIFICATION START
     int numberOfThumbSamplesPerChannelToRead = 0;
     int startThumbSampleIndex = 0;
-    /*BEATCONNECT MODIFICATION END*/
+    // BEATCONNECT MODIFICATION END
 
     bool setDataSource (LevelDataSource*);
     void setLevels (const MinMaxValue* const* values, int thumbIndex, int numChans, int numValues);
@@ -94,12 +94,12 @@ private:
                       double endTime, int channelNum, float verticalZoomFactor) override;
     void drawChannels (juce::Graphics&, const juce::Rectangle<int>& area, double startTimeSeconds,
                        double endTimeSeconds, float verticalZoomFactor) override;
-    /*BEATCONNECT MODIFICATION START*/
-    /**Returns numberOfThumbSamplesPerChannelToRead from a channel */
+    // BEATCONNECT MODIFICATION START
+    // Returns numberOfThumbSamplesPerChannelToRead from a channel
     int getNumberOfThumbSamples(int channel);
-    /**Returns and sets numberOfThumbSamplesPerChannelToRead from all channels */
+    // Returns and sets numberOfThumbSamplesPerChannelToRead from all channels
     int getNumberOfTotalThumbSamples();
-    /*BEATCONNECT MODIFICATION END*/
+    // BEATCONNECT MODIFICATION END
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TracktionThumbnail)
 };

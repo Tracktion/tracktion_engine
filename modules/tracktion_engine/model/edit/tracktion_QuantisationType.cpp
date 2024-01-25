@@ -150,10 +150,15 @@ void QuantisationType::setProportion (float prop)
     proportion = juce::jlimit (0.0f, 1.0f, prop);
 }
 
-// BEATCONNECT MODIFICATION START !?*& - Very similar to updateFraction()
+// BEATCONNECT MODIFICATION START
 double QuantisationType::getFractionOfBeat() const
 {
-    return  quantisationTypes[typeIndex].beatFraction;
+    double result = 0.0;
+
+    if (typeIndex >= 0 && typeIndex < juce::numElementsInArray(quantisationTypes))
+        result = quantisationTypes[typeIndex].beatFraction;
+
+    return  result;
 }
 // BEATCONNECT MODIFICATION END
 
