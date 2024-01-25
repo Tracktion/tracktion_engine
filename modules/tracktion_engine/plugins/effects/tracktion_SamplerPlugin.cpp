@@ -570,11 +570,12 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             auto sn = playingNotes.getUnchecked (i);
 
             // BEATCONNECT MODIFICATIONS START
-            auto effectsModulesIterator = effectsModules.find(sn->note);
+            int breakpoint = 8888;
+            auto effectsModulesIterator = effectsModulesPtr.find(sn->note);
             EffectsModule& effectsMod();
 
-            jassert(effectsModulesIterator != effectsModules.end());
-            if (effectsModulesIterator == effectsModules.end())
+            jassert(effectsModulesIterator != effectsModulesPtr.end());
+            if (effectsModulesIterator == effectsModulesPtr.end())
             {
                 // =8> fill in a proper failure case.
                 // Explode in flames
@@ -586,7 +587,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
             // BEATCONNECT MODIFICATIONS START
                              ,
-                             effectsModulesIterator->second
+                             *effectsModulesIterator->second
             // BEATCONNECT MODIFICATIONS END
             );
 
@@ -697,7 +698,7 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                                       float chorusSpeed, float chorusWidth,
                                       float delayCrossfed, float delayFeedback, float delay,
                                       float delayMix, bool delayOn,
-                                      float distortion, bool distortionOn,
+                                      float distortion, bool distortionOn, float distortionMix,
                                       float reverbDamping, float reverbMix, bool reverbOn,
                                       float reverbSize, float reverbWidth
                                       // BEATCONNECT MODIFICATION END
@@ -731,7 +732,8 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::delayMix, delayMix,
                               IDs::delayOn, delayOn, // The delay's bypass state
                               IDs::distortion, distortion, // The distortion's intensity
-                              IDs::distortionOn, distortionOn,
+                              IDs::distortionOn, distortionOn, 
+                              IDs::distortionMix, distortionMix,
                               IDs::reverbDamping, reverbDamping,
                               IDs::reverbMix, reverbMix,
                               IDs::reverbOn, reverbOn, // Reverb's bypass state
@@ -743,26 +745,37 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     // BEATCONNECT MODIFICATION START
     // Add EffectsModule if the keyNote is unique
     // =8> this sampleRate might not be exactly correct, the sample rate of the audio file might need to be used!
-    // EffectsModule effectsModule(sampleRate, keyNote);
-    
-    // auto effectsModule = effectsModules.insert((const int)keyNote, test);
-    auto effectsModule = effectsModules.emplace(std::pair<const int, EffectsModule&>((const int)keyNote, EffectsModule(sampleRate, keyNote)));
-    // =8> Add the AutomatableParameters here?
+    EffectsModule effectsModule(sampleRate, keyNote);
+
+    // This Works :)
+    std::map<const int, EffectsModule*> coolMap;
+    auto effectsModuleIt = coolMap.emplace(keyNote, new EffectsModule(sampleRate, keyNote));
+
+    auto effectsModuleItPtr = effectsModulesPtr.emplace(
+        keyNote, new EffectsModule(sampleRate, keyNote));
+    //auto effectsModuleIt = effectsModules.emplace(keyNote, EffectsModule(sampleRate, keyNote));
+
+    auto test = coolMap.find(keyNote);
 
                 juce::ValueTree soundNode = v;
                 std::string soundNodeDebug = soundNode.toXmlString().toStdString();
                 int breakpoint = 8888;
 
-                chorusMixValue.referTo(soundNode, IDs::chorusMix, nullptr, 0.0f); 
-                delayMixValue.referTo(soundNode, IDs::delayMix, nullptr, 0.0f); 
-                distortionMixValue.referTo(soundNode, IDs::distortionMix, nullptr, 0.0f);
-                reverbMixValue.referTo(soundNode, IDs::reverbMix, nullptr, 0.0f);
+                effectsModuleItPtr.first->second->chorusMixValue.referTo(
+                    soundNode, IDs::chorusMix, nullptr, 0.0f);
+                
+               /* effectsModule.first->second.delayMixValue.referTo(
+                    soundNode, IDs::delayMix, nullptr, 0.0f); 
+                effectsModule.first->second.distortionMixValue.referTo(
+                    soundNode, IDs::distortionMix, nullptr, 0.0f);
+                effectsModule.first->second.reverbMixValue.referTo(
+                    soundNode, IDs::reverbMix, nullptr, 0.0f);*/
 
-                auto tests = effectsModule.first->second.chorusMix;
+                // auto tests = effectsModuleIt.first->second.chorusMix;
                 int breaks = 8888;
 
-                effectsModule.first->second.chorusMix = addParam("chorusMix", TRANS("Chorus Mix"), {0.0f, 1.0f}); 
-                effectsModule.first->second.delayMix = addParam(
+                effectsModuleItPtr.first->second->chorusMix = addParam("chorusMix", TRANS("Chorus Mix"), {0.0f, 1.0f}); 
+                /*effectsModule.first->second.delayMix = addParam(
                     "delayMix",
                 TRANS("Delay Mix"), {0.0f, 1.0f}); 
                 effectsModule.first->second.distortionMix =
@@ -770,16 +783,16 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                 1.0f}); 
                 effectsModule.first->second.reverbMix = addParam(
                     "reverbMix",
-                TRANS("Reverb Mix"), {0.0f, 1.0f});
+                TRANS("Reverb Mix"), {0.0f, 1.0f});*/
 
-                effectsModule.first->second.chorusMix->attachToCurrentValue(
-                    chorusMixValue);
-                effectsModule.first->second.delayMix->attachToCurrentValue(
-                    delayMixValue);
+                effectsModuleItPtr.first->second->chorusMix->attachToCurrentValue(
+                    effectsModuleItPtr.first->second->chorusMixValue);
+                /*effectsModule.first->second.delayMix->attachToCurrentValue(
+                    effectsModule.first->second.delayMixValue);
                 effectsModule.first->second.distortionMix->attachToCurrentValue(
-                    distortionMixValue);
+                    effectsModule.first->second.distortionMixValue);
                 effectsModule.first->second.reverbMix->attachToCurrentValue(
-                    reverbMixValue);
+                    effectsModule.first->second.reverbMixValue);*/
 
                 // What is the state of the EffectsModule added to the map?
                 breakpoint = 8888;

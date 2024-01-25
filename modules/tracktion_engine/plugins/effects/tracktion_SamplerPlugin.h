@@ -66,7 +66,7 @@ public:
                             float chorusSpeed = 0, float chorusWidth = 0,
                             float delayCrossfed = 0, float delayFeedback = 0, float delay = 0,
                             float delayMix = 0, bool delayOn = false,
-                            float distortion = 0, bool distortionOn = false,
+                            float distortion = 0, bool distortionOn = false, float distortionMix = 0, 
                             float reverbDamping = 0, float reverbMix = 0, bool reverbOn = false,
                             float reverbSize = 0, float reverbDepth = 0
                             // BEATCONNECT MODIFICATION END
@@ -126,7 +126,7 @@ public:
 
     // BEATCONNECT MODIFICATION START
     // =8> example implementation for one EffectsModule control
-    juce::CachedValue<float> chorusMixValue;
+    /*juce::CachedValue<float> chorusMixValue;
     juce::CachedValue<float> distortionMixValue;
     juce::CachedValue<float> delayMixValue;
     juce::CachedValue<float> reverbMixValue;
@@ -134,7 +134,7 @@ public:
     AutomatableParameter::Ptr chorusMix;
     AutomatableParameter::Ptr delayMix;
     AutomatableParameter::Ptr distortionMix;
-    AutomatableParameter::Ptr reverbMix;
+    AutomatableParameter::Ptr reverbMix;*/
     // BEATCONNECT MODIFICATION END
 
     struct SamplerSound
@@ -169,7 +169,8 @@ private:
     struct SampledNote;
 
     // BEATCONNECT MODIFICATION START
-    std::map < const int, EffectsModule&> effectsModules;
+    std::map <const int, EffectsModule> effectsModules;
+    std::map <const int, EffectsModule*> effectsModulesPtr;
     // BEATCONNECT MODIFICATION END
 
     juce::Colour colour;
