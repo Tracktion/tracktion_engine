@@ -29,7 +29,7 @@ public:
         : juce::UnitTest ("Rack Benchmarks", "tracktion_benchmarks")
     {
     }
-    
+
     void runTest() override
     {
         using namespace benchmark_utilities;
@@ -42,12 +42,12 @@ public:
 
         runRackMixBusTest (engine, ts);
     }
-    
+
     void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
     {
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
-        
+
         static constexpr unsigned char RackMixBus_zip[] =
         { 120,156,237,157,207,115,220,70,118,199,135,146,70,178,189,187,149,181,55,169,178,47,217,57,165,188,135,213,162,127,162,145,67,74,20,73,123,89,22,127,132,164,180,155,75,92,35,114,36,77,76,114,88,195,161,108,237,41,247,61,228,156,115,170,146,75,170,82,
         251,39,236,63,144,63,98,255,133,252,3,105,204,47,14,56,141,158,238,198,107,160,199,108,86,89,38,103,128,7,60,244,123,15,141,47,240,193,219,217,222,61,105,109,180,187,87,87,175,122,195,235,254,224,178,181,241,89,251,119,221,247,189,55,131,225,69,7,161,
@@ -192,7 +192,7 @@ public:
             // Put the content on the first 8 audio tracks
             auto audioTracks = getAudioTracks (*edit);
             expectGreaterOrEqual (audioTracks.size(), 8);
-            
+
             for (int i = 0; i < 8; ++i)
                 audioTracks[i]->insertMIDIClip (TimeRange (0.0s, TimeDuration::fromSeconds (fileLength)), nullptr);
 

@@ -44,7 +44,7 @@ namespace benchmark_utilities
         using namespace tracktion::graph;
         auto s = graph::test_utilities::getDescription (opts.testSetup)
                     + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST");
-        
+
         if (opts.isMultiThreaded == MultiThreaded::yes && opts.isLockFree == LockFree::yes)
             s << ", lock-free";
 
@@ -53,7 +53,7 @@ namespace benchmark_utilities
 
         if (opts.isMultiThreaded == MultiThreaded::yes)
             s << ", " + graph::test_utilities::getName (opts.poolType);
-        
+
         return s;
     }
 
@@ -79,7 +79,7 @@ namespace benchmark_utilities
 
         if (isMultiThreaded == MultiThreaded::no)
             testContext.getNodePlayer().setNumThreads (0);
-        
+
         testContext.setPlayHead (&playHeadState.playHead);
         playHeadState.playHead.playSyncedToRange ({});
         ut.expect (true);
@@ -143,10 +143,10 @@ namespace benchmark_utilities
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
                                                                                                                                    tracktion::graph::getPoolCreatorFunction (opts.poolType)),
                                                                                            opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
-            
+
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
-                
+
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
         else
@@ -155,7 +155,7 @@ namespace benchmark_utilities
                                                                                                 opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
-        
+
         ut.beginTest (opts.editName + " - cleanup: " + description);
         // This is deliberately empty as RAII will take care of cleanup
         ut.expect (true);
@@ -177,22 +177,22 @@ namespace benchmark_utilities
     {
         std::unique_ptr<Edit> edit;
         juce::TemporaryFile tempArchiveFile, tempDir;
-        
+
         {
             const auto res = tempDir.getFile().createDirectory();
             jassert (res);
             ignoreUnused (res);
         }
-        
+
         {
             tempArchiveFile.getFile().replaceWithData (data, (size_t) size);
             TracktionArchiveFile archive (engine, tempArchiveFile.getFile());
-            
+
             juce::Array<juce::File> createdFiles;
             const auto res = archive.extractAll (tempDir.getFile(), createdFiles);
             jassert (res);
             juce::ignoreUnused (res);
-            
+
             for (const auto& f : createdFiles)
             {
                 if (isTracktionEditFile (f))
@@ -202,9 +202,9 @@ namespace benchmark_utilities
                 }
             }
         }
-        
+
         tempDir.getFile().deleteRecursively();
-        
+
         return edit;
     }
 
@@ -212,24 +212,24 @@ namespace benchmark_utilities
     inline std::unique_ptr<Edit> loadEditFromValueTree (Engine& engine, const juce::ValueTree& editState)
     {
         auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
-        
+
         if (! id.isValid())
             id = ProjectItemID::createNewID (0);
-        
+
         Edit::Options options =
         {
             engine,
             editState,
             id,
-            
+
             Edit::forEditing,
             nullptr,
             Edit::getDefaultNumUndoLevels(),
-            
+
             {},
             {}
         };
-        
+
         return std::make_unique<Edit> (options);
     }
 

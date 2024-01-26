@@ -26,6 +26,12 @@ namespace EditPlaybackContextInternal
         static bool usePool = false;
         return usePool;
     }
+
+    inline bool& getNodeMemorySharingFlag()
+    {
+        static bool useSharing = false;
+        return useSharing;
+    }
 }
 
 
@@ -145,6 +151,7 @@ private:
      {
          setNumThreads (numThreads);
          player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
+         player.enableNodeMemorySharing (EditPlaybackContextInternal::getNodeMemorySharingFlag());
      }
 
      void setNumThreads (size_t numThreads)
@@ -1149,6 +1156,11 @@ int EditPlaybackContext::getThreadPoolStrategy()
 void EditPlaybackContext::enablePooledMemory (bool enable)
 {
     EditPlaybackContextInternal::getPooledMemoryFlag() = enable;
+}
+
+void EditPlaybackContext::enableNodeMemorySharing (bool enable)
+{
+    EditPlaybackContextInternal::getNodeMemorySharingFlag() = enable;
 }
 
 int EditPlaybackContext::getNumActivelyRecordingDevices() const

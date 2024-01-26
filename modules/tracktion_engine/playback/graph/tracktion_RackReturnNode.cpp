@@ -77,11 +77,29 @@ TransformResult RackReturnNode::transform (Node&, const std::vector<Node*>&, Tra
 
 void RackReturnNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
+    if (wetInput->numOutputNodes > 1)
+        return;
+
+    const auto inputNumChannels = wetInput->getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+    if (inputNumChannels >= desiredNumChannels)
+    {
+        canUseWetSourceBuffers = true;
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
+    }
 }
 
 bool RackReturnNode::isReadyToProcess()
 {
     return wetInput->hasProcessed() && dryInput->hasProcessed();
+}
+
+void RackReturnNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseWetSourceBuffers)
+        setBufferViewToUse (wetInput.get(), wetInput->getProcessedOutput().audio);
 }
 
 void RackReturnNode::process (ProcessContext& pc)
@@ -103,8 +121,8 @@ void RackReturnNode::process (ProcessContext& pc)
 
     
     // Copy wet audio applying gain
-    copy (destAudio.getFirstChannels (wetSource.audio.getNumChannels()),
-          wetSource.audio);
+    copyIfNotAliased (destAudio.getFirstChannels (wetSource.audio.getNumChannels()),
+                      wetSource.audio);
 
     if (wetGain == lastWetGain)
     {

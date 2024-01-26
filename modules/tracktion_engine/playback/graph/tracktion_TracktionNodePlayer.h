@@ -47,7 +47,7 @@ public:
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }
-    
+
     /** Sets the number of threads to use for rendering.
         This can be 0 in which case only the process calling thread will be used for processing.
         N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
@@ -71,7 +71,7 @@ public:
     {
         nodePlayer.setNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
     }
-    
+
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
     {
         nodePlayer.prepareToPlay (sampleRateToUse, blockSizeToUse);
@@ -102,25 +102,31 @@ public:
 
         return numMisses;
     }
-    
+
     /** Clears the Node currently playing. */
     void clearNode()
     {
         nodePlayer.clearNode();
     }
-    
+
     /** Returns the current sample rate. */
     double getSampleRate() const
     {
-        return nodePlayer.getSampleRate();        
+        return nodePlayer.getSampleRate();
     }
-    
+
     /** @internal */
     void enablePooledMemoryAllocations (bool enablePooledMemory)
     {
         nodePlayer.enablePooledMemoryAllocations (enablePooledMemory);
     }
-    
+
+    /* @internal. */
+    void enableNodeMemorySharing (bool enableNodeMemorySharing)
+    {
+        nodePlayer.enableNodeMemorySharing (enableNodeMemorySharing);
+    }
+
 private:
     tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;

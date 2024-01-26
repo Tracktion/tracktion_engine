@@ -145,6 +145,12 @@ public:
     */
     static void enablePooledMemory (bool);
 
+    /** Enables reusing of audio buffers during graph processing
+        which may reduce the memory use at the cost of some additional overhead.
+        N.B. This is different from enablePooledMemory.
+    */
+    static void enableNodeMemorySharing (bool);
+
     /** @internal */
     int getNumActivelyRecordingDevices() const;
     /** @internal */

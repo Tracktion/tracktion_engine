@@ -105,6 +105,25 @@ std::vector<tracktion::graph::Node*> TrackMutingNode::getDirectInputNodes()
     return { input.get() };
 }
 
+void TrackMutingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
+{
+    if (! info.enableNodeMemorySharing)
+        return;
+
+    if (input->numOutputNodes > 1)
+        return;
+
+    const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+    if (inputNumChannels >= desiredNumChannels)
+    {
+        canUseSourceBuffers = true;
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
+    }
+}
+
 bool TrackMutingNode::isReadyToProcess()
 {
     return input->hasProcessed();
@@ -113,6 +132,12 @@ bool TrackMutingNode::isReadyToProcess()
 void TrackMutingNode::prefetchBlock (juce::Range<int64_t>)
 {
     trackMuteState->update();
+}
+
+void TrackMutingNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseSourceBuffers)
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
 }
 
 void TrackMutingNode::process (ProcessContext& pc)
@@ -132,7 +157,7 @@ void TrackMutingNode::process (ProcessContext& pc)
         // If we've just been muted/unmuted we need to copy the data to
         // apply a fade to, otherwise we can just pass on the view
         if (wasJustMuted || wasJustUnMuted)
-            copy (destAudioView, sourceBuffers.audio);
+            copyIfNotAliased (destAudioView, sourceBuffers.audio);
         else
             setAudioOutput (input.get(), sourceBuffers.audio);
     }

@@ -105,10 +105,10 @@ namespace test_utilities
                                                        [=] (auto, auto frame)
                                                        {
                                                            const auto sinValue = std::sin ((float) (frame * phaseIncrement));
-      
+
                                                            if (sinValue > 0.0f) return 1.0f;
                                                            if (sinValue < 0.0f) return -1.0f;
-      
+
                                                            return 0.0f;
                                                        });
     }
@@ -246,12 +246,12 @@ namespace test_utilities
             static void visitInputs (Node& n, int depth)
             {
                 logNode (n, depth);
-                
+
                 for (auto input : n.getDirectInputNodes())
                     visitInputs (*input, depth + 1);
             }
         };
-        
+
         Visitor::visitInputs (node, 0);
     }
 
@@ -503,7 +503,7 @@ namespace test_utilities
                     jassertfalse;
                 }
             }
-            
+
             setPlayer (std::move (playerToUse));
         }
 
@@ -514,12 +514,12 @@ namespace test_utilities
                     .replace ("{numChannels}", juce::String (numChannels))
                     .replace ("{durationInSeconds}", juce::String (durationInSeconds)).toStdString();
         }
-        
+
         PerformanceMeasurement::Statistics getStatisticsAndReset()
         {
             return performanceMeasurement.getStatisticsAndReset();
         }
-        
+
         Node& getNode() const
         {
             return *player->getNode();
@@ -556,7 +556,7 @@ namespace test_utilities
             for (;;)
             {
                 const ScopedPerformanceMeasurement spm (performanceMeasurement);
-                
+
                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
                                                                     : std::min (testSetup.blockSize, numSamplesToDo);
                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
@@ -639,7 +639,7 @@ namespace test_utilities
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
         int numProcessMisses = 0;
-        
+
         PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
     };
 
