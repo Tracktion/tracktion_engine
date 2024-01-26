@@ -54,6 +54,11 @@ const LaunchHandle& SlotControlNode::getLaunchHandle() const
     return *launchHandle;
 }
 
+const LaunchHandle* SlotControlNode::getLaunchHandleIfNotUnique() const
+{
+    return launchHandle.use_count() > 1 ? launchHandle.get() : nullptr;
+}
+
 tracktion::graph::NodeProperties SlotControlNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();

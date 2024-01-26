@@ -310,10 +310,13 @@ void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
 {
     for (auto& n : launcherNodesCopy)
     {
-        if (n->getLaunchHandle().getPlayingStatus() == LaunchHandle::PlayState::playing)
+        if (auto lh = n->getLaunchHandleIfNotUnique())
         {
-            track->playSlotClips = true;
-            return;
+            if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+            {
+                track->playSlotClips = true;
+                return;
+            }
         }
     }
 }

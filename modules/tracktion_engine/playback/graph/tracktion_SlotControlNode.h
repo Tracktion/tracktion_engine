@@ -29,6 +29,7 @@ public:
                      std::unique_ptr<Node> input);
 
     const LaunchHandle& getLaunchHandle() const;
+    const LaunchHandle* getLaunchHandleIfNotUnique() const;
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
