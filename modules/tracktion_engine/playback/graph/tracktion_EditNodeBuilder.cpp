@@ -1076,7 +1076,7 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     if (arrangerNodes.empty() && launcherNodes.empty())
         return {};
 
-    std::unique_ptr<Node> arrangerNode, launcherNode;
+    std::unique_ptr<Node> arrangerNode;
 
     if (arrangerNodes.size() == 1)
         arrangerNode = std::move (arrangerNodes.front());

@@ -28,6 +28,8 @@ namespace benchmark_utilities
 
     enum class PoolMemoryAllocations    { no, yes };
 
+    enum class ShareNodeMemory          { no, yes };
+
     struct BenchmarkOptions
     {
         Edit* edit = nullptr;
@@ -37,6 +39,7 @@ namespace benchmark_utilities
         LockFree isLockFree;
         tracktion::graph::ThreadPoolStrategy poolType;
         PoolMemoryAllocations poolMemoryAllocations = PoolMemoryAllocations::no;
+        ShareNodeMemory shareNodeMemory = ShareNodeMemory::no;
     };
 
     inline juce::String getDescription (const BenchmarkOptions& opts)
@@ -50,6 +53,9 @@ namespace benchmark_utilities
 
         if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
             s << ", pooled-memory";
+
+        if (opts.shareNodeMemory == ShareNodeMemory::yes)
+            s << ", share-node-memory";
 
         if (opts.isMultiThreaded == MultiThreaded::yes)
             s << ", " + graph::test_utilities::getName (opts.poolType);
@@ -124,6 +130,7 @@ namespace benchmark_utilities
     inline void renderEdit (juce::UnitTest& ut, BenchmarkOptions opts)
     {
         assert (opts.edit != nullptr);
+        assert (opts.shareNodeMemory == ShareNodeMemory::no || opts.isLockFree == LockFree::yes); // Only supported in the lock-free player atm
         const auto description = getDescription (opts);
 
         tracktion::graph::PlayHead playHead;
@@ -140,12 +147,22 @@ namespace benchmark_utilities
         //===
         if (opts.isLockFree == LockFree::yes)
         {
-            tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
+            // N.B. Don't set the Node until after the pooled and shared options or they won't get picked up
+            tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
+                                                                                                                                   processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
                                                                                                                                    tracktion::graph::getPoolCreatorFunction (opts.poolType)),
                                                                                            opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
 
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
+
+            if (opts.shareNodeMemory == ShareNodeMemory::yes)
+                testContext.getNodePlayer().enableNodeMemorySharing (true);
+
+            {
+                const ScopedBenchmark sb2 (createBenchmarkDescription ("Node", (opts.editName + ": setting node").toStdString(), description.toStdString()));
+                testContext.setNode(std::move(node));
+            }
 
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }

@@ -230,8 +230,11 @@ public:
             for (int blockSize : { 128, 256, 512, 1024, 2048 })
             {
                 ts.blockSize = blockSize;
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
             }
         }
     }
