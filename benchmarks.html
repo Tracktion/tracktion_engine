@@ -6,7 +6,7 @@
   <style>
     body      { background-color: white; }
     #charts   { max-width: 1000px; }
-    select    { max-width: 250px; margin-right: 20px; }
+    select    { max-width: 700px; margin-right: 20px; }
     .tickboxes  { padding-right: 30px; }
 
   .loader {
@@ -48,17 +48,11 @@
     return false;
   }
 </script>
-<body onload="buildMenus()">
+<body onload="initialise()">
   <h1>Tracktion Benchmarks</h1>
 
-  <label for="categories_list">Categories:</label>
-  <select id="categories_list"></select>
-
-  <label for="names_list">Name:</label>
-  <select id="names_list"></select>
-
-  <label for="descriptions_list">Description:</label>
-  <select id="descriptions_list"></select>
+  <label for="benchmark_list">Benchmark:</label>
+  <select id="benchmark_list"></select>
 
   <br/>
   <label for="platforms_list">Platform:</label>
@@ -135,19 +129,24 @@
     var categories = new Set();
     var names = new Set();
     var descriptions = new Set();
+    var benchmarks = new Set();
     var platforms = new Set();
     var branches = new Set();
+
+    var benchmarkItems = new Map();
 
     var currentResults = new Map();
     var currentMin, currentMax;
 
-    function updateMenus()
+    function initialise()
     {
-      categories_list.innerHTML = "";
-      names_list.innerHTML = "";
-      descriptions_list.innerHTML = "";
-      platforms_list.innerHTML = "";
-      branch_list.innerHTML = "";
+      // Set the start date to a month ago
+      {
+        const today = new Date();
+        today.setMonth (today.getMonth() - 1);
+        const lastMonth = today.toISOString().slice (0, 10);
+        document.getElementById ("start_date").value = lastMonth;
+      }
 
       function populateOptions (list, menuItems)
       {
@@ -167,36 +166,93 @@
         });
       };
 
-      populateOptions (categories_list, categories);
-      populateOptions (names_list, names);
-      populateOptions (descriptions_list, descriptions);
-      populateOptions (platforms_list, platforms);
-      populateOptions (branch_list, branches);
-    }
-
-    function buildMenus()
-    {
-      var filterString = "";
-
-      if (categories_list.value != "All")     filterString += '&benchmark_category=' + categories_list.value;
-      if (names_list.value != "All")          filterString += '&benchmark_name=' + names_list.value;
-      if (descriptions_list.value != "All")   filterString += '&benchmark_description=' + descriptions_list.value;
-      if (platforms_list.value != "All")      filterString += '&benchmark_platform=' + platforms_list.value;
-      if (branch_list.value != "All")         filterString += '&benchmark_branch_name=' + branch_list.value;
-
       document.getElementById ("loader").style.display = "block";
-      getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_menus" + filterString, function (status, res)
-      {
-        console.log (res);
-        document.getElementById ("loader").style.display = "none";
-        hashes        = res["benchmark_hash"];
-        categories    = res["benchmark_category"];
-        names         = res["benchmark_name"];
-        descriptions  = res["benchmark_description"];
-        platforms     = res["benchmark_platform"];
-        branches      = res["benchmark_branch_name"];
 
-        updateMenus();
+      populateOptions (platforms_list, [ "mac", "windows", "linux" ]);
+
+      // BRANCHES
+      getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_branches", function (status, res)
+      {
+        branches = [];
+        res.forEach (branch =>
+        {
+          branches.push (branch.benchmark_branch_name);
+        });
+
+        populateOptions (branch_list, branches);
+      });
+
+      // BENCHMARKS
+      getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_menus_grouped", function (status, res)
+      {
+        document.getElementById ("loader").style.display = "none";
+        benchmarkItems = new Map();
+        benchmarks = [];
+
+        res.forEach (entry =>
+        {
+          hashID = entry.benchmark_category + " | " + entry.benchmark_name + " | " + entry.benchmark_description;
+
+          if (benchmarkItems.has (hashID))
+          {
+            existingObj = benchmarkItems.get (hashID);
+          }
+          else
+          {
+            newObj = {};
+            newObj.hashID = hashID;
+            newObj.benchmark_category     = entry.benchmark_category;
+            newObj.benchmark_name         = entry.benchmark_name;
+            newObj.benchmark_description  = entry.benchmark_description;
+            benchmarkItems.set (hashID, newObj);
+          }
+
+          benchmarks.push (hashID);
+        });
+
+        benchmark_list.innerHTML = "";
+
+        currentCategory = "";
+        currentName = "";
+
+        benchmarkItems.forEach (benchmarkItem =>
+        {
+          list = benchmark_list;
+          
+          cat = benchmarkItem.benchmark_category;
+          name = benchmarkItem.benchmark_name;
+          desc = benchmarkItem.benchmark_description;
+
+          if (currentCategory != cat)
+          {
+            currentCategory = cat;
+
+            var option = document.createElement ('option');
+            option.innerHTML = "";
+            option.disabled = true;
+            list.appendChild (option);
+
+            var option = document.createElement ('option');
+            option.innerHTML = cat;
+            option.disabled = true;
+            list.appendChild (option);
+          }
+
+          if (currentName != name)
+          {
+            currentName = name;
+
+            var option = document.createElement ('option');
+            option.innerHTML = "------ " + name;
+            option.disabled = true;
+            list.appendChild (option);
+          }
+          
+          var option = document.createElement ('option');
+          option.value = benchmarkItem.hashID;
+          option.innerHTML = "------------ " + desc;
+          list.appendChild (option);
+        });
       });
     }
 
@@ -302,9 +358,14 @@
 
     function fetchResults()
     {
-      let categoryToShow    = categories_list.value;
-      let nameToShow        = names_list.value;
-      let descriptionToShow = descriptions_list.value;
+      benchmarkObject = benchmarkItems.get (benchmark_list.value);
+
+      if (! benchmarkObject)
+        return;
+
+      let categoryToShow    = benchmarkObject.benchmark_category;
+      let nameToShow        = benchmarkObject.benchmark_name;
+      let descriptionToShow = benchmarkObject.benchmark_description;
       let platformToShow    = platforms_list.value;
       let branchToShow      = branch_list.value;
 
@@ -387,7 +448,6 @@
       currentMax = Number.MIN_VALUE;
       currentMin = Number.MAX_VALUE;
 
-      console.log (currentResults);
       currentResults.forEach (result =>
                              {
                                if (showTotal)
