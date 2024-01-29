@@ -590,7 +590,6 @@ public:
         playbackSpeedRatio = speedRatio;
         semitonesShift = semitones;
 
-
         [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) (1.0 / speedRatio), (float) semitonesShift);
         assert (ok);
     }
@@ -1794,7 +1793,21 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     if (editReader)
         return true;
 
-    auto fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
+    AudioFileCache::Reader::Ptr fileCacheReader;
+
+    // Try creating a MemoryMappedFileReader first for compressed formats
+    if (audioFile.getInfo().needsCachedProxy)
+    {
+        auto mappedFileAndReader = AudioFileUtils::createMappedFileAndReaderFor (*audioFile.engine, audioFile.getFile());
+        fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile,
+                                                                                      [&](juce::AudioFormatReader*, juce::TimeSliceThread&, int) -> std::unique_ptr<FallbackReader>
+                                                                                      {
+                                                                                          return std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
+                                                                                      });
+    }
+
+    if (! fileCacheReader)
+        fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
 
     if (fileCacheReader == nullptr || fileCacheReader->getSampleRate() == 0.0)
         return false;

@@ -530,6 +530,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioFifo.h"
 #include "audio_files/tracktion_RecordingThumbnailManager.h"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.h"
+#include "audio_files/formats/tracktion_MemoryMappedFileReader.h"
 #include "audio_files/formats/tracktion_LAMEManager.h"
 #include "audio_files/formats/tracktion_RexFileFormat.h"
 
