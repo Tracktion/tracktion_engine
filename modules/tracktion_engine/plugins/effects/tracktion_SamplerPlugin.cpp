@@ -503,7 +503,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                         playingNotes.add(new SampledNote
                             // BEATCONNECT MODIFICATION START
                             (adjustedMidiNote,
-                                // BEATCONNECT MODIFICATION END
+                            // BEATCONNECT MODIFICATION END
                                 ss->keyNote,
                                 m.getVelocity() / 127.0f,
                                 ss->audioFile,
@@ -553,22 +553,20 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
             auto sn = playingNotes.getUnchecked (i);
 
             // BEATCONNECT MODIFICATIONS START
-            auto effectsModulesIterator = effectsModulesPtr.find(sn->note);
+            auto effectsModulesIterator = effectsModulesSmart.find(sn->note);
 
-            jassert(effectsModulesIterator != effectsModulesPtr.end());
-            if (effectsModulesIterator == effectsModulesPtr.end())
+            jassert(effectsModulesIterator != effectsModulesSmart.end());
+            if (effectsModulesIterator == effectsModulesSmart.end())
             {
                 // =8> fill in a proper failure case.
                 // Explode in flames
                 int breakpoint = 8888;
             }
-             
             // BEATCONNECT MODIFICATIONS END
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
-            // BEATCONNECT MODIFICATIONS START
-                             ,
-                             *effectsModulesIterator->second
+            // BEATCONNECT MODIFICATIONS START                  
+                , *singleEffectsModule
             // BEATCONNECT MODIFICATIONS END
             );
 
@@ -726,9 +724,9 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     // BEATCONNECT MODIFICATION START
 
     auto effectsModuleSmartIt = effectsModulesSmart.emplace(keyNote, std::make_unique<EffectsModule>(sampleRate, keyNote));
-    auto effectsModuleIt = effectsModulesPtr.emplace(keyNote, new EffectsModule(sampleRate, keyNote));
+    singleEffectsModule = std::make_unique<EffectsModule>(sampleRate, keyNote);
 
-    if (!effectsModuleIt.second) {
+    if (!effectsModuleSmartIt.second) {
         jassertfalse; // =8> Insertion failed! What to do?
         int breakpoint = 8888;
     }  
@@ -752,11 +750,11 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
         addParam("reverbMix", TRANS("Reverb Mix"), {0.0f, 1.0f});
 
     effectsModuleSmartIt.first->second->chorus->chorusMix->attachToCurrentValue(
-        effectsModuleIt.first->second->chorus->chorusMixValue);
+        effectsModuleSmartIt.first->second->chorus->chorusMixValue);
     effectsModuleSmartIt.first->second->delay->delayMix->attachToCurrentValue(
-        effectsModuleIt.first->second->delay->delayMixValue);
+        effectsModuleSmartIt.first->second->delay->delayMixValue);
     effectsModuleSmartIt.first->second->distortionMix->attachToCurrentValue(
-        effectsModuleIt.first->second->distortionMixValue);
+        effectsModuleSmartIt.first->second->distortionMixValue);
     effectsModuleSmartIt.first->second->reverbMix->attachToCurrentValue(
         effectsModuleSmartIt.first->second->reverbMixValue);
     // BEATCONNECT MODIFICATION END
@@ -839,7 +837,7 @@ void SamplerPlugin::removeSound (int index)
         }
 
     if (!keyNotePresisting)
-        effectsModulesPtr.erase(removeSoundsKeyNote);
+        effectsModulesSmart.erase(removeSoundsKeyNote);
     // BEATCONNECT MODIFICATION END
 
     state.removeChild (index, getUndoManager());
