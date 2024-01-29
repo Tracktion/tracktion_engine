@@ -157,7 +157,7 @@ private:
 
     // BEATCONNECT MODIFICATION START
     std::map <const int, std::unique_ptr<EffectsModule>> effectsModulesSmart;
-    std::unique_ptr<EffectsModule> singleEffectsModule;
+    //std::unique_ptr<EffectsModule> singleEffectsModule;
     // BEATCONNECT MODIFICATION END
 
     juce::Colour colour;

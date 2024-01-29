@@ -33,7 +33,6 @@ public:
                  const FilterType filterType_ = FilterType::noFilter, 
                  const double filterFrequency_ = 0, 
                  const double filterGain_ = 0,
-                 // =8> make sure all these defaults are accurate later =8>
                  const float chorusDepth_ = 0,
                  const float chorusMix_ = 0,
                  const bool chorusOn_ = false, // The chorus' bypass state
@@ -51,7 +50,6 @@ public:
                  const bool reverbOn_ = false, // Reverb's bypass state
                  const float reverbSize_ = 0,
                  const float reverbWidth_ = 0
-                 // =8> make sure all these defaults are accurate later =8>
                  // BEAT CONNECT MODIFICATION END
                  )
        : note (midiNote),
@@ -554,19 +552,13 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
 
             // BEATCONNECT MODIFICATIONS START
             auto effectsModulesIterator = effectsModulesSmart.find(sn->note);
-
             jassert(effectsModulesIterator != effectsModulesSmart.end());
-            if (effectsModulesIterator == effectsModulesSmart.end())
-            {
-                // =8> fill in a proper failure case.
-                // Explode in flames
-                int breakpoint = 8888;
-            }
+
             // BEATCONNECT MODIFICATIONS END
 
             sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
             // BEATCONNECT MODIFICATIONS START                  
-                , *singleEffectsModule
+                , *effectsModulesIterator->second.get()
             // BEATCONNECT MODIFICATIONS END
             );
 
@@ -724,40 +716,37 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
     // BEATCONNECT MODIFICATION START
 
     auto effectsModuleSmartIt = effectsModulesSmart.emplace(keyNote, std::make_unique<EffectsModule>(sampleRate, keyNote));
-    singleEffectsModule = std::make_unique<EffectsModule>(sampleRate, keyNote);
 
-    if (!effectsModuleSmartIt.second) {
-        jassertfalse; // =8> Insertion failed! What to do?
-        int breakpoint = 8888;
+    jassert(effectsModuleSmartIt.second);
+    if (effectsModuleSmartIt.second) {
+        effectsModuleSmartIt.first->second->chorus->chorusMixValue.referTo(
+            v, IDs::chorusMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->delay->delayMixValue.referTo(
+            v, IDs::delayMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->distortionMixValue.referTo(
+            v, IDs::distortionMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->reverbMixValue.referTo(
+            v, IDs::reverbMix, nullptr, 0.0f);
+
+        effectsModuleSmartIt.first->second->chorus->chorusMix =
+            addParam("chorusMix", TRANS("Chorus Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->delay->delayMix =
+            addParam("delayMix", TRANS("Delay Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->distortionMix =
+            addParam("distortionMix", TRANS("Distortion Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->reverbMix =
+            addParam("reverbMix", TRANS("Reverb Mix"), { 0.0f, 1.0f });
+
+        effectsModuleSmartIt.first->second->chorus->chorusMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->chorus->chorusMixValue);
+        effectsModuleSmartIt.first->second->delay->delayMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->delay->delayMixValue);
+        effectsModuleSmartIt.first->second->distortionMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->distortionMixValue);
+        effectsModuleSmartIt.first->second->reverbMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->reverbMixValue);
+        // BEATCONNECT MODIFICATION END
     }  
-
-    effectsModuleSmartIt.first->second->chorus->chorusMixValue.referTo(
-        v, IDs::chorusMix, nullptr, 0.0f);
-    effectsModuleSmartIt.first->second->delay->delayMixValue.referTo(
-        v, IDs::delayMix, nullptr, 0.0f); 
-    effectsModuleSmartIt.first->second->distortionMixValue.referTo(
-        v, IDs::distortionMix, nullptr, 0.0f);
-    effectsModuleSmartIt.first->second->reverbMixValue.referTo(
-        v, IDs::reverbMix, nullptr, 0.0f);
-
-    effectsModuleSmartIt.first->second->chorus->chorusMix =
-        addParam("chorusMix", TRANS("Chorus Mix"), {0.0f, 1.0f}); 
-    effectsModuleSmartIt.first->second->delay->delayMix =
-        addParam("delayMix", TRANS("Delay Mix"), {0.0f, 1.0f}); 
-    effectsModuleSmartIt.first->second->distortionMix =
-        addParam("distortionMix", TRANS("Distortion Mix"), {0.0f, 1.0f}); 
-    effectsModuleSmartIt.first->second->reverbMix =
-        addParam("reverbMix", TRANS("Reverb Mix"), {0.0f, 1.0f});
-
-    effectsModuleSmartIt.first->second->chorus->chorusMix->attachToCurrentValue(
-        effectsModuleSmartIt.first->second->chorus->chorusMixValue);
-    effectsModuleSmartIt.first->second->delay->delayMix->attachToCurrentValue(
-        effectsModuleSmartIt.first->second->delay->delayMixValue);
-    effectsModuleSmartIt.first->second->distortionMix->attachToCurrentValue(
-        effectsModuleSmartIt.first->second->distortionMixValue);
-    effectsModuleSmartIt.first->second->reverbMix->attachToCurrentValue(
-        effectsModuleSmartIt.first->second->reverbMixValue);
-    // BEATCONNECT MODIFICATION END
 
     if (filterType != (int)FilterType::noFilter) 
     {
