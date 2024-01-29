@@ -258,7 +258,7 @@ public:
     juce::IIRFilter iirFilterL;
     juce::IIRCoefficients coefs;
     double iirFilterQuotient = 0.710624337f;
-    float chorusDepth; // =8> make sure all these defaults are accurate later =8>
+    float chorusDepth;
     float chorusMix;
     bool chorusOn; // The chorus' bypass state
     float chorusSpeed;
