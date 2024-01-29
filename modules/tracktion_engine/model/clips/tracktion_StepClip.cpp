@@ -413,6 +413,7 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                             result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
                         }
                         // BEATCONNECT MODIFICATION END
+
                         result.addEvent (juce::MidiMessage::noteOn (chan, note, vel * channelVelScale), eventStart);
                         result.addEvent (juce::MidiMessage::noteOff (chan, note, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
                         

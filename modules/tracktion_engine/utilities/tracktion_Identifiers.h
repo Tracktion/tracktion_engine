@@ -70,9 +70,6 @@ namespace IDs
     DECLARE_ID (INPUTDEVICE)
     DECLARE_ID (INPUTDEVICEINSTANCE)
     DECLARE_ID (INPUTDEVICEDESTINATION)
-    // BEATCONNECT MODIFICATION START
-    DECLARE_ID (inputType)
-    // BEATCONNECT MODIFICATION END
     DECLARE_ID (sourceTrack)
     DECLARE_ID (targetTrack)
     DECLARE_ID (targetIndex)
@@ -136,10 +133,6 @@ namespace IDs
     DECLARE_ID (index)
     DECLARE_ID (layout)
     DECLARE_ID (parameters)
-    // BEATCONNECT MODIFICATION START
-    DECLARE_ID (parameterIDs)
-    DECLARE_ID (Component)
-    // BEAT CONNECT MODIFICATION END
     DECLARE_ID (CURVESECTION)
     DECLARE_ID (TEMPOCURVESECTION)
     DECLARE_ID (AUTOMATIONCURVE)
@@ -599,9 +592,6 @@ namespace IDs
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
     DECLARE_ID (filterQ)
-    // BEATCONNECT MODIFICATION START
-    DECLARE_ID (filterGain)
-    // BEATCONNECT MODIFICATION END
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
@@ -660,6 +650,7 @@ namespace IDs
 
     // BEATCONNECT MODIFICATIONS START HERE
     // Generic IDs
+    DECLARE_ID(filterGain)
     DECLARE_ID(baseValue)
     DECLARE_ID(currentValue)
     DECLARE_ID(defaultValue)

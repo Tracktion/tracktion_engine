@@ -561,10 +561,7 @@ Edit::Edit (Options options)
 
     undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
 
-    // BEATCONNECT MODIFICATION START
-    // initialise();
-    initialise(options.createDefaultTrack);
-    // BEATCONNECT MODIFICATION END
+    initialise();
 
     undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
 
@@ -686,10 +683,8 @@ Edit::ScopedRenderStatus::~ScopedRenderStatus()
 
 
 //==============================================================================
-// BEATCONNECT MODIFICATION START
-// void Edit::initialise()
-void Edit::initialise(bool createDefaultTrack)
-// BEATCONNECT MODIFICATION END
+// 
+void Edit::initialise()
 {
     CRASH_TRACER
     const StopwatchTimer loadTimer;
@@ -725,10 +720,7 @@ void Edit::initialise(bool createDefaultTrack)
     if (loadContext != nullptr)
         loadContext->progress = 1.0f;
 
-    // BEATCONNECT MODIFICATION START
-    // initialiseTracks();
-    initialiseTracks(createDefaultTrack);
-    // BEATCONNECT MODIFICATION END
+    initialiseTracks();
 
     initialiseARA();
     updateMuteSoloStatuses();
@@ -838,9 +830,11 @@ void Edit::initialiseMasterVolume()
     if (! masterVolState.isValid())
     {
         masterVolState = VolumeAndPanPlugin::create();
+
         // BEATCONNECT MODIFICATION START
         masterVolState.setProperty(IDs::volume, decibelsToVolumeFaderPosition(-4.0f), nullptr);
         // BEATCONNECT MODIFICATION END
+
         mvTree.addChild (masterVolState, -1, nullptr);
     }
 
@@ -913,20 +907,21 @@ void Edit::removeZeroLengthClips()
         c->removeFromParentTrack();
 }
 
-// BEATCONNECT MODIFICATION START
-// void Edit::initialiseTracks()
-void Edit::initialiseTracks(bool createDefaultTrack)
-// BEATCONNECT MODIFICATION END
+void Edit::initialiseTracks()
 {
-    // If the tempo track hasn't been created yet this is a new Edit
     // BEATCONNECT MODIFICATION START
-    // if (getTempoTrack() == nullptr)
-    if (getTempoTrack() == nullptr && createDefaultTrack)
+    // 
+    // Default track is handled DLL side.
+    // We create a default folder track if the Edit is an empty Edit.
+    // 
+    //  // If the tempo track hasn't been created yet this is a new Edit
+    //  if (getTempoTrack() == nullptr)
+    //  {
+    //      ensureNumberOfAudioTracks (getProjectItemID().getProjectID() == 0 ? 1 : 8);
+    //      updateTrackStatuses();
+    //  }
+    // 
     // BEATCONNECT MODIFICATION END
-    {
-        ensureNumberOfAudioTracks (getProjectItemID().getProjectID() == 0 ? 1 : 8);
-        updateTrackStatuses();
-    }
 
     ensureArrangerTrack();
     ensureTempoTrack();
@@ -1714,26 +1709,6 @@ Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
 
     return newTrack;
 }
-
-// BEATCONNECT MODIFICATION START
-AudioTrack::Ptr Edit::insertNewAudioTrackWithType(TrackInsertPoint insertPoint, SelectionManager* sm, juce::String type)
-{
-    if (auto newTrack = newTrackWithType(insertPoint, IDs::TRACK, sm, type))
-    {
-        newTrack->pluginList.addDefaultTrackPlugins(false);
-        return dynamic_cast<AudioTrack*> (newTrack.get());
-    }
-
-    return {};
-}
-
-Track::Ptr Edit::newTrackWithType(TrackInsertPoint insertPoint, const juce::Identifier& xmlType, SelectionManager* sm, juce::String type)
-{
-    auto v = juce::ValueTree(xmlType);
-    v.setProperty(IDs::type, type, nullptr);
-    return insertTrack(insertPoint, v, sm);
-}
-// BEATCONNECT MODIFICATION END
 
 AudioTrack::Ptr Edit::insertNewAudioTrack (TrackInsertPoint insertPoint, SelectionManager* sm)
 {

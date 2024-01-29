@@ -104,6 +104,7 @@ void LevelMeasurer::Client::setNumChannelsUsed (int numChannels) noexcept
     juce::SpinLock::ScopedLockType sl (mutex);
     numChannelsUsed = numChannels;
 }
+
 // BEATCONNECT MODIFICATION START
 int LevelMeasurer::Client::getNumChannelsUsed() noexcept
 {
@@ -111,6 +112,7 @@ int LevelMeasurer::Client::getNumChannelsUsed() noexcept
     return numChannelsUsed;
 }
 // BEATCONNECT MODIFICATION END
+
 void LevelMeasurer::Client::setOverload (int channel, bool hasOverloaded) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
