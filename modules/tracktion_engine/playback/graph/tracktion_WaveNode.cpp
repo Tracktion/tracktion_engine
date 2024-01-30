@@ -1804,12 +1804,14 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     // Try creating a MemoryMappedFileReader first for compressed formats
     if (audioFile.getInfo().needsCachedProxy)
     {
-        auto mappedFileAndReader = AudioFileUtils::createMappedFileAndReaderFor (*audioFile.engine, audioFile.getFile());
-        fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile,
-                                                                                      [&](juce::AudioFormatReader*, juce::TimeSliceThread&, int) -> std::unique_ptr<FallbackReader>
-                                                                                      {
-                                                                                          return std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
-                                                                                      });
+        if (auto mappedFileAndReader = AudioFileUtils::createMappedFileAndReaderFor (*audioFile.engine, audioFile.getFile()))
+        {
+            auto memoryMappedFileReader = std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
+            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&memoryMappedFileReader] (juce::TimeSliceThread&, int) mutable -> std::unique_ptr<FallbackReader>
+                                                                                                  {
+                                                                                                      return std::unique_ptr<FallbackReader> (std::move (memoryMappedFileReader));
+                                                                                                  });
+        }
     }
 
     if (! fileCacheReader)

@@ -62,23 +62,23 @@ std::unique_ptr<AudioFileUtils::MappedFileAndReader> AudioFileUtils::createMappe
     if (auto mf = std::make_unique<juce::MemoryMappedFile> (file, juce::MemoryMappedFile::readOnly))
     {
         auto& fileFormatManager = engine.getAudioFileFormatManager();
-        juce::AudioFormatReader* reader = {};
+        std::unique_ptr<juce::AudioFormatReader> reader;
         auto mis = std::make_unique<juce::MemoryInputStream> (mf->getData(), mf->getSize(), false);
 
         // Try using the file extension first as this will be quicker
         if (auto audioFormat = fileFormatManager.getFormatFromFileName (file))
-            if (reader = audioFormat->createReaderFor (mis.get(), false); reader)
+            if (reader = std::unique_ptr<juce::AudioFormatReader> (audioFormat->createReaderFor (mis.get(), false)); reader)
                 mis.release();
 
         // If that doesn't work, fall back to stream
         if (! reader)
-            reader = fileFormatManager.readFormatManager.createReaderFor (std::move (mis));
+            reader = std::unique_ptr<juce::AudioFormatReader> (fileFormatManager.readFormatManager.createReaderFor (std::move (mis)));
 
         if (reader)
         {
             auto result = std::make_unique<MappedFileAndReader>();
             result->mappedFile = std::move (mf);
-            result->reader = std::unique_ptr<juce::AudioFormatReader> (reader);
+            result->reader = std::move (reader);
             return result;
         }
 

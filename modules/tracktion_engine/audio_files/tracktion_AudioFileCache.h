@@ -92,6 +92,11 @@ public:
                                                                                    int samplesToBuffer)>&
                               createFallbackReader);
 
+    /** @internal */
+    Reader::Ptr createFallbackReader (const std::function<std::unique_ptr<FallbackReader> (juce::TimeSliceThread& timeSliceThread,
+                                                                                           int samplesToBuffer)>&
+                                      createFallbackReader);
+
     //==============================================================================
     void setCacheSizeSamples (SampleCount samplesPerFile);
     SampleCount getCacheSizeSamples() const         { return cacheSizeSamples; }

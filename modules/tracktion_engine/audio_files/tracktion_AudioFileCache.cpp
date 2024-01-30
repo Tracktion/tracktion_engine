@@ -131,7 +131,7 @@ public:
     {
         {
             const juce::ScopedReadLock sl (readerLock);
-            
+
             if (mapEntireFile && readers.size() > 0)
                 return false;
         }
@@ -308,7 +308,7 @@ public:
     bool isUnused() const
     {
         const juce::ScopedReadLock sl (clientListLock);
-        
+
         return clients.isEmpty();
     }
 
@@ -501,7 +501,7 @@ private:
     std::atomic<bool> failedToOpenFile { false };
     uint32_t lastFailedOpenAttempt = 0;
     juce::Random random;
-    
+
     juce::ReadWriteLock clientListLock, readerLock;
 
     juce::MemoryMappedAudioFormatReader* findReaderFor (SampleCount sample) const
@@ -810,6 +810,16 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
     }
 
     return {};
+}
+
+AudioFileCache::Reader::Ptr AudioFileCache::createFallbackReader (const std::function<std::unique_ptr<FallbackReader> (juce::TimeSliceThread& timeSliceThread,
+                                                                                                                       int samplesToBuffer)>&
+                                                                  createFallbackReader)
+{
+    backgroundReaderThread.startThread (juce::Thread::Priority::low);
+    auto fallbackReader = createFallbackReader (backgroundReaderThread,
+                                                48000 * 5);
+    return new Reader (*this, nullptr, std::move (fallbackReader));
 }
 
 void AudioFileCache::purgeOrphanReaders()
