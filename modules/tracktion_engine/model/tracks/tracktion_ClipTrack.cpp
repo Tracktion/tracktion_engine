@@ -885,23 +885,14 @@ Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
          && clip.getPosition().time.reduced (TimeDuration::fromSeconds (0.001)).contains (time)
          && ! clip.isGrouped())
     {
-        auto newClipState = clip.state.createCopy();
-        edit.createNewItemID().writeID (newClipState, nullptr);
-
-        // BEATCONNECT MODIFICATION START !?*& - If this code can't be moved, we need to remove hard coded strings.
-        // Remove uuids
-        auto removeUUID = [&](juce::ValueTree node, auto&& removeUUID) -> void
-        {
-            node.removeProperty("uuid", nullptr);
-            for (int i = 0; i < node.getNumChildren(); ++i)
-                removeUUID(node.getChild(i), removeUUID);
-        };
-
-        removeUUID(newClipState, removeUUID);
-
-        // Remove thumbnail metadata
+        // BEATCONNECT MODIFICATION START
+        // For this copy, a reset of uuids is required.
+        auto newClipState = clip.state.createCopy(true);
         newClipState.removeChild(newClipState.getChildWithName("AudioClipInfoMetaData"), nullptr);
+        // auto newClipState = clip.state.createCopy();
         // BEATCONNECT MODIFICATION END
+
+        edit.createNewItemID().writeID (newClipState, nullptr);
 
         if (auto newClip = insertClipWithState (newClipState))
         {

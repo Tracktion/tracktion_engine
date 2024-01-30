@@ -650,6 +650,7 @@ namespace IDs
 
     // BEATCONNECT MODIFICATIONS START HERE
     // Generic IDs
+    DECLARE_ID(uuid) // TODO: This is duplicated DLL side. 
     DECLARE_ID(filterGain)
     DECLARE_ID(baseValue)
     DECLARE_ID(currentValue)

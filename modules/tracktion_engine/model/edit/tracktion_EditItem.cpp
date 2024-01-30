@@ -312,10 +312,8 @@ struct IDRemapping
         }
 
         // BEATCONNECT MODIFICATION START !?*& - This need to go.
-        // Need to remove the current BC properties or else there will be duplicates
-        v.removeProperty("uuid", nullptr);
-        v.removeProperty("armedBy", nullptr);
-        v.removeProperty("isInputMonitoring", nullptr);
+        // Need to remove the current uuid. Will be reset.
+        v.removeProperty(IDs::uuid, nullptr);
         // BEATCONNECT MODIFICATION END
 
         for (auto child : v)
