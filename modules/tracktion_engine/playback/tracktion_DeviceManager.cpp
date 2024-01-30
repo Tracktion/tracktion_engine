@@ -1229,6 +1229,46 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
             globalOutputAudioProcessor->processBlock (ab, mb);
         }
 
+        // Output clipping
+        if (outputClippingEnabled.load (std::memory_order_relaxed))
+        {
+            bool hasClipped = false;
+
+            for (int i = totalNumOutputChannels; --i >= 0;)
+            {
+                if (auto dest = outputChannelData[i])
+                {
+                    if (activeOutChannels[i])
+                    {
+                        for (int j = 0; j < numSamples; ++j)
+                        {
+                            auto samp = dest[j];
+
+                            if (samp < -1.0f)
+                            {
+                                samp = -1.0f;
+                                hasClipped = true;
+                            }
+                            else if (samp > 1.0f)
+                            {
+                                samp = 1.0f;
+                                hasClipped = true;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            dest[j] = samp;
+                        }
+                    }
+                }
+            }
+
+            if (hasClipped)
+                outputHasClipped.store (true, std::memory_order_relaxed);
+        }
+
         {
             const auto timeWindowSec = numSamples / static_cast<float> (currentSampleRate);
 
@@ -1317,6 +1357,22 @@ void DeviceManager::updateNumCPUs()
 
     for (auto c : activeContexts)
         c->updateNumCPUs();
+}
+
+//==============================================================================
+void DeviceManager::enableOutputClipping (bool clipOutput)
+{
+    outputClippingEnabled.store (clipOutput, std::memory_order_relaxed);
+}
+
+bool DeviceManager::hasOutputClipped (bool reset)
+{
+    const auto hasClipped = outputHasClipped.load (std::memory_order_relaxed);
+
+    if (hasClipped && reset)
+        outputHasClipped.store (false, std::memory_order_relaxed);
+
+    return hasClipped;
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)

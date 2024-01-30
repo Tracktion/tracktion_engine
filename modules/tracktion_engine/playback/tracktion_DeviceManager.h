@@ -81,6 +81,15 @@ public:
     void updateNumCPUs(); // should be called when active num CPUs is changed
 
     //==============================================================================
+    /** If set to true, clips the output at 0.0. */
+    void enableOutputClipping (bool clipOutput);
+
+    /** Checks if the output has clipped.
+        @param reset    Resets the clipped flag
+    */
+    bool hasOutputClipped (bool reset);
+
+    //==============================================================================
     struct CPUUsageListener
     {
         virtual ~CPUUsageListener() {}
@@ -222,6 +231,7 @@ private:
     bool sendMidiTimecode = false;
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
+    std::atomic<bool> outputHasClipped { false }, outputClippingEnabled { false };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     juce::Array<EditPlaybackContext*> contextsToRestart;
 
