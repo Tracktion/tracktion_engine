@@ -158,6 +158,9 @@ public:
     */
     int processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
 
+    /** Processes some already held data to even out CPU spikes. */
+    void processData();
+
     /** Flushes the end of the stream when input data is exhausted but there is still output data available.
         Once you have called this, you can no longer call processData.
         @param outChannels  The destination for non-interleaved output samples. This should be as big as samplesPerBlock

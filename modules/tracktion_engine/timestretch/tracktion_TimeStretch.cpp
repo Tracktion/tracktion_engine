@@ -87,6 +87,7 @@ struct TimeStretcher::Stretcher
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
     virtual int processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
+    virtual void processData() {}
     virtual int flush (float* const* outChannels) = 0;
 };
 
@@ -235,7 +236,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
             // This must be called first, before any other functions and can not
             // be called again
             maxFramesNeeded = elastique->GetMaxFramesNeeded();
-            outputFifo.setSize (numChannels, maxFramesNeeded);
+            outputFifo.setSize (numChannels, maxFramesNeeded * 2);
 
             if (mode == TimeStretcher::elastiquePro)
                 elastique->SetStereoInputMode (elastiqueProOptions.midSideStereo ? CElastiqueProV3DirectIf::kMSMode
@@ -250,9 +251,11 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
     }
 
     bool isOk() const override      { return elastique != nullptr; }
+
     void reset() override
     {
         hasBeenReset = true;
+        numProcessCallsToDo = 0;
         elastique->Reset();
     }
 
@@ -273,7 +276,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         if (outputFifo.getNumReady() > samplesPerOutputBuffer)
             return 0;
 
-        const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded()
+        const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded() + elastique->GetFramesNeeded()
                                               : elastique->GetFramesNeeded();
         jassert (framesNeeded <= maxFramesNeeded);
 
@@ -288,6 +291,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
         CRASH_TRACER
+        using namespace choc::buffer;
 
         if (numSamples > 0 || outputFifo.getNumReady() < samplesPerOutputBuffer)
         {
@@ -295,47 +299,38 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
             {
                 hasBeenReset = false;
 
-                const int numPreFramesNeeded = elastique->GetPreFramesNeeded();
+                const auto numFrames = static_cast<FrameCount> (numSamples);
+                const auto numPreFramesNeeded = static_cast<FrameCount> (elastique->GetPreFramesNeeded());
+                const auto numPostFramesNeeded = static_cast<FrameCount> (elastique->GetFramesNeeded());
                 assert (numPreFramesNeeded >= 0);
-                assert (numPreFramesNeeded <= numSamples);
+                assert (numPreFramesNeeded <= numFrames);
+                assert (numFrames == (numPreFramesNeeded + numPostFramesNeeded));
 
-                AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
-                const int numPreProcessFrames = elastique->PreProcessData ((float **) inChannels, numSamples,
-                                                                           (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
-                                                                           CElastiqueProV3DirectIf::kFastStartup);
+                const auto inputChannelView = createChannelArrayView (inChannels,
+                                                                      static_cast<ChannelCount> (numChannels),
+                                                                      static_cast<FrameCount> (numSamples));
 
-                assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
-                assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
-                outputFifo.write (scratchBuffer.buffer, 0, numPreProcessFrames);
+                // Process the pre-frames
+                processPreFrames (inputChannelView.getStart (numPreFramesNeeded));
+
+                // Add the post-frames but don't process yet
+                processFrames (inputChannelView.getEnd (numPostFramesNeeded),
+                               PerformProcessCalls::no);
             }
             else
             {
-                {
-                    [[maybe_unused]] const int err = elastique->ProcessData ((float **) inChannels, numSamples);
-                    assert (err == 0);
-                }
-
-                {
-                    const int numProcessCalls = elastique->GetNumOfProcessCalls();
-
-                    for (int i = 0; i < numProcessCalls; ++i)
-                    {
-                        [[maybe_unused]] const int err = elastique->ProcessData();
-                        assert (err == 0);
-                    }
-                }
-
-                {
-                    const int numFramesProcessed = elastique->GetFramesProcessed();
-                    AudioScratchBuffer scratchBuffer (numChannels, numFramesProcessed);
-                    const int numFramesReturned = elastique->GetProcessedData ((float **) scratchBuffer.buffer.getArrayOfWritePointers());
-                    assert (numFramesProcessed == numFramesReturned);
-                    assert (numFramesReturned <= scratchBuffer.buffer.getNumSamples());
-                    assert (outputFifo.getFreeSpace() >= numFramesReturned);
-                    outputFifo.write (scratchBuffer.buffer, 0, numFramesReturned);
-                }
+                processFrames (createChannelArrayView (inChannels,
+                                                       static_cast<ChannelCount> (numChannels),
+                                                       static_cast<FrameCount> (numSamples)),
+                               PerformProcessCalls::yes);
             }
         }
+        else if (numSamples == 0)
+        {
+            // This should only happen if there are enough frames in the fifo to return
+            assert (outputFifo.getNumReady() >= samplesPerOutputBuffer);
+            processFrames (false);
+         }
 
         // If enough samples are ready, output these now
         if (const int numReady = outputFifo.getNumReady(); numReady > 0)
@@ -350,6 +345,11 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
         jassertfalse;
         return 0;
+    }
+
+    void processData() override
+    {
+        processFrames (false);
     }
 
     int flush (float* const* outChannels) override
@@ -381,7 +381,7 @@ private:
     TimeStretcher::Mode elastiqueMode;
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     const int samplesPerOutputBuffer, numChannels;
-    int maxFramesNeeded;
+    int maxFramesNeeded = 0, numProcessCallsToDo = 0;
     AudioFifo outputFifo;
     bool hasBeenReset = true;
     float newSpeedRatio, newSemitonesUp;
@@ -427,6 +427,84 @@ private:
             elastique->SetEnvelopeFactor (pitch);
             elastique->SetEnvelopeOrder (elastiqueProOptions.envelopeOrder);
         }
+    }
+
+    int processPreFrames (const choc::buffer::ChannelArrayView<const float>& inFrames)
+    {
+        const int numInputFrames = static_cast<int> (inFrames.size.numFrames);
+        assert (numInputFrames == elastique->GetPreFramesNeeded());
+
+        AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
+        const int numPreProcessFrames = elastique->PreProcessData ((float **) inFrames.data.channels, numInputFrames,
+                                                                   (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
+                                                                   CElastiqueProV3DirectIf::kNormalStartup);
+
+        assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
+        assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
+        outputFifo.write (scratchBuffer.buffer, 0, numPreProcessFrames);
+
+        return numPreProcessFrames;
+    }
+
+    enum class PerformProcessCalls { no, yes };
+
+    int processFrames (const choc::buffer::ChannelArrayView<const float>& inFrames, PerformProcessCalls performProcessCalls)
+    {
+        const int numInputFrames = static_cast<int> (inFrames.size.numFrames);
+
+        if (numInputFrames > 0)
+        {
+            if (numProcessCallsToDo > 0)
+                processFrames (true);
+
+            assert (numProcessCallsToDo == 0);
+            [[maybe_unused]] const int err = elastique->ProcessData ((float **) inFrames.data.channels, numInputFrames);
+            assert (err == 0);
+
+            numProcessCallsToDo = elastique->GetNumOfProcessCalls();
+        }
+
+        if (performProcessCalls == PerformProcessCalls::yes)
+            processFrames (outputFifo.getNumReady() < samplesPerOutputBuffer);
+
+        return 0;
+    }
+
+    void processFrames (bool processAll)
+    {
+        const int numProcessCallsThisTime = processAll ? numProcessCallsToDo
+                                                       : numProcessCallsToDo < 7 ? numProcessCallsToDo
+                                                                                 : numProcessCallsToDo / 3;
+
+        if (numProcessCallsThisTime == 0)
+            return;
+
+        for (int i = 0; i < numProcessCallsThisTime; ++i)
+        {
+            [[maybe_unused]] const int err = elastique->ProcessData();
+            assert (err == 0);
+        }
+
+        numProcessCallsToDo -= numProcessCallsThisTime;
+
+        if (numProcessCallsToDo == 0)
+            finishProcessing();
+    }
+
+    int finishProcessing()
+    {
+        // N.B. GetFramesProcessed always returns a positive number until new data is supplied
+        const int numFramesProcessed = elastique->GetFramesProcessed();
+
+        assert (numFramesProcessed > 0);
+        AudioScratchBuffer scratchBuffer (numChannels, numFramesProcessed);
+        const int numFramesReturned = elastique->GetProcessedData ((float **) scratchBuffer.buffer.getArrayOfWritePointers());
+        assert (numFramesProcessed == numFramesReturned);
+        assert (numFramesReturned <= scratchBuffer.buffer.getNumSamples());
+        assert (outputFifo.getFreeSpace() >= numFramesReturned);
+        outputFifo.write (scratchBuffer.buffer, 0, numFramesReturned);
+
+        return numFramesProcessed;
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ElastiqueDirectStretcher)
@@ -1075,6 +1153,12 @@ int TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& ou
     outFifo.write (outBuffer.buffer, 0, numOutputFrames);
 
     return numOutputFrames;
+}
+
+void TimeStretcher::processData()
+{
+    if (stretcher != nullptr)
+        stretcher->processData();
 }
 
 int TimeStretcher::flush (float* const* outChannels)

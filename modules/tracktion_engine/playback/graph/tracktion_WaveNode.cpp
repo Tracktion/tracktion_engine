@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
+#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 0
 
 namespace tracktion { inline namespace engine
 {
@@ -599,13 +599,19 @@ public:
         assert (numChannels == (int) destBuffer.getNumChannels());
         const auto numFramesToDo = destBuffer.getNumFrames();
 
-        for (;;)
+        for (int i = 0;; ++i)
         {
             // If there are enough output samples in the fifo, read them out
             if (outputFifo.getNumReady() >= int (numFramesToDo))
             {
                 auto destAudioBuffer = toAudioBuffer (destBuffer);
                 outputFifo.read (destAudioBuffer, 0);
+
+                // If this is the first loop and we've got enough samples to avoid
+                // pushing new data, try and do some processing to spread the load
+                if (i == 0)
+                    timeStretcher.processData();
+
                 break;
             }
 
