@@ -599,6 +599,9 @@ namespace IDs
     DECLARE_ID (voices)
     DECLARE_ID (detune)
     DECLARE_ID (distortionOn)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID (distortionMix)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (reverbOn)
     DECLARE_ID (delayOn)
     DECLARE_ID (chorusOn)
@@ -675,8 +678,6 @@ namespace IDs
     DECLARE_ID(SamplerDrumPad)
     DECLARE_ID(Snare)
     DECLARE_ID(Tambourine)
-    // BEATCONNECT MODIFICATIONS END HERE
-
     #undef DECLARE_ID
 }
 

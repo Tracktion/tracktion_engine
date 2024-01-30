@@ -61,7 +61,14 @@ public:
                             double startTime, double length, float gainDb,
                             int keyNote = 72, int minNote = 72 - 24, int maxNote = 72 + 24, bool openEnded = true
                             // BEATCONNECT MODIFICATION START
-                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0
+                            , int filterType = 0, double filterFrequency = 0, double filterGain = 0,
+                            float chorusDepth = 0, float chorusMix = 0, bool chorusOn = false,
+                            float chorusSpeed = 0, float chorusWidth = 0,
+                            float delayCrossfed = 0, float delayFeedback = 0, float delay = 0,
+                            float delayMix = 0, bool delayOn = false,
+                            float distortion = 0, bool distortionOn = false, float distortionMix = 0, 
+                            float reverbDamping = 0, float reverbMix = 0, bool reverbOn = false,
+                            float reverbSize = 0, float reverbDepth = 0
                             // BEATCONNECT MODIFICATION END
                             );
     void removeSound (int index);
@@ -85,8 +92,8 @@ public:
     static const char* xmlTypeName;
     // BEATCONNECT MODIFICATION START
     static const char* uniqueId;
-    // BEATCONNECT MODIFICATION END
 
+    // BEATCONNECT MODIFICATION END
     juce::String getName() override                     { return TRANS("Sampler"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
@@ -116,6 +123,7 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     //==============================================================================
+
     struct SamplerSound
     {
         SamplerSound (SamplerPlugin&, const juce::String& sourcePathOrProjectID, const juce::String& name,
@@ -146,6 +154,11 @@ public:
 private:
     //==============================================================================
     struct SampledNote;
+
+    // BEATCONNECT MODIFICATION START
+    std::map <const int, std::unique_ptr<EffectsModule>> effectsModulesSmart;
+    //std::unique_ptr<EffectsModule> singleEffectsModule;
+    // BEATCONNECT MODIFICATION END
 
     juce::Colour colour;
     juce::CriticalSection lock;

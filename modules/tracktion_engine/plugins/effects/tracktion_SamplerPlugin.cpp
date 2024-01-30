@@ -27,17 +27,55 @@ public:
                  const juce::AudioBuffer<float>& data,
                  int lengthInSamples,
                  float gainDb,
-                 float pan,
-                 bool openEnded_
-                 , const FilterType filterType_ = FilterType::noFilter, 
+                 float pan
+                 // BEAT CONNECT MODIFICATION START
+                 , bool openEnded_,
+                 const FilterType filterType_ = FilterType::noFilter, 
                  const double filterFrequency_ = 0, 
-                 const double filterGain_ = 0
+                 const double filterGain_ = 0,
+                 const float chorusDepth_ = 0,
+                 const float chorusMix_ = 0,
+                 const bool chorusOn_ = false, // The chorus' bypass state
+                 const float chorusSpeed_ = 0,
+                 const float chrousWidth_ = 0,
+                 const float delay_ = 0, // The delay's length
+                 const float delayCrossfeed_ = 0,
+                 const float delayFeedback_ = 0,
+                 const float delayMix_ = 0,
+                 const bool delayOn_ = 0, // The delay's bypass state
+                 const float distortion_ = 0, // The distortion's intensity
+                 const bool distortionOn_ = false,
+                 const float reverbDamping_ = 0,
+                 const float reverbMix_ = 0,
+                 const bool reverbOn_ = false, // Reverb's bypass state
+                 const float reverbSize_ = 0,
+                 const float reverbWidth_ = 0
+                 // BEAT CONNECT MODIFICATION END
                  )
        : note (midiNote),
          offset (-sampleDelayFromBufferStart),
          audioData (data),
-         openEnded (openEnded_),
-        filterType (filterType_)
+         openEnded (openEnded_)
+         // BEAT CONNECT MODIFICATION START
+         , filterType (filterType_),
+         chorusDepth(chorusDepth_),
+         chorusMix(chorusMix_),
+         chorusOn(chorusOn_),
+         chorusSpeed(chorusSpeed_),
+         chorusWidth(chrousWidth_),
+         delay(delay_),
+         delayCrossfeed(delayCrossfeed_),
+         delayFeedback(delayFeedback_),
+         delayMix(delayMix_),
+         delayOn(delayOn_),
+         distortion(distortion_),
+         distortionOn(distortionOn_),
+         reverbDamping(reverbDamping_),
+         reverbMix(reverbMix_),
+         reverbOn(reverbOn_),
+         reverbSize(reverbSize_),
+         reverbWidth(reverbWidth_)
+         // BEAT CONNECT MODIFICATION END
     {
         resampler[0].reset();
         resampler[1].reset();
@@ -52,7 +90,7 @@ public:
         setCoefficients(filterType_, filterFrequency_, filterGain_);
     }
 
-    void addNextBlock (juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples)
+    void addNextBlock(juce::AudioBuffer<float>& outBuffer, int startSamp, int numSamples, EffectsModule& effectsModule_in)
     {
         jassert (! isFinished);
 
@@ -71,6 +109,11 @@ public:
             AudioScratchBuffer scratch(audioData.getNumChannels(), numSamps);
             for (int i = scratch.buffer.getNumChannels(); --i >= 0;)
                 scratch.buffer.copyFrom(i, 0, audioData, i, offset, numSamps);
+
+            // BEATCONNECT MODIFICATION START
+            effectsModule_in.applyEffects(scratch.buffer);
+            // BEATCONNECT MODIFICATION END
+
             if (filterType != FilterType::noFilter)
             {
                 iirFilterR.processSamples(scratch.buffer.getWritePointer(0), scratch.buffer.getNumSamples());
@@ -214,7 +257,24 @@ public:
     juce::IIRFilter iirFilterR;
     juce::IIRFilter iirFilterL;
     juce::IIRCoefficients coefs;
-    double iirFilterQuotient = 0.710624337;
+    double iirFilterQuotient = 0.710624337f;
+    float chorusDepth;
+    float chorusMix;
+    bool chorusOn; // The chorus' bypass state
+    float chorusSpeed;
+    float chorusWidth;
+    float delayCrossfeed;
+    float delayFeedback;
+    float delay; // The delay's length
+    float delayMix;
+    bool delayOn; // The delay's bypass state
+    float distortion;// The distortion's intensity
+    bool distortionOn;
+    float reverbDamping;
+    float reverbMix;
+    bool reverbOn; // Reverb's bypass state
+    float reverbSize;
+    float reverbWidth;
     // BEATCONNECT MODIFICATION END
 
 private:
@@ -436,27 +496,28 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                             adjustedMidiNote = bc::MidiNote::getMidiNote(newNoteHz);
                         }
                         // BEATCONNECT MODIFICATION END
-                            highlightedNotes.setBit (note);
-                            playingNotes.add (new SampledNote 
-                                                               // BEATCONNECT MODIFICATION START
-                                                               (adjustedMidiNote,
-                                                               // BEATCONNECT MODIFICATION END
-                                                               ss->keyNote,
-                                                               m.getVelocity() / 127.0f,
-                                                               ss->audioFile,
-                                                               sampleRate,
-                                                               noteTimeSample,
-                                                               ss->audioData,
-                                                               ss->fileLengthSamples,
-                                                               ss->gainDb,
-                                                               ss->pan,
-                                                               ss->openEnded
-                                                               // BEATCONNECT MODIFICATION START
-                                                               , ss->filterType,
-                                                               ss->filterFrequency,
-                                                               ss->filterGain
-                                                               // BEATCONNECT MODIFICATION END
-                                                               ));
+
+                        highlightedNotes.setBit(note);
+                        playingNotes.add(new SampledNote
+                            // BEATCONNECT MODIFICATION START
+                            (adjustedMidiNote,
+                            // BEATCONNECT MODIFICATION END
+                                ss->keyNote,
+                                m.getVelocity() / 127.0f,
+                                ss->audioFile,
+                                sampleRate,
+                                noteTimeSample,
+                                ss->audioData,
+                                ss->fileLengthSamples,
+                                ss->gainDb,
+                                ss->pan,
+                                ss->openEnded
+                                // BEATCONNECT MODIFICATION START
+                                , ss->filterType,
+                                ss->filterFrequency,
+                                ss->filterGain
+                                // BEATCONNECT MODIFICATION END
+                            ));
                         }
                     }
                 }
@@ -488,7 +549,18 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
         for (int i = playingNotes.size(); --i >= 0;)
         {
             auto sn = playingNotes.getUnchecked (i);
-            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);
+
+            // BEATCONNECT MODIFICATIONS START
+            auto effectsModulesIterator = effectsModulesSmart.find(sn->note);
+            jassert(effectsModulesIterator != effectsModulesSmart.end());
+
+            // BEATCONNECT MODIFICATIONS END
+
+            sn->addNextBlock (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples
+            // BEATCONNECT MODIFICATIONS START                  
+                , *effectsModulesIterator->second.get()
+            // BEATCONNECT MODIFICATIONS END
+            );
 
             if (sn->isFinished)
                 playingNotes.remove (i);
@@ -587,13 +659,19 @@ double SamplerPlugin::getSoundLength (int index) const
     return l;
 }
 
-
 juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
                                       double startTime, double length, float gainDb,
                                       int keyNote, int minNote, int maxNote
                                       // BEATCONNECT MODIFICATION START
-                                      , bool openEnded, int filterType, 
-                                      double filterFrequency, double filterGain
+                                      , bool openEnded, 
+                                      int filterType, double filterFrequency, double filterGain,
+                                      float chorusDepth, float chorusMix, bool chorusOn,
+                                      float chorusSpeed, float chorusWidth,
+                                      float delayCrossfed, float delayFeedback, float delay,
+                                      float delayMix, bool delayOn,
+                                      float distortion, bool distortionOn, float distortionMix,
+                                      float reverbDamping, float reverbMix, bool reverbOn,
+                                      float reverbSize, float reverbWidth
                                       // BEATCONNECT MODIFICATION END
                                       )
 {
@@ -613,11 +691,63 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
                               IDs::gainDb, gainDb,
                               IDs::pan, (double) 0
                               // BEATCONNECT MODIFICATION START
-                              , IDs::openEnded, openEnded
+                              , IDs::openEnded, openEnded,
+                              IDs::chorusDepth, chorusDepth,
+                              IDs::chorusMix, chorusMix,
+                              IDs::chorusOn, chorusOn,// The chorus' bypass state
+                              IDs::chosusSpeed, chorusSpeed,
+                              IDs::chrousWidth, chorusWidth,
+                              IDs::delayCrossfeed, delayCrossfed,
+                              IDs::delayFeedback, delayFeedback,
+                              IDs::delay, delay, // The delay's length
+                              IDs::delayMix, delayMix,
+                              IDs::delayOn, delayOn, // The delay's bypass state
+                              IDs::distortion, distortion, // The distortion's intensity
+                              IDs::distortionOn, distortionOn, 
+                              IDs::distortionMix, distortionMix,
+                              IDs::reverbDamping, reverbDamping,
+                              IDs::reverbMix, reverbMix,
+                              IDs::reverbOn, reverbOn, // Reverb's bypass state
+                              IDs::reverbSize, reverbSize,
+                              IDs::reverbWidth, reverbWidth
                               // BEATCONNECT MODIFICATION END
                               );
-
+    
     // BEATCONNECT MODIFICATION START
+
+    auto effectsModuleSmartIt = effectsModulesSmart.emplace(keyNote, std::make_unique<EffectsModule>(sampleRate, keyNote));
+
+    jassert(effectsModuleSmartIt.second);
+    if (effectsModuleSmartIt.second) {
+        effectsModuleSmartIt.first->second->chorus->chorusMixValue.referTo(
+            v, IDs::chorusMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->delay->delayMixValue.referTo(
+            v, IDs::delayMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->distortionMixValue.referTo(
+            v, IDs::distortionMix, nullptr, 0.0f);
+        effectsModuleSmartIt.first->second->reverbMixValue.referTo(
+            v, IDs::reverbMix, nullptr, 0.0f);
+
+        effectsModuleSmartIt.first->second->chorus->chorusMix =
+            addParam("chorusMix", TRANS("Chorus Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->delay->delayMix =
+            addParam("delayMix", TRANS("Delay Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->distortionMix =
+            addParam("distortionMix", TRANS("Distortion Mix"), { 0.0f, 1.0f });
+        effectsModuleSmartIt.first->second->reverbMix =
+            addParam("reverbMix", TRANS("Reverb Mix"), { 0.0f, 1.0f });
+
+        effectsModuleSmartIt.first->second->chorus->chorusMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->chorus->chorusMixValue);
+        effectsModuleSmartIt.first->second->delay->delayMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->delay->delayMixValue);
+        effectsModuleSmartIt.first->second->distortionMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->distortionMixValue);
+        effectsModuleSmartIt.first->second->reverbMix->attachToCurrentValue(
+            effectsModuleSmartIt.first->second->reverbMixValue);
+        // BEATCONNECT MODIFICATION END
+    }  
+
     if (filterType != (int)FilterType::noFilter) 
     {
         v.setProperty(IDs::filterType, filterType, nullptr);
@@ -670,7 +800,6 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
             break;
         }
     }
-
     // BEATCONNECT MODIFICATION END
 
     state.addChild (v, -1, getUndoManager());
@@ -679,8 +808,29 @@ juce::String SamplerPlugin::addSound (const juce::String& source, const juce::St
 
 void SamplerPlugin::removeSound (int index)
 {
-    state.removeChild (index, getUndoManager());
+    // BEATCONNECT MODIFICATION START
+    // If the keyNote is no longer in use, remove the corresponding EffectsModule
+    const int removeSoundsKeyNote = state.getChild(index).getProperty(IDs::keyNote);
+    bool keyNotePresisting = false;
+    int keyNoteAccumulator = 0;
 
+    for (auto element : state) 
+        if ((const int)element.getProperty(IDs::keyNote) == removeSoundsKeyNote)
+        {
+            keyNoteAccumulator++;
+            if (keyNoteAccumulator > 1)
+            {
+                keyNotePresisting = true;
+                break;
+            }
+        }
+
+    if (!keyNotePresisting)
+        effectsModulesSmart.erase(removeSoundsKeyNote);
+    // BEATCONNECT MODIFICATION END
+
+    state.removeChild (index, getUndoManager());
+    
     const juce::ScopedLock sl (lock);
     playingNotes.clear();
     highlightedNotes.clear();
