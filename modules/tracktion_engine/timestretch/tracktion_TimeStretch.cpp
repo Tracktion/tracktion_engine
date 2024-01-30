@@ -276,7 +276,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         if (outputFifo.getNumReady() > samplesPerOutputBuffer)
             return 0;
 
-        const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded() + elastique->GetFramesNeeded()
+        const int framesNeeded = hasBeenReset ? elastique->GetPreFramesNeeded()
                                               : elastique->GetFramesNeeded();
         jassert (framesNeeded <= maxFramesNeeded);
 
@@ -301,21 +301,28 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
 
                 const auto numFrames = static_cast<FrameCount> (numSamples);
                 const auto numPreFramesNeeded = static_cast<FrameCount> (elastique->GetPreFramesNeeded());
-                const auto numPostFramesNeeded = static_cast<FrameCount> (elastique->GetFramesNeeded());
+                // const auto numPostFramesNeeded = static_cast<FrameCount> (elastique->GetFramesNeeded());
                 assert (numPreFramesNeeded >= 0);
                 assert (numPreFramesNeeded <= numFrames);
-                assert (numFrames == (numPreFramesNeeded + numPostFramesNeeded));
+                // assert (numFrames == (numPreFramesNeeded + numPostFramesNeeded));
 
                 const auto inputChannelView = createChannelArrayView (inChannels,
                                                                       static_cast<ChannelCount> (numChannels),
-                                                                      static_cast<FrameCount> (numSamples));
+                                                                      numFrames);
 
                 // Process the pre-frames
                 processPreFrames (inputChannelView.getStart (numPreFramesNeeded));
 
-                // Add the post-frames but don't process yet
-                processFrames (inputChannelView.getEnd (numPostFramesNeeded),
-                               PerformProcessCalls::no);
+                // The idea here was to quickly add the number of post frames required but not to process
+                // and then spread the processing out whilst the pre-frames are returned.
+                // It doesn't seem this is possible however as Elastique returns a different number for
+                // GetFramesNeeded before and after the pre-frames are processed
+                // Leaving this here in case it does become possible...
+                // {
+                //     // Add the post-frames but don't process yet
+                //     processFrames (inputChannelView.getEnd (numPostFramesNeeded),
+                //                    PerformProcessCalls::no);
+                // }
             }
             else
             {
@@ -437,7 +444,7 @@ private:
         AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
         const int numPreProcessFrames = elastique->PreProcessData ((float **) inFrames.data.channels, numInputFrames,
                                                                    (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
-                                                                   CElastiqueProV3DirectIf::kNormalStartup);
+                                                                   CElastiqueProV3DirectIf::kFastStartup);
 
         assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
         assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
@@ -458,6 +465,7 @@ private:
                 processFrames (true);
 
             assert (numProcessCallsToDo == 0);
+            assert (numInputFrames == elastique->GetFramesNeeded());
             [[maybe_unused]] const int err = elastique->ProcessData ((float **) inFrames.data.channels, numInputFrames);
             assert (err == 0);
 
