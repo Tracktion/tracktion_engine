@@ -157,29 +157,29 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
             return [ctx] (auto b)
             { ctx->launchHandle->play (b); };
 
-        case scenePrevious:
+        case trackPrevious:
             if (ctx->sceneIndex > 0)
                 if (auto prevHandle = ctx->allSceneHandles[ctx->sceneIndex - 1]; prevHandle)
                     return [prevHandle] (auto b)
                            { prevHandle->play (b); };
-        case sceneNext:
+        case trackNext:
             if (ctx->sceneIndex < (ctx->validSceneHandles.size() - 1))
                 if (auto nextHandle = ctx->allSceneHandles[ctx->sceneIndex + 1]; nextHandle)
                     return [nextHandle] (auto b)
                     { nextHandle->play (b); };
-        case sceneFirst:
+        case trackFirst:
             return [ctx] (auto b)
             { ctx->validSceneHandles.front()->play (b); };
-        case sceneLast:
+        case trackLast:
             return [ctx] (auto b)
             { ctx->validSceneHandles.back()->play (b); };
-        case sceneAny:
+        case trackAny:
             return [ctx] (auto b)
             {
                 const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
                 ctx->validSceneHandles[index]->play (b);
             };
-        case sceneOther:
+        case trackOther:
             if (ctx->validSceneHandles.size() > 1)
                 return [ctx] (auto b)
                 {
@@ -194,7 +194,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                         break;
                     }
                 };
-        case sceneRoundRobin:
+        case trackRoundRobin:
             return [ctx] (auto b)
             { ctx->validSceneHandles[(ctx->sceneIndex + 1) % ctx->validSceneHandles.size()]->play (b); };
 
