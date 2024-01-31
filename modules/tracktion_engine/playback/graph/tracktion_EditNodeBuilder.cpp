@@ -560,7 +560,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    speedFadeDesc, std::move (editTempoPosition),
                                                    std::move (warpMap),
                                                    seq, syncTempo, syncPitch,
-                                                   getChordTrackSequenceIfRequired (clip));
+                                                   getChordTrackSequenceIfRequired (clip),
+                                                   clip.getPitchChange());
             }
             else
             {
@@ -579,7 +580,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    speedFadeDesc, std::move (editTempoPosition),
                                                    std::move (warpMap),
                                                    seq, syncTempo, syncPitch,
-                                                   getChordTrackSequenceIfRequired (clip));
+                                                   getChordTrackSequenceIfRequired (clip),
+                                                   clip.getPitchChange());
             }
         }
         else

@@ -138,6 +138,8 @@ public:
                                     the file playback will match tempo changes in the Edit.
         @param chordPitchSequence   If this is supplied and SyncPitch == yes, rather than syncing
                                     to the Edit's pitch sequence, it will sync to this pitch sequence.
+        @param pitchChangeSemitones Is SyncPitch == no, then this can be used to change the pitch
+                                    of the source
     */
     WaveNodeRealTime (const AudioFile&,
                       TimeStretcher::Mode,
@@ -157,7 +159,8 @@ public:
                       std::optional<WarpMap>,
                       tempo::Sequence sourceFileTempoMap,
                       SyncTempo, SyncPitch,
-                      std::optional<tempo::Sequence> chordPitchSequence);
+                      std::optional<tempo::Sequence> chordPitchSequence,
+                      float pitchChangeSemitones = 1.0f);
 
     //==============================================================================
     /** Sets an offset to be applied to all times in this node, effectively shifting

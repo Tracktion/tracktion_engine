@@ -1680,7 +1680,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     tempo::Sequence sourceFileTempoMap,
                                     SyncTempo syncTempo_,
                                     SyncPitch syncPitch_,
-                                    std::optional<tempo::Sequence> chordPitchSequence_)
+                                    std::optional<tempo::Sequence> chordPitchSequence_,
+                                    float pitchChange)
     : TracktionEngineNode (ps),
       editPositionBeats (editTime),
       loopSectionBeats (loop),
@@ -1696,7 +1697,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
-      destChannels (destChannelsToFill)
+      destChannels (destChannelsToFill),
+      pitchChangeSemitones (pitchChange)
 {
     syncTempo = syncTempo_;
     syncPitch = syncPitch_;
@@ -1738,6 +1740,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
 
     if (chordPitchSequence)
         hash_combine (stateHash, chordPitchSequence->hash());
+
+    hash_combine (stateHash, pitchChangeSemitones);
 }
 
 //==============================================================================
