@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 0
+#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
 
 namespace tracktion { inline namespace engine
 {
@@ -1807,10 +1807,13 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         if (auto mappedFileAndReader = AudioFileUtils::createMappedFileAndReaderFor (*audioFile.engine, audioFile.getFile()))
         {
             auto memoryMappedFileReader = std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
-            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&memoryMappedFileReader] (juce::TimeSliceThread&, int) mutable -> std::unique_ptr<FallbackReader>
-                                                                                                  {
-                                                                                                      return std::unique_ptr<FallbackReader> (std::move (memoryMappedFileReader));
-                                                                                                  });
+            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&memoryMappedFileReader](juce::TimeSliceThread& thread, int samplesToBuffer) mutable -> std::unique_ptr<FallbackReader>
+                                                                                                      {
+                                                                                                          auto bufferingAudioReader = std::make_unique<juce::BufferingAudioReader> (memoryMappedFileReader.release(),
+                                                                                                                                                                                    thread, samplesToBuffer);
+                                                                                                          auto fallbackReader = std::make_unique<BufferingAudioReaderWrapper> (std::move (bufferingAudioReader));
+                                                                                                          return std::unique_ptr<FallbackReader> (std::move (fallbackReader));
+                                                                                                      });
         }
     }
 
@@ -1820,14 +1823,24 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     if (fileCacheReader == nullptr || fileCacheReader->getSampleRate() == 0.0)
         return false;
 
-    std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
-                                                                                      destChannels, channelsToUse);
+    auto audioFileCacheReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
+                                                                        destChannels, channelsToUse);
+    std::unique_ptr<AudioReader> loopReader;
 
     if (warpMap)
-        loopReader = std::make_unique<WarpReader> (std::move (loopReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
+    {
+        // If we're using a warp map, the looping as to be applied above the warp so the loop times don't get warped
+        // This can have performance hits though
+        loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
 
-    if (! loopSectionTime.isEmpty())
-        loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
+        if (! loopSectionTime.isEmpty())
+            loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
+    }
+    else
+    {
+        audioFileCacheReader->setLoopRange (loopSectionTime);
+        loopReader = std::move (audioFileCacheReader);
+    }
 
     const bool timestretchDisabled = timeStretcherMode == TimeStretcher::Mode::disabled;
     std::unique_ptr<ResamplerReader> resamplerAudioReader;

@@ -47,4 +47,43 @@ private:
     std::unique_ptr<AudioFileUtils::MappedFileAndReader> source;
 };
 
+
+//==============================================================================
+//==============================================================================
+/**
+    FallbackReader that wraps a BufferingAudioReader to avoid reading on the audio thread.
+*/
+class BufferingAudioReaderWrapper   : public FallbackReader
+{
+public:
+    BufferingAudioReaderWrapper (std::unique_ptr<juce::BufferingAudioReader> sourceReader)
+        : source (std::move (sourceReader))
+    {
+        sampleRate              = source->sampleRate;
+        bitsPerSample           = source->bitsPerSample;
+        lengthInSamples         = source->lengthInSamples;
+        numChannels             = source->numChannels;
+        usesFloatingPointData   = source->usesFloatingPointData;
+        metadataValues          = source->metadataValues;
+    }
+
+    /** @internal */
+    void setReadTimeout (int timeoutMilliseconds) override
+    {
+        source->setReadTimeout (timeoutMilliseconds);
+    }
+
+    /** @internal */
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+                      juce::int64 startSampleInFile, int numSamples) override
+    {
+        return source->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
+                                    startSampleInFile, numSamples);
+    }
+
+private:
+    std::unique_ptr<juce::BufferingAudioReader> source;
+};
+
+
 }} // namespace tracktion { inline namespace engine
