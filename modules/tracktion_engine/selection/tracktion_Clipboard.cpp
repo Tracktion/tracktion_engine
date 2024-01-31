@@ -418,6 +418,9 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                         // Set sensible defaults for new launcher clips
                         if (auto clipSlot = newClip->getClipSlot())
                         {
+                            if (newClip->effectsEnabled())
+                                newClip->enableEffects (false, false);
+
                             newClip->setUsesProxy (false);
                             newClip->setAutoTempo (true);
                             newClip->setStart (0_tp, false, true);
@@ -441,6 +444,9 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                         // Set sensible defaults for new launcher clips
                         if (auto clipSlot = newClip->getClipSlot())
                         {
+                            if (newClip->effectsEnabled())
+                                newClip->enableEffects (false, false);
+
                             newClip->setUsesProxy (false);
                             newClip->setAutoTempo (true);
                             newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });

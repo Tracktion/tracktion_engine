@@ -355,6 +355,9 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
                 {
+                    if (acb->effectsEnabled())
+                        acb->enableEffects (false, false);
+
                     acb->setUsesProxy (false);
                     acb->setAutoTempo (true);
                     acb->setStart (0_tp, false, true);

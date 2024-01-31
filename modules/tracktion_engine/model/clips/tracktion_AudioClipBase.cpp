@@ -1302,6 +1302,7 @@ void AudioClipBase::enableEffects (bool enable, bool warn)
 
     if (enable)
     {
+        setUsesProxy (true);
         if (! v.isValid())
         {
             state.addChild (ClipEffects::create(), -1, um);
