@@ -382,6 +382,7 @@ namespace tracktion { inline namespace engine
     class Scene;
     class LaunchHandle;
     class LaunchQuantisation;
+    class BufferedAudioFileManager;
 }} // namespace tracktion { inline namespace engine
 
 #ifdef __GNUC__
@@ -522,6 +523,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioProxyGenerator.h"
 #include "audio_files/tracktion_AudioFileManager.h"
 #include "audio_files/tracktion_AudioFileWriter.h"
+#include "audio_files/tracktion_BufferedAudioReader.h"
 
 #include "model/clips/tracktion_CompManager.h"
 

@@ -107,6 +107,7 @@ Engine::~Engine()
     midiLearnState.reset();
     audioFileFormatManager.reset();
     backToArrangerUpdateTimer.reset();
+    bufferedAudioFileManager.reset();
 
     instance = nullptr;
     engines.removeFirstMatchingValue (this);
@@ -268,6 +269,14 @@ SharedTimer& Engine::getBackToArrangerUpdateTimer() const
         backToArrangerUpdateTimer = std::make_unique<SharedTimer> (HertzTag_t, 10);
 
     return *backToArrangerUpdateTimer;
+}
+
+BufferedAudioFileManager& Engine::getBufferedAudioFileManager()
+{
+    if (! bufferedAudioFileManager)
+        bufferedAudioFileManager = std::make_unique<BufferedAudioFileManager> (*this);
+
+    return *bufferedAudioFileManager;
 }
 
 bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
