@@ -765,7 +765,7 @@ MidiNote* findNoteForState (const Edit& edit, const juce::ValueTree& v)
     return result;
 }
 
-juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
+juce::Result mergeMidiClips (juce::Array<MidiClip*> clips, SelectionManager* sm)
 {
     for (auto c : clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
@@ -777,7 +777,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
     {
         if (auto track = first->getClipTrack())
         {
-            if (auto newClip = track->insertMIDIClip (first->getName(), first->getPosition().time, nullptr))
+            if (auto newClip = track->insertMIDIClip (first->getName(), first->getPosition().time, sm))
             {
                 newClip->setQuantisation (first->getQuantisation());
                 newClip->setGrooveTemplate (first->getGrooveTemplate());
