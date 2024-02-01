@@ -24,6 +24,9 @@ BufferedAudioReader::BufferedAudioReader (std::unique_ptr<juce::AudioFormatReade
     metadataValues          = source->metadataValues;
 
     data.resize (choc::buffer::Size::create (numChannels, lengthInSamples));
+
+    // Read the first chunk on the calling thread in case it needs to be played back straight away
+    readNextChunk();
 }
 
 BufferedAudioReader::~BufferedAudioReader()
@@ -38,7 +41,7 @@ float BufferedAudioReader::getProportionComplete() const
 }
 
 bool BufferedAudioReader::readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                                              juce::int64 startSampleInFile, int numSamples)
+                                       juce::int64 startSampleInFile, int numSamples)
 {
     clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                        startSampleInFile, numSamples, lengthInSamples);
@@ -49,7 +52,6 @@ bool BufferedAudioReader::readSamples (int* const* destSamples, int numDestChann
     using namespace choc::buffer;
     const auto srcRange = FrameRange { static_cast<FrameCount> (startSampleInFile),
                                        static_cast<FrameCount> (startSampleInFile + numSamples) };
-
     const auto srcView = data.getFrameRange (srcRange);
 
     const auto destSize = choc::buffer::Size::create (numDestChannels, numSamples);
@@ -82,7 +84,12 @@ bool BufferedAudioReader::readNextChunk()
     if (readIntoBuffer ({ start, end }))
     {
         validEnd.store (end, std::memory_order_release);
-        return end != sourceLength;
+
+        if (const bool hasFinished = end == sourceLength; hasFinished)
+        {
+            source.reset();
+            return false;
+        }
     }
 
     return true;
@@ -106,6 +113,7 @@ BufferedAudioFileManager::BufferedAudioFileManager (Engine& e)
 
 std::shared_ptr<BufferedAudioReader> BufferedAudioFileManager::get (juce::File f)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     auto& item = cache[f];
 
     if (! item)
@@ -115,10 +123,25 @@ std::shared_ptr<BufferedAudioReader> BufferedAudioFileManager::get (juce::File f
             item = std::make_shared<BufferedAudioReader> (std::move (reader), readThread);
             readThread.addTimeSliceClient (item.get());
             readThread.startThread (juce::Thread::Priority::normal);
+
+            if (! timer.isTimerRunning())
+                timer.startTimer (5'000);
         }
     }
 
     return item;
+}
+
+void BufferedAudioFileManager::cleanUp()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    std::erase_if (cache, [](auto& item)
+                  {
+                      return item.second.use_count() == 1;
+                  });
+
+    if (cache.empty())
+        timer.stopTimer();
 }
 
 std::unique_ptr<juce::AudioFormatReader> BufferedAudioFileManager::createReader (juce::File f)
