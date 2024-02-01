@@ -2340,6 +2340,7 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             || id == IDs::elastiqueMode || id == IDs::autoPitch
             || id == IDs::elastiqueOptions || id == IDs::warpTime
             || id == IDs::effectsVisible || id == IDs::autoPitchMode
+            || id == IDs::resamplingQuality
             || id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
         {
             if (id == IDs::warpTime)
