@@ -373,6 +373,9 @@ public:
     /** Moves a track to a new position. */
     void moveTrack (Track::Ptr, TrackInsertPoint);
 
+    /** Copies a track to a new position. */
+    void copyTrack (Track::Ptr, TrackInsertPoint);
+
     /** Deletes a Track. */
     void deleteTrack (Track*);
 

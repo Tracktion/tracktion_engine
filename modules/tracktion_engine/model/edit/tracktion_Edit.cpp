@@ -1824,6 +1824,100 @@ void Edit::moveTrack (Track::Ptr t, TrackInsertPoint destination)
         sm->keepSelectedObjectsOnScreen();
 }
 
+void Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
+{
+    CRASH_TRACER
+
+    if (t == nullptr)
+        return;
+
+    juce::ValueTree newParent (state), preceedingTrack;
+
+    if (destination.parentTrackID.isValid())
+        if (auto parentTrack = findTrackForID (*this, destination.parentTrackID))
+            newParent = parentTrack->state;
+
+    if (destination.precedingTrackID.isValid())
+        if (auto p = findTrackForID (*this, destination.precedingTrackID))
+            preceedingTrack = p->state;
+
+    auto oldParent = t->state.getParent();
+    auto currentIndex = oldParent.indexOf (t->state);
+    auto precedingIndex = preceedingTrack.isValid() ? newParent.indexOf (preceedingTrack) : 0;
+
+    if (newParent.isAChildOf (t->state) || newParent == t->state)
+        return;
+
+    auto newTrack = t->state.createCopy();
+
+    std::map<EditItemID, EditItemID> remappedIDs;
+    EditItemID::remapIDs (newTrack, nullptr, t->edit, &remappedIDs);
+
+    if (oldParent != newParent)
+    {
+        newParent.addChild (newTrack, precedingIndex + 1, &undoManager);
+    }
+    else
+    {
+        auto newIndex = precedingIndex + 1;
+
+        if (currentIndex < 0 || newIndex < 0)
+            return;
+
+        newParent.addChild (newTrack, newIndex, &undoManager);
+    }
+
+    for (auto sm : getSelectionManagers (*this))
+    {
+        if (auto track = findTrackForState (t->edit, newTrack))
+            sm->select (track, true);
+        
+        sm->keepSelectedObjectsOnScreen();
+    }
+
+    // Find any parameters on the Track that have modifier assignments
+    // Check to see if they're assigned to the old modifier IDs
+    // If they are, find the new modifier ID equivalents and update them
+    // If they can't be found leave them if they're global or a parent of the new track.
+    if (auto track = findTrackForState (t->edit, newTrack))
+    {
+        for (auto param : track->getAllAutomatableParams())
+        {
+            auto assignments = param->getAssignments();
+
+            for (int i = assignments.size(); --i >= 0;)
+            {
+                auto ass = assignments.getUnchecked (i);
+
+                // Macro reassignment is done during Plugin::giveNewIDsToPlugins so
+                // we need to make sure we don't remove these
+                if (dynamic_cast<MacroParameter::Assignment*> (ass.get()) != nullptr)
+                    continue;
+
+                const auto oldID = EditItemID::fromProperty (ass->state, IDs::source);
+                const auto newID = remappedIDs[oldID];
+
+                if (newID.isValid())
+                {
+                    ass->state.setProperty (IDs::source, newID, nullptr);
+                }
+                else
+                {
+                    // If the modifier is on this track, keep it
+                    // If oldID is found in a global track, keep it
+                    // If oldID is found in a parent track, keep it
+                    if (auto tt = getTrackContainingModifier (t->edit, findModifierForID (t->edit, oldID)))
+                        if (tt == track || TrackList::isFixedTrack (tt->state) || track->isAChildOf (*tt))
+                            continue;
+
+                    // Otherwise remove the assignment
+                    param->removeModifier (*ass);
+                }
+            }
+        }
+    }
+}
+
 void Edit::updateTrackStatuses()
 {
     CRASH_TRACER
