@@ -419,9 +419,6 @@ void PluginManager::initialise()
     createBuiltInType<PitchShiftPlugin>();
     createBuiltInType<LowPassPlugin>();
     createBuiltInType<SamplerPlugin>();
-    // BEATCONNECT MODIFICATION START
-    createBuiltInType<DrumMachinePlugin>();
-    // BEATCONNECT MODIFICATION END
     createBuiltInType<FourOscPlugin>();
     createBuiltInType<MidiModifierPlugin>();
     createBuiltInType<MidiPatchBayPlugin>();

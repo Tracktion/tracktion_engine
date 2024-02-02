@@ -82,9 +82,6 @@ using namespace std::literals;
 #include "plugins/effects/tracktion_Reverb.cpp"
 #include "plugins/effects/tracktion_SamplerPlugin.cpp"
 #include "plugins/effects/tracktion_ToneGenerator.cpp"
-// BEATCONNECT MODIFICATION START
-#include "plugins/effects/DrumMachinePlugin.cpp"
-// BEATCONNECT MODIFICATION END
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 
