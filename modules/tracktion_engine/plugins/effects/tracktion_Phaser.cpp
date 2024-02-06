@@ -64,7 +64,6 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
     {
         float* b = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         swp = sweep;
-        swpFactor = sweepFactor;
 
         for (int i = fc.bufferNumSamples; --i >= 0;)
         {
