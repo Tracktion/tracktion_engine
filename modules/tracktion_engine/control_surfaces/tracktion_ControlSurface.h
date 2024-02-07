@@ -423,6 +423,8 @@ public:
     ExternalControllerManager& externalControllerManager;
     ExternalController* owner = nullptr;
 
+    std::set<std::pair<int, int>> recentlyPressedPads;
+
 private:
     enum ControlType
     {

@@ -262,7 +262,10 @@ void ControlSurface::userLaunchedClip (int channelNum, int sceneNum)
 {
     RETURN_IF_SAFE_RECORDING
 
+    recentlyPressedPads.insert ({owner->channelStart + channelNum, owner->padStart + sceneNum});
+
     externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, owner->padStart + sceneNum);
+    externalControllerManager.updatePadColours();
 }
 
 void ControlSurface::userStoppedClip (int channelNum)

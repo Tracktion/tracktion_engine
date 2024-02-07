@@ -1020,6 +1020,39 @@ void ExternalController::updatePadColours()
                                 }
                             }
                         }
+                        else if (cs.recentlyPressedPads.contains ({track + channelStart, padStart + scene}))
+                        {
+                            auto anyPlaying = [&]()
+                            {
+                                if (auto tc = getTransport())
+                                {
+                                    for (auto slot : at->getClipSlotList().getClipSlots())
+                                    {
+                                        if (auto c = slot->getClip())
+                                        {
+                                            if (auto lh = c->getLaunchHandle())
+                                            {
+                                                if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing && tc->isPlaying())
+                                                    return true;
+                                                else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                                    return true;
+                                            }
+                                        }
+                                    }
+                                }
+                                return false;
+                            };
+
+                            if (anyPlaying())
+                            {
+                                colourIdx = 1;
+                                state = 1;
+                            }
+                            else
+                            {
+                                cs.recentlyPressedPads.erase ({track + channelStart, padStart + scene});
+                            }
+                        }
                     }
                 }
 
