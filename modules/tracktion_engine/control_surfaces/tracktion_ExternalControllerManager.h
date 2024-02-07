@@ -140,6 +140,7 @@ public:
     void userPressedSoloIsolate (int channelNum);
     void userPressedMute (int channelNum, bool muteVolumeControl);
     void userSelectedTrack (int channelNum);
+    void userSelectedOneTrack (int channelNum);
     void userSelectedClipInTrack (int channelNum);
     void userSelectedPluginInTrack (int channelNum);
     void userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition);

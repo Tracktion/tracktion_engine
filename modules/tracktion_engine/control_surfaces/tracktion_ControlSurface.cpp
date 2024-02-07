@@ -177,6 +177,12 @@ void ControlSurface::userSelectedTrack (int channelNum)
     externalControllerManager.userSelectedTrack (owner->channelStart + channelNum);
 }
 
+void ControlSurface::userSelectedOneTrack (int channelNum)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userSelectedOneTrack (owner->channelStart + channelNum);
+}
+
 void ControlSurface::userSelectedClipInTrack (int channelNum)
 {
     RETURN_IF_SAFE_RECORDING

@@ -817,6 +817,16 @@ void ExternalControllerManager::userSelectedTrack (int channelNum)
     }
 }
 
+void ExternalControllerManager::userSelectedOneTrack (int channelNum)
+{
+    if (auto t = getChannelTrack (channelNum))
+    {
+        if (currentSelectionManager != nullptr)
+            currentSelectionManager->selectOnly (t);
+    }
+}
+
+
 void ExternalControllerManager::userSelectedClipInTrack (int channelNum)
 {
     if (currentSelectionManager != nullptr)
