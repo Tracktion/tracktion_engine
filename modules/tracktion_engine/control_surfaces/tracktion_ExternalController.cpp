@@ -1026,11 +1026,11 @@ void ExternalController::updatePadColours()
                             {
                                 if (auto tc = getTransport())
                                 {
-                                    for (auto slot : at->getClipSlotList().getClipSlots())
+                                    for (auto slot_ : at->getClipSlotList().getClipSlots())
                                     {
-                                        if (auto c = slot->getClip())
+                                        if (auto c_ = slot_->getClip())
                                         {
-                                            if (auto lh = c->getLaunchHandle())
+                                            if (auto lh = c_->getLaunchHandle())
                                             {
                                                 if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing && tc->isPlaying())
                                                     return true;
