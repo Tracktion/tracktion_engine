@@ -421,8 +421,9 @@ void SelectionManager::deselectAll()
 
 static bool canBeSelected (Selectable& newItem)
 {
-    auto newItemClass = SelectableClass::findClassFor (newItem);
-    return newItemClass->canBeSelected (newItem);
+    if (auto newItemClass = SelectableClass::findClassFor (newItem))
+		return newItemClass->canBeSelected (newItem);
+	return true;
 }
 
 static bool canSelectAtTheSameTime (const SelectableList& selected, Selectable& newItem)
