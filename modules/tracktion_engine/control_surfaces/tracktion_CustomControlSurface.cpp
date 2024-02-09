@@ -613,6 +613,22 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case userAction18Id:
         case userAction19Id:
         case userAction20Id:
+		case clip1TrackId:
+		case clip2TrackId:
+		case clip3TrackId:
+		case clip4TrackId:
+		case clip5TrackId:
+		case clip6TrackId:
+		case clip7TrackId:
+		case clip8TrackId:
+		case stopClipsTrackId:
+		case sceneId:
+		case clipBankUp1Id:
+		case clipBankUp4Id:
+		case clipBankUp8Id:
+		case clipBankDown1Id:
+		case clipBankDown4Id:
+		case clipBankDown8Id:
         case none:
         default:
             return false;
@@ -1309,7 +1325,30 @@ void CustomControlSurface::loadFunctions()
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), selectTrackId, &CustomControlSurface::selectTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), auxTrackId, &CustomControlSurface::auxTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), auxTextTrackId, &CustomControlSurface::null);
-
+	
+	juce::PopupMenu clipSubMenu;
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #1"), clip1TrackId, &CustomControlSurface::launchClip1);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #2"), clip2TrackId, &CustomControlSurface::launchClip2);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #3"), clip3TrackId, &CustomControlSurface::launchClip3);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #4"), clip4TrackId, &CustomControlSurface::launchClip4);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #5"), clip5TrackId, &CustomControlSurface::launchClip5);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #6"), clip6TrackId, &CustomControlSurface::launchClip6);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #7"), clip7TrackId, &CustomControlSurface::launchClip7);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #8"), clip8TrackId, &CustomControlSurface::launchClip8);
+	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Stop Clips"), stopClipsTrackId, &CustomControlSurface::stopClips);
+	addSceneFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Scene"), sceneId, &CustomControlSurface::launchScene);
+	
+    juce::PopupMenu clipBankSubMenu;
+	auto clipBankSubMenuSet = new juce::SortedSet<int>();
+	addAllCommandItem (clipBankSubMenu);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 1", clipBankUp1Id, &CustomControlSurface::clipBankUp1);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 4", clipBankUp4Id, &CustomControlSurface::clipBankUp4);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 8", clipBankUp8Id, &CustomControlSurface::clipBankUp8);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 1", clipBankDown1Id, &CustomControlSurface::clipBankDown1);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 4", clipBankDown4Id, &CustomControlSurface::clipBankDown4);
+	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 8", clipBankDown8Id, &CustomControlSurface::clipBankDown8);
+	commandGroups [nextCmdGroupIndex++] = clipBankSubMenuSet;
+	
     juce::PopupMenu navigationSubMenu;
     auto navigationSubMenuSet = new juce::SortedSet<int>();
     addAllCommandItem (navigationSubMenu);
@@ -1369,6 +1408,8 @@ void CustomControlSurface::loadFunctions()
     contextMenu.addSubMenu (TRANS("Options"),           optionsSubMenu);
     contextMenu.addSubMenu (TRANS("Plugin"),            pluginSubMenu);
     contextMenu.addSubMenu (TRANS("Track"),             trackSubMenu);
+	contextMenu.addSubMenu (TRANS("Clip Launcher"), 	clipSubMenu);
+    contextMenu.addSubMenu (TRANS("Clip Launcher Bank"),clipBankSubMenu);
     contextMenu.addSubMenu (TRANS("Navigation"),        navigationSubMenu);
     contextMenu.addSubMenu (TRANS("Switch fader bank"), bankSubMenu);
     contextMenu.addSubMenu (TRANS("Switch param bank"), paramBankSubMenu);
@@ -1477,8 +1518,41 @@ void CustomControlSurface::addTrackFunction (juce::PopupMenu& menu,
         subMenuSet->add (afi->id);
     }
 
-    menu.addSubMenu(name, subMenu);
+    menu.addSubMenu (name, subMenu);
     commandGroups[nextCmdGroupIndex++] = subMenuSet;
+}
+
+void CustomControlSurface::addSceneFunction (juce::PopupMenu& menu,
+											 const juce::String& group, const juce::String& name,
+											 ActionID aid, ActionFunction actionFunc)
+{
+	if (isTextAction (aid) && ! needsOSCSocket)
+		return;
+
+	int id = (int) aid;
+
+	juce::PopupMenu subMenu;
+	addAllCommandItem (subMenu);
+
+	auto subMenuSet = new juce::SortedSet<int>();
+
+	for (int i = 0; i < 8; ++i)
+	{
+		ActionFunctionInfo* afi = new ActionFunctionInfo();
+
+		afi->name       = name + " " + TRANS("Scene") + " #" + juce::String (i + 1);
+		afi->group      = group;
+		afi->id         = id + i;
+		afi->actionFunc = actionFunc;
+		afi->param      = i;
+
+		actionFunctionList.add (afi);
+		subMenu.addItem (afi->id, TRANS("Scene") + " #" + juce::String (i + 1));
+		subMenuSet->add (afi->id);
+	}
+
+	menu.addSubMenu (name, subMenu);
+	commandGroups[nextCmdGroupIndex++] = subMenuSet;
 }
 
 bool CustomControlSurface::shouldActOnValue (float val)
@@ -1539,6 +1613,23 @@ void CustomControlSurface::selectTrack (float val, int param)   { if (shouldActO
 void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, 0, val); }
 void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
 void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
+
+void CustomControlSurface::launchClip1 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 0); }
+void CustomControlSurface::launchClip2 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 1); }
+void CustomControlSurface::launchClip3 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 2); }
+void CustomControlSurface::launchClip4 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 3); }
+void CustomControlSurface::launchClip5 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 4); }
+void CustomControlSurface::launchClip6 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 5); }
+void CustomControlSurface::launchClip7 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 6); }
+void CustomControlSurface::launchClip8 (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedClip (param, 7); }
+void CustomControlSurface::stopClips (float val, int param)		{ if (shouldActOnValue (val)) userStoppedClip (param); }
+void CustomControlSurface::launchScene (float val, int param)	{ if (shouldActOnValue (val)) userLaunchedScene (param); }
+void CustomControlSurface::clipBankUp1 (float val, int)	        { if (shouldActOnValue (val)) userChangedPadBanks (-1); }
+void CustomControlSurface::clipBankUp4 (float val, int)	        { if (shouldActOnValue (val)) userChangedPadBanks (-4); }
+void CustomControlSurface::clipBankUp8 (float val, int)			{ if (shouldActOnValue (val)) userChangedPadBanks (-8); }
+void CustomControlSurface::clipBankDown1 (float val, int)		{ if (shouldActOnValue (val)) userChangedPadBanks (1); }
+void CustomControlSurface::clipBankDown4 (float val, int)		{ if (shouldActOnValue (val)) userChangedPadBanks (4); }
+void CustomControlSurface::clipBankDown8 (float val, int)		{ if (shouldActOnValue (val)) userChangedPadBanks (8); }
 
 void CustomControlSurface::markIn (float val, int)                  { if (shouldActOnValue (val)) userPressedMarkIn(); }
 void CustomControlSurface::markOut (float val, int)                 { if (shouldActOnValue (val)) userPressedMarkOut(); }
