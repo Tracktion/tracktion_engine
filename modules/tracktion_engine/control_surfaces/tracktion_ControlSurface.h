@@ -414,6 +414,9 @@ public:
     // useful for non motorized faders, so the don't jump when adjusted
     bool pickUpMode = false;
 
+    // pad colors are limited to < 8
+    bool limitedPadColours = false;
+
     int numAuxes = 0;
     int numCharactersForAuxLabels = 0;
     bool wantsAuxBanks = false;
