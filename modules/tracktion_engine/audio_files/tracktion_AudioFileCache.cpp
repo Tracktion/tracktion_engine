@@ -21,6 +21,39 @@ FallbackReader::FallbackReader()
 
 //==============================================================================
 //==============================================================================
+class BufferingAudioReaderWrapper   : public FallbackReader
+{
+public:
+    BufferingAudioReaderWrapper (std::unique_ptr<juce::BufferingAudioReader> sourceReader)
+        : source (std::move (sourceReader))
+    {
+        sampleRate              = source->sampleRate;
+        bitsPerSample           = source->bitsPerSample;
+        lengthInSamples         = source->lengthInSamples;
+        numChannels             = source->numChannels;
+        usesFloatingPointData   = source->usesFloatingPointData;
+        metadataValues          = source->metadataValues;
+    }
+
+    void setReadTimeout (int timeoutMilliseconds) override
+    {
+        source->setReadTimeout (timeoutMilliseconds);
+    }
+
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+                      juce::int64 startSampleInFile, int numSamples) override
+    {
+        return source->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
+                                    startSampleInFile, numSamples);
+    }
+
+private:
+    std::unique_ptr<juce::BufferingAudioReader> source;
+};
+
+
+//==============================================================================
+//==============================================================================
 static void clearSetOfChannels (int* const* channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
