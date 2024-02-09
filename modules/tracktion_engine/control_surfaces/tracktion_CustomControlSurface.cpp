@@ -1325,29 +1325,33 @@ void CustomControlSurface::loadFunctions()
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), selectTrackId, &CustomControlSurface::selectTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), auxTrackId, &CustomControlSurface::auxTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), auxTextTrackId, &CustomControlSurface::null);
-	
-	juce::PopupMenu clipSubMenu;
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #1"), clip1TrackId, &CustomControlSurface::launchClip1);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #2"), clip2TrackId, &CustomControlSurface::launchClip2);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #3"), clip3TrackId, &CustomControlSurface::launchClip3);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #4"), clip4TrackId, &CustomControlSurface::launchClip4);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #5"), clip5TrackId, &CustomControlSurface::launchClip5);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #6"), clip6TrackId, &CustomControlSurface::launchClip6);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #7"), clip7TrackId, &CustomControlSurface::launchClip7);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #8"), clip8TrackId, &CustomControlSurface::launchClip8);
-	addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Stop Clips"), stopClipsTrackId, &CustomControlSurface::stopClips);
-	addSceneFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Scene"), sceneId, &CustomControlSurface::launchScene);
-	
+
+    juce::PopupMenu clipSubMenu;
     juce::PopupMenu clipBankSubMenu;
-	auto clipBankSubMenuSet = new juce::SortedSet<int>();
-	addAllCommandItem (clipBankSubMenu);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 1", clipBankUp1Id, &CustomControlSurface::clipBankUp1);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 4", clipBankUp4Id, &CustomControlSurface::clipBankUp4);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 8", clipBankUp8Id, &CustomControlSurface::clipBankUp8);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 1", clipBankDown1Id, &CustomControlSurface::clipBankDown1);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 4", clipBankDown4Id, &CustomControlSurface::clipBankDown4);
-	addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 8", clipBankDown8Id, &CustomControlSurface::clipBankDown8);
-	commandGroups [nextCmdGroupIndex++] = clipBankSubMenuSet;
+
+    if (engine.getEngineBehaviour().areClipSlotsEnabled())
+    {
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #1"), clip1TrackId, &CustomControlSurface::launchClip1);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #2"), clip2TrackId, &CustomControlSurface::launchClip2);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #3"), clip3TrackId, &CustomControlSurface::launchClip3);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #4"), clip4TrackId, &CustomControlSurface::launchClip4);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #5"), clip5TrackId, &CustomControlSurface::launchClip5);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #6"), clip6TrackId, &CustomControlSurface::launchClip6);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #7"), clip7TrackId, &CustomControlSurface::launchClip7);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #8"), clip8TrackId, &CustomControlSurface::launchClip8);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Stop Clips"), stopClipsTrackId, &CustomControlSurface::stopClips);
+        addSceneFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Scene"), sceneId, &CustomControlSurface::launchScene);
+        
+        auto clipBankSubMenuSet = new juce::SortedSet<int>();
+        addAllCommandItem (clipBankSubMenu);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 1", clipBankUp1Id, &CustomControlSurface::clipBankUp1);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 4", clipBankUp4Id, &CustomControlSurface::clipBankUp4);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 8", clipBankUp8Id, &CustomControlSurface::clipBankUp8);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 1", clipBankDown1Id, &CustomControlSurface::clipBankDown1);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 4", clipBankDown4Id, &CustomControlSurface::clipBankDown4);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 8", clipBankDown8Id, &CustomControlSurface::clipBankDown8);
+        commandGroups [nextCmdGroupIndex++] = clipBankSubMenuSet;
+    }
 	
     juce::PopupMenu navigationSubMenu;
     auto navigationSubMenuSet = new juce::SortedSet<int>();
@@ -1408,8 +1412,13 @@ void CustomControlSurface::loadFunctions()
     contextMenu.addSubMenu (TRANS("Options"),           optionsSubMenu);
     contextMenu.addSubMenu (TRANS("Plugin"),            pluginSubMenu);
     contextMenu.addSubMenu (TRANS("Track"),             trackSubMenu);
-	contextMenu.addSubMenu (TRANS("Clip Launcher"), 	clipSubMenu);
-    contextMenu.addSubMenu (TRANS("Clip Launcher Bank"),clipBankSubMenu);
+    
+    if (engine.getEngineBehaviour().areClipSlotsEnabled())
+    {
+        contextMenu.addSubMenu (TRANS("Clip Launcher"), 	clipSubMenu);
+        contextMenu.addSubMenu (TRANS("Clip Launcher Bank"),clipBankSubMenu);
+    }
+    
     contextMenu.addSubMenu (TRANS("Navigation"),        navigationSubMenu);
     contextMenu.addSubMenu (TRANS("Switch fader bank"), bankSubMenu);
     contextMenu.addSubMenu (TRANS("Switch param bank"), paramBankSubMenu);
