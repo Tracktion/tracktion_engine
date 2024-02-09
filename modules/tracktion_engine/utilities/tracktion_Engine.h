@@ -77,8 +77,7 @@ public:
     CompFactory& getCompFactory() const;                                ///< Returns the CompFactory instance.
     WarpTimeFactory& getWarpTimeFactory() const;                        ///< Returns the WarpTimeFactory instance.
     ProjectManager& getProjectManager() const;                          ///< Returns the ProjectManager instance.
-    SharedTimer& getBackToArrangerUpdateTimer() const;                  ///< Returns the SharedTimer instance.
-    BufferedAudioFileManager& getBufferedAudioFileManager();            ///< Returns the BufferedAudioFileManager instance
+    SharedTimer& getBackToArrangerUpdateTimer() const;                  ///< Returns the ProjectManager instance.
 
     using WeakRef = juce::WeakReference<Engine>;
 
@@ -107,7 +106,6 @@ private:
     mutable std::unique_ptr<CompFactory> compFactory;
     mutable std::unique_ptr<WarpTimeFactory> warpTimeFactory;
     mutable std::unique_ptr<SharedTimer> backToArrangerUpdateTimer;
-    std::unique_ptr<BufferedAudioFileManager> bufferedAudioFileManager;
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (Engine)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Engine)

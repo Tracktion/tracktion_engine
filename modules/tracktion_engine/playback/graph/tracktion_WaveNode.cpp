@@ -13,8 +13,6 @@
 namespace tracktion { inline namespace engine
 {
 
-//==============================================================================
-//==============================================================================
 namespace utils
 {
     inline void zeroSamplesOutsideClipRange (choc::buffer::ChannelArrayView<float> buffer,
@@ -1810,12 +1808,16 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     // Try creating a MemoryMappedFileReader first for compressed formats
     if (audioFile.getInfo().needsCachedProxy)
     {
-        if (auto bufferedFileReader = audioFile.engine->getBufferedAudioFileManager().get (audioFile.getFile()))
+        if (auto mappedFileAndReader = AudioFileUtils::createMappedFileAndReaderFor (*audioFile.engine, audioFile.getFile()))
         {
-            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&bufferedFileReader] (juce::TimeSliceThread&, int) mutable -> std::unique_ptr<FallbackReader>
-                                                                                                  {
-                                                                                                      return std::make_unique<BufferedFileReaderWrapper> (std::move (bufferedFileReader));
-                                                                                                  });
+            auto memoryMappedFileReader = std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
+            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&memoryMappedFileReader](juce::TimeSliceThread& thread, int samplesToBuffer) mutable -> std::unique_ptr<FallbackReader>
+                                                                                                      {
+                                                                                                          auto bufferingAudioReader = std::make_unique<juce::BufferingAudioReader> (memoryMappedFileReader.release(),
+                                                                                                                                                                                    thread, samplesToBuffer);
+                                                                                                          auto fallbackReader = std::make_unique<BufferingAudioReaderWrapper> (std::move (bufferingAudioReader));
+                                                                                                          return std::unique_ptr<FallbackReader> (std::move (fallbackReader));
+                                                                                                      });
         }
     }
 
