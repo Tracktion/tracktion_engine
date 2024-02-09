@@ -964,7 +964,7 @@ void ExternalController::updatePadColours()
                                     auto numColours = 19;
                                     auto newHue = col.getHue();
 
-                                    colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                    colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
                                     break;
                                 }
                             }
@@ -982,12 +982,12 @@ void ExternalController::updatePadColours()
 
                             if (currentTime < dest->input.getPunchInTime (dest->targetID))
                             {
-                                colourIdx = 1;
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
                                 state = 1;
                             }
                             else
                             {
-                                colourIdx = 1;
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
                                 state = 2;
                             }
                         }
@@ -1000,7 +1000,7 @@ void ExternalController::updatePadColours()
                                 auto numColours = 19;
                                 auto newHue = col.getHue();
 
-                                colourIdx = juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
                             }
 
                             if (auto tc = getTransport())
@@ -1009,12 +1009,12 @@ void ExternalController::updatePadColours()
                                 {
                                     if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
                                     {
-                                        colourIdx = 8;
+                                        colourIdx = cs.limitedPadColours ? 2 : 8;
                                         state = tc->isPlaying() ? 2 : 1;
                                     }
                                     else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
                                     {
-                                        colourIdx = 8;
+                                        colourIdx = cs.limitedPadColours ? 2 : 8;;
                                         state = 1;
                                     }
                                 }
@@ -1045,7 +1045,7 @@ void ExternalController::updatePadColours()
 
                             if (anyPlaying())
                             {
-                                colourIdx = 1;
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
                                 state = 1;
                             }
                             else
