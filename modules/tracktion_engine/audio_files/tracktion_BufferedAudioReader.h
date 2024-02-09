@@ -91,9 +91,7 @@ private:
     Engine& engine;
     juce::TimeSliceThread readThread { "Audio file decompressing" };
     std::map<juce::File, std::shared_ptr<BufferedAudioReader>> cache;
-    LambdaTimer timer { [this] { cleanUp(); } };
 
-    void cleanUp();
     std::unique_ptr<juce::AudioFormatReader> createReader (juce::File);
 };
 
