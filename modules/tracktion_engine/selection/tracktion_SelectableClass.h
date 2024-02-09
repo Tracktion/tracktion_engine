@@ -63,10 +63,17 @@ public:
     /** A class should use this to create XML clipboard entries for the given set of items. */
     virtual void addClipboardEntriesFor (AddClipboardEntryParams&);
 
+    struct DeleteSelectedParams
+    {
+        SelectionManager* selectionManager = nullptr;
+        SelectableList items;
+        bool partOfCutOperation;
+    };
+
     /** Deletes this set of objects.
         The partOfCutOperation flag is set if it's being called from SelectableManager::cutSelected()
     */
-    virtual void deleteSelected (const SelectableList&, bool partOfCutOperation);
+    virtual void deleteSelected (const DeleteSelectedParams& params);
 
     /** This gives the selected items a first chance to paste the clipboard contents when the
         user presses ctrl-v. If it doesn't want to handle this, it should return false, and the

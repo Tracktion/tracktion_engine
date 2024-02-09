@@ -283,7 +283,7 @@ juce::String SelectableClass::getDescriptionOfSelectedGroup (const SelectableLis
 }
 
 bool SelectableClass::canBeSelected (const Selectable&) { return true; }
-void SelectableClass::deleteSelected (const SelectableList&, bool) {}
+void SelectableClass::deleteSelected (const DeleteSelectedParams&) {}
 void SelectableClass::addClipboardEntriesFor (AddClipboardEntryParams&) {}
 
 bool SelectableClass::pasteClipboard (const SelectableList&, int)
@@ -606,7 +606,7 @@ void SelectionManager::deleteSelected()
 
     if (auto cls = getFirstSelectableClass())
         // use a local copy of the list, as it will change as things get deleted + deselected
-        cls->deleteSelected (SelectableList (selected), false);
+        cls->deleteSelected ({this, selected, false});
 }
 
 bool SelectionManager::cutSelected()
@@ -618,7 +618,7 @@ bool SelectionManager::cutSelected()
         if (cls->canCutSelected (selected) && copySelected())
         {
             // use a local copy of the list, as it will change as things get deleted + deselected
-            cls->deleteSelected (SelectableList (selected), true);
+            cls->deleteSelected ({this, selected, true});
             return true;
         }
     }
