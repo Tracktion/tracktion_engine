@@ -63,7 +63,7 @@ namespace tracktion { inline namespace engine
 
 using namespace ARA;
 
-struct ARAClipPlayer  : private SelectableListener
+struct ARAClipPlayer  : private Selectable::Listener
 {
     #include "tracktion_MelodyneInstanceFactory.h"
     #include "tracktion_ARAWrapperFunctions.h"
@@ -71,22 +71,19 @@ struct ARAClipPlayer  : private SelectableListener
 
     //==============================================================================
     ARAClipPlayer (Edit& ed, MelodyneFileReader& o, AudioClipBase& c)
-      : owner (o),
+      : Selectable::Listener (ed.tempoSequence), owner (o),
         clip (c),
         file (c.getAudioFile()),
         edit (ed)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (file.getFile().existsAsFile());
-        edit.tempoSequence.addSelectableListener (this);
     }
 
     ~ARAClipPlayer()
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
-
-        edit.tempoSequence.removeSelectableListener (this);
 
         contentAnalyserChecker = nullptr;
         modelUpdater = nullptr;
