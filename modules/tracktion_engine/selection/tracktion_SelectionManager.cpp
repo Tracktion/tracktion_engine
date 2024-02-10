@@ -216,6 +216,20 @@ void Selectable::deselect()
 }
 
 //==============================================================================
+Selectable::Listener::Listener (Selectable& s)
+{
+    selectable = &s;
+    if (selectable)
+        selectable->addSelectableListener (this);
+}
+
+Selectable::Listener::~Listener()
+{
+    if (selectable)
+        selectable->removeSelectableListener (this);
+}
+
+//==============================================================================
 SelectableClass::SelectableClass() {}
 SelectableClass::~SelectableClass() {}
 

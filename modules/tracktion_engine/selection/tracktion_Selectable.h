@@ -26,7 +26,6 @@ public:
     virtual void selectableObjectAboutToBeDeleted (Selectable*) = 0;
 };
 
-
 //==============================================================================
 /**
     Base class for things that can be selected, and whose properties can appear
@@ -61,6 +60,17 @@ public:
         should still be valid at this point.
     */
     virtual void selectableAboutToBeDeleted() {}
+    
+    //==============================================================================
+    class Listener : public SelectableListener
+    {
+    public:
+        Listener (Selectable& s);
+        ~Listener() override;
+        
+    private:
+        juce::WeakReference<Selectable> selectable;
+    };
 
     //==============================================================================
     void addSelectableListener (SelectableListener*);
