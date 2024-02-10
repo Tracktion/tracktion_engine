@@ -296,13 +296,25 @@ private:
     juce::WeakReference<Selectable> weakRef;
 };
 
-/** Creates a SafeSelectable for a given selectable insatnce. */
+/** Creates a SafeSelectable for a given selectable object. */
 template<typename SelectableType>
 SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
 {
     return SafeSelectable<SelectableType> (selectable);
 }
 
+/** Creates a std::vector<SafeSelectable> for a given juce::Array of selectable objects. */
+template<typename SelectableType>
+std::vector<SafeSelectable<SelectableType>> makeSafeVector (const juce::Array<SelectableType*>& selectables)
+{
+    std::vector<SafeSelectable<SelectableType>> v;
+    v.reserve (static_cast<size_t> (selectables.size()));
+
+    for (auto* s : selectables)
+        v.emplace_back (*s);
+
+    return v;
+}
 
 //==============================================================================
 //==============================================================================
