@@ -1377,14 +1377,6 @@ bool AutomationDragDropTarget::isAutomatableParameterBeingDraggedOver() const
      return isAutoParamCurrentlyOver;
 }
 
-AutomatableParameter::Ptr AutomationDragDropTarget::getAssociatedAutomatableParameter (bool* learn)
-{
-    if (learn != nullptr)
-        *learn = false;
-
-    return getAssociatedAutomatableParameter();
-}
-
 bool AutomationDragDropTarget::isInterestedInDragSource (const SourceDetails& details)
 {
     return details.description == automatableDragString;
@@ -1413,16 +1405,25 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
     if (auto c = dynamic_cast<juce::Component*> (this))
         c->repaint();
 
-    if (auto source = dynamic_cast<ParameterisableDragDropSource*> (dragSourceDetails.sourceComponent.get()))
+    juce::WeakReference<juce::Component> sourceCompRef (dragSourceDetails.sourceComponent);
+    juce::WeakReference<juce::Component> thisRef (dynamic_cast<juce::Component*> (this));
+
+    if (auto source = dynamic_cast<ParameterisableDragDropSource*> (sourceCompRef.get()))
     {
         source->draggedOntoAutomatableParameterTargetBeforeParamSelection();
 
-        bool learn = false;
+        auto handleChosenParam = [sourceCompRef] (AutomatableParameter::Ptr param)
+        {
+            if (auto source = dynamic_cast<ParameterisableDragDropSource*> (sourceCompRef.get()))
+                source->draggedOntoAutomatableParameterTarget (param);
+        };
 
-        if (auto param = getAssociatedAutomatableParameter (&learn))
-            source->draggedOntoAutomatableParameterTarget (param);
-        else if (learn)
-            startParameterLearn (source);
+        chooseAutomatableParameter (handleChosenParam,
+                                    [thisRef, handleChosenParam]
+                                    {
+                                        if (auto t = dynamic_cast<AutomationDragDropTarget*> (thisRef.get()))
+                                            t->startParameterLearn (handleChosenParam);
+                                    });
     }
 }
 
