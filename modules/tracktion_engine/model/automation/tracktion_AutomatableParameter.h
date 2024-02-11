@@ -352,17 +352,14 @@ public:
 
     //==============================================================================
     virtual bool hasAnAutomatableParameter() = 0;
-    // this will only be called when actually dropped, so if
-    // there is more than one possible param, it can show UI to choose one at this point
-    virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter() = 0;
 
-    // if the user chooses learn mode instead of a specific parameter, this will return
-    // nullptr and set learn flag to true. the default implementation never returns a true
-    // learn flag
-    virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter (bool* learn);
+    // this will only be called when actually dropped, so if there are multiple params,
+    // it should show UI to choose one and then invoke the callback asynchronously
+    virtual void chooseAutomatableParameter (std::function<void(AutomatableParameter::Ptr)> handleChosenParam,
+                                             std::function<void()> startLearnMode) = 0;
 
-    // start the process for learning a parameter
-    virtual void startParameterLearn (ParameterisableDragDropSource*) {}
+    // start the process for learning a parameter and call the callback when one is chosen
+    virtual void startParameterLearn (std::function<void(AutomatableParameter::Ptr)> handleChosenParam) {}
 
     // the subclass can call this so it knows to draw itself differently when dragging over
     bool isAutomatableParameterBeingDraggedOver() const;
