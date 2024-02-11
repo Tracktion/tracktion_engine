@@ -1414,8 +1414,8 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
 
         auto handleChosenParam = [sourceCompRef] (AutomatableParameter::Ptr param)
         {
-            if (auto source = dynamic_cast<ParameterisableDragDropSource*> (sourceCompRef.get()))
-                source->draggedOntoAutomatableParameterTarget (param);
+            if (auto src = dynamic_cast<ParameterisableDragDropSource*> (sourceCompRef.get()))
+                src->draggedOntoAutomatableParameterTarget (param);
         };
 
         chooseAutomatableParameter (handleChosenParam,
