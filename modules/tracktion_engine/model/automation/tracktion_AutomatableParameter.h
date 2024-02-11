@@ -359,7 +359,7 @@ public:
                                              std::function<void()> startLearnMode) = 0;
 
     // start the process for learning a parameter and call the callback when one is chosen
-    virtual void startParameterLearn (std::function<void(AutomatableParameter::Ptr)> handleChosenParam) {}
+    virtual void startParameterLearn (std::function<void(AutomatableParameter::Ptr)>) {}
 
     // the subclass can call this so it knows to draw itself differently when dragging over
     bool isAutomatableParameterBeingDraggedOver() const;
