@@ -16,6 +16,8 @@ BufferedAudioReader::BufferedAudioReader (std::unique_ptr<juce::AudioFormatReade
     : juce::AudioFormatReader (nullptr, "BufferedAudioReader"),
       source (std::move (sourceReader)), thread (t)
 {
+    assert (source);
+
     sampleRate              = source->sampleRate;
     bitsPerSample           = source->bitsPerSample;
     lengthInSamples         = source->lengthInSamples;
@@ -77,6 +79,9 @@ int BufferedAudioReader::useTimeSlice()
 
 bool BufferedAudioReader::readNextChunk()
 {
+    if (! source)
+        return false;
+
     using namespace choc::buffer;
     const auto start = validEnd.load (std::memory_order_acquire);
     const auto end = std::min (start + chunkSize, sourceLength);
