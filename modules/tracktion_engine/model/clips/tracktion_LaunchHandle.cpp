@@ -141,7 +141,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     if (s.nextEventTime->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         splitStatus.playing1 = true;
-                        splitStatus.range1 = BeatRange::endingAt (syncPoint.beat, duration);;
+                        splitStatus.range1 = BeatRange::endingAt (syncPoint.beat, duration);
                         splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
                         if (s.playedRange)
@@ -160,8 +160,8 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                         splitStatus.range1 = blockBeatRange.withLength (s.nextEventTime->v - blockMonotonicBeatRange.v.getStart());
                         splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart()) : std::nullopt;
                         splitStatus.playing2 = true;
-                        splitStatus.range2 = blockBeatRange.withStart (blockBeatRange.getStart() + splitStatus.range1.getLength());
-                        splitStatus.playStartTime2 = blockBeatRange.getStart() + splitStatus.range1.getLength();
+                        splitStatus.range2 = BeatRange::endingAt (syncPoint.beat, splitStatus.range1.getLength());
+                        splitStatus.playStartTime2 = splitStatus.range2.getStart();
                         splitStatus.isSplit = true;
 
                         assert(! splitStatus.range1.isEmpty());
