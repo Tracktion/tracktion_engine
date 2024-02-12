@@ -984,18 +984,20 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
     else
     {
         auto sourceLen = getSourceLength();
-        jassert (sourceLen > 0s);
 
-        // limits the number of times longer than the source file length the loop length can be
-        const double maxMultiplesOfSourceLengthForLooping = 50.0;
-
-        auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
-        auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
-
-        if (loopStart != newStart || loopLength != newLength)
+        if (sourceLen > 0s)
         {
-            loopStart = newStart;
-            loopLength = newLength;
+            // limits the number of times longer than the source file length the loop length can be
+            const double maxMultiplesOfSourceLengthForLooping = 50.0;
+
+            auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
+            auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
+
+            if (loopStart != newStart || loopLength != newLength)
+            {
+                loopStart = newStart;
+                loopLength = newLength;
+            }
         }
     }
 }
