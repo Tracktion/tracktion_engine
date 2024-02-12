@@ -147,10 +147,10 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                         if (s.playedRange)
                             s.lastPlayedRange = s.playedRange;
 
-                        const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getStart() - s.nextEventTime->v;
+                        const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - s.nextEventTime->v;
 
                         s.playedRange = splitStatus.range1.withLength (numBeatsSinceLaunch);
-                        s.playedMonotonicRange = MonotonicBeatRange { BeatRange (s.nextEventTime->v, blockMonotonicBeatRange.v.getStart()) };
+                        s.playedMonotonicRange = MonotonicBeatRange { BeatRange (s.nextEventTime->v, blockMonotonicBeatRange.v.getEnd()) };
                         s.status = PlayState::playing;
                         s.nextStatus = std::nullopt;
                     }

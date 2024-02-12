@@ -131,7 +131,7 @@ void SlotControlNode::process (ProcessContext& pc)
         {
             if (auto playedMonotonicRange = launchHandle->getPlayedMonotonicRange())
             {
-                const auto blockRange = MonotonicBeatRange { BeatRange (syncPoint.monotonicBeat.v, editBeatRange.getLength()) };
+                const auto blockRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, editBeatRange.getLength()) };
                 const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
                 if (blockRange.v.contains (stopPoint.v))
