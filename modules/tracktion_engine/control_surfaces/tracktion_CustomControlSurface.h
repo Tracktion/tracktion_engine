@@ -76,23 +76,23 @@ public:
         selectTrackId               = 1400,
         auxTrackId                  = 1500,
         auxTextTrackId              = 2300,
-		
-		clip1TrackId				= 3100,
-		clip2TrackId				= 3200,
-		clip3TrackId				= 3300,
-		clip4TrackId				= 3400,
-		clip5TrackId				= 3500,
-		clip6TrackId				= 3600,
-		clip7TrackId				= 3700,
-		clip8TrackId				= 3800,
-		stopClipsTrackId			= 3900,
-		sceneId						= 4000,
-		clipBankUp1Id				= 320,
-		clipBankUp4Id				= 321,
-		clipBankUp8Id				= 322,
-		clipBankDown1Id				= 323,
-		clipBankDown4Id				= 324,
-		clipBankDown8Id				= 325,
+
+        clip1TrackId                = 3100,
+        clip2TrackId                = 3200,
+        clip3TrackId                = 3300,
+        clip4TrackId                = 3400,
+        clip5TrackId                = 3500,
+        clip6TrackId                = 3600,
+        clip7TrackId                = 3700,
+        clip8TrackId                = 3800,
+        stopClipsTrackId            = 3900,
+        sceneId                     = 4000,
+        clipBankUp1Id               = 320,
+        clipBankUp4Id               = 321,
+        clipBankUp8Id               = 322,
+        clipBankDown1Id             = 323,
+        clipBankDown4Id             = 324,
+        clipBankDown8Id             = 325,
 
         zoomInId                    = 100,
         zoomOutId                   = 101,
@@ -307,26 +307,26 @@ public:
     virtual void armTrack (float val, int param);
     virtual void selectTrack (float val, int param);
     virtual void auxTrack (float val, int param);
-	
-	// clip launcher
-	virtual void launchClip1 (float val, int param);
-	virtual void launchClip2 (float val, int param);
-	virtual void launchClip3 (float val, int param);
-	virtual void launchClip4 (float val, int param);
-	virtual void launchClip5 (float val, int param);
-	virtual void launchClip6 (float val, int param);
-	virtual void launchClip7 (float val, int param);
-	virtual void launchClip8 (float val, int param);
-	virtual void stopClips (float val, int param);
-	
-	virtual void launchScene (float val, int param);
-	virtual void clipBankUp1 (float val, int param);
-	virtual void clipBankUp4 (float val, int param);
-	virtual void clipBankUp8 (float val, int param);
-	virtual void clipBankDown1 (float val, int param);
-	virtual void clipBankDown4 (float val, int param);
-	virtual void clipBankDown8 (float val, int param);
-	
+
+    // clip launcher
+    virtual void launchClip1 (float val, int param);
+    virtual void launchClip2 (float val, int param);
+    virtual void launchClip3 (float val, int param);
+    virtual void launchClip4 (float val, int param);
+    virtual void launchClip5 (float val, int param);
+    virtual void launchClip6 (float val, int param);
+    virtual void launchClip7 (float val, int param);
+    virtual void launchClip8 (float val, int param);
+    virtual void stopClips (float val, int param);
+
+    virtual void launchScene (float val, int param);
+    virtual void clipBankUp1 (float val, int param);
+    virtual void clipBankUp4 (float val, int param);
+    virtual void clipBankUp8 (float val, int param);
+    virtual void clipBankDown1 (float val, int param);
+    virtual void clipBankDown4 (float val, int param);
+    virtual void clipBankDown8 (float val, int param);
+
     // navigation
     virtual void zoomIn (float val, int param);
     virtual void zoomOut (float val, int param);
@@ -493,7 +493,7 @@ private:
     virtual void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
-	virtual void addSceneFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    virtual void addSceneFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addAllCommandItem (juce::PopupMenu&);
 
     virtual void sendCommandToControllerForActionID (int actionID, bool);

@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private juce::Timer,
                                                       private juce::AsyncUpdater,
-                                                      private SceneWatcher::Listener 
+                                                      private SceneWatcher::Listener
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
@@ -717,7 +717,7 @@ void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
 void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     auto track = getChannelTrack (channelNum);
-    
+
     if (auto t = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = t->getVolumePlugin())
@@ -746,9 +746,9 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
 
 void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum)
 {
-	if (launchClip && currentEdit)
-		if (auto t = getChannelTrack (channelNum))
-			launchClip (*currentEdit, *t, sceneNum);
+    if (launchClip && currentEdit)
+        if (auto t = getChannelTrack (channelNum))
+            launchClip (*currentEdit, *t, sceneNum);
 }
 
 void ExternalControllerManager::userStoppedClip (int channelNum)
@@ -762,8 +762,8 @@ void ExternalControllerManager::userStoppedClip (int channelNum)
 
 void ExternalControllerManager::userLaunchedScene (int sceneNum)
 {
-	if (launchScene && currentEdit)
-		launchScene (*currentEdit, sceneNum);
+    if (launchScene && currentEdit)
+        launchScene (*currentEdit, sceneNum);
 }
 
 void ExternalControllerManager::userMovedQuickParam (float newLevel)
@@ -983,7 +983,7 @@ int ExternalControllerManager::getXTCount (const juce::String& desc)
 {
     if (desc == "Mackie Control Universal")
         return engine.getPropertyStorage().getProperty (SettingID::xtCount);
-    
+
     return engine.getPropertyStorage().getPropertyItem (SettingID::xtCount, desc);
 }
 
