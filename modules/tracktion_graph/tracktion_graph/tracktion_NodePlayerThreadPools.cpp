@@ -53,10 +53,15 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         resetExitSignal();
 
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -76,7 +81,7 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -144,10 +149,10 @@ private:
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
         for (;;)
@@ -178,10 +183,15 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         resetExitSignal();
 
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -283,10 +293,15 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         resetExitSignal();
 
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                              .withPriority (10)
+                              .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -306,7 +321,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -392,10 +407,10 @@ private:
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
         for (;;)
@@ -428,10 +443,15 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
 
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -525,10 +545,15 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
 
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
+
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 

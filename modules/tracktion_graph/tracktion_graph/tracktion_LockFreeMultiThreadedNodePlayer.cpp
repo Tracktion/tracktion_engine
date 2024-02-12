@@ -180,7 +180,7 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
     createThreads();
 
     sampleRate.store (sampleRateToUse, std::memory_order_release);
-    blockSize = blockSizeToUse;
+    blockSize.store (blockSizeToUse, std::memory_order_release);;
 
     if (! useCurrentAudioBufferPool)
         return node_player_utils::prepareToPlay (std::move (node), oldGraph, sampleRateToUse, blockSizeToUse, nullptr, nullptr, nodeMemorySharingEnabled);

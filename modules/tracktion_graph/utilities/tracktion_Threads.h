@@ -22,4 +22,7 @@ namespace tracktion { inline namespace graph
 */
 bool setThreadPriority (std::thread&, int priority);
 
+/** Tries to upgrade the current thread to realtime priority. */
+bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions&);
+
 }} // namespace tracktion_engine

@@ -182,8 +182,9 @@ public:
             assert (nodeInUse || shouldExit());
         }
 
-    private:
         LockFreeMultiThreadedNodePlayer& player;
+
+    private:
         std::atomic<bool> threadsShouldExit { false };
         std::atomic<LockFreeMultiThreadedNodePlayer::PreparedNode*> currentPreparedNode { nullptr };
     };
@@ -241,6 +242,12 @@ public:
         return sampleRate.load (std::memory_order_acquire);
     }
 
+    /** Returns the current block size. */
+    int getBlockSize() const
+    {
+        return blockSize.load (std::memory_order_acquire);;
+    }
+
     //==============================================================================
     /** Enables or disables the use on an AudioBufferPool to reduce memory consumption.
         Don't rely on this, it is a temporary method used for benchmarking and will go
@@ -269,7 +276,7 @@ private:
 
     //==============================================================================
     std::atomic<double> sampleRate { 44100.0 };
-    int blockSize = 512;
+    std::atomic<int> blockSize { 512 };
     bool nodeMemorySharingEnabled = false;
 
     //==============================================================================
