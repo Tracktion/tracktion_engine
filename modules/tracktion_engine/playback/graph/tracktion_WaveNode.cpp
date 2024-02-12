@@ -8,7 +8,9 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
+#ifndef REPLACE_ELASTIQUE_WITH_DIRECT_MODE
+ #define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
+#endif
 
 namespace tracktion { inline namespace engine
 {
