@@ -60,14 +60,14 @@ public:
         should still be valid at this point.
     */
     virtual void selectableAboutToBeDeleted() {}
-    
+
     //==============================================================================
     class Listener : public SelectableListener
     {
     public:
-        Listener (Selectable& s);
+        Listener (Selectable&);
         ~Listener() override;
-        
+
     private:
         juce::WeakReference<Selectable> selectable;
     };
