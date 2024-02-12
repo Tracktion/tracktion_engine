@@ -73,6 +73,7 @@ public:
     void hideMacroParametersFromTracks() const;
 
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
+    void visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const;
 
     juce::String getName() const override     { return {}; }
     Track* getTrack() const;

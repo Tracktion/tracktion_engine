@@ -116,6 +116,14 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
         return params;
     }
 
+    void visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const
+    {
+        const juce::ScopedLock sl (macroParameters.getLock());
+
+        for (auto& p : macroParameters)
+            visit (*p);
+    }
+
     MacroParameterList& macroParameterList;
     Edit& edit;
 
@@ -243,6 +251,11 @@ void MacroParameterList::hideMacroParametersFromTracks() const
 juce::ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() const
 {
     return list->getMacroParameters();
+}
+
+void MacroParameterList::visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    list->visitMacroParameters (visit);
 }
 
 Track* MacroParameterList::getTrack() const

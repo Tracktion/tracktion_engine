@@ -324,15 +324,32 @@ juce::Array<AutomatableParameter*> Track::getAllAutomatableParams() const
     return params;
 }
 
+void Track::visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    for (auto p : getAllPlugins())
+    {
+        p->macroParameterList.visitAllAutomatableParams (visit);
+        p->visitAllAutomatableParams (visit);
+    }
+
+    for (auto m : modifierList->getModifiers())
+        m->visitAllAutomatableParams (visit);
+}
+
 static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pluginID, const juce::String& paramID)
 {
     if (pluginID.isValid() && paramID.isNotEmpty())
     {
-        juce::Array<AutomatableParameter*> list (edit.getAllAutomatableParams (false));
+        AutomatableParameter::Ptr found;
 
-        for (auto p : list)
-            if (p->getOwnerID() == pluginID && p->paramID == paramID)
-                return p;
+        edit.visitAllAutomatableParams (false, [&] (AutomatableParameter& p)
+        {
+            if (p.paramID == paramID && p.getOwnerID() == pluginID)
+                found = p;
+        });
+
+        if (found)
+            return found;
 
         if (auto p = edit.getPluginCache().getPluginFor (pluginID))
         {

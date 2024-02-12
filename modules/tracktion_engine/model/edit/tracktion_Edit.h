@@ -513,10 +513,15 @@ public:
     void setAuxBusName (int bus, const juce::String& name);
 
     //==============================================================================
-    /** Returns all automatiabel parameters in an Edit.
+    /** Returns all automatable parameters in an Edit.
         @param includeTrackParams Whether to include plugins on tracks and clips
     */
     juce::Array<AutomatableParameter*> getAllAutomatableParams (bool includeTrackParams) const;
+
+    /** Returns all automatable parameters in an Edit.
+        @param includeTrackParams Whether to include plugins on tracks and clips
+    */
+    void visitAllAutomatableParams (bool includeTrackParams, const std::function<void(AutomatableParameter&)>&) const;
 
     //==============================================================================
     /** Returns the currently set video file. */

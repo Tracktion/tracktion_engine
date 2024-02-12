@@ -371,12 +371,13 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 
     bool isActive() const
     {
-        jassert (numSources.load (std::memory_order_acquire) == objects.size());
-        return numSources.load (std::memory_order_acquire) > 0;
+        auto num = numSources.load (std::memory_order_acquire);
+        jassert (num == objects.size());
+        return num > 0;
     }
 
     template<typename Fn>
-    void visitSources (Fn f)
+    void visitSources (Fn&& f)
     {
         if (auto cs = cachedSources)
             for (auto* as : cs->sources)
@@ -420,12 +421,19 @@ private:
 
     void updateCachedSources()
     {
-        auto cs = new CachedSources();
+        if (objects.isEmpty())
+        {
+            cachedSources.reset();
+        }
+        else
+        {
+            auto cs = new CachedSources();
 
-        for (auto o : objects)
-            cs->sources.add (o);
+            for (auto o : objects)
+                cs->sources.add (o);
 
-        cachedSources = cs;
+            cachedSources = cs;
+        }
     }
 
     bool isSuitableType (const juce::ValueTree& v) const override
@@ -1196,11 +1204,6 @@ void AutomatableParameter::curveHasChanged()
 }
 
 //==============================================================================
-juce::Array<AutomatableParameter*> getAllAutomatableParameter (Edit& edit)
-{
-    return edit.getAllAutomatableParams (true);
-}
-
 AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableParameter::ModifierAssignment& ass)
 {
     for (auto modifier : getAllModifierSources (ass.edit))
@@ -1214,30 +1217,34 @@ juce::ReferenceCountedArray<AutomatableParameter> getAllParametersBeingModifiedB
 {
     juce::ReferenceCountedArray<AutomatableParameter> params;
 
-    for (auto ap : edit.getAllAutomatableParams (true))
+    edit.visitAllAutomatableParams (true, [&] (AutomatableParameter& param)
     {
-        for (auto ass : ap->getAssignments())
+        for (auto ass : param.getAssignments())
         {
             if (ass->isForModifierSource (m))
             {
-                jassert (! params.contains (ap)); // Being modified by the same source twice?
-                params.add (ap);
+                jassert (! params.contains (param)); // Being modified by the same source twice?
+                params.add (param);
                 break;
             }
         }
-    }
+    });
 
     return params;
 }
 
 AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& assignment)
 {
-    for (auto ap : assignment.edit.getAllAutomatableParams (true))
-        for (auto ass : ap->getAssignments())
-            if (ass == &assignment)
-                return ap;
+    AutomatableParameter* result = nullptr;
 
-    return {};
+    assignment.edit.visitAllAutomatableParams (true, [&] (AutomatableParameter& param)
+    {
+        for (auto ass : param.getAssignments())
+            if (ass == &assignment)
+                result = &param;
+    });
+
+    return result;
 }
 
 //==============================================================================

@@ -29,6 +29,7 @@ public:
     int getNumAutomatableParameters() const;
     AutomatableParameter::Ptr getAutomatableParameter (int index) const     { return automatableParams[index]; }
     AutomatableParameter::Ptr getAutomatableParameterByID (const juce::String& paramID) const;
+    void visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const;
 
     void deleteParameter (AutomatableParameter*);
     void deleteAutomatableParameters();

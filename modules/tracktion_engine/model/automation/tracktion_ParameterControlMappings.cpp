@@ -244,7 +244,7 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
 
     if (state.hasType (IDs::CONTROLLERMAPPINGS))
     {
-        auto allParams = edit.getAllAutomatableParams (true);
+        juce::Array<AutomatableParameter*> allParams;
 
         for (int j = 0; j < state.getNumChildren(); ++j)
         {
@@ -257,6 +257,9 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
 
             if (id != 0)
             {
+                if (allParams.isEmpty())
+                    allParams = edit.getAllAutomatableParams (true);
+
                 for (auto* p : allParams)
                 {
                     if (p->getFullName() == paramName)

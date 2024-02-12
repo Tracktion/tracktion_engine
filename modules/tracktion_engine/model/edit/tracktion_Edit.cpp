@@ -2642,6 +2642,49 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
     return list;
 }
 
+void Edit::visitAllAutomatableParams (bool includeTrackParams, const std::function<void(AutomatableParameter&)>& visit) const
+{
+    visit (*masterVolumePlugin->volParam);
+    visit (*masterVolumePlugin->panParam);
+
+    globalMacros->macroParameterList.visitMacroParameters (visit);
+
+    for (auto p : *masterPluginList)
+    {
+        p->macroParameterList.visitMacroParameters (visit);
+        p->visitAllAutomatableParams (visit);
+    }
+
+    for (auto rft : getRackList().getTypes())
+    {
+        for (auto mod : rft->getModifierList().getModifiers())
+            mod->visitAllAutomatableParams (visit);
+
+        rft->macroParameterList.visitMacroParameters (visit);
+
+        for (auto p : rft->getPlugins())
+        {
+            p->macroParameterList.visitMacroParameters (visit);
+            p->visitAllAutomatableParams (visit);
+        }
+    }
+
+    if (includeTrackParams)
+    {
+        // Skip the MasterTrack as that is covered by the masterPluginList above
+        auto masterTrack = getMasterTrack();
+
+        for (auto t : getAllTracks (*this))
+        {
+            if (t == masterTrack)
+                continue;
+
+            t->macroParameterList.visitMacroParameters (visit);
+            t->visitAllAutomatableParams (visit);
+        }
+    }
+}
+
 //==============================================================================
 ArrangerTrack* Edit::getArrangerTrack() const
 {

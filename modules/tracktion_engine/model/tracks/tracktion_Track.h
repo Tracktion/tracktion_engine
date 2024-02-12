@@ -295,8 +295,11 @@ public:
     void updateAudibility (bool areAnyTracksSolo);
 
     //==============================================================================
-    /** Returns all the parameteres for this track's Plugin[s] and Modifier[s]. */
+    /** Returns all the parameters for this track's Plugin[s] and Modifier[s]. */
     juce::Array<AutomatableParameter*> getAllAutomatableParams() const;
+
+    /** Visits all the parameters for this track's Plugin[s] and Modifier[s]. */
+    void visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>&) const;
 
     /** Returns the parameter whos curve should be shown on this Track. */
     AutomatableParameter* getCurrentlyShownAutoParam() const noexcept;

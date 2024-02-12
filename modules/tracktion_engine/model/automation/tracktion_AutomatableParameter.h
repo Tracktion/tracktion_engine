@@ -291,21 +291,20 @@ juce::Array<ModifierType*> getModifiersOfType (const AutomatableParameter& ap)
     return mods;
 }
 
-/** Returns all the automatable parameters in an Edit. */
-juce::Array<AutomatableParameter*> getAllAutomatableParameter (Edit&);
-
 /** Iterates an Edit looking for all parameters that assigned to a given parameter. */
-template<typename AssignmentType, typename ModifierSourceType>
-juce::ReferenceCountedArray<AssignmentType> getAssignmentsForSource (Edit& edit, const ModifierSourceType& source)
+template<typename AssignmentType, typename ModifierSourceType, typename EditType>
+juce::ReferenceCountedArray<AssignmentType> getAssignmentsForSource (EditType& edit, const ModifierSourceType& source)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     juce::ReferenceCountedArray<AssignmentType> assignments;
 
-    for (auto* ap : getAllAutomatableParameter (edit))
-        for (auto* ass : ap->getAssignments())
+    edit.visitAllAutomatableParams (true, [&] (AutomatableParameter& param)
+    {
+        for (auto* ass : param.getAssignments())
             if (auto* m = dynamic_cast<AssignmentType*> (ass))
                 if (m->isForModifierSource (source))
                     assignments.add (m);
+    });
 
     return assignments;
 }

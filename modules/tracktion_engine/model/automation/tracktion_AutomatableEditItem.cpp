@@ -41,6 +41,12 @@ int AutomatableEditItem::getNumAutomatableParameters() const
     return automatableParams.size();
 }
 
+void AutomatableEditItem::visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    for (auto p : automatableParams)
+        visit (*p);
+}
+
 AutomatableParameter::Ptr AutomatableEditItem::getAutomatableParameterByID (const juce::String& paramID) const
 {
     for (auto p : automatableParams)
