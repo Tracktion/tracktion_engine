@@ -441,7 +441,7 @@ private:
         const int numInputFrames = static_cast<int> (inFrames.size.numFrames);
         assert (numInputFrames == elastique->GetPreFramesNeeded());
 
-        AudioScratchBuffer scratchBuffer(numChannels, maxFramesNeeded);
+        AudioScratchBuffer scratchBuffer (numChannels, maxFramesNeeded);
         const int numPreProcessFrames = elastique->PreProcessData ((float **) inFrames.data.channels, numInputFrames,
                                                                    (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
                                                                    CElastiqueProV3DirectIf::kFastStartup);

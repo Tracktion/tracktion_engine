@@ -142,7 +142,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     {
                         splitStatus.playing1 = true;
                         splitStatus.range1 = BeatRange::endingAt (syncPoint.beat, duration);;
-                        splitStatus.playStartTime1 = blockBeatRange.getStart();
+                        splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
                         if (s.playedRange)
                             s.lastPlayedRange = s.playedRange;
