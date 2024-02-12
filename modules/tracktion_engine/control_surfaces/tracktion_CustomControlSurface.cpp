@@ -635,6 +635,23 @@ bool CustomControlSurface::isTextAction (ActionID id)
     }
 }
 
+void CustomControlSurface::timerCallback()
+{
+    stopTimer();
+
+    auto i = listeningOnRow;
+    while (i < mappings.size())
+    {
+        i++;
+        if (auto map = mappings[i]; map && ! map->isControllerAssigned())
+        {
+            setLearntParam (false);
+            listenToRow (i);
+            break;
+        }
+    }
+}
+
 void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     if (! m.isController() && ! m.isNoteOn())
@@ -657,7 +674,10 @@ void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
     }
 
     if (listeningOnRow >= 0)
+    {
         triggerAsyncUpdate();
+        startTimer (666);
+    }
 
     if (auto ed = getEdit())
     {
@@ -1006,9 +1026,9 @@ void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions
 
     listenToRow (-1);
     o.runModal();
+    setLearntParam (false);
     listenToRow (-1);
 
-    setLearntParam (false);
     manager->saveAllSettings (engine);
    #else
     juce::ignoreUnused (o);

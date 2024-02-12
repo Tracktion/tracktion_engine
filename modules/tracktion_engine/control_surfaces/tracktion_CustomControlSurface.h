@@ -15,7 +15,8 @@ namespace tracktion { inline namespace engine
 class CustomControlSurface  : public ControlSurface,
                               public juce::ChangeBroadcaster,
                               private juce::AsyncUpdater,
-                              private juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
+                              private juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>,
+                              private juce::Timer
 {
 public:
     //==============================================================================
@@ -240,6 +241,11 @@ public:
     //==============================================================================
     struct Mapping
     {
+        bool isControllerAssigned()
+        {
+            return id != 0 || addr.isNotEmpty() || note != -1;
+        }
+
         int id = 0;
         juce::String addr;
         int note = -1;
@@ -252,7 +258,7 @@ public:
     int getRowBeingListenedTo() const;
     bool allowsManualEditing() const { return needsOSCSocket; }
     void showMappingsListForRow (int);
-    void setLearntParam(bool keepListening);
+    void setLearntParam (bool keepListening);
     void removeMapping (int index);
     Mapping* getMappingForRow (int) const;
     std::pair<juce::String, juce::String> getTextForRow (int) const;
@@ -443,6 +449,9 @@ private:
 
     std::unique_ptr<juce::OSCSender> oscSender;
     std::unique_ptr<juce::OSCReceiver> oscReceiver;
+
+    //==============================================================================
+    void timerCallback() override;
 
     //==============================================================================
     struct RPNParser
