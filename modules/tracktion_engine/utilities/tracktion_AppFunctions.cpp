@@ -32,7 +32,6 @@ namespace AppFunctions
         if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
             return e;
 
-        jassertfalse;
         return nullptr;
     }
 
