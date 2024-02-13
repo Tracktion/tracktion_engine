@@ -214,7 +214,7 @@ public:
             lastTime = -1.0s;
         }
 
-        if (parameter.isAutomationActive() != wasAutomationActive);
+        if (parameter.isAutomationActive() != wasAutomationActive)
             parameter.automatableEditElement.updateActiveParameters();
     }
 
