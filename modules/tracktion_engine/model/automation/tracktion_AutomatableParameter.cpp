@@ -476,11 +476,23 @@ private:
         };
 
         if (auto mod = findModifierForID (parameter.getEdit(), EditItemID::fromProperty (v, IDs::source)))
+        {
+            if (v.isAChildOf (mod->state))
+                return nullptr;
+
             as = new ModifierAutomationSource (mod, v);
+        }
         else if (auto macro = getMacroForID (v[IDs::source].toString()))
+        {
+            if (v.isAChildOf (macro->state))
+                return nullptr;
+
             as = new MacroSource (new MacroParameter::Assignment (v, *macro), *macro);
+        }
         else
+        {
             return nullptr;
+        }
 
         as->incReferenceCount();
         ++numSources;
@@ -709,6 +721,9 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
 
     if (auto mod = dynamic_cast<Modifier*> (&source))
     {
+        if (mod == &automatableEditElement)
+            return {};
+
         v = createValueTree (mod->state.getType(),
                              IDs::source, mod->itemID);
     }
