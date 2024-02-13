@@ -191,6 +191,7 @@ public:
     virtual bool showingPluginParams()                  { return false; }
     virtual bool showingMarkers()                       { return false; }
     virtual bool showingTracks()                        { return true;  }
+    virtual bool showingClipSlots()                     { return true;  }
 
     virtual void deleteController()                     {}
     virtual void pluginBypass (bool)                    {}

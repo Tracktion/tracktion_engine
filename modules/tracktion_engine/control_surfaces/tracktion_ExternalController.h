@@ -126,12 +126,15 @@ public:
 
     //==============================================================================
     juce::Colour getSelectionColour() const             { return selectionColour; }
-    bool getShowSelectionColour() const                 { return showSelection; }
+    bool getShowTrackSelectionColour() const            { return showTrackSelection; }
+    bool getShowClipSlotSelectionColour() const         { return showClipSlotSelection; }
     void setSelectionColour (juce::Colour);
-    void setShowSelectionColour (bool);
+    void setShowTrackSelectionColour (bool);
+    void setShowClipSlotSelectionColour (bool);
 
     bool shouldTrackBeColoured (int channelNum);
     void getTrackColour (int channelNum, juce::Colour&);
+    std::optional<ColourArea> getColouredArea (const Edit&);
 
     bool shouldPluginBeColoured (Plugin*);
     void getPluginColour (Plugin*, juce::Colour&);
@@ -190,7 +193,8 @@ private:
     bool allowBankingOffEnd = false;
     AutomatableParameter::Array currentParams;
     Selectable::WeakRef currentParamSource, lastRegisteredSelectable;
-    bool showSelection = false;
+    bool showTrackSelection = false;
+    bool showClipSlotSelection = true;
     juce::Colour selectionColour;
     int startMarkerNumber = 0;
     int auxBank = 0;

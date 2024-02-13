@@ -41,14 +41,15 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
         outputDeviceName[i] = storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i));
     }
 
-    oscInputPort        = storage.getPropertyItem (SettingID::externOscInputPort, getName());
-    oscOutputPort       = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
-    oscOutputAddr       = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+    oscInputPort            = storage.getPropertyItem (SettingID::externOscInputPort, getName());
+    oscOutputPort           = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
+    oscOutputAddr           = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
 
-    showSelection       = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
-    selectionColour     = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
+    showTrackSelection      = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
+    showClipSlotSelection   = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
+    selectionColour         = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
                                                                           juce::Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
-    enabled             = storage.getPropertyItem (SettingID::externControlEnable, getName());
+    enabled                 = storage.getPropertyItem (SettingID::externControlEnable, getName());
 
     midiInOutDevicesChanged();
     oscSettingsChanged();
@@ -396,12 +397,22 @@ void ExternalController::setSelectionColour (juce::Colour c)
     }
 }
 
-void ExternalController::setShowSelectionColour (bool b)
+void ExternalController::setShowTrackSelectionColour (bool b)
 {
-    if (showSelection != b)
+    if (showTrackSelection != b)
     {
-        showSelection = b;
+        showTrackSelection = b;
         engine.getPropertyStorage().setPropertyItem (SettingID::externControlShowSelection, getName(), b);
+        getControlSurface().changed();
+    }
+}
+
+void ExternalController::setShowClipSlotSelectionColour (bool b)
+{
+    if (showClipSlotSelection != b)
+    {
+        showClipSlotSelection = b;
+        engine.getPropertyStorage().setPropertyItem (SettingID::externControlShowClipSlotSelection, getName(), b);
         getControlSurface().changed();
     }
 }
@@ -589,7 +600,7 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
 
             updateDeviceState();
 
-            if (selectedChannels.size() > 0 && getShowSelectionColour() && isEnabled())
+            if (selectedChannels.size() > 0 && getShowTrackSelectionColour() && isEnabled())
                 for (int i = 0; i < selectedChannels.size(); ++i)
                     ecm.repaintTrack (selectedChannels[i]);
 
@@ -610,6 +621,11 @@ void ExternalController::changePadBank (int delta)
     {
         padStart = std::max (0, padStart + delta);
         updatePadColours();
+
+        auto& ecm = getExternalControllerManager();
+
+        if (getShowClipSlotSelectionColour() && isEnabled())
+            ecm.repaintSlots();
     }
 }
 
@@ -1351,7 +1367,7 @@ bool ExternalController::shouldTrackBeColoured (int channelNum)
     return channelNum >= channelStart
             && channelNum < (channelStart + getNumFaderChannels())
             && getControlSurface().showingTracks()
-            && getShowSelectionColour()
+            && getShowTrackSelectionColour()
             && isEnabled();
 }
 
@@ -1360,7 +1376,7 @@ void ExternalController::getTrackColour (int channelNum, juce::Colour& color)
     if (channelNum >= channelStart
          && channelNum < channelStart + getNumFaderChannels()
          && getControlSurface().showingTracks()
-         && getShowSelectionColour()
+         && getShowTrackSelectionColour()
          && isEnabled())
     {
         if (color.getARGB() == 0)
@@ -1370,18 +1386,44 @@ void ExternalController::getTrackColour (int channelNum, juce::Colour& color)
     }
 }
 
+std::optional<ColourArea> ExternalController::getColouredArea (const Edit& e)
+{
+    if (&e != getEdit())
+        return {};
+
+    if (controlSurface == nullptr || ! getControlSurface().showingClipSlots() || ! getShowClipSlotSelectionColour() || ! isEnabled())
+        return {};
+
+    auto& ecm = getExternalControllerManager();
+
+    auto t1 = ecm.getChannelTrack (channelStart);
+    auto t2 = t1;
+
+    for (auto i = 0; i < controlSurface->numberOfFaderChannels; i++)
+        if (auto t = t2 = ecm.getChannelTrack (channelStart + i))
+            t2 = t;
+
+    if (t1 && t2)
+    {
+        ColourArea c = {getSelectionColour(), *t1, *t2, padStart, padStart + controlSurface->numberOfTrackPads - 1};
+        return c;
+    }
+
+    return {};
+}
+
 bool ExternalController::shouldPluginBeColoured (Plugin* p)
 {
     return controlSurface != nullptr
             && (getControlSurface().isPluginSelected (p)
                  || (p == currentParamSource && getControlSurface().showingPluginParams()))
-            && getShowSelectionColour()
+            && getShowTrackSelectionColour()
             && isEnabled();
 }
 
 void ExternalController::getPluginColour (Plugin* plugin, juce::Colour& color)
 {
-    if (shouldPluginBeColoured (plugin) && getShowSelectionColour() && isEnabled())
+    if (shouldPluginBeColoured (plugin) && getShowTrackSelectionColour() && isEnabled())
     {
         if (color.getARGB() == 0)
             color = getSelectionColour();

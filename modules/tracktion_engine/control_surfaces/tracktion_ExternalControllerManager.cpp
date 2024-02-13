@@ -11,6 +11,20 @@
 namespace tracktion { inline namespace engine
 {
 
+bool ColourArea::contains (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private juce::Timer,
                                                       private juce::AsyncUpdater,
@@ -938,6 +952,18 @@ bool ExternalControllerManager::shouldTrackBeColoured (int channelNum)
     return false;
 }
 
+std::vector<ColourArea> ExternalControllerManager::ExternalControllerManager::getColouredArea (const Edit& e)
+{
+    std::vector<ColourArea> areas;
+
+    for (auto device : devices)
+        if (device->isEnabled())
+            if (auto area = device->getColouredArea (e); area.has_value())
+                areas.push_back (*area);
+
+    return areas;
+}
+
 juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
 {
     juce::Colour c;
@@ -955,6 +981,10 @@ void ExternalControllerManager::repaintTrack (int channelNum)
 {
     if (auto t = getChannelTrack (channelNum))
         t->changed();
+}
+
+void ExternalControllerManager::repaintSlots()
+{
 }
 
 bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)

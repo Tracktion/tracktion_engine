@@ -130,6 +130,7 @@ enum class SettingID
     addId3Info,
     realtime,
     passThroughFilters,
+    externControlShowClipSlotSelection,
 };
 
 }} // namespace tracktion { inline namespace engine

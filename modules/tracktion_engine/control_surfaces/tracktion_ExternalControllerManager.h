@@ -11,6 +11,18 @@
 namespace tracktion { inline namespace engine
 {
 
+/** An area of the edit currently control by a control surface */
+struct ColourArea
+{
+    juce::Colour colour;
+    Track& firstTrack;
+    Track& lastTrack;
+    int firstScene;
+    int lastScene;
+
+    bool contains (ClipSlot&) const;
+};
+
 /** Keeps a list of external controllers and keeps them connected to the
     right MIDI in/out devices
 */
@@ -109,6 +121,8 @@ public:
     bool shouldTrackBeColoured (int channelNum);
     juce::Colour getTrackColour (int channelNum);
 
+    std::vector<ColourArea> getColouredArea (const Edit&);
+
     bool shouldPluginBeColoured (Plugin*);
     juce::Colour getPluginColour (Plugin*);
 
@@ -154,6 +168,7 @@ public:
 
     void repaintTrack (int channelNum);
     void repaintPlugin (Plugin&);
+    void repaintSlots();
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
     NovationAutomap* getAutomap() const noexcept        { return automap; }
