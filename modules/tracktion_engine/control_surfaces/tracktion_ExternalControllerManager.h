@@ -168,7 +168,7 @@ public:
 
     void repaintTrack (int channelNum);
     void repaintPlugin (Plugin&);
-    void repaintSlots();
+    void repaintSlots (int channelNum);
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
     NovationAutomap* getAutomap() const noexcept        { return automap; }

@@ -68,6 +68,9 @@ public:
         Listener (Selectable&);
         ~Listener() override;
 
+        void selectableObjectChanged (Selectable*) override {};
+        void selectableObjectAboutToBeDeleted (Selectable*) override {};
+
     private:
         juce::WeakReference<Selectable> selectable;
     };

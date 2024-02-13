@@ -983,8 +983,10 @@ void ExternalControllerManager::repaintTrack (int channelNum)
         t->changed();
 }
 
-void ExternalControllerManager::repaintSlots()
+void ExternalControllerManager::repaintSlots (int channelNum)
 {
+    if (auto t = getChannelTrack (channelNum))
+        t->changed();
 }
 
 bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)

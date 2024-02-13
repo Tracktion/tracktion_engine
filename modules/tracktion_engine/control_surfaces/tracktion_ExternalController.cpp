@@ -625,7 +625,10 @@ void ExternalController::changePadBank (int delta)
         auto& ecm = getExternalControllerManager();
 
         if (getShowClipSlotSelectionColour() && isEnabled())
-            ecm.repaintSlots();
+        {
+            for (int i = channelStart; i < (channelStart + getNumFaderChannels()); ++i)
+                ecm.repaintSlots (i);
+        }
     }
 }
 
