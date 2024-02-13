@@ -95,12 +95,12 @@ public:
     {
         param->addListener (this);
     }
-    
+
     ~ParameterValueSource() override
     {
         param->removeListener (this);
     }
-    
+
     var getValue() const override
     {
         return param->getCurrentValue();
@@ -113,13 +113,13 @@ public:
 
 private:
     AutomatableParameter::Ptr param;
-    
+
     void curveHasChanged (AutomatableParameter&) override
     {
         sendChangeMessage (false);
     }
-    
-    void currentValueChanged (AutomatableParameter&, float /*newValue*/) override
+
+    void currentValueChanged (AutomatableParameter&) override
     {
         sendChangeMessage (false);
     }
@@ -154,7 +154,7 @@ public:
     {
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<DistortionPlugin>();
-        
+
         Helpers::addAndMakeVisible (*this, { &gainSlider, &playPauseButton });
 
         oggTempFile = std::make_unique<TemporaryFile> (".ogg");
@@ -165,7 +165,7 @@ public:
         // Creates track. Loads clip into track.
         auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
         jassert (track != nullptr);
-        
+
         // Add a new clip to this track
         te::AudioFile audioFile (edit.engine, f);
 

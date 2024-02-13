@@ -42,7 +42,7 @@ struct Modifier : public AutomatableEditItem,
     /** Creates a Modifier for a given state. */
     Modifier (Edit&, const juce::ValueTree&);
     /** Destructor. */
-    ~Modifier();
+    ~Modifier() override;
 
     /** Removes this Modifier from its parent Track. */
     void remove();

@@ -18,7 +18,7 @@ class AutomatableEditItem  : public EditItem
 {
 public:
     AutomatableEditItem (Edit&, const juce::ValueTree&);
-    virtual ~AutomatableEditItem();
+    ~AutomatableEditItem() override;
 
     //==============================================================================
     virtual void flushPluginStateToValueTree();
