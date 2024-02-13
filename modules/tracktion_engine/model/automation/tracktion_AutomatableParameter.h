@@ -213,9 +213,9 @@ public:
 
         /** Called when the current value of the parameter changed, either from setting the parameter,
             automation, a macro or modifier.
-            This will be called on the audio thread so make sure you don't do anything time consuming or block etc.
+            This is async so you won't get a callback for every parameter change.
         */
-        virtual void currentValueChanged (AutomatableParameter&, float /*newValue*/) {}
+        virtual void currentValueChanged (AutomatableParameter&) {}
 
         /** Called when the parameter is changed by the plugin or host, not from automation. */
         virtual void parameterChanged (AutomatableParameter&, float /*newValue*/) {}
@@ -242,6 +242,7 @@ protected:
     std::atomic<float> currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };
     std::atomic<bool> isRecording { false };
     bool updateParametersRecursionCheck = false;
+    AsyncCaller parameterChangedCaller { [this] { listeners.call (&Listener::currentValueChanged, *this); } };
 
     juce::ValueTree modifiersState;
     struct AutomationSourceList;

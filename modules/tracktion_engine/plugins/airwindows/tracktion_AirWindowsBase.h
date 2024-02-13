@@ -149,7 +149,7 @@ public:
     {
         currentValue = currentParameterValue = plugin.impl->getParameter (index);
         curveHasChanged();
-        listeners.call (&Listener::currentValueChanged, *this, currentValue);
+        listeners.call (&Listener::currentValueChanged, *this);
     }
 
     void setConversionRange (juce::NormalisableRange<float> range)

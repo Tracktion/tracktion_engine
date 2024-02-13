@@ -861,11 +861,12 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
         // N.B.You shouldn't be directly setting the value of an attachedValue managed parameter.
         // To avoid feedback loops of sync issues, always go via setParameter
 
+        TRACKTION_ASSERT_MESSAGE_THREAD
         SCOPED_REALTIME_CHECK
         // N.B. we shouldn't call attachedValue->updateParameterFromValue here as this
         // will set the base value of the parameter. The change in property could be due
         // to a Modifier or automation change so we don't want to force that to be the base value
-        listeners.call (&Listener::currentValueChanged, *this, currentValue);
+        listeners.call (&Listener::currentValueChanged, *this);
     }
 }
 
@@ -1083,7 +1084,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
 
         {
             SCOPED_REALTIME_CHECK
-            listeners.call (&Listener::currentValueChanged, *this, currentValue);
+            parameterChangedCaller.triggerAsyncUpdate();
         }
     }
 }
@@ -1096,6 +1097,7 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
     if (nt != juce::dontSendNotification)
     {
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
+        TRACKTION_ASSERT_MESSAGE_THREAD
         listeners.call (&Listener::parameterChanged, *this, currentValue);
 
         if (attachedValue != nullptr)
@@ -1169,11 +1171,13 @@ void AutomatableParameter::updateToFollowCurve (TimePosition time)
 
 void AutomatableParameter::parameterChangeGestureBegin()
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     listeners.call (&Listener::parameterChangeGestureBegin, *this);
 }
 
 void AutomatableParameter::parameterChangeGestureEnd()
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     listeners.call (&Listener::parameterChangeGestureEnd, *this);
 }
 
@@ -1199,6 +1203,7 @@ void AutomatableParameter::midiControllerPressed()
 //==============================================================================
 void AutomatableParameter::curveHasChanged()
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     curveSource->triggerAsyncCurveUpdate();
     getEdit().getParameterChangeHandler().parameterChanged (*this, false);

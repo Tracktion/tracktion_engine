@@ -888,7 +888,7 @@ void ExternalController::curveHasChanged (AutomatableParameter&)
     triggerAsyncUpdate();
 }
 
-void ExternalController::currentValueChanged (AutomatableParameter&, float)
+void ExternalController::currentValueChanged (AutomatableParameter&)
 {
     updateParams = true;
     triggerAsyncUpdate();

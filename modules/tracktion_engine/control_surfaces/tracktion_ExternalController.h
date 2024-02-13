@@ -98,7 +98,7 @@ public:
     void selectableObjectChanged (Selectable*) override;
     void selectableObjectAboutToBeDeleted (Selectable*) override;
     void curveHasChanged (AutomatableParameter&) override;
-    void currentValueChanged (AutomatableParameter&, float /*newValue*/) override;
+    void currentValueChanged (AutomatableParameter&) override;
     void updateTrackSelectLights();
     void updateTrackRecordLights();
     void updatePunchLights();
