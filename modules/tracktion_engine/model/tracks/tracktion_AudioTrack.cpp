@@ -736,7 +736,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
 
             changed();
         }
-        if (i == IDs::playSlotClips)
+        else if (i == IDs::playSlotClips)
         {
             playSlotClips.forceUpdateOfCachedValue();
 

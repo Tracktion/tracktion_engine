@@ -192,6 +192,7 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
+        const bool wasAutomationActive = parameter.isAutomationActive();
         std::unique_ptr<AutomationIterator> newStream;
 
         if (curve.getNumPoints() > 0)
@@ -210,10 +211,11 @@ public:
             if (! parameterStream)
                 parameter.updateToFollowCurve (lastTime);
 
-            lastTime = TimePosition::fromSeconds (-1.0);
+            lastTime = -1.0s;
         }
 
-        parameter.automatableEditElement.updateActiveParameters();
+        if (parameter.isAutomationActive() != wasAutomationActive);
+            parameter.automatableEditElement.updateActiveParameters();
     }
 
     bool isActive() const noexcept
