@@ -144,8 +144,8 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
                                             editBeatRange,
                                             getProcessState().getSyncPoint().monotonicBeat);
 
-    launcherSampleFader->apply (destAudioView);
-    arrangerSampleFader->apply (destAudioView);
+    launcherSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
+    arrangerSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
 
     processLauncher (pc, slotStatus);
 
@@ -193,7 +193,7 @@ void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const S
                     const auto endFrame = beatToSamplePosition (slotStatus.beatsUntilQueuedStopTrimmedToBlock,
                                                                 editBeatRange.getLength(), numFrames);
                     launcherSampleFader->trigger (10);
-                    launcherSampleFader->applyAt (destAudioView,  endFrame);
+                    launcherSampleFader->applyAt (destAudioView,  endFrame, SampleFader::FadeType::fadeOut);
                 }
             }
         }
@@ -231,7 +231,7 @@ void ArrangerLauncherSwitchingNode::processArranger (ProcessContext& pc, const S
                 arrangerSampleFader->push (sourceSubView);
 
                 choc::buffer::add (destSubView, sourceSubView);
-                launcherSampleFader->applyAt (destAudioView,  endFrame);
+                launcherSampleFader->applyAt (destAudioView,  endFrame, SampleFader::FadeType::fadeOut);
             }
 
             const auto endTime = TimePosition::fromSamples (endFrame, getSampleRate());

@@ -46,8 +46,14 @@ public:
         currentFadeFrameCountDown = numFramesToFade;
     }
 
+    enum class FadeType
+    {
+        fadeOut,
+        crossfade
+    };
+
     template<typename Buffer>
-    void apply (Buffer&& buffer)
+    void apply (Buffer&& buffer, FadeType fadeType)
     {
         if (currentFadeFrameCountDown == 0 || numFramesToFade == 0)
             return;
@@ -67,7 +73,12 @@ public:
                 const auto frameNum = numFramesToFade - channelCurrentFadeFrameCountDown;
                 auto alpha = frameNum / static_cast<float> (numFramesToFade);
                 assert (alpha >= 0.0f && alpha <= 1.0f);
-                dest[i] = dest[i] + lastSample * (1.0f - alpha);
+
+                if (fadeType == FadeType::fadeOut)
+                    dest[i] = dest[i] + (lastSample * (1.0f - alpha));
+                else if (fadeType == FadeType::crossfade)
+                    dest[i] = (alpha * dest[i]) + (lastSample * (1.0f - alpha));
+
                 --channelCurrentFadeFrameCountDown;
             }
         }
@@ -77,9 +88,10 @@ public:
     }
 
     template<typename Buffer>
-    void applyAt (Buffer& buffer, choc::buffer::FrameCount frameNum)
+    void applyAt (Buffer& buffer, choc::buffer::FrameCount frameNum, FadeType fadeType)
     {
-        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() - frameNum }));
+        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() - frameNum }),
+               fadeType);
     }
 
 private:
