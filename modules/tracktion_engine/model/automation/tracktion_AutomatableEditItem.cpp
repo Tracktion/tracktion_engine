@@ -213,7 +213,7 @@ void AutomatableEditItem::updateActiveParameters()
     activeParameters.swapWith (nowActiveParams);
     automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);
 
-    lastTime = TimePosition::fromSeconds (-1.0);
+    lastTime = -1.0s;
 }
 
 void AutomatableEditItem::saveChangedParametersToState()

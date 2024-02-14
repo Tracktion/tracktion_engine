@@ -150,7 +150,7 @@ struct ModifierAutomationSource : public AutomationModifierSource
         const auto currentTime = modifier->getCurrentTime();
         const auto deltaTime = currentTime - editTimeToReturn;
 
-        if (deltaTime > TimeDuration() && deltaTime < Modifier::maxHistoryTime)
+        if (deltaTime > 0s && deltaTime < Modifier::maxHistoryTime)
             baseValue = modifier->getValueAt (deltaTime);
 
         return AutomationScaleHelpers::mapValue (baseValue, assignment->offset, assignment->value, assignment->curve);
@@ -192,7 +192,6 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        const bool wasAutomationActive = parameter.isAutomationActive();
         std::unique_ptr<AutomationIterator> newStream;
 
         if (curve.getNumPoints() > 0)
@@ -214,8 +213,7 @@ public:
             lastTime = -1.0s;
         }
 
-        if (parameter.isAutomationActive() != wasAutomationActive)
-            parameter.automatableEditElement.updateActiveParameters();
+        parameter.automatableEditElement.updateActiveParameters();
     }
 
     bool isActive() const noexcept
