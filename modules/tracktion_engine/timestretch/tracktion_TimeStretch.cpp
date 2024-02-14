@@ -257,6 +257,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         hasBeenReset = true;
         numProcessCallsToDo = 0;
         elastique->Reset();
+        outputFifo.reset();
     }
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
@@ -425,7 +426,7 @@ private:
             return;
 
         float pitch = juce::jlimit (0.25f, 4.0f, Pitch::semitonesToRatio (newSemitonesUp));
-        const bool  sync = elastiqueMode == TimeStretcher::elastiqueDirectPro ? elastiqueProOptions.syncTimeStrPitchShft : false;
+        const bool sync = elastiqueMode == TimeStretcher::elastiqueDirectPro ? elastiqueProOptions.syncTimeStrPitchShft : false;
         const int res = elastique->SetStretchPitchQFactor (newSpeedRatio, pitch, sync);
         newSpeedAndPitchPending = res != 0;
 
