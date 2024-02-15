@@ -59,19 +59,25 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     const auto beatEnd = tempoPosition->getBeats();
     editBeatRange = { beatStart, beatEnd };
 
-    // Update the SyncPoint to point to the end of this block
-    if (auto oldSyncPoint = getSyncPoint();
-        oldSyncPoint.referenceSamplePosition != referenceSampleRange.getEnd())
-    {
-        syncPoint = { referenceSampleRange.getEnd(),
-                      { oldSyncPoint.monotonicBeat.v + editBeatRange.getLength() },
-                      TimePosition::fromSamples (playHeadState.playHead.getUnloopedPosition(), sampleRate),
-                      editTimeRange.getEnd(),
-                      beatEnd };
-        oldSyncPoint.time = editTimeRange.getStart();
-        oldSyncPoint.beat = beatStart;
-        syncRange.store ({ oldSyncPoint, syncPoint });
-    }
+    if (updateContinuityFlags == UpdateContinuityFlags::no)
+        return;
+
+    // Only update the sync range if the continuity is being updated as the player can call this
+    // multiple times and we don't want to increment the monotonic beat each call
+    const auto unloopTimelineSample = playHeadState.playHead.referenceSamplePositionToTimelinePositionUnlooped (referenceSampleRange.getEnd());
+    auto oldSyncPoint = getSyncPoint();
+    const auto newSyncPoint = SyncPoint ({
+                                             referenceSampleRange.getEnd(),
+                                             { oldSyncPoint.monotonicBeat.v + editBeatRange.getLength() },
+                                             TimePosition::fromSamples (unloopTimelineSample, sampleRate),
+                                             editTimeRange.getEnd(),
+                                             beatEnd
+                                         });
+    syncPoint.store (newSyncPoint);
+
+    oldSyncPoint.time = editTimeRange.getStart();
+    oldSyncPoint.beat = beatStart;
+    syncRange.store ({ oldSyncPoint, newSyncPoint });
 }
 
 void ProcessState::setPlaybackSpeedRatio (double newRatio)
@@ -104,12 +110,18 @@ const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
 
 SyncPoint ProcessState::getSyncPoint() const
 {
-    return syncPoint.load (std::memory_order_acquire);
+    return syncPoint.load();
 }
 
 SyncRange ProcessState::getSyncRange() const
 {
     return syncRange.load();
+}
+
+void ProcessState::setSync (SyncPoint p, SyncRange r)
+{
+    syncPoint.store (p);
+    syncRange.store (r);
 }
 
 //==============================================================================

@@ -1197,7 +1197,7 @@ public:
                double playbackSpeedRatio)
     {
         if (! shouldWarp() || editTimeRange.isEmpty())
-            return  reader->read (editBeatRange, editTimeRange, destBuffer, isContiguous, playbackSpeedRatio);
+            return reader->read (editBeatRange, editTimeRange, destBuffer, isContiguous, playbackSpeedRatio);
 
         const auto originalDuration = editTimeRange.getLength();
         std::tie (editBeatRange, editTimeRange) = warpTimeRanges (editBeatRange, editTimeRange);
