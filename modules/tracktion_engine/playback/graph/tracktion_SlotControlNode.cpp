@@ -234,7 +234,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
     auto& ps = getProcessState();
-    localProcessState.setSync (ps.getSyncPoint(), ps.getSyncRange());
+    localProcessState.setSyncRange (ps.getSyncRange());
 
     // Update the offset for compatible Nodes
     if (playStartTime)

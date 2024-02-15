@@ -59,7 +59,7 @@ struct ProcessState
     SyncRange getSyncRange() const;
 
     /** @internal. */
-    void setSync (SyncPoint, SyncRange);
+    void setSyncRange (SyncRange);
 
     tracktion::graph::PlayHeadState& playHeadState;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
@@ -71,7 +71,6 @@ struct ProcessState
 private:
     const tempo::Sequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
-    crill::seqlock_object<SyncPoint> syncPoint { SyncPoint() };
     crill::seqlock_object<SyncRange> syncRange { SyncRange() };
 };
 

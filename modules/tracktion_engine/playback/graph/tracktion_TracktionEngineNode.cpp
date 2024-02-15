@@ -73,7 +73,6 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
                                              editTimeRange.getEnd(),
                                              beatEnd
                                          });
-    syncPoint.store (newSyncPoint);
 
     oldSyncPoint.time = editTimeRange.getStart();
     oldSyncPoint.beat = beatStart;
@@ -110,7 +109,7 @@ const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
 
 SyncPoint ProcessState::getSyncPoint() const
 {
-    return syncPoint.load();
+    return getSyncRange().end;
 }
 
 SyncRange ProcessState::getSyncRange() const
@@ -118,10 +117,9 @@ SyncRange ProcessState::getSyncRange() const
     return syncRange.load();
 }
 
-void ProcessState::setSync (SyncPoint p, SyncRange r)
+void ProcessState::setSyncRange (SyncRange r)
 {
-    syncPoint.store (p);
-    syncRange.store (r);
+    syncRange.store (std::move (r));
 }
 
 //==============================================================================
