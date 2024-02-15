@@ -184,6 +184,10 @@ template<typename PositionType>
 template<typename PositionType>
 [[ nodiscard ]] RangeType<PositionType> operator- (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
+//==============================================================================
+/** Adds an amount to the end of the range and returns a new range. */
+template<typename PositionType>
+[[ nodiscard ]] RangeType<PositionType> withEndExtended (RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 //==============================================================================
 //        _        _           _  _
@@ -371,6 +375,12 @@ template<typename PositionType>
 inline RangeType<PositionType> operator+ (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() + d, r.getEnd() + d); }
 template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
+
+template<typename PositionType>
+inline RangeType<PositionType> withEndExtended (RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)
+{
+    return r.withEnd (r.getEnd() + d);
+}
 
 template<typename RangeType,
          std::enable_if_t<std::is_same_v<TimeRange, RangeType>

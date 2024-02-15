@@ -56,6 +56,8 @@ struct ProcessState
 
     SyncPoint getSyncPoint() const;
 
+    SyncRange getSyncRange() const;
+
     tracktion::graph::PlayHeadState& playHeadState;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
     int numSamples = 0;
@@ -67,6 +69,7 @@ private:
     const tempo::Sequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
     std::atomic<SyncPoint> syncPoint { SyncPoint() };
+    crill::seqlock_object<SyncRange> syncRange { SyncRange() };
 };
 
 
@@ -81,10 +84,10 @@ public:
     //==============================================================================
     /** Creates a TracktionEngineNode. */
     TracktionEngineNode (ProcessState&);
-    
+
     /** Destructor. */
     virtual ~TracktionEngineNode() = default;
-    
+
     //==============================================================================
     /** Returns the number of samples in the current process block. */
     int getNumSamples() const                               { return processState->numSamples; }
@@ -144,7 +147,7 @@ class DynamicallyOffsettableNodeBase
 public:
     DynamicallyOffsettableNodeBase() = default;
     virtual ~DynamicallyOffsettableNodeBase() = default;
-    
+
     /** Sets an offset to be applied to all times in this node, effectively shifting
         it forwards or backwards in time.
      */

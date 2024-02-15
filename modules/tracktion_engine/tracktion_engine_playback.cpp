@@ -159,6 +159,7 @@ namespace tracktion
 #undef ENABLE_SINC_FAST_CONVERTER
 
 #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+#include "../3rd_party/crill/seqlock_object.h"
 
 //==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS

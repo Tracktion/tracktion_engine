@@ -123,15 +123,15 @@ void SlotControlNode::process (ProcessContext& pc)
         return;
     }
 
+    const auto syncRange = getProcessState().getSyncRange();
+
     if (const auto editBeatRange = getEditBeatRange(); ! editBeatRange.isEmpty())
     {
-        const auto syncPoint = getProcessState().getSyncPoint();
-
         if (stopDuration)
         {
             if (auto playedMonotonicRange = launchHandle->getPlayedMonotonicRange())
             {
-                const auto blockRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, editBeatRange.getLength()) };
+                const auto blockRange = MonotonicBeatRange { { syncRange.start.monotonicBeat.v, syncRange.end.monotonicBeat.v } };
                 const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
                 if (blockRange.v.contains (stopPoint.v))
@@ -146,13 +146,13 @@ void SlotControlNode::process (ProcessContext& pc)
             }
         }
 
-        if (auto splitStatus = launchHandle->advance (syncPoint, editBeatRange.getLength());
+        if (auto splitStatus = launchHandle->advance (syncRange);
             ! splitStatus.range1.isEmpty())
            processSplitSection (pc, splitStatus);
     }
     else if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
     {
-        launchHandle->advance (getProcessState().getSyncPoint(), {});
+        launchHandle->advance (syncRange);
     }
 }
 
@@ -326,7 +326,7 @@ void SlotControlNode::processStop (ProcessContext& pc)
     if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
         launchHandle->stop ({});
 
-    launchHandle->advance (getProcessState().getSyncPoint(), {});
+    launchHandle->advance (getProcessState().getSyncRange());
 }
 
 }} // namespace tracktion { inline namespace engine

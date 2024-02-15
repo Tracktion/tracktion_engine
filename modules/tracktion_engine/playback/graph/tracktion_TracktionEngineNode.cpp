@@ -60,7 +60,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     editBeatRange = { beatStart, beatEnd };
 
     // Update the SyncPoint to point to the end of this block
-    if (const auto oldSyncPoint = getSyncPoint();
+    if (auto oldSyncPoint = getSyncPoint();
         oldSyncPoint.referenceSamplePosition != referenceSampleRange.getEnd())
     {
         syncPoint = { referenceSampleRange.getEnd(),
@@ -68,6 +68,9 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
                       TimePosition::fromSamples (playHeadState.playHead.getUnloopedPosition(), sampleRate),
                       editTimeRange.getEnd(),
                       beatEnd };
+        oldSyncPoint.time = editTimeRange.getStart();
+        oldSyncPoint.beat = beatStart;
+        syncRange.store ({ oldSyncPoint, syncPoint });
     }
 }
 
@@ -104,6 +107,10 @@ SyncPoint ProcessState::getSyncPoint() const
     return syncPoint.load (std::memory_order_acquire);
 }
 
+SyncRange ProcessState::getSyncRange() const
+{
+    return syncRange.load();
+}
 
 //==============================================================================
 //==============================================================================

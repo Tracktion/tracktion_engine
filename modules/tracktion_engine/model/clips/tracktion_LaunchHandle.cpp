@@ -36,7 +36,7 @@ void LaunchHandle::play (std::optional<MonotonicBeat> pos)
     s.nextStatus = QueueState::playQueued;
     s.nextEventTime = pos;
 
-    setState (s);
+    setState (std::move (s));
 }
 
 void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
@@ -49,7 +49,7 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
         {
             s.nextStatus = {};
             s.nextEventTime = {};
-            setState (s);
+            setState (std::move (s));
         }
 
         return;
@@ -58,7 +58,7 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
     s.nextStatus = QueueState::stopQueued;
     s.nextEventTime = pos;
 
-    setState (s);
+    setState (std::move (s));
 }
 
 std::optional<BeatRange> LaunchHandle::getPlayedRange() const
@@ -76,9 +76,12 @@ std::optional<BeatRange> LaunchHandle::getLastPlayedRange() const
     return getState().lastPlayedRange;
 }
 
-auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> SplitStatus
+auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
 {
     auto s = getState();
+
+    const auto blockMonotonicBeatRange = getMonotonicBeatRange (syncRange);
+    const auto duration = blockMonotonicBeatRange.v.getLength();
 
     // Playhead isn't moving so just apply stop queued states straight away
     if (duration == 0_bd)
@@ -97,36 +100,26 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
             s.status = PlayState::stopped;
             s.nextStatus = std::nullopt;
 
-            setState (s);
+            setState (std::move (s));
         }
 
         return splitStatus;
     }
 
     SplitStatus splitStatus;
-    const auto blockMonotonicBeatRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, duration) };
-
-    auto blockBeatRange = BeatRange::endingAt (syncPoint.beat, duration);
-    auto playedMonotonicRange = MonotonicBeatRange { BeatRange::endingAt (syncPoint.monotonicBeat.v, duration) };
-
-    if (s.playedRange)
-        blockBeatRange = { s.playedRange->getEnd(), s.playedRange->getEnd() + duration };
-
-    if (s.playedMonotonicRange)
-        playedMonotonicRange = MonotonicBeatRange { s.playedMonotonicRange->v.withEnd (s.playedMonotonicRange->v.getEnd() + duration) };
 
     auto continuePlayingOrStopped = [&]
     {
         splitStatus.playing1 = s.status == PlayState::playing;
-        splitStatus.range1 = blockBeatRange;
+        splitStatus.range1 = getBeatRange (syncRange);
         splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart())
                                                    : std::nullopt;
 
         if (s.playedRange)
-            s.playedRange = s.playedRange->withEnd (s.playedRange->getEnd() + duration);
+            s.playedRange = withEndExtended (*s.playedRange, duration);
 
         if (s.playedMonotonicRange)
-            s.playedMonotonicRange = playedMonotonicRange;
+            s.playedMonotonicRange = MonotonicBeatRange { withEndExtended (s.playedMonotonicRange->v, duration) };
     };
 
     // Check if we need to change state
@@ -141,26 +134,28 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     if (s.nextEventTime->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         splitStatus.playing1 = true;
-                        splitStatus.range1 = BeatRange::endingAt (syncPoint.beat, duration);
-                        splitStatus.playStartTime1 = splitStatus.range1.getStart();
+                        splitStatus.range1 = getBeatRange (syncRange);
+                        splitStatus.playStartTime1 = s.nextEventTime->v;
 
                         if (s.playedRange)
                             s.lastPlayedRange = s.playedRange;
 
                         const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - s.nextEventTime->v;
 
-                        s.playedRange = splitStatus.range1.withLength (numBeatsSinceLaunch);
-                        s.playedMonotonicRange = MonotonicBeatRange { BeatRange (s.nextEventTime->v, blockMonotonicBeatRange.v.getEnd()) };
+                        s.playedRange = BeatRange::endingAt (splitStatus.range1.getEnd(), numBeatsSinceLaunch);
+                        s.playedMonotonicRange = MonotonicBeatRange { BeatRange::endingAt (blockMonotonicBeatRange.v.getEnd(), numBeatsSinceLaunch) };
                         s.status = PlayState::playing;
                         s.nextStatus = std::nullopt;
                     }
                     else if (blockMonotonicBeatRange.v.contains (s.nextEventTime->v))
                     {
+                        const auto blockEditBeatRange = getBeatRange (syncRange);
+
                         splitStatus.playing1 = s.status == PlayState::playing;
-                        splitStatus.range1 = blockBeatRange.withLength (s.nextEventTime->v - blockMonotonicBeatRange.v.getStart());
+                        splitStatus.range1 = blockEditBeatRange.withLength (s.nextEventTime->v - blockMonotonicBeatRange.v.getStart());
                         splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart()) : std::nullopt;
                         splitStatus.playing2 = true;
-                        splitStatus.range2 = BeatRange::endingAt (syncPoint.beat, splitStatus.range1.getLength());
+                        splitStatus.range2 = { splitStatus.range1.getEnd(), blockEditBeatRange.getEnd() };
                         splitStatus.playStartTime2 = splitStatus.range2.getStart();
                         splitStatus.isSplit = true;
 
@@ -183,12 +178,14 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                 }
                 else
                 {
-                    splitStatus.playing1 = true;
-                    splitStatus.range1 = blockBeatRange;
-                    splitStatus.playStartTime1 = blockBeatRange.getStart();
+                    const auto blockEditBeatRange = getBeatRange (syncRange);
 
-                    s.playedRange = blockBeatRange;
-                    s.playedMonotonicRange = playedMonotonicRange;
+                    splitStatus.playing1 = true;
+                    splitStatus.range1 = blockEditBeatRange;
+                    splitStatus.playStartTime1 = blockEditBeatRange.getStart();
+
+                    s.playedRange = blockEditBeatRange;
+                    s.playedMonotonicRange = getMonotonicBeatRange (syncRange);
                     s.status = PlayState::playing;
                     s.nextStatus = std::nullopt;
                 }
@@ -200,7 +197,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                 if (s.status == PlayState::stopped)
                 {
                     splitStatus.playing1 = false;
-                    splitStatus.range1 = blockBeatRange;
+                    splitStatus.range1 = getBeatRange (syncRange);
                     splitStatus.playStartTime1 = std::nullopt;
 
                     s.playedRange = std::nullopt;
@@ -213,7 +210,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     if (s.nextEventTime->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         splitStatus.playing1 = false;
-                        splitStatus.range1 = blockBeatRange;
+                        splitStatus.range1 = getBeatRange (syncRange);
                         splitStatus.playStartTime1 = std::nullopt;
 
                         if (s.playedRange)
@@ -226,11 +223,14 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                     }
                     else if (blockMonotonicBeatRange.v.contains (s.nextEventTime->v))
                     {
+                        const auto blockEditBeatRange = getBeatRange (syncRange);
+                        const auto playingDuration = s.nextEventTime->v - blockMonotonicBeatRange.v.getStart();
+
                         splitStatus.playing1 = s.status == PlayState::playing;
-                        splitStatus.range1 = blockBeatRange.withLength (s.nextEventTime->v - blockMonotonicBeatRange.v.getStart());
+                        splitStatus.range1 = blockEditBeatRange.withLength (playingDuration);
                         splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart()) : std::nullopt;
                         splitStatus.playing2 = false;
-                        splitStatus.range2 = blockBeatRange.withStart (blockBeatRange.getStart() + splitStatus.range1.getLength());
+                        splitStatus.range2 = { splitStatus.range1.getEnd(), blockEditBeatRange.getEnd() };
                         splitStatus.playStartTime1 = std::nullopt;
                         splitStatus.isSplit = true;
 
@@ -238,7 +238,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                         assert(! splitStatus.range2.isEmpty());
 
                         if (s.playedRange)
-                            s.lastPlayedRange = s.playedRange;
+                            s.lastPlayedRange = withEndExtended (*s.playedRange, playingDuration);
 
                         s.playedRange = std::nullopt;
                         s.playedMonotonicRange = std::nullopt;
@@ -253,8 +253,10 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
                 }
                 else
                 {
+                    const auto blockEditBeatRange = getBeatRange (syncRange);
+
                     splitStatus.playing1 = false;
-                    splitStatus.range1 = blockBeatRange;
+                    splitStatus.range1 = blockEditBeatRange;
                     splitStatus.playStartTime1 = std::nullopt;
 
                     if (s.playedRange)
@@ -275,7 +277,7 @@ auto LaunchHandle::advance (SyncPoint syncPoint, BeatDuration duration) -> Split
         continuePlayingOrStopped();
     }
 
-    setState (s);
+    setState (std::move (s));
 
     return splitStatus;
 }

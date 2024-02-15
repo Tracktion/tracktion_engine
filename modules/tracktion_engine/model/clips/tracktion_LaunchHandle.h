@@ -70,13 +70,12 @@ public:
 
     /** Advance the state.
         N.B. This should only be called by the audio thread.
-        @param SyncPoint    The current SyncPoint. Used to sync launch positions to
-        @param BeatDuration The duration to increment the timeline by. Must be greater than 0
+        @param SyncRange    The current SyncRange. Used to sync launch positions to
         @returns            The unlooped Edit beat range split if there are
                             different play/stop states.
         [[ audio_thread ]]
     */
-    SplitStatus advance (SyncPoint, BeatDuration);
+    SplitStatus advance (const SyncRange&);
 
     //==============================================================================
     /** Returns the Edit beat range this has been playing for.

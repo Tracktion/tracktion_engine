@@ -978,7 +978,7 @@ void EditPlaybackContext::blockUntilSyncPointChange()
 {
     if (const auto startSyncPoint = getSyncPoint())
     {
-        for (;;)
+        for (const auto startTime = std::chrono::steady_clock::now();;)
         {
             const auto syncPointNow = getSyncPoint();
 
@@ -986,6 +986,11 @@ void EditPlaybackContext::blockUntilSyncPointChange()
                 break;
 
             if (syncPointNow->referenceSamplePosition != startSyncPoint->referenceSamplePosition)
+                break;
+
+            // This probably means something has gone wrong with the audio device and it's not playing
+            // back anymore but appears valid so we don't want to block indefinitely
+            if ((std::chrono::steady_clock::now() - startTime) > 100ms)
                 break;
 
             std::this_thread::sleep_for (1us);

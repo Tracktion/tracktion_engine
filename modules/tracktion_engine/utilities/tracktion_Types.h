@@ -32,4 +32,37 @@ struct SyncPoint
     BeatPosition beat;                      /**< The Edit timeline beat. */
 };
 
+struct SyncRange
+{
+    SyncPoint start, end;
+};
+
+MonotonicBeatRange getMonotonicBeatRange (const SyncRange&);
+BeatRange getBeatRange (const SyncRange&);
+
+
+//==============================================================================
+//        _        _           _  _
+//     __| |  ___ | |_   __ _ (_)| | ___
+//    / _` | / _ \| __| / _` || || |/ __|
+//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
+//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
+//
+//   Code beyond this point is implementation detail...
+//
+//==============================================================================
+
+inline MonotonicBeatRange getMonotonicBeatRange (const SyncRange& r)
+{
+    return { { r.start.monotonicBeat.v, r.end.monotonicBeat.v } };
+}
+
+inline BeatRange getBeatRange (const SyncRange& r)
+{
+    return { r.start.beat, r.end.beat };
+}
+
+
+
+
 }} // namespace tracktion { inline namespace engine
