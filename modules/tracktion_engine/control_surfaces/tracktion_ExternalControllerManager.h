@@ -157,7 +157,7 @@ public:
     void userSelectedOneTrack (int channelNum);
     void userSelectedClipInTrack (int channelNum);
     void userSelectedPluginInTrack (int channelNum);
-    void userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition);
+    void userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition, bool delta);
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
     void userLaunchedClip (int channelNum, int clip);

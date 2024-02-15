@@ -243,7 +243,7 @@ public:
     void userMovedMasterLevelFader (float newLevel, bool delta = false);
     void userMovedMasterPanPot (float newLevel);
 
-    void userMovedAux (int channelNum, int auxNum, float newPosition);
+    void userMovedAux (int channelNum, int auxNum, float newPosition, bool delta = false);
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
 
@@ -349,7 +349,7 @@ public:
     void userChangedRewindButton (bool isButtonDown);
     void userChangedFastForwardButton (bool isButtonDown);
 
-    void userMovedParameterControl (int parameter, float newValue);
+    void userMovedParameterControl (int parameter, float newValue, bool delta = false);
     void userPressedParameterControl (int paramNumber);
 
     void userChangedParameterBank (int deltaParams);

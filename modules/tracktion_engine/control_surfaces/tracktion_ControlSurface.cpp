@@ -140,11 +140,11 @@ void ControlSurface::userMovedPanPot (int channelNum, float newPan, bool delta)
         externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan, delta);
 }
 
-void ControlSurface::userMovedAux (int channelNum, int auxNum, float newPosition)
+void ControlSurface::userMovedAux (int channelNum, int auxNum, float newPosition, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    if (pickedUp (ctrlAux, channelNum, newPosition))
-        externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank + auxNum, auxMode, newPosition);
+    if (delta || pickedUp (ctrlAux, channelNum, newPosition))
+        externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank + auxNum, auxMode, newPosition, delta);
 }
 
 void ControlSurface::userPressedAux (int channelNum, int auxNum)
@@ -397,11 +397,11 @@ void ControlSurface::userMovedJogWheel (float amount)
         scrub (*tc, amount);
 }
 
-void ControlSurface::userMovedParameterControl (int parameter, float newValue)
+void ControlSurface::userMovedParameterControl (int parameter, float newValue, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    if (pickedUp (ctrlParam, parameter, newValue))
-        owner->userMovedParameterControl (parameter, newValue);
+    if (delta || pickedUp (ctrlParam, parameter, newValue))
+        owner->userMovedParameterControl (parameter, newValue, delta);
 }
 
 void ControlSurface::userPressedParameterControl (int paramNumber)

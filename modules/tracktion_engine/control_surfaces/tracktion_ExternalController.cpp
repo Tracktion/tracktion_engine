@@ -688,10 +688,15 @@ void ExternalController::updateParamList()
     }
 }
 
-void ExternalController::userMovedParameterControl (int paramNumber, float newValue)
+void ExternalController::userMovedParameterControl (int paramNumber, float newValue, bool delta)
 {
     if (auto p = currentParams[paramNumber])
-        p->midiControllerMoved (newValue);
+    {
+        if (delta)
+            p->midiControllerMoved (std::clamp (p->getCurrentNormalisedValue() + newValue, 0.0f, 1.0f));
+        else
+            p->midiControllerMoved (newValue);
+    }
 }
 
 void ExternalController::userPressedParameterControl (int paramNumber)
