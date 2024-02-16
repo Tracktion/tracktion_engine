@@ -37,6 +37,7 @@ Track::Track (Edit& ed, const juce::ValueTree& v)
 Track::~Track()
 {
     edit.trackCache.removeItem (*this);
+    cachedParentTrack = nullptr;
     cachedParentFolderTrack = nullptr;
     masterReference.clear();
     state.removeListener (this);
@@ -161,10 +162,10 @@ Track* Track::getSiblingTrack (int delta, bool keepWithinSameParent) const
         tracks = getAllTracks (edit);
     }
 
-    auto index = tracks.indexOf (const_cast<Track*> (this));
-    jassert (index >= 0);
+    if (auto index = tracks.indexOf (const_cast<Track*> (this)); index >= 0)
+        return tracks[index + delta];
 
-    return tracks[index + delta];
+    return {};
 }
 
 //==============================================================================
@@ -485,17 +486,10 @@ void Track::updateTrackList()
 void Track::updateCachedParent()
 {
     CRASH_TRACER
-    auto parent = getParentTrackTree();
-
-    if (parent.isValid())
-    {
-        if (auto t = edit.trackCache.findItem (EditItemID::fromID (parent)))
-            cachedParentTrack = t;
-    }
+    if (auto parent = getParentTrackTree(); parent.isValid())
+        cachedParentTrack = dynamic_cast<Track*> (edit.trackCache.findItem (EditItemID::fromID (parent)));
     else
-    {
         cachedParentTrack = nullptr;
-    }
 
     auto newFolder = dynamic_cast<FolderTrack*> (cachedParentTrack.get());
 
@@ -507,10 +501,9 @@ void Track::updateCachedParent()
         if (newFolder != nullptr)
             newFolder->setDirtyClips();
 
+        cachedParentFolderTrack = newFolder;
         changed();
     }
-
-    cachedParentFolderTrack = newFolder;
 }
 
 //==============================================================================

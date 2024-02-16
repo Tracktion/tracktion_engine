@@ -220,10 +220,10 @@ public:
     juce::ValueTree getParentTrackTree() const;
 
     /** Returns the parent Track if this is a nested track. */
-    Track* getParentTrack() const                               { return dynamic_cast<Track*> (cachedParentTrack.get()); }
+    Track* getParentTrack() const                               { return cachedParentTrack; }
 
     /** Returns the parent FolderTrack if this is nested in one. */
-    FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }
+    FolderTrack* getParentFolderTrack() const                   { return cachedParentFolderTrack; }
 
     /** Tests whether this is a child of a given Track. */
     bool isAChildOf (const Track& possibleParent) const;
@@ -426,8 +426,8 @@ private:
     bool imageChanged = false;
     std::atomic<bool> isAudible { true };
 
-    juce::WeakReference<Selectable> cachedParentTrack;
-    FolderTrack* cachedParentFolderTrack = nullptr;
+    SafeSelectable<Track> cachedParentTrack;
+    SafeSelectable<FolderTrack> cachedParentFolderTrack;
 
     //==============================================================================
     void updateTrackList();
