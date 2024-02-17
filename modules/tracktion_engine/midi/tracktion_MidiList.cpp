@@ -1512,6 +1512,7 @@ MidiSysexEvent& MidiList::addSysExEvent (const juce::MidiMessage& message, BeatP
 {
     auto v = MidiSysexEvent::createSysexEvent (message, beat);
     state.addChild (v, -1, um);
+    sysexList->triggerSort();
 
     return *sysexList->getEventFor (v);
 }
