@@ -298,7 +298,7 @@ SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
 template<typename Iterable>
 auto makeSafeVector (const Iterable& selectables) -> std::vector<SafeSelectable<typename std::remove_reference<decltype(*selectables[0])>::type>>
 {
-    using SelectableType = std::remove_reference<decltype(*selectables[0])>::type;
+    using SelectableType = typename std::remove_reference<decltype(*selectables[0])>::type;
     static_assert (std::is_base_of_v<Selectable, SelectableType>);
     std::vector<SafeSelectable<SelectableType>> v;
     v.reserve (static_cast<size_t> (selectables.size()));
