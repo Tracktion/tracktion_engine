@@ -280,8 +280,17 @@ public:
     /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
     SelectableType* operator->() const noexcept                     { return get(); }
 
-    bool operator== (SelectableType* selectable) const noexcept     { return weakRef == selectable; }
-    bool operator!= (SelectableType* selectable) const noexcept     { return weakRef != selectable; }
+    bool operator== (SelectableType* other) const noexcept          { return weakRef.get() == other; }
+    bool operator!= (SelectableType* other) const noexcept          { return weakRef.get() != other; }
+
+    bool operator== (const SafeSelectable& other) const noexcept    { return weakRef.get() == other.weakRef.get(); }
+    bool operator!= (const SafeSelectable& other) const noexcept    { return weakRef.get() != other.weakRef.get(); }
+
+    bool operator== (const SelectableType& other) const noexcept    { return weakRef.get() == &other; }
+    bool operator!= (const SelectableType& other) const noexcept    { return weakRef.get() != &other; }
+
+    bool operator== (decltype(nullptr)) const noexcept              { return weakRef == nullptr; }
+    bool operator!= (decltype(nullptr)) const noexcept              { return weakRef != nullptr; }
 
 private:
     juce::WeakReference<Selectable> weakRef;
