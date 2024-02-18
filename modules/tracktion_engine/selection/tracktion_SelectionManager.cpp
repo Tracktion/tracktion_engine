@@ -142,9 +142,7 @@ void Selectable::sendChangeCallbackToListenersIfNeeded()
 
     const juce::ScopedValueSetter<bool> svs (isCallingListeners, true);
 
-    WeakRef self (this);
-
-    selectableListeners.call ([self] (SelectableListener& l)
+    selectableListeners.call ([self = makeSafeRef (*this)] (SelectableListener& l)
                               {
                                   if (auto s = self.get())
                                       l.selectableObjectChanged (s);
@@ -180,15 +178,13 @@ void Selectable::notifyListenersOfDeletion()
         {
             CRASH_TRACER
 
-            WeakRef self (this);
-
             // Use a local copy in case any listeners get deleted during the callbacks
             juce::ListenerList<SelectableListener> copy;
 
             for (auto l : selectableListeners.getListeners())
                 copy.add (l);
 
-            copy.call ([self] (SelectableListener& l)
+            copy.call ([self = makeSafeRef (*this)] (SelectableListener& l)
                        {
                            if (auto s = self.get())
                            {
@@ -373,7 +369,7 @@ SelectableClass* SelectionManager::getFirstSelectableClass() const
 
 void SelectionManager::clearList()
 {
-    for (auto s : selected.getAsWeakRefList())
+    for (auto s : makeSafeVector (selected))
         if (s != nullptr)
             s->removeSelectableListener (this);
 
@@ -424,7 +420,7 @@ void SelectionManager::deselectAll()
 
     if (selected.size() > 0)
     {
-        for (auto s : selected.getAsWeakRefList())
+        for (auto s : makeSafeVector (selected))
             if (s != nullptr)
                 s->selectionStatusChanged (false);
 
@@ -680,7 +676,7 @@ void SelectionManager::keepSelectedObjectsOnScreen()
 
 Edit* SelectionManager::getEdit() const
 {
-    return dynamic_cast<Edit*> (edit.get());
+    return edit.get();
 }
 
 SelectionManager* SelectionManager::findSelectionManager (const juce::Component* c)

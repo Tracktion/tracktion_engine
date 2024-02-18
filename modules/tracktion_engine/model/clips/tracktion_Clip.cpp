@@ -499,15 +499,15 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
         }
         else if (id == IDs::name)
         {
-            auto weakRef = getWeakRef();
             clipName.forceUpdateOfCachedValue();
-            changed();
 
-            juce::MessageManager::callAsync ([weakRef]
+            juce::MessageManager::callAsync ([weakRef = makeSafeRef (*this)]
             {
                 if (weakRef != nullptr)
                     SelectionManager::refreshAllPropertyPanels();
             });
+
+            changed();
         }
         else if (id == IDs::followActionDurationType)
         {

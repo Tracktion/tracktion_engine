@@ -99,12 +99,11 @@ Plugin::Plugin (PluginCreationInfo info)
    #if TRACKTION_ENABLE_AUTOMAP && TRACKTION_ENABLE_CONTROL_SURFACES
     if (! edit.isLoading())
     {
-        Plugin::WeakRef ref (this);
         auto& e = engine;
 
-        juce::MessageManager::callAsync ([=, &e]() mutable
+        juce::MessageManager::callAsync ([ref = makeSafeRef (*this), &e]() mutable
         {
-            if (auto plugin = dynamic_cast<Plugin*> (ref.get()))
+            if (auto plugin = ref.get())
                 if (auto na = e.getExternalControllerManager().getAutomap())
                     na->pluginChanged (plugin);
         });

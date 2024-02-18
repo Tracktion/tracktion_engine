@@ -687,7 +687,7 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
 
 AutomatableParameter::~AutomatableParameter()
 {
-    if (auto edit = dynamic_cast<Edit*> (editRef.get()))
+    if (auto edit = editRef.get())
         edit->getAutomationRecordManager().parameterBeingDeleted (*this);
 
     notifyListenersOfDeletion();

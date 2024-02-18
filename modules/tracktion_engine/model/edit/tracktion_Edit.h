@@ -318,7 +318,7 @@ public:
         ~UndoTransactionInhibitor();
 
     private:
-        Edit::WeakRef edit;
+        SafeSelectable<Edit> edit;
     };
 
     /** Returns the default number of undo levels that should be used. */
@@ -936,7 +936,6 @@ private:
     void needToUpdateFrozenTracks();
 
     void sanityCheckTrackNames();
-    void updateMirroredPlugins();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Edit)
 };

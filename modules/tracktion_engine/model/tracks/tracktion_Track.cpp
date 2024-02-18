@@ -544,10 +544,10 @@ void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
             changed();
 
             if (! edit.isLoading())
-                juce::MessageManager::callAsync ([trackRef = getWeakRef()]
+                juce::MessageManager::callAsync ([trackRef = makeSafeRef (*this)]
                                                  {
-                                                     if (trackRef != nullptr)
-                                                         SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
+                                                     if (auto t = trackRef.get())
+                                                         SelectionManager::refreshAllPropertyPanelsShowing (*t);
                                                  });
 
             triggerAsyncUpdate();

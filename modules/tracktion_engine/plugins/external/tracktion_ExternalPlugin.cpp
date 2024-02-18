@@ -861,7 +861,7 @@ void ExternalPlugin::doFullInitialisation()
 
 void ExternalPlugin::trackPropertiesChanged()
 {
-    juce::MessageManager::callAsync ([this, pluginRef = getWeakRef()]
+    juce::MessageManager::callAsync ([this, pluginRef = makeSafeRef (*this)]
     {
         if (pluginRef == nullptr)
             return;

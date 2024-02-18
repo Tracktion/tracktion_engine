@@ -455,35 +455,38 @@ struct Edit::ChangedPluginsList
     /** Call to indicate a plugin's state has changed and needs saving. */
     void pluginChanged (Plugin& p)
     {
-        plugins.addIfNotAlreadyThere (Plugin::WeakRef (&p));
+        changedPlugins.addIfNotAlreadyThere (&p);
+    }
+
+    void clear()
+    {
+        changedPlugins.clear();
     }
 
     /** Flushes the plugin state to the Edit if it has changed. */
     void flushPluginStateIfNeeded (Plugin& p)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        const int index = plugins.indexOf (&p);
 
-        if (index != -1)
+        if (auto index = changedPlugins.indexOf (&p); index >= 0)
         {
             p.flushPluginStateToValueTree();
-            plugins.remove (index);
+            changedPlugins.remove (index);
         }
     }
 
     /** Flushes all changed plugins to the Edit. */
     void flushAll()
     {
-        for (auto plugin : plugins)
-            if (auto p = dynamic_cast<Plugin*> (plugin.get()))
+        for (auto& plugin : changedPlugins)
+            if (auto p = plugin.get())
                 p->flushPluginStateToValueTree();
 
-        plugins.clear();
+        clear();
     }
 
 private:
-    friend class Edit;
-    juce::Array<Plugin::WeakRef> plugins;
+    juce::Array<SafeSelectable<Plugin>> changedPlugins;
 };
 
 //==============================================================================
@@ -494,10 +497,15 @@ struct Edit::FrozenTrackCallback : public juce::AsyncUpdater
     Edit& edit;
 };
 
-struct Edit::PluginChangeTimer : public Timer
+//==============================================================================
+struct Edit::PluginChangeTimer  : private juce::Timer
 {
     PluginChangeTimer (Edit& ed) : edit (ed) {}
-    void pluginChanged() noexcept       { startTimer (500); }
+
+    void pluginChanged()
+    {
+        startTimer (500);
+    }
 
     void timerCallback() override
     {
@@ -508,13 +516,33 @@ struct Edit::PluginChangeTimer : public Timer
     Edit& edit;
 };
 
-struct Edit::MirroredPluginUpdateTimer  : public Timer
+//==============================================================================
+struct Edit::MirroredPluginUpdateTimer  : private juce::Timer
 {
     MirroredPluginUpdateTimer (Edit& ed) : edit (ed) {}
-    void timerCallback() override       { edit.updateMirroredPlugins(); }
+
+    void pluginChanged (Plugin& p)
+    {
+        changedPlugins.addIfNotAlreadyThere (&p);
+        startTimer (500);
+    }
+
+    void timerCallback() override
+    {
+        if (! edit.isLoading())
+        {
+            stopTimer();
+
+            for (auto& changed : changedPlugins)
+                if (auto p = changed.get())
+                    edit.sendMirrorUpdateToAllPlugins (*p);
+
+            changedPlugins.clear();
+        }
+    }
 
     Edit& edit;
-    juce::Array<Plugin::WeakRef> changedPlugins;
+    juce::Array<SafeSelectable<Plugin>> changedPlugins;
 };
 
 //==============================================================================
@@ -1044,7 +1072,7 @@ void Edit::flushState()
         at->getOutput().flushStateToValueTree();
     }
 
-    changedPluginsList->plugins.clear();
+    changedPluginsList->clear();
 
     if (araDocument != nullptr)
         araDocument->flushStateToValueTree();
@@ -1149,8 +1177,8 @@ void Edit::undo()           { undoOrRedo (true); }
 void Edit::redo()           { undoOrRedo (false); }
 
 Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (Edit& e) : edit (&e)                                  { ++e.numUndoTransactionInhibitors; }
-Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (auto e = dynamic_cast<Edit*> (edit.get())) ++(e->numUndoTransactionInhibitors); }
-Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (auto e = dynamic_cast<Edit*> (edit.get())) --(e->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (auto e = edit.get()) ++(e->numUndoTransactionInhibitors); }
+Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (auto e = edit.get()) --(e->numUndoTransactionInhibitors); }
 
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
@@ -2128,27 +2156,10 @@ void Edit::sendMirrorUpdateToAllPlugins (Plugin& plugin) const
     masterPluginList->sendMirrorUpdateToAllPlugins (plugin);
 }
 
-void Edit::updateMirroredPlugins()
-{
-    if (isLoading())
-        return;
-
-    mirroredPluginUpdateTimer->stopTimer();
-
-    for (auto changed : mirroredPluginUpdateTimer->changedPlugins)
-        if (auto p = dynamic_cast<Plugin*> (changed.get()))
-            sendMirrorUpdateToAllPlugins (*p);
-
-    mirroredPluginUpdateTimer->changedPlugins.clear();
-}
-
 void Edit::updateMirroredPlugin (Plugin& p)
 {
     if (mirroredPluginUpdateTimer != nullptr)
-    {
-        mirroredPluginUpdateTimer->changedPlugins.addIfNotAlreadyThere (&p);
-        mirroredPluginUpdateTimer->startTimer (500);
-    }
+        mirroredPluginUpdateTimer->pluginChanged (p);
 }
 
 void Edit::sendStartStopMessageToPlugins()

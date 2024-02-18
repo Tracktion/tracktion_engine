@@ -771,7 +771,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
     for (auto& cp : clips)
     {
-        if (auto c = dynamic_cast<Clip*> (cp.clip.get()))
+        if (auto c = cp.clip.get())
         {
             auto newStart  = tempoSequence.toTime (cp.startBeat);
             auto newEnd    = tempoSequence.toTime (cp.endBeat);
@@ -788,7 +788,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
                 if (c->type == TrackItem::Type::wave)
                 {
-                    auto ac = dynamic_cast<AudioClipBase*> (cp.clip.get());
+                    auto ac = dynamic_cast<AudioClipBase*> (c);
 
                     if (ac != nullptr && ac->getAutoTempo())
                         c->setPosition ({ { newStart, newEnd }, newOffset });

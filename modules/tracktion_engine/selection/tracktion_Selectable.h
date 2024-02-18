@@ -99,10 +99,11 @@ public:
     // MUST be called by all subclasses of Selectable in their destructor!
     void notifyListenersOfDeletion();
 
+    //==============================================================================
+    // This is deprecated: use SafeSelectable<Selectable> instead
     using WeakRef = juce::WeakReference<Selectable>;
     WeakRef::Master masterReference;
-
-    WeakRef getWeakRef()                                        { return WeakRef (this); }
+    [[ deprecated ("Use makeSafeRef() and SafeSelectable instead") ]] WeakRef getWeakRef() { return { this }; }
 
 private:
     //==============================================================================
@@ -224,16 +225,6 @@ struct SelectableList
     inline bool contains (Selectable* elementToLookFor) const   { return items.contains (elementToLookFor); }
     inline int indexOf (Selectable* elementToLookFor) const     { return items.indexOf (elementToLookFor); }
 
-    juce::Array<Selectable::WeakRef> getAsWeakRefList() const
-    {
-        juce::Array<Selectable::WeakRef> result;
-
-        for (auto& i : items)
-            result.add (i);
-
-        return result;
-    }
-
     template <class OtherArrayType>
     inline bool operator== (const OtherArrayType& other) const  { return items == other; }
 
@@ -257,9 +248,6 @@ private:
     the selectable is deleted.
 
     The SelectableType template parameter must be Selectable, or some subclass of Selectable.
-
-    You may also want to use a juce::WeakReference<Selectable> object for the same purpose.
-    @see SelectablegetWeakRef()
 */
 template<typename SelectableType>
 class SafeSelectable
@@ -306,10 +294,12 @@ SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
     return SafeSelectable<SelectableType> (selectable);
 }
 
-/** Creates a std::vector<SafeSelectable> for a given juce::Array of selectable objects. */
-template<typename SelectableType>
-std::vector<SafeSelectable<SelectableType>> makeSafeVector (const juce::Array<SelectableType*>& selectables)
+/** Creates a std::vector<SafeSelectable<Something>> for a given juce::Array of selectable objects. */
+template<typename Iterable>
+auto makeSafeVector (const Iterable& selectables) -> std::vector<SafeSelectable<typename std::remove_reference<decltype(*selectables[0])>::type>>
 {
+    using SelectableType = std::remove_reference<decltype(*selectables[0])>::type;
+    static_assert (std::is_base_of_v<Selectable, SelectableType>);
     std::vector<SafeSelectable<SelectableType>> v;
     v.reserve (static_cast<size_t> (selectables.size()));
 
@@ -359,7 +349,7 @@ public:
     std::function<void()> onSelectableAboutToBeDeleted; /*<< Assignable callback for deletion events. */
 
 private:
-    Selectable::WeakRef ref;
+    SafeSelectable<Selectable> ref;
 
     void selectableObjectChanged (Selectable*) override
     {

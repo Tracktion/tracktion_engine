@@ -257,7 +257,7 @@ struct EditTimecodeRemapperSnapshot
 private:
     struct ClipPos
     {
-        Selectable::WeakRef clip;
+        SafeSelectable<Clip> clip;
         BeatPosition startBeat, endBeat;
         BeatDuration contentStartBeat;
     };

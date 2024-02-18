@@ -169,7 +169,7 @@ public:
     /** If this SelectionManager is being used to represent items inside a particular view of an edit,
         this id should be set so you can find it by iterating the SelectionManagers.
     */
-    Selectable::WeakRef edit;
+    SafeSelectable<Edit> edit;
     int editViewID = -1;
     EditInsertPoint* insertPoint = nullptr;
 

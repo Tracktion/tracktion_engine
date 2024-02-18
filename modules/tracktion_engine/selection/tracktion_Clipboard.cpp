@@ -1933,7 +1933,7 @@ Clipboard::Plugins::Plugins (const Plugin::Array& items)
         {
             if (auto type = rackInstance->type)
             {
-                auto newEntry = std::make_pair (type->edit.getWeakRef(), type->state);
+                auto newEntry = std::make_pair (makeSafeRef (type->edit), type->state);
 
                 if (std::find (rackTypes.begin(), rackTypes.end(), newEntry) == rackTypes.end())
                     rackTypes.push_back (newEntry);
@@ -2000,7 +2000,7 @@ static bool pastePluginIntoTrack (const Plugin::Ptr& newPlugin, EditInsertPoint&
     return false;
 }
 
-static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<Selectable::WeakRef, juce::ValueTree>>& editAndTypeStates)
+static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<SafeSelectable<Edit>, juce::ValueTree>>& editAndTypeStates)
 {
     EditItemID::IDMap reassignedIDs;
 

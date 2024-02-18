@@ -234,7 +234,7 @@ protected:
     std::unique_ptr<AttachedValue> attachedValue;
     juce::ListenerList<Listener> listeners;
 
-    juce::WeakReference<Selectable> editRef;
+    SafeSelectable<Edit> editRef;
     Plugin* plugin = nullptr;
     Modifier* modifierOwner = nullptr;
     MacroParameterList* macroOwner = nullptr;

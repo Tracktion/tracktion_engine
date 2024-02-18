@@ -192,7 +192,7 @@ private:
     bool deletable = false;
     bool allowBankingOffEnd = false;
     AutomatableParameter::Array currentParams;
-    Selectable::WeakRef currentParamSource, lastRegisteredSelectable;
+    SafeSelectable<Selectable> currentParamSource, lastRegisteredSelectable;
     bool showTrackSelection = false;
     bool showClipSlotSelection = true;
     juce::Colour selectionColour;
