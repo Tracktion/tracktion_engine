@@ -114,6 +114,7 @@ private:
     //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> getFlattenedParameterTree (AutomatableParameterTree::TreeNode&) const;
 
+    JUCE_DECLARE_WEAK_REFERENCEABLE (AutomatableEditItem)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableEditItem)
 };
 

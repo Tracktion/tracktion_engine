@@ -418,6 +418,7 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_BinaryData.h"
 #include "utilities/tracktion_SettingID.h"
 #include "utilities/tracktion_SharedTimer.h"
+#include "utilities/tracktion_SafeScopedListener.h"
 #include "utilities/tracktion_ScopedListener.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"

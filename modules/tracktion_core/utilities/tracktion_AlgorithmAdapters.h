@@ -80,6 +80,17 @@ inline std::optional<size_t> index_of (const Container& container, typename Cont
     return {};
 }
 
+template<class Container, class IndexType>
+inline std::optional<typename Container::value_type> get_checked (const Container& container, IndexType index)
+{
+    const auto i = static_cast<typename Container::size_type> (index);
+
+    if (i >= 0 && i < container.size())
+        return container[i];
+
+    return {};
+}
+
 template<class Type>
 bool assign_if_valid (Type& dest, const std::optional<Type>& src)
 {
