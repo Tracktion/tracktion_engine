@@ -11,6 +11,14 @@
 namespace tracktion { inline namespace engine
 {
 
+template<typename T>
+concept WeakReferenceable = requires (T x)
+{
+    { x.operator->() };
+    { static_cast<bool> (x) };
+    { std::is_copy_constructible_v<T> };
+};
+
 /**
     Manages adding and removing listeners in an RAII way so you don't forget to unregister a listener.
 
@@ -54,6 +62,7 @@ public:
 
     /** Creates a ScopedListener which makes ListenerType listen to BroadcasterType. */
     template<typename BroadcasterType, typename ListenerType>
+        requires WeakReferenceable<BroadcasterType>
     SafeScopedListener (BroadcasterType b, ListenerType& l)
     {
         reset (std::move (b), l);
@@ -61,6 +70,7 @@ public:
 
     /** Unregisters any previous listener and registers the new one. */
     template<typename BroadcasterType, typename ListenerType>
+        requires WeakReferenceable<BroadcasterType>
     void reset (BroadcasterType b, ListenerType& l)
     {
         pimpl = std::make_any<std::shared_ptr<SafeScopedListenerImpl<BroadcasterType, ListenerType>>>
