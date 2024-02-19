@@ -56,7 +56,8 @@ bool BufferedAudioReader::readSamples (int* const* destSamples, int numDestChann
                                        static_cast<FrameCount> (startSampleInFile + numSamples) };
     const auto srcView = data.getFrameRange (srcRange);
 
-    const auto destSize = choc::buffer::Size::create (numDestChannels, numSamples);
+    const auto numChannelsToRead = std::min (srcView.getNumChannels(), static_cast<FrameCount> (numDestChannels));
+    const auto destSize = choc::buffer::Size::create (numChannelsToRead, numSamples);
     const auto destView = createChannelArrayView (reinterpret_cast<float* const*> (destSamples),
                                                   destSize.getChannelRange().size(),
                                                   destSize.getFrameRange().size());
