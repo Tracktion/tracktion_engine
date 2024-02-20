@@ -46,12 +46,13 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
                       .withPriority (10)
@@ -144,6 +145,7 @@ private:
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
     mutable std::atomic<bool> triggered { false };
+    juce::AudioWorkgroup workgroup;
 
     bool shouldWaitOrIsNotTriggered()
     {
@@ -155,6 +157,9 @@ private:
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -176,12 +181,13 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
                       .withPriority (10)
@@ -251,9 +257,13 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
 private:
     std::vector<std::thread> threads;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -286,12 +296,13 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
                               .withPriority (10)
@@ -402,6 +413,8 @@ private:
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
     mutable std::atomic<bool> triggered { false };
+    juce::AudioWorkgroup workgroup;
+
 
     bool shouldWaitOrIsNotTriggered()
     {
@@ -413,6 +426,9 @@ private:
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -435,13 +451,14 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+        workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
                       .withPriority (10)
@@ -512,9 +529,13 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 private:
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -537,13 +558,14 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+        workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
                       .withPriority (10)
@@ -639,9 +661,13 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 private:
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())

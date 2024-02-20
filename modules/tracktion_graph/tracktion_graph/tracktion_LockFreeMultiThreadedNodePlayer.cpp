@@ -23,7 +23,8 @@ LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer()
     threadPool = getPoolCreatorFunction (ThreadPoolStrategy::realTime) (*this);
 }
 
-LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCreator poolCreator)
+LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCreator poolCreator, juce::AudioWorkgroup audioWorkgroup_)
+    : audioWorkgroup (std::move (audioWorkgroup_))
 {
     threadPool = poolCreator (*this);
 }
@@ -171,6 +172,7 @@ void LockFreeMultiThreadedNodePlayer::enableNodeMemorySharing (bool shouldBeEnab
         prepareToPlay (sampleRate, blockSize);
 }
 
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
@@ -206,7 +208,7 @@ void LockFreeMultiThreadedNodePlayer::clearThreads()
 
 void LockFreeMultiThreadedNodePlayer::createThreads()
 {
-    threadPool->createThreads (numThreadsToUse.load());
+    threadPool->createThreads (numThreadsToUse.load(), audioWorkgroup);
 }
 
 inline void LockFreeMultiThreadedNodePlayer::pause()

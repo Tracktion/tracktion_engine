@@ -32,6 +32,30 @@ namespace EditPlaybackContextInternal
         static bool useSharing = false;
         return useSharing;
     }
+
+    inline bool& getAudioWorkgroupFlag()
+    {
+        static bool useAudioWorkgroup = false;
+        return useAudioWorkgroup;
+    }
+
+    inline juce::AudioWorkgroup getAudioWorkgroupIfEnabled (Engine& e)
+    {
+        if (! getAudioWorkgroupFlag())
+            return {};
+
+        return e.getDeviceManager().deviceManager.getDeviceAudioWorkgroup();
+    }
+
+    inline size_t getMaxNumThreadsToUse (Edit& edit)
+    {
+        if (edit.getIsPreviewEdit())
+            return 0;
+
+        auto wg = getAudioWorkgroupIfEnabled (edit.engine);
+        return wg ? wg.getMaxParallelThreadCount() - 1
+                  : static_cast<size_t> (juce::SystemStats::getNumCpus() - 1);
+    }
 }
 
 
@@ -145,9 +169,11 @@ private:
  struct EditPlaybackContext::NodePlaybackContext
  {
      NodePlaybackContext (const TempoSequence& ts, size_t numThreads, size_t maxNumThreadsToUse)
-        : tempoSequence (ts),
-          player (processState, getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
-          maxNumThreads (maxNumThreadsToUse)
+         : tempoSequence (ts),
+           player (processState,
+                   getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy())),
+                   EditPlaybackContextInternal::getAudioWorkgroupIfEnabled (tempoSequence.edit.engine)),
+           maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
          player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
@@ -440,7 +466,7 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
     {
         nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.tempoSequence,
                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
-                                                                     size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
+                                                                     EditPlaybackContextInternal::getMaxNumThreadsToUse (edit));
         contextSyncroniser = std::make_unique<ContextSyncroniser>();
 
         // This ensures the referenceSampleRange of the new context has been synced
@@ -1166,6 +1192,11 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 void EditPlaybackContext::enableNodeMemorySharing (bool enable)
 {
     EditPlaybackContextInternal::getNodeMemorySharingFlag() = enable;
+}
+
+void EditPlaybackContext::enableAudioWorkgroup (bool enable)
+{
+    EditPlaybackContextInternal::getAudioWorkgroupFlag() = enable;
 }
 
 int EditPlaybackContext::getNumActivelyRecordingDevices() const

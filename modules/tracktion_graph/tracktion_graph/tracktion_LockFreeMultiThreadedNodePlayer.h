@@ -93,7 +93,7 @@ public:
         virtual ~ThreadPool() = default;
 
         /** Subclasses should implement this to create the given number of threads. */
-        virtual void createThreads (size_t numThreads) = 0;
+        virtual void createThreads (size_t numThreads, juce::AudioWorkgroup) = 0;
 
         /** Subclasses should implement this to clear all the threads. */
         virtual void clearThreads() = 0;
@@ -196,7 +196,7 @@ public:
     using ThreadPoolCreator = std::function<std::unique_ptr<ThreadPool> (LockFreeMultiThreadedNodePlayer&)>;
 
     /** Creates an empty LockFreeMultiThreadedNodePlayer with a specified ThreadPool type. */
-    LockFreeMultiThreadedNodePlayer (ThreadPoolCreator);
+    LockFreeMultiThreadedNodePlayer (ThreadPoolCreator, juce::AudioWorkgroup = {});
 
     /** Destructor. */
     ~LockFreeMultiThreadedNodePlayer();
@@ -266,6 +266,7 @@ private:
     std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false };
 
     std::unique_ptr<ThreadPool> threadPool;
+    juce::AudioWorkgroup audioWorkgroup;
 
     LockFreeObject<PreparedNode> preparedNodeObject;
     Node* rootNode = nullptr;

@@ -151,6 +151,11 @@ public:
     */
     static void enableNodeMemorySharing (bool);
 
+    /** Enables using AudioWorkgroups.
+        Currently experimental and only on macOS.
+    */
+    static void enableAudioWorkgroup (bool);
+
     /** @internal */
     int getNumActivelyRecordingDevices() const;
     /** @internal */

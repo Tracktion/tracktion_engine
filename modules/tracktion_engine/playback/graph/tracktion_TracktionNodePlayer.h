@@ -31,10 +31,11 @@ public:
 
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (ProcessState& processStateToUse,
-                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
+                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator,
+                         juce::AudioWorkgroup audioWorkgroup = {})
         : playHeadState (processStateToUse.playHeadState),
           processState (processStateToUse),
-          nodePlayer (std::move (poolCreator))
+          nodePlayer (std::move (poolCreator), std::move (audioWorkgroup))
     {
     }
 
