@@ -769,8 +769,15 @@ void ExternalControllerManager::userStoppedClip (int channelNum)
 {
     if (stopClip && currentEdit)
     {
-        auto t = getChannelTrack (channelNum);
-        stopClip (*currentEdit, t);
+        if (channelNum >= 0)
+        {
+            auto t = getChannelTrack (channelNum);
+            stopClip (*currentEdit, t);
+        }
+        else
+        {
+            stopClip (*currentEdit, nullptr);
+        }
     }
 }
 

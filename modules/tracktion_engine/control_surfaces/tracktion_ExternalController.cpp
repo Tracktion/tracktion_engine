@@ -968,6 +968,30 @@ void ExternalController::updatePadColours()
     {
         for (auto track = 0; track < cs.numberOfFaderChannels; track++)
         {
+            {
+                bool isPlaying = false;
+
+                if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    for (auto slot : at->getClipSlotList().getClipSlots())
+                    {
+                        if (auto dest = slot->getInputDestination(); dest && dest->input.isRecording (dest->targetID))
+                            isPlaying = true;
+
+                        if (auto tc = getTransport())
+                            if (auto c = slot->getClip())
+                                if (auto lh = c->getLaunchHandle())
+                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                        isPlaying = true;
+
+                        if (isPlaying)
+                            break;
+                    }
+                }
+
+                cs.clipsPlayingStateChanged (track, isPlaying);
+            }
+
             for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
             {
                 auto colourIdx = 0;

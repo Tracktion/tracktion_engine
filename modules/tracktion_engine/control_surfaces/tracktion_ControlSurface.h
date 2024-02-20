@@ -123,6 +123,9 @@ public:
     // state 2: pulse
     virtual void padStateChanged ([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] int state) {}
 
+    // Are any clips on the track playing. 
+    virtual void clipsPlayingStateChanged (int channel, bool isPlaying) {}
+
     // if the device has per-channel level meters, this should update one of them.
     // the channel number is the physical channel on the device, regardless of bank selection
     // if the channel is mono then l == r
