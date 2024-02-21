@@ -327,7 +327,9 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
             {
                 if (newClip->getColour() == newClip->getDefaultColour())
                 {
-                    float hue = at->getColour().getHue();
+                    auto col = at->getColour();
+
+                    float hue = col.isTransparent() ? ((at->getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
                     newClip->setColour (newClip->getDefaultColour().withHue (hue));
                 }
 
@@ -350,7 +352,8 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
             {
                 if (newClip->getColour() == newClip->getDefaultColour())
                 {
-                    float hue = cs->track.getColour().getHue();
+                    auto col = cs->track.getColour();
+                    float hue = col.isTransparent() ? ((cs->track.getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
                     newClip->setColour (newClip->getDefaultColour().withHue (hue));
                 }
 
