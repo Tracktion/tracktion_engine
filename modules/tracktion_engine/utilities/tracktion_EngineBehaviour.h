@@ -138,6 +138,8 @@ public:
 
     virtual bool shouldPlayMidiGuideNotes()                                         { return false; }
 
+    virtual bool ignoreBWavTimestamps()                                             { return false; }
+
     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }
 
     /** Should muted tracks processing be disabled to save CPU */

@@ -285,7 +285,7 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
 
     if (numAudioClips > 1)
     {
-        if (numAudioClipsWithBWAV > 0)
+        if (numAudioClipsWithBWAV > 0 && ! engine.getEngineBehaviour().ignoreBWavTimestamps())
         {
            #if JUCE_MODAL_LOOPS_PERMITTED
             juce::ToggleButton toggle (TRANS("Snap to BWAV"));
@@ -319,10 +319,13 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
     }
     else if (numAudioClips == 1 && numAudioClipsWithBWAV == 1)
     {
-        options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
-                                                                   TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
-                                                                   TRANS("BWAV timestamp"),
-                                                                   TRANS("Cursor position"));
+        if (engine.getEngineBehaviour().ignoreBWavTimestamps())
+            options.snapBWavsToOriginalTime = false;
+        else
+            options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
+                                                                       TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
+                                                                       TRANS("BWAV timestamp"),
+                                                                       TRANS("Cursor position"));
     }
 }
 
