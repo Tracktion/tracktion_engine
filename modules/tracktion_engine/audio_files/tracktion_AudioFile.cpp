@@ -349,7 +349,7 @@ AudioFileInfo::AudioFileInfo (Engine& e)
 AudioFileInfo::AudioFileInfo (const AudioFile& file, juce::AudioFormatReader* reader, juce::AudioFormat* f)
     : engine (file.engine), hashCode (file.getHash()), format (f),
       fileModificationTime (file.getFile().getLastModificationTime()),
-      loopInfo (*file.engine, reader, f)
+      loopInfo (*file.engine, reader, f, file.getFile())
 {
     if (reader != nullptr)
     {
