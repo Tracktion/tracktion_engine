@@ -8,21 +8,24 @@
     #charts   { max-width: 1000px; }
     select    { max-width: 700px; margin-right: 20px; }
     .tickboxes  { padding-right: 30px; }
+    .delete_button { float: right }
+    .hash_display { float: right; opacity: 0.2; font-family: monospace; margin: 4px; padding-right: 10px; }
+    .chart   { padding-bottom: 50px; }
 
-  .loader {
-      border: 10px solid #f3f3f3; /* Light grey */
-      border-top: 10px solid #3498db; /* Blue */
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 2s linear infinite;
-      margin: auto;
-    }
+    .loader {
+        border: 10px solid #f3f3f3; /* Light grey */
+        border-top: 10px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin: auto;
+      }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
   </style>
 </head>
 <script>
@@ -51,45 +54,48 @@
 <body onload="initialise()">
   <h1>Tracktion Benchmarks</h1>
 
-  <label for="benchmark_list">Benchmark:</label>
-  <select id="benchmark_list"></select>
+  <div>
+    <label for="benchmark_list">Benchmark:</label>
+    <select id="benchmark_list"></select>
 
-  <br/>
-  <label for="platforms_list">Platform:</label>
-  <select id="platforms_list"></select>
+    <br/>
+    <label for="platforms_list">Platform:</label>
+    <select id="platforms_list"></select>
 
-  <label for="branch_list">Branch:</label>
-  <select id="branch_list"></select>
+    <label for="branch_list">Branch:</label>
+    <select id="branch_list"></select>
 
-  <br/><br/>
-  <label for="start_date">Start Date:</label>
-  <input type="date" id="start_date" oninput="updateStartEndDates()"></input>
+    <br/><br/>
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" oninput="updateStartEndDates()"></input>
 
-  <label for="end_date">End Date:</label>
-  <input type="date" id="end_date" oninput="updateStartEndDates()"></input>
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" oninput="updateStartEndDates()"></input>
 
-  <label>Time
-    <input type="radio" checked="checked" name="time/cycles" id="time_results">
-  </label>
-  <label >Cycles
-    <input type="radio" name="time/cycles" id="cycles_results">
-  </label>
-  
-  <br/><br/>
-  <input type="checkbox" id="show_total_button" name="total_name" checked oninput="updateGraphs();">
-  <label class="tickboxes" for="total_name">Show total</label>
+    <label>Time
+      <input type="radio" checked="checked" name="time/cycles" id="time_results">
+    </label>
+    <label >Cycles
+      <input type="radio" name="time/cycles" id="cycles_results">
+    </label>
+    
+    <br/><br/>
+    <input type="checkbox" id="show_total_button" name="total_name" checked oninput="updateGraphs();">
+    <label class="tickboxes" for="total_name">Show total</label>
 
-  <input type="checkbox" id="show_minmax_button" name="minmax_name" checked oninput="updateGraphs();">
-  <label class="tickboxes" for="minmax_name">Show min/max</label>
+    <input type="checkbox" id="show_minmax_button" name="minmax_name" checked oninput="updateGraphs();">
+    <label class="tickboxes" for="minmax_name">Show min/max</label>
 
-  <input type="checkbox" id="show_variance_button" name="variance_name" oninput="updateGraphs();">
-  <label class="tickboxes"for="variance_name">Show variance</label>
+    <input type="checkbox" id="show_variance_button" name="variance_name" oninput="updateGraphs();">
+    <label class="tickboxes"for="variance_name">Show variance</label>
 
-  <input type="checkbox" id="normalise_button" name="normalise_name" oninput="updateGraphs();">
-  <label class="tickboxes"for="normalise_name">Normalise results</label>
+    <input type="checkbox" id="normalise_button" name="normalise_name" oninput="updateGraphs();">
+    <label class="tickboxes"for="normalise_name">Normalise results</label>
 
-  <br/><br/>
-  <button id="fetch_results_button" type="button" onclick="fetchResults();">Update Results</button>
+    <br/><br/>
+    <button id="add_results_button" type="button" onclick="fetchResults();">Add Results</button>
+    <button id="clear_results_button" type="button" onclick="clearResults();">Clear All Results</button>
+  <div>
 
   <br/><br/>
   <hr/>
@@ -120,6 +126,20 @@
         xhr.send (paramString);
     };
 
+    var hashCode = function (s) 
+    {
+      return s.split ("").reduce (function (a, b) 
+                                  {
+                                    a = ((a << 5) - a) + b.charCodeAt (0);
+                                    return (a & a) >>> 0;
+                                  }, 0);
+    }
+
+    var hashBenchmark = function (bm) 
+    {
+      return hashCode (bm.benchmark_category + " | " + bm.benchmark_name + " | " + bm.benchmark_description).toString();
+    }
+
     var showTotal;
     var showMinMaxMean;
     var showVariances;
@@ -138,6 +158,60 @@
     var currentResults = new Map();
     var currentMin, currentMax;
 
+    function parseGETParams()
+    {
+      const urlParams = new URLSearchParams (window.location.search);
+
+      if (start = urlParams.get ('start'))
+      {
+        document.getElementById ("start_date").value = start;
+        updateStartEndDates();
+      }
+
+      if (end = urlParams.get ('end'))
+      {
+        document.getElementById ("end_date").value = end;
+        updateStartEndDates();
+      }
+
+      if (os = urlParams.get ('os'))
+      {
+        if (["mac", "windows", "linux"].includes (os))
+          platforms_list.value = os;
+      }
+
+      if (branch = urlParams.get ('branch'))
+      {        
+        if (branches.includes (branch))
+        {
+          branch_list.value = branch;
+        }
+        else
+        {
+          branches.forEach (branchItem =>
+          {
+            if (branchItem && branchItem.endsWith (branch))
+              branch_list.value = branchItem;
+          });
+        }
+      }
+
+      if (hashList = urlParams.get ('hash'))
+      {
+        hashList.split (",").forEach (hash =>
+                                      {
+                                        benchmarkItems.forEach (benchmarkItem =>
+                                                                {
+                                                                  if (hash == benchmarkItem.hashID)
+                                                                  {
+                                                                    benchmark_list.value = hash;
+                                                                    document.getElementById ("add_results_button").click();
+                                                                  }
+                                                                });
+                                      });
+      }
+    }
+
     function initialise()
     {
       // Set the start date to a month ago
@@ -146,6 +220,7 @@
         today.setMonth (today.getMonth() - 1);
         const lastMonth = today.toISOString().slice (0, 10);
         document.getElementById ("start_date").value = lastMonth;
+        updateStartEndDates();
       }
 
       function populateOptions (list, menuItems)
@@ -191,7 +266,7 @@
 
         res.forEach (entry =>
         {
-          hashID = entry.benchmark_category + " | " + entry.benchmark_name + " | " + entry.benchmark_description;
+          hashID = hashBenchmark (entry);
 
           if (benchmarkItems.has (hashID))
           {
@@ -201,6 +276,7 @@
           {
             newObj = {};
             newObj.hashID = hashID;
+            newObj.benchmark_hash         = entry.benchmark_hash;
             newObj.benchmark_category     = entry.benchmark_category;
             newObj.benchmark_name         = entry.benchmark_name;
             newObj.benchmark_description  = entry.benchmark_description;
@@ -253,6 +329,8 @@
           option.innerHTML = "------------ " + desc;
           list.appendChild (option);
         });
+
+        parseGETParams();
       });
     }
 
@@ -261,10 +339,32 @@
       const title = values.name + ' (' + values.platform + ')';
       const subtitle = values.description;
 
+      var div = document.createElement ('div');
+      div.setAttribute ("class", "chart");
+      
+      var deleteButton = document.createElement ('button');
+      deleteButton.innerText = "Delete";
+      deleteButton.setAttribute ("class", "delete_button");
+      deleteButton.id = "delete_" + hash;
+      deleteButton.type = "button";
+      var deleteGraph = function()
+      {
+          currentResults.delete (hash);
+          updateGraphs();
+      };
+      deleteButton.onclick = deleteGraph;
+      div.appendChild (deleteButton);
+
+      var hashDisplay = document.createElement ('span');
+      hashDisplay.innerText = hash;
+      hashDisplay.setAttribute ("class", "hash_display");
+      div.appendChild (hashDisplay);
+
       var canvas = document.createElement ('canvas');
       canvas.id = hash;
       canvas.style="width:100%";
-      charts.appendChild (canvas);
+      div.appendChild (canvas);
+      charts.appendChild (div);
 
       const red     = 'rgb(255, 99, 132)';
       const orange  = 'rgb(255, 159, 64)';
@@ -379,8 +479,6 @@
         return;
       }
 
-      charts.innerHTML = "";
-
       var filterString = "";
 
       if (categoryToShow != "All")      filterString += '&benchmark_category=' + categoryToShow;
@@ -395,7 +493,6 @@
       getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_results_grouped" + filterString, function (status, results)
         {
           document.getElementById ("loader").style.display = "none";
-          currentResults.clear();
           currentMax = Number.MIN_VALUE;
           currentMin = Number.MAX_VALUE;
           const displayCycles = cycles_results.checked;
@@ -408,6 +505,7 @@
                             values.description  = result.benchmark_description;
                             values.platform     = result.benchmark_platform;
                             values.branch       = result.benchmark_branch_name;
+                            values.hashID       = hashBenchmark (result);
 
                             values.dateTimes  = result.benchmark_time;
 
@@ -431,11 +529,17 @@
                             currentMax = Math.max (currentMax, ...values.durations, ...values.maximums);
                             currentMin = Math.min (currentMin, ...values.durations, ...values.minimums);
 
-                            currentResults.set (result.benchmark_hash, values);
+                            currentResults.set (values.hashID, values);
                           });
 
           updateGraphs();
         });
+    }
+
+    function clearResults()
+    {
+      currentResults.clear();
+      charts.innerHTML = "";
     }
 
     function updateGraphs()
