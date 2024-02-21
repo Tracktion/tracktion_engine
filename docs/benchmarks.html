@@ -196,15 +196,19 @@
         }
       }
 
+      // Hash can be either the short or long hash
+      // There are several long hashes per benchmark name as they're unique for
+      // each OS whereas the short hash is OS agnostic
       if (hashList = urlParams.get ('hash'))
       {
         hashList.split (",").forEach (hash =>
                                       {
                                         benchmarkItems.forEach (benchmarkItem =>
                                                                 {
-                                                                  if (hash == benchmarkItem.hashID)
+                                                                  if (hash == benchmarkItem.hashID
+                                                                      || hash == benchmarkItem.benchmark_hash)
                                                                   {
-                                                                    benchmark_list.value = hash;
+                                                                    benchmark_list.value = benchmarkItem.hashID;
                                                                     document.getElementById ("add_results_button").click();
                                                                   }
                                                                 });
@@ -355,8 +359,9 @@
       deleteButton.onclick = deleteGraph;
       div.appendChild (deleteButton);
 
+      console.log (values);
       var hashDisplay = document.createElement ('span');
-      hashDisplay.innerText = hash;
+      hashDisplay.innerText = hash + ", " + values.benchmark_hash;
       hashDisplay.setAttribute ("class", "hash_display");
       div.appendChild (hashDisplay);
 
@@ -500,12 +505,13 @@
           results.forEach (result =>
                           {
                             var values = {};
-                            values.name         = result.benchmark_name;
-                            values.category     = result.benchmark_category;
-                            values.description  = result.benchmark_description;
-                            values.platform     = result.benchmark_platform;
-                            values.branch       = result.benchmark_branch_name;
-                            values.hashID       = hashBenchmark (result);
+                            values.name           = result.benchmark_name;
+                            values.category       = result.benchmark_category;
+                            values.description    = result.benchmark_description;
+                            values.platform       = result.benchmark_platform;
+                            values.branch         = result.benchmark_branch_name;
+                            values.benchmark_hash = result.benchmark_hash;
+                            values.hashID         = hashBenchmark (result);
 
                             values.dateTimes  = result.benchmark_time;
 
