@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -16,12 +17,12 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     juce::AudioPlayHead::CurrentPositionInfo info;
     auto& transport = edit.getTransport();
     auto& tempoSequence = edit.tempoSequence;
-    
+
     auto currentTime = transport.getPosition();
-    
+
     if (auto epc = transport.getCurrentPlaybackContext())
         currentTime = epc->getPosition();
-    
+
     auto position = createPosition (tempoSequence);
     position.set (currentTime);
     const auto timeSig = position.getTimeSignature();
@@ -57,9 +58,9 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
 {
     if (info.bpm == 0.0)
         return;
-    
+
     auto& transport = edit.getTransport();
-    
+
     // First synchronise position
     if (auto epc = transport.getCurrentPlaybackContext())
     {
@@ -69,29 +70,29 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         const double beatsSinceStart = (info.ppqPosition * info.timeSigDenominator) / 4.0;
         const double secondsPerBeat = 240.0 / (info.bpm * info.timeSigDenominator);
         const TimeDuration timeOffset = TimeDuration::fromSeconds (beatsSinceStart * secondsPerBeat);
-        
+
         const TimeDuration blockSizeInSeconds = TimeDuration::fromSeconds (edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0);
         const TimePosition currentPositionInSeconds = epc->getPosition() + blockSizeInSeconds;
         // N.B we add the blockSizeInSeconds here as the playhead position will be at the end of the last block.
         // This avoids us re-syncing every block
-        
+
         if (info.isPlaying)
         {
             if (TimeDuration::fromSeconds (std::abs ((currentPositionInSeconds - timeOffset).inSeconds())) > (blockSizeInSeconds / 2.0))
                 epc->postPosition (toPosition (timeOffset));
-            
+
             if (! epc->isPlaying())
                 epc->play();
         }
         else
         {
             transport.setPosition (toPosition (timeOffset));
-            
+
             if (epc->isPlaying())
                 epc->stop();
         }
     }
-    
+
     // Then the tempo info
     {
         auto position = createPosition (edit.tempoSequence);
@@ -189,11 +190,11 @@ bool ExternalPlayheadSynchroniser::synchronise (juce::AudioPlayHead& playhead)
         {
             // Synchronise the Edit's position and tempo info based on the host
             synchroniseEditPosition (edit, positionInfo);
-            
+
             return true;
         }
     }
-    
+
     return false;
 }
 

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -45,13 +46,13 @@ public:
             }
         }
     }
-    
+
     /** Releases the lock, this should only be called after a successful call to try_lock or lock. */
     void unlock() noexcept
     {
         flag.clear (std::memory_order_release);
     }
-    
+
     /** Attempts to take the lock once, returning true if successful. */
     bool try_lock() noexcept
     {

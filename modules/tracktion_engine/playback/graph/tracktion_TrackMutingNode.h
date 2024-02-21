@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -27,7 +28,7 @@ public:
 
     /** Call once per block to update the mute status. */
     void update();
-    
+
     //==============================================================================
     /** Returns true if the track's mix bus should be audible. */
     bool shouldTrackBeAudible() const;
@@ -55,7 +56,7 @@ private:
     juce::ReferenceCountedObjectPtr<Track> track;
     bool wasBeingPlayedFlag = false;
     std::atomic<bool> wasJustMutedFlag { false }, wasJustUnMutedFlag { false };
-    
+
     bool callInputWhileMuted = false;
     bool processMidiWhileMuted = false;
     juce::Array<InputDeviceInstance*> inputDevicesToMuteFor;

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace graph
@@ -24,12 +25,12 @@ public:
     {
         runAllocationTests();
     }
-    
+
 private:
     void runAllocationTests()
     {
         using namespace choc::buffer;
-        
+
         beginTest ("Allocation");
         {
             const auto size = Size::create (2, 128);
@@ -54,7 +55,7 @@ private:
             {
                 AudioBufferPool pool (2);
                 pool.reserve (1, size);
-                
+
                 pool.release (ChannelArrayBuffer<float> (size));
 
                 auto buffer = pool.allocate (size);

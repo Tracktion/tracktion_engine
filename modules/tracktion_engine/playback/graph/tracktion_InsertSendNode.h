@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -18,7 +19,7 @@ namespace tracktion { inline namespace engine
     dependencies in the graph:
         InsertSendNode   -> InsertPluginNode
         InsertReturnNode ->
- 
+
     Due to the way the graph is built, the InsertSendReturnDependencyNode feeds
     in to the InsertPlugin's PluginNode and creates a dependency on the
     InsertSendNode and InsertReturnNode to ensure they are processed first.
@@ -56,7 +57,7 @@ public:
     InsertSendNode (InsertPlugin&);
 
     InsertPlugin& getInsert() const     { return owner; }
-    
+
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;

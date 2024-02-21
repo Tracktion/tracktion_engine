@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -404,7 +405,7 @@ void Plugin::valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int)
 void Plugin::valueTreeParentChanged (juce::ValueTree& v)
 {
     isClipEffect = state.getParent().hasType (IDs::EFFECT);
-    
+
     if (v.hasType (IDs::PLUGIN))
         hideWindowForShutdown();
 }
@@ -421,7 +422,7 @@ void Plugin::changed()
 void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
-    
+
     if (! enabled.get())
         cpuUsageMs = 0.0;
 }
@@ -524,7 +525,7 @@ void Plugin::deleteFromParent()
 
     for (auto t : getAllTracks (edit))
         t->hideAutomatableParametersForSource (itemID);
-    
+
     hideWindowForShutdown();
     deselect();
     removeFromParent();
@@ -878,7 +879,7 @@ void Plugin::sortPlugins (std::vector<Plugin*>& plugins)
 {
     if (plugins.size() == 0 || plugins[0] == nullptr)
         return;
-    
+
     auto first = plugins[0];
 
     PluginList list (first->edit);

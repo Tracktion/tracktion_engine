@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -316,7 +317,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
 
     if (! isMarkedRegionBigEnough (markedRegionTime))
         markedRegion = false;
-    
+
     if (markedRegion)
         params.time = markedRegionTime;
     else
@@ -778,7 +779,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
 
         ro->allowedClips = clips;
         bool areAllClipsMono = true;
-        
+
         for (auto c : clips)
         {
             if (auto t = c->getTrack())
@@ -789,7 +790,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
                     if (auto dest = at->getOutput().getDestinationTrack())
                         ro->tracks.addIfNotAlreadyThere (dest->itemID);
             }
-            
+
             // Assume any non-audio clips should be rendered in stereo
             if (auto audioClip = dynamic_cast<AudioClipBase*> (c))
             {
@@ -801,7 +802,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
                 areAllClipsMono = false;
             }
         }
-        
+
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
 

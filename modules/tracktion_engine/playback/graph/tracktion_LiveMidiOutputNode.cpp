@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -75,7 +76,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     bool needToUpdate = false;
-    
+
     {
         const juce::ScopedLock sl (lock);
 
@@ -84,7 +85,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
 
         needToUpdate = ! pendingMessages.isEmpty();
     }
-    
+
     if (needToUpdate)
         triggerAsyncUpdate();
 }

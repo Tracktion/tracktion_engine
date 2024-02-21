@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -33,7 +34,7 @@ tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
     auto props = input->getNodeProperties();
     props.hasMidi = true;
     hash_combine (props.nodeID, track->itemID.getRawID());
-    
+
     return props;
 }
 
@@ -70,10 +71,10 @@ void LiveMidiInjectingNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     const juce::ScopedLock sl (liveMidiLock);
-    
+
     if (liveMidiMessages.isEmpty())
         return;
-    
+
     destMidiBlock.mergeFromAndClear (liveMidiMessages);
 }
 

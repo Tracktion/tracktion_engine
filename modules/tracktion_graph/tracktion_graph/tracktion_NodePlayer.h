@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -23,13 +24,13 @@ class NodePlayer
 public:
     /** Creates an empty NodePlayer. */
     NodePlayer() = default;
-    
+
     /** Creates an NodePlayer to process a Node. */
     NodePlayer (std::unique_ptr<Node> nodeToProcess, PlayHeadState* playHeadStateToUse = nullptr)
         : input (std::move (nodeToProcess)), playHeadState (playHeadStateToUse)
     {
     }
-    
+
     /** Returns the current Node. */
     Node* getNode()
     {
@@ -49,7 +50,7 @@ public:
     {
         auto newGraph = prepareToPlay (std::move (newNode), nodeGraph.get(), sampleRateToUse, blockSizeToUse);
         std::unique_ptr<NodeGraph> oldGraph;
-        
+
         {
             const juce::SpinLock::ScopedLockType sl (inputAndNodesLock);
             oldGraph = std::move (nodeGraph);
@@ -75,10 +76,10 @@ public:
     {
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
-        
+
         if (playHeadState != nullptr)
             playHeadState->playHead.setScrubbingBlockLength (timeToSample (0.08, sampleRate));
-        
+
         return node_player_utils::prepareToPlay (std::move (node), oldGraph, sampleRateToUse, blockSizeToUse);
     }
 
@@ -94,27 +95,27 @@ public:
                 inputAndNodesLock.exit();
                 return 0;
             }
-            
+
             int numMisses = 0;
-            
+
             if (playHeadState != nullptr)
                 numMisses = processWithPlayHeadState (*playHeadState, *nodeGraph, pc);
             else
                 numMisses = processPostorderedNodes (*nodeGraph, pc);
-            
+
             inputAndNodesLock.exit();
-            
+
             return numMisses;
         }
-        
+
         return 0;
     }
-    
+
     double getSampleRate() const
     {
         return sampleRate;
     }
-    
+
     int processPostorderedNodes (NodeGraph& graphToProcess, const Node::ProcessContext& pc)
     {
         return processPostorderedNodesSingleThreaded (graphToProcess, pc);
@@ -124,12 +125,12 @@ protected:
     std::unique_ptr<Node> input;
     std::unique_ptr<NodeGraph> nodeGraph;
     PlayHeadState* playHeadState = nullptr;
-    
+
     double sampleRate = 0.0;
     int blockSize = 0;
-    
+
     juce::SpinLock inputAndNodesLock;
-    
+
     int processWithPlayHeadState (PlayHeadState& phs, NodeGraph& graphToProcess,
                                   const Node::ProcessContext& pc)
     {
@@ -137,7 +138,7 @@ protected:
 
         // Check to see if the timeline needs to be processed in two halves due to looping
         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (phs.playHead, pc.referenceSampleRange);
-        
+
         if (splitTimelineRange.isSplit)
         {
             const auto firstProportion = splitTimelineRange.timelineRange1.getLength() / (double) pc.referenceSampleRange.getLength();
@@ -174,7 +175,7 @@ protected:
             phs.update (pc.referenceSampleRange);
             numMisses += processPostorderedNodes (graphToProcess, pc);
         }
-        
+
         return numMisses;
     }
 
@@ -185,7 +186,7 @@ protected:
     {
         for (auto node : nodeGraph.orderedNodes)
             node->prepareForNextBlock (pc.referenceSampleRange);
-        
+
         int numMisses = 0;
         size_t numNodesProcessed = 0;
 
@@ -209,17 +210,17 @@ protected:
                 auto output = nodeGraph.rootNode->getProcessedOutput();
                 auto numAudioChannels = std::min (output.audio.getNumChannels(),
                                                   pc.buffers.audio.getNumChannels());
-                
+
                 if (numAudioChannels > 0)
                     add (pc.buffers.audio.getFirstChannels (numAudioChannels),
                          output.audio.getFirstChannels (numAudioChannels));
-                
+
                 pc.buffers.midi.mergeFrom (output.midi);
 
                 break;
             }
         }
-        
+
         return numMisses;
     }
 };

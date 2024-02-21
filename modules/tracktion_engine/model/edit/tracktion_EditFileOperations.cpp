@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -174,7 +175,7 @@ bool EditFileOperations::writeToFile (const juce::File& file, bool writeQuickBin
     CRASH_TRACER
     bool ok = false;
     std::unique_ptr<ScopedWaitCursor> waitCursor;
-    
+
     if (! writeQuickBinaryVersion)
     {
         EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler (edit.engine);
@@ -454,7 +455,7 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID 
         // If the file already exists and is not empty, don't write over it as it could have been corrupted and be recoverable
         if (f.existsAsFile() && f.getSize() > 0)
             return {};
-        
+
         state = juce::ValueTree (IDs::EDIT);
         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);
     }
@@ -468,7 +469,7 @@ std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFi
 {
     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
-    
+
     if (! id.isValid())
         id = ProjectItemID::createNewID (0);
 
@@ -497,15 +498,15 @@ std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFil
         engine,
         loadEditFromFile (engine, {}, id),
         id,
-        
+
         Edit::forEditing,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-        
+
         [editFile] { return editFile; },
         {}
     };
-    
+
     return std::make_unique<Edit> (options);
 }
 

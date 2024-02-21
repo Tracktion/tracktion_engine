@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -29,10 +30,10 @@ tracktion::graph::NodeProperties InsertSendReturnDependencyNode::getNodeProperti
 std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectInputNodes()
 {
     std::vector<tracktion::graph::Node*> inputs { input.get() };
-    
+
     if (sendNode)
         inputs.push_back (sendNode);
-    
+
     if (returnNode)
         inputs.push_back (returnNode);
 
@@ -45,7 +46,7 @@ TransformResult InsertSendReturnDependencyNode::transform (Node&, const std::vec
         return TransformResult::none;
 
     bool foundSend = false, foundReturn = false;
-    
+
     for (auto n : postOrderedNodes)
     {
         if (! sendNode)
@@ -72,7 +73,7 @@ TransformResult InsertSendReturnDependencyNode::transform (Node&, const std::vec
             }
         }
     }
-    
+
     return (foundSend || foundReturn) ? TransformResult::connectionsMade
                                       : TransformResult::none;
 }
@@ -110,7 +111,7 @@ tracktion::graph::NodeProperties InsertSendNode::getNodeProperties()
     props.hasAudio = owner.hasAudio();
     props.hasMidi = owner.hasMidi();
     props.numberOfChannels = props.hasAudio ? 2 : 0;
-    
+
     return props;
 }
 

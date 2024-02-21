@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -38,7 +39,7 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
 {
     auto wetProps = wetInput->getNodeProperties();
     auto dryProps = dryInput->getNodeProperties();
-    
+
     auto props = wetProps;
     props.hasAudio = true;
     props.numberOfChannels = std::max (wetProps.numberOfChannels, dryProps.numberOfChannels);
@@ -46,7 +47,7 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     hash_combine (props.nodeID, dryProps.nodeID);
 
     constexpr size_t rackReturnNodeMagicHash = size_t (0x726b52657475726e);
-    
+
     if (props.nodeID != 0)
         hash_combine (props.nodeID, rackReturnNodeMagicHash);
 
@@ -62,13 +63,13 @@ TransformResult RackReturnNode::transform (Node&, const std::vector<Node*>&, Tra
     auto wetProps = wetInput->getNodeProperties();
     auto dryProps = dryInput->getNodeProperties();
     assert (dryProps.latencyNumSamples <= wetProps.latencyNumSamples);
-    
+
     if (wetProps.latencyNumSamples > dryProps.latencyNumSamples)
     {
         const int numLatencySamples = wetProps.latencyNumSamples - dryProps.latencyNumSamples;
         dryLatencyNode = tracktion::graph::makeNode<tracktion::graph::LatencyNode> (dryInput, numLatencySamples);
         dryInput = dryLatencyNode.get();
-        
+
         return TransformResult::connectionsMade;
     }
 
@@ -105,21 +106,21 @@ void RackReturnNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
 void RackReturnNode::process (ProcessContext& pc)
 {
     auto destAudio = pc.buffers.audio;
-    
+
     auto wetSource = wetInput->getProcessedOutput();
     auto drySource = dryInput->getProcessedOutput();
 
     assert (destAudio.getNumFrames() == wetSource.audio.getNumFrames());
     assert (wetSource.audio.getNumFrames() == drySource.audio.getNumFrames());
-    
+
     const float wetGain = wetGainFunction();
     const float dryGain = dryGainFunction();
 
-    
+
     // Always copy MIDI (N.B. MIDI is always the wet signal with no gain applied)
     pc.buffers.midi.copyFrom (wetSource.midi);
 
-    
+
     // Copy wet audio applying gain
     copyIfNotAliased (destAudio.getFirstChannels (wetSource.audio.getNumChannels()),
                       wetSource.audio);
@@ -137,10 +138,10 @@ void RackReturnNode::process (ProcessContext& pc)
         lastWetGain = wetGain;
     }
 
-    
+
     // Add dry audio applying gain
     auto dryDestView = destAudio.getFirstChannels (drySource.audio.getNumChannels());
-    
+
     if (dryGain == lastDryGain)
     {
         if (dryGain == 1.0f)

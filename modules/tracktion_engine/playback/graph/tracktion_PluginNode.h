@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -45,10 +46,10 @@ public:
 
     /** Destructor. */
     ~PluginNode() override;
-    
+
     //==============================================================================
     Plugin& getPlugin()                                 { return *plugin; }
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
@@ -65,7 +66,7 @@ private:
     const TrackMuteState* trackMuteState = nullptr;
     tracktion::graph::PlayHeadState& playHeadState;
     bool isRendering = false;
-    
+
     bool isInitialised = false;
     double sampleRate = 44100.0;
     int latencyNumSamples = 0, maxNumChannels = -1;
@@ -73,7 +74,7 @@ private:
     int subBlockSizeToUse = -1;
     bool balanceLatency = true, canProcessBypassed = false;
     TimeDuration automationAdjustmentTime;
-    
+
     std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
     std::optional<NodeProperties> cachedNodeProperties;
     bool isPrepared = false, canUseSourceBuffers = false;

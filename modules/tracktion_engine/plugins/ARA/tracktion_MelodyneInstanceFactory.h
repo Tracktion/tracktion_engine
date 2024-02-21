@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 struct MelodyneInstance
@@ -164,7 +165,7 @@ private:
     Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (juce::AudioPluginInstance& p)
     {
         entrypoint_t* ep = nullptr;
-        
+
         auto getIComponent = [] (juce::AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
         {
             struct VST3Visitor : public juce::ExtensionsVisitor
@@ -173,16 +174,16 @@ private:
                 {
                     icomponent = static_cast<Steinberg::Vst::IComponent*> (client.getIComponentPtr());
                 }
-                
+
                 Steinberg::Vst::IComponent* icomponent = nullptr;
             };
 
             VST3Visitor vst3Visitor;
             p.getExtensions (vst3Visitor);
-            
+
             return vst3Visitor.icomponent;
         };
-        
+
         if (auto component = getIComponent (p))
             component->queryInterface (entrypoint_t::iid, (void**) &ep);
 

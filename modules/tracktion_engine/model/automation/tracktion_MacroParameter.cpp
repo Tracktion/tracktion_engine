@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -102,17 +103,17 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const
     {
         juce::ReferenceCountedArray<MacroParameter> params;
-        
+
         // This is verbose but directly returning macroParameters causes a
         // crash in optimised gcc Linux builds, could be a compiler bug
         {
             const juce::ScopedLock sl (macroParameters.getLock());
             params.ensureStorageAllocated (macroParameters.size());
-            
+
             for (auto& p : macroParameters)
                 params.add (p);
         }
-        
+
         return params;
     }
 

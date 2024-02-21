@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #include "tracktion_TestUtilities.h"
@@ -21,7 +22,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
     {
        #if __has_include (<cxxabi.h>)
         int status;
-        
+
         if (char* demangled = abi::__cxa_demangle (name.c_str(), nullptr, nullptr, &status); status == 0)
         {
             std::string demangledString (demangled);
@@ -29,7 +30,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
             return demangledString;
         }
        #endif
-        
+
         return name;
     }
 
@@ -75,15 +76,15 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 }
             }
         };
-        
+
         std::map<std::string, NodeInfo> idNameMap;
         std::vector<std::string> edges;
         Visitor::visitInputs (node, edges, idNameMap);
-        
+
         // Build graph
         std::string output;
         output += "digraph {\n";
-        
+
         for (auto [id, info] : idNameMap)
         {
             std::string label = choc::text::replace (info.label,
@@ -106,9 +107,9 @@ namespace tracktion { inline namespace graph { namespace test_utilities
 
         for (auto edge : edges)
             output += edge += "\n";
-        
+
         output += "\n}";
-        
+
         return output;
     }
 }}}

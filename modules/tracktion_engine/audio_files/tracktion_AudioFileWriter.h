@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -14,7 +15,7 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 /**
     Smart wrapper for writing to an audio file.
- 
+
     Internally this opens a File for writng and provides some helper methods to
     append to it and free the file handle when done.
 */
@@ -35,10 +36,10 @@ public:
     //==============================================================================
     /** Returns true if the file is open and ready to write to. */
     bool isOpen() const noexcept;
-    
+
     /** Returns the sample rate of the writer, should only be called on an open writer. */
     double getSampleRate() const noexcept;
-    
+
     /** Returns the num channels of the writer, should only be called on an open writer. */
     int getNumChannels() const noexcept;
 

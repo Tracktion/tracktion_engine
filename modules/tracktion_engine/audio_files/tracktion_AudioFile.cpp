@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -179,7 +180,7 @@ void AudioFileWriter::closeForWriting()
         const juce::ScopedLock sl (writerLock);
         writer.reset();
     }
-    
+
     auto& audioFileManager = file.engine->getAudioFileManager();
     audioFileManager.releaseFile (file);
     audioFileManager.checkFileForChanges (file);
@@ -530,7 +531,7 @@ bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
     for (auto thumb : engine.getAudioFileManager().activeThumbnails)
         if (! thumb->isFullyLoaded())
             return false;
-    
+
     return true;
 }
 
@@ -598,7 +599,7 @@ void SmartThumbnail::createThumbnailReader()
 
         // this breaks thumbnails in 64-bit mode
         //setReader (new CacheAudioFormatReader (file), hashCode);
-        
+
         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), hashCode);
         thumbnailIsInvalid = false;
     }

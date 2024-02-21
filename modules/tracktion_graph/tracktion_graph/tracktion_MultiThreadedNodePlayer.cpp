@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -61,7 +62,7 @@ public:
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -120,13 +121,13 @@ public:
         threadsShouldExit = true;
         signalAll();
     }
-    
+
     /** Signals the pool that all the threads should continue to run and not exit. */
     void resetExitSignal()
     {
         threadsShouldExit = false;
     }
-    
+
     /** Returns true if all the threads should exit. */
     bool shouldExit() const
     {
@@ -140,7 +141,7 @@ public:
     {
         if (shouldExit())
             return false;
-        
+
         return player.numNodesQueued == 0;
     }
 
@@ -152,11 +153,11 @@ public:
     {
         return player.processNextFreeNode();
     }
-    
+
 private:
     //==============================================================================
     MultiThreadedNodePlayer& player;
-    
+
     std::atomic<bool> threadsShouldExit { false };
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
@@ -167,10 +168,10 @@ private:
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
         for (;;)
@@ -234,7 +235,7 @@ void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSi
 int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 {
     std::unique_lock<RealTimeSpinLock> tryLock (clearNodesLock, std::try_to_lock);
-    
+
     if (! tryLock.owns_lock())
         return -1;
 
@@ -242,7 +243,7 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
         return -1;
 
     const std::lock_guard<RealTimeSpinLock> lock (preparedNodeMutex);
-    
+
     // Reset the stream range
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
@@ -291,12 +292,12 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 void MultiThreadedNodePlayer::clearNode()
 {
     std::lock_guard<RealTimeSpinLock> sl (clearNodesLock);
-    
+
     // N.B. The threads will be trying to read the preparedNodes so we need to actually stop these first
     clearThreads();
     setNode (nullptr);
     createThreads();
-    
+
     assert (preparedNode == nullptr);
     assert (getNode() == nullptr);
 }
@@ -346,7 +347,7 @@ void MultiThreadedNodePlayer::setNewGraph (std::unique_ptr<NodeGraph> newGraph)
         preparedNode = {};
         return;
     }
-    
+
     // Ensure the Nodes ready to be processed are at the front of the queue
     std::stable_sort (newGraph->orderedNodes.begin(), newGraph->orderedNodes.end(),
                       [] (auto n1, auto n2)

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -571,7 +572,7 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
     {
         overallStartTime = std::min (overallStartTime, std::max (clip->getPosition().getStart(), range.getStart()));
         firstTrackIndex  = std::min (firstTrackIndex,  std::max (0, allTracks.indexOf (clip->getTrack())));
-        
+
         if (auto slot = clip->getClipSlot())
             firstSlotIndex = std::min (firstSlotIndex, slot->getIndex());
     }
@@ -625,7 +626,7 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
             }
 
             info.trackOffset = allTracks.indexOf (clip->getTrack()) - firstTrackIndex;
-            
+
             if (auto slot = clip->getClipSlot())
                 info.slotOffset = slot->getIndex() - firstSlotIndex;
 
@@ -718,7 +719,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
     }
 }
 
-static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipInfo& clip, 
+static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipInfo& clip,
                           const std::vector<Clipboard::Clips::ClipInfo>& otherClips,
                           TempoSequence& tempoSequence, TimePosition startOffset)
 {
@@ -728,7 +729,7 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
     if (clip.hasBeatTimes)
     {
         BeatDuration slotOffset;
-        
+
         if (clip.slotOffset.has_value())
             for (const auto& info : otherClips)
                 if (info.trackOffset == clip.trackOffset && info.slotOffset.has_value() && *info.slotOffset < *clip.slotOffset)
@@ -869,29 +870,29 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                 auto calcSlotOffset = [&]
                 {
                     auto offset = 0;
-                    
+
                     for (const auto& c : clips)
                         if (c.trackOffset == clip.trackOffset && c.startBeats < clip.startBeats)
                             offset++;
-                    
+
                     return offset;
                 };
-                
+
                 auto slotOffset = clip.slotOffset.has_value() ? *clip.slotOffset : calcSlotOffset();
-                
+
                 auto tracks = getAudioTracks (options.edit);
                 auto trackIndex = tracks.indexOf (dynamic_cast<AudioTrack*> (&clipSlot->track));
                 auto slotIndex  = clipSlot->getIndex();
-                
+
                 trackIndex += clip.trackOffset;
                 slotIndex  += slotOffset;
-                
+
                 options.edit.getSceneList().ensureNumberOfScenes (slotIndex + 1);
                 options.edit.ensureNumberOfAudioTracks (trackIndex + 1);
-                
+
                 if (auto at = getAudioTracks (options.edit)[trackIndex])
                     clipSlot = at->getClipSlotList().getClipSlots()[slotIndex];
-                
+
                 if (auto existingClip = clipSlot->getClip())
                     existingClip->removeFromParent();
 
@@ -1086,7 +1087,7 @@ bool Clipboard::Scenes::pasteIntoEdit (const EditPastingOptions& options) const
                 {
                     auto newClipState = clip.createCopy();
                     EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
-                    
+
                     insertClipWithState (*slot, newClipState);
                 }
             }

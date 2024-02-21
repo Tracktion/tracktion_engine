@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -26,7 +27,7 @@ public:
         @param const TrackMuteState*    The optional TrackMuteState to use
         @param PlayHeadState            The PlayHeadState to monitor for jumps
         @param rendering                Should be true if this is an offline render
-     
+
     */
     ModifierNode (std::unique_ptr<Node> input,
                   tracktion::engine::Modifier::Ptr,
@@ -36,7 +37,7 @@ public:
 
     /** Creates a ModifierNode to process a plugin on in a Rack with an InputProvider.
         @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
-     
+
     */
     ModifierNode (std::unique_ptr<Node> input,
                   tracktion::engine::Modifier::Ptr,
@@ -45,7 +46,7 @@ public:
 
     /** Destructor. */
     ~ModifierNode() override;
-    
+
     //==============================================================================
     Modifier& getModifier()                             { return *modifier; }
 
@@ -55,17 +56,17 @@ public:
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
-    
+
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
     tracktion::engine::Modifier::Ptr modifier;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
-    
+
     const TrackMuteState* trackMuteState = nullptr;
     tracktion::graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
-    
+
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion::engine::MidiMessageArray midiMessageArray;

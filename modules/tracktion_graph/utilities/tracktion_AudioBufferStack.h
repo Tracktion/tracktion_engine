@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #include <stack>
@@ -16,16 +17,16 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 /**
     A stack of audio buffers.
- 
+
     If you need to quickly create and then return some audio buffers this class
     enables you to do that.
- 
+
     Note that the buffers can be pre-allocated but if you ask for a buffer which
     isn't in the pool, it will either resize an existing one or allocate a new one.
-    
+
     After processing a constant audio graph for a while though this should be
     completely allocation and lock-free.
-    
+
     However, it is not thread safe so you should use a different stack for each thread!
 */
 class AudioBufferStack
@@ -42,7 +43,7 @@ public:
         This will attempt to get a buffer from the pre-allocated pool that can
         fit the size but if one can't easily be found, it will allocate one with
         new and return it.
-        
+
         Additionally, the returned buffer may be bigger than the size asked for
         so be sure to only use a view of it but retain ownership of the whole buffer.
         You can release it back to the pool later.
@@ -51,7 +52,7 @@ public:
         @see release
     */
     choc::buffer::ChannelArrayBuffer<float> allocate (choc::buffer::Size);
-    
+
     /** Releases an allocated buffer back to the stack. */
     void release (choc::buffer::ChannelArrayBuffer<float>&&);
 
@@ -92,7 +93,7 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferStack::allocate (choc:
     {
         buffer = std::move (stack.top());
         stack.pop();
-        
+
         if (auto bufferSize = buffer.getSize();
             bufferSize.numChannels < size.numChannels
             || bufferSize.numFrames < size.numFrames)
@@ -104,7 +105,7 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferStack::allocate (choc:
     {
         buffer.resize (size);
     }
-        
+
     return buffer;
 }
 
@@ -117,14 +118,14 @@ inline void AudioBufferStack::release (choc::buffer::ChannelArrayBuffer<float>&&
 inline void AudioBufferStack::reserve (size_t numBuffers, choc::buffer::Size size)
 {
     std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
-    
+
     // Remove all the buffers
     for (size_t i = 0; i < std::min (numBuffers, stack.size()); ++i)
     {
         buffers.emplace_back (std::move (stack.top()));
         stack.pop();
     }
-    
+
     // Ensure their size is as big as required
     for (auto& b : buffers)
     {
@@ -135,7 +136,7 @@ inline void AudioBufferStack::reserve (size_t numBuffers, choc::buffer::Size siz
             b.resize (size);
         }
     }
-    
+
     // Reset the fifo storage to hold the new number of buffers
     const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
     assert (numToAdd >= 0);
@@ -143,7 +144,7 @@ inline void AudioBufferStack::reserve (size_t numBuffers, choc::buffer::Size siz
     // Push the temp buffers back
     for (auto& b : buffers)
         stack.push (std::move (b));
-    
+
     // Push any additional buffers
     for (int i = 0; i < numToAdd; ++i)
         stack.push (choc::buffer::ChannelArrayBuffer<float> (size));
@@ -158,7 +159,7 @@ inline size_t AudioBufferStack::getAllocatedSize()
 {
     if (stack.size() == 0)
         return 0;
-    
+
     auto& b = stack.top();
     return b.getView().data.getBytesNeeded (b.getSize());
 }

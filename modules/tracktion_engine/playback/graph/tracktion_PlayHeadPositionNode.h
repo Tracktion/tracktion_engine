@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -25,31 +26,31 @@ public:
           playHeadTime (playHeadTimeToUpdate)
     {
     }
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        
+
         constexpr size_t playHeadPositionNodeMagicHash = size_t (0x706c617948656164);
-        
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
 
         return props;
     }
-    
+
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
-        
+
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
         latencyNumSamples = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
-        
+
         // Member variables have to be updated from the previous Node or if the graph gets
         // rebuilt during the countdown period, the playhead time will jump back
         updateFromPreviousNode (info.nodeGraphToReplace);
     }
-    
+
     void process (ProcessContext& pc) override
     {
         // Copy the input buffers to the outputs
@@ -58,7 +59,7 @@ public:
 
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
         copy (pc.buffers.audio, sourceBuffers.audio);
-        
+
         updatePlayHeadTime (pc.referenceSampleRange.getLength());
     }
 
@@ -74,19 +75,19 @@ private:
         int64_t numLatencySamplesToCountDown = 0;
         int64_t referencePositionOnJump = 0;
     };
-    
+
     std::shared_ptr<State> state { std::make_shared<State>() };
-    
+
     void updatePlayHeadTime (int64_t numSamples)
     {
         int64_t referenceSamplePosition = getReferenceSampleRange().getStart();
-        
+
         if (getPlayHeadState().didPlayheadJump() || updateReferencePositionOnJump)
         {
             state->numLatencySamplesToCountDown = latencyNumSamples;
             state->referencePositionOnJump = referenceSamplePosition;
         }
-        
+
         if (state->numLatencySamplesToCountDown > 0)
         {
             const int64_t numSamplesToDecrement = std::min (state->numLatencySamplesToCountDown, numSamples);

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -29,7 +30,7 @@ public:
 
         auto& engine = *Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
-        
+
         beginTest ("No latency");
         {
             expectEquals (sinFile->getFile().getFileExtension(), juce::String (".wav"));
@@ -37,7 +38,7 @@ public:
             auto track1 = getAudioTracks (*edit)[0];
             auto track2 = getAudioTracks (*edit)[1];
             expect (track1 != track2);
-            
+
             // Add sin file
             {
                 AudioFile af (engine, sinFile->getFile());
@@ -62,7 +63,7 @@ public:
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
         }
-        
+
         beginTest ("Source file with different sample rate");
         {
             auto sinFile96Ogg = getSinFile<juce::OggVorbisAudioFormat> (96000.0);
@@ -135,13 +136,13 @@ public:
         // Then write it to a temp file
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
-        
+
         if (auto fileStream = f->getFile().createOutputStream())
         {
             const int numQualityOptions = format.getQualityOptions().size();
             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);
             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;
-            
+
             if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (AudioFormatType().createWriterFor (fileStream.get(),
                                                                                                            sampleRate, 1, bitDepth,
                                                                                                            {}, qualityOptionIndex)))

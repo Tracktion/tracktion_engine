@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #include "../../3rd_party/rpmalloc/rpallocator.h"
@@ -27,22 +28,22 @@ public:
     {
         runRPMallocTests();
     }
-    
+
 private:
     void runRPMallocTests()
     {
         beginTest ("rpmalloc single thread");
         {
             expectEquals (rpmalloc_initialize(), 0, "rpmalloc_initialize failed");
-            
+
             {
                 constexpr size_t numFloats = 256;
                 constexpr size_t numBytes = numFloats * sizeof (float);
                 auto data = static_cast<float*> (rpmalloc (numBytes));
                 expect (data != nullptr);
-                
+
                 std::fill_n (data, numFloats, 0.7f);
-                
+
                 rpfree (data);
             }
 
@@ -51,9 +52,9 @@ private:
                 constexpr size_t numBytes = numFloats * sizeof (float);
                 auto data = static_cast<float*> (rpmalloc (numBytes));
                 expect (data != nullptr);
-                
+
                 std::fill_n (data, numFloats, 0.7f);
-                
+
                 rpfree (data);
             }
 
@@ -67,7 +68,7 @@ private:
             constexpr size_t numInts = 256;
             constexpr size_t numBytes = numInts * sizeof (float);
             int* data1 = nullptr, *data2 = nullptr;
-            
+
             std::thread t1 ([&]
                             {
                                 rpmalloc_thread_initialize();
@@ -77,10 +78,10 @@ private:
                                 std::fill_n (data1, numInts, 42);
                                 expectEquals (*data1, 42);
                                 expectEquals (data1[numInts - 1], 42);
-                                
+
                                 rpmalloc_thread_finalize();
                             });
-            
+
             std::thread t2 ([&]
                             {
                                 t1.join();
@@ -95,10 +96,10 @@ private:
                                 expectEquals (*data1, 42);
                                 expectEquals (data1[numInts - 1], 42);
                                 rpfree (data1);
-                                
+
                                 rpmalloc_thread_finalize();
                             });
-            
+
             t2.join();
             expectEquals (*data2, 42);
             expectEquals (data2[numInts - 1], 42);
@@ -127,7 +128,7 @@ private:
                             {
                                 expectEquals (*intVec1.begin(), 1);
                                 expectEquals (intVec1[intVec1.size() - 1], 1);
-                
+
                                 std::vector<int, rpallocator<int>> intVec2 (1024, 2);
                                 expectEquals (*intVec2.begin(), 2);
                                 expectEquals (intVec2[intVec2.size() - 1], 2);
@@ -140,7 +141,7 @@ private:
             std::thread t2 ([this, &intVec1, &t1]
                             {
                                 t1.join();
-                
+
                                 intVec1.push_back (44);
                                 expectEquals (*intVec1.begin(), 1);
                                 expectEquals (intVec1[intVec1.size() - 1], 44);
@@ -165,12 +166,12 @@ private:
             expect (intVec1.size() == 0);
             expect (intVec1.capacity() == 0);
         }
-        
+
         beginTest ("rpallocator multi-thread");
         {
             // Create 20 threads
             // Randomly push or pop ints in to a vector
-            
+
             constexpr int numThreads = 20;
             std::vector<std::thread> pool;
             std::atomic<bool> shouldExit { false };
@@ -181,7 +182,7 @@ private:
                                        const size_t maxSize = 100'000;
                                        juce::Random r;
                                        std::vector<int, rpallocator<int>> vec;
-                    
+
                                        while (! shouldExit)
                                        {
                                            const bool remove = r.nextBool() || vec.size() >= maxSize;
@@ -190,7 +191,7 @@ private:
                                            if (remove)
                                            {
                                                const auto numToRemove = std::min (num, vec.size());
-                                               
+
                                                for (size_t i = 0; i < numToRemove; ++i)
                                                    vec.pop_back();
                                            }
@@ -207,14 +208,14 @@ private:
                                        std::cout << "num ints: " << vec.size() << "\n";
                                       #endif
                                    });
-            
+
             using namespace std::literals;
             std::this_thread::sleep_for (1s);
             shouldExit = true;
-            
+
             for (auto& thread : pool)
                 thread.join();
-            
+
             expect (true);
         }
     }

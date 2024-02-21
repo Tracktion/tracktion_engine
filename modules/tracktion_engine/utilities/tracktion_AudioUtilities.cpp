@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -263,7 +264,7 @@ void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const
             case PanLawLinear:
                 jassertfalse; // should have alread been handled?
                 break;
-                
+
             default:
                 jassertfalse; // New pan law?
                 break;
@@ -574,7 +575,7 @@ public:
             testPanLaw (PanLawLinear, 1.0f, -0.5f, 1.5f, 0.5f); // 1/2 left
             testPanLaw (PanLawLinear, 1.0f, 0.5f, 0.5f, 1.5f);  // 1 right
         }
-        
+
         beginTest ("-2.5dB");
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-2.5f);
@@ -619,7 +620,7 @@ private:
         expectGreaterOrEqual (gain, 0.0f);
         expectGreaterOrEqual (pan, -1.0f);
         expectLessOrEqual (pan, 1.0f);
-        
+
         float leftGain = 0.0;
         float rightGain = 0.0;
         getGainsFromVolumeFaderPositionAndPan (gainToVolumeFaderPosition (gain), pan, pl,

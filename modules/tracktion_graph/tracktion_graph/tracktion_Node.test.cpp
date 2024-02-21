@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 
@@ -25,7 +26,7 @@ public:
         : juce::UnitTest ("Node", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         for (auto setup : getTestSetups (*this))
@@ -47,7 +48,7 @@ public:
 
             // Multi channel tests
             runStereoTests (setup);
-            
+
             // Tests rebuilding the graph mid render
             runRebuildTests (setup);
             runCycleTests (setup);
@@ -62,7 +63,7 @@ private:
         beginTest ("Sin");
         {
             auto sinNode = std::make_unique<SinNode> (220.0f);
-            
+
             auto testContext = createBasicTestContext (std::move (sinNode), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
@@ -80,7 +81,7 @@ private:
             nodes.push_back (std::move (invertedSinNode));
 
             auto sumNode = std::make_unique<BasicSummingNode> (std::move (nodes));
-            
+
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
         }
@@ -91,12 +92,12 @@ private:
             std::vector<std::unique_ptr<Node>> trackOneClipNodes;
             trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
             trackOneClipNodes.push_back (std::make_unique<SinNode> (220.0f, 1));
-            
+
             auto trackOneNode = std::make_unique<SummingNode> (std::move (trackOneClipNodes));
 
             auto trackTwoClipNode = std::make_unique<SinNode> (220.0f, 1);
             auto trackTwoNode = std::make_unique<GainNode> (std::move (trackTwoClipNode), [clipGain] { return clipGain; });
-            
+
             std::vector<std::unique_ptr<Node>> trackNodes;
             trackNodes.push_back (std::move (trackOneNode));
             trackNodes.push_back (std::move (trackTwoNode));
@@ -115,12 +116,12 @@ private:
 
             auto sumNode = std::make_unique<BasicSummingNode> (std::move (nodes));
             auto node = std::make_unique<FunctionNode> (std::move (sumNode), [] (float s) { return s * 0.5f; });
-            
+
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.885f, 0.5f);
         }
     }
-    
+
     void runSendReturnTests (TestSetup testSetup)
     {
         beginTest ("Sin send/return");
@@ -162,7 +163,7 @@ private:
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
         }
-        
+
         beginTest ("Sin send/return non-blocking");
         {
             // Track 1 sends a sin tone to a send with a gain of 0.25
@@ -177,12 +178,12 @@ private:
 
             // Track 1 & 2 then get summed together
             auto node = makeBaicSummingNode ({ track1Node.release(), track2Node.release() });
-            
+
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.885f, 0.5f);
         }
     }
-    
+
     void runLatencyTests (TestSetup testSetup)
     {
         beginTest ("Basic latency test cancelling sin");
@@ -256,7 +257,7 @@ private:
             auto track2 = makeNode<SinNode> ((float) sinFrequency);
             track2 = makeGainNode (std::move (track2), 0.5f);
             track2 = makeNode<ReturnNode> (std::move (track2), 1);
-            
+
             auto node = makeSummingNode ({ track1.release(), track2.release() });
 
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);
@@ -333,36 +334,36 @@ private:
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);
         }
     }
-        
+
     void runMidiTests (TestSetup testSetup)
     {
         const double sampleRate = 44100.0;
         const double duration = 5.0;
-        
+
         // Avoid creating events at the end of the duration as they'll get lost after latency is applied
         const auto sequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, testSetup.random);
-        
+
         beginTest ("Basic MIDI");
         {
             auto node = std::make_unique<MidiNode> (sequence);
-            
+
             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
         }
-        
+
         beginTest ("Delayed MIDI");
         {
             expectGreaterThan (sequence.getNumEvents(), 0);
-            
+
             const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
             auto midiNode = makeNode<MidiNode> (sequence);
             auto delayedNode = makeNode<LatencyNode> (std::move (midiNode), latencyNumSamples);
 
             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);
-            
+
             auto extectedSequence = sequence;
             extectedSequence.addTimeToMessages (delayedTime);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, extectedSequence);
@@ -373,18 +374,18 @@ private:
             // This test has a sin node being delayed by a block which then gets mixed with a non-deleayed MIDI stream
             // The MIDI stream should be delayed by the same amount as the sin stream
             expectGreaterThan (sequence.getNumEvents(), 0);
-            
+
             const int latencyNumSamples = juce::roundToInt (sampleRate / 100.0);
             const double delayedTime = latencyNumSamples / sampleRate;
 
             auto sinNode = makeNode<SinNode> (220.0f);
             auto delayedNode = makeNode<LatencyNode> (std::move (sinNode), latencyNumSamples);
-            
+
             auto midiNode = makeNode<MidiNode> (sequence);
             auto summedNode = makeSummingNode ({ delayedNode.release(), midiNode.release() });
 
             auto testContext = createBasicTestContext (std::move (summedNode), testSetup, 1, duration);
-            
+
             auto extectedSequence = sequence;
             extectedSequence.addTimeToMessages (delayedTime);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, extectedSequence);
@@ -394,13 +395,13 @@ private:
         {
             // Test that sends MIDI from one branch of a node to another and mutes the original
             const int busNum = 1;
-            
+
             auto track1 = makeNode<MidiNode> (sequence);
             track1 = makeNode<SendNode> (std::move (track1), busNum);
             track1 = makeNode<FunctionNode> (std::move (track1), [] (float) { return 0.0f; });
 
             auto track2 = makeNode<ReturnNode> (makeNode<SinNode> (220.0f), busNum);
-            
+
             auto sumNode = makeSummingNode ({ track1.release(), track2.release() });
 
             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, duration);
@@ -408,12 +409,12 @@ private:
             expectGreaterThan (sequence.getNumEvents(), 0);
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
         }
-        
+
         beginTest ("Send/return MIDI passthrough");
         {
             // Test that sends MIDI from one branch of a node to another and mutes the return path
             const int busNum = 1;
-            
+
             auto track1 = makeNode<MidiNode> (sequence);
             track1 = makeNode<SendNode> (std::move (track1), busNum);
 
@@ -428,7 +429,7 @@ private:
             test_utilities::expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
         }
     }
-    
+
     void runStereoTests (TestSetup testSetup)
     {
         beginTest ("Stereo sin");
@@ -486,7 +487,7 @@ private:
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 1.0f, 0.001f);
             expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.707f, 0.001f);
         }
-        
+
         beginTest ("Twin mono sin summed to mono cancelling");
         {
             // L/R sin with inverted phase that cancel
@@ -509,7 +510,7 @@ private:
             expectWithinAbsoluteError (buffer.getMagnitude (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
             expectWithinAbsoluteError (buffer.getRMSLevel (0, 0, buffer.getNumSamples()), 0.0f, 0.001f);
         }
-        
+
         beginTest ("Mono sin duplicated to 6 channel");
         {
             // Create a single mono sin and then copy that to 6 channels
@@ -530,7 +531,7 @@ private:
             }
         }
     }
-    
+
     void runRebuildTests (TestSetup testSetup)
     {
         beginTest ("Sin rebuild");
@@ -540,7 +541,7 @@ private:
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::make_unique<SinNode> (220.0f)),
                                                    testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
-            
+
             playerContext.process (firstHalfNumSamples);
             auto testContext = playerContext.getTestResult();
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -551,7 +552,7 @@ private:
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
-            
+
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
         }
@@ -567,7 +568,7 @@ private:
                 size_t nodeID = 1234;
                 return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
             };
-            
+
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             auto node = makeSinNode();
@@ -575,7 +576,7 @@ private:
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
                                                    testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
-            
+
             playerContext.process (firstHalfNumSamples);
             auto testContext = playerContext.getTestResult();
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
@@ -589,7 +590,7 @@ private:
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
-            
+
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0,
                                                juce::Range<int>::withStartAndLength (firstHalfNumSamples, latencyNumSamples),
@@ -599,7 +600,7 @@ private:
                                                                                      secondHalfNumSamples - latencyNumSamples),
                                                1.0f, 0.707f);
         }
-        
+
         beginTest ("Sin with latency rebuild, replacing");
         {
             // This is the same as the previous text except that it uses setNode which passes the old
@@ -611,7 +612,7 @@ private:
                 size_t nodeID = 1234;
                 return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
             };
-            
+
             const double totalDuration = 5.0;
             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);
             auto node = makeSinNode();
@@ -619,7 +620,7 @@ private:
             TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (std::move (node)),
                                                    testSetup, 1, totalDuration, true);
             const int firstHalfNumSamples = totalNumSamples / 2;
-            
+
             playerContext.process (firstHalfNumSamples);
             auto testContext = playerContext.getTestResult();
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
@@ -634,13 +635,13 @@ private:
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
             testContext = playerContext.getTestResult();
-            
+
             expectEquals (testContext->buffer.getNumSamples(), firstHalfNumSamples + secondHalfNumSamples);
             test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, latencyNumSamples,
                                                0.0f, 0.0f, 1.0f, 0.707f);
         }
     }
-    
+
     void runCycleTests (TestSetup testSetup)
     {
         beginTest ("Cycles");

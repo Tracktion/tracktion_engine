@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -1292,7 +1293,7 @@ void RackTypeList::removeRackType (const RackType::Ptr& type)
     if (list->objects.contains (type.get()))
     {
         auto allTracks = getAllTracks (edit);
-        
+
         for (auto f : getAllPlugins (edit, false))
             if (auto rf = dynamic_cast<RackInstance*> (f))
                 if (rf->type == type)
@@ -1309,7 +1310,7 @@ void RackTypeList::removeRackType (const RackType::Ptr& type)
         {
             for (auto t : allTracks)
                 t->hideAutomatableParametersForSource (modifier->itemID);
-            
+
             for (auto param : getAllParametersBeingModifiedBy (edit, *modifier))
                 param->removeModifier (*modifier);
         }
@@ -1387,7 +1388,7 @@ void RackType::triggerUpdate()
         return;
 
     countInstancesInEdit();
-    
+
     edit.restartPlayback();
 }
 

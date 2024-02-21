@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 
@@ -73,10 +74,10 @@ void WaveInputDeviceNode::process (ProcessContext& pc)
         auto destSubView = destAudio.getFirstChannels (numChannelsToRead)
                                     .getStart (numToRead);
         audioFifo.readAdding (destSubView);
-    
+
         // Copy any additional channels from the last one
         auto lastChannelView = destSubView.getChannel (destSubView.getNumChannels() - 1);
-        
+
         for (auto c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
             copy (destAudio.getChannel (c).getStart (numToRead), lastChannelView);
     }

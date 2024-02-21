@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -20,7 +21,7 @@ class WaveAudioClip  : public AudioClipBase
 public:
     /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */
     WaveAudioClip (const juce::ValueTree&, EditItemID, ClipOwner&);
-    
+
     /** Destructor. */
     ~WaveAudioClip() override;
 
@@ -29,7 +30,7 @@ public:
     //==============================================================================
     /** Adds a new take with the ProjectItemID as the source. */
     void addTake (ProjectItemID);
-    
+
     /** Adds a new take with the given file as the source. */
     void addTake (const juce::File&);
 

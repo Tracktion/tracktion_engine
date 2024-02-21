@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -26,7 +27,7 @@ public:
         : juce::UnitTest ("ConnectedNode", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -45,10 +46,10 @@ private:
             auto sinNode1 = std::make_shared<SinNode> (220.0f);
             auto sinNode2 = std::make_shared<SinNode> (220.0f);
             auto connectedNode = std::make_unique<ConnectedNode>();
-            
+
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });
             connectedNode->addAudioConnection (sinNode2, { 0, 0 });
-            
+
             // Reduce by 0.5 to avoid clipping
             auto node = makeGainNode (std::move (connectedNode), 0.5f);
 
@@ -67,10 +68,10 @@ private:
             auto sinNode1 = std::make_shared<SinNode> ((float) sinFrequency);
             auto sinNode2 = std::make_shared<LatencyNode> (makeNode<SinNode> ((float) sinFrequency), numLatencySamples);
             auto connectedNode = std::make_unique<ConnectedNode>();
-            
+
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });
             connectedNode->addAudioConnection (sinNode2, { 0, 0 });
-            
+
             // Reduce by 0.5 to avoid clipping
             auto node = makeGainNode (std::move (connectedNode), 0.5f);
 

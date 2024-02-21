@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -66,7 +67,7 @@ void ModifierNode::prepareToPlay (const tracktion::graph::PlaybackInitialisation
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
-    
+
     auto props = getNodeProperties();
 
     if (props.latencyNumSamples > 0)
@@ -77,7 +78,7 @@ void ModifierNode::process (ProcessContext& pc)
 {
     auto inputBuffers = input->getProcessedOutput();
     auto& inputAudioBlock = inputBuffers.audio;
-    
+
     auto& outputBuffers = pc.buffers;
     auto& outputAudioBlock = outputBuffers.audio;
 
@@ -97,16 +98,16 @@ void ModifierNode::process (ProcessContext& pc)
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);
     bool shouldProcess = getBoolParamValue (*modifier->enabledParam);
-    
+
     if (playHeadState != nullptr && playHeadState->didPlayheadJump())
         midiMessageArray.isAllNotesOff = true;
-    
+
     if (trackMuteState != nullptr)
     {
         if (! trackMuteState->shouldTrackContentsBeProcessed())
         {
             shouldProcess = shouldProcess && trackMuteState->shouldTrackBeAudible();
-        
+
             if (trackMuteState->wasJustMuted())
                 midiMessageArray.isAllNotesOff = true;
         }
@@ -115,7 +116,7 @@ void ModifierNode::process (ProcessContext& pc)
     // Process the plugin
     if (shouldProcess)
         modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange, outputAudioBuffer));
-    
+
     // Then copy the buffers to the outputs
     outputBuffers.midi.copyFrom (midiMessageArray);
 }
@@ -138,7 +139,7 @@ PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> r
         rc.bufferNumSamples = destBuffer.getNumSamples();
         rc.bufferForMidiMessages = &midiMessageArray;
         rc.midiBufferOffset = 0.0;
-        
+
         return rc;
     }
 
@@ -147,7 +148,7 @@ PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> r
 
     const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHead, referenceSampleRange);
     jassert (! timelineRange.isSplit);
-    
+
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),

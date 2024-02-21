@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -27,7 +28,7 @@ public:
                        std::unique_ptr<tracktion::graph::PlayHeadState>,
                        std::unique_ptr<ProcessState>,
                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate);
-    
+
     /** Destructor. */
     ~NodeRenderContext();
 
@@ -77,12 +78,12 @@ private:
     Renderer::RenderTask& owner;
     Renderer::Parameters r, originalParams;
     bool needsToNormaliseAndTrim = false;
-    
+
     std::unique_ptr<tracktion::graph::PlayHead> playHead;
     std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
     std::unique_ptr<ProcessState> processState;
     std::unique_ptr<TracktionNodePlayer> nodePlayer;
-    
+
     int numOutputChans = 0;
     std::unique_ptr<AudioFileWriter> writer;
     Plugin::Array plugins;
@@ -122,7 +123,7 @@ private:
         succeeded,
         failed
     };
-    
+
     WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
 };
 

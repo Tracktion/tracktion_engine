@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -686,7 +687,7 @@ bool containsClip (const Edit& edit, Clip* clip)
                                   {
                                       if (t.indexOfTrackItem (clip) >= 0)
                                           return true;
-        
+
                                       if (auto at = dynamic_cast<AudioTrack*> (&t))
                                           for (auto slot : at->getClipSlotList().getClipSlots())
                                               if (clip == slot->getClip())
@@ -712,7 +713,7 @@ void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
                                               if (! f (*ti))
                                                   return false;
                                       }
-        
+
                                       if (auto at = dynamic_cast<AudioTrack*> (&t))
                                           for (auto slot : at->getClipSlotList().getClipSlots())
                                               if (auto c = slot->getClip())

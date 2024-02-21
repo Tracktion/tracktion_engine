@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -74,7 +75,7 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
     }
 
     playheadJumped = jumped;
-    
+
     // Next check if this is the start or end of a loop range
     if (playHead.isLooping())
     {
@@ -82,7 +83,7 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
         const auto startTimelinePos = playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart());
         const auto endTimelinePos = playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getEnd() - 1) + 1;
         // The -1/+1 is here to avoid the last sample being wrapped to the beginning of the loop range
-        
+
         if (playHead.isRollingIntoLoop())
             firstBlockOfLoop = false;
         else

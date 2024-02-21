@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -17,10 +18,10 @@ namespace tracktion { inline namespace graph
     Plays back a node with mutiple threads.
     This uses a simpler internal mechanism than the LockFreeMultiThreadedNodePlayer but uses spin locks
     do do so so isn't completely wait-free.
- 
+
     The thread pool uses a hybrid method of trying to keep processing threads spinning where possible but
     falling back to a condition variable if they spin for too long.
- 
+
     This is mainly here to compare performance with the LockFreeMultiThreadedNodePlayer.
     @see LockFreeMultiThreadedNodePlayer
 */
@@ -30,17 +31,17 @@ public:
     //==============================================================================
     /** Creates an empty MultiThreadedNodePlayer. */
     MultiThreadedNodePlayer();
-    
+
     /** Destructor. */
     ~MultiThreadedNodePlayer();
-    
+
     //==============================================================================
     /** Sets the number of threads to use for rendering.
         This can be 0 in which case only the process calling thread will be used for processing.
         N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
     */
     void setNumThreads (size_t);
-    
+
     /** Sets the Node to process. */
     void setNode (std::unique_ptr<Node>);
 
@@ -62,7 +63,7 @@ public:
 
     /** Process a block of the Node. */
     int process (const Node::ProcessContext&);
-    
+
     /** Clears the current Node.
         Note that this shouldn't be called concurrently with setNode.
         If it's called concurrently with process, it will block until the current process call has finished.
@@ -86,13 +87,13 @@ private:
 
     class ThreadPool;
     std::unique_ptr<ThreadPool> threadPool;
-    
+
     struct PlaybackNode
     {
         PlaybackNode (Node& n)
             : node (n), numInputs (node.getDirectInputNodes().size())
         {}
-        
+
         Node& node;
         const size_t numInputs;
         std::vector<Node*> outputs;
@@ -102,14 +103,14 @@ private:
         std::atomic<bool> hasBeenDequeued { false };
        #endif
     };
-    
+
     struct PreparedNode
     {
         std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         choc::fifo::MultipleReaderMultipleWriterFIFO<Node*> nodesReadyToBeProcessed;
     };
-    
+
     RealTimeSpinLock preparedNodeMutex;
     std::unique_ptr<PreparedNode> preparedNode;
     std::atomic<PreparedNode*> currentPreparedNode { nullptr };
@@ -120,7 +121,7 @@ private:
     //==============================================================================
     std::atomic<double> sampleRate { 0.0 };
     int blockSize = 0;
-    
+
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
     std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph, double sampleRateToUse, int blockSizeToUse);
@@ -132,7 +133,7 @@ private:
 
     //==============================================================================
     void setNewGraph (std::unique_ptr<NodeGraph>);
-    
+
     //==============================================================================
     static void buildNodesOutputLists (std::vector<Node*>&, std::vector<std::unique_ptr<PlaybackNode>>&);
     void resetProcessQueue();

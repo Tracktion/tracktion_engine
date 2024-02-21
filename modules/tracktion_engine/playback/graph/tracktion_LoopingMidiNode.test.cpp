@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LOOPINGMIDINODE
@@ -22,7 +23,7 @@ public:
         : juce::UnitTest ("LoopingMidiNodeTests", "tracktion_engine")
     {
     }
-    
+
     void runTest() override
     {
         for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -275,7 +276,7 @@ private:
                 { { 0x80, 0x49, 0x00 }, 24.1976 },
                 { { 0x80, 0x42, 0x00 }, 24.2033 },
                 { { 0x80, 0x4e, 0x00 }, 24.2284 } };
-            
+
             runSequenceClippingTest ({ std::begin (data), std::end (data) },
                                      { 12.0, 24.0 }, static_cast<size_t> (26));
         }

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -43,7 +44,7 @@ private:
 
         juce::WavAudioFormat format;
         juce::TemporaryFile tempFile (format.getFileExtensions()[0]);
-        
+
         AudioFile audioFile (engine, tempFile.getFile());
         const int numChannels = 2;
         const double sampleRate = 44100.0;
@@ -63,7 +64,7 @@ private:
 
             AudioFileWriter writer (audioFile, &format, numChannels, sampleRate, bitDepth, {}, 0);
             expect (writer.isOpen());
-            
+
             if (writer.isOpen())
             {
                 juce::AudioBuffer<float> buffer (numChannels, numSamplesToWrite);

@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -1066,7 +1067,7 @@ void MackieMCU::moveFader (int channelNum_, float newSliderPos)
 void MackieMCU::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
 {
     ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
-    
+
     moveFaderInt (deviceIdx, 8, (newLeftSliderPos + newRightSliderPos) * 0.5f);
 }
 
@@ -1082,7 +1083,7 @@ void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
 void MackieMCU::movePanPot (int channelNum_, float newPan)
 {
     ControlSurface::movePanPot (channelNum_, newPan);
-    
+
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1222,7 +1223,7 @@ void MackieMCU::automationWriteModeChanged (bool isWriting)
 void MackieMCU::parameterChanged (int parameterNumber_, const ParameterSetting& newValue)
 {
     ControlSurface::parameterChanged (parameterNumber_, newValue);
-    
+
     int parameterNumber = parameterNumber_ % 8;
     int dev             = parameterNumber_ / 8;
 

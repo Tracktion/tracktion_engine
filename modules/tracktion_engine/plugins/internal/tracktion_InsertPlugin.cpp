@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -235,7 +236,7 @@ void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAu
 {
     CRASH_TRACER
     const juce::ScopedLock sl (bufferLock);
-    
+
     if (sendDeviceType == audioDevice)
     {
         if (destAudio != nullptr)
@@ -252,7 +253,7 @@ void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcA
 {
     CRASH_TRACER
     const juce::ScopedLock sl (bufferLock);
-    
+
     if (returnDeviceType == audioDevice)
     {
         if (srcAudio != nullptr)

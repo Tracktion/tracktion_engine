@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 #pragma once
@@ -25,16 +26,16 @@ public:
         : juce::UnitTest ("PlayHeadStateTests", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         constexpr int64_t blockSize = 44'100;
-        
+
         beginTest ("Loop edges");
         {
             PlayHead playHead;
             PlayHeadState playHeadState (playHead);
-            
+
             playHead.play ({ 44'100, 176'400 }, true); // 1-4s
             auto referenceRange = juce::Range<int64_t>::withStartAndLength (0, blockSize);
             playHeadState.update (referenceRange); // This is reference samples
@@ -62,12 +63,12 @@ public:
             expect (! playHeadState.isFirstBlockOfLoop());
             expect (playHeadState.isLastBlockOfLoop());
         }
-        
+
         beginTest ("Not looping");
         {
             PlayHead playHead;
             PlayHeadState playHeadState (playHead);
-            
+
             playHead.play ({ 44'100, 176'400 }, false); // 1-4s
             auto referenceRange = juce::Range<int64_t>::withStartAndLength (0, blockSize);
             playHeadState.update (referenceRange); // This is reference samples

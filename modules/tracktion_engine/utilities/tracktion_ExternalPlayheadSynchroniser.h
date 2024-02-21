@@ -1,11 +1,12 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
 */
 
 namespace tracktion { inline namespace engine
@@ -23,7 +24,7 @@ void synchroniseEditPosition (Edit&, const juce::AudioPlayHead::CurrentPositionI
 //==============================================================================
 /** An ExternalPlayheadSynchroniser is used to synchronise the internal Edit's playhead with an
     AudioProcessor, for use in plugins.
-    
+
     Just create one when you create your Edit and repeatedly call the synchronise method
     in your process block like this:
     @code
@@ -39,7 +40,7 @@ class ExternalPlayheadSynchroniser
 public:
     /** Constructs an ExternalPlayheadSynchroniser. */
     ExternalPlayheadSynchroniser (Edit&);
-    
+
     /** Synchronises the Edit's playback position with an AudioPlayHead if possible.
         Generally you'd call this at the start of your plugin's processBlock method.
         @returns true if it was able to synchronise, false otherwise.
