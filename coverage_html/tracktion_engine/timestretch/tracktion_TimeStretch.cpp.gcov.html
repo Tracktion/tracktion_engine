@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-02-22 12:55:12</td>
+            <td class="headerValue">2024-02-22 12:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -295,15 +295,15 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">        123 :     }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">        123 :     bool isOk() const override      { return true; }</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       1430 :     void reset() override           { clear(); }</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       1428 :     void reset() override           { clear(); }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">      17469 :     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">      17261 :     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override</span></a>
 <a name="239"><span class="lineNum">     239 </span>            :     {</a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      17469 :         setTempo (1.0f / speedRatio);</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      17469 :         setPitchSemiTones (semitonesUp);</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      17469 :         inputOutputSampleRatio = getInputOutputSampleRatio();</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      17261 :         setTempo (1.0f / speedRatio);</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      17261 :         setPitchSemiTones (semitonesUp);</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      17261 :         inputOutputSampleRatio = getInputOutputSampleRatio();</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :         </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      17469 :         return true;</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      17261 :         return true;</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :     }</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">      60524 :     int getFramesNeeded() const override</span></a>
@@ -826,16 +826,16 @@
 <a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :     return mode != TimeStretcher::disabled;</span></a>
 <a name="765"><span class="lineNum">     765 </span>            : }</a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
-<a name="767"><span class="lineNum">     767 </span><span class="lineCov">       1430 : void TimeStretcher::reset()</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">       1428 : void TimeStretcher::reset()</span></a>
 <a name="768"><span class="lineNum">     768 </span>            : {</a>
-<a name="769"><span class="lineNum">     769 </span><span class="lineCov">       1430 :     if (stretcher != nullptr)</span></a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineCov">       1430 :         stretcher-&gt;reset();</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       1430 : }</span></a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineCov">       1428 :     if (stretcher != nullptr)</span></a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineCov">       1428 :         stretcher-&gt;reset();</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       1428 : }</span></a>
 <a name="772"><span class="lineNum">     772 </span>            : </a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineCov">      17460 : bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)</span></a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineCov">      17252 : bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : {</a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineCov">      17469 :     if (stretcher != nullptr)</span></a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineCov">      17469 :         return stretcher-&gt;setSpeedAndPitch (speedRatio, semitonesUp);</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">      17261 :     if (stretcher != nullptr)</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">      17261 :         return stretcher-&gt;setSpeedAndPitch (speedRatio, semitonesUp);</span></a>
 <a name="777"><span class="lineNum">     777 </span>            : </a>
 <a name="778"><span class="lineNum">     778 </span>            :     return false;</a>
 <a name="779"><span class="lineNum">     779 </span>            : }</a>

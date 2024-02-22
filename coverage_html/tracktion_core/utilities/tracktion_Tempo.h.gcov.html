@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-02-22 12:55:12</td>
+            <td class="headerValue">2024-02-22 12:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -257,7 +257,7 @@
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span>            :             //==============================================================================</a>
 <a name="197"><span class="lineNum">     197 </span>            :             /** Returns the current time of the Position. */</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      67494 :             TimePosition getTime() const                                { return time; }</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">      67573 :             TimePosition getTime() const                                { return time; }</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
 <a name="200"><span class="lineNum">     200 </span>            :             /** Returns the current beats of the Position. */</a>
 <a name="201"><span class="lineNum">     201 </span>            :             BeatPosition getBeats() const;</a>
@@ -340,7 +340,7 @@
 <a name="278"><span class="lineNum">     278 </span>            : /** Converts time to beats. */</a>
 <a name="279"><span class="lineNum">     279 </span>            : [[ nodiscard ]] constexpr BeatPosition operator* (TimePosition t, tempo::BeatsPerSecond bps)    { return BeatPosition::fromBeats (t.inSeconds() * bps.v); }</a>
 <a name="280"><span class="lineNum">     280 </span>            : /** Converts time to beats. */</a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">   20165115 : [[ nodiscard ]] constexpr BeatDuration operator* (TimeDuration t, tempo::BeatsPerSecond bps)    { return BeatDuration::fromBeats (t.inSeconds() * bps.v); }</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">   20165475 : [[ nodiscard ]] constexpr BeatDuration operator* (TimeDuration t, tempo::BeatsPerSecond bps)    { return BeatDuration::fromBeats (t.inSeconds() * bps.v); }</span></a>
 <a name="282"><span class="lineNum">     282 </span>            : /** Converts time to beats. */</a>
 <a name="283"><span class="lineNum">     283 </span>            : [[ nodiscard ]] constexpr BeatPosition operator* (tempo::BeatsPerSecond bps, TimePosition t)    { return BeatPosition::fromBeats (t.inSeconds() * bps.v); }</a>
 <a name="284"><span class="lineNum">     284 </span>            : /** Converts time to beats. */</a>
@@ -362,7 +362,7 @@
 <a name="300"><span class="lineNum">     300 </span>            : /** Converts beats to time. */</a>
 <a name="301"><span class="lineNum">     301 </span>            : [[ nodiscard ]] constexpr TimePosition operator* (tempo::SecondsPerBeat spb, BeatPosition t)    { return TimePosition::fromSeconds (t.inBeats() * spb.v); }</a>
 <a name="302"><span class="lineNum">     302 </span>            : /** Converts beats to time. */</a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineCov">    3855570 : [[ nodiscard ]] constexpr TimeDuration operator* (tempo::SecondsPerBeat spb, BeatDuration t)    { return TimeDuration::fromSeconds (t.inBeats() * spb.v); }</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">    3855728 : [[ nodiscard ]] constexpr TimeDuration operator* (tempo::SecondsPerBeat spb, BeatDuration t)    { return TimeDuration::fromSeconds (t.inBeats() * spb.v); }</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
 <a name="305"><span class="lineNum">     305 </span>            : /** Converts a SecondsPerBeat to BeatsPerSecond. */</a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineCov">        758 : [[ nodiscard ]] constexpr tempo::BeatsPerSecond operator/ (double t, tempo::SecondsPerBeat spb) { return { t / spb.v }; }</span></a>
@@ -445,13 +445,13 @@
 <a name="383"><span class="lineNum">     383 </span>            :         return it.startBeat + ((time - it.startTime) * it.beatsPerSecond);</a>
 <a name="384"><span class="lineNum">     384 </span>            :     }</a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">    3855502 :     inline TimePosition toTime (const std::vector&lt;Sequence::Section&gt;&amp; sections, BeatPosition beats)</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">    3855660 :     inline TimePosition toTime (const std::vector&lt;Sequence::Section&gt;&amp; sections, BeatPosition beats)</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :     {</a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">    3856617 :         for (int i = (int) sections.size(); --i &gt;= 0;)</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">    3856775 :         for (int i = (int) sections.size(); --i &gt;= 0;)</span></a>
 <a name="389"><span class="lineNum">     389 </span>            :         {</a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineCov">    3855730 :             auto&amp; it = sections[(size_t) i];</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineCov">    3855888 :             auto&amp; it = sections[(size_t) i];</span></a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineCov">    3855730 :             if (toPosition (beats - it.startBeat) &gt;= BeatPosition())</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineCov">    3855888 :             if (toPosition (beats - it.startBeat) &gt;= BeatPosition())</span></a>
 <a name="393"><span class="lineNum">     393 </span>            :                 return it.startTime + it.secondsPerBeat * (beats - it.startBeat);</a>
 <a name="394"><span class="lineNum">     394 </span>            :         }</a>
 <a name="395"><span class="lineNum">     395 </span>            : </a>
@@ -806,15 +806,15 @@
 <a name="744"><span class="lineNum">     744 </span>            :     assert (sequence.sections.size() &gt; 0);</a>
 <a name="745"><span class="lineNum">     745 </span>            : }</a>
 <a name="746"><span class="lineNum">     746 </span>            : </a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineCov">       5507 : inline Sequence::Position::Position (const Position&amp; o)</span></a>
-<a name="748"><span class="lineNum">     748 </span><span class="lineCov">       5507 :     : sequence (o.sequence)</span></a>
+<a name="747"><span class="lineNum">     747 </span><span class="lineCov">       5603 : inline Sequence::Position::Position (const Position&amp; o)</span></a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineCov">       5603 :     : sequence (o.sequence)</span></a>
 <a name="749"><span class="lineNum">     749 </span>            : {</a>
 <a name="750"><span class="lineNum">     750 </span>            :     assert (sequence.sections.size() &gt; 0);</a>
 <a name="751"><span class="lineNum">     751 </span>            : }</a>
 <a name="752"><span class="lineNum">     752 </span>            : </a>
 <a name="753"><span class="lineNum">     753 </span>            : inline BeatPosition Sequence::Position::getBeats() const</a>
 <a name="754"><span class="lineNum">     754 </span>            : {</a>
-<a name="755"><span class="lineNum">     755 </span><span class="lineCov">    7300531 :     const auto&amp; it = sequence.sections[index];</span></a>
+<a name="755"><span class="lineNum">     755 </span><span class="lineCov">    7300891 :     const auto&amp; it = sequence.sections[index];</span></a>
 <a name="756"><span class="lineNum">     756 </span>            :     return it.startBeat + (time - it.startTime) * it.beatsPerSecond;</a>
 <a name="757"><span class="lineNum">     757 </span>            : }</a>
 <a name="758"><span class="lineNum">     758 </span>            : </a>
@@ -851,34 +851,34 @@
 <a name="789"><span class="lineNum">     789 </span>            : }</a>
 <a name="790"><span class="lineNum">     790 </span>            : </a>
 <a name="791"><span class="lineNum">     791 </span>            : //==============================================================================</a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineCov">   17819350 : inline void Sequence::Position::set (TimePosition t)</span></a>
+<a name="792"><span class="lineNum">     792 </span><span class="lineCov">   17818924 : inline void Sequence::Position::set (TimePosition t)</span></a>
 <a name="793"><span class="lineNum">     793 </span>            : {</a>
-<a name="794"><span class="lineNum">     794 </span><span class="lineCov">   17819350 :     const auto maxIndex = sequence.sections.size() - 1;</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineCov">   17818924 :     const auto maxIndex = sequence.sections.size() - 1;</span></a>
 <a name="795"><span class="lineNum">     795 </span>            : </a>
-<a name="796"><span class="lineNum">     796 </span><span class="lineCov">   17819350 :     if (index &gt; maxIndex)</span></a>
+<a name="796"><span class="lineNum">     796 </span><span class="lineCov">   17818924 :     if (index &gt; maxIndex)</span></a>
 <a name="797"><span class="lineNum">     797 </span>            :     {</a>
 <a name="798"><span class="lineNum">     798 </span><span class="lineNoCov">          0 :         index = maxIndex;</span></a>
 <a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 :         time = sequence.sections[index].startTime;</span></a>
 <a name="800"><span class="lineNum">     800 </span>            :     }</a>
 <a name="801"><span class="lineNum">     801 </span>            : </a>
-<a name="802"><span class="lineNum">     802 </span><span class="lineCov">   17819350 :     if (t &gt;= time)</span></a>
+<a name="802"><span class="lineNum">     802 </span><span class="lineCov">   17818924 :     if (t &gt;= time)</span></a>
 <a name="803"><span class="lineNum">     803 </span>            :     {</a>
-<a name="804"><span class="lineNum">     804 </span><span class="lineCov">   14165884 :         while (index &lt; maxIndex &amp;&amp; sequence.sections[index + 1].startTime &lt;= t)</span></a>
+<a name="804"><span class="lineNum">     804 </span><span class="lineCov">   14165278 :         while (index &lt; maxIndex &amp;&amp; sequence.sections[index + 1].startTime &lt;= t)</span></a>
 <a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 :             ++index;</span></a>
 <a name="806"><span class="lineNum">     806 </span>            :     }</a>
 <a name="807"><span class="lineNum">     807 </span>            :     else</a>
 <a name="808"><span class="lineNum">     808 </span>            :     {</a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">    3653466 :         while (index &gt; 0 &amp;&amp; sequence.sections[index].startTime &gt; t)</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineCov">    3653646 :         while (index &gt; 0 &amp;&amp; sequence.sections[index].startTime &gt; t)</span></a>
 <a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :             --index;</span></a>
 <a name="811"><span class="lineNum">     811 </span>            :     }</a>
 <a name="812"><span class="lineNum">     812 </span>            : </a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">   17819350 :     time = t;</span></a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">   17819350 : }</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">   17818924 :     time = t;</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">   17818924 : }</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineCov">     171199 : inline TimePosition Sequence::Position::set (BeatPosition t)</span></a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineCov">     171357 : inline TimePosition Sequence::Position::set (BeatPosition t)</span></a>
 <a name="817"><span class="lineNum">     817 </span>            : {</a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineCov">     171199 :     set (details::toTime (sequence.sections, t));</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">     171199 :     return time;</span></a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineCov">     171357 :     set (details::toTime (sequence.sections, t));</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">     171357 :     return time;</span></a>
 <a name="820"><span class="lineNum">     820 </span>            : }</a>
 <a name="821"><span class="lineNum">     821 </span>            : </a>
 <a name="822"><span class="lineNum">     822 </span>            : inline TimePosition Sequence::Position::set (BarsAndBeats t)</a>
@@ -967,16 +967,16 @@
 <a name="905"><span class="lineNum">     905 </span>            : }</a>
 <a name="906"><span class="lineNum">     906 </span>            : </a>
 <a name="907"><span class="lineNum">     907 </span>            : //==============================================================================</a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineCov">    3629226 : inline TimePosition Sequence::Position::getTimeOfNextChange() const</span></a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineCov">    3629406 : inline TimePosition Sequence::Position::getTimeOfNextChange() const</span></a>
 <a name="909"><span class="lineNum">     909 </span>            : {</a>
 <a name="910"><span class="lineNum">     910 </span>            :     assert (sequence.sections.size() &gt; 0);</a>
-<a name="911"><span class="lineNum">     911 </span><span class="lineCov">    3629226 :     const auto currentSectionTime = sequence.sections[index].startTime;</span></a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineCov">    3629406 :     const auto currentSectionTime = sequence.sections[index].startTime;</span></a>
 <a name="912"><span class="lineNum">     912 </span>            : </a>
-<a name="913"><span class="lineNum">     913 </span><span class="lineCov">    3629226 :     for (auto i = index + 1; i &lt; sequence.sections.size(); ++i)</span></a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineCov">    3629406 :     for (auto i = index + 1; i &lt; sequence.sections.size(); ++i)</span></a>
 <a name="914"><span class="lineNum">     914 </span><span class="lineNoCov">          0 :         if (sequence.sections[i].startTime &gt; currentSectionTime)</span></a>
 <a name="915"><span class="lineNum">     915 </span><span class="lineNoCov">          0 :             return sequence.sections[i].startTime;</span></a>
 <a name="916"><span class="lineNum">     916 </span>            : </a>
-<a name="917"><span class="lineNum">     917 </span><span class="lineCov">    3629226 :     return currentSectionTime;</span></a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">    3629406 :     return currentSectionTime;</span></a>
 <a name="918"><span class="lineNum">     918 </span>            : }</a>
 <a name="919"><span class="lineNum">     919 </span>            : </a>
 <a name="920"><span class="lineNum">     920 </span><span class="lineNoCov">          0 : inline BeatPosition Sequence::Position::getBeatOfNextChange() const</span></a>
@@ -1009,10 +1009,10 @@
 <a name="947"><span class="lineNum">     947 </span>            : </a>
 <a name="948"><span class="lineNum">     948 </span>            : inline double Sequence::Position::getPPQTime() const noexcept</a>
 <a name="949"><span class="lineNum">     949 </span>            : {</a>
-<a name="950"><span class="lineNum">     950 </span><span class="lineCov">       5464 :     const auto&amp; it = sequence.sections[index];</span></a>
+<a name="950"><span class="lineNum">     950 </span><span class="lineCov">       5560 :     const auto&amp; it = sequence.sections[index];</span></a>
 <a name="951"><span class="lineNum">     951 </span>            :     const auto beatsSinceStart = (time - it.startTime) * it.beatsPerSecond;</a>
 <a name="952"><span class="lineNum">     952 </span>            : </a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">       5464 :     return it.ppqAtStart + 4.0 * beatsSinceStart.inBeats() / it.denominator;</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">       5560 :     return it.ppqAtStart + 4.0 * beatsSinceStart.inBeats() / it.denominator;</span></a>
 <a name="954"><span class="lineNum">     954 </span>            : }</a>
 <a name="955"><span class="lineNum">     955 </span>            : </a>
 <a name="956"><span class="lineNum">     956 </span><span class="lineCov">          1 : inline double Sequence::Position::getPPQTimeOfBarStart() const noexcept</span></a>
