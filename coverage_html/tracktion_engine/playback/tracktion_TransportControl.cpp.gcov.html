@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-01-29 11:45:53</td>
+            <td class="headerValue">2024-02-22 12:55:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">27</td>
@@ -697,9 +697,9 @@
 <a name="635"><span class="lineNum">     635 </span><span class="lineCov">        197 :     return controls;</span></a>
 <a name="636"><span class="lineNum">     636 </span>            : }</a>
 <a name="637"><span class="lineNum">     637 </span>            : </a>
-<a name="638"><span class="lineNum">     638 </span><span class="lineCov">        687 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineCov">        710 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
 <a name="639"><span class="lineNum">     639 </span>            : {</a>
-<a name="640"><span class="lineNum">     640 </span><span class="lineCov">        687 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineCov">        710 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
 <a name="641"><span class="lineNum">     641 </span>            : }</a>
 <a name="642"><span class="lineNum">     642 </span>            : </a>
 <a name="643"><span class="lineNum">     643 </span><span class="lineCov">        197 : void TransportControl::stopAllTransports (Engine&amp; engine, bool discardRecordings, bool clearDevices)</span></a>
@@ -1018,11 +1018,11 @@
 <a name="956"><span class="lineNum">     956 </span><span class="lineCov">        377 : }</span></a>
 <a name="957"><span class="lineNum">     957 </span>            : </a>
 <a name="958"><span class="lineNum">     958 </span>            : //==============================================================================</a>
-<a name="959"><span class="lineNum">     959 </span><span class="lineCov">       2263 : void TransportControl::timerCallback()</span></a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineCov">       2269 : void TransportControl::timerCallback()</span></a>
 <a name="960"><span class="lineNum">     960 </span>            : {</a>
-<a name="961"><span class="lineNum">     961 </span><span class="lineCov">       2263 :     CRASH_TRACER</span></a>
+<a name="961"><span class="lineNum">     961 </span><span class="lineCov">       2269 :     CRASH_TRACER</span></a>
 <a name="962"><span class="lineNum">     962 </span>            : </a>
-<a name="963"><span class="lineNum">     963 </span><span class="lineCov">       2263 :     if (playbackContext == nullptr)</span></a>
+<a name="963"><span class="lineNum">     963 </span><span class="lineCov">       2269 :     if (playbackContext == nullptr)</span></a>
 <a name="964"><span class="lineNum">     964 </span>            :         return;</a>
 <a name="965"><span class="lineNum">     965 </span>            : </a>
 <a name="966"><span class="lineNum">     966 </span><span class="lineNoCov">          0 :     if (isDelayedChangePending)</span></a>
@@ -1084,7 +1084,7 @@
 <a name="1022"><span class="lineNum">    1022 </span><span class="lineNoCov">          0 :             playHeadWrapper-&gt;setLoopTimes (false, {});</span></a>
 <a name="1023"><span class="lineNum">    1023 </span>            :         }</a>
 <a name="1024"><span class="lineNum">    1024 </span>            :     }</a>
-<a name="1025"><span class="lineNum">    1025 </span><span class="lineCov">       2263 : }</span></a>
+<a name="1025"><span class="lineNum">    1025 </span><span class="lineCov">       2269 : }</span></a>
 <a name="1026"><span class="lineNum">    1026 </span>            : </a>
 <a name="1027"><span class="lineNum">    1027 </span>            : </a>
 <a name="1028"><span class="lineNum">    1028 </span>            : //==============================================================================</a>

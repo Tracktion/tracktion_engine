@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-01-29 11:45:53</td>
+            <td class="headerValue">2024-02-22 12:55:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">38</td>
@@ -137,13 +137,13 @@
 <a name="75"><span class="lineNum">      75 </span>            :         }</a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">      41107 :     }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      29494 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      29478 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      29494 :         if (Clip::isClipState (child))</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      29478 :         if (Clip::isClipState (child))</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">       8533 :             if (auto c = ct.findClipForID (EditItemID::fromID (child)))</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :             {</a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       2007 :                 if (c-&gt;isGrouped())</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       2389 :                 if (c-&gt;isGrouped())</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :                 {</a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :                     auto cc = findOrCreateCollectionClip (c-&gt;getGroupID());</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :                     cc-&gt;addClip (c);</span></a>
@@ -152,7 +152,7 @@
 <a name="90"><span class="lineNum">      90 </span>            :                 }</a>
 <a name="91"><span class="lineNum">      91 </span>            :             }</a>
 <a name="92"><span class="lineNum">      92 </span>            :         }</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      29494 :     }</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">      29478 :     }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineCov">      10385 :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp; child, int) override</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :     {</a>
@@ -340,8 +340,8 @@
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">       8811 : Clip* ClipTrack::findClipForID (EditItemID id) const</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : {</a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">     401074 :     for (auto c : getClips())</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     394372 :         if (c-&gt;itemID == id)</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">       2109 :             return c;</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">     394754 :         if (c-&gt;itemID == id)</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">       2491 :             return c;</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span>            :     return {};</a>
 <a name="285"><span class="lineNum">     285 </span>            : }</a>
