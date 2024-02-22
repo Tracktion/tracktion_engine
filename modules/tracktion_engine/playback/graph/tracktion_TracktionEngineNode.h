@@ -55,9 +55,25 @@ struct ProcessState
     /** Returns the tempo::Sequence::Position this state uses. */
     const tempo::Sequence::Position* getTempoSequencePosition() const;
 
+    /** Returns the SyncRange for the current audio block.
+        Technically, this is only valid during processing but the end of the range
+        can be used to schedule future events assuming the tempo doesn't change
+        between now and the sceduled time.
+
+        If the tempo does change, the time will be incorrect but the MonotonicBeat
+        will still be in sync.
+    */
+    SyncRange getSyncRange() const;
+
+    /** Returns the end of the SyncRange.
+        @see getSyncRange
+    */
     SyncPoint getSyncPoint() const;
 
-    SyncRange getSyncRange() const;
+    /** Callback which can be set to be called when the continuity changes.
+        This will be made on the audio thread so shouldn't block.
+    */
+    std::function<void()> onContinuityUpdated;
 
     /** @internal. */
     void setSyncRange (SyncRange);

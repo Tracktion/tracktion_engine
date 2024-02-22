@@ -169,13 +169,25 @@ private:
 //==============================================================================
  struct EditPlaybackContext::NodePlaybackContext
  {
-     NodePlaybackContext (const TempoSequence& ts, size_t numThreads, size_t maxNumThreadsToUse)
-         : tempoSequence (ts),
+     NodePlaybackContext (EditPlaybackContext& epc, size_t numThreads, size_t maxNumThreadsToUse)
+         : editPlaybackContext (epc),
            player (processState,
                    getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy())),
                    EditPlaybackContextInternal::getAudioWorkgroupIfEnabled (tempoSequence.edit.engine)),
            maxNumThreads (maxNumThreadsToUse)
      {
+         processState.onContinuityUpdated = [this]
+             {
+                 const auto syncRange = processState.getSyncRange();
+                 const auto editTime = syncRange.start.time;
+                 editPlaybackContext.edit.updateModifierTimers (editTime, static_cast<int> (getNumSamples (syncRange)));
+                 editPlaybackContext.midiDispatcher.masterTimeUpdate (editTime);
+
+                #if TRACKTION_ENABLE_ABLETON_LINK
+                 editPlaybackContext.edit.getAbletonLink().syncronise (editTime);
+                #endif
+             };
+
          setNumThreads (numThreads);
          player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
          player.enableNodeMemorySharing (EditPlaybackContextInternal::getNodeMemorySharingFlag());
@@ -395,7 +407,8 @@ private:
          return processState.getSyncPoint();
      }
 
-     const TempoSequence& tempoSequence;
+     EditPlaybackContext& editPlaybackContext;
+     const TempoSequence& tempoSequence { editPlaybackContext.edit.tempoSequence };
      tracktion::graph::PlayHead playHead;
      tracktion::graph::PlayHeadState playHeadState { playHead };
      ProcessState processState { playHeadState, tempoSequence };
@@ -465,7 +478,7 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
     if (edit.shouldPlay())
     {
-        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.tempoSequence,
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (*this,
                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
                                                                      EditPlaybackContextInternal::getMaxNumThreadsToUse (edit));
         contextSyncroniser = std::make_unique<ContextSyncroniser>();
@@ -913,17 +926,10 @@ void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numC
         }
     }
 
-    const auto editTime = TimePosition::fromSamples (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
-    edit.updateModifierTimers (editTime, numSamples);
-    midiDispatcher.masterTimeUpdate (editTime);
-
-   #if TRACKTION_ENABLE_ABLETON_LINK
-    edit.getAbletonLink().syncronise (editTime);
-   #endif
-
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
 
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
+    auto editTime = nodePlaybackContext->processState.getSyncRange().start.time;
     midiDispatcher.dispatchPendingMessagesForDevices (editTime);
 }
 

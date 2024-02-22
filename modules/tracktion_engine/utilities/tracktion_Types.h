@@ -40,6 +40,7 @@ struct SyncRange
 
 MonotonicBeatRange getMonotonicBeatRange (const SyncRange&);
 BeatRange getBeatRange (const SyncRange&);
+int64_t getNumSamples (const SyncRange&);
 
 
 //==============================================================================
@@ -63,7 +64,10 @@ inline BeatRange getBeatRange (const SyncRange& r)
     return { r.start.beat, r.end.beat };
 }
 
-
+inline int64_t getNumSamples (const SyncRange& r)
+{
+    return r.end.referenceSamplePosition - r.start.referenceSamplePosition;
+}
 
 
 }} // namespace tracktion { inline namespace engine

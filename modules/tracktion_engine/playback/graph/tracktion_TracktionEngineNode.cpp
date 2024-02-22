@@ -78,6 +78,9 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     oldSyncPoint.time = editTimeRange.getStart();
     oldSyncPoint.beat = beatStart;
     syncRange.store ({ oldSyncPoint, newSyncPoint });
+
+    if (onContinuityUpdated)
+        onContinuityUpdated();
 }
 
 void ProcessState::setPlaybackSpeedRatio (double newRatio)
