@@ -26,6 +26,61 @@ bool ColourArea::contains (ClipSlot& clipSlot) const
     return false;
 }
 
+bool ColourArea::isLeft (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t == t1 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isRight (ClipSlot& clipSlot) const
+{
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t == t2 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isTop (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s == firstScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isBottom (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s == lastScene)
+        return true;
+
+    return false;
+}
+
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private juce::Timer,
                                                       private juce::AsyncUpdater,

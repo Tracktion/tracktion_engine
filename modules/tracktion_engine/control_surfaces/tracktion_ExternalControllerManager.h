@@ -22,6 +22,10 @@ struct ColourArea
     int lastScene;
 
     bool contains (ClipSlot&) const;
+    bool isLeft (ClipSlot&) const;
+    bool isRight (ClipSlot&) const;
+    bool isTop (ClipSlot&) const;
+    bool isBottom (ClipSlot&) const;
 };
 
 /** Keeps a list of external controllers and keeps them connected to the
