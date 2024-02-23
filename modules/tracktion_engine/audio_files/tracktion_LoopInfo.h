@@ -168,7 +168,7 @@ private:
     juce::ValueTree getOrCreateTags();
     void setBpm (double newBpm, double currentBpm);
     
-    bool estimateTempo (const juce::File& file, const juce::AudioFormatReader&);
+    bool deduceTempo (const juce::File& file, const juce::AudioFormatReader&);
     std::optional<float> getCueTempo (const juce::StringPairArray& metadata);
     std::optional<float> getFileNameTempo (const juce::String& rawName);
     std::optional<int> getFileNameRootNote (const juce::String& rawName);

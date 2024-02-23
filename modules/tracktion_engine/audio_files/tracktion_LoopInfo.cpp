@@ -443,7 +443,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
     }
     
     if (file != juce::File() && float (state.getProperty (IDs::bpm)) < 0.001f)
-        estimateTempo (file, *afr);
+        deduceTempo (file, *afr);
 
     initialiseMissingProps();
 }
@@ -458,13 +458,34 @@ std::optional<float> LoopInfo::getCueTempo (const juce::StringPairArray& metadat
     return {};
 }
 
+static juce::StringArray reverseTokens (juce::StringRef stringToTokenise, juce::StringRef breakCharacters, juce::StringRef quoteCharacters)
+{
+    auto tokens = juce::StringArray::fromTokens (stringToTokenise, breakCharacters, quoteCharacters);
+    std::reverse (tokens.strings.begin(), tokens.strings.end());
+    return tokens;
+}
+
 std::optional<float> LoopInfo::getFileNameTempo (const juce::String& rawName)
 {
     auto name = rawName.replace (" ", "_");
 
-    for (auto token : juce::StringArray::fromTokens (name, "_", ""))
+    for (auto token : reverseTokens (name, "_", ""))
+    {
+        if (token.containsIgnoreCase ("bpm"))
+        {
+            token = token.replace ("bpm", "", true).trim();
+            
+            auto val = token.getIntValue();
+            
+            if (val > 50 && val < 250 && juce::String (val) == token)
+                return float (val);
+        }
+    }
+    
+    for (auto token : reverseTokens (name, "_", ""))
     {
         auto val = token.getIntValue();
+        
         if (val > 50 && val < 250 && juce::String (val) == token)
             return float (val);
     }
@@ -476,7 +497,7 @@ std::optional<int> LoopInfo::getFileNameRootNote (const juce::String& rawName)
 {
     auto name = rawName.replace (" ", "_").toLowerCase();
 
-    for (auto token : juce::StringArray::fromTokens (name, "_", ""))
+    for (auto token : reverseTokens (name, "_", ""))
     {
         if (token.endsWith ("min")) token = token.dropLastCharacters (3);
         else if (token.endsWith ("maj")) token = token.dropLastCharacters (3);
@@ -504,7 +525,7 @@ std::optional<int> LoopInfo::getFileNameRootNote (const juce::String& rawName)
     return {};
 }
 
-bool LoopInfo::estimateTempo (const juce::File& file, const juce::AudioFormatReader& afr)
+bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReader& afr)
 {
     auto len = afr.lengthInSamples / afr.sampleRate;
     if (len <= 1.0 && len > 60.0)
