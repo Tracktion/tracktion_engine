@@ -29,7 +29,6 @@ bool ColourArea::contains (ClipSlot& clipSlot) const
 bool ColourArea::isLeft (ClipSlot& clipSlot) const
 {
     auto t1 = firstTrack.getIndexInEditTrackList();
-    auto t2 = lastTrack.getIndexInEditTrackList();
 
     auto t = clipSlot.track.getIndexInEditTrackList();
     auto s = clipSlot.getIndex();
