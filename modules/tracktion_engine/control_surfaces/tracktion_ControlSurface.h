@@ -17,9 +17,9 @@ struct ParameterSetting
     ParameterSetting() noexcept;
     void clear() noexcept;
 
-    char label[32];
-    char valueDescription[32];
-    float value;
+    char label[32] = "";
+    char valueDescription[32] = "";
+    float value = 0.0f;
 };
 
 struct MarkerSetting
@@ -27,9 +27,9 @@ struct MarkerSetting
     MarkerSetting() noexcept;
     void clear() noexcept;
 
-    char label[32];
-    int number;
-    bool absolute;
+    char label[32] = "";
+    int number = 0;
+    bool absolute = false;
 };
 
 //==============================================================================

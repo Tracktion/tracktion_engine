@@ -1191,7 +1191,7 @@ void ExternalController::updateDeviceState()
                         if (trackName.startsWithIgnoreCase (TRANS("Track") + " ") && trackName.length() > maxTrackNameChars)
                             trackName = juce::String (trackName.getTrailingIntValue());
                         else if (trackName.length() > maxTrackNameChars)
-                            trackName = shortenName (trackName, 7);
+                            trackName = shortenName (trackName, maxTrackNameChars);
 
                         name = trackName.substring (0, maxTrackNameChars);
                     }
