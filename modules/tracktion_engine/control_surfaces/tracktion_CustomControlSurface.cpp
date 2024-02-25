@@ -83,6 +83,7 @@ void CustomControlSurface::init()
     numCharactersForTrackNames      = needsOSCSocket ? 12 : 0;
     numParameterControls            = 18;
     numCharactersForParameterLabels = needsOSCSocket ? 12 : 0;
+    wantsDummyParams                = false;
     deletable                       = true;
     listeningOnRow                  = -1;
     pluginMoveMode                  = true;

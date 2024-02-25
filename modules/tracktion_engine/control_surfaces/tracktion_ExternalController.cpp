@@ -668,7 +668,7 @@ void ExternalController::updateParamList()
             else
            #endif
             {
-                if (getControlSurfaceIfType<CustomControlSurface>() == nullptr)
+                if (getControlSurface().wantsDummyParams)
                     for (int i = 0; i < 2; ++i)
                         possibleParams.add (nullptr);
             }

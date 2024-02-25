@@ -408,6 +408,7 @@ public:
     bool allowBankingOffEnd = false;
 
     // number of labelled rotary dials that can control things like plugin parameters
+    bool wantsDummyParams = true;
     int numParameterControls = 0;
     int numCharactersForParameterLabels = 0;
 
