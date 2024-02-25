@@ -365,6 +365,10 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
             const int rootNote = afr->metadataValues[juce::WavAudioFormat::acidRootSet] == "1"
                                     ? afr->metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;
             const double numBeats = afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();
+            
+            if (rootNote == -1)
+                if (auto smplNote = afr->metadataValues["MidiUnityNote"].getIntValue())
+                    setRootNote (smplNote);
 
             setRootNote (rootNote);
             setNumBeats (numBeats);
@@ -441,6 +445,12 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
         setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
     }
+    else if (afr->metadataValues.containsKey ("MidiUnityNote"))
+    {
+        auto note = afr->metadataValues["MidiUnityNote"].getIntValue();
+        if (note > 0)
+            setRootNote (note);
+    }
     
     if (file != juce::File() && float (state.getProperty (IDs::bpm)) < 0.001f)
         deduceTempo (file, *afr);
@@ -467,13 +477,16 @@ static juce::StringArray reverseTokens (juce::StringRef stringToTokenise, juce::
 
 std::optional<float> LoopInfo::getFileNameTempo (const juce::String& rawName)
 {
-    auto name = rawName.replace (" ", "_");
+    auto name = rawName.replace (" ", "_").replace ("-", "_");
 
     for (auto token : reverseTokens (name, "_", ""))
     {
         if (token.containsIgnoreCase ("bpm"))
         {
             token = token.replace ("bpm", "", true).trim();
+            
+            while (token.startsWith ("0"))
+                token = token.substring (1);
             
             auto val = token.getIntValue();
             
@@ -485,6 +498,9 @@ std::optional<float> LoopInfo::getFileNameTempo (const juce::String& rawName)
     for (auto token : reverseTokens (name, "_", ""))
     {
         auto val = token.getIntValue();
+        
+        while (token.startsWith ("0"))
+            token = token.substring (1);
         
         if (val > 50 && val < 250 && juce::String (val) == token)
             return float (val);
@@ -542,7 +558,7 @@ bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReade
 
     auto beats = *tempo / 60 * len;
     auto rem = std::fmod (beats, 4.0f);
-    if (rem < 0.0f || (rem > 0.0001f && rem < 3.999f) || rem > 4.0f)
+    if (rem < 0.0f || (rem > 0.1f && rem < 3.9f) || rem > 4.0f)
         return false;
 
     setNumBeats (beats);
