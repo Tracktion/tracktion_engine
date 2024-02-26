@@ -99,6 +99,7 @@ int ControlSurface::getMarkerBankOffset() const { return owner->getMarkerBankOff
 int ControlSurface::getFaderBankOffset() const  { return owner->getFaderBankOffset();   }
 int ControlSurface::getAuxBankOffset() const    { return owner->getAuxBankOffset();     }
 int ControlSurface::getParamBankOffset() const  { return owner->getParamBankOffset();   }
+int ControlSurface::getClipSlotOffset() const   { return owner->getClipSlotOffset();    }
 
 #define RETURN_IF_SAFE_RECORDING  if (isSafeRecording()) return;
 

@@ -209,6 +209,9 @@ public:
     Edit* getEdit() const noexcept                      { return edit; }
     TransportControl* getTransport() const noexcept     { return edit != nullptr ? &edit->getTransport() : nullptr; }
 
+    virtual void currentSelectionManagerChanged (SelectionManager* sm)  { selectionManager = sm; }
+    SelectionManager* getSelectionManager()             { return selectionManager; }
+
     //==============================================================================
     /*
         The following functions are called by the driver class to send commands
@@ -226,6 +229,7 @@ public:
     int getFaderBankOffset() const;
     int getAuxBankOffset() const;
     int getParamBankOffset() const;
+    int getClipSlotOffset() const;
 
     // sends a MIDI message to the device's back-channel
     void sendMidiCommandToController (int idx, const void* midiData, int numBytes);
@@ -457,6 +461,7 @@ private:
     };
 
     Edit* edit = nullptr;
+    SelectionManager* selectionManager = nullptr;
 
     void performIfNotSafeRecording (const std::function<void()>&);
 

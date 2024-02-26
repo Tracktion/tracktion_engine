@@ -330,6 +330,7 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
     }
 
     FOR_EACH_ACTIVE_DEVICE (currentEditChanged (currentEdit));
+    FOR_EACH_ACTIVE_DEVICE (currentSelectionManagerChanged (currentSelectionManager));
 }
 
 bool ExternalControllerManager::isAttachedToEdit (const Edit* ed) const noexcept

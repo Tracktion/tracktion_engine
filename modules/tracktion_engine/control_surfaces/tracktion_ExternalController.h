@@ -65,6 +65,7 @@ public:
     bool wantsMidiClock() const                 { return wantsClock; }
 
     void currentEditChanged (Edit*);
+    void currentSelectionManagerChanged (SelectionManager*);
 
     // these will be called by tracktion when stuff happens, and
     // will pass the message on to the controller.
@@ -213,6 +214,7 @@ private:
     int getFaderBankOffset() const    { return channelStart;      }
     int getAuxBankOffset() const      { return auxBank;           }
     int getParamBankOffset() const    { return startParamNumber;  }
+    int getClipSlotOffset() const     { return padStart;          }
 
     void changeFaderBank (int delta, bool moveSelection);
     void changePadBank (int delta);

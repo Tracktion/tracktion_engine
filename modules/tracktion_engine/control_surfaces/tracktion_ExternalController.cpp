@@ -126,6 +126,15 @@ void ExternalController::currentEditChanged (Edit* edit)
     }
 }
 
+void ExternalController::currentSelectionManagerChanged (SelectionManager* sm)
+{
+    if (controlSurface != nullptr)
+    {
+        CRASH_TRACER
+        getControlSurface().currentSelectionManagerChanged (sm);
+    }
+}
+
 bool ExternalController::isEnabled() const
 {
     if (needsChannel)
