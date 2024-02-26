@@ -974,6 +974,21 @@ void ExternalController::updateUndoLights()
                                    ed->getUndoManager().canRedo());
 }
 
+void ExternalController::clearPadColours()
+{
+    auto& cs = getControlSurface();
+
+    if (cs.numberOfTrackPads > 0)
+    {
+        for (auto track = 0; track < cs.numberOfFaderChannels; track++)
+        {
+            cs.clipsPlayingStateChanged (track, false);
+            for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
+                cs.padStateChanged (track, scene, 0, 0);
+        }
+    }
+}
+
 void ExternalController::updatePadColours()
 {
     auto& ecm = getExternalControllerManager();
@@ -1247,6 +1262,10 @@ void ExternalController::updateDeviceState()
             {
                 jassertfalse;
             }
+        }
+        else
+        {
+            clearPadColours();
         }
     }
 }

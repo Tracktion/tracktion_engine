@@ -108,6 +108,7 @@ public:
     void updateScrollLights();
     void updateUndoLights();
     void updatePadColours();
+    void clearPadColours();
 
     int getNumFaderChannels() const noexcept;
     int getFaderIndexInActiveRegion (int num) const noexcept;
