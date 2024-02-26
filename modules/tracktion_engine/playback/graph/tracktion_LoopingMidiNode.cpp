@@ -1288,7 +1288,7 @@ public:
             MidiNodeHelpers::createNoteOffs (*activeNoteList,
                                              destBuffer,
                                              midiSourceID,
-                                             timePositionOfLastSample,
+                                             0.0,
                                              isPlaying);
             shouldCreateMessagesForTime = true;
         }

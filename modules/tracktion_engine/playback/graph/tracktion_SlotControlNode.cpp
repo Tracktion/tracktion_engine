@@ -289,8 +289,7 @@ void SlotControlNode::processStop (ProcessContext& pc)
 {
     if (midiNode)
     {
-        const auto timeForOneSample = TimeDuration::fromSamples (1, getSampleRate ());
-        midiNode->killActiveNotes (pc.buffers.midi, (getEditTimeRange ().getLength () - timeForOneSample).inSeconds ());
+        midiNode->killActiveNotes (pc.buffers.midi, 0.0);
     }
 
     // Fade out last sample
