@@ -195,6 +195,18 @@ private:
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
     blinkTimer.reset (new BlinkTimer (*this));
+    masterLevelsTimer.setCallback ([this]
+    {
+        if (currentEdit == nullptr)
+            return;
+
+        auto ctx = currentEdit->getCurrentPlaybackContext();
+        if (ctx == nullptr)
+            return;
+
+        auto l = ctx->masterLevels.getLevelCache();
+        masterLevelsChanged (dbToGain (l.first), dbToGain (l.second));
+    });
 }
 
 ExternalControllerManager::~ExternalControllerManager()
@@ -296,8 +308,13 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
 
         if (currentEdit != nullptr)
         {
+            masterLevelsTimer.startTimer (1000 / 50);
             currentEdit->getTransport().addChangeListener (this);
             editTreeWatcher = std::make_unique<EditTreeWatcher> (*this, *currentEdit);
+        }
+        else
+        {
+            masterLevelsTimer.stopTimer();
         }
     }
 
@@ -603,12 +620,8 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
     {
         if (vp.edit.getMasterVolumePlugin().get() == &vp)
         {
-            float left, right;
-            getGainsFromVolumeFaderPositionAndPan (vp.getSliderPos(), vp.getPan(), getDefaultPanLaw(), left, right);
-            left  = gainToVolumeFaderPosition (left);
-            right = gainToVolumeFaderPosition (right);
-
-            FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (left, right));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterFader (vp.getSliderPos()));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterPanPot (vp.getPan()));
         }
     }
 }
@@ -635,10 +648,16 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
     }
 }
 
-void ExternalControllerManager::moveMasterFaders (float newLeftPos, float newRightPos)
+void ExternalControllerManager::moveMasterFader (float newPos)
 {
     CRASH_TRACER
-    FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
+    FOR_EACH_ACTIVE_DEVICE (moveMasterFader (newPos));
+}
+
+void ExternalControllerManager::moveMasterPanPot (float newPan)
+{
+    CRASH_TRACER
+    FOR_EACH_ACTIVE_DEVICE (moveMasterPanPot (newPan));
 }
 
 void ExternalControllerManager::soloCountChanged (bool anySoloTracks)
@@ -777,10 +796,10 @@ void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel, 
     }
 }
 
-void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
+void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newPos, bool delta)
 {
     if (ed != nullptr)
-        ed->setMasterPanPos (newLevel);
+        ed->setMasterPanPos (delta ? ed->getMasterPanParameter()->getCurrentValue() + newPos : newPos);
 }
 
 void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, bool delta)

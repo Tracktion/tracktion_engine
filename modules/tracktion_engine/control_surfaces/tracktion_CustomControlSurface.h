@@ -202,7 +202,8 @@ public:
     bool canSetEatsAllMessages() override;
     void setEatsAllMessages(bool eatAll) override;
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
+    void moveMasterLevelFader (float newSliderPos) override;
+    void moveMasterPanPot (float newPos) override;
     void movePanPot (int channelNum, float newPan) override;
     void moveAux (int channel, int auxNum, const char* bus, float newPos) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;

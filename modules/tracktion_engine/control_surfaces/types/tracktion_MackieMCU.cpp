@@ -1064,11 +1064,11 @@ void MackieMCU::moveFader (int channelNum_, float newSliderPos)
     }
 }
 
-void MackieMCU::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+void MackieMCU::moveMasterLevelFader (float newPos)
 {
-    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    ControlSurface::moveMasterLevelFader (newPos);
 
-    moveFaderInt (deviceIdx, 8, (newLeftSliderPos + newRightSliderPos) * 0.5f);
+    moveFaderInt (deviceIdx, 8, newPos);
 }
 
 void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)

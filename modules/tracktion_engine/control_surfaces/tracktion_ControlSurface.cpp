@@ -122,10 +122,11 @@ void ControlSurface::userMovedMasterLevelFader (float newLevel, bool delta)
         externalControllerManager.userMovedMasterFader (getEdit(), newLevel, delta);
 }
 
-void ControlSurface::userMovedMasterPanPot (float newLevel)
+void ControlSurface::userMovedMasterPanPot (float newPan, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedMasterPanPot (getEdit(), newLevel * 2.0f - 1.0f);
+    if (delta || pickedUp (ctrlMasterPanPot, newPan))
+        externalControllerManager.userMovedMasterPanPot (getEdit(), newPan, delta);
 }
 
 void ControlSurface::userMovedQuickParam (float newLevel)
@@ -562,12 +563,25 @@ void ControlSurface::moveAux (int channel, int auxNum, const char*, float newPos
         info.pickedUp = false;
 }
 
-void ControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+void ControlSurface::moveMasterLevelFader (float newPos)
 {
     if (! pickUpMode) return;
 
     auto& info = pickUpMap[{ctrlMasterFader, 0}];
-    info.lastOut = (newLeftSliderPos + newRightSliderPos) / 2;
+    info.lastOut = newPos;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+void ControlSurface::moveMasterPanPot (float newPan)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlMasterPanPot, 0}];
+    info.lastOut = newPan;
 
     if (info.lastIn.has_value())
         info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;

@@ -51,7 +51,7 @@ public:
     virtual void setAssignmentMode (AssignmentMode);
     void moveFaderInt (int dev, int channelNum, float newSliderPos);
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
+    void moveMasterLevelFader (float newPos) override;
     void movePanPotInt (int dev, int channelNum, float newPan);
     void movePanPot (int channelNum, float newPan) override;
     void moveAux (int channelNum, int auxNum, const char* bus, float newPos) override;

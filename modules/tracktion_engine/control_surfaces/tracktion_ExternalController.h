@@ -71,8 +71,9 @@ public:
 
     // channels are virtual - i.e. not restricted to physical chans
     void moveFader (int channelNum, float newSliderPos);
-    void moveMasterFaders (float newLeftPos, float newRightPos);
+    void moveMasterFader (float newPos);
     void movePanPot (int channelNum, float newPan);
+    void moveMasterPanPot (float newPos);
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright);
     void soloCountChanged (bool);
     void playStateChanged (bool isPlaying);

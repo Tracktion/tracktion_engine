@@ -722,16 +722,21 @@ void CustomControlSurface::moveFader (int faderIndex, float v)
     sendCommandToControllerForActionID (volTextTrackId + faderIndex, dbText);
 }
 
-void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+void CustomControlSurface::moveMasterLevelFader (float newSliderPos)
 {
-    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    ControlSurface::moveMasterLevelFader (newSliderPos);
 
-    const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
-    sendCommandToControllerForActionID (masterPanId, panApproximation);
-    sendCommandToControllerForActionID (masterVolumeId, std::max (newLeftSliderPos, newRightSliderPos));
+    sendCommandToControllerForActionID (masterVolumeId, newSliderPos);
 
-    auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (std::max (newLeftSliderPos, newRightSliderPos)));
+    auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (newSliderPos));
     sendCommandToControllerForActionID (masterVolumeTextId, dbText);
+}
+
+void CustomControlSurface::moveMasterPanPot (float newPos)
+{
+    ControlSurface::moveMasterPanPot (newPos);
+
+    sendCommandToControllerForActionID (masterPanId, (newPos + 1.0f) / 2.0f);
 }
 
 void CustomControlSurface::movePanPot (int faderIndex, float v)
@@ -1629,7 +1634,7 @@ void CustomControlSurface::rewind (float val, int)          { userChangedRewindB
 void CustomControlSurface::fastForward (float val, int)     { userChangedFastForwardButton (isValueNonZero (val)); }
 
 void CustomControlSurface::masterVolume (float val, int)    { userMovedMasterLevelFader (val); }
-void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPanPot (val); }
+void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPanPot (val * 2.0f - 1.0f); }
 
 void CustomControlSurface::quickParam (float val, int)      { userMovedQuickParam (val); }
 void CustomControlSurface::volTrack (float val, int param)  { userMovedFader (param, val); }

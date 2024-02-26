@@ -101,8 +101,9 @@ public:
 
     // channels are virtual - i.e. not restricted to physical chans
     void moveFader (int channelNum, float newSliderPos);
-    void moveMasterFaders (float newLeftPos, float newRightPos);
+    void moveMasterFader (float newPos);
     void movePanPot (int channelNum, float newPan);
+    void moveMasterPanPot (float newPan);
     void playStateChanged (bool isPlaying);
     void recordStateChanged (bool isRecording);
     void automationModeChanged (bool isReading, bool isWriting);
@@ -153,7 +154,7 @@ public:
     // these are called back by the controller to make the app respond
     void userMovedFader (int channelNum, float newSliderPos, bool delta);
     void userMovedMasterFader (Edit*, float newLevel, bool delta);
-    void userMovedMasterPanPot (Edit*, float newLevel);
+    void userMovedMasterPanPot (Edit*, float newLevel, bool delta);
     void userMovedPanPot (int channelNum, float newPan, bool delta);
     void userPressedSolo (int channelNum);
     void userPressedSoloIsolate (int channelNum);
@@ -206,6 +207,8 @@ private:
     };
 
     std::unique_ptr<BlinkTimer> blinkTimer;
+
+    LambdaTimer masterLevelsTimer;
 
     ExternalController* addNewController (ControlSurface*);
 

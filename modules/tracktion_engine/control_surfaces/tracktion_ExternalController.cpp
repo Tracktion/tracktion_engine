@@ -426,11 +426,11 @@ void ExternalController::moveFader (int channelNum, float newSliderPos)
         getControlSurface().moveFader (i, newSliderPos);
 }
 
-void ExternalController::moveMasterFaders (float newLeftPos, float newRightPos)
+void ExternalController::moveMasterFader (float newPos)
 {
     CRASH_TRACER
     if (controlSurface != nullptr)
-        getControlSurface().moveMasterLevelFader (newLeftPos, newRightPos);
+        getControlSurface().moveMasterLevelFader (newPos);
 }
 
 void ExternalController::movePanPot (int channelNum, float newPan)
@@ -439,6 +439,11 @@ void ExternalController::movePanPot (int channelNum, float newPan)
 
     if (i >= 0)
         getControlSurface().movePanPot (i, newPan);
+}
+
+void ExternalController::moveMasterPanPot (float newPan)
+{
+    getControlSurface().moveMasterPanPot (newPan);
 }
 
 void ExternalController::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
@@ -1169,14 +1174,12 @@ void ExternalController::updateDeviceState()
 
             {
                 CRASH_TRACER
-                float l = 0, r = 0;
 
                 if (auto masterVol = edit->getMasterVolumePlugin())
-                    getGainsFromVolumeFaderPositionAndPan (masterVol->getSliderPos(), masterVol->getPan(),
-                                                           getDefaultPanLaw(), l, r);
-
-                moveMasterFaders (gainToVolumeFaderPosition (l),
-                                  gainToVolumeFaderPosition (r));
+                {
+                    moveMasterFader (masterVol->getSliderPos());
+                    moveMasterPanPot (masterVol->getPan());
+                }
 
                 juce::StringArray trackNames;
 

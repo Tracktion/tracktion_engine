@@ -77,15 +77,18 @@ public:
     // If you override this, you must call parent class if you use pick mode
     virtual void moveFader (int channelNum, float newSliderPos);
 
-    // tells the device to move the master faders, if it has them. If it just has one master
-    // fader, it can use the average of these levels.
+    // tells the device to move the master faders, if it has them.
     // slider pos is 0 to 1.0
-    virtual void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos);
+    virtual void moveMasterLevelFader (float newPos);
 
     // tells the device to move a pan pot.
     // the channel number is the physical channel on the device, regardless of bank selection
     // pan is -1.0 to 1.0
     virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan);
+
+    // tells the device to move the master pan pot.
+    // pan is -1.0 to 1.0
+    virtual void moveMasterPanPot (float newPan);
 
     virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] int auxNum, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
 
@@ -245,7 +248,7 @@ public:
 
     // tells tracktion that the master fader has moved.
     void userMovedMasterLevelFader (float newLevel, bool delta = false);
-    void userMovedMasterPanPot (float newLevel);
+    void userMovedMasterPanPot (float newLevel, bool delta = false);
 
     void userMovedAux (int channelNum, int auxNum, float newPosition, bool delta = false);
     void userPressedAux (int channelNum, int auxNum);
@@ -440,6 +443,7 @@ private:
     {
         ctrlFader,
         ctrlMasterFader,
+        ctrlMasterPanPot,
         ctrlPan,
         ctrlParam,
         ctrlAux,    // aux must be last because there can be several of them
