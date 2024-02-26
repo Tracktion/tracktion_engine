@@ -15,6 +15,7 @@ namespace tracktion { inline namespace engine
 template<typename T>
 concept WeakReferenceable = requires (T x)
 {
+    { ! std::is_pointer_v<T> };
     { x.operator->() };
     { static_cast<bool> (x) };
     { std::is_copy_constructible_v<T> };

@@ -137,7 +137,7 @@ public:
         @param runsPerPrintout  the number of start/stop iterations before calling
                                 printStatistics()
     */
-    PerformanceMeasurement (const std::string& counterName,
+    PerformanceMeasurement (std::string counterName,
                             int runsPerPrintout = 100,
                             bool printOnDestruction = true);
 
@@ -170,11 +170,9 @@ public:
         void clear() noexcept;
         double getVarianceSeconds() const;
         double getVarianceCycles() const;
-        std::string toString() const;
+        std::string toString (const std::string& name) const;
 
         void addResult (double secondsElapsed, uint64_t cyclesElapsed) noexcept;
-
-        std::string name;
 
         double meanSeconds      = 0.0;
         double m2Seconds        = 0.0;
@@ -191,6 +189,9 @@ public:
         int64_t numRuns = 0;
     };
 
+    /** Returns the name. */
+    std::string getName() const;
+
     /** Returns a copy of the current stats. */
     Statistics getStatistics() const;
 
@@ -200,6 +201,7 @@ public:
 private:
     //==============================================================================
     Statistics stats;
+    std::string name;
     int64_t runsPerPrint;
     bool printOnDestruction;
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
@@ -246,10 +248,9 @@ public:
 //
 //==============================================================================
 
-inline PerformanceMeasurement::PerformanceMeasurement (const std::string& name, int runsPerPrintout, bool shouldPrintOnDestruction)
-    : runsPerPrint (runsPerPrintout), printOnDestruction (shouldPrintOnDestruction)
+inline PerformanceMeasurement::PerformanceMeasurement (std::string name_, int runsPerPrintout, bool shouldPrintOnDestruction)
+    : name (std::move (name_)), runsPerPrint (runsPerPrintout), printOnDestruction (shouldPrintOnDestruction)
 {
-    stats.name = name;
 }
 
 inline PerformanceMeasurement::~PerformanceMeasurement()
@@ -316,7 +317,7 @@ inline double PerformanceMeasurement::Statistics::getVarianceCycles() const
     return numRuns > 0 ? (m2Cycles / (double) numRuns) : 0.0;
 }
 
-inline std::string PerformanceMeasurement::Statistics::toString() const
+inline std::string PerformanceMeasurement::Statistics::toString (const std::string& perfName) const
 {
     auto timeToString = [] (double secs)
     {
@@ -324,7 +325,7 @@ inline std::string PerformanceMeasurement::Statistics::toString() const
                 + (secs < 0.01 ? " us" : " ms");
     };
 
-    std::string s = "Performance count for \"" + name + "\" over " + std::to_string (numRuns) + " run(s)\n"
+    std::string s = "Performance count for \"" + perfName + "\" over " + std::to_string (numRuns) + " run(s)\n"
                     + "\t Seconds: Mean = " + timeToString (meanSeconds)
                     + ", min = "            + timeToString (minimumSeconds)
                     + ", max = "            + timeToString (maximumSeconds)
@@ -364,8 +365,13 @@ inline bool PerformanceMeasurement::stop()
 
 inline void PerformanceMeasurement::printStatistics()
 {
-    const auto desc = getStatisticsAndReset().toString();
+    const auto desc = getStatisticsAndReset().toString (name);
     std::cout << (desc);
+}
+
+inline std::string PerformanceMeasurement::getName() const
+{
+    return name;
 }
 
 inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatistics() const

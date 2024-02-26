@@ -546,10 +546,7 @@ public:
 
         while (! threadShouldExit())
         {
-            {
-                const ScopedCpuMeter cpu (owner.cpuUsage, 0.2);
-                owner.touchReaders();
-            }
+            owner.touchReaders();
 
             wait (TransportControl::getNumPlayingTransports (owner.engine) > 0 ? 10 : 250);
         }
@@ -978,6 +975,8 @@ bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestCh
 
     if (loopLength == 0)
     {
+        const ScopedCpuMeter cpu (cache.cpuUsage, 0.2);
+
         if (auto cf = static_cast<CachedFile*> (file))
         {
             allOk = cf->read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numSamples, timeoutMs);
@@ -997,6 +996,7 @@ bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestCh
             jassert (juce::isPositiveAndBelow (readPos.load() - loopStart.load(), loopLength.load()));
 
             auto numToRead = (int) std::min ((SampleCount) numSamples, loopStart + loopLength - readPos);
+            const ScopedCpuMeter cpu (cache.cpuUsage, 0.2);
 
             if (auto cf = static_cast<CachedFile*> (file))
             {

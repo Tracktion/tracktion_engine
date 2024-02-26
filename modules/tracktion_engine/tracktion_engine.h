@@ -392,6 +392,9 @@ namespace tracktion { inline namespace engine
 #endif
 
 //==============================================================================
+#include "../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
+
+//==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
 #include "utilities/tracktion_AtomicWrapper.h"
 #include "utilities/tracktion_Identifiers.h"

@@ -187,6 +187,9 @@ public:
 
     double getOutputLatencySeconds() const;
 
+    PerformanceMeasurement::Statistics getCPUStatistics() const;
+    void restCPUStatistics();
+
     Engine& engine;
 
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
@@ -258,6 +261,9 @@ private:
    #endif
 
     juce::ListenerList<CPUUsageListener> cpuUsageListeners;
+    PerformanceMeasurement performanceMeasurement { "tracktion_engine::DeviceManager", -1, false };
+    crill::seqlock_object<PerformanceMeasurement::Statistics> performanceStats;
+    std::atomic<bool> clearStatsFlag { false };
 
     void initialiseMidi();
     void rebuildWaveDeviceList();

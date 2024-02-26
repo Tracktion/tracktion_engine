@@ -516,6 +516,11 @@ namespace test_utilities
                     .replace ("{durationInSeconds}", juce::String (durationInSeconds)).toStdString();
         }
 
+        const PerformanceMeasurement& getPerformanceMeasurement()
+        {
+            return performanceMeasurement;
+        }
+
         PerformanceMeasurement::Statistics getStatisticsAndReset()
         {
             return performanceMeasurement.getStatisticsAndReset();

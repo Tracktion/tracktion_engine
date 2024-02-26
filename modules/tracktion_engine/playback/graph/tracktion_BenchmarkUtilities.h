@@ -117,7 +117,7 @@ namespace benchmark_utilities
                                                                        stats));
 
         std::cout << sw.getDescription() << "\n";
-        std::cout << stats.toString() << "\n";
+        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);

@@ -1127,6 +1127,16 @@ double DeviceManager::getOutputLatencySeconds() const
     return outputLatencyTime;
 }
 
+PerformanceMeasurement::Statistics DeviceManager::getCPUStatistics() const
+{
+    return performanceStats.load();
+}
+
+void DeviceManager::restCPUStatistics()
+{
+    clearStatsFlag.store (true, std::memory_order_relaxed);
+}
+
 void DeviceManager::audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int numInputChannels,
                                                       float* const* outputChannelData, int totalNumOutputChannels,
                                                       int numSamples,
@@ -1179,6 +1189,11 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
        #endif
 
         const auto startTimeTicks = juce::Time::getHighResolutionTicks();
+
+        if (clearStatsFlag.exchange (false))
+            performanceMeasurement.getStatisticsAndReset();
+
+        const ScopedPerformanceMeasurement spm (performanceMeasurement);
 
         if (currentCpuUsage > cpuLimitBeforeMuting)
         {
@@ -1296,6 +1311,21 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                 cpuAvgCounter = cpuReportingInterval;
             }
         }
+    }
+
+    {
+        auto decayValue = [] (auto oldV, auto newV)
+            {
+                return newV > oldV ? newV : 0.8 * newV + 0.2 * oldV;
+            };
+
+        const auto blockStats = performanceMeasurement.getStatistics();
+        auto filteredStats = performanceStats.load();
+        filteredStats.meanSeconds       = decayValue (blockStats.meanSeconds, filteredStats.meanSeconds);
+        filteredStats.maximumSeconds    = decayValue (blockStats.maximumSeconds, filteredStats.maximumSeconds);
+        filteredStats.minimumSeconds    = decayValue (blockStats.minimumSeconds, filteredStats.minimumSeconds);
+        filteredStats.totalSeconds      = decayValue (blockStats.totalSeconds, filteredStats.totalSeconds);
+        performanceStats.store (performanceMeasurement.getStatistics());
     }
 }
 
