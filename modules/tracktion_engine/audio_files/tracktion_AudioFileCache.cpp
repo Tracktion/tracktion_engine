@@ -29,6 +29,39 @@ static void clearSetOfChannels (int* const* channels, int numChannels, int offse
             juce::FloatVectorOperations::clear (chan + offset, numSamples);
 }
 
+//==============================================================================
+//==============================================================================
+struct AudioFileCache::ScopedFileRead
+{
+    ScopedFileRead (AudioFileCache& c)
+        : cache (c)
+    {
+    }
+
+    ~ScopedFileRead()
+    {
+        const auto durationMs = juce::Time::getMillisecondCounterHiRes() - startTimeMs;
+
+        // We have to roll our own fetch_add until it's available on all platforms for atomic<double>
+        auto expected = cache.blockDurationMs.load (std::memory_order_acquire);
+        auto desired = expected + durationMs;
+
+        while (! cache.blockDurationMs.compare_exchange_weak (expected, desired,
+                                                              std::memory_order_release,
+                                                              std::memory_order_relaxed))
+        {
+            expected = cache.blockDurationMs.load (std::memory_order_acquire);
+            desired = expected + durationMs;
+        }
+    }
+
+    AudioFileCache& cache;
+    const double startTimeMs { juce::Time::getMillisecondCounterHiRes() };
+};
+
+
+//==============================================================================
+//==============================================================================
 class AudioFileCache::CachedFile
 {
 public:
@@ -727,6 +760,20 @@ bool AudioFileCache::hasCacheMissed (bool clearMissedFlag)
     return didMiss;
 }
 
+TimeDuration AudioFileCache::getCpuUsage() const
+{
+    return TimeDuration::fromSeconds (lastBlockDurationMs.load (std::memory_order_acquire) / 1000.0);
+}
+
+void AudioFileCache::nextBlockStarted()
+{
+    const auto last = lastBlockDurationMs.load (std::memory_order_acquire);
+    const auto current = blockDurationMs.exchange (0.0, std::memory_order_acq_rel);
+    lastBlockDurationMs.store (current > last ? current
+                                              : last + 0.2 * (current - last),
+                               std::memory_order_release);
+}
+
 //==============================================================================
 AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 {
@@ -972,11 +1019,10 @@ bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestCh
     }
 
     bool allOk = true;
+    const ScopedFileRead sfr (cache);
 
     if (loopLength == 0)
     {
-        const ScopedCpuMeter cpu (cache.cpuUsage, 0.2);
-
         if (auto cf = static_cast<CachedFile*> (file))
         {
             allOk = cf->read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numSamples, timeoutMs);
@@ -996,7 +1042,6 @@ bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestCh
             jassert (juce::isPositiveAndBelow (readPos.load() - loopStart.load(), loopLength.load()));
 
             auto numToRead = (int) std::min ((SampleCount) numSamples, loopStart + loopLength - readPos);
-            const ScopedCpuMeter cpu (cache.cpuUsage, 0.2);
 
             if (auto cf = static_cast<CachedFile*> (file))
             {

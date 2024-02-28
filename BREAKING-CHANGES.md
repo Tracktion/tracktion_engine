@@ -3,6 +3,20 @@
 ## Develop
 
 ### Change
+Removed `DeviceManager::CPUUsageListener`
+
+#### Possible Issues
+Existing code using it will no longer compile.
+
+#### Workaround
+Use `getCPUStatistics()/restCPUStatistics()` instead.
+
+#### Rationale
+The old listener code wasn't thread safe. The new funtion returns more information and is wait-free from the audio side. 
+
+---
+
+### Change
 `CurveEditor::getCurrentLineColour()` is no longer `const`
 
 #### Possible Issues

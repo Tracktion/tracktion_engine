@@ -90,18 +90,6 @@ public:
     */
     bool hasOutputClipped (bool reset);
 
-    //==============================================================================
-    struct CPUUsageListener
-    {
-        virtual ~CPUUsageListener() {}
-
-        // this is called from the audio thread and therefore musn't allocate, lock or
-        // throw exceptions
-        virtual void reportCPUUsage (float cpuAvg, float cpuMin, float cpuMax, int numGlitches) = 0;
-    };
-
-    void addCPUUsageListener (CPUUsageListener* listener)       { cpuUsageListeners.add (listener); }
-    void removeCPUUsageListener (CPUUsageListener* listener)    { cpuUsageListeners.remove (listener); }
 
     //==============================================================================
     double getSampleRate() const;
@@ -244,6 +232,7 @@ private:
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     int defaultWaveOutIndex = 0, defaultMidiOutIndex = 0, defaultWaveInIndex = 0, defaultMidiInIndex = 0;
+    int maxBlockSize = 0;
 
     std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
     std::unique_ptr<ContextDeviceClearer> contextDeviceClearer;
@@ -260,7 +249,6 @@ private:
     ScopedSteadyLoad::Context steadyLoadContext;
    #endif
 
-    juce::ListenerList<CPUUsageListener> cpuUsageListeners;
     PerformanceMeasurement performanceMeasurement { "tracktion_engine::DeviceManager", -1, false };
     crill::seqlock_object<PerformanceMeasurement::Statistics> performanceStats;
     std::atomic<bool> clearStatsFlag { false };
@@ -283,15 +271,6 @@ private:
     void audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
                                         float* const* outputChannelData, int totalNumOutputChannels,
                                         int numSamples);
-
-    //==============================================================================
-    int maxBlockSize = 0;
-    int cpuReportingInterval = 1;
-    int cpuAvgCounter = 0;
-    int glitchCntr = 0;
-    float cpuAvg = 0;
-    float cpuMin = 0;
-    float cpuMax = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeviceManager)
 };

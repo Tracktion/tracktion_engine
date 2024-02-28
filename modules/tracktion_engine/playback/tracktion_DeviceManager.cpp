@@ -1188,7 +1188,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
         const ScopedSteadyLoad load (steadyLoadContext, numSamples);
        #endif
 
-        const auto startTimeTicks = juce::Time::getHighResolutionTicks();
+        engine.getAudioFileManager().cache.nextBlockStarted();
 
         if (clearStatsFlag.exchange (false))
             performanceMeasurement.getStatisticsAndReset();
@@ -1284,49 +1284,9 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
             if (hasClipped)
                 outputHasClipped.store (true, std::memory_order_relaxed);
         }
-
-        {
-            const auto timeWindowSec = numSamples / static_cast<float> (currentSampleRate);
-
-            const auto currentCpuUtilisation = float (juce::Time::getHighResolutionTicks() - startTimeTicks)
-                                                / juce::Time::getHighResolutionTicksPerSecond() / timeWindowSec;
-
-            cpuAvg += currentCpuUtilisation;
-            cpuMin = std::min (cpuMin, currentCpuUtilisation);
-            cpuMax = std::max (cpuMax, currentCpuUtilisation);
-
-            if (currentCpuUtilisation > 1)
-                ++glitchCntr;
-
-            if (--cpuAvgCounter == 0)
-            {
-                cpuAvg /= static_cast<float> (cpuReportingInterval);
-
-                cpuUsageListeners.call (&CPUUsageListener::reportCPUUsage, cpuAvg, cpuMin, cpuMax, glitchCntr);
-
-                cpuAvg = 0;
-                cpuMin = 1;
-                cpuMax = 0;
-                glitchCntr = 0;
-                cpuAvgCounter = cpuReportingInterval;
-            }
-        }
     }
 
-    {
-        auto decayValue = [] (auto oldV, auto newV)
-            {
-                return newV > oldV ? newV : 0.8 * newV + 0.2 * oldV;
-            };
-
-        const auto blockStats = performanceMeasurement.getStatistics();
-        auto filteredStats = performanceStats.load();
-        filteredStats.meanSeconds       = decayValue (blockStats.meanSeconds, filteredStats.meanSeconds);
-        filteredStats.maximumSeconds    = decayValue (blockStats.maximumSeconds, filteredStats.maximumSeconds);
-        filteredStats.minimumSeconds    = decayValue (blockStats.minimumSeconds, filteredStats.minimumSeconds);
-        filteredStats.totalSeconds      = decayValue (blockStats.totalSeconds, filteredStats.totalSeconds);
-        performanceStats.store (performanceMeasurement.getStatistics());
-    }
+    performanceStats.store (performanceMeasurement.getStatistics());
 }
 
 void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
@@ -1358,12 +1318,6 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
-
-    if (device->getCurrentBufferSizeSamples() > 0)
-        cpuAvgCounter = cpuReportingInterval = std::max (1, static_cast<int> (device->getCurrentSampleRate())
-                                                             / device->getCurrentBufferSizeSamples());
-    else
-        cpuAvgCounter = cpuReportingInterval = 1;
 
     jassert (currentSampleRate > 0.0);
 

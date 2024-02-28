@@ -22,7 +22,8 @@ struct ScopedCpuMeter
     ~ScopedCpuMeter() noexcept
     {
         const double msTaken = juce::Time::getMillisecondCounterHiRes() - callbackStartTime;
-        valueToUpdate.store (filterAmount * (msTaken - valueToUpdate.load (std::memory_order_acquire)),
+        const auto lastValue = valueToUpdate.load (std::memory_order_acquire);
+        valueToUpdate.store (lastValue + filterAmount * (msTaken - lastValue),
                              std::memory_order_release);
     }
 
