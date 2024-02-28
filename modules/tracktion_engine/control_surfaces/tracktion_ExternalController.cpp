@@ -1287,14 +1287,21 @@ void ExternalController::auxSendLevelsChanged()
                 {
                     for (auto i = 0; i < cs.numAuxes; i++)
                     {
-                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
+                        if (at != nullptr)
                         {
-                            auto nm = aux->getBusName();
+                            if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
+                            {
+                                auto nm = aux->getBusName();
 
-                            if (nm.length() > cs.numCharactersForAuxLabels)
-                                nm = shortenName (nm, 7);
+                                if (nm.length() > cs.numCharactersForAuxLabels)
+                                    nm = shortenName (nm, 7);
 
-                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                                cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                            }
+                            else
+                            {
+                                cs.clearAux (chan - channelStart, i);
+                            }
                         }
                         else
                         {
