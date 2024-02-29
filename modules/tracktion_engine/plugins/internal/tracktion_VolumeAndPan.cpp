@@ -122,8 +122,8 @@ VolumeAndPanPlugin::VolumeAndPanPlugin (PluginCreationInfo info, bool isMasterVo
         addAutomatableParameter (panParam = new PanAutomatableParameter ("pan", TRANS("Pan"), *this, { -1.0f, 1.0f }));
     }
 
-    volParam->attachToCurrentValue (volume);
-    panParam->attachToCurrentValue (pan);
+    volParam->setParameter (volume, juce::dontSendNotification);
+    panParam->setParameter (pan, juce::dontSendNotification);
 }
 
 VolumeAndPanPlugin::VolumeAndPanPlugin (Edit& ed, const juce::ValueTree& v, bool isMaster)
@@ -134,9 +134,6 @@ VolumeAndPanPlugin::VolumeAndPanPlugin (Edit& ed, const juce::ValueTree& v, bool
 VolumeAndPanPlugin::~VolumeAndPanPlugin()
 {
     notifyListenersOfDeletion();
-
-    volParam->detachFromCurrentValue();
-    panParam->detachFromCurrentValue();
 }
 
 juce::ValueTree VolumeAndPanPlugin::create()
@@ -256,7 +253,7 @@ void VolumeAndPanPlugin::setVolumeDb (float vol)
 
 void VolumeAndPanPlugin::setSliderPos (float newV)
 {
-    volParam->setParameter (juce::jlimit (0.0f, 1.0f, newV), juce::sendNotification);
+    volume = juce::jlimit (0.0f, 1.0f, newV);
 }
 
 void VolumeAndPanPlugin::setPan (float p)
@@ -264,7 +261,7 @@ void VolumeAndPanPlugin::setPan (float p)
     if (p >= -0.005f && p <= 0.005f)
         p = 0.0f;
 
-    panParam->setParameter (juce::jlimit (-1.0f, 1.0f, p), juce::sendNotification);
+    pan = juce::jlimit (-1.0f, 1.0f, p);
 }
 
 PanLaw VolumeAndPanPlugin::getPanLaw() const noexcept
@@ -310,9 +307,27 @@ void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree&
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+}
 
-    for (auto p : getAutomatableParameters())
-        p->updateFromAttachedValue();
+void VolumeAndPanPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
+{
+    Plugin::valueTreePropertyChanged (v, i);
+
+    if (v == state)
+    {
+        if (i == IDs::volume)
+        {
+            volume.forceUpdateOfCachedValue();
+            volParam->setParameter (juce::jlimit (0.0f, 1.0f, static_cast<float> (volume)),
+                                    juce::sendNotification);
+        }
+        else if (i == IDs::pan)
+        {
+            pan.forceUpdateOfCachedValue();
+            panParam->setParameter (juce::jlimit (-1.0f, 1.0f, static_cast<float> (pan)),
+                                    juce::sendNotification);
+        }
+    }
 }
 
 }} // namespace tracktion { inline namespace engine
