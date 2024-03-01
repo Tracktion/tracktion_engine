@@ -189,7 +189,7 @@ void ExternalController::setMainDevice (int num)
 
 juce::String ExternalController::getMidiInputDevice (int idx) const
 {
-    if (inputDeviceName[maxDevices].isEmpty())
+    if (inputDeviceName[idx].isEmpty())
         return {};
 
     if (getMidiInputPorts().contains (inputDeviceName[idx]))
