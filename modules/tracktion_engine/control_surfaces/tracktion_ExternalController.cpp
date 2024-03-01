@@ -922,11 +922,17 @@ void ExternalController::currentValueChanged (AutomatableParameter&)
 
 void ExternalController::updateTrackSelectLights()
 {
-    if (getEdit() != nullptr)
-        if (auto sm = getExternalControllerManager().getSelectionManager())
-            for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+    for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+    {
+        bool selected = false;
+
+        if (getEdit() != nullptr)
+            if (auto sm = getExternalControllerManager().getSelectionManager())
                 if (auto t = getExternalControllerManager().getChannelTrack (chan))
-                    trackSelected (chan, sm->isSelected (t));
+                    selected = sm->isSelected (t);
+
+        trackSelected (chan, selected);
+    }
 }
 
 void ExternalController::updateTrackRecordLights()
@@ -955,7 +961,16 @@ void ExternalController::updateTrackRecordLights()
 
                 getControlSurface().trackRecordEnabled (chan - channelStart, isRecording);
             }
+            else
+            {
+                getControlSurface().trackRecordEnabled (chan - channelStart, false);
+            }
         }
+    }
+    else
+    {
+        for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+            getControlSurface().trackRecordEnabled (chan - channelStart, false);
     }
 }
 
@@ -1199,6 +1214,8 @@ void ExternalController::updateDeviceState()
                     }
                 }
 
+                updateTrackSelectLights();
+                updateTrackRecordLights();
                 soloCountChanged (anySoloTracks);
             }
 
@@ -1271,6 +1288,8 @@ void ExternalController::updateDeviceState()
         }
         else
         {
+            updateTrackSelectLights();
+            updateTrackRecordLights();
             clearPadColours();
         }
     }
