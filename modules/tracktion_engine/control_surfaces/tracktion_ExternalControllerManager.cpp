@@ -1073,9 +1073,10 @@ void ExternalControllerManager::repaintSlots (int channelNum)
 
 bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)
 {
-    for (auto* d : devices)
-        if (d->shouldPluginBeColoured (plugin))
-            return true;
+    for (auto d : devices)
+        if (d->isEnabled())
+            if (d->shouldPluginBeColoured (plugin))
+                return true;
 
     return false;
 }

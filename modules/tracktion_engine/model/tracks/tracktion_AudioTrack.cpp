@@ -626,6 +626,9 @@ void AudioTrack::setTrackToGhost (AudioTrack* track, bool shouldGhost)
 
 juce::Array<AudioTrack*> AudioTrack::getGhostTracks() const
 {
+    if (ghostTracks->isEmpty())
+        return {};
+
     juce::Array<AudioTrack*> tracks;
 
     for (auto& trackID : EditItemID::parseStringList (ghostTracks))
