@@ -120,6 +120,16 @@ bool Selectable::isSelectableValid (const Selectable* s) noexcept
     return s != nullptr && updateTimerInstance->isValid (s);
 }
 
+void Selectable::addListener (SelectableListener* l)
+{
+    addSelectableListener (l);
+}
+
+void Selectable::removeListener (SelectableListener* l)
+{
+    removeSelectableListener (l);
+}
+
 void Selectable::addSelectableListener (SelectableListener* l)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD

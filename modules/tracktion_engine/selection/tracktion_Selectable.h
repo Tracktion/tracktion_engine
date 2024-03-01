@@ -77,6 +77,9 @@ public:
     };
 
     //==============================================================================
+    void addListener (SelectableListener*);
+    void removeListener (SelectableListener*);
+
     void addSelectableListener (SelectableListener*);
     void removeSelectableListener (SelectableListener*);
 
