@@ -256,10 +256,13 @@ ClipTrack* Clip::getClipTrack() const
 
 Track* Clip::getTrack() const
 {
+    if (auto t = dynamic_cast<Track*> (parent))
+        return t;
+
     if (auto cs = getClipSlot())
         return &cs->track;
 
-    return dynamic_cast<Track*> (parent);
+    return nullptr;
 }
 
 ClipSlot* Clip::getClipSlot() const
