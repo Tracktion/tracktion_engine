@@ -626,7 +626,7 @@ void AudioTrack::setTrackToGhost (AudioTrack* track, bool shouldGhost)
 
 juce::Array<AudioTrack*> AudioTrack::getGhostTracks() const
 {
-    if (ghostTracks->isEmpty())
+    if (ghostTracks.get().isEmpty())
         return {};
 
     juce::Array<AudioTrack*> tracks;
