@@ -76,7 +76,7 @@ public:
 private:
     float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
 
-    juce::CriticalSection vcaTrackLock;
+    RealTimeSpinLock vcaTrackLock;
     juce::ReferenceCountedObjectPtr<AudioTrack> vcaTrack;
     const bool isMasterVolume = false;
 

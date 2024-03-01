@@ -237,7 +237,7 @@ private:
     std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
     std::unique_ptr<ContextDeviceClearer> contextDeviceClearer;
 
-    juce::CriticalSection contextLock;
+    std::shared_mutex contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;
     std::unique_ptr<juce::AudioProcessor> globalOutputAudioProcessor;
     juce::HeapBlock<const float*> inputChannelsScratch;

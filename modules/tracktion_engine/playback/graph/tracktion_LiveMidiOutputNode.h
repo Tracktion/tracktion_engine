@@ -40,7 +40,7 @@ private:
 
     std::unique_ptr<tracktion::graph::Node> input;
 
-    juce::CriticalSection lock;
+    RealTimeSpinLock mutex;
     MidiMessageArray pendingMessages, dispatchingMessages;
 
     //==============================================================================

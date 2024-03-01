@@ -77,8 +77,9 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
 
     bool needToUpdate = false;
 
+    if (sourceBuffers.midi.isNotEmpty())
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
 
         for (auto& m : sourceBuffers.midi)
             pendingMessages.add (m);
@@ -94,7 +95,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
 void LiveMidiOutputNode::handleAsyncUpdate()
 {
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
         pendingMessages.swapWith (dispatchingMessages);
     }
 

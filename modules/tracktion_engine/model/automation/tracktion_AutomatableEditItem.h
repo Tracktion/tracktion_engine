@@ -92,7 +92,7 @@ protected:
     void restoreChangedParametersFromState();
 
 private:
-    juce::CriticalSection activeParameterLock;
+    RealTimeSpinLock activeParameterLock;
     juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters;
     mutable AutomatableParameterTree parameterTree;
 

@@ -149,7 +149,7 @@ void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
 //==============================================================================
 void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, int numSamples)
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     if (clients.isEmpty())
         return;
@@ -224,7 +224,7 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
 
 void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     if (clients.isEmpty() || ! showMidi)
         return;
@@ -243,7 +243,7 @@ void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 
 void LevelMeasurer::processMidiLevel (float level)
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     if (clients.isEmpty() || ! showMidi)
         return;
@@ -256,7 +256,7 @@ void LevelMeasurer::processMidiLevel (float level)
 
 void LevelMeasurer::clearOverload()
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     for (auto c : clients)
         c->setClearOverload (true);
@@ -264,7 +264,7 @@ void LevelMeasurer::clearOverload()
 
 void LevelMeasurer::clearPeak()
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     for (auto c : clients)
         c->setClearPeak (true);
@@ -272,7 +272,7 @@ void LevelMeasurer::clearPeak()
 
 void LevelMeasurer::clear()
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
 
     for (auto c : clients)
         c->reset();
@@ -290,14 +290,14 @@ void LevelMeasurer::setMode (LevelMeasurer::Mode m)
 
 void LevelMeasurer::addClient (Client& c)
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
     jassert (! clients.contains (&c));
     clients.add (&c);
 }
 
 void LevelMeasurer::removeClient (Client& c)
 {
-    const juce::ScopedLock sl (clientsMutex);
+    const std::scoped_lock sl (clientsMutex);
     clients.removeFirstMatchingValue (&c);
 }
 

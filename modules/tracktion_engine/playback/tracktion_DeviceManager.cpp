@@ -453,7 +453,7 @@ void DeviceManager::changeListenerCallback (ChangeBroadcaster*)
     if (! rebuildWaveDeviceListIfNeeded())
     {
         // force all plugins to be restarted, to cope with changes in rate + buffer size
-        const juce::ScopedLock sl (contextLock);
+        const std::shared_lock sl (contextLock);
 
         for (auto c : activeContexts)
             c->edit.restartPlayback();
@@ -1210,7 +1210,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
 
             {
                 SCOPED_REALTIME_CHECK
-                const juce::ScopedLock sl (contextLock);
+                const std::shared_lock sl (contextLock);
 
                 for (auto wi : waveInputs)
                     wi->consumeNextAudioBlock (inputChannelData, numInputChannels, numSamples, streamTime);
@@ -1311,10 +1311,12 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
 
     reloadAllContextDevices();
 
-    const juce::ScopedLock sl (contextLock);
+    {
+        const std::shared_lock sl (contextLock);
 
-    for (auto c : activeContexts)
-        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate }, currentSampleRate);
+        for (auto c : activeContexts)
+            c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate }, currentSampleRate);
+    }
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
@@ -1338,7 +1340,7 @@ void DeviceManager::audioDeviceStopped()
 void DeviceManager::updateNumCPUs()
 {
     const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
-    const juce::ScopedLock cl (contextLock);
+    const std::shared_lock cl (contextLock);
 
     for (auto c : activeContexts)
         c->updateNumCPUs();
@@ -1367,7 +1369,7 @@ void DeviceManager::addContext (EditPlaybackContext* c)
     double lastStreamTime;
 
     {
-        const juce::ScopedLock sl (contextLock);
+        const std::unique_lock sl (contextLock);
         lastStreamTime = streamTime;
         c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate }, currentSampleRate);
         activeContexts.addIfNotAlreadyThere (c);
@@ -1383,13 +1385,13 @@ void DeviceManager::addContext (EditPlaybackContext* c)
 
 void DeviceManager::removeContext (EditPlaybackContext* c)
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::unique_lock sl (contextLock);
     activeContexts.removeAllInstancesOf (c);
 }
 
 void DeviceManager::clearAllContextDevices()
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::shared_lock sl (contextLock);
 
     for (auto c : activeContexts)
         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, false);
@@ -1397,7 +1399,7 @@ void DeviceManager::clearAllContextDevices()
 
 void DeviceManager::reloadAllContextDevices()
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::shared_lock sl (contextLock);
 
     for (auto c : activeContexts)
         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, true);
