@@ -688,8 +688,19 @@ void ExternalControllerManager::automationModeChanged (bool isReading, bool isWr
 void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
 {
     CRASH_TRACER
-    const int cn = mapTrackNumToChannelNum (channel);
-    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (cn, l, r));
+    // This is an optimisation that avoids calling mapTrackNumToChannelNum if there are no enabled/active devices
+    // However, a quicker mapTrackNumToChannelNum function would be preferred
+    std::optional<int> channelNum;
+
+    auto getChannelNum = [&]
+    {
+        if (! channelNum)
+            channelNum = mapTrackNumToChannelNum (channel);
+
+        return *channelNum;
+    };
+
+    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (getChannelNum(), l, r));
 }
 
 void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)
