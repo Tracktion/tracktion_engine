@@ -1084,10 +1084,18 @@ juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
 {
     juce::Colour c;
 
-    if (! devices.isEmpty())
+    if (devices.isEmpty())
+        return c;
+
+    auto activeDevices = getActiveDevices();
+
+    if (activeDevices.isEmpty())
+        return {};
     {
         auto cn = mapTrackNumToChannelNum (channelNum);
-        FOR_EACH_ACTIVE_DEVICE (getTrackColour (cn, c));
+
+        for (auto d : activeDevices)
+            d->getTrackColour (cn, c);
     }
 
     return c;
