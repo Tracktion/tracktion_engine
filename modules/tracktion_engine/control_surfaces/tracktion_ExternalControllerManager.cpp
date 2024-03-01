@@ -114,7 +114,11 @@ private:
 
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
-        if (v.hasType (IDs::AUDIOCLIP) || v.hasType (IDs::MIDICLIP))
+        if (v.hasType (IDs::MARKERCLIP))
+        {
+            triggerAsyncUpdate();
+        }
+        else if (Clip::isClipState (v))
         {
             if (i == IDs::colour)
                 updatePads.set (true);
@@ -126,9 +130,10 @@ private:
             else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
-        else if (v.hasType (IDs::MARKERCLIP))
+        else if (v.hasType (IDs::TRACK))
         {
-            triggerAsyncUpdate();
+            if (i == IDs::name)
+                owner.updateDeviceState();
         }
     }
 
