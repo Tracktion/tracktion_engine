@@ -212,6 +212,7 @@ private:
 
     ExternalController* addNewController (ControlSurface*);
 
+    juce::Array<ExternalController*> getActiveDevices() const;
     void blinkNow();
     void timerCallback() override;
 

@@ -545,6 +545,17 @@ void ExternalControllerManager::BlinkTimer::timerCallback()
     ecm.blinkNow();
 }
 
+juce::Array<ExternalController*> ExternalControllerManager::getActiveDevices() const
+{
+    juce::Array<ExternalController*> activeDevices;
+
+    for (auto d : devices)
+        if (d->isEnabled())
+            activeDevices.add (d);
+
+    return activeDevices;
+}
+
 void ExternalControllerManager::blinkNow()
 {
     updateMuteSoloLights (true);
@@ -552,36 +563,43 @@ void ExternalControllerManager::blinkNow()
 
 void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)
 {
-    if (currentEdit != nullptr)
+    if (currentEdit == nullptr)
+        return;
+
+    const auto activeDevices = getActiveDevices();
+
+    if (activeDevices.isEmpty())
+        return;
+
+    int i = 0;
+    const bool isBright = blinkTimer->isBright;
+    bool anySolo = false;
+
+    currentEdit->visitAllTracksRecursive ([&, this] (Track& t)
     {
-        int i = 0;
-        const bool isBright = blinkTimer->isBright;
-        bool anySolo = false;
+        if (t.isSolo (false))
+            anySolo = true;
 
-        currentEdit->visitAllTracksRecursive ([&, this] (Track& t)
+        auto mappedChan = mapTrackNumToChannelNum (i);
+
+        if (mappedChan >= 0)
         {
-            if (t.isSolo (false))
-                anySolo = true;
+            const auto flags = t.getMuteAndSoloLightState();
 
-            auto mappedChan = mapTrackNumToChannelNum (i);
-
-            if (mappedChan >= 0)
+            if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
+                 || ! onlyUpdateFlashingLights)
             {
-                const auto flags = t.getMuteAndSoloLightState();
-
-                if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
-                     || ! onlyUpdateFlashingLights)
-                {
-                    FOR_EACH_ACTIVE_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
-                }
+                for (auto d : activeDevices)
+                    d->updateSoloAndMute (mappedChan, flags, isBright);
             }
+        }
 
-            ++i;
-            return true;
-        });
+        ++i;
+        return true;
+    });
 
-        FOR_EACH_ACTIVE_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
-    }
+    for (auto d : activeDevices)
+        d->soloCountChanged (blinkTimer->isBright && anySolo);
 }
 
 //==============================================================================
