@@ -100,12 +100,12 @@ public:
 
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }
-    WaveOutputDevice* getDefaultWaveOutDevice() const           { return getWaveOutDevice (defaultWaveOutIndex); }
+    WaveOutputDevice* getDefaultWaveOutDevice() const           { return defaultWaveOut; }
     void setDefaultWaveOutDevice (int index);
 
     int getNumWaveInDevices() const                             { return waveInputs.size(); }
     WaveInputDevice* getWaveInDevice (int index) const          { return waveInputs[index]; }
-    WaveInputDevice* getDefaultWaveInDevice() const             { return getWaveInDevice (defaultWaveInIndex); }
+    WaveInputDevice* getDefaultWaveInDevice() const             { return defaultWaveIn; }
     void setDefaultWaveInDevice (int index);
 
     void setDeviceOutChannelStereo (int channelNum, bool isStereoPair);
@@ -125,13 +125,13 @@ public:
 
     int getNumMidiOutDevices() const                            { return midiOutputs.size(); }
     MidiOutputDevice* getMidiOutDevice (int index) const        { return midiOutputs[index]; }
-    MidiOutputDevice* getDefaultMidiOutDevice() const           { return getMidiOutDevice (defaultMidiOutIndex); }
+    MidiOutputDevice* getDefaultMidiOutDevice() const           { return defaultMidiOut; }
 
     void setDefaultMidiOutDevice (int index);
 
     int getNumMidiInDevices() const;
     MidiInputDevice* getMidiInDevice (int index) const;
-    MidiInputDevice* getDefaultMidiInDevice() const             { return getMidiInDevice (defaultMidiInIndex); }
+    MidiInputDevice* getDefaultMidiInDevice() const             { return defaultMidiIn; }
 
     void setDefaultMidiInDevice (int index);
 
@@ -231,7 +231,14 @@ private:
 
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
-    int defaultWaveOutIndex = 0, defaultMidiOutIndex = 0, defaultWaveInIndex = 0, defaultMidiInIndex = 0;
+    juce::String defaultWaveOutID, defaultMidiOutID, defaultWaveInID, defaultMidiInID;
+
+    SafeSelectable<WaveInputDevice> defaultWaveIn;
+    SafeSelectable<WaveOutputDevice> defaultWaveOut;
+
+    SafeSelectable<MidiInputDevice> defaultMidiIn;
+    SafeSelectable<MidiOutputDevice> defaultMidiOut;
+
     int maxBlockSize = 0;
 
     std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
@@ -254,6 +261,7 @@ private:
     std::atomic<bool> clearStatsFlag { false };
 
     void initialiseMidi();
+    void updateDefaultDevicePointers();
     void rebuildWaveDeviceList();
     bool waveDeviceListNeedsRebuilding();
     void sanityCheckEnabledChannels();

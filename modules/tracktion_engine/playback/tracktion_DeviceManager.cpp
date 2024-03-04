@@ -332,8 +332,8 @@ void DeviceManager::initialiseMidi()
 
     auto& storage = engine.getPropertyStorage();
 
-    defaultMidiOutIndex = storage.getProperty (SettingID::defaultMidiOutDevice);
-    defaultMidiInIndex = storage.getProperty (SettingID::defaultMidiInDevice);
+    defaultMidiOutID = storage.getProperty (SettingID::defaultMidiOutDevice);
+    defaultMidiInID = storage.getProperty (SettingID::defaultMidiInDevice);
 
     bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
 
@@ -751,8 +751,8 @@ void DeviceManager::loadSettings()
     }
 
     auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
-    defaultWaveOutIndex = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, 0);
-    defaultWaveInIndex = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, 0);
+    defaultWaveOutID = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, 0);
+    defaultWaveInID = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, 0);
 
     TRACKTION_LOG ("Audio block size: " + juce::String (getBlockSize())
                     + "  Rate: " + juce::String ((int) getSampleRate()));
@@ -781,83 +781,105 @@ void DeviceManager::saveSettings()
     }
 }
 
+void DeviceManager::updateDefaultDevicePointers()
+{
+    defaultMidiIn  = nullptr;
+    defaultMidiOut = nullptr;
+    defaultWaveIn  = nullptr;
+    defaultWaveOut = nullptr;
+
+    for (auto d : midiInputs)
+        if (d->isEnabled() && d->getDeviceID() == defaultMidiInID)
+            defaultMidiIn = d;
+
+    for (auto d : midiOutputs)
+        if (d->isEnabled() && d->getDeviceID() == defaultMidiOutID)
+            defaultMidiOut = d;
+
+    for (auto d : waveInputs)
+        if (d->isEnabled() && d->getDeviceID() == defaultWaveInID)
+            defaultWaveIn = d;
+
+    for (auto d : waveOutputs)
+        if (d->isEnabled() && d->getDeviceID() == defaultWaveOutID)
+            defaultWaveOut = d;
+}
+
 void DeviceManager::checkDefaultDevicesAreValid()
 {
     if (! finishedInitialising)
         return;
 
+    updateDefaultDevicePointers();
+
     auto& storage = engine.getPropertyStorage();
 
-    if (getDefaultWaveOutDevice() == nullptr
-         || ! getDefaultWaveOutDevice()->isEnabled())
+    if (getDefaultWaveOutDevice() == nullptr || ! getDefaultWaveOutDevice()->isEnabled())
     {
-        defaultWaveOutIndex = -1;
+        defaultWaveOutID = {};
 
         for (int i = 0; i < getNumWaveOutDevices(); ++i)
         {
-            if (getWaveOutDevice(i) != nullptr && getWaveOutDevice(i)->isEnabled())
+            if (auto d = getWaveOutDevice (i); d != nullptr && d->isEnabled())
             {
-                defaultWaveOutIndex = i;
+                defaultWaveOutID = d->getDeviceID();
                 break;
             }
         }
 
-        if (defaultWaveOutIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveOutIndex);
+        if (defaultWaveOutID.isNotEmpty())
+            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveOutID);
     }
 
-    if (getDefaultMidiOutDevice() == nullptr
-         || ! getDefaultMidiOutDevice()->isEnabled())
+    if (getDefaultMidiOutDevice() == nullptr || ! getDefaultMidiOutDevice()->isEnabled())
     {
-        defaultMidiOutIndex = -1;
+        defaultMidiOutID = {};
 
         for (int i = 0; i < getNumMidiOutDevices(); ++i)
         {
-            if (getMidiOutDevice(i) != nullptr && getMidiOutDevice(i)->isEnabled())
+            if (auto d = getMidiOutDevice (i); d != nullptr && d->isEnabled())
             {
-                defaultMidiOutIndex = i;
+                defaultMidiOutID = d->getDeviceID();
                 break;
             }
         }
 
-        if (defaultMidiOutIndex >= 0)
-            storage.setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
+        if (defaultMidiOutID.isNotEmpty())
+            storage.setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutID);
     }
 
-    if (getDefaultWaveInDevice() == nullptr
-        || ! getDefaultWaveInDevice()->isEnabled())
+    if (getDefaultWaveInDevice() == nullptr || ! getDefaultWaveInDevice()->isEnabled())
     {
-        defaultWaveInIndex = -1;
+        defaultWaveInID = {};
 
         for (int i = 0; i < getNumWaveInDevices(); ++i)
         {
-            if (getWaveInDevice(i) != nullptr && getWaveInDevice(i)->isEnabled())
+            if (auto d = getWaveInDevice (i); d != nullptr && d->isEnabled())
             {
-                defaultWaveInIndex = i;
+                defaultWaveInID = d->getDeviceID();
                 break;
             }
         }
 
-        if (defaultWaveInIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInIndex);
+        if (defaultWaveInID.isNotEmpty())
+            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInID);
     }
 
-    if (getDefaultMidiInDevice() == nullptr
-        || ! getDefaultMidiInDevice()->isEnabled())
+    if (getDefaultMidiInDevice() == nullptr || ! getDefaultMidiInDevice()->isEnabled())
     {
-        defaultMidiInIndex = -1;
+        defaultMidiInID = {};
 
         for (int i = 0; i < getNumMidiInDevices(); ++i)
         {
-            if (getMidiInDevice(i) != nullptr && getMidiInDevice(i)->isEnabled())
+            if (auto d = getMidiInDevice (i); d != nullptr && d->isEnabled())
             {
-                defaultMidiInIndex = i;
+                defaultMidiInID = d->getDeviceID();
                 break;
             }
         }
 
-        if (defaultMidiInIndex >= 0)
-            storage.setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
+        if (defaultMidiInID.isNotEmpty())
+            storage.setProperty (SettingID::defaultMidiInDevice, defaultMidiInID);
     }
 }
 
@@ -901,7 +923,7 @@ void DeviceManager::setDefaultWaveOutDevice (int index)
     {
         if (wod->isEnabled())
         {
-            defaultWaveOutIndex = index;
+            defaultWaveOutID = wod->getDeviceID();
             engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveOutDevice,
                                                          deviceManager.getCurrentAudioDeviceType(), index);
         }
@@ -913,11 +935,11 @@ void DeviceManager::setDefaultWaveOutDevice (int index)
 
 void DeviceManager::setDefaultWaveInDevice (int index)
 {
-    if (auto wod = getWaveInDevice (index))
+    if (auto wid = getWaveInDevice (index))
     {
-        if (wod->isEnabled())
+        if (wid->isEnabled())
         {
-            defaultWaveInIndex = index;
+            defaultWaveInID = wid->getDeviceID();
             engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveInDevice,
                                                          deviceManager.getCurrentAudioDeviceType(), index);
         }
@@ -1007,8 +1029,8 @@ void DeviceManager::setDefaultMidiOutDevice (int index)
 {
     if (midiOutputs[index] != nullptr && midiOutputs[index]->isEnabled())
     {
-        defaultMidiOutIndex = index;
-        engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
+        defaultMidiOutID = midiOutputs[index]->getDeviceID();
+        engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutID);
     }
 
     checkDefaultDevicesAreValid();
@@ -1021,8 +1043,8 @@ void DeviceManager::setDefaultMidiInDevice (int index)
 
     if (midiInputs[index] != nullptr && midiInputs[index]->isEnabled())
     {
-        defaultMidiInIndex = index;
-        engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
+        defaultMidiInID = midiInputs[index]->getDeviceID();
+        engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, defaultMidiInID);
     }
 
     checkDefaultDevicesAreValid();
@@ -1300,8 +1322,8 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
     currentSampleRate = device->getCurrentSampleRate();
     currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
     outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
-    defaultWaveOutIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), 0);
-    defaultWaveInIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), 0);
+    defaultWaveOutID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName());
+    defaultWaveInID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName());
 
     inputChannelsScratch.realloc (device->getInputChannelNames().size());
     outputChannelsScratch.realloc (device->getOutputChannelNames().size());

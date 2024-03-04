@@ -40,6 +40,8 @@ public:
     const juce::String& getName() const         { return name; }
     const juce::String& getType() const         { return type; }
 
+    juce::String getDeviceID() const            { return getName(); }
+
     virtual DeviceType getDeviceType() const = 0;
     bool isTrackDevice() const;
 
