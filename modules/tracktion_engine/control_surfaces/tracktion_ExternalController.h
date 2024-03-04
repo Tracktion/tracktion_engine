@@ -223,6 +223,7 @@ private:
     void updateParamList();
     void changeMarkerBank (int delta);
     void changeAuxBank (int delta);
+    void setAuxBank (int num);
 
     void userMovedParameterControl (int paramNumber, float newValue, bool delta);
     void userPressedParameterControl (int paramNumber);

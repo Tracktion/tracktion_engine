@@ -368,6 +368,8 @@ public:
     void userPressedGoToMarker (int marker);
 
     void userChangedAuxBank (int delta);
+    void userSetAuxBank (int num);
+
     void updateDeviceState();
 
     void redrawSelectedPlugin();

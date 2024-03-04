@@ -358,6 +358,12 @@ void ControlSurface::userChangedAuxBank (int delta)
     owner->changeAuxBank (delta);
 }
 
+void ControlSurface::userSetAuxBank (int num)
+{
+    RETURN_IF_SAFE_RECORDING
+    owner->setAuxBank (num);
+}
+
 void ControlSurface::userToggledLoopOnOff()            { performIfNotSafeRecording (&AppFunctions::toggleLoop); }
 void ControlSurface::userToggledPunchOnOff()           { performIfNotSafeRecording (&AppFunctions::togglePunch); }
 void ControlSurface::userToggledSnapOnOff()            { performIfNotSafeRecording (&AppFunctions::toggleSnap); }

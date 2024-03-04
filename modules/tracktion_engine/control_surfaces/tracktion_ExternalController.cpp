@@ -1308,25 +1308,23 @@ void ExternalController::auxSendLevelsChanged()
             {
                 auto at = dynamic_cast<AudioTrack*> (t);
 
-                if (cs.auxMode == AuxPosition::byPosition)
+                if (at == nullptr)
+                {
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                        cs.clearAux (chan - channelStart, i);
+                }
+                else if (cs.auxMode == AuxPosition::byPosition)
                 {
                     for (auto i = 0; i < cs.numAuxes; i++)
                     {
-                        if (at != nullptr)
+                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
                         {
-                            if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
-                            {
-                                auto nm = aux->getBusName();
+                            auto nm = aux->getBusName();
 
-                                if (nm.length() > cs.numCharactersForAuxLabels)
-                                    nm = shortenName (nm, 7);
+                            if (nm.length() > cs.numCharactersForAuxLabels)
+                                nm = shortenName (nm, cs.numCharactersForAuxLabels);
 
-                                cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
-                            }
-                            else
-                            {
-                                cs.clearAux (chan - channelStart, i);
-                            }
+                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
                         }
                         else
                         {
@@ -1334,23 +1332,30 @@ void ExternalController::auxSendLevelsChanged()
                         }
                     }
                 }
-                else if (auto aux = at ? at->getAuxSendPlugin (auxBank) : nullptr)
-                {
-                    auto nm = aux->getBusName();
-
-                    if (nm.length() > cs.numCharactersForAuxLabels)
-                        nm = shortenName (nm, 7);
-
-                    cs.moveAux (chan - channelStart, 0, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
-                }
                 else
                 {
-                    cs.clearAux (chan - channelStart, 0);
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                    {
+                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byBus))
+                        {
+                            auto nm = aux->getBusName();
+
+                            if (nm.length() > cs.numCharactersForAuxLabels)
+                                nm = shortenName (nm, cs.numCharactersForAuxLabels);
+
+                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                        }
+                        else
+                        {
+                            cs.clearAux (chan - channelStart, i);
+                        }
+                    }
                 }
             }
             else
             {
-                cs.clearAux (chan - channelStart, 0);
+                for (auto i = 0; i < cs.numAuxes; i++)
+                    cs.clearAux (chan - channelStart, i);
             }
         }
     }
@@ -1610,6 +1615,20 @@ void ExternalController::changeAuxBank (int delta)
             auxBank = juce::jlimit (0, 15, auxBank + delta);
         else
             auxBank = juce::jlimit (-1, 31, auxBank + delta);
+
+        getControlSurface().auxBankChanged (auxBank);
+        auxSendLevelsChanged();
+    }
+}
+
+void ExternalController::setAuxBank (int num)
+{
+    if (controlSurface != nullptr)
+    {
+        if (getControlSurface().auxMode == AuxPosition::byPosition)
+            auxBank = juce::jlimit (0, 15, num);
+        else
+            auxBank = juce::jlimit (-1, 31, num);
 
         getControlSurface().auxBankChanged (auxBank);
         auxSendLevelsChanged();
