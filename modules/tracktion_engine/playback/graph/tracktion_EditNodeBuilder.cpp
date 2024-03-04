@@ -494,7 +494,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         }
         else
         {
-            node = tracktion::graph::makeNode<WaveNode> (playFile,
+            node = tracktion::graph::makeNode<WaveNode> (
+                                                         // BEATCONNECT MODIFICATION START
+                                                         clip.edit,
+                                                         // BEATCONNECT MODIFICATION START
+                                                         playFile,
                                                          clip.getEditTimeRange(),
                                                          nodeOffset,
                                                          loopRange,
@@ -650,8 +654,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 
     std::vector<juce::MidiMessageSequence> sequences;
     sequences.emplace_back (clip.getSequenceLooped().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
-
-    return graph::makeNode<MidiNode> (std::move (sequences),
+    return graph::makeNode<MidiNode> (
+                                      // BEATCONNECT MODIFICATION START
+                                      clip.edit,
+                                      // BEATCONNECT MODIFICATION end
+                                      std::move (sequences),
                                       timeBase,
                                       channels,
                                       generateMPE,
@@ -685,7 +692,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
 
     const auto clipRange = clip.getEditTimeRange();
     const juce::Range<double> editTimeRange (clipRange.getStart().inSeconds(), clipRange.getEnd().inSeconds());
-    node = graph::makeNode<MidiNode> (std::move (sequences),
+    node = graph::makeNode<MidiNode> (
+                                      // BEATCONNECT MODIFICATION START
+                                      clip.edit,
+                                      // BEATCONNECT MODIFICATION END
+                                      std::move (sequences),
                                       MidiList::TimeBase::seconds,
                                       juce::Range<int> (1, 16),
                                       false,
@@ -789,7 +800,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrac
 
     const bool processMidiWhenMuted = track.state.getProperty (IDs::processMidiWhenMuted, false);
     auto trackMuteState = std::make_unique<TrackMuteState> (track, false, processMidiWhenMuted);
-    auto node = tracktion::graph::makeNode<WaveNode> (AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
+    auto node = tracktion::graph::makeNode<WaveNode> (
+                                                     // BEATCONNECT MODIFICATION START
+                                                     track.edit,
+                                                     // BEATCONNECT MODIFICATION START
+                                                     AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
                                                      TimeRange (TimePosition(), track.getLengthIncludingInputTracks()),
                                                      TimeDuration(), TimeRange(), LiveClipLevel(),
                                                      1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
@@ -1417,7 +1432,11 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
             if (length <= 0.0s)
                 return {};
 
-            auto node = tracktion::graph::makeNode<WaveNode> (af, TimeRange (0.0s, length),
+            auto node = tracktion::graph::makeNode<WaveNode> (
+                                                             // BEATCONNECT MODIFICATION START
+                                                             edit,
+                                                             // BEATCONNECT MODIFICATION START
+                                                             af, TimeRange (0.0s, length),
                                                              0.0s, TimeRange(), LiveClipLevel(),
                                                              1.0,
                                                              juce::AudioChannelSet::stereo(),

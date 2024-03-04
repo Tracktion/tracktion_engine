@@ -15,7 +15,11 @@
 namespace tracktion { inline namespace engine
 {
 
-MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
+MidiNode::MidiNode (
+                    // BEATCONNECT MODIFICATION START
+                    Edit& edit,
+                    // BEATCONNECT MODIFICATION END
+                    std::vector<juce::MidiMessageSequence> sequences,
                     MidiList::TimeBase tb,
                     juce::Range<int> midiChannelNumbers,
                     bool useMPE,
@@ -33,7 +37,10 @@ MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
       clipLevel (liveClipLevel),
       editItemID (editItemIDToUse),
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
-      wasMute (liveClipLevel.isMute())
+      wasMute (liveClipLevel.isMute()),
+      // BEATCONNECT MODIFICATION START
+      m_Edit(edit)
+      // BEATCONNECT MODIFICATION END
 {
     jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
 
@@ -120,6 +127,15 @@ void MidiNode::processSection (Node::ProcessContext& pc,
         || sectionEditRange.getEnd() <= editRange.getStart()
         || sectionEditRange.getStart() >= editRange.getEnd())
        return;
+
+
+    // BEATCONNECT MODIFICATION START
+	// For notification that the transport is either at the start or end of play.
+    if (sectionEditRange.getEnd() >= editRange.getEnd())
+        m_Edit.notifyTransportOnClipEdge(false, editItemID);
+    else if (sectionEditRange.getStart() <= editRange.getStart())
+        m_Edit.notifyTransportOnClipEdge(true, editItemID);
+    // BEATCONNECT MODIFICATION END
 
     const auto localTime = sectionEditRange - editRange.getStart();
     const bool mute = clipLevel.isMute();

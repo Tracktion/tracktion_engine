@@ -42,7 +42,11 @@ public:
         2.0f will double the values returned.
 
     */
-    WaveNode (const AudioFile&,
+    WaveNode (
+              // BEATCONNECT MODIFICATION START
+              Edit& edit,
+              // BEATCONNECT MODIFICATION END
+              const AudioFile&,
               TimeRange editTime,
               TimeDuration offset,
               TimeRange loopSection,
@@ -84,6 +88,10 @@ private:
     void replaceChannelStateIfPossible (NodeGraph*, int numChannelsToUse);
     void replaceChannelStateIfPossible (WaveNode&, int numChannelsToUse);
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
+
+    // BEATCONNECT MODIFICATION START
+    Edit& m_Edit;
+    // BEATCONNECT MODIFICATION END
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
 };

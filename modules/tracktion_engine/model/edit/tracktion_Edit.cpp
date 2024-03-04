@@ -656,6 +656,19 @@ juce::String Edit::getName()
     return {};
 }
 
+// BEATCONNECT MODIFICATION START
+void Edit::notifyTransportOnClipEdge(bool p_IsStart, const EditItemID& p_EditItemID)
+{
+    if (transportOnClipEdge != nullptr)
+    {
+        juce::MessageManager::callAsync([this, p_IsStart, p_EditItemID]()
+        {
+            transportOnClipEdge(p_IsStart, p_EditItemID);
+        });
+    }
+}
+// BEATCONNECT MODIFICATION END
+
 void Edit::setProjectItemID (ProjectItemID newID)
 {
     editProjectItemID = newID;

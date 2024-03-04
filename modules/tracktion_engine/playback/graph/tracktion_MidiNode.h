@@ -18,7 +18,11 @@ class MidiNode final    : public tracktion::graph::Node,
                           public TracktionEngineNode
 {
 public:
-    MidiNode (std::vector<juce::MidiMessageSequence> sequences,
+    MidiNode (
+              // BEATCONNECT MODIFICATION START
+              Edit& edit,
+              // BEATCONNECT MODIFICATION END
+              std::vector<juce::MidiMessageSequence> sequences,
               MidiList::TimeBase,
               juce::Range<int> midiChannelNumbers,
               bool useMPE,
@@ -52,6 +56,10 @@ private:
     bool wasMute = false, shouldCreateMessagesForTime = false;
 
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
+
+    // BEATCONNECT MODIFICATION START
+    Edit& m_Edit;
+    // BEATCONNECT MODIFICATION END
 
     //==============================================================================
     void processSection (Node::ProcessContext&,

@@ -137,6 +137,10 @@ public:
     // BEATCONNECT MODIFICATION START
     // Used to retrieve a path to our curstom folder system.
     std::function<juce::File()> recordFileRetriever;
+
+    // For notification that the transport is either at the start or end of play.
+    std::function<void(bool, const EditItemID&)> transportOnClipEdge;
+    void notifyTransportOnClipEdge(bool p_IsStart, const EditItemID& p_EditItemID);
     // BEATCONNECT MODIFICATION END
 
     /** Sets the ProjectItemID of the Edit, this is also stored in the state. */

@@ -425,8 +425,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                             int totalAttacks = tremoloAttacks + 1;
                             double attackInterval = period / totalAttacks;
 
-                            for (int i = 1; i < totalAttacks; i++) {
-                                float attackTimeOffset = i * attackInterval;
+                            for (int j = 1; j < totalAttacks; j++) {
+                                float attackTimeOffset = j * attackInterval;
                                 float newEventStart = eventStart + attackTimeOffset;
                                 result.addEvent(juce::MidiMessage::noteOn(chan, note, vel * channelVelScale), newEventStart);
                                 result.addEvent(juce::MidiMessage::noteOff(chan, note, (uint8_t)juce::jlimit(0, 127, c.noteValue.get())), newEventStart + attackInterval);

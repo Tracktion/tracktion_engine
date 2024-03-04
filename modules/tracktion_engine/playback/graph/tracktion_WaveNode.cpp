@@ -1371,7 +1371,11 @@ struct WaveNode::PerChannelState
 
 
 //==============================================================================
-WaveNode::WaveNode (const AudioFile& af,
+WaveNode::WaveNode (
+                    // BEATCONNECT MODIFICATION START
+                    Edit& edit,
+                    // BEATCONNECT MODIFICATION END
+                    const AudioFile& af,
                     TimeRange editTime,
                     TimeDuration off,
                     TimeRange loop,
@@ -1393,7 +1397,10 @@ WaveNode::WaveNode (const AudioFile& af,
      audioFile (af),
      clipLevel (level),
      channelsToUse (channelSetToUse),
-     destChannels (destChannelsToFill)
+     destChannels (destChannelsToFill),
+    // BEATCONNECT MODIFICATION START
+     m_Edit(edit)
+    // BEATCONNECT MODIFICATION END
 {
 }
 
@@ -1599,6 +1606,14 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     if (ratio <= 0.0)
         return;
 
+    // BEATCONNECT MODIFICATION START
+	// For notification that the transport is either at the start or end of play.
+    if (sectionEditTime.getEnd() >= editPosition.getEnd())
+        m_Edit.notifyTransportOnClipEdge(false, editItemID);
+    else if (sectionEditTime.getStart() <= editPosition.getStart())
+        m_Edit.notifyTransportOnClipEdge(true, editItemID);
+    // BEATCONNECT MODIFICATION END
+
     float gains[2];
 
     // For stereo, use the pan, otherwise ignore it
@@ -1655,7 +1670,6 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
             destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();
     }
 }
-
 
 //==============================================================================
 //==============================================================================
