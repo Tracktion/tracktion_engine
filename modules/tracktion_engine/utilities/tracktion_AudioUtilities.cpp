@@ -487,27 +487,22 @@ struct AudioScratchBuffer::BufferList   : private juce::DeletedAtShutdown
     Buffer* get()
     {
         {
-            const juce::ScopedLock sl (lock);
+            const std::scoped_lock sl (mutex);
 
             for (auto b : buffers)
-            {
-                if (b->isFree)
-                {
-                    b->isFree = false;
+                if (b->isFree.exchange (false, std::memory_order_acq_rel))
                     return b;
-                }
-            }
         }
 
         auto newBuffer = new Buffer();
         newBuffer->isFree = false;
 
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
         buffers.add (newBuffer);
         return newBuffer;
     }
 
-    juce::CriticalSection lock;
+    RealTimeSpinLock mutex;
     juce::OwnedArray<Buffer> buffers;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BufferList)
