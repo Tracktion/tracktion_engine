@@ -570,11 +570,15 @@ bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReade
     if (auto root = getFileNameRootNote (fn))
     {
         setRootNote (*root);
+       #if LOG_DEDUCED_TEMPO
         DBG(fn + juce::String::formatted (": %.1f bpm %.1f beats ", *tempo, beats) + juce::MidiMessage::getMidiNoteName (*root, true, false, 4));
+       #endif
     }
     else
     {
+       #if LOG_DEDUCED_TEMPO
         DBG(fn + juce::String::formatted (": %.1f bpm %.1f beats", *tempo, beats));
+       #endif
     }
 
     return true;
