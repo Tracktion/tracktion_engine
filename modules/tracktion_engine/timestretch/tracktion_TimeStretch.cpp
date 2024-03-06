@@ -172,8 +172,7 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
 
     int flush (float* const* outChannels) override
     {
-        elastique->FlushBuffer ((float**) outChannels);
-        return samplesPerOutputBuffer;
+        return elastique->FlushBuffer ((float**) outChannels);
     }
 
 private:
@@ -446,7 +445,7 @@ private:
         AudioScratchBuffer scratchBuffer (numChannels, maxFramesNeeded);
         const int numPreProcessFrames = elastique->PreProcessData ((float **) inFrames.data.channels, numInputFrames,
                                                                    (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
-                                                                   CElastiqueProV3DirectIf::kFastStartup);
+                                                                   CElastiqueProV3DirectIf::kNormalStartup);
 
         assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
         assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
