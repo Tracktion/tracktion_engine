@@ -2,4 +2,4 @@
 	path = modules/juce
     url = https://github.com/BeatConnect/bc_dll_juce_fork.git
     update = merge
-	branch = bc_main
+	branch = new_bc
