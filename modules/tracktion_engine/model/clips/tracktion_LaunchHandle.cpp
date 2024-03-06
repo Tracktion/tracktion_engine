@@ -136,7 +136,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                     {
                         splitStatus.playing1 = true;
                         splitStatus.range1 = getBeatRange (syncRange);
-                        splitStatus.playStartTime1 = s.nextEventTime->v;
+                        splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
                         if (s.playedRange)
                             s.lastPlayedRange = s.playedRange;

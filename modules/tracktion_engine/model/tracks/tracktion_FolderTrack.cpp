@@ -329,7 +329,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
 
         for (auto clip : clips)
         {
-            const auto tolerance = TimeDuration::fromSeconds (0.000001);
+            const auto tolerance = 0.000001s;
             auto bounds = getClipExtendedBounds (*clip);
 
             if (bounds.getLength() > tolerance)
@@ -371,7 +371,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
             {
                 auto bounds = getClipExtendedBounds (*c);
 
-                if (bounds.getLength() > TimeDuration::fromSeconds (0.000001))
+                if (bounds.getLength() > 0.000001s)
                 {
                     if (first)
                         totalRange = bounds;

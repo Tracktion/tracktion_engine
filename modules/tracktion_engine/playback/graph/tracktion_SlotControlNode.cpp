@@ -214,6 +214,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
                                    {
                                        wasPlaying = isPlaying;
                                        localPlayheadState.playheadJumped = false;
+                                       localPlayheadState.firstBlockOfLoop = false;
                                    } };
 
     if (! isPlaying)
@@ -229,6 +230,9 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     {
         // Force the playheadJumped state to true in order to resync MIDI streams etc.
         localPlayheadState.playheadJumped = true;
+
+        // Set this flag to avoid fading in
+        localPlayheadState.firstBlockOfLoop = true;
     }
 
     localProcessState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
