@@ -100,6 +100,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wimplicit-fallthrough")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
