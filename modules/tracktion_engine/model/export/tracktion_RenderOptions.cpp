@@ -516,13 +516,14 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack->getSiblingTrack (1, false));
             break;
 
-        case thisTrack:
+        case thisTrack:     [[ fallthrough ]];
         case replaceClips:
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack.get());
+            break;
 
-        case addTrack:
-        case replaceTrack:
-        case none:
+        case addTrack:      [[ fallthrough ]];
+        case replaceTrack:  [[ fallthrough ]];
+        case none:          [[ fallthrough ]];
         default:
             break;
     }
