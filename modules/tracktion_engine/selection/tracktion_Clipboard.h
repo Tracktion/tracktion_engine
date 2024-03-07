@@ -40,7 +40,7 @@ public:
             EditItemID targetClipOwnerID;
             SelectionManager* selectionManager = nullptr;
             bool silent = false;
-            FileDragList::PreferredLayout preferredLayout = FileDragList::horizontal;
+            FileDragList::PreferredLayout preferredLayout = FileDragList::sameTrack;
             bool setTransportToEnd = false;
         };
 

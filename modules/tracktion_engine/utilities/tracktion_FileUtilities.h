@@ -63,11 +63,11 @@ struct FileDragList  : public juce::ReferenceCountedObject
 {
     enum PreferredLayout
     {
-        horizontal,
-        vertical,
+        sameTrack,
+        consecutiveTracks,
     };
 
-    PreferredLayout preferredLayout = horizontal;
+    PreferredLayout preferredLayout = sameTrack;
     juce::Array<juce::File> files;
 
     using Ptr = juce::ReferenceCountedObjectPtr<FileDragList>;

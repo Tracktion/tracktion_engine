@@ -351,7 +351,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
     ProjectItemPastingOptions pastingOptions;
 
-    pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
+    pastingOptions.separateTracks = options.preferredLayout == FileDragList::consecutiveTracks;
 
     if (! options.silent)
         askUserAboutProjectItemPastingOptions (e, *this, pastingOptions);
@@ -464,7 +464,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                 {
                     if (pastingInToClipLauncher)
                     {
-                        if (juce::ModifierKeys::currentModifiers.isCommandDown())
+                        if (juce::ModifierKeys::currentModifiers.isCommandDown() || options.preferredLayout == FileDragList::consecutiveTracks)
                         {
                             ++targetTrackIndex;
                             auto newTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
