@@ -132,6 +132,14 @@ public:
         callback = std::move (newCallback);
     }
 
+    template<typename DurationType>
+    void startTimer (std::chrono::duration<DurationType> interval)
+    {
+        juce::Timer::startTimer (static_cast<int> (std::chrono::duration_cast<std::chrono::milliseconds> (interval).count()));
+    }
+
+    using juce::Timer::startTimer;
+
     void timerCallback() override
     {
         if (callback)
