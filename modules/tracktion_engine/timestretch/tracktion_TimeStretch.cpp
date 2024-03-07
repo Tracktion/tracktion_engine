@@ -89,6 +89,8 @@ struct TimeStretcher::Stretcher
     virtual int getMaxFramesNeeded() const = 0;
     virtual int processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
     virtual void processData() {}
+    virtual int getNumSamplesThatCanBePushed() { return 0; }
+    virtual int pushData ([[ maybe_unused ]] const float* const* inChannels, [[ maybe_unused ]] int numSamples) { return 0; }
     virtual int flush (float* const* outChannels) = 0;
 };
 
@@ -255,6 +257,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
     void reset() override
     {
         hasBeenReset = true;
+        hasPushedFirstRealBlock = false;
         numProcessCallsToDo = 0;
         elastique->Reset();
         outputFifo.reset();
@@ -327,6 +330,7 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
             }
             else
             {
+                assert (numSamples == elastique->GetFramesNeeded());
                 processFrames (createChannelArrayView (inChannels,
                                                        static_cast<ChannelCount> (numChannels),
                                                        static_cast<FrameCount> (numSamples)),
@@ -360,6 +364,24 @@ struct ElastiqueDirectStretcher : public TimeStretcher::Stretcher
         processFrames (false);
     }
 
+    int getNumSamplesThatCanBePushed() override
+    {
+        if (hasBeenReset)
+            return 0;
+
+        return hasPushedFirstRealBlock ? 0
+                                         : elastique->GetFramesNeeded();
+    }
+
+    int pushData (const float* const* inChannels, int numSamples) override
+    {
+        using namespace choc::buffer;
+        return processFrames (createChannelArrayView (inChannels,
+                                                      static_cast<ChannelCount> (numChannels),
+                                                      static_cast<FrameCount> (numSamples)),
+                              PerformProcessCalls::no);
+    }
+
     int flush (float* const* outChannels) override
     {
         {
@@ -391,7 +413,7 @@ private:
     const int samplesPerOutputBuffer, numChannels;
     int maxFramesNeeded = 0, numProcessCallsToDo = 0;
     AudioFifo outputFifo;
-    bool hasBeenReset = true;
+    bool hasBeenReset = true, hasPushedFirstRealBlock = false;
     float newSpeedRatio, newSemitonesUp;
     mutable bool newSpeedAndPitchPending = false;
 
@@ -466,27 +488,27 @@ private:
                 processFrames (true);
 
             assert (numProcessCallsToDo == 0);
-            assert (numInputFrames == elastique->GetFramesNeeded());
             [[maybe_unused]] const int err = elastique->ProcessData ((float **) inFrames.data.channels, numInputFrames);
             assert (err == 0);
+            hasPushedFirstRealBlock = true;
 
             numProcessCallsToDo = elastique->GetNumOfProcessCalls();
         }
 
         if (performProcessCalls == PerformProcessCalls::yes)
-            processFrames (outputFifo.getNumReady() < samplesPerOutputBuffer);
+            return processFrames (outputFifo.getNumReady() < samplesPerOutputBuffer);
 
         return 0;
     }
 
-    void processFrames (bool processAll)
+    int processFrames (bool processAll)
     {
         const int numProcessCallsThisTime = processAll ? numProcessCallsToDo
                                                        : numProcessCallsToDo < 7 ? numProcessCallsToDo
                                                                                  : numProcessCallsToDo / 3;
 
         if (numProcessCallsThisTime == 0)
-            return;
+            return 0;
 
         for (int i = 0; i < numProcessCallsThisTime; ++i)
         {
@@ -497,7 +519,9 @@ private:
         numProcessCallsToDo -= numProcessCallsThisTime;
 
         if (numProcessCallsToDo == 0)
-            finishProcessing();
+            return finishProcessing();
+
+        return 0;
     }
 
     int finishProcessing()
@@ -1168,6 +1192,34 @@ void TimeStretcher::processData()
 {
     if (stretcher != nullptr)
         stretcher->processData();
+}
+
+int TimeStretcher::getNumSamplesThatCanBePushed() const
+{
+    if (stretcher != nullptr)
+        return stretcher->getNumSamplesThatCanBePushed();
+
+    return 0;
+}
+
+int TimeStretcher::pushData (const float* const* inChannels, int numSamples)
+{
+    if (stretcher == nullptr)
+        return 0;
+
+    return stretcher->pushData (inChannels, numSamples);
+}
+
+int TimeStretcher::pushData (AudioFifo& inFifo, int numSamples)
+{
+    if (stretcher == nullptr)
+        return 0;
+
+    AudioScratchBuffer inBuffer (inFifo.getNumChannels(), numSamples);
+    auto inChannels = inBuffer.buffer.getArrayOfReadPointers();
+    inFifo.read (inBuffer.buffer, 0, numSamples);
+
+    return pushData (inChannels, numSamples);
 }
 
 int TimeStretcher::flush (float* const* outChannels)

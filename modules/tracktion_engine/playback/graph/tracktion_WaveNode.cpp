@@ -640,6 +640,27 @@ public:
             assert (outputFifo.getFreeSpace() >= numThisTime);
             assert (outputFifo.getFreeSpace() >= chunkSize);
             timeStretcher.processData (inputFifo, numThisTime, outputFifo);
+
+            // If this is the first loop and we've got enough samples to avoid
+            // pushing new data, try and do some processing to spread the load
+            if (i == 0)
+            {
+                if (auto numToPush = timeStretcher.getNumSamplesThatCanBePushed();
+                    numToPush > 0)
+                {
+                    // Read samples from source and push to fifo
+                    AudioScratchBuffer scratchBuffer (numChannels, numToPush);
+                    scratchBuffer.buffer.clear();
+                    auto scratchView = toBufferView (scratchBuffer.buffer);
+
+                    if (! source->readSamples (scratchView))
+                        return false;
+
+                    assert (inputFifo.getFreeSpace() >= numToPush);
+                    inputFifo.write (scratchBuffer.buffer);
+                    timeStretcher.pushData (inputFifo, numToPush);
+                }
+            }
         }
 
         readPosition += numFramesToDo * playbackSpeedRatio;
