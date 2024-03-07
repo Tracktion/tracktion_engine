@@ -164,6 +164,31 @@ public:
 
 static ChronoNowBenchmarks chronoNowBenchmarks;
 
+//==============================================================================
+//==============================================================================
+class JUCEMsCounterHiRes   : public juce::UnitTest
+{
+public:
+    JUCEMsCounterHiRes()
+        : juce::UnitTest ("juce::Time::getMillisecondCounterHiRes()", "tracktion_benchmarks") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        Benchmark benchmark (createBenchmarkDescription ("Time", "juce ms timer hi-res", "juce::Time::getMillisecondCounterHiRes()"));
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            [[ maybe_unused ]] volatile auto now = juce::Time::getMillisecondCounterHiRes();
+            benchmark.stop();
+        }
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
+    }
+};
+
+static JUCEMsCounterHiRes juceMsCounterHiRes;
 
 //==============================================================================
 //==============================================================================

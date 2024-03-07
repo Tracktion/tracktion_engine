@@ -42,6 +42,16 @@ struct ClipContext
     size_t sceneIndex = 0, groupIndex = 0, indexInGroup = 0;
     juce::Random random;
 
+    size_t getIndexInValidHandles() const
+    {
+        if (auto iter = std::find (validSceneHandles.begin(), validSceneHandles.end(), launchHandle);
+            iter != validSceneHandles.end())
+            return static_cast<size_t> (std::distance (validSceneHandles.begin(), iter));
+
+        assert (false);
+        return 0;
+    }
+
     std::vector<std::shared_ptr<LaunchHandle>>& getGroup()
     {
         return groups[groupIndex];
@@ -136,8 +146,128 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
 
     return ctx;
 }
-}
 
+inline std::shared_ptr<LaunchHandle> getLaunchHandle (follow_action_utils::ClipContext& ctx,
+                                                      FollowAction followAction)
+{
+    using enum FollowAction;
+
+    assert (! ctx.getGroup().empty());
+    assert (! ctx.validSceneHandles.empty());
+
+    switch (followAction)
+    {
+        case globalReturnToArrangement: [[ fallthrough ]];
+        case trackAny:                  [[ fallthrough ]];
+        case trackOther:                [[ fallthrough ]];
+        case currentGroupAny:           [[ fallthrough ]];
+        case currentGroupOther:         [[ fallthrough ]];
+        case previousGroupAny:          [[ fallthrough ]];
+        case otherGroupFirst:           [[ fallthrough ]];
+        case otherGroupLast:            [[ fallthrough ]];
+        case nextGroupAny:              [[ fallthrough ]];
+        case otherGroupAny:
+            assert (false && "These actions are random can't return launch handles");
+            break;
+
+        case none:
+            return {};
+
+        case globalStop:
+            return {};
+
+        case globalPlayAgain:
+            return ctx.launchHandle;
+
+        case trackPrevious:
+        {
+            if (auto validIndex = ctx.getIndexInValidHandles(); validIndex > 0)
+                if (auto prevHandle = ctx.validSceneHandles[validIndex - 1]; prevHandle)
+                    return prevHandle;
+
+            break;
+        }
+        case trackNext:
+        {
+            if (auto validIndex = ctx.getIndexInValidHandles(); validIndex < (ctx.validSceneHandles.size() - 1))
+                if (auto nextHandle = ctx.validSceneHandles[validIndex + 1]; nextHandle)
+                    return nextHandle;
+
+            break;
+        }
+        case trackFirst:
+        {
+            return ctx.validSceneHandles.front();
+        }
+        case trackLast:
+        {
+            return ctx.validSceneHandles.back();
+        }
+        case trackRoundRobin:
+        {
+            const auto validIndex = ctx.getIndexInValidHandles();
+            return ctx.validSceneHandles[(validIndex + 1) % ctx.validSceneHandles.size()];
+        }
+        case currentGroupPrevious:
+        {
+            if (ctx.indexInGroup > 0)
+                return ctx.getGroup()[(ctx.indexInGroup - 1)];
+
+            break;
+        }
+        case currentGroupNext:
+        {
+            if (ctx.indexInGroup < (ctx.getGroup().size() - 1))
+                return ctx.getGroup()[(ctx.indexInGroup + 1)];
+
+            break;
+        }
+        case currentGroupFirst:
+        {
+            return ctx.getGroup().front();
+        }
+        case currentGroupLast:
+        {
+            return ctx.getGroup().back();
+        }
+        case currentGroupRoundRobin:
+        {
+            auto &group = ctx.getGroup();
+            return group[(ctx.indexInGroup + 1) % group.size()];
+        }
+        case previousGroupFirst:
+        {
+            if (auto group = ctx.getPreviousGroup())
+                return group->front();
+
+            break;
+        }
+        case previousGroupLast:
+        {
+            if (auto group = ctx.getPreviousGroup())
+                return group->back();
+
+            break;
+        }
+        case nextGroupFirst:
+        {
+            if (auto group = ctx.getNextGroup())
+                return group->front();
+
+            break;
+        }
+        case nextGroupLast:
+        {
+            if (auto group = ctx.getNextGroup())
+                return group->back();
+
+            break;
+        }
+    };
+
+    return {};
+}
+}
 
 inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<follow_action_utils::ClipContext> ctx,
                                                                FollowAction followAction)
@@ -146,48 +276,19 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
     switch (followAction)
     {
-        case none:
-            return {};
-
-        case globalStop:
-            return {};
         case globalReturnToArrangement:
+        {
             return [ctx] (auto)
                    { ctx->track->playSlotClips = true; };
-        case globalPlayAgain:
-            return [ctx] (auto b)
-                   { ctx->launchHandle->play (b); };
-
-        case trackPrevious:
-        {
-            if (ctx->sceneIndex > 0)
-                if (auto prevHandle = ctx->allSceneHandles[ctx->sceneIndex - 1]; prevHandle)
-                    return [prevHandle] (auto b)
-                           { prevHandle->play (b); };
-
-            break;
         }
-        case trackNext:
-        {
-            if (ctx->sceneIndex < (ctx->validSceneHandles.size() - 1))
-                if (auto nextHandle = ctx->allSceneHandles[ctx->sceneIndex + 1]; nextHandle)
-                    return [nextHandle] (auto b)
-                           { nextHandle->play (b); };
-
-            break;
-        }
-        case trackFirst:
-            return [ctx] (auto b)
-                   { ctx->validSceneHandles.front()->play (b); };
-        case trackLast:
-            return [ctx] (auto b)
-                   { ctx->validSceneHandles.back()->play (b); };
         case trackAny:
+        {
             return [ctx] (auto b)
                    {
                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
                        ctx->validSceneHandles[index]->play (b);
                    };
+        }
         case trackOther:
         {
             if (ctx->validSceneHandles.size() > 1)
@@ -207,76 +308,30 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
             break;
         }
-        case trackRoundRobin:
-            return [ctx] (auto b)
-                   { ctx->validSceneHandles[(ctx->sceneIndex + 1) % ctx->validSceneHandles.size()]->play (b); };
-
-        case currentGroupPrevious:
-        {
-            if (ctx->indexInGroup > 0)
-                return [ctx, &group = ctx->getGroup()] (auto b)
-                       { group[(ctx->indexInGroup - 1)]->play (b); };
-
-            break;
-        }
-        case currentGroupNext:
-        {
-            if (ctx->indexInGroup < (ctx->getGroup().size() - 1))
-                return [ctx, &group = ctx->getGroup()] (auto b)
-                       { group[(ctx->indexInGroup + 1)]->play (b); };
-
-            break;
-        }
-        case currentGroupFirst:
-            return [ctx] (auto b)
-                   { ctx->getGroup().front()->play (b); };
-        case currentGroupLast:
-            return [ctx] (auto b)
-                   { ctx->getGroup().back()->play (b); };
         case currentGroupAny:
+        {
             return [ctx, &group = ctx->getGroup()] (auto b)
                    {
                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
                        group[index]->play (b);
                    };
+        }
         case currentGroupOther:
         {
             if (ctx->getGroup().size() > 1)
                 return [ctx, &group = ctx->getGroup()] (auto b)
-                        {
-                            for (;;)
-                            {
-                                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
+                       {
+                           for (;;)
+                           {
+                               const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
 
-                                if (index == ctx->indexInGroup)
-                                    continue;
+                               if (index == ctx->indexInGroup)
+                                   continue;
 
-                                group[index]->play (b);
-                                break;
-                            }
-                        };
-
-            break;
-        }
-        case currentGroupRoundRobin:
-            return [ctx, &group = ctx->getGroup()] (auto b)
-                    {
-                        group[(ctx->indexInGroup + 1) % group.size()]->play (b);
-                    };
-
-        case previousGroupFirst:
-        {
-            if (auto group = ctx->getPreviousGroup())
-                return [ctx, group] (auto b)
-                       { group->front()->play (b); };
-
-            break;
-        }
-        case previousGroupLast:
-        {
-            if (auto group = ctx->getPreviousGroup())
-                return [ctx, group] (auto b)
-                       { group->back()->play (b); };
+                               group[index]->play (b);
+                               break;
+                           }
+                       };
 
             break;
         }
@@ -284,26 +339,10 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         {
             if (auto group = ctx->getPreviousGroup())
                 return [ctx, group] (auto b)
-                {
-                    const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
-                    (*group)[index]->play (b);
-                };
-
-            break;
-        }
-        case nextGroupFirst:
-        {
-            if (auto group = ctx->getNextGroup())
-                return [ctx, group] (auto b)
-                       { group->front()->play (b); };
-
-            break;
-        }
-        case nextGroupLast:
-        {
-            if (auto group = ctx->getNextGroup())
-                return [ctx, group] (auto b)
-                       { group->back()->play (b); };
+                       {
+                           const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
+                           (*group)[index]->play (b);
+                       };
 
             break;
         }
@@ -311,10 +350,10 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         {
             if (auto group = ctx->getNextGroup())
                 return [ctx, group] (auto b)
-                        {
-                            const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
-                            (*group)[index]->play (b);
-                        };
+                       {
+                           const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
+                           (*group)[index]->play (b);
+                       };
 
             break;
         }
@@ -346,9 +385,239 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
             break;
         }
+        case none:                      [[ fallthrough ]];
+        case globalStop:                [[ fallthrough ]];
+        case globalPlayAgain:           [[ fallthrough ]];
+        case trackPrevious:             [[ fallthrough ]];
+        case trackNext:                 [[ fallthrough ]];
+        case trackFirst:                [[ fallthrough ]];
+        case trackLast:                 [[ fallthrough ]];
+        case trackRoundRobin:           [[ fallthrough ]];
+        case currentGroupPrevious:      [[ fallthrough ]];
+        case currentGroupNext:          [[ fallthrough ]];
+        case currentGroupFirst:         [[ fallthrough ]];
+        case currentGroupLast:          [[ fallthrough ]];
+        case currentGroupRoundRobin:    [[ fallthrough ]];
+        case previousGroupFirst:        [[ fallthrough ]];
+        case previousGroupLast:         [[ fallthrough ]];
+        case nextGroupFirst:            [[ fallthrough ]];
+        case nextGroupLast:
+        {
+            // All these are know at graph build time
+            if (auto lh = getLaunchHandle (*ctx, followAction))
+                return [lh] (auto b) { lh->play (b); };
+
+            break;
+        }
     };
 
     return {};
+
+    // switch (followAction)
+    // {
+    //     case none:
+    //         return {};
+    //
+    //     case globalStop:
+    //         return {};
+    //     case globalReturnToArrangement:
+    //         return [ctx] (auto)
+    //                { ctx->track->playSlotClips = true; };
+    //     case globalPlayAgain:
+    //         return [ctx] (auto b)
+    //                { ctx->launchHandle->play (b); };
+    //
+    //     case trackPrevious:
+    //     {
+    //         if (ctx->sceneIndex > 0)
+    //             if (auto prevHandle = ctx->allSceneHandles[ctx->sceneIndex - 1]; prevHandle)
+    //                 return [prevHandle] (auto b)
+    //                        { prevHandle->play (b); };
+    //
+    //         break;
+    //     }
+    //     case trackNext:
+    //     {
+    //         if (ctx->sceneIndex < (ctx->allSceneHandles.size() - 1))
+    //             if (auto nextHandle = ctx->allSceneHandles[ctx->sceneIndex + 1]; nextHandle)
+    //                 return [nextHandle] (auto b)
+    //                        { nextHandle->play (b); };
+    //
+    //         break;
+    //     }
+    //     case trackFirst:
+    //         return [ctx] (auto b)
+    //                { ctx->validSceneHandles.front()->play (b); };
+    //     case trackLast:
+    //         return [ctx] (auto b)
+    //                { ctx->validSceneHandles.back()->play (b); };
+    //     case trackAny:
+    //         return [ctx] (auto b)
+    //                {
+    //                    const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+    //                    ctx->validSceneHandles[index]->play (b);
+    //                };
+    //     case trackOther:
+    //     {
+    //         if (ctx->validSceneHandles.size() > 1)
+    //             return [ctx] (auto b)
+    //                    {
+    //                        for (;;)
+    //                        {
+    //                            const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+    //
+    //                            if (index == ctx->sceneIndex)
+    //                                continue;
+    //
+    //                            ctx->validSceneHandles[index]->play (b);
+    //                            break;
+    //                        }
+    //                    };
+    //
+    //         break;
+    //     }
+    //     case trackRoundRobin:
+    //         return [ctx] (auto b)
+    //                { ctx->validSceneHandles[(ctx->sceneIndex + 1) % ctx->validSceneHandles.size()]->play (b); };
+    //
+    //     case currentGroupPrevious:
+    //     {
+    //         if (ctx->indexInGroup > 0)
+    //             return [ctx, &group = ctx->getGroup()] (auto b)
+    //                    { group[(ctx->indexInGroup - 1)]->play (b); };
+    //
+    //         break;
+    //     }
+    //     case currentGroupNext:
+    //     {
+    //         if (ctx->indexInGroup < (ctx->getGroup().size() - 1))
+    //             return [ctx, &group = ctx->getGroup()] (auto b)
+    //                    { group[(ctx->indexInGroup + 1)]->play (b); };
+    //
+    //         break;
+    //     }
+    //     case currentGroupFirst:
+    //         return [ctx] (auto b)
+    //                { ctx->getGroup().front()->play (b); };
+    //     case currentGroupLast:
+    //         return [ctx] (auto b)
+    //                { ctx->getGroup().back()->play (b); };
+    //     case currentGroupAny:
+    //         return [ctx, &group = ctx->getGroup()] (auto b)
+    //                {
+    //                    const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
+    //                    group[index]->play (b);
+    //                };
+    //     case currentGroupOther:
+    //     {
+    //         if (ctx->getGroup().size() > 1)
+    //             return [ctx, &group = ctx->getGroup()] (auto b)
+    //                     {
+    //                         for (;;)
+    //                         {
+    //                             const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
+    //
+    //                             if (index == ctx->indexInGroup)
+    //                                 continue;
+    //
+    //                             group[index]->play (b);
+    //                             break;
+    //                         }
+    //                     };
+    //
+    //         break;
+    //     }
+    //     case currentGroupRoundRobin:
+    //         return [ctx, &group = ctx->getGroup()] (auto b)
+    //                 {
+    //                     group[(ctx->indexInGroup + 1) % group.size()]->play (b);
+    //                 };
+    //
+    //     case previousGroupFirst:
+    //     {
+    //         if (auto group = ctx->getPreviousGroup())
+    //             return [ctx, group] (auto b)
+    //                    { group->front()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case previousGroupLast:
+    //     {
+    //         if (auto group = ctx->getPreviousGroup())
+    //             return [ctx, group] (auto b)
+    //                    { group->back()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case previousGroupAny:
+    //     {
+    //         if (auto group = ctx->getPreviousGroup())
+    //             return [ctx, group] (auto b)
+    //             {
+    //                 const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
+    //                 (*group)[index]->play (b);
+    //             };
+    //
+    //         break;
+    //     }
+    //     case nextGroupFirst:
+    //     {
+    //         if (auto group = ctx->getNextGroup())
+    //             return [ctx, group] (auto b)
+    //                    { group->front()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case nextGroupLast:
+    //     {
+    //         if (auto group = ctx->getNextGroup())
+    //             return [ctx, group] (auto b)
+    //                    { group->back()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case nextGroupAny:
+    //     {
+    //         if (auto group = ctx->getNextGroup())
+    //             return [ctx, group] (auto b)
+    //                     {
+    //                         const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
+    //                         (*group)[index]->play (b);
+    //                     };
+    //
+    //         break;
+    //     }
+    //     case otherGroupFirst:
+    //     {
+    //         if (ctx->groups.size() > 1)
+    //             return [ctx] (auto b)
+    //                    { ctx->getOtherGroup()->front()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case otherGroupLast:
+    //     {
+    //         if (ctx->groups.size() > 1)
+    //             return [ctx] (auto b)
+    //                    { ctx->getOtherGroup()->back()->play (b); };
+    //
+    //         break;
+    //     }
+    //     case otherGroupAny:
+    //     {
+    //         if (ctx->groups.size() > 1)
+    //             return [ctx] (auto b)
+    //                    {
+    //                        auto group = ctx->getOtherGroup();
+    //                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
+    //                        (*group)[index]->play (b);
+    //                    };
+    //
+    //         break;
+    //     }
+    // };
+    //
+    // return {};
 }
 
 std::function<void (MonotonicBeat)> createFollowAction (Clip& c)

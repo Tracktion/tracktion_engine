@@ -81,6 +81,16 @@ inline std::optional<size_t> index_of (const Container& container, typename Cont
     return {};
 }
 
+template<class Container, class Predicate>
+inline std::optional<size_t> index_if (const Container& container, Predicate p)
+{
+    if (auto iter = std::find_if (container.begin(), container.end(), std::forward<decltype(p)> (p));
+        iter != container.end())
+        return std::distance (container.begin(), iter);
+
+    return {};
+}
+
 template<class Container, class IndexType>
 inline std::optional<typename Container::value_type> get_checked (const Container& container, IndexType index)
 {

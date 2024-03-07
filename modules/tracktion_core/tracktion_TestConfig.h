@@ -25,6 +25,7 @@
 #define ENGINE_UNIT_TESTS_EDIT                          1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
+#define ENGINE_UNIT_TESTS_FOLLOW_ACTIONS                1
 #define ENGINE_UNIT_TESTS_LAUNCH_HANDLE                 1
 #define ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE 1
 #define ENGINE_UNIT_TESTS_LAUNCH_QUANTISATION           1

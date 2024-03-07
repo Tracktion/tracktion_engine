@@ -18,6 +18,20 @@ namespace tracktion { inline namespace engine
 namespace test_utilities
 {
     //==============================================================================
+    void expectInt (juce::UnitTest& ut, std::unsigned_integral auto int1, std::unsigned_integral auto int2)
+    {
+        ut.expectEquals (static_cast<std::uint64_t> (int1), static_cast<std::uint64_t> (int2));
+    }
+
+    /* Only valid for values less than std::int64_t::max. */
+    void expectInt (juce::UnitTest& ut, std::integral auto int1, std::integral auto int2)
+    {
+        assert (int1 <= std::numeric_limits<std::int64_t>::max());
+        assert (int2 <= std::numeric_limits<std::int64_t>::max());
+        ut.expectEquals (static_cast<std::int64_t> (int1), static_cast<std::int64_t> (int2));
+    }
+
+    //==============================================================================
     inline Renderer::Statistics logStats (juce::UnitTest& ut, Renderer::Statistics stats)
     {
         ut.logMessage ("Stats: peak " + juce::String (stats.peak) + ", avg " + juce::String (stats.average)
