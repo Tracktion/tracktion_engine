@@ -47,6 +47,8 @@ public:
 
     void muteOrUnmute();
 
+    bool shoulMeasureCpuUsage() const noexcept final        { return false; }
+
     //==============================================================================
     static const char* xmlTypeName;
 

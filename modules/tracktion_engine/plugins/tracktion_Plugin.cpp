@@ -664,7 +664,10 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
-    const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);
+    std::optional<ScopedCpuMeter> cpuMeter;
+
+    if (shoulMeasureCpuUsage())
+        cpuMeter.emplace (cpuUsageMs, 0.2);
 
     auto& arm = edit.getAutomationRecordManager();
     jassert (initialiseCount > 0);
