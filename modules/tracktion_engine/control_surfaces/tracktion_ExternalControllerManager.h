@@ -46,6 +46,12 @@ public:
     /** Callback that can be set to determine if a track is visible on a controller or not. */
     std::function<bool (const Track&)> isVisibleOnControlSurface;
 
+    /** Optional callback that can be set to map an Edit track number to a control surface channel number.
+        If this isn't set, the manager will iterate the tracks to find the mapping. This can be slow however
+        so this function can be used to create your own cache and speed up the process.
+    */
+    std::function<int (Edit&, int)> mapEditTrackNumToControlSurfaceChannelNum;
+
     /** Callback that can be set allow surfaces to open/close folders. */
     std::function<void (FolderTrack&, bool)> setFolderTrackOpen;
 

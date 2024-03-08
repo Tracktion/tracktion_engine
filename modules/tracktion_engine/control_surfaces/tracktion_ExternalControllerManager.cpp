@@ -712,8 +712,10 @@ void ExternalControllerManager::channelLevelChanged (int channel, float l, float
 {
     CRASH_TRACER
     // This is an optimisation that avoids calling mapTrackNumToChannelNum if there are no enabled/active devices
-    // However, a quicker mapTrackNumToChannelNum function would be preferred
     std::optional<int> channelNum;
+
+    if (currentEdit == nullptr)
+        return;
 
     auto getChannelNum = [&]
     {
@@ -1024,31 +1026,37 @@ Track* ExternalControllerManager::getChannelTrack (int index) const
 
 int ExternalControllerManager::mapTrackNumToChannelNum (int index) const
 {
+    if (currentEdit == nullptr)
+        return -1;
+
+    if (mapEditTrackNumToControlSurfaceChannelNum)
+        return mapEditTrackNumToControlSurfaceChannelNum (*currentEdit, index);
+
+    if (! isVisibleOnControlSurface)
+        return -1;
+
     int result = -1;
 
-    if (currentEdit != nullptr && isVisibleOnControlSurface)
+    if (index >= 0)
     {
-        if (index >= 0)
+        int i = 0, trackNum = 0;
+
+        currentEdit->visitAllTracksRecursive ([&] (Track& t)
         {
-            int i = 0, trackNum = 0;
-
-            currentEdit->visitAllTracksRecursive ([&] (Track& t)
+            if (isVisibleOnControlSurface (t))
             {
-                if (isVisibleOnControlSurface (t))
+                if (i == index)
                 {
-                    if (i == index)
-                    {
-                        result = trackNum;
-                        return false;
-                    }
-
-                    ++trackNum;
+                    result = trackNum;
+                    return false;
                 }
 
-                ++i;
-                return true;
-            });
-        }
+                ++trackNum;
+            }
+
+            ++i;
+            return true;
+        });
     }
 
     return result;
