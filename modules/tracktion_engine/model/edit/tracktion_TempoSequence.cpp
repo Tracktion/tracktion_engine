@@ -701,29 +701,34 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
 
     clips.clear();
+    
+    auto addClip = [this, &tempoSequence] (auto clip)
+    {
+        auto pos = clip->getPosition();
+
+        ClipPos cp;
+        cp.clip = clip;
+        cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+        cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+        cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
+        clips.add (cp);
+    };
 
     for (auto t : getClipTracks (ed))
     {
         for (auto& c : t->getClips())
         {
-            auto addClip = [this, &tempoSequence] (auto clip)
-            {
-                auto pos = clip->getPosition();
-
-                ClipPos cp;
-                cp.clip = clip;
-                cp.startBeat        = tempoSequence.toBeats (pos.getStart());
-                cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
-                cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
-                clips.add (cp);
-            };
-
             addClip (c);
 
             if (auto cc = dynamic_cast<ClipOwner*> (c))
                 for (auto childClip : cc->getClips())
                     addClip (childClip);
         }
+        
+        if (auto at = dynamic_cast<AudioTrack*> (t))
+            for (auto slot : at->getClipSlotList().getClipSlots())
+                if (auto cc = slot->getClip())
+                    addClip (cc);
     }
 
     automation.clear();
