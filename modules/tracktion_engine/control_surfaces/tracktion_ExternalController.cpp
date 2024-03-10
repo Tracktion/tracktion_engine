@@ -96,6 +96,14 @@ juce::String ExternalController::getName() const
     return {};
 }
 
+bool ExternalController::wantsDevice (const MidiID& m) 
+{
+    if (auto cs = controlSurface.get())
+        return cs->wantsDevice (m);
+
+    return false;
+}
+
 juce::String ExternalController::getDesiredMidiChannel() const
 {
     if (auto cs = controlSurface.get())

@@ -44,6 +44,17 @@ public:
 
     bool isTakingControllerMessages = true;
 
+    class Listener
+    {
+    public:
+        virtual ~Listener() {}
+
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {};
+    };
+
+    void addListener (Listener* l)      { listeners.add (l);    }
+    void removeListener (Listener* l)   { listeners.remove (l); }
+
 protected:
     juce::String openDevice() override;
     void closeDevice() override;
@@ -62,6 +73,9 @@ private:
     bool tryToSendTimecode (const juce::MidiMessage&);
 
     ActiveNoteList activeNotes;
+
+    using ThreadSafeListenerList = juce::ListenerList<Listener, juce::Array<Listener*, juce::CriticalSection>>;
+    ThreadSafeListenerList listeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)
 };

@@ -28,6 +28,8 @@ public:
     //==============================================================================
     juce::String getName() const;
 
+    bool wantsDevice (const MidiID& m);
+
     bool needsMidiChannel() const               { return needsChannel; }
     bool needsMidiBackChannel() const           { return needsBackChannel; }
 

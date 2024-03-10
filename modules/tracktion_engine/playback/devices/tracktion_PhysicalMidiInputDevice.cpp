@@ -428,6 +428,8 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage
 
 void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m)
 {
+    listeners.call ([m] (Listener& l) { l.handleIncomingMidiMessage (m); });
+
     if (externalController != nullptr && externalController->wantsMessage (*this, m))
     {
         externalController->acceptMidiMessage (*this, m);

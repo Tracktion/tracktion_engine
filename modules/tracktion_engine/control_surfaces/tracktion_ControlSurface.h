@@ -32,6 +32,14 @@ struct MarkerSetting
     bool absolute = false;
 };
 
+struct MidiID
+{
+    uint16_t    manufacturer    = 0;
+    uint16_t    family          = 0;
+    uint16_t    model           = 0;
+    uint32_t    version         = 0;
+};
+
 //==============================================================================
 /**
     Base class for types of control surface.
@@ -54,6 +62,10 @@ public:
 
     virtual void initialiseDevice ([[maybe_unused]] bool connect) {}
     virtual void shutDownDevice() {}
+
+    // Given the MidiID from MIDI Identity Request SysEx message, return
+    // true if the ID is for a device the control surface understands
+    virtual bool wantsDevice (const MidiID&) { return false; }
 
     // If the device communicates via OSC, then this tells the device the new settings
     virtual void updateOSCSettings (int /*oscInputPort*/, int /*oscOutputPort*/, juce::String /*oscOutputAddr*/) {}
