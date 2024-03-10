@@ -1026,7 +1026,7 @@ Track* ExternalControllerManager::getChannelTrack (int index) const
 
 int ExternalControllerManager::mapTrackNumToChannelNum (int index) const
 {
-    if (currentEdit == nullptr)
+    if (currentEdit == nullptr || index < 0)
         return -1;
 
     if (mapEditTrackNumToControlSurfaceChannelNum)
@@ -1035,29 +1035,24 @@ int ExternalControllerManager::mapTrackNumToChannelNum (int index) const
     if (! isVisibleOnControlSurface)
         return -1;
 
-    int result = -1;
+    int result = -1, i = 0, trackNum = 0;
 
-    if (index >= 0)
+    currentEdit->visitAllTracksRecursive ([&] (Track& t)
     {
-        int i = 0, trackNum = 0;
-
-        currentEdit->visitAllTracksRecursive ([&] (Track& t)
+        if (isVisibleOnControlSurface (t))
         {
-            if (isVisibleOnControlSurface (t))
+            if (i == index)
             {
-                if (i == index)
-                {
-                    result = trackNum;
-                    return false;
-                }
-
-                ++trackNum;
+                result = trackNum;
+                return false;
             }
 
-            ++i;
-            return true;
-        });
-    }
+            ++trackNum;
+        }
+
+        ++i;
+        return true;
+    });
 
     return result;
 }
