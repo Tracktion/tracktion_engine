@@ -49,7 +49,7 @@ public:
     public:
         virtual ~Listener() {}
 
-        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {};
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
     };
 
     void addListener (Listener* l)      { listeners.add (l);    }
