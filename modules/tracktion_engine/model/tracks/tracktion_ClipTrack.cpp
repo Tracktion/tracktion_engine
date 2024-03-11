@@ -888,7 +888,6 @@ Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
         // BEATCONNECT MODIFICATION START
         // For this copy, a reset of uuids is required.
         auto newClipState = clip.state.createCopy(true);
-        newClipState.removeChild(newClipState.getChildWithName("AudioClipInfoMetaData"), nullptr);
         // auto newClipState = clip.state.createCopy();
         // BEATCONNECT MODIFICATION END
 
