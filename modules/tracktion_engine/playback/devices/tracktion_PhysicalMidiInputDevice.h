@@ -52,8 +52,17 @@ public:
         virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
     };
 
-    void addListener (Listener* l)      { listeners.add (l);    }
-    void removeListener (Listener* l)   { listeners.remove (l); }
+    void addListener (Listener* l)
+    {
+        const std::scoped_lock sl (listenerLock);
+        listeners.add (l);
+    }
+
+    void removeListener (Listener* l)   
+    {
+        const std::scoped_lock sl (listenerLock);
+        listeners.remove (l);
+    }
 
 protected:
     juce::String openDevice() override;
@@ -74,8 +83,8 @@ private:
 
     ActiveNoteList activeNotes;
 
-    using ThreadSafeListenerList = juce::ListenerList<Listener, juce::Array<Listener*, juce::CriticalSection>>;
-    ThreadSafeListenerList listeners;
+    RealTimeSpinLock listenerLock;
+    juce::ListenerList<Listener> listeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)
 };
