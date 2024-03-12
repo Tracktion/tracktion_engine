@@ -130,11 +130,12 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
 
     // BEATCONNECT MODIFICATION START
+    // TODO: Remove once the solution via transport notification in AudioClipInfo works.
 	// For notification that the transport is either at the start or end of play.
-    if (sectionEditRange.getEnd() >= editRange.getEnd())
-        m_Edit.notifyTransportOnClipEdge(false, editItemID);
-    else if (sectionEditRange.getStart() <= editRange.getStart())
-        m_Edit.notifyTransportOnClipEdge(true, editItemID);
+    //  if (sectionEditRange.getEnd() >= editRange.getEnd())
+    //      m_Edit.notifyTransportOnClipEdge(false, editItemID);
+    //  else if (sectionEditRange.getStart() <= editRange.getStart())
+    //      m_Edit.notifyTransportOnClipEdge(true, editItemID);
     // BEATCONNECT MODIFICATION END
 
     const auto localTime = sectionEditRange - editRange.getStart();

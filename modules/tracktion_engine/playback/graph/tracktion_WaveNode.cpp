@@ -1607,11 +1607,12 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         return;
 
     // BEATCONNECT MODIFICATION START
+    // TODO: Remove once the solution via transport notification in AudioClipInfo works.
 	// For notification that the transport is either at the start or end of play.
-    if (sectionEditTime.getEnd() >= editPosition.getEnd())
-        m_Edit.notifyTransportOnClipEdge(false, editItemID);
-    else if (sectionEditTime.getStart() <= editPosition.getStart())
-        m_Edit.notifyTransportOnClipEdge(true, editItemID);
+    //  if (sectionEditTime.getEnd() >= editPosition.getEnd())
+    //      m_Edit.notifyTransportOnClipEdge(false, editItemID);
+    //  else if (sectionEditTime.getStart() <= editPosition.getStart())
+    //      m_Edit.notifyTransportOnClipEdge(true, editItemID);
     // BEATCONNECT MODIFICATION END
 
     float gains[2];
