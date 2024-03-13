@@ -28,6 +28,14 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
 }
 
+/** Creates a FrameRange from any integral type. */
+inline choc::buffer::FrameRange createFrameRange (std::integral auto start, std::integral auto end)
+{
+    return { .start = static_cast<choc::buffer::FrameCount> (start),
+             .end = static_cast<choc::buffer::FrameCount> (end) };
+}
+
+
 //==============================================================================
 /** Converts a choc::midi event to a juce::MidiMessage */
 inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
