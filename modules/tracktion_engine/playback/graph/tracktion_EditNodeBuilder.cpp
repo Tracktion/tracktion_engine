@@ -503,6 +503,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     {
         const auto timeStretcherMode = clip.getActualTimeStretchMode();
         const auto timeStretcherOpts = clip.elastiqueProOptions.get();
+        const auto readAhead = params.readAheadTimeStretchNodes ? WaveNodeRealTime::ReadAhead::yes
+                                                                : WaveNodeRealTime::ReadAhead::no;
 
         const auto speedFadeDesc = getSpeedFadeDescription (clip);
         auto warpMap = getWarpMap (clip);
@@ -562,7 +564,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    std::move (warpMap),
                                                    seq, syncTempo, syncPitch,
                                                    getChordTrackSequenceIfRequired (clip),
-                                                   clip.getPitchChange());
+                                                   clip.getPitchChange(),
+                                                   readAhead);
             }
             else
             {
@@ -582,7 +585,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    std::move (warpMap),
                                                    seq, syncTempo, syncPitch,
                                                    getChordTrackSequenceIfRequired (clip),
-                                                   clip.getPitchChange());
+                                                   clip.getPitchChange(),
+                                                   readAhead);
             }
         }
         else
@@ -603,7 +607,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
                                                timeStretcherMode, timeStretcherOpts,
-                                               clip.getPitchChange());
+                                               clip.getPitchChange(),
+                                               readAhead);
         }
     }
 
