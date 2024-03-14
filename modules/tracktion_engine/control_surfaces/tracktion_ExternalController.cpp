@@ -61,6 +61,9 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
 
     updateDeviceState();
     changeParamBank (0);
+
+    auto& dm = engine.getDeviceManager();
+    dm.addChangeListener (this);
 }
 
 ExternalController::~ExternalController()
@@ -75,6 +78,7 @@ ExternalController::~ExternalController()
     controlSurface = nullptr;
 
     auto& dm = engine.getDeviceManager();
+    dm.removeChangeListener (this);
 
     for (int i = dm.getNumMidiInDevices(); --i >= 0;)
         if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i)))
@@ -86,6 +90,11 @@ ExternalController::~ExternalController()
         lastRegisteredSelectable->removeSelectableListener (this);
         lastRegisteredSelectable = nullptr;
     }
+}
+
+void ExternalController::changeListenerCallback (juce::ChangeBroadcaster*)
+{
+    hasMidiInput = {};
 }
 
 juce::String ExternalController::getName() const
@@ -146,7 +155,14 @@ void ExternalController::currentSelectionManagerChanged (SelectionManager* sm)
 bool ExternalController::isEnabled() const
 {
     if (needsChannel)
-        return getMidiInputDevice (0).isNotEmpty();
+    {
+        if (hasMidiInput.has_value())
+            return *hasMidiInput;
+
+        hasMidiInput = getMidiInputDevice (0).isNotEmpty();
+
+        return *hasMidiInput;
+    }
 
     return enabled;
 }
@@ -216,6 +232,7 @@ void ExternalController::setMidiInputDevice (int idx, const juce::String& nameOf
                 if (c != this && c->getMidiInputDevice (idx) == nameOfMidiInput)
                     c->setMidiInputDevice (idx, {});
 
+    hasMidiInput = {};
     inputDeviceName[idx] = nameOfMidiInput;
     engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn, getName() + (idx > 0 ? juce::String (idx) : juce::String()), inputDeviceName[idx]);
 

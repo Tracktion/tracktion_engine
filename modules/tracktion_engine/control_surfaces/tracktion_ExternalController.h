@@ -18,6 +18,7 @@ namespace tracktion { inline namespace engine
 class ExternalController  : private juce::AsyncUpdater,
                             private SelectableListener,
                             private AutomatableParameter::Listener,
+                            private juce::ChangeListener,
                             private juce::Timer
 {
 public:
@@ -170,6 +171,7 @@ public:
 
 private:
     void timerCallback() override;
+    void changeListenerCallback (juce::ChangeBroadcaster*) override;
 
     static constexpr int maxDevices = 4;
     friend class ExternalControllerManager;
@@ -187,6 +189,7 @@ private:
     juce::String oscOutputAddr;
 
     bool enabled;
+    mutable std::optional<bool> hasMidiInput;
     int maxTrackNameChars;
     int channelStart = 0;
     int padStart = 0;

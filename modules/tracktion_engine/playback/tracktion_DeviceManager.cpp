@@ -431,6 +431,8 @@ void DeviceManager::initialiseMidi()
             if (! isMicrosoftGSSynth (*firstOut))
                 firstOut->setEnabled (true);
     }
+
+    sendChangeMessage();
 }
 
 void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
