@@ -69,6 +69,7 @@ public:
         bool separateTracks = false;
         bool addAntiDenormalisationNoise = false;
         bool checkNodesForAudio = true;             /**< If true, attempting to render an Edit that doesn't produce audio will fail. */
+        bool addAcidMetadata = false;
 
         int quality = 0;
         juce::StringPairArray metadata;
@@ -157,6 +158,7 @@ public:
                               TimeRange range,
                               const juce::BigInteger& tracksToDo,
                               bool usePlugins = true,
+                              bool useACID = true,
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
 

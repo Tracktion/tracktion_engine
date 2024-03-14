@@ -458,6 +458,7 @@ namespace IDs
     DECLARE_ID (addRenderToLibrary)
     DECLARE_ID (reverseRender)
     DECLARE_ID (renderAddMetadata)
+    DECLARE_ID (addAcidMetadata)
     DECLARE_ID (height)
     DECLARE_ID (currentAutoParamPluginID)
     DECLARE_ID (currentAutoParamTag)

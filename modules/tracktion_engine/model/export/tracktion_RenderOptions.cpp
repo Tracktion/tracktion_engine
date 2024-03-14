@@ -115,6 +115,7 @@ void RenderOptions::loadFromUserSettings()
         dither            = storage.getProperty (SettingID::renderDither, true);
         qualityIndex      = storage.getProperty (SettingID::quality, 5);
         addMetadata       = storage.getProperty (SettingID::addId3Info, false);
+        addAcidMetadata   = storage.getProperty (SettingID::addAcidMetadata, false);
         realTime          = storage.getProperty (SettingID::realtime, false);
         usePlugins        = storage.getProperty (SettingID::passThroughFilters, true);
     }
@@ -130,6 +131,7 @@ void RenderOptions::loadFromUserSettings()
         rmsLevelDb        = storage.getProperty (SettingID::editClipRenderRMSLevelDb, -12.0);
         peakLevelDb       = storage.getProperty (SettingID::editClipRenderPeakLevelDb, 0.0);
         usePlugins        = storage.getProperty (SettingID::editClipPassThroughFilters, true);
+        addAcidMetadata   = storage.getProperty (SettingID::addAcidMetadata, false);
 
         return;
     }
@@ -163,6 +165,7 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::editClipRenderRMSLevelDb, rmsLevelDb.get());
         storage.setProperty (SettingID::editClipRenderPeakLevelDb, peakLevelDb.get());
         storage.setProperty (SettingID::editClipPassThroughFilters, usePlugins.get());
+        storage.setProperty (SettingID::addAcidMetadata, addAcidMetadata.get());
     }
     else if (isExportAll())
     {
@@ -180,6 +183,7 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::renderDither, dither.get());
         storage.setProperty (SettingID::quality, qualityIndex.get());
         storage.setProperty (SettingID::addId3Info, addMetadata.get());
+        storage.setProperty (SettingID::addAcidMetadata, addAcidMetadata.get());
         storage.setProperty (SettingID::realtime, realTime.get());
         storage.setProperty (SettingID::passThroughFilters, usePlugins.get());
     }
@@ -214,7 +218,8 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
     if (isTrackRender())
         p.endAllowance = markedRegion ? 0.0s : 10.0s;
 
-    addAcidInfo (edit, p);
+    if (p.addAcidMetadata)
+        addAcidInfo (edit, p);
 
     return (p.audioFormat != nullptr || p.createMidiFile)
                 ? EditRenderJob::getOrCreateRenderJob (edit.engine, p, false, false, false)
@@ -251,6 +256,7 @@ void RenderOptions::relinkCachedValues (juce::UndoManager* um)
     addRenderToLibrary.referTo (state, IDs::addRenderToLibrary, um, false);
     reverseRender.referTo (state, IDs::reverseRender, um, false);
     addMetadata.referTo (state, IDs::renderAddMetadata, um, false);
+    addAcidMetadata.referTo (state, IDs::addAcidMetadata, um, false);
 
     sampleRate = engine.getDeviceManager().getSampleRate();
     tracks = EditItemID::parseStringList (tracksProperty);
@@ -375,6 +381,8 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
 
     if (addMetadata)
         params.metadata = getMetadata (edit);
+
+    params.addAcidMetadata = addAcidMetadata;
 
     return params;
 }
@@ -713,6 +721,7 @@ void RenderOptions::setToDefault()
     reverseRender            = false;
 
     addMetadata              = false;
+    addAcidMetadata          = false;
 }
 
 void RenderOptions::updateLastUsedRenderPath (RenderOptions& renderOptions, const juce::String& itemID)
@@ -1157,7 +1166,8 @@ void RenderOptions::updateHash()
            ^ (((HashCode) tracksToSeparateFiles) << 13)
            ^ (((HashCode) realTime)              << 14)
            ^ (((HashCode) usePlugins)            << 15)
-           ^ (((HashCode) addMetadata)           << 16);
+           ^ (((HashCode) addMetadata)           << 16)
+           ^ (((HashCode) addAcidMetadata)       << 17);
 }
 
 void RenderOptions::updateFileName()

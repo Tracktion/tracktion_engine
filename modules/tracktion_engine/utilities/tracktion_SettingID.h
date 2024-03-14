@@ -132,6 +132,7 @@ enum class SettingID
     realtime,
     passThroughFilters,
     externControlShowClipSlotSelection,
+    addAcidMetadata,
 };
 
 }} // namespace tracktion { inline namespace engine

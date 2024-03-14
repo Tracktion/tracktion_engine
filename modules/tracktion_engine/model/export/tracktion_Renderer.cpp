@@ -413,6 +413,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
                              TimeRange range,
                              const juce::BigInteger& tracksToDo,
                              bool usePlugins,
+                             bool useACID,
                              juce::Array<Clip*> clips,
                              bool useThread)
 {
@@ -446,7 +447,8 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         r.allowedClips = clips;
         r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-        addAcidInfo (edit, r);
+        if (useACID)
+            addAcidInfo (edit, r);
 
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
@@ -469,7 +471,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
 
 bool Renderer::renderToFile (Edit& edit, const juce::File& f, bool useThread)
 {
-    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, {}, useThread);
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, true, {}, useThread);
 }
 
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)

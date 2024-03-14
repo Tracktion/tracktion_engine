@@ -135,6 +135,8 @@ public:
     double getSampleRate() const                                { return sampleRate; }
     bool shouldAddMetadata() const                              { return addMetadata; }
 
+    bool shouldAddAcidMetadata() const                          { return addAcidMetadata; }
+
     juce::BigInteger getTrackIndexes (const Edit&) const;
     bool getRemoveSilence() const noexcept                      { return removeSilence; }
     bool getMarkedRegion() const noexcept                       { return markedRegion; }
@@ -172,7 +174,7 @@ public:
                             tracksToSeparateFiles, realTime, usePlugins;
 
     juce::CachedValue<AddRenderOptions> addRenderOptions;
-    juce::CachedValue<bool> addRenderToLibrary, reverseRender, addMetadata;
+    juce::CachedValue<bool> addRenderToLibrary, reverseRender, addMetadata, addAcidMetadata;
 
     // These optional lambdas will be called when the addRenderToLibrary flag
     // is set, and can be used to do something with the finished item

@@ -982,7 +982,7 @@ juce::Array<juce::File> TransportControl::getRetrospectiveRecordAsAudioFiles()
                     }
 
                     Renderer::renderToFile (TRANS("Render Clip"), f, edit, clipPos.time,
-                                            tracksToDo, true, clipsToRender, true);
+                                            tracksToDo, true, false, clipsToRender, true);
 
                     files.add (f);
                 }

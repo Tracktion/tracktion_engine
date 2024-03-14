@@ -164,6 +164,7 @@ juce::String PropertyStorage::settingToString (SettingID setting)
         case SettingID::realtime:                           return "realtime";
         case SettingID::passThroughFilters:                 return "passThroughFilters";
         case SettingID::invalid:                            return "invalid";
+        case SettingID::addAcidMetadata:                    return "addAcidMetadata";
     }
     return {};
 }
