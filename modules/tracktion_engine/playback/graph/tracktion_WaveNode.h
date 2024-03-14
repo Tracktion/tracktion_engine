@@ -102,6 +102,11 @@ class WaveNodeRealTime final    : public graph::Node,
                                   public DynamicallyOffsettableNodeBase
 {
 public:
+    //==============================================================================
+    /** Whether or not to use a background thread to read ahead the time-stretch buffer. */
+    enum class ReadAhead : bool { no, yes };
+
+    //==============================================================================
     /** offset is a time added to the start of the file, e.g. an offset of 10.0
         would produce ten seconds of silence followed by the file.
     */
@@ -121,14 +126,15 @@ public:
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
                       TimeStretcher::ElastiqueProOptions = {},
-                      float pitchChangeSemitones = 0.0f);
+                      float pitchChangeSemitones = 0.0f,
+                      ReadAhead = ReadAhead::no);
 
     //==============================================================================
     /** Represets whether the file should try and match Edit tempo changes. */
-    enum class SyncTempo { no, yes };
+    enum class SyncTempo : bool { no, yes };
 
     /** Represets whether the file should try and match Edit pitch changes. */
-    enum class SyncPitch { no, yes };
+    enum class SyncPitch : bool { no, yes };
 
     /**
         @param sourceFileTempoMap   A tempo map describing the changes in the source file.
@@ -161,7 +167,8 @@ public:
                       tempo::Sequence sourceFileTempoMap,
                       SyncTempo, SyncPitch,
                       std::optional<tempo::Sequence> chordPitchSequence,
-                      float pitchChangeSemitones = 1.0f);
+                      float pitchChangeSemitones = 1.0f,
+                      ReadAhead = ReadAhead::no);
 
     //==============================================================================
     /** Sets an offset to be applied to all times in this node, effectively shifting
@@ -196,7 +203,9 @@ private:
     const juce::AudioChannelSet channelsToUse, destChannels;
     float pitchChangeSemitones = 0.0;
     double outputSampleRate = 44100.0;
+    int outputBlockSize = 0;
     bool isFirstBlock = false;
+    const ReadAhead readAhead;
 
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
