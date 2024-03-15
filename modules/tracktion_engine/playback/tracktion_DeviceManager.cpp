@@ -365,7 +365,9 @@ void DeviceManager::initialiseMidi()
         midiInputs.add (hostedAudioDeviceInterface->createMidiInput());
     }
 
-   #if JUCE_MAC && JUCE_DEBUG
+   #if 0 // JUCE_MAC && JUCE_DEBUG
+    // This is causing problems on macOS as creating the device will cause the OS to send an async
+    // "devices changed" callback which will create the device again etc. in an infinite loop
     if (openHardwareMidi)
         midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
    #endif
