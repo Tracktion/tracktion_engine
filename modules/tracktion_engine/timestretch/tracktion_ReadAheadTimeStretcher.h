@@ -116,7 +116,7 @@ private:
         void addInstance (ReadAheadTimeStretcher*);
         void removeInstance (ReadAheadTimeStretcher*);
 
-        void flagForProcessing (ReadAheadTimeStretcher&);
+        void flagForProcessing (std::atomic<std::uint64_t>&);
 
     private:
         //==============================================================================
@@ -127,6 +127,7 @@ private:
         juce::WaitableEvent event;
         std::atomic_flag waitingToExitFlag = ATOMIC_FLAG_INIT;
         std::atomic_flag breakForAddRemoveInstance = ATOMIC_FLAG_INIT;
+        std::atomic<std::uint64_t> processEpoch { 0 };
 
         //==============================================================================
         void process();
@@ -137,6 +138,7 @@ private:
     const int numBlocksToReadAhead;
     int numChannels = 0, numSamplesPerOutputBlock = 0;
     mutable std::mutex processMutex;
+    std::atomic<std::uint64_t> epoch { std::numeric_limits<std::uint64_t>::max() };
 
     mutable std::atomic<float> pendingSpeedRatio { 1.0f }, pendingSemitonesUp { 0.0f };
     mutable std::atomic<bool> newSpeedAndPitchPending { false }, hasBeenReset { true };
@@ -146,6 +148,7 @@ private:
     void tryToSetNewSpeedAndPitch() const;
     int processNextBlock (bool shouldBlock);
     bool canProcessNextBlock();
+    std::uint64_t getEpoch() const { return epoch.load (std::memory_order_acquire); };
 };
 
 }

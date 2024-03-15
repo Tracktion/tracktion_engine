@@ -29,30 +29,26 @@ ReadAheadTimeStretcher::ProcessThread::~ProcessThread()
 void ReadAheadTimeStretcher::ProcessThread::addInstance (ReadAheadTimeStretcher* instance)
 {
     breakForAddRemoveInstance.test_and_set();
+
     const std::unique_lock sl (instancesMutex);
-    instances.emplace_back (std::move (instance));
+    instances.emplace_back (instance);
+
+    breakForAddRemoveInstance.clear();
 }
 
 void ReadAheadTimeStretcher::ProcessThread::removeInstance (ReadAheadTimeStretcher* instance)
 {
     breakForAddRemoveInstance.test_and_set();
+
     const std::unique_lock sl (instancesMutex);
     std::erase_if (instances, [&] (auto& i) { return i == instance; });
+
+    breakForAddRemoveInstance.clear();
 }
 
-void ReadAheadTimeStretcher::ProcessThread::flagForProcessing (ReadAheadTimeStretcher&)
+void ReadAheadTimeStretcher::ProcessThread::flagForProcessing (std::atomic<std::uint64_t>& epoch)
 {
-    // It might be an idea to flag the instances that need processing here rather
-    // than iterating all the instances. However that would need to be either very
-    // quick or non-blocking as many threads can call this function concurrently
-    // and they shouldn't block each other. As this is a background thread it's
-    // probably ok to just iterate all the instances for now although it does favour
-    // those added first.
-    //
-    // One idea might be to add some kind of epoch counter that gets incremented each
-    // process call and the current epoch gets assigned to each instance when it gets
-    // flagged here. Processing should then only happen for instances with epochs
-    // lower than the current.
+    epoch = processEpoch.load (std::memory_order_acquire);
     event.signal();
 }
 
@@ -68,27 +64,32 @@ void ReadAheadTimeStretcher::ProcessThread::process()
 
         {
             const std::unique_lock sl (instancesMutex);
+            const auto currentEpoch = processEpoch.load (std::memory_order_acquire);
 
             for (auto instance : instances)
             {
                 if (waitingToExitFlag.test (std::memory_order_acquire))
                     return;
 
-                if (breakForAddRemoveInstance.test())
+                if (breakForAddRemoveInstance.test (std::memory_order_acquire))
                 {
                     anyInstancesProcessed = false; // Run again asap
                     break;
                 }
+
+                // Skip unflagged instances
+                if (instance->getEpoch() > currentEpoch)
+                    continue;
 
                 if (instance->processNextBlock (false))
                      anyInstancesProcessed = true;
             }
         }
 
+        processEpoch.fetch_add (1, std::memory_order_release);
+
         if (! anyInstancesProcessed)
-        {
             event.wait (-1);
-        }
     }
 }
 
@@ -194,7 +195,7 @@ int ReadAheadTimeStretcher::pushData (const float* const* inChannels, int numSam
 {
     assert (inputFifo.getFreeSpace() >= numSamples);
     inputFifo.write (inChannels, numSamples);
-    processThread->flagForProcessing (*this);
+    processThread->flagForProcessing (epoch);
     hasBeenReset.store (false, std::memory_order_release);
 
     return numSamples;
