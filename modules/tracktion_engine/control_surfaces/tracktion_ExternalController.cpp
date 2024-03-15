@@ -1465,9 +1465,19 @@ juce::StringArray ExternalController::getMidiInputPorts() const
 
     auto& dm = engine.getDeviceManager();
 
+    auto wantsDevice = [] ([[maybe_unused]] MidiInputDevice* in)
+    {
+       #if ! JUCE_DEBUG
+        if (dynamic_cast<VirtualMidiInputDevice*> (in))
+            return false;
+       #endif
+
+        return true;
+    };
+
     for (int i = 0; i < dm.getNumMidiInDevices(); ++i)
         if (auto m = dm.getMidiInDevice (i))
-            if (m->isEnabled())
+            if (m->isEnabled() && wantsDevice (m))
                 inputNames.add (m->getName());
 
     return inputNames;
