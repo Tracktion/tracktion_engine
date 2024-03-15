@@ -34,7 +34,7 @@ struct CreateNodeParams
     bool includeBypassedPlugins = true;                 /**< If false, bypassed plugins will be completely ommited from the graph. */
     bool implicitlyIncludeSubmixChildTracks = true;     /**< If true, child track in submixes will be included regardless of the allowedTracks param. Only relevent when forRendering is also true. */
     bool allowClipSlots = true;                         /**< If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient Node). */
-    bool readAheadTimeStretchNodes = true;              /**< TEMPORARY: If true, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. */
+    bool readAheadTimeStretchNodes = false;             /**< TEMPORARY: If true, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. */
 };
 
 //==============================================================================

@@ -159,25 +159,6 @@ public:
     */
     int processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
 
-    /** Processes some already held data to even out CPU spikes. */
-    void processData();
-
-    /** Some engines can read-ahead to offload CPU use. If they can, this will return the number of
-        samples they can currently accept.
-        @see pushData
-    */
-    int getNumSamplesThatCanBePushed() const;
-
-    /** Some engines can read-ahead to offload CPU use. If they can, and getNumSamplesThatCanBePushed
-        returns a non-zero number, you can call pushData with these samples.
-    */
-    int pushData (const float* const* inChannels, int numSamples);
-
-    /** Some engines can read-ahead to offload CPU use. If they can, and getNumSamplesThatCanBePushed
-        returns a non-zero number, you can call pushData with these samples.
-    */
-    int pushData (AudioFifo&, int numSamples);
-
     /** Flushes the end of the stream when input data is exhausted but there is still output data available.
         Once you have called this, you can no longer call processData.
         @param outChannels  The destination for non-interleaved output samples. This should be as big as samplesPerBlock

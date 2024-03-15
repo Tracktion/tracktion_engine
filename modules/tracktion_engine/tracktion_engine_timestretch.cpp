@@ -71,6 +71,7 @@
 
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"
+#include "timestretch/tracktion_ReadAheadTimeStretcher.cpp"
 
 namespace tracktion { inline namespace engine
 {

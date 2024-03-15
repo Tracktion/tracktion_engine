@@ -88,6 +88,11 @@ public:
     */
     virtual bool areClipSlotsEnabled()                                            { return true; }
 
+    /** TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background
+        thread to reduce audio CPU use.
+    */
+    virtual bool enableReadAheadForTimeStretchNodes()                             { return false; }
+
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
 

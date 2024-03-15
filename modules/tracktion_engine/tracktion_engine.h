@@ -556,6 +556,7 @@ namespace tracktion { inline namespace engine
 
 #include "timestretch/tracktion_BeatDetect.h"
 #include "timestretch/tracktion_TimeStretch.h"
+#include "timestretch/tracktion_ReadAheadTimeStretcher.h"
 
 #include "model/export/tracktion_ArchiveFile.h"
 #include "model/export/tracktion_ExportJob.h"

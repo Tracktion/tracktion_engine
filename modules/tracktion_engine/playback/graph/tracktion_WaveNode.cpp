@@ -16,337 +16,6 @@
 namespace tracktion { inline namespace engine
 {
 
-    class ReadAheadTimeStretcher
-    {
-    public:
-        ReadAheadTimeStretcher (int numBlocksToReadAhead);
-
-        ~ReadAheadTimeStretcher();
-
-        //==============================================================================
-        /** Initialises the TimeStretcher ready to perform timestretching.
-            This must be called at least once before calling the processData methods.
-            @param sourceSampleRate     The sample rate this will be processed at
-            @param samplesPerBlock      The expected number of samples per process block
-            @param numChannels          The number of channels to process
-            @param Mode                 The Mode to enable
-            @param ElastiqueProOptions  The Elastique options to use, ignored in non-ElastiquePro modes
-            @param realtime             Indicates this is for real-time or offline use
-        */
-        void initialise (double sourceSampleRate, int samplesPerBlock,
-                         int numChannels, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions,
-                         bool realtime);
-
-        /** Returns true if this has been fully initialised. */
-        bool isInitialised() const;
-
-        /** Resets the TimeStretcher ready for a new set of audio data, maintains mode, speed and pitch ratios. */
-        void reset();
-
-        /** Sets the timestretch speed ratio and semitones pitch shift.
-            @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.
-            @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.
-        */
-        bool setSpeedAndPitch (float speedRatio, float semitones);
-
-        /** Returns the maximum number of frames that will ever be returned by getFramesNeeded.
-            This can be used to size FIFOs for real-time use accordingly.
-        */
-        int getMaxFramesNeeded() const;
-
-        /** Returns the expected number of frames required to generate some output.
-            This should be queried each block and the returned number of frames be passes to processData.
-        */
-        int getFramesNeeded() const;
-
-        /** Processes some input frames and fills some output frames with the applied speed ratio and pitch shift.
-            @param inChannels   The input sample data in non-interleaved format
-            @param numSamples   The number of input frames to read from inChannels
-            @param outChannels  The destination for non-interleaved output samples. This should be as big as samplesPerBlock
-                                passed to the constructor but it may not fill the whole buffer. In cases where less than
-                                samplesPerBlock is returned, you should query getFramesNeeded and call this method again,
-                                incrementing destination buffers as required.
-            @returns            The number of frames read and hence written to outChannels
-        */
-        int processData (const float* const* inChannels, int numSamples, float* const* outChannels);
-
-        /** Processes some input frames and fills some output frames from a pair of AudioFifos, useful for real-time use.
-            @param inFifo       The input sample data to read from
-            @param numSamples   The number of input frames to read from inFifo. In inFifo must have this number of frames ready
-            @param outFifo      The destination for output samples. This should have at lest samplesPerBlock free.
-            @returns            The number of frames read and hence written to outFifo
-        */
-        int processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
-
-        int getFreeSpace() const;
-        int pushData (const float* const* inChannels, int numSamples);
-
-        int getNumReady() const;
-        int popData (float* const* outChannels, int numSamples);
-
-        /** Flushes the end of the stream when input data is exhausted but there is still output data available.
-            Once you have called this, you can no longer call processData.
-            @param outChannels  The destination for non-interleaved output samples. This should be as big as samplesPerBlock
-                                passed to the constructor but it may not fill the whole buffer. In cases where less than
-                                samplesPerBlock is returned, you should query getFramesNeeded and call this method again,
-                                incrementing destination buffers as required.
-            @returns            The number of frames read and hence written to outChannels
-        */
-        int flush (float* const* outChannels);
-
-    private:
-        //==============================================================================
-        class ProcessThread
-        {
-        public:
-            ProcessThread()
-            {
-                thread = std::thread ([this] { process(); });
-            }
-
-            ~ProcessThread()
-            {
-                waitingToExitFlag.test_and_set();
-                event.signal();
-                thread.join();
-            }
-
-            void addInstance (ReadAheadTimeStretcher* instance)
-            {
-                const std::unique_lock sl (instancesMutex);
-                instances.emplace_back (std::move (instance));
-            }
-
-            void removeInstance (ReadAheadTimeStretcher* instance)
-            {
-                const std::unique_lock sl (instancesMutex);
-                std::erase_if (instances, [&] (auto& i) { return i == instance; });
-            }
-
-            void flagForProcessing (ReadAheadTimeStretcher&)
-            {
-                // Move to the back as processing starts from the front
-                {
-                    // const std::shared_lock sl (instancesMutex);
-                    //
-                    // if (auto found = std::find (instances.begin(), instances.end(), &instance); found != instances.end())
-                    //     std::rotate (found, found + 1, instances.end());
-                    //
-                    // assert (instances.back() == &instance);
-                }
-
-                event.signal();
-            }
-
-        private:
-            //==============================================================================
-            std::vector<ReadAheadTimeStretcher*> instances;
-            std::mutex instancesMutex;
-
-            std::thread thread;
-            juce::WaitableEvent event;
-            std::atomic_flag waitingToExitFlag = ATOMIC_FLAG_INIT;
-
-            //==============================================================================
-            void process()
-            {
-                for (;;)
-                {
-                    if (waitingToExitFlag.test (std::memory_order_acquire))
-                        return;
-
-                    bool anyInstancesProcessed = false;
-
-                    for (auto instance : instances)
-                    {
-                        if (waitingToExitFlag.test (std::memory_order_acquire))
-                            return;
-
-                        if (instance->processNextBlock (false))
-                            anyInstancesProcessed = true;
-                    }
-
-                    if (! anyInstancesProcessed)
-                    {
-                        event.wait (-1);
-                    }
-                }
-            }
-        };
-
-        static ProcessThread& getProcessThread()
-        {
-            static ProcessThread processThread;
-            return processThread;
-        }
-
-        AudioFifo inputFifo { 1, 32 }, outputFifo { 1, 32 };
-        mutable TimeStretcher stretcher;
-        const int numBlocksToReadAhead;
-        int numChannels = 0, numSamplesPerOutputBlock = 0;
-        mutable std::mutex processMutex;
-
-        mutable std::atomic<float> pendingSpeedRatio { 1.0f }, pendingSemitonesUp { 0.0f };
-        mutable std::atomic<bool> newSpeedAndPitchPending { false };
-
-        void tryToSetNewSpeedAndPitch() const;
-        bool processNextBlock (bool shouldBlock);
-        bool canProcessNextBlock();
-    };
-
-    //==============================================================================
-    ReadAheadTimeStretcher::ReadAheadTimeStretcher (int numBlocksToReadAhead_)
-        : numBlocksToReadAhead (numBlocksToReadAhead_)
-    {
-    }
-
-    ReadAheadTimeStretcher::~ReadAheadTimeStretcher()
-    {
-        getProcessThread().removeInstance (this);
-    }
-
-    void ReadAheadTimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
-                                             int numChannelsToUse, TimeStretcher::Mode mode, TimeStretcher::ElastiqueProOptions proOpts,
-                                             bool realtime)
-    {
-        assert (! stretcher.isInitialised() && "Can only initialise once");
-
-        numSamplesPerOutputBlock = samplesPerBlock;
-        numChannels = numChannelsToUse;
-
-        stretcher.initialise (sourceSampleRate, samplesPerBlock,
-                              numChannelsToUse, mode, proOpts,
-                              realtime);
-
-        if (! isInitialised())
-            return;
-
-        getProcessThread().addInstance (this);
-        inputFifo.setSize (numChannels, getMaxFramesNeeded());
-        outputFifo.setSize (numChannels, samplesPerBlock * numBlocksToReadAhead);
-    }
-
-    bool ReadAheadTimeStretcher::isInitialised() const
-    {
-        return stretcher.isInitialised();
-    }
-
-    void ReadAheadTimeStretcher::reset()
-    {
-        const std::scoped_lock sl (processMutex);
-
-        inputFifo.reset();
-        outputFifo.reset();
-        newSpeedAndPitchPending.store (true, std::memory_order_release);
-
-        stretcher.reset();
-    }
-
-    bool ReadAheadTimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)
-    {
-        const bool setSpeed = ! juce::approximatelyEqual (pendingSpeedRatio.exchange (speedRatio, std::memory_order_acq_rel), speedRatio);
-        const bool setPitch = ! juce::approximatelyEqual (pendingSemitonesUp.exchange (semitonesUp, std::memory_order_acq_rel), semitonesUp);
-
-        if (setSpeed || setPitch)
-            newSpeedAndPitchPending.store (true, std::memory_order_release);
-
-        return true;
-    }
-
-    int ReadAheadTimeStretcher::getMaxFramesNeeded() const
-    {
-        return stretcher.getMaxFramesNeeded();
-    }
-
-    int ReadAheadTimeStretcher::getFramesNeeded() const
-    {
-        const std::scoped_lock sl (processMutex);
-        return stretcher.getFramesNeeded();
-    }
-
-    int ReadAheadTimeStretcher::processData (const float* const* inChannels, int numSamples, float* const* outChannels)
-    {
-        pushData (inChannels, numSamples);
-        return popData (outChannels, numSamples);
-    }
-
-    int ReadAheadTimeStretcher::getFreeSpace() const
-    {
-        return inputFifo.getFreeSpace();
-    }
-
-    int ReadAheadTimeStretcher::pushData (const float* const* inChannels, int numSamples)
-    {
-        assert (inputFifo.getFreeSpace() >= numSamples);
-        inputFifo.write (inChannels, numSamples);
-        getProcessThread().flagForProcessing (*this);
-
-        return numSamples;
-    }
-
-    int ReadAheadTimeStretcher::getNumReady() const
-    {
-        return outputFifo.getNumReady();
-    }
-
-    int ReadAheadTimeStretcher::popData (float* const* outChannels, int numSamples)
-    {
-        assert (numSamples <= numSamplesPerOutputBlock || numSamples <= getNumReady());
-
-        if (outputFifo.getNumReady() <= numSamples)
-        {
-            [[ maybe_unused ]] auto res = processNextBlock (true);
-            assert (res && "Not enough input frames pushed");
-        }
-
-        const int numToRead = std::min (numSamples, outputFifo.getNumReady());
-        juce::AudioBuffer<float> destBuffer (outChannels, numChannels, numToRead);
-        outputFifo.read (destBuffer, 0);
-        return numToRead;
-    }
-
-    int ReadAheadTimeStretcher::flush (float* const* outChannels)
-    {
-        jassertfalse; // Not implemented yet!
-        return stretcher.flush (outChannels);
-    }
-
-    void ReadAheadTimeStretcher::tryToSetNewSpeedAndPitch() const
-    {
-        if (! newSpeedAndPitchPending.exchange (false, std::memory_order_acq_rel))
-            return;
-
-        stretcher.setSpeedAndPitch (pendingSpeedRatio.load (std::memory_order_acquire),
-                                    pendingSemitonesUp.load (std::memory_order_acquire));
-    }
-
-    bool ReadAheadTimeStretcher::processNextBlock (bool block)
-    {
-        if (outputFifo.getFreeSpace() < numSamplesPerOutputBlock)
-            return false;
-
-        std::unique_lock<std::mutex> sl;
-
-        if (block)
-            sl = std::unique_lock (processMutex);
-        else
-            sl = std::unique_lock (processMutex, std::try_to_lock);
-
-        if (! sl.owns_lock())
-            return true;
-
-        // If we were waiting for the lock to be released, there might now be samples ready for us so don't process again
-        if (block)
-            if (outputFifo.getNumReady() >= numSamplesPerOutputBlock)
-                return true;
-
-        if (inputFifo.getNumReady() < stretcher.getFramesNeeded())
-            return false;
-
-        tryToSetNewSpeedAndPitch();
-        return stretcher.processData (inputFifo, stretcher.getFramesNeeded(), outputFifo) != 0;
-    }
-
 //==============================================================================
 //==============================================================================
 namespace utils
@@ -948,19 +617,13 @@ public:
         assert (numChannels == (int) destBuffer.getNumChannels());
         const auto numFramesToDo = destBuffer.getNumFrames();
 
-        for (int i = 0;; ++i)
+        for (;;)
         {
             // If there are enough output samples in the fifo, read them out
             if (outputFifo.getNumReady() >= int (numFramesToDo))
             {
                 auto destAudioBuffer = toAudioBuffer (destBuffer);
                 outputFifo.read (destAudioBuffer, 0);
-
-                // If this is the first loop and we've got enough samples to avoid
-                // pushing new data, try and do some processing to spread the load
-                if (i == 0)
-                    timeStretcher.processData();
-
                 break;
             }
 
@@ -984,27 +647,6 @@ public:
             assert (outputFifo.getFreeSpace() >= numThisTime);
             assert (outputFifo.getFreeSpace() >= chunkSize);
             timeStretcher.processData (inputFifo, numThisTime, outputFifo);
-
-            // If this is the first loop and we've got enough samples to avoid
-            // pushing new data, try and do some processing to spread the load
-            if (i == 0)
-            {
-                if (auto numToPush = timeStretcher.getNumSamplesThatCanBePushed();
-                    numToPush > 0)
-                {
-                    // Read samples from source and push to fifo
-                    AudioScratchBuffer scratchBuffer (numChannels, numToPush);
-                    scratchBuffer.buffer.clear();
-                    auto scratchView = toBufferView (scratchBuffer.buffer);
-
-                    if (! source->readSamples (scratchView))
-                        return false;
-
-                    assert (inputFifo.getFreeSpace() >= numToPush);
-                    inputFifo.write (scratchBuffer.buffer);
-                    timeStretcher.pushData (inputFifo, numToPush);
-                }
-            }
         }
 
         readPosition += numFramesToDo * playbackSpeedRatio;
@@ -1056,7 +698,6 @@ public:
 
         source->setPosition (t);
         timeStretcher.reset();
-        hasBeenReset = true;
         setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
     }
 
@@ -1102,46 +743,34 @@ public:
         const auto numFramesToDo = static_cast<int> (destBuffer.getNumFrames());
         int startFrame = 0;
 
+        // Always push one block to keep the input fifo stoked but don't do this for every chunk unless required
+        if (const auto numToPush = timeStretcher.getFramesRecomended(); numToPush > 0)
+            if (! readSourceAndPushFrames (numToPush))
+                return false;
+
         for (auto numFramesLeft = numFramesToDo; numFramesLeft > 0;)
         {
-            const auto numFramesThisTime = std::min (chunkSize, numFramesLeft);
-
-            // Read samples from source and push to stretcher if capacity
-            // The logic here is complicated but basically we want to avoid reading too many
-            // samples at once as it's expensive to read and resample them.
-            // However, after the first reset, we do want to provide enough samples to get
-            // the first block out. After that, we want to keep the stretcher stoked with
-            // samples so the background thread can process them
-            const bool wasJustReset = std::exchange (hasBeenReset, false);
-            const auto numToPush = wasJustReset ? timeStretcher.getFramesNeeded()
-                                                : std::min (std::max (timeStretcher.getFramesNeeded(), chunkSize * 2),
-                                                            timeStretcher.getFreeSpace());
-
-            if (numToPush > 0)
-            {
-                AudioScratchBuffer scratchBuffer (numChannels, numToPush);
-                scratchBuffer.buffer.clear();
-                auto scratchView = toBufferView (scratchBuffer.buffer);
-
-                if (! source->readSamples (scratchView))
-                    return false;
-
-                timeStretcher.pushData (scratchBuffer.buffer.getArrayOfReadPointers(), numToPush);
-            }
+            const auto maxNumFramesThisTime = std::min (chunkSize, numFramesLeft);
 
             // Read the number of samples we need
             {
-                auto destAudioBuffer = toAudioBuffer (destBuffer.getFrameRange (createFrameRange (startFrame, startFrame + numFramesThisTime)));
+                auto destAudioBuffer = toAudioBuffer (destBuffer.getFrameRange (createFrameRange (startFrame, startFrame + maxNumFramesThisTime)));
+                const int numRead = timeStretcher.popData (destAudioBuffer.getArrayOfWritePointers(), maxNumFramesThisTime);
 
-                if (! timeStretcher.popData (destAudioBuffer.getArrayOfWritePointers(), numFramesThisTime))
+                if (numRead == 0)
                 {
                     destBuffer.clear();
                     return false;
                 }
+
+                startFrame += numRead;
+                numFramesLeft -= numRead;
             }
 
-            startFrame += numFramesThisTime;
-            numFramesLeft -= numFramesThisTime;
+            if (numFramesLeft > 0 && timeStretcher.requiresMoreFrames())
+                if (const auto numToPush = timeStretcher.getFramesRecomended(); numToPush > 0)
+                    if (! readSourceAndPushFrames (numToPush))
+                        return false;
         }
 
         readPosition += numFramesToDo * playbackSpeedRatio;
@@ -1152,11 +781,26 @@ public:
     const int numChannels, chunkSize = 1024;
     ReadAheadTimeStretcher timeStretcher { 3 };
     double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
-    bool hasBeenReset = true;
 
     SampleCount getReadPosition() const
     {
         return static_cast<SampleCount> (readPosition + 0.5);
+    }
+
+    bool readSourceAndPushFrames (int numSourceFrames)
+    {
+        if (numSourceFrames <= 0)
+            return true;
+
+        // Read samples from source and push to stretcher if capacity
+        AudioScratchBuffer scratchBuffer (numChannels, numSourceFrames);
+        scratchBuffer.buffer.clear();
+        auto scratchView = toBufferView (scratchBuffer.buffer);
+
+        if (! source->readSamples (scratchView))
+            return false;
+
+        return timeStretcher.pushData (scratchBuffer.buffer.getArrayOfReadPointers(), numSourceFrames) == numSourceFrames;
     }
 };
 
