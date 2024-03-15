@@ -442,9 +442,11 @@ private:
         if (numInputFrames == 0)
             return 0;
 
-        assert (numInputFrames == elastique->GetFramesNeeded());
-        [[maybe_unused]] const int err = elastique->ProcessData ((float **) inFrames.data.channels, numInputFrames);
-        assert (err == 0);
+        {
+            assert (numInputFrames == elastique->GetFramesNeeded());
+            [[maybe_unused]] const int err = elastique->ProcessData ((float **) inFrames.data.channels, numInputFrames);
+            assert (err == 0);
+        }
 
         for (int numProcessCalls = elastique->GetNumOfProcessCalls(); --numProcessCalls >= 0;)
         {
