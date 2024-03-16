@@ -148,7 +148,7 @@ private:
     void tryToSetNewSpeedAndPitch() const;
     int processNextBlock (bool shouldBlock);
     bool canProcessNextBlock();
-    std::uint64_t getEpoch() const { return epoch.load (std::memory_order_acquire); };
+    std::uint64_t getEpoch() const { return epoch.load (std::memory_order_acquire); }
 };
 
 }
