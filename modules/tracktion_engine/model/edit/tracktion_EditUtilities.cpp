@@ -557,7 +557,7 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
     {
         // For large sizes it's much quicker to add all the items and then remove duplicates
         std::vector<Selectable*> selectables;
-        selectables.reserve (in.size());
+        selectables.reserve (static_cast<size_t> (in.size()));
 
         for (auto ti : in.getItemsOfType<TrackItem>())
         {
