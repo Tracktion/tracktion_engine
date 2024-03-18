@@ -165,7 +165,7 @@ struct SelectableList
 
         for (auto s : items)
             if (auto i = dynamic_cast<SubclassType*> (s))
-                results.addIfNotAlreadyThere (i);
+                results.add (i);
 
         return results;
     }
