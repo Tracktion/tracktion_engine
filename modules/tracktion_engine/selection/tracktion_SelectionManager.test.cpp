@@ -78,7 +78,6 @@ private:
 
 static SelectableBenchmarks selectableBenchmarks;
 
-#endif //TRACKTION_BENCHMARKS
-
-
 } // namespace tracktion::inline engine
+
+#endif //TRACKTION_BENCHMARKS
