@@ -54,7 +54,7 @@ public:
             }
 
             {
-                ScopedBenchmark sb (getDescription ("Select 10'000 clips"));
+                ScopedBenchmark sb (getDescription ("Select 10,000 clips"));
                 sm.select (clips);
             }
 
