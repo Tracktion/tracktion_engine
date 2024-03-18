@@ -121,4 +121,26 @@ SmartPointerContainer& erase_if_null (SmartPointerContainer& container)
     return container;
 }
 
+/** Removes duplicates from a container maintaining the order.
+    This is slower than sorting the container and using std::unique and also alocates memory so should be used only if the order is important.
+*/
+template<class Container>
+Container& stable_remove_duplicates (Container& container)
+{
+    std::set<typename Container::value_type> seen;
+
+    auto new_end = std::remove_if (container.begin(), container.end(),
+                                   [&seen] (const auto& value)
+                                   {
+                                       if (seen.find (value) != seen.end())
+                                           return true;
+
+                                       seen.insert (value);
+                                       return false;
+                                   });
+    container.erase (new_end, container.end());
+
+    return container;
+}
+
 }}
