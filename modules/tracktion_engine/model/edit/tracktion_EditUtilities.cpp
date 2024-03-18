@@ -553,14 +553,35 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 {
     SelectableList result;
 
-    for (auto ti : in.getItemsOfType<TrackItem>())
+    if (in.size() > 1000)
     {
-        if (auto clip = dynamic_cast<Clip*> (ti))
-            result.addIfNotAlreadyThere (clip);
+        // For large sizes it's much quicker to add all the items and then remove duplicates
+        std::vector<Selectable*> selectables;
+        selectables.reserve (in.size());
 
-        if (auto cc = dynamic_cast<CollectionClip*> (ti))
-            for (auto c : cc->getClips())
-                result.addIfNotAlreadyThere (c);
+        for (auto ti : in.getItemsOfType<TrackItem>())
+        {
+            if (auto clip = dynamic_cast<Clip*> (ti))
+                selectables.push_back (clip);
+
+            if (auto cc = dynamic_cast<CollectionClip*> (ti))
+                for (auto c : cc->getClips())
+                    selectables.push_back (c);
+        }
+
+        return stable_remove_duplicates (selectables);
+    }
+    else
+    {
+        for (auto ti : in.getItemsOfType<TrackItem>())
+        {
+            if (auto clip = dynamic_cast<Clip*> (ti))
+                result.addIfNotAlreadyThere (clip);
+
+            if (auto cc = dynamic_cast<CollectionClip*> (ti))
+                for (auto c : cc->getClips())
+                    result.addIfNotAlreadyThere (c);
+        }
     }
 
     return result;
