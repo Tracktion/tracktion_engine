@@ -148,6 +148,12 @@ struct SelectableList
         items.addArray (initialItems);
     }
 
+    template<typename SelectableType>
+    SelectableList (const std::vector<SelectableType*>& initialItems)
+    {
+        items.addArray (initialItems.data(), static_cast<int> (initialItems.size()));
+    }
+
     //==============================================================================
     /** Returns the selectable class for a given Selectable in the list. */
     SelectableClass* getSelectableClass (int index) const;
