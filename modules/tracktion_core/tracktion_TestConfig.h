@@ -69,4 +69,5 @@
 #define ENGINE_BENCHMARKS_WAVENODE                      1
 #define ENGINE_BENCHMARKS_RESAMPLING                    1
 #define ENGINE_BENCHMARKS_RACKS                         1
+#define ENGINE_BENCHMARKS_SELECTABLE                    1
 #define ENGINE_BENCHMARKS_PLUGINNODE                    1

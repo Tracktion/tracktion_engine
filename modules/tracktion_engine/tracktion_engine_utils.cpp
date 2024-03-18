@@ -59,9 +59,13 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #endif
 
 //==============================================================================
+#include "../tracktion_core/utilities/tracktion_Benchmark.h"
+
+//==============================================================================
 #include "selection/tracktion_Clipboard.cpp"
 #include "selection/tracktion_Selectable.test.cpp"
 #include "selection/tracktion_SelectionManager.cpp"
+#include "selection/tracktion_SelectionManager.test.cpp"
 
 #include "utilities/tracktion_AppFunctions.cpp"
 #include "utilities/tracktion_AudioUtilities.cpp"
