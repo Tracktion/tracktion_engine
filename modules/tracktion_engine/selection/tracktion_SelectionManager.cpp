@@ -252,9 +252,20 @@ SelectableClass::ClassInstanceBase::~ClassInstanceBase()  { getAllSelectableClas
 SelectableClass* SelectableClass::findClassFor (const Selectable& s)
 {
    #if ! JUCE_DEBUG
+    static std::unordered_map<std::type_index, SelectableClass*> cache;
+    const std::type_index typeindex (typeid (s));
+
+    if (auto found = cache.find (typeindex); found != cache.end())
+        return found->second;
+
     for (auto cls : getAllSelectableClasses())
+    {
         if (auto c = cls->getClassForObject (&s))
+        {
+            cache[typeindex] = c;
             return c;
+        }
+    }
    #else
     SelectableClass* result = nullptr;
 
