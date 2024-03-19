@@ -426,7 +426,8 @@ private:
         AudioScratchBuffer scratchBuffer (numChannels, maxFramesNeeded);
         const int numPreProcessFrames = elastique->PreProcessData ((float **) inFrames.data.channels, numInputFrames,
                                                                    (float **) scratchBuffer.buffer.getArrayOfWritePointers(),
-                                                                   CElastiqueProV3DirectIf::kNormalStartup);
+                                                                   samplesPerOutputBuffer >= 512 ? CElastiqueProV3DirectIf::kFastStartup
+                                                                                                 : CElastiqueProV3DirectIf::kNormalStartup);
 
         assert (numPreProcessFrames <= scratchBuffer.buffer.getNumSamples());
         assert (outputFifo.getFreeSpace() >= numPreProcessFrames);
