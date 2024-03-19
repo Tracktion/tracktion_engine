@@ -62,6 +62,7 @@ public:
 
     void paint (juce::Graphics&) override;
     bool hitTest (int x, int y) override;
+    void visibilityChanged() override;
 
     void mouseDown (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;

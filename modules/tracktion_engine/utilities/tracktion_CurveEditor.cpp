@@ -310,6 +310,11 @@ bool CurveEditor::hitTest (int x, int y)
     return false;
 }
 
+void CurveEditor::visibilityChanged()
+{
+    updateLineThickness();
+}
+
 void CurveEditor::mouseDown (const juce::MouseEvent& e)
 {
     CRASH_TRACER
@@ -797,7 +802,8 @@ void CurveEditor::changeListenerCallback (juce::ChangeBroadcaster* cb)
         repaint();
     }
 
-    updateLineThickness();
+    if (isVisible())
+        updateLineThickness();
 }
 
 Edit& CurveEditor::getEdit() const
