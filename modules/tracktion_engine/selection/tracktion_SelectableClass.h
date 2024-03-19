@@ -139,15 +139,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectableClass)
 };
 
-//==============================================================================
-template<typename SelectableType>
-inline SelectableClass* SelectableClass::findClassFor()
-{
-    return findClassFor (std::type_index (typeid (SelectableType)));
-}
 
-
-//==============================================================================
 //==============================================================================
 class SelectableClassWithVolume
 {
