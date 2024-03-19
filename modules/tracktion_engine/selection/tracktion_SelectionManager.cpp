@@ -246,23 +246,29 @@ static juce::Array<SelectableClass::ClassInstanceBase*>& getAllSelectableClasses
     return classes;
 }
 
+static std::unordered_map<std::type_index, SelectableClass*>& getSelectableClassCache()
+{
+    static std::unordered_map<std::type_index, SelectableClass*> cache;
+    return cache;
+}
+
 SelectableClass::ClassInstanceBase::ClassInstanceBase()   { getAllSelectableClasses().add (this); }
 SelectableClass::ClassInstanceBase::~ClassInstanceBase()  { getAllSelectableClasses().removeAllInstancesOf (this); }
 
 SelectableClass* SelectableClass::findClassFor (const Selectable& s)
 {
    #if ! JUCE_DEBUG
-    static std::unordered_map<std::type_index, SelectableClass*> cache;
-    const std::type_index typeindex (typeid (s));
+    auto& cache = getSelectableClassCache();
+    const std::type_index typeIndex (typeid (s));
 
-    if (auto found = cache.find (typeindex); found != cache.end())
+    if (auto found = cache.find (typeIndex); found != cache.end())
         return found->second;
 
     for (auto cls : getAllSelectableClasses())
     {
         if (auto c = cls->getClassForObject (&s))
         {
-            cache[typeindex] = c;
+            cache[typeIndex] = c;
             return c;
         }
     }

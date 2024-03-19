@@ -28,6 +28,9 @@ public:
     static SelectableClass* findClassFor (const Selectable&);
     static SelectableClass* findClassFor (const Selectable*);
 
+    template<typename SelectableType>
+    static SelectableClass* findClassFor();
+
     //==============================================================================
     /** Must return a description of this particular group of objects.
         This will be shown on the properties panel.
@@ -136,7 +139,15 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectableClass)
 };
 
+//==============================================================================
+template<typename SelectableType>
+inline SelectableClass* SelectableClass::findClassFor()
+{
+    return findClassFor (std::type_index (typeid (SelectableType)));
+}
 
+
+//==============================================================================
 //==============================================================================
 class SelectableClassWithVolume
 {
