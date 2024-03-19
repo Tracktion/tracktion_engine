@@ -246,7 +246,7 @@ static juce::Array<SelectableClass::ClassInstanceBase*>& getAllSelectableClasses
     return classes;
 }
 
-static std::unordered_map<std::type_index, SelectableClass*>& getSelectableClassCache()
+static inline std::unordered_map<std::type_index, SelectableClass*>& getSelectableClassCache()
 {
     static std::unordered_map<std::type_index, SelectableClass*> cache;
     return cache;
