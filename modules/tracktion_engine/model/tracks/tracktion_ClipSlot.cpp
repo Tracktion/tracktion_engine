@@ -32,11 +32,17 @@ ClipSlot::~ClipSlot()
 //==============================================================================
 void ClipSlot::setClip (Clip* c)
 {
+    if (c == nullptr)
+        return;
+
     if (auto existingClip = getClip())
         existingClip->removeFromParent();
 
-    if (c)
-        c->moveTo (*this);
+    jassert (findClipForID (edit, c->itemID) == nullptr);
+
+    auto um = c->getUndoManager();
+    c->state.getParent().removeChild (c->state, um);
+    state.addChild (c->state, -1, um);
 }
 
 Clip* ClipSlot::getClip()

@@ -403,21 +403,25 @@ void Clip::removeFromParent()
 
 bool Clip::moveTo (ClipOwner& newParent)
 {
+    if (parent == &newParent)
+        return false;
+
+    if (! canBeAddedTo (newParent))
+        return false;
+
     if (auto to = dynamic_cast<ClipTrack*> (&newParent))
     {
-        if (canBeAddedTo (*to))
-        {
-            if (parent != to)
-            {
-                if (! to->isFrozen (Track::anyFreeze))
-                {
-                    Clip::Ptr refHolder (this);
-                    to->addClip (this);
-                }
-            }
+        if (to->isFrozen (Track::anyFreeze))
+            return false;
 
-            return true;
-        }
+        Clip::Ptr refHolder (this);
+        to->addClip (this);
+        return true;
+    }
+    else if (auto cs = dynamic_cast<ClipSlot*> (&newParent))
+    {
+        Clip::Ptr refHolder (this);
+        cs->setClip (this);
     }
 
     return false;
