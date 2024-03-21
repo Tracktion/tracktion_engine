@@ -116,8 +116,23 @@ void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& info)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    // This latency number is from trial and error, may need more testing
-    latencySeconds = manualAdjustMs / 1000.0 + (double)info.blockSizeSamples / info.sampleRate;
+    // This latency number is from trial and error, may need more testing.
+    // It should be accurate on well reporting devices though
+    int latency = info.blockSizeSamples
+                    + static_cast<int> (timeToSample (manualAdjustMs / 1000.0, info.sampleRate));
+
+    if (auto device = engine.getDeviceManager().deviceManager.getCurrentAudioDevice())
+    {
+        if (sendDeviceType == audioDevice)
+            latency += device->getOutputLatencyInSamples();
+
+        if (returnDeviceType == audioDevice)
+            latency += device->getInputLatencyInSamples();
+    }
+
+    latency = std::max (0, latency);
+    latencyNumSamples = latency;
+    latencySeconds = TimeDuration::fromSamples (latency, info.sampleRate).inSeconds();
 }
 
 void InsertPlugin::deinitialise()
@@ -263,6 +278,11 @@ void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcA
         if (srcMidi != nullptr)
             returnMidiBuffer.mergeFrom (*srcMidi);
     }
+}
+
+int InsertPlugin::getLatencyNumSamples() const
+{
+    return latencyNumSamples.load (std::memory_order_acquire);
 }
 
 void InsertPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

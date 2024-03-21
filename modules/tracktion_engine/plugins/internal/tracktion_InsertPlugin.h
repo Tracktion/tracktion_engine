@@ -72,12 +72,16 @@ public:
     void fillSendBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
     void fillReturnBuffer (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*);
 
+    /** @internal */
+    int getLatencyNumSamples() const;
+
 private:
     //==============================================================================
     choc::buffer::ChannelArrayBuffer<float> sendBuffer, returnBuffer;
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
     juce::CriticalSection bufferLock;
 
+    std::atomic<int> latencyNumSamples { 0 };
     std::atomic<double> latencySeconds { 0.0 };
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
 
