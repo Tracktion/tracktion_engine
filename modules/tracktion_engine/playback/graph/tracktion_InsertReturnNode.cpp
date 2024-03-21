@@ -24,6 +24,7 @@ tracktion::graph::NodeProperties InsertReturnNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.nodeID = 0;
+    props.latencyNumSamples = owner.getLatencyNumSamples();
 
     return props;
 }
