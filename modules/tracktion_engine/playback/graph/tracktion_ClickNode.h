@@ -50,6 +50,16 @@ private:
     int bigClickMidiNote = 37, littleClickMidiNote = 76;
 
     //==============================================================================
+    bool isPlaying();
+    void trigger (juce::AudioBuffer<float>*);
+    void render (choc::buffer::ChannelArrayView<float>&);
+    void reset();
+    int samplesRemaining();
+
+    juce::AudioBuffer<float>* currentSample = nullptr;
+    int samplePos = -1;
+
+    //==============================================================================
     bool isMutedAtTime (TimePosition) const;
 };
 
