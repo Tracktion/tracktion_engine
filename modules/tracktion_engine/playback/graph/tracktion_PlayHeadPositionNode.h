@@ -25,6 +25,8 @@ public:
           input (std::move (inputNode)),
           playHeadTime (playHeadTimeToUpdate)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
 
     tracktion::graph::NodeProperties getNodeProperties() override
@@ -58,8 +60,7 @@ public:
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        copy (pc.buffers.audio, sourceBuffers.audio);
-
+        setAudioOutput (input.get(), sourceBuffers.audio);
         updatePlayHeadTime (pc.referenceSampleRange.getLength());
     }
 
