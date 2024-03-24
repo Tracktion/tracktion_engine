@@ -668,6 +668,8 @@ private:
     {
         juce::WorkgroupToken token;
         workgroup.join (token);
+        
+        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
         for (;;)
         {
