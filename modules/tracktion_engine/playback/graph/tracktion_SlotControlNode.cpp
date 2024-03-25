@@ -120,7 +120,7 @@ void SlotControlNode::process (ProcessContext& pc)
     if (wasPlaying && ! getPlayHead().isPlaying())
     {
         wasPlaying = false;
-        processStop (pc);
+        processStop (pc, 0.0);
         return;
     }
 
@@ -160,14 +160,13 @@ void SlotControlNode::process (ProcessContext& pc)
 //==============================================================================
 void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::SplitStatus status)
 {
-    const auto editBeatRange = getEditBeatRange();
     const auto totalRange = status.range1.isEmpty() ? status.range2
                                                     : (status.range2.isEmpty() ? status.range1
                                                                                : status.range1.getUnionWith (status.range2));
     const juce::NormalisableRange blockRangeBeats (totalRange.getStart().inBeats(),
                                                    totalRange.getEnd().inBeats());
 
-    auto processSubSection = [this, &pc, &editBeatRange, &blockRangeBeats] (auto section, bool isPlaying, auto playStartTime)
+    auto processSubSection = [this, &pc, &blockRangeBeats, editBeatRange = getEditBeatRange(), editTimeRange = getEditTimeRange()] (auto section, bool isPlaying, auto playStartTime)
     {
         const auto proportion = juce::Range (blockRangeBeats.convertTo0to1 (section.getStart().inBeats()),
                                              blockRangeBeats.convertTo0to1 (section.getEnd().inBeats()));
@@ -193,7 +192,9 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 
         const auto startBeat  = editBeatRange.getStart() + editBeatRange.getLength() * proportion.getStart();
         const auto endBeat    = editBeatRange.getStart() + editBeatRange.getLength() * proportion.getEnd();
-        processSection (subSection, { startBeat, endBeat }, section, isPlaying, playStartTime);
+        const auto startTime  = editTimeRange.getStart() + editTimeRange.getLength() * proportion.getStart();
+        const auto endTime    = editTimeRange.getStart() + editTimeRange.getLength() * proportion.getEnd();
+        processSection (subSection, { startBeat, endBeat }, { startTime, endTime }, section, isPlaying, playStartTime);
     };
 
     if (status.isSplit)
@@ -207,7 +208,7 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
     }
 }
 
-void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, BeatRange unloopedClipBeatRange,
+void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRange, TimeRange editTimeRange, BeatRange unloopedClipBeatRange,
                                       bool isPlaying, std::optional<BeatPosition> playStartTime)
 {
     const juce::ScopeGuard scope { [this, isPlaying]
@@ -220,7 +221,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     if (! isPlaying)
     {
         if (wasPlaying != isPlaying)
-            processStop (pc);
+            processStop (pc, (editTimeRange.getStart() - getEditTimeRange().getStart()).inSeconds());
         else
             pc.buffers.audio.clear();
 
@@ -289,11 +290,11 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     }
 }
 
-void SlotControlNode::processStop (ProcessContext& pc)
+void SlotControlNode::processStop (ProcessContext& pc, double timestampForMidiNoteOffs)
 {
     if (midiNode)
     {
-        midiNode->killActiveNotes (pc.buffers.midi, 0.0);
+        midiNode->killActiveNotes (pc.buffers.midi, timestampForMidiNoteOffs);
     }
 
     // Fade out last sample
