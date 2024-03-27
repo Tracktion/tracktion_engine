@@ -258,7 +258,7 @@ void ReadAheadTimeStretcher::tryToSetNewSpeedAndPitch() const
 int ReadAheadTimeStretcher::processNextBlock (bool block)
 {
     if (outputFifo.getFreeSpace() < numSamplesPerOutputBlock)
-        return false;
+        return 0;
 
     std::unique_lock<std::mutex> sl;
 
@@ -268,15 +268,15 @@ int ReadAheadTimeStretcher::processNextBlock (bool block)
         sl = std::unique_lock (processMutex, std::try_to_lock);
 
     if (! sl.owns_lock())
-        return true;
+        return 0;
 
     // If we were waiting for the lock to be released, there might now be samples ready for us so don't process again
     if (block)
         if (outputFifo.getNumReady() >= numSamplesPerOutputBlock)
-            return true;
+            return numSamplesPerOutputBlock;
 
     if (inputFifo.getNumReady() < stretcher.getFramesNeeded())
-        return false;
+        return 0;
 
     tryToSetNewSpeedAndPitch();
     return stretcher.processData (inputFifo, stretcher.getFramesNeeded(), outputFifo);
