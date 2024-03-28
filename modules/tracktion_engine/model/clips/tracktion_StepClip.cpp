@@ -657,7 +657,7 @@ int StepClip::insertNewPattern (int index)
 {
     // BEATCONNECT MODIFICATION START
     // Add a little more resolution
-    auto numNotes = getBeatsPerBar() * 4;
+    auto numNotes = getBeatsPerBar() * 4 * 4;
     auto noteLength = 0.25f;
     auto v = createValueTree (IDs::PATTERN,
                               IDs::numNotes, numNotes,
