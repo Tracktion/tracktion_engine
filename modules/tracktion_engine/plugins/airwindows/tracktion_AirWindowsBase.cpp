@@ -79,6 +79,11 @@ int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
     return impl->getNumOutputs();
 }
 
+juce::String AirWindowsPlugin::getSelectableDescription()
+{
+    return getName() + " " + TRANS("Plugin");
+}
+
 void AirWindowsPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;

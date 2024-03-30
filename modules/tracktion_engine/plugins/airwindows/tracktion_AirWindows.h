@@ -51,7 +51,7 @@ public:
     virtual Type getPluginCategory() = 0;
 
     //==============================================================================
-    juce::String getSelectableDescription() override                        { return TRANS("Air Windows Plugin"); }
+    juce::String getSelectableDescription() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
 
     //==============================================================================
