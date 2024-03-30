@@ -231,12 +231,18 @@ Plugin::Ptr PluginList::insertPlugin (const juce::ValueTree& v, int index)
         }
 
         if (auto ft = dynamic_cast<FolderTrack*> (ownerTrack))
-            if (! ft->willAcceptPlugin (*newPlugin))
-                return {};
-
-        if (ownerTrack != nullptr && ! ownerTrack->canContainPlugin (newPlugin.get()))
         {
-            jassertfalse;
+            if (! ft->willAcceptPlugin (*newPlugin))
+            {
+                edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add this kind of plugin to a folder track"));
+                return {};
+            }
+        }
+
+        if ((ownerTrack == nullptr && ! newPlugin->canBeAddedToMaster()) ||
+            (ownerTrack != nullptr && ! ownerTrack->canContainPlugin (newPlugin.get())))
+        {
+            edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add this kind of plugin to the master list"));
             return {};
         }
 
