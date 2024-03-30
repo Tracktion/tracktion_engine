@@ -395,7 +395,7 @@ public:
     /** Creates a ChordTrack if there isn't currently one. */
     void ensureChordTrack();
 
-    /** Creates a ChordTrack if there isn't currently one. */
+    /** Creates a MasterTrack if there isn't currently one. */
     void ensureMasterTrack();
 
     /** Returns the global ArrangerTrack. */
