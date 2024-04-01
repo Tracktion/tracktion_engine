@@ -135,8 +135,7 @@ PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)
                                                                              s.getFloatValue()); });
 
     semitonesValue.referTo (state, IDs::semitonesUp, um);
-    // mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);
-    mode.referTo (state, IDs::mode, um, (int) TimeStretcher::soundtouchBetter); // =8>
+    mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);
     elastiqueOptions.referTo (state, IDs::elastiqueOptions, um);
 
     semitones->attachToCurrentValue (semitonesValue);
