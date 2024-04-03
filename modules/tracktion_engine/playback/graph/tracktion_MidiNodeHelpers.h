@@ -20,7 +20,11 @@ namespace MidiNodeHelpers
                                        juce::Range<int> channelNumbers,
                                        LiveClipLevel& clipLevel,
                                        bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
-                                       juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
+                                       juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer, 
+                                       // BEATCONNECT MODIFICATION START
+                                       // Used for note animation
+                                       const EditItemID& editItemID)
+                                       // BEATCONNECT MODIFICATION END
     {
         if (useMPEChannelMode)
         {
@@ -66,6 +70,12 @@ namespace MidiNodeHelpers
                                 juce::MidiMessage m (meh->message);
                                 m.multiplyVelocity (volScale);
 
+                                // BEATCONNECT MODIFICATION START
+                                // Used for note animation
+                                m.setTimeInClip(0.0);
+                                m.setEditItemID(editItemID.getRawID());
+                                // BEATCONNECT MODIFICATION START
+                                
                                 // give these a tiny offset to make sure they're played after the controller updates
                                 destBuffer.addMidiMessage (m, 0.0001, midiSourceID);
                             }

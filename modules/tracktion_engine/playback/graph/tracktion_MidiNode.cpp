@@ -153,9 +153,19 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
     if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
     {
-        MidiNodeHelpers::createMessagesForTime (pc.buffers.midi, sequence, localTime.getStart(),
-                                                channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
-                                                controllerMessagesScratchBuffer);
+        MidiNodeHelpers::createMessagesForTime (
+            pc.buffers.midi, 
+            sequence, 
+            localTime.getStart(),
+            channelNumbers, 
+            clipLevel, 
+            useMPEChannelMode, 
+            midiSourceID,
+            controllerMessagesScratchBuffer,
+            // BEATCONNECT MODIFICATION START
+            // Used for note animation
+            editItemID);
+            // BEATCONNECT MODIFICATION END
         shouldCreateMessagesForTime = false;
     }
 
@@ -190,7 +200,7 @@ void MidiNode::processSection (Node::ProcessContext& pc,
             // BEATCONNECT MODIFICATION START
             // Used for note animation
             auto timeInClip = eventTime;
-            // BEATCONNECT MODIFICATION START
+            // BEATCONNECT MODIFICATION END
 
             // This correction here is to avoid rounding errors converting to and from sample position and times
             const auto timeCorrection = lastBlockOfLoop ? (meh->message.isNoteOff() ? 0.0 : durationOfOneSample) : 0.0;
@@ -221,7 +231,7 @@ void MidiNode::processSection (Node::ProcessContext& pc,
                 //      ", Is note on : " <<
                 //      (int)meh->message.isNoteOn());
                 // 
-                // BEATCONNECT MODIFICATION START
+                // BEATCONNECT MODIFICATION END
 
                 juce::MidiMessage m (meh->message);
                 m.multiplyVelocity (volScale);
@@ -230,7 +240,7 @@ void MidiNode::processSection (Node::ProcessContext& pc,
                 // Used for note animation
                 m.setTimeInClip(timeInClip);
                 m.setEditItemID(editItemID.getRawID());
-                // BEATCONNECT MODIFICATION START
+                // BEATCONNECT MODIFICATION END
 
                 const auto eventTimeSeconds = eventTime * secondsPerTimeBase;
                 pc.buffers.midi.addMidiMessage (m, eventTimeSeconds, midiSourceID);
