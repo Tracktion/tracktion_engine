@@ -1041,7 +1041,7 @@ bool Clipboard::Clips::pasteInsertingAtCursorPos (Edit& edit, EditInsertPoint& i
     }
 
     EditPastingOptions options (edit, insertPoint, &sm);
-    options.startTime = cursorPos;
+    options.startTime = std::max (0_tp, cursorPos);
     return pasteIntoEdit (options);
 }
 
