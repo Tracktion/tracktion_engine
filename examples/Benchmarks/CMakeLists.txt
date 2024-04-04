@@ -91,6 +91,10 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_compile_options(${TARGET_NAME} PRIVATE "-fno-aligned-allocation")
+endif()
+
 # If we are compiling for Linux specify the arch to enable sse and avx instructions
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_compile_options(${TARGET_NAME} PRIVATE "-march=sandybridge")

@@ -19,7 +19,6 @@ endif()
 # If we are compiling for macOS we want to target OS versions down to 10.13
 if (APPLE)
     set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
-    set (CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED NO)
 endif()
 
 
@@ -91,6 +90,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_compile_options(${TARGET_NAME} PRIVATE "-fno-aligned-allocation")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
