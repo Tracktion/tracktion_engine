@@ -114,10 +114,6 @@ jobs:
             g++ -v
           fi
 
-          if [ "${{ matrix.name }}" = 'macOS' ]; then
-            xcodeselect -s /Applications/Xcode_15.3.app
-          fi
-
           cd ${{ env.BUILD_DIR }}
           cmake --build . --target ${{ matrix.target }} --config ${{ env.BUILD_CONFIG }} --parallel 4 ${{ matrix.asan_cmake_args }} ${{ matrix.tsan_cmake_args }}
 
@@ -227,10 +223,6 @@ jobs:
               export CXX=/usr/bin/g++-11
               gcc -v
               g++ -v
-            fi
-
-            if [ "${{ matrix.name }}" = 'macOS' ]; then
-              xcodeselect -s /Applications/Xcode_15.3.app
             fi
 
             cd ${{ env.BUILD_DIR }}
