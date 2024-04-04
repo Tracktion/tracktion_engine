@@ -21,7 +21,7 @@ jobs:
           - name: linux
             os: ubuntu-latest
           - name: macOS
-            os: macos-14
+            os: macos-latest
             generator: "-G Xcode"
           - name: windows
             os: windows-latest
@@ -34,7 +34,7 @@ jobs:
           # Extra tooled builds (outside of matrix)
           - name: macOS_asan
             target: TestRunner
-            os: macos-14
+            os: macos-latest
             generator: "-G Xcode"
             run_target: true
             asan_cmake_args: "-- -enableAddressSanitizer YES -enableUndefinedBehaviorSanitizer YES"
@@ -42,7 +42,7 @@ jobs:
             schedule_only: true
           - name: macOS_asan
             target: Benchmarks
-            os: macos-14
+            os: macos-latest
             generator: "-G Xcode"
             run_target: true
             asan_cmake_args: "-- -enableAddressSanitizer YES -enableUndefinedBehaviorSanitizer YES"
@@ -50,12 +50,12 @@ jobs:
             schedule_only: true
           - name: macOS_analyse
             target: TestRunner
-            os: macos-14
+            os: macos-latest
             generator: "-G Xcode"
             analyse: true
           - name: macOS_analyse
             target: Benchmarks
-            os: macos-14
+            os: macos-latest
             generator: "-G Xcode"
             analyse: true
 
@@ -155,7 +155,7 @@ jobs:
             # Extra tooled builds (only run on sceduled builds)
             - name: macOS_tsan
               target: TestRunner
-              os: macos-14
+              os: macos-latest
               generator: "-G Xcode"
               run_target: true
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
@@ -163,7 +163,7 @@ jobs:
               schedule_only: true
             - name: macOS_tsan
               target: Benchmarks
-              os: macos-14
+              os: macos-latest
               generator: "-G Xcode"
               run_target: true
               tsan_cmake_args: "-- -enableThreadSanitizer YES"
