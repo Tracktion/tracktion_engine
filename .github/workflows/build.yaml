@@ -115,7 +115,7 @@ jobs:
           fi
 
           if [ "${{ matrix.name }}" = 'macOS' ]; then
-            xcode-select -s /Applications/Xcode_15.3.app
+            xcodeselect -s /Applications/Xcode_15.3.app
           fi
 
           cd ${{ env.BUILD_DIR }}
@@ -230,7 +230,7 @@ jobs:
             fi
 
             if [ "${{ matrix.name }}" = 'macOS' ]; then
-              xcode-select -s /Applications/Xcode_15.3.app
+              xcodeselect -s /Applications/Xcode_15.3.app
             fi
 
             cd ${{ env.BUILD_DIR }}
