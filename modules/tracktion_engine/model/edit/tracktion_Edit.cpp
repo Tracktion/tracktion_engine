@@ -1620,8 +1620,14 @@ void Edit::sendSourceFileUpdate()
     CRASH_TRACER
 
     for (auto t : getAudioTracks (*this))
+    {
         for (auto& c : t->getClips())
             c->sourceMediaChanged();
+
+        for (auto cs : t->getClipSlotList().getClipSlots())
+            if (auto c = cs->getClip())
+                c->sourceMediaChanged();
+    }
 
     for (auto p : getAllPlugins (*this, true))
         p->sourceMediaChanged();
