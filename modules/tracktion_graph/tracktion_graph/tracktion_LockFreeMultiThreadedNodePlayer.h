@@ -40,16 +40,15 @@ private:
     {
     public:
         LockFreeFifo (int capacity)
-            : fifo (std::make_unique<choc::fifo::MultipleReaderMultipleWriterFIFO<Type>>())
+            : fifo (std::make_unique<rigtorp::MPMCQueue<Type>> (static_cast<size_t> (capacity)))
         {
-            fifo->reset ((size_t) capacity);
         }
 
-        bool try_enqueue (Type&& item)      { return fifo->push (std::move (item)); }
-        bool try_dequeue (Type& item)       { return fifo->pop (item); }
+        bool try_enqueue (Type&& item)      { return fifo->try_push (std::move (item)); }
+        bool try_dequeue (Type& item)       { return fifo->try_pop (item); }
 
     private:
-        std::unique_ptr<choc::fifo::MultipleReaderMultipleWriterFIFO<Type>> fifo;
+        std::unique_ptr<rigtorp::MPMCQueue<Type>> fifo;
     };
 
     struct PlaybackNode

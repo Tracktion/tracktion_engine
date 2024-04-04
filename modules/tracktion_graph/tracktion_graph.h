@@ -79,6 +79,9 @@
  #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
 
+#include "../3rd_party/rigtorp/tracktion_rigtorp.hpp"
+
+
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>
 #include "../tracktion_core/tracktion_core.h"
