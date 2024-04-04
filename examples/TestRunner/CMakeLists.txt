@@ -19,6 +19,7 @@ endif()
 # If we are compiling for macOS we want to target OS versions down to 10.13
 if (APPLE)
     set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
+    set (CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED NO)
 endif()
 
 
