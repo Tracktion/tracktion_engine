@@ -413,10 +413,10 @@ void PluginManager::initialise()
     createBuiltInType<EqualiserPlugin>();
     createBuiltInType<ReverbPlugin>();
     createBuiltInType<CompressorPlugin>();
-    createBuiltInType<ChorusPlugin>();
+    // createBuiltInType<ChorusPlugin>(); // BEATCONNECT MODIFICATION
     createBuiltInType<DelayPlugin>();
-    createBuiltInType<PhaserPlugin>();
-    createBuiltInType<PitchShiftPlugin>();
+    // createBuiltInType<PhaserPlugin>(); // BEATCONNECT MODIFICATION
+    // createBuiltInType<PitchShiftPlugin>(); // BEATCONNECT MODIFICATION
     createBuiltInType<LowPassPlugin>();
     createBuiltInType<SamplerPlugin>();
     createBuiltInType<FourOscPlugin>();
