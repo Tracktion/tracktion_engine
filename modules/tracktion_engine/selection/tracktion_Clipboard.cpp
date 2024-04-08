@@ -911,6 +911,20 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         }
     }
 
+    std::map<EditItemID, EditItemID> groupMap;
+    for (auto c : itemsAdded.getItemsOfType<Clip>())
+    {
+        if (c->isGrouped())
+        {
+            auto originalGroup = c->getGroupID();
+
+            if (groupMap.find (originalGroup) == groupMap.end())
+                groupMap[originalGroup] = c->edit.createNewItemID();
+
+            c->setGroup (groupMap[originalGroup]);
+        }
+    }
+
     for (auto& curve : automationCurves)
     {
         if (! curve.points.empty())
@@ -942,7 +956,17 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         return false;
 
     if (auto sm = options.selectionManager)
-        sm->select (itemsAdded);
+    {
+        bool first = true;
+        for (auto i : itemsAdded)
+        {
+            if (auto c = dynamic_cast<Clip*> (i); c->isGrouped())
+                sm->select (c->getGroupClip(), ! first);
+            else
+                sm->select (i, ! first);
+            first = false;
+        }
+    }
 
     if (options.setTransportToEnd && ! options.edit.getTransport().isPlaying())
         options.edit.getTransport().setPosition (getTimeRangeForSelectedItems (itemsAdded).getEnd());

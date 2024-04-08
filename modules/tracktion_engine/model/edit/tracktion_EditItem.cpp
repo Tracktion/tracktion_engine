@@ -400,6 +400,12 @@ void EditItemID::remapIDs (juce::ValueTree& v, juce::UndoManager* um,
         {
             auto& remapped = newIDs[oldIDString];
 
+            if (remapped.isInvalid() && remappedIDs != nullptr && remappedIDs->contains (EditItemID::fromString (oldIDString)))
+            {
+                remapped = remappedIDs->at (EditItemID::fromString (oldIDString));
+                //DBG ("Remapping ID: " << oldIDString << "  " << remapped.toString());
+            }
+
             if (remapped.isInvalid())
             {
                 remapped = createNewID();
