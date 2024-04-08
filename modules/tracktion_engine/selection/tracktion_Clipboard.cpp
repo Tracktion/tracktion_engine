@@ -588,6 +588,8 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
 
             ClipInfo info;
 
+            info.grouped = clip->isGrouped();
+
             clip->flushStateToValueTree();
             info.state = clip->state.createCopy();
 
@@ -867,37 +869,44 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto clipSlot = findClipSlotForID (options.edit, targetClipOwnerID))
             {
-                auto calcSlotOffset = [&]
+                if (clip.grouped)
                 {
-                    auto offset = 0;
+                    options.edit.engine.getUIBehaviour().showWarningMessage (TRANS ("Group clips can not be added to the clip launcher"));
+                }
+                else
+                {
+                    auto calcSlotOffset = [&]
+                    {
+                        auto offset = 0;
 
-                    for (const auto& c : clips)
-                        if (c.trackOffset == clip.trackOffset && c.startBeats < clip.startBeats)
-                            offset++;
+                        for (const auto& c : clips)
+                            if (c.trackOffset == clip.trackOffset && c.startBeats < clip.startBeats)
+                                offset++;
 
-                    return offset;
-                };
+                        return offset;
+                    };
 
-                auto slotOffset = clip.slotOffset.has_value() ? *clip.slotOffset : calcSlotOffset();
+                    auto slotOffset = clip.slotOffset.has_value() ? *clip.slotOffset : calcSlotOffset();
 
-                auto tracks = getAudioTracks (options.edit);
-                auto trackIndex = tracks.indexOf (dynamic_cast<AudioTrack*> (&clipSlot->track));
-                auto slotIndex  = clipSlot->getIndex();
+                    auto tracks = getAudioTracks (options.edit);
+                    auto trackIndex = tracks.indexOf (dynamic_cast<AudioTrack*> (&clipSlot->track));
+                    auto slotIndex  = clipSlot->getIndex();
 
-                trackIndex += clip.trackOffset;
-                slotIndex  += slotOffset;
+                    trackIndex += clip.trackOffset;
+                    slotIndex  += slotOffset;
 
-                options.edit.getSceneList().ensureNumberOfScenes (slotIndex + 1);
-                options.edit.ensureNumberOfAudioTracks (trackIndex + 1);
+                    options.edit.getSceneList().ensureNumberOfScenes (slotIndex + 1);
+                    options.edit.ensureNumberOfAudioTracks (trackIndex + 1);
 
-                if (auto at = getAudioTracks (options.edit)[trackIndex])
-                    clipSlot = at->getClipSlotList().getClipSlots()[slotIndex];
+                    if (auto at = getAudioTracks (options.edit)[trackIndex])
+                        clipSlot = at->getClipSlotList().getClipSlots()[slotIndex];
 
-                if (auto existingClip = clipSlot->getClip())
-                    existingClip->removeFromParent();
+                    if (auto existingClip = clipSlot->getClip())
+                        existingClip->removeFromParent();
 
-                if (auto newClip = insertClipWithState (*clipSlot, newClipState))
-                    itemsAdded.add (newClip);
+                    if (auto newClip = insertClipWithState (*clipSlot, newClipState))
+                        itemsAdded.add (newClip);
+                }
             }
             else if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))
             {

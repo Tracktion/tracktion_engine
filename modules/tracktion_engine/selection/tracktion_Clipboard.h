@@ -96,6 +96,7 @@ public:
             BeatPosition startBeats;
             BeatDuration lengthBeats;
             BeatPosition offsetBeats;
+            bool grouped = false;
         };
 
         std::vector<ClipInfo> clips;
