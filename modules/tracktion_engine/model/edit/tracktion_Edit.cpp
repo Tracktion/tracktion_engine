@@ -2773,7 +2773,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     else
         edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
 
-    edit->ensureNumberOfAudioTracks (2);
+    edit->ensureNumberOfAudioTracks (3);
     edit->isPreviewEdit = true;
     edit->getTransport().setPosition (0s);
 
@@ -2781,7 +2781,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
         *couldMatchTempo = false;
 
     auto tracks = getAudioTracks (*edit);
-    if (tracks.size() < 2)
+    if (tracks.size() < 3)
         return {};
 
     for (auto t : tracks)
@@ -2800,8 +2800,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 
     bool isDrums = false;
 
-    auto midiTrack  = tracks[0];
-    auto drumTrack  = tracks[1];
+    auto midiTrack  = tracks[1];
+    auto drumTrack  = tracks[2];
 
     bool resizeClip = false;
     double clipTempo = 120.0;
