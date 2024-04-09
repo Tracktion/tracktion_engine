@@ -123,7 +123,12 @@ jobs:
         if: ${{ matrix.analyse }}
         run: |
           cd ${{ env.BUILD_DIR }}
-          xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO
+          OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO`
+          echo "$OUTPUT"
+          WARNING_LINES=`$OUTPUT | grep ": warning:"`
+          echo "WARNING_LINES:\n"
+          echo "$WARNING_LINES"
+          if [[ "$WARNING_LINES" != "" ]]; then exit 1; fi
 
       # Run products
       - name: "Run products"
