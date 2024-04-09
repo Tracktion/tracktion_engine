@@ -125,7 +125,7 @@ jobs:
           cd ${{ env.BUILD_DIR }}
           OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO`
           echo "$OUTPUT"
-          WARNING_LINES=`$OUTPUT | grep ": warning:"`
+          WARNING_LINES=$(echo "$OUTPUT" | grep ": warning:")
           echo "WARNING_LINES:\n"
           echo "$WARNING_LINES"
           if [[ "$WARNING_LINES" != "" ]]; then exit 1; fi
