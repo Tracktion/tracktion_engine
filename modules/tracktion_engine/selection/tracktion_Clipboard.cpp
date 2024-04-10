@@ -432,6 +432,12 @@ void Clipboard::Clips::addClip (int trackOffset, const juce::ValueTree& state)
     ci.trackOffset = trackOffset;
     ci.state = state.createCopy();
 
+    // BEATCONNECT MODIFICATION START
+    jassert(state.getParent().isValid());
+    jassert(state.getParent().hasType(IDs::TRACK));
+    ci.clipTrackID = state.getParent().getProperty(IDs::id);
+    // BEATCONNECT MODIFICATION END
+
     clips.push_back (ci);
 }
 
@@ -479,6 +485,12 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
 
             clip->flushStateToValueTree();
             info.state = clip->state.createCopy();
+
+            // BEATCONNECT MODIFICATION START
+            jassert(clip->state.getParent().isValid());
+            jassert(clip->state.getParent().hasType(IDs::TRACK));
+            info.clipTrackID = clip->state.getParent().getProperty(IDs::id);
+            // BEATCONNECT MODIFICATION END
 
             addValueTreeProperties (info.state,
                                     IDs::start, (clippedStart - overallStartTime).inSeconds(),

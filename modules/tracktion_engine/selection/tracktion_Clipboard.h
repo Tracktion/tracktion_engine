@@ -87,6 +87,10 @@ public:
 
         struct ClipInfo
         {
+            // BEATCONNECT MODIFICATION START
+            int clipTrackID = 0;
+            // BEATCONNECT MODIFICATION END
+
             juce::ValueTree state;
             int trackOffset = 0;
             bool hasBeatTimes = false;
