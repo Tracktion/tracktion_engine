@@ -169,7 +169,7 @@ private:
                                                    const int blockSize, float stretchRatio,
                                                    bool stretcherRequiresFramesNeeded)
     {
-        const int numChannels = sourceBuffer.getNumChannels();
+        [[ maybe_unused ]] const int numChannels = sourceBuffer.getNumChannels();
         jassert (numChannels == 2); // Expected stereo for now
 
         const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
