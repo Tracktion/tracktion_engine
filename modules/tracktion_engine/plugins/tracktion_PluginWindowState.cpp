@@ -12,6 +12,20 @@
 namespace tracktion { inline namespace engine
 {
 
+static bool isDialogOpen()
+{
+    auto& mm = *juce::ModalComponentManager::getInstance();
+    if (mm.getNumModalComponents() > 0)
+        return true;
+
+    for (int i = juce::TopLevelWindow::getNumTopLevelWindows(); --i >= 0;)
+        if (auto w = juce::TopLevelWindow::getTopLevelWindow (i))
+            if (dynamic_cast<juce::AlertWindow*> (w))
+                return true;
+
+    return false;
+}
+
 PluginWindowState::PluginWindowState (Edit& e)
    : edit (e),
      engine (e.engine),
@@ -86,6 +100,9 @@ void PluginWindowState::pickDefaultWindowBounds()
 
 void PluginWindowState::showWindow()
 {
+    if (isDialogOpen())
+        return;
+
     if (! pluginWindow)
     {
         // Ensure at least 40px of the window is on screen
