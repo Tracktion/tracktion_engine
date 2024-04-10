@@ -843,11 +843,12 @@ void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageA
 bool AudioTrack::mergeInMidiSequence (juce::MidiMessageSequence ms, TimePosition startTime,
                                       MidiClip* mc, MidiList::NoteAutomationType automationType)
 {
-    const auto start = TimePosition::fromSeconds (ms.getStartTime());
-    const auto end = TimePosition::fromSeconds (ms.getEndTime());
 
     if (mc == nullptr)
     {
+        const auto start = TimePosition::fromSeconds (ms.getStartTime()) + toDuration (startTime);
+        const auto end = TimePosition::fromSeconds (ms.getEndTime()) + toDuration (startTime);
+
         for (auto c : getClips())
         {
             if (c->getPosition().time.overlaps ({ start, end }))
