@@ -30,9 +30,7 @@ namespace tracktion { inline namespace engine
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wsign-conversion"
  #pragma GCC diagnostic ignored "-Wshadow"
- #if __clang__
-  #pragma GCC diagnostic ignored "-Xanalyzer"
- #elif
+ #if ! __clang__
   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
  #endif
  #pragma GCC diagnostic ignored "-Wunused-variable"
