@@ -82,6 +82,9 @@ void MidiInputDeviceNode::process (ProcessContext& pc)
 
 void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message)
 {
+    if (state->activeNode.load (std::memory_order_acquire) != this)
+        return;
+
     auto channelToUse = midiInputDevice.getChannelToUse().getChannelNumber();
 
     {
@@ -130,6 +133,8 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
 void MidiInputDeviceNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
+    state->activeNode.store (this, std::memory_order_release);
+
     const auto editTime = tracktion::graph::sampleToTime (timelineRange, sampleRate);
     const auto timeNow = juce::Time::getApproximateMillisecondCounter();
     auto& destMidi = pc.buffers.midi;

@@ -55,6 +55,8 @@ private:
                 incomingMessages.add (new juce::MidiMessage (0x80, 0, 0));
         }
 
+        std::atomic<MidiInputDeviceNode*> activeNode { nullptr };
+
         std::mutex incomingMessagesMutex;
         juce::OwnedArray<juce::MidiMessage> incomingMessages;
         int numIncomingMessages = 0;
