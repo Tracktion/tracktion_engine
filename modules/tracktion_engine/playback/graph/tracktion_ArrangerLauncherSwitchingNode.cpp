@@ -97,6 +97,9 @@ void ArrangerLauncherSwitchingNode::prepareToPlay (const PlaybackInitialisationI
             if (oldNode->arrangerActiveNoteList)
                 arrangerActiveNoteList = oldNode->arrangerActiveNoteList;
 
+            if (oldNode->activeNode)
+                activeNode = oldNode->activeNode;
+
             midiSourceID = oldNode->midiSourceID;
         }
     }
@@ -109,6 +112,9 @@ void ArrangerLauncherSwitchingNode::prepareToPlay (const PlaybackInitialisationI
 
     if (! arrangerActiveNoteList)
         arrangerActiveNoteList = std::make_shared<ActiveNoteList>();
+
+    if (! activeNode)
+        activeNode = std::make_shared<std::atomic<ArrangerLauncherSwitchingNode*>> (this);
 
     for (auto& launcherNode : launcherNodes)
         launcherNode->initialise (info);
@@ -127,6 +133,8 @@ void ArrangerLauncherSwitchingNode::prefetchBlock (juce::Range<int64_t> referenc
 
 void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
 {
+    activeNode->store (this, std::memory_order_release);
+
     auto destAudioView = pc.buffers.audio;
     assert (destAudioView.getNumChannels() == launcherSampleFader->getNumChannels());
 
@@ -384,7 +392,8 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
 //==============================================================================
 void ArrangerLauncherSwitchingNode::sharedTimerCallback()
 {
-    updatePlaySlotsState();
+    if (activeNode->load (std::memory_order_acquire) == this)
+        updatePlaySlotsState();
 }
 
 }} // namespace tracktion { inline namespace engine

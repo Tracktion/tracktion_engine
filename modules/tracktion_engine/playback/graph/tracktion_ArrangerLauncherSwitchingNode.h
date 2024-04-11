@@ -148,6 +148,7 @@ private:
     std::vector<SlotControlNode*> launcherNodesCopy;
     std::shared_ptr<SampleFader> launcherSampleFader, arrangerSampleFader;
     std::shared_ptr<ActiveNoteList> arrangerActiveNoteList;
+    std::shared_ptr<std::atomic<ArrangerLauncherSwitchingNode*>> activeNode;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
     ScopedListener playSlotsUpdaterListener { track->edit.engine.getBackToArrangerUpdateTimer(),  *this };
 
