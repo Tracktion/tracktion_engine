@@ -408,11 +408,9 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         auto chan = c.channel.get().getChannelNumber();
                         
                         // BEATCONNECT MODIFICATION START
-                        if (cache->getKeyNoteOffset(i) != 0) {
-                            const int pitchWheelSemitoneRange = 25;
-                            int pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
-                            result.addEvent (juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
-                        }
+                        const int pitchWheelSemitoneRange = 25;
+                        const int pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
+                        result.addEvent(juce::MidiMessage::textMetaEvent(chan, IDs::PitchWheelKeyNote + juce::String(note) + IDs::PitchWheelPosition + juce::String(pitchWheelPosition)), eventStart);
                         // BEATCONNECT MODIFICATION END
 
                         result.addEvent (juce::MidiMessage::noteOn (chan, note, vel * channelVelScale), eventStart);
@@ -420,12 +418,14 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         
                         // BEATCONNECT MODIFICATION START
                         int tremoloAttacks = cache->getTremolo(i);
-                        if ( tremoloAttacks > 0)  {
+                        if ( tremoloAttacks > 0)  
+                        {
                             double period = eventEnd - eventStart;
                             int totalAttacks = tremoloAttacks + 1;
                             double attackInterval = period / totalAttacks;
 
-                            for (int j = 1; j < totalAttacks; j++) {
+                            for (int j = 1; j < totalAttacks; j++) 
+                            {
                                 float attackTimeOffset = j * attackInterval;
                                 float newEventStart = eventStart + attackTimeOffset;
                                 result.addEvent(juce::MidiMessage::noteOn(chan, note, vel * channelVelScale), newEventStart);
