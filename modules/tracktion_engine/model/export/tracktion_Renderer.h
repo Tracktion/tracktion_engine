@@ -225,8 +225,7 @@ public:
 
         ~ScopedClipSlotDisabler()
         {
-            size_t i = 0;
-            for (auto t : tracks)
+            for (size_t i = 0; auto t : tracks)
                 if (auto at = dynamic_cast<AudioTrack*> (t))
                     at->playSlotClips = playSlotClips[i++];
         }
