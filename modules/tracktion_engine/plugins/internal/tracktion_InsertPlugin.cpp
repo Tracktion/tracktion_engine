@@ -119,8 +119,7 @@ void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& in
     TRACKTION_ASSERT_MESSAGE_THREAD
     // This latency number is from trial and error, may need more testing.
     // It should be accurate on well reporting devices though
-    int latency = info.blockSizeSamples
-                    + static_cast<int> (timeToSample (manualAdjustMs / 1000.0, info.sampleRate));
+    int latency = static_cast<int> (timeToSample (manualAdjustMs / 1000.0, info.sampleRate));
 
     if (auto device = engine.getDeviceManager().deviceManager.getCurrentAudioDevice())
     {

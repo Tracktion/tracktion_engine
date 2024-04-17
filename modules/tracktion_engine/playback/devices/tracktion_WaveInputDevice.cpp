@@ -369,7 +369,10 @@ public:
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
                 rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
-                rc->adjustSamples += context.getLatencySamples();
+
+                if (! owner.isTrackDevice())
+                    rc->adjustSamples += context.getLatencySamples();
+
                 rc->adjustDurationAtStart = TimeDuration::fromSamples (rc->adjustSamples, rc->sampleRate);
 
                 if (edit.recordingPunchInOut)

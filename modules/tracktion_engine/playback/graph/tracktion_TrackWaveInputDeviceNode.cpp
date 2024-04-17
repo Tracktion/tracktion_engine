@@ -13,9 +13,10 @@
 namespace tracktion { inline namespace engine
 {
 
-TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (WaveInputDevice& owner, std::unique_ptr<Node> inputNode,
+TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (ProcessState& processState, WaveInputDevice& owner, std::unique_ptr<Node> inputNode,
                                                     bool copyInputsToOutputs_)
-    : waveInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (copyInputsToOutputs_)
+    : TracktionEngineNode (processState),
+      waveInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (copyInputsToOutputs_)
 {
     jassert (waveInputDevice.isTrackDevice());
 
@@ -37,7 +38,10 @@ tracktion::graph::NodeProperties TrackWaveInputDeviceNode::getNodeProperties()
 void TrackWaveInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    offsetSamples = waveInputDevice.engine.getDeviceManager().getBlockSize();
+
+    auto latencyUpToThisPoint = getNodeProperties().latencyNumSamples;
+    const auto latencyUpToThisPointS = TimeDuration::fromSamples (latencyUpToThisPoint, sampleRate);
+    offset = -latencyUpToThisPointS;
 }
 
 bool TrackWaveInputDeviceNode::isReadyToProcess()
@@ -66,10 +70,9 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
                                                : nullptr,
                                   nullptr };
 
-        const double streamTime = waveInputDevice.engine.getDeviceManager().getCurrentStreamTime()
-                                    + tracktion::graph::sampleToTime (offsetSamples, sampleRate);
-
-        waveInputDevice.consumeNextAudioBlock (chans, (int) numChans, (int) sourceBuffers.audio.getNumFrames(), streamTime);
+        const auto streamPos = TimePosition::fromSamples (getReferenceSampleRange().getStart(), sampleRate);
+        waveInputDevice.consumeNextAudioBlock (chans, (int) numChans, (int) sourceBuffers.audio.getNumFrames(),
+                                               (streamPos + offset).inSeconds());
     }
 }
 

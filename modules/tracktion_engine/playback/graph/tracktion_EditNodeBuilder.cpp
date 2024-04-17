@@ -373,6 +373,8 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
 
 std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID, const juce::Array<Clip*>&, const TrackMuteState&, const CreateNodeParams&);
 
+std::unique_ptr<Node> createInsertReturnNode (InsertPlugin&, tracktion::graph::PlayHeadState&, const CreateNodeParams&);
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& clip, EditTimeRange clipTimeRangeToUse,
@@ -1113,7 +1115,9 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
     {
         if (waveDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
-                return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
+                return makeNode<TrackWaveInputDeviceNode> (params.processState,
+                                                           *waveDevice,
+                                                           makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
                                                            shouldMonitorTrackDevice (inputDeviceInstance));
 
         // For legacy reasons, we always need a stereo output from our live inputs
@@ -1283,8 +1287,12 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         }
         else if (auto insertPlugin = dynamic_cast<InsertPlugin*> (p))
         {
-            node = makeNode<InsertSendReturnDependencyNode> (std::move (node), *insertPlugin);
-            node = createNodeForPlugin (*p, trackMuteState, std::move (node), params);
+            if (! insertPlugin->isEnabled())
+                continue;
+
+            if (auto insertReturnNode = createInsertReturnNode (*insertPlugin, playHeadState, params))
+                node = makeNode<InsertNode> (std::move (node), *insertPlugin, std::move (insertReturnNode),
+                                             SampleRateAndBlockSize { params.sampleRate, params.blockSize });
         }
         else
         {
@@ -1620,29 +1628,23 @@ std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList&
 }
 
 //==============================================================================
-std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
-                                            tracktion::graph::PlayHeadState& playHeadState,
-                                            const CreateNodeParams& params)
+std::unique_ptr<Node> createInsertReturnNode (InsertPlugin& insert,
+                                              tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+{
+    if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
+        for (auto i : insert.edit.getAllInputDevices())
+            if (i->owner.getName() == insert.inputDevice)
+                return createLiveInputNodeForDevice (*i, playHeadState, params, EditItemID());
+
+    return {};
+}
+
+std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device)
 {
     if (insert.outputDevice != device.getName())
         return {};
 
-    auto sendNode = makeNode<InsertSendNode> (insert);
-
-    auto getInsertReturnNode = [&] () -> std::unique_ptr<Node>
-    {
-        if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
-            for (auto i : insert.edit.getAllInputDevices())
-                if (i->owner.getName() == insert.inputDevice)
-                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState, params, EditItemID()));
-
-        return {};
-    };
-
-    if (auto returnNode = getInsertReturnNode())
-        return { makeSummingNode ({ returnNode.release(), sendNode.release() }) };
-
-    return sendNode;
+    return makeNode<InsertSendNode> (insert);
 }
 
 //==============================================================================
@@ -1862,7 +1864,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             if (ins->outputDevice != device->getName())
                 continue;
 
-            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))
+            if (auto sendNode = createInsertSendNode (*ins, *device))
             {
                 sumNode->addInput (std::move (sendNode));
                 deviceIsBeingUsedAsInsert = true;

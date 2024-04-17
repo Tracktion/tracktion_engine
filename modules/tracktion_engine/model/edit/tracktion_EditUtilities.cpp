@@ -128,6 +128,24 @@ bool containsTrack (const Edit& edit, const Track& track)
     return findTrackForPredicate (edit, [&track] (Track& t) { return &track == &t; }) != nullptr;
 }
 
+ClipTrack* getSiblingClipTrack (Track& track, int delta)
+{
+    //ddd auto startTrack = &track;
+    //
+    // while (startTrack != nullptr && dynamic_cast<ClipTrack*> (startTrack) == nullptr)
+    //     startTrack = startTrack->getSiblingTrack (1, false);
+    //
+    // if (startTrack == nullptr)
+    //     return nullptr;
+    //
+    // auto tracks = getAllTracks (track.edit);
+    //
+    // if (auto index = tracks.indexOf (&track); index >= 0)
+    //     return tracks[index + delta];
+
+    return {};
+}
+
 TrackOutput* getTrackOutput (Track& track)
 {
     if (auto t = dynamic_cast<AudioTrack*> (&track))
