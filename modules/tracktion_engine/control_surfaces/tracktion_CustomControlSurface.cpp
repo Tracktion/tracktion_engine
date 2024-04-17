@@ -409,82 +409,81 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
 {
     packetsIn++;
 
+    float val = 1.0f;
+
     if (m.size() >= 1)
     {
         auto arg = m[0];
-        float val = 0;
 
         if (arg.isFloat32())
             val = arg.getFloat32();
         else if (arg.isInt32())
             val = float (arg.getInt32());
-        else
-            return;
+    }
 
-        auto addr = m.getAddressPattern().toString();
+    auto addr = m.getAddressPattern().toString();
 
-        if (addr.endsWith ("/z"))
+    if (addr.endsWith ("/z"))
+    {
+        // Track control touches and releases
+        addr = addr.dropLastCharacters (2);
+        if (val != 0.0f)
         {
-            // Track control touches and releases
-            addr = addr.dropLastCharacters (2);
-            if (val != 0.0f)
-            {
-                oscControlTouched[addr] = true;
-                oscControlTapsWhileTouched[addr] = 0;
-            }
-            else
-            {
-                oscControlTouched[addr] = false;
-                oscControlTapsWhileTouched[addr] = 0;
-
-                auto itr = oscLastValue.find (addr);
-                if (itr != oscLastValue.end())
-                {
-                    if (oscSender)
-                    {
-                        try
-                        {
-                            juce::OSCMessage mo (addr);
-                            mo.addFloat32 (itr->second);
-
-                            if (oscSender->send (mo))
-                                packetsOut++;
-                        }
-                        catch ([[maybe_unused]] juce::OSCException& err)
-                        {
-                            DBG("OSC Error: " + err.description);
-                        }
-                    }
-
-                    oscLastValue.erase (itr);
-                }
-            }
+            oscControlTouched[addr] = true;
+            oscControlTapsWhileTouched[addr] = 0;
         }
         else
         {
-            // Track control values
-            lastControllerAddr = addr;
-            lastControllerValue = val;
+            oscControlTouched[addr] = false;
+            oscControlTapsWhileTouched[addr] = 0;
 
-            if (listeningOnRow >= 0)
-                triggerAsyncUpdate();
-
-            oscControlTapsWhileTouched[addr]++;
-            oscActiveAddr = addr;
-
-            if (getEdit() != nullptr)
+            auto itr = oscLastValue.find (addr);
+            if (itr != oscLastValue.end())
             {
-                for (auto* mapping : mappings)
+                if (oscSender)
                 {
-                    if (lastControllerAddr == mapping->addr)
+                    try
                     {
-                        for (auto* actionFunction : actionFunctionList)
+                        juce::OSCMessage mo (addr);
+                        mo.addFloat32 (itr->second);
+
+                        if (oscSender->send (mo))
+                            packetsOut++;
+                    }
+                    catch ([[maybe_unused]] juce::OSCException& err)
+                    {
+                        DBG("OSC Error: " + err.description);
+                    }
+                }
+
+                oscLastValue.erase (itr);
+            }
+        }
+    }
+    else
+    {
+        // Track control values
+        lastControllerAddr = addr;
+        lastControllerValue = val;
+
+        if (listeningOnRow >= 0)
+            triggerAsyncUpdate();
+
+        oscControlTapsWhileTouched[addr]++;
+        oscActiveAddr = addr;
+
+        if (getEdit() != nullptr)
+        {
+            for (auto* mapping : mappings)
+            {
+                if (lastControllerAddr == mapping->addr)
+                {
+                    for (auto* actionFunction : actionFunctionList)
+                    {
+                        if (actionFunction->id == mapping->function)
                         {
-                            if (actionFunction->id == mapping->function)
-                            {
-                                auto actionFunc = actionFunction->actionFunc;
-                                (this->*actionFunc) (lastControllerValue, actionFunction->param);
-                            }
+                            auto actionFunc = actionFunction->actionFunc;
+                            (this->*actionFunc) (lastControllerValue, actionFunction->param);
                         }
                     }
                 }
