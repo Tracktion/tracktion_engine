@@ -61,7 +61,7 @@ public:
             {
                 canUseSourceBuffers = true;
                 setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                    tracktion::graph::AllocateAudioBuffer::no });
+                                    tracktion::graph::AllocateAudioBuffer::no });
             }
         }
 

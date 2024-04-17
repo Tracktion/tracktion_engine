@@ -76,6 +76,7 @@ public:
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
+        props.latencyNumSamples = std::numeric_limits<int>::min();
 
         for (auto& node : nodes)
         {
@@ -273,10 +274,11 @@ private:
 
         for (auto& node : nodes)
         {
-            const int nodeLatency = node->getNodeProperties().latencyNumSamples;
+            auto props = node->getNodeProperties();
+            const int nodeLatency = props.latencyNumSamples;
             const int latencyToAdd = maxLatency - nodeLatency;
 
-            if (latencyToAdd == 0)
+            if (latencyToAdd <= 0)
                 continue;
 
             auto getOwnedNode = [this] (auto nodeToFind)
