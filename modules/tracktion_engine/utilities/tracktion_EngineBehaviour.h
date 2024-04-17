@@ -224,6 +224,9 @@ public:
 
     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
     virtual bool autoAddClipEdgeFades()                                             { return false; }
+    
+    /** Interpolate automation at 10ms intervals (faster) or calculate actual value (slower) */
+    virtual bool interpolateAutomation()                                            { return true; }
 
     /** Determines the default properties of clips. */
     struct ClipDefaults

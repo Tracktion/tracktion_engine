@@ -1270,15 +1270,16 @@ AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& as
 
 //==============================================================================
 AutomationIterator::AutomationIterator (const AutomatableParameter& p)
-    : param (p)
 {
+    hiRes = ! p.automatableEditElement.edit.engine.getEngineBehaviour().interpolateAutomation();
+    
     if (hiRes)
-        copy();
+        copy (p);
     else
-        interpolate();
+        interpolate (p);
 }
 
-void AutomationIterator::copy()
+void AutomationIterator::copy (const AutomatableParameter& param)
 {
     const auto& curve = param.getCurve();
 
@@ -1297,7 +1298,7 @@ void AutomationIterator::copy()
     }
 }
 
-void AutomationIterator::interpolate()
+void AutomationIterator::interpolate (const AutomatableParameter& param)
 {
     const auto& curve = param.getCurve();
 
