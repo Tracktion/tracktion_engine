@@ -23,7 +23,7 @@ public:
     ~InsertNode() override;
 
     InsertPlugin& getInsert() const     { return owner; }
-    Node& getInputNode()                { return *input; };
+    Node& getInputNode()                { return *input; }
 
     TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
     tracktion::graph::NodeProperties getNodeProperties() override;
