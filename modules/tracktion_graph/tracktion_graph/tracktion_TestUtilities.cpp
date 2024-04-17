@@ -42,6 +42,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
             size_t memorySizeBytes = 0;
             int numOutputs = -1;
             bool containsInternalNodes = false;
+            int latencyNumSamples = 0;
         };
 
         struct Visitor
@@ -60,6 +61,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 destNodeInfo.memorySizeBytes = n.getAllocatedBytes();
                 destNodeInfo.containsInternalNodes = ! n.getInternalNodes().empty();
                 destNodeInfo.numOutputs = n.numOutputNodes;
+                destNodeInfo.latencyNumSamples = n.getNodeProperties().latencyNumSamples;
 
                 for (auto input : n.getDirectInputNodes())
                 {
@@ -99,10 +101,15 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 colourString += "color=red ";
             }
 
+            label += " (" + std::to_string (info.numOutputs) + ")";
+
+            if (info.latencyNumSamples > 0)
+                label += choc::text::replace ("\n{}", "{}", std::to_string (info.latencyNumSamples));
+
             if (info.containsInternalNodes)
                 shapeString += "shape=box";
 
-            output += id + "[label=\"" + label + " (" + std::to_string (info.numOutputs) + ")" + "\" " + colourString + shapeString + "]\n";
+            output += id + "[label=\"" + label + "\" " + colourString + shapeString + "]\n";
         }
 
         for (auto edge : edges)
