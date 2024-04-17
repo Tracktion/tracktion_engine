@@ -404,15 +404,27 @@ struct AutomationIterator
     float getCurrentValue() noexcept            { return currentValue; }
 
 private:
+    void interpolate (const AutomatableParameter&);
+    void copy (const AutomatableParameter&);
+    int updateIndex (TimePosition newTime);
+    
+    void setPositionHiRes (TimePosition newTime) noexcept;
+    void setPositionInterpolated (TimePosition newTime) noexcept;
+    
     struct AutoPoint
     {
-        TimePosition time;
-        float value;
+        TimePosition time = 0_tp;
+        float value = 0.0f;
+        float curve = 0.0f;
     };
+    
+    static AutoPoint getBezierPoint (const AutoPoint& p1, const AutoPoint& p2);
+    static void getBezierEnds (const AutoPoint& p1, const AutoPoint& p2, double& x1out, float& y1out, double& x2out, float& y2out);
 
     juce::Array<AutoPoint> points;
     int currentIndex = -1;
     float currentValue = 0.0f;
+    bool hiRes = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)
 };

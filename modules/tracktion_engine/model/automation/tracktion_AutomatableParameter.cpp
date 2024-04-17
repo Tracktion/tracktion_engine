@@ -1271,12 +1271,41 @@ AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& as
 //==============================================================================
 AutomationIterator::AutomationIterator (const AutomatableParameter& p)
 {
-    const auto& curve = p.getCurve();
+    hiRes = ! p.automatableEditElement.edit.engine.getEngineBehaviour().interpolateAutomation();
+    
+    if (hiRes)
+        copy (p);
+    else
+        interpolate (p);
+}
+
+void AutomationIterator::copy (const AutomatableParameter& param)
+{
+    const auto& curve = param.getCurve();
+
+    jassert (curve.getNumPoints() > 0);
+
+    for (int i = 0; i < curve.getNumPoints(); i++)
+    {
+        auto src = curve.getPoint (i);
+        
+        AutoPoint dst;
+        dst.time = src.time;
+        dst.value = src.value;
+        dst.curve = src.curve;
+        
+        points.add (dst);
+    }
+}
+
+void AutomationIterator::interpolate (const AutomatableParameter& param)
+{
+    const auto& curve = param.getCurve();
 
     jassert (curve.getNumPoints() > 0);
 
     const auto timeDelta        = TimeDuration::fromSeconds (1.0 / 100.0);
-    const double minValueDelta  = (p.getValueRange().getLength()) / 256.0;
+    const double minValueDelta  = (param.getValueRange().getLength()) / 256.0;
 
     int curveIndex = 0;
     int lastCurveIndex = -1;
@@ -1332,7 +1361,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
             }
             else if (c >= -0.5 && c <= 0.5)
             {
-                v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, p.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2);
+                v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2);
             }
             else
             {
@@ -1341,7 +1370,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
                 else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
                     v = v2;
                 else
-                    v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, p.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end);
+                    v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end);
             }
         }
 
@@ -1364,10 +1393,160 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
     }
 }
 
+AutomationIterator::AutoPoint AutomationIterator::getBezierPoint (const AutoPoint& p1, const AutoPoint& p2)
+{
+    auto x1 = p1.time;
+    auto y1 = p1.value;
+    auto x2 = p2.time;
+    auto y2 = p2.value;
+    auto c  = juce::jlimit (-1.0f, 1.0f, p1.curve * 2.0f);
+
+    if (y2 > y1)
+    {
+        auto run  = x2 - x1;
+        auto rise = y2 - y1;
+
+        auto xc = x1 + run / 2;
+        auto yc = y1 + rise / 2;
+
+        auto x = xc - run / 2 * -c;
+        auto y = yc + rise / 2 * -c;
+
+        return { x, y, 0.0f };
+    }
+
+    auto run  = x2 - x1;
+    auto rise = y1 - y2;
+
+    auto xc = x1 + run / 2;
+    auto yc = y2 + rise / 2;
+
+    auto x = xc - run / 2 * -c;
+    auto y = yc - rise / 2 * -c;
+
+    return { x, y, 0.0f };
+}
+
+void AutomationIterator::getBezierEnds (const AutoPoint& p1, const AutoPoint& p2, double& x1out, float& y1out, double& x2out, float& y2out)
+{
+    auto x1 = p1.time.inSeconds();
+    auto y1 = p1.value;
+    auto x2 = p2.time.inSeconds();
+    auto y2 = p2.value;
+    auto c  = juce::jlimit (-1.0f, 1.0f, p1.curve * 2.0f);
+        
+    auto minic = (std::abs (c) - 0.5f) * 2.0f;
+    auto run   = (minic) * (x2 - x1);
+    auto rise  = (minic) * ((y2 > y1) ? (y2 - y1) : (y1 - y2));
+    
+    if (c > 0.0f)
+    {
+        x1out = x1 + run;
+        y1out = y1;
+        
+        x2out = x2;
+        y2out = (y1 < y2) ? (y2 - rise) : (y2 + rise);
+    }
+    else
+    {
+        x1out = x1;
+        y1out = (y1 < y2) ? (y1 + rise) : (y1 - rise);
+        
+        x2out = x2 - run;
+        y2out = y2;
+    }
+}
+
 void AutomationIterator::setPosition (TimePosition newTime) noexcept
+{
+    if (hiRes)
+        setPositionHiRes (newTime);
+    else
+        setPositionInterpolated (newTime);
+}
+
+void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
+{
+    jassert (points.size() > 0);
+    
+    auto newIndex = updateIndex (newTime);
+    
+    if (newTime < points[0].time)
+    {
+        currentIndex = newIndex;
+        currentValue = points.getReference (0).value;
+        return;
+    }
+    
+    if (newIndex == points.size() - 1)
+    {
+        currentIndex = newIndex;
+        currentValue = points.getReference (newIndex).value;
+        return;
+    }
+        
+    const auto& p1 = points.getReference (newIndex);
+    const auto& p2 = points.getReference (newIndex + 1);
+    
+    const auto t = newTime;
+    
+    const auto t1 = p1.time;
+    const auto t2 = p2.time;
+
+    const auto v1 = p1.value;
+    const auto v2 = p2.value;
+
+    const auto c = p1.curve;
+    
+    float v = p2.value;
+
+    if (t2 != t1)
+    {
+        if (c == 0.0f)
+        {
+            v = v1 + (v2 - v1) * (float) ((t - t1) / (t2 - t1));
+        }
+        else if (c >= -0.5 && c <= 0.5)
+        {
+            auto bp = getBezierPoint (p1, p2);
+            v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, bp.time.inSeconds(), bp.value, t2.inSeconds(), v2);
+        }
+        else
+        {
+            double x1end = 0, x2end = 0;
+            float y1end = 0, y2end = 0;
+            
+            auto bp = getBezierPoint (p1, p2);
+            getBezierEnds (p1, p2, x1end, y1end, x2end, y2end);
+            
+            if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
+                v = v1;
+            else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
+                v = v2;
+            else
+                v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, bp.time.inSeconds(), bp.value, x2end, y2end);
+        }
+    }
+    currentIndex = newIndex;
+    currentValue = v;
+}
+
+void AutomationIterator::setPositionInterpolated (TimePosition newTime) noexcept
 {
     jassert (points.size() > 0);
 
+    auto newIndex = updateIndex (newTime);
+
+    if (currentIndex != newIndex)
+    {
+        jassert (juce::isPositiveAndBelow (newIndex, points.size()));
+        currentIndex = newIndex;
+        currentValue = points.getReference (newIndex).value;
+    }
+}
+
+int AutomationIterator::updateIndex (TimePosition newTime)
+{
     auto newIndex = currentIndex;
 
     if (! juce::isPositiveAndBelow (newIndex, points.size()))
@@ -1385,13 +1564,7 @@ void AutomationIterator::setPosition (TimePosition newTime) noexcept
         while (newIndex < points.size() - 1 && points.getReference (newIndex + 1).time < newTime)
             ++newIndex;
     }
-
-    if (currentIndex != newIndex)
-    {
-        jassert (juce::isPositiveAndBelow (newIndex, points.size()));
-        currentIndex = newIndex;
-        currentValue = points.getReference (newIndex).value;
-    }
+    return newIndex;
 }
 
 //==============================================================================
