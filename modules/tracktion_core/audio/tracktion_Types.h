@@ -16,4 +16,10 @@ namespace tracktion { inline namespace core
 
 using SampleCount = int64_t;
 
+struct SampleRateAndBlockSize
+{
+    double sampleRate = 0.0;
+    int blockSize = 0;
+};
+
 }} // namespace tracktion { inline namespace core
