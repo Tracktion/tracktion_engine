@@ -392,7 +392,7 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
 //==============================================================================
 void ArrangerLauncherSwitchingNode::sharedTimerCallback()
 {
-    if (activeNode->load (std::memory_order_acquire) == this)
+    if (activeNode && activeNode->load (std::memory_order_acquire) == this)
         updatePlaySlotsState();
 }
 
