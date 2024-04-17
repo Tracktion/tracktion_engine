@@ -119,7 +119,9 @@ struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
 
     void deleteObject (RackConnection* t) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
+        if (! type.edit.isLoading())
+            TRACKTION_ASSERT_MESSAGE_THREAD
+
         jassert (t != nullptr);
         delete t;
     }
