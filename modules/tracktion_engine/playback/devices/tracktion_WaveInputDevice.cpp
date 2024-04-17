@@ -1176,7 +1176,7 @@ public:
                         AudioScratchBuffer silence (inputBuffer.getNumChannels(), -adjustSamples);
                         silence.buffer.clear();
 
-                        recordingContext->addBlockToRecord (silence.buffer, 0, numSamples);
+                        recordingContext->addBlockToRecord (silence.buffer, 0, silence.buffer.getNumSamples());
                         recordingContext->adjustSamples = 0;
                     }
                     else if (adjustSamples > 0)
