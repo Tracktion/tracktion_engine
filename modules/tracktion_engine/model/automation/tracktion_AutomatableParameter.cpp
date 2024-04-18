@@ -1393,70 +1393,6 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
     }
 }
 
-AutomationIterator::AutoPoint AutomationIterator::getBezierPoint (const AutoPoint& p1, const AutoPoint& p2)
-{
-    auto x1 = p1.time;
-    auto y1 = p1.value;
-    auto x2 = p2.time;
-    auto y2 = p2.value;
-    auto c  = juce::jlimit (-1.0f, 1.0f, p1.curve * 2.0f);
-
-    if (y2 > y1)
-    {
-        auto run  = x2 - x1;
-        auto rise = y2 - y1;
-
-        auto xc = x1 + run / 2;
-        auto yc = y1 + rise / 2;
-
-        auto x = xc - run / 2 * -c;
-        auto y = yc + rise / 2 * -c;
-
-        return { x, y, 0.0f };
-    }
-
-    auto run  = x2 - x1;
-    auto rise = y1 - y2;
-
-    auto xc = x1 + run / 2;
-    auto yc = y2 + rise / 2;
-
-    auto x = xc - run / 2 * -c;
-    auto y = yc - rise / 2 * -c;
-
-    return { x, y, 0.0f };
-}
-
-void AutomationIterator::getBezierEnds (const AutoPoint& p1, const AutoPoint& p2, double& x1out, float& y1out, double& x2out, float& y2out)
-{
-    auto x1 = p1.time.inSeconds();
-    auto y1 = p1.value;
-    auto x2 = p2.time.inSeconds();
-    auto y2 = p2.value;
-    auto c  = juce::jlimit (-1.0f, 1.0f, p1.curve * 2.0f);
-        
-    auto minic = (std::abs (c) - 0.5f) * 2.0f;
-    auto run   = (minic) * (x2 - x1);
-    auto rise  = (minic) * ((y2 > y1) ? (y2 - y1) : (y1 - y2));
-    
-    if (c > 0.0f)
-    {
-        x1out = x1 + run;
-        y1out = y1;
-        
-        x2out = x2;
-        y2out = (y1 < y2) ? (y2 - rise) : (y2 + rise);
-    }
-    else
-    {
-        x1out = x1;
-        y1out = (y1 < y2) ? (y1 + rise) : (y1 - rise);
-        
-        x2out = x2 - run;
-        y2out = y2;
-    }
-}
-
 void AutomationIterator::setPosition (TimePosition newTime) noexcept
 {
     if (hiRes)
@@ -1508,23 +1444,26 @@ void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
         }
         else if (c >= -0.5 && c <= 0.5)
         {
-            auto bp = getBezierPoint (p1, p2);
-            v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, bp.time.inSeconds(), bp.value, t2.inSeconds(), v2);
+            auto bp = getBezierPoint (p1.time.inSeconds(), p1.value, p2.time.inSeconds(), p2.value, p1.curve);
+            v = float (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, bp.first, bp.second, t2.inSeconds(), v2));
         }
         else
         {
             double x1end = 0, x2end = 0;
-            float y1end = 0, y2end = 0;
+            double y1end = 0, y2end = 0;
             
-            auto bp = getBezierPoint (p1, p2);
-            getBezierEnds (p1, p2, x1end, y1end, x2end, y2end);
+            auto bp = getBezierPoint (p1.time.inSeconds(), p1.value, p2.time.inSeconds(), p2.value, p1.curve);
+            getBezierEnds (p1.time.inSeconds(), p1.value,
+                           p2.time.inSeconds(), p2.value,
+                           p1.curve,
+                           x1end, y1end, x2end, y2end);
             
             if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
                 v = v1;
             else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
                 v = v2;
             else
-                v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, bp.time.inSeconds(), bp.value, x2end, y2end);
+                v = float (getBezierYFromX (t.inSeconds(), x1end, y1end, bp.first, bp.second, x2end, y2end));
         }
     }
     currentIndex = newIndex;
@@ -1542,6 +1481,22 @@ void AutomationIterator::setPositionInterpolated (TimePosition newTime) noexcept
         jassert (juce::isPositiveAndBelow (newIndex, points.size()));
         currentIndex = newIndex;
         currentValue = points.getReference (newIndex).value;
+    }
+    
+    if (newTime >= points[0].time && newIndex < points.size() - 1)
+    {
+        const auto& p1 = points.getReference (newIndex);
+        const auto& p2 = points.getReference (newIndex + 1);
+        
+        const auto t = newTime.inSeconds();
+        
+        const auto t1 = p1.time.inSeconds();
+        const auto t2 = p2.time.inSeconds();
+
+        const auto v1 = p1.value;
+        const auto v2 = p2.value;
+
+        currentValue = float (std::lerp (v1, v2, (t - t1) / (t2 - t1)));
     }
 }
 

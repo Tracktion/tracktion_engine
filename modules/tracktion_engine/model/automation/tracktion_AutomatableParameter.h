@@ -418,9 +418,6 @@ private:
         float curve = 0.0f;
     };
     
-    static AutoPoint getBezierPoint (const AutoPoint& p1, const AutoPoint& p2);
-    static void getBezierEnds (const AutoPoint& p1, const AutoPoint& p2, double& x1out, float& y1out, double& x2out, float& y2out);
-
     juce::Array<AutoPoint> points;
     int currentIndex = -1;
     float currentValue = 0.0f;
