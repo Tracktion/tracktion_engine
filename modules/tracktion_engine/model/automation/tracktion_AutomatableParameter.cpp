@@ -1496,7 +1496,7 @@ void AutomationIterator::setPositionInterpolated (TimePosition newTime) noexcept
         const auto v1 = p1.value;
         const auto v2 = p2.value;
 
-        currentValue = float (std::lerp (v1, v2, (t - t1) / (t2 - t1)));
+        currentValue = std::lerp (v1, v2, float ((t - t1) / (t2 - t1)));
     }
 }
 
