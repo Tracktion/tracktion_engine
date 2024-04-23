@@ -1300,6 +1300,14 @@ void CustomControlSurface::loadFunctions()
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Add Marker"), addMarkerId, &CustomControlSurface::addMarker);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Next Marker"), nextMarkerId, &CustomControlSurface::nextMarker);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Previous Marker"), previousMarkerId, &CustomControlSurface::prevMarker);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 1"), marker1Id, &CustomControlSurface::marker1);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 2"), marker2Id, &CustomControlSurface::marker2);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 3"), marker3Id, &CustomControlSurface::marker3);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 4"), marker4Id, &CustomControlSurface::marker4);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 5"), marker5Id, &CustomControlSurface::marker5);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 6"), marker6Id, &CustomControlSurface::marker6);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 7"), marker7Id, &CustomControlSurface::marker7);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 8"), marker8Id, &CustomControlSurface::marker8);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Left"), nudgeLeftId, &CustomControlSurface::nudgeLeft);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Right"), nudgeRightId, &CustomControlSurface::nudgeRight);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort"), abortId, &CustomControlSurface::abort);
@@ -1753,6 +1761,15 @@ void CustomControlSurface::prevMarker (float val, int)  { if (shouldActOnValue (
 void CustomControlSurface::nextMarker (float val, int)  { if (shouldActOnValue (val)) userPressedNextMarker(); }
 void CustomControlSurface::nudgeLeft  (float val, int)  { if (shouldActOnValue (val)) userNudgedLeft(); }
 void CustomControlSurface::nudgeRight (float val, int)  { if (shouldActOnValue (val)) userNudgedRight(); }
+
+void CustomControlSurface::marker1 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (0); }
+void CustomControlSurface::marker2 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (1); }
+void CustomControlSurface::marker3 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (2); }
+void CustomControlSurface::marker4 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (3); }
+void CustomControlSurface::marker5 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (4); }
+void CustomControlSurface::marker6 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (5); }
+void CustomControlSurface::marker7 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (6); }
+void CustomControlSurface::marker8 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (7); }
 
 void CustomControlSurface::paramTrack (float val, int param)
 {

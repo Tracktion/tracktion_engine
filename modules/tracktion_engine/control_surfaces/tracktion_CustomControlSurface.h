@@ -47,6 +47,15 @@ public:
         jumpToMarkOutId             = 22,
         timecodeId                  = 25,
 
+        marker1Id                   = 400,
+        marker2Id                   = 401,
+        marker3Id                   = 402,
+        marker4Id                   = 403,
+        marker5Id                   = 404,
+        marker6Id                   = 405,
+        marker7Id                   = 406,
+        marker8Id                   = 407,
+
         toggleBeatsSecondsModeId    = 50,
         toggleLoopId                = 51,
         togglePunchId               = 52,
@@ -281,6 +290,14 @@ public:
     virtual void addMarker (float val, int param);
     virtual void prevMarker (float val, int param);
     virtual void nextMarker (float val, int param);
+    virtual void marker1 (float val, int param);
+    virtual void marker2 (float val, int param);
+    virtual void marker3 (float val, int param);
+    virtual void marker4 (float val, int param);
+    virtual void marker5 (float val, int param);
+    virtual void marker6 (float val, int param);
+    virtual void marker7 (float val, int param);
+    virtual void marker8 (float val, int param);
     virtual void nudgeLeft (float val, int param);
     virtual void nudgeRight (float val, int param);
     virtual void abort (float val, int param);
