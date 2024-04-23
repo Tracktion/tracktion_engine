@@ -211,6 +211,14 @@ void MidiAssignable::buildMenu (juce::PopupMenu& m)
             case CustomControlSurface::clipBankDown1Id:
             case CustomControlSurface::clipBankDown4Id:
             case CustomControlSurface::clipBankDown8Id:
+            case CustomControlSurface::marker1Id:
+            case CustomControlSurface::marker2Id:
+            case CustomControlSurface::marker3Id:
+            case CustomControlSurface::marker4Id:
+            case CustomControlSurface::marker5Id:
+            case CustomControlSurface::marker6Id:
+            case CustomControlSurface::marker7Id:
+            case CustomControlSurface::marker8Id:
             case CustomControlSurface::none:
             default:
             {
