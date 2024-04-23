@@ -630,6 +630,14 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case clipBankDown1Id:
         case clipBankDown4Id:
         case clipBankDown8Id:
+        case marker1Id:
+        case marker2Id:
+        case marker3Id:
+        case marker4Id:
+        case marker5Id:
+        case marker6Id:
+        case marker7Id:
+        case marker8Id:
         case none:
         default:
             return false;
