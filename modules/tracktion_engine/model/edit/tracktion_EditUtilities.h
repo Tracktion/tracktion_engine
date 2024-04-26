@@ -167,6 +167,9 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 /** Returns all clip effects */
 juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
 
+/* Merges audio clips into takes on one clip */
+juce::Result mergeAudioClipsIntoTakes (juce::Array<WaveAudioClip*>, SelectionManager* sm = nullptr);
+
 //==============================================================================
 // MIDI
 //==============================================================================

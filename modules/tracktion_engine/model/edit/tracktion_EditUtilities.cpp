@@ -601,6 +601,104 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
     return res;
 }
 
+juce::Result mergeAudioClipsIntoTakes (juce::Array<WaveAudioClip*> clips, SelectionManager* sm)
+{
+    for (auto c : clips)
+        if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
+            return juce::Result::fail (TRANS("Unable to merge clips on frozen tracks"));
+
+    if (clips.size() < 2)
+        return juce::Result::fail (TRANS("2 or more clips are required to merge"));
+
+    auto& dest = *clips[0];
+    auto um = dest.getUndoManager();
+
+    auto start = dest.getPosition().getStart();
+    auto end   = dest.getPosition().getEnd();
+
+    std::set<juce::String> knownTakes;
+
+    // Convert to takes
+    auto destTakes = dest.state.getChildWithName (IDs::TAKES);
+    if (! destTakes.isValid())
+    {
+        destTakes = dest.state.getOrCreateChildWithName (IDs::TAKES, um);
+
+        auto take = juce::ValueTree (IDs::TAKE);
+        take.setProperty (IDs::source, dest.state[IDs::source], nullptr);
+
+        destTakes.appendChild (take, um);
+
+        knownTakes.insert (dest.state[IDs::source].toString());
+    }
+    else
+    {
+        for (auto v : destTakes)
+            knownTakes.insert (v[IDs::source].toString());
+    }
+
+    for (auto i = 1; i < clips.size(); i++)
+    {
+        auto& src = *clips[i];
+        auto takeOffset = destTakes.getNumChildren();
+
+        if (src.getPosition().getStart() < start)
+        {
+            auto offset = start - src.getPosition().getStart() + src.getPosition().getOffset() - dest.getPosition().getOffset();
+
+            for (auto v : dest.state.getChildWithName (IDs::TAKES))
+                v.setProperty (IDs::offset, double (v[IDs::offset]) + offset.inSeconds(), um);
+
+            start = src.getPosition().getStart();
+            dest.setStart (start, false, true);
+        }
+
+        if (src.getPosition().getEnd() > end)
+        {
+            end = src.getPosition().getEnd();
+            dest.setEnd (end, false);
+        }
+
+        if (const auto srcTakes = src.state.getChildWithName (IDs::TAKES); srcTakes.isValid())
+        {
+            for (auto v : srcTakes)
+            {
+                auto srcTake = v.createCopy();
+                auto id = srcTake[IDs::source].toString();
+
+                if (! knownTakes.contains (id))
+                {
+                    if (srcTake.hasProperty (IDs::takeIndex) && int (srcTake[IDs::takeIndex]) >= 0)
+                        srcTake.setProperty (IDs::takeIndex, int (srcTake[IDs::takeIndex]) + takeOffset, nullptr);
+
+                    destTakes.appendChild (srcTake, um);
+
+                    knownTakes.insert (id);
+                }
+            }
+        }
+        else
+        {
+            auto id = src.state[IDs::source];
+            if (! knownTakes.contains (id))
+            {
+                auto take = juce::ValueTree (IDs::TAKE);
+                take.setProperty (IDs::source, id, nullptr);
+
+                destTakes.appendChild (take, um);
+
+                knownTakes.insert (id);
+            }
+        }
+
+        src.removeFromParent();
+    }
+
+    if (sm)
+        sm->selectOnly (dest);
+
+    return juce::Result::ok();
+}
 
 //==============================================================================
 ClipOwner* findClipOwnerForID (const Edit& edit, EditItemID id)

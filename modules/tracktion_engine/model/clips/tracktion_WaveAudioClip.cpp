@@ -167,6 +167,10 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
 //==============================================================================
 void WaveAudioClip::addTake (ProjectItemID id)
 {
+    for (auto t : getTakes())
+        if (t == id)
+            return;
+
     auto um = getUndoManager();
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
 
