@@ -381,7 +381,7 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
             if (! queuedPos)
                 status.beatsUntilQueuedStopTrimmedToBlock = 0_bd;
 
-            if (blockRange.contains (queuedPos->v))
+            if (queuedPos && blockRange.contains (queuedPos->v))
                 status.beatsUntilQueuedStopTrimmedToBlock = queuedPos->v - blockRange.getStart();
         }
     }
