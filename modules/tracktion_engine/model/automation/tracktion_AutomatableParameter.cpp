@@ -1316,6 +1316,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
     auto t2 = curve.getPointTime (0);
     float v1 = curve.getValueAt (TimePosition());
     float v2 = v1;
+    float vp = v2;
     float c  = 0;
     CurvePoint bp;
     double x1end = 0;
@@ -1383,12 +1384,17 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
             point.value = v;
 
             jassert (points.isEmpty() || points.getLast().time <= t);
+
+            if (points.size() >= 1 && t - points[points.size() - 1].time > timeDelta * 10)
+                points.add ({t - timeDelta, vp});
+
             points.add (point);
 
             lastValue = v;
             lastCurveIndex = curveIndex;
         }
 
+        vp = v;
         t = t + timeDelta;
     }
 }
