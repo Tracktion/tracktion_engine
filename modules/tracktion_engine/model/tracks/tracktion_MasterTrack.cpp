@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 MasterTrack::MasterTrack (Edit& e, const juce::ValueTree& v)
-    : Track (e, v)
+    : Track (e, v, true)
 {
 }
 

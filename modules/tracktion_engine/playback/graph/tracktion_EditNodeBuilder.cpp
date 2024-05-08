@@ -1303,24 +1303,33 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList& list, Modifier::ProcessingPosition position, TrackMuteState* trackMuteState,
-                                                                  std::unique_ptr<Node> node,
-                                                                  tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList* list, 
+                                                                   Modifier::ProcessingPosition position,
+                                                                   TrackMuteState* trackMuteState,
+                                                                   std::unique_ptr<Node> node,
+                                                                   tracktion::graph::PlayHeadState& playHeadState,
+                                                                   const CreateNodeParams& params)
 {
-    for (auto& modifier : list.getModifiers())
+    if (list != nullptr)
     {
-        if (modifier->getProcessingPosition() != position)
-            continue;
+        for (auto& modifier : list->getModifiers())
+        {
+            if (modifier->getProcessingPosition() != position)
+                continue;
 
-        node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
-                                       trackMuteState, playHeadState, params.forRendering);
+            node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
+                                           trackMuteState, playHeadState, params.forRendering);
+        }
     }
 
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t, TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
-                                                                 tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t, 
+                                                                  TrackMuteState& trackMuteState,
+                                                                  std::unique_ptr<Node> node,
+                                                                  tracktion::graph::PlayHeadState& playHeadState,
+                                                                  const CreateNodeParams& params)
 {
     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,
                                       &trackMuteState, std::move (node), playHeadState, params);
@@ -1600,7 +1609,8 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
     return makeNode<SinkNode> (std::move (rackOutputNode));
 }
 
-std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, const CreateNodeParams& params)
+std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, 
+                                                        const CreateNodeParams& params)
 {
     std::vector<std::unique_ptr<Node>> nodes;
 
@@ -1612,7 +1622,9 @@ std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeLi
     return nodes;
 }
 
-std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList& rackTypeList, const CreateNodeParams& params)
+std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, 
+                                      RackTypeList& rackTypeList,
+                                      const CreateNodeParams& params)
 {
     // Finally add the RackType Nodes
     auto rackNodes = createNodesForRacks (rackTypeList, params);
@@ -1629,7 +1641,8 @@ std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList&
 
 //==============================================================================
 std::unique_ptr<Node> createInsertReturnNode (InsertPlugin& insert,
-                                              tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+                                              tracktion::graph::PlayHeadState& playHeadState,
+                                              const CreateNodeParams& params)
 {
     if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
         for (auto i : insert.edit.getAllInputDevices())
@@ -1648,7 +1661,9 @@ std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& 
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit, OutputDevice& device, ProcessState& processState)
+std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit, 
+                                                                        OutputDevice& device,
+                                                                        ProcessState& processState)
 {
     CRASH_TRACER
 
@@ -1681,7 +1696,10 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc, OutputDevice& device, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc, 
+                                                             OutputDevice& device,
+                                                             PlayHeadState& playHeadState,
+                                                             std::unique_ptr<Node> node)
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
@@ -1700,19 +1718,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
     }
     else if (auto midiInstance = dynamic_cast<MidiOutputDeviceInstance*> (epc.getOutputFor (&device)))
     {
-        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), playHeadState.playHead);
+        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), 
+                                                                                  playHeadState.playHead);
     }
 
     return {};
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tracktion::graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, 
+                                                                 tracktion::graph::PlayHeadState& playHeadState,
+                                                                 std::unique_ptr<Node> node,
+                                                                 const CreateNodeParams& params)
 {
     if (! params.includeMasterPlugins)
         return node;
 
-    auto& tempoModList = edit.getTempoTrack()->getModifierList();
-    auto& masterModList = edit.getMasterTrack()->getModifierList();
+    auto tempoModList = edit.getTempoTrack()->getModifierList();
+    auto masterModList = edit.getMasterTrack()->getModifierList();
+
     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,
                                       nullptr, std::move (node), playHeadState, params);
     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,
@@ -1731,7 +1754,9 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tra
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, 
+                                                                   std::unique_ptr<Node> node,
+                                                                   const CreateNodeParams& params)
 {
     if (! params.includeMasterPlugins)
         return node;

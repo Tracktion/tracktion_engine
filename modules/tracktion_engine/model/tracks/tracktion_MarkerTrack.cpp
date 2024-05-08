@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 MarkerTrack::MarkerTrack (Edit& e, const juce::ValueTree& v)
-    : ClipTrack (e, v)
+    : ClipTrack (e, v, false)
 {
 }
 

@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 ChordTrack::ChordTrack (Edit& ed, const juce::ValueTree& v)
-    : ClipTrack (ed, v)
+    : ClipTrack (ed, v, false)
 {
 }
 

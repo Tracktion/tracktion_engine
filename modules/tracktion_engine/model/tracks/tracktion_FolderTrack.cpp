@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
-    : Track (ed, v)
+    : Track (ed, v, true)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     muted.referTo (state, IDs::mute, nullptr);

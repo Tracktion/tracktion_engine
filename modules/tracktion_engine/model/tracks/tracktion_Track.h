@@ -24,7 +24,7 @@ class Track   : public EditItem,
 {
 public:
     /** Creates a track with a given state. */
-    Track (Edit&, const juce::ValueTree&);
+    Track (Edit&, const juce::ValueTree&, bool hasModifierList);
 
     /** Destructor. */
     ~Track() override;
@@ -334,8 +334,8 @@ public:
     void flipAllPluginsEnablement();
 
     //==============================================================================
-    /** Returns the ModifierList for this Track. */
-    ModifierList& getModifierList() const                   { return *modifierList; }
+    /** Returns the ModifierList for this track, if it has one. */
+    ModifierList* getModifierList() const                   { return modifierList.get(); }
 
     //==============================================================================
     static const int minTrackHeightForDetail = 10;  /**< The minimim height to show track contents at. */

@@ -1083,10 +1083,12 @@ juce::ReferenceCountedArray<Modifier> getAllModifiers (const Edit& edit)
         modifiers.addArray (r->getModifierList().getModifiers());
 
     edit.visitAllTracksRecursive ([&] (Track& t)
-                                  {
-                                      modifiers.addArray (t.getModifierList().getModifiers());
-                                      return true;
-                                  });
+    {
+        if (auto modifierList = t.getModifierList())
+            modifiers.addArray (modifierList->getModifiers());
+        
+        return true;
+    });
 
     return modifiers;
 }
@@ -1114,7 +1116,13 @@ Track* getTrackContainingModifier (const Edit& edit, const Modifier::Ptr& m)
     if (m == nullptr)
         return nullptr;
 
-    return findTrackForPredicate (edit, [m] (Track& t) { return t.getModifierList().getModifiers().contains (m); });
+    return findTrackForPredicate (edit, [m] (Track& t)
+    {
+        if (auto list = t.getModifierList())
+            return list->getModifiers().contains (m);
+
+        return false;
+    });
 }
 
 //==============================================================================

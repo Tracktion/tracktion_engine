@@ -12,7 +12,7 @@
 namespace tracktion { inline namespace engine
 {
 
-Track::Track (Edit& ed, const juce::ValueTree& v)
+Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
       state (v),
       pluginList (ed)
@@ -29,7 +29,8 @@ Track::Track (Edit& ed, const juce::ValueTree& v)
     currentAutoParamPlugin.referTo (state, IDs::currentAutoParamPluginID, um, EditItemID());
     currentAutoParamID.referTo (state, IDs::currentAutoParamTag, um, {});
 
-    modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
+    if (hasModifierList)
+        modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
 
     state.addListener (this);
 }
@@ -262,9 +263,10 @@ juce::Array<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
     auto plugins = getAllPlugins();
     destArray.addArray (plugins);
 
-    for (auto m : modifierList->getModifiers())
-        if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
-            destArray.add (aei);
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
+                destArray.add (aei);
 
     for (auto p : plugins)
         destArray.add (&p->macroParameterList);
@@ -319,8 +321,9 @@ juce::Array<AutomatableParameter*> Track::getAllAutomatableParams() const
         params.addArray (p->macroParameterList.getMacroParameters());
     }
 
-    for (auto m : modifierList->getModifiers())
-        params.addArray (m->getAutomatableParameters());
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            params.addArray (m->getAutomatableParameters());
 
     return params;
 }
@@ -333,8 +336,9 @@ void Track::visitAllAutomatableParams (const std::function<void(AutomatableParam
         p->visitAllAutomatableParams (visit);
     }
 
-    for (auto m : modifierList->getModifiers())
-        m->visitAllAutomatableParams (visit);
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            m->visitAllAutomatableParams (visit);
 }
 
 static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pluginID, const juce::String& paramID)

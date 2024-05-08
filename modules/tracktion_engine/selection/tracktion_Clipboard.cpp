@@ -2155,34 +2155,40 @@ bool Clipboard::Modifiers::pasteIntoEdit (const EditPastingOptions& options) con
         {
             if (auto t = getTrackContainingModifier (options.edit, firstSelectedMod))
             {
-                auto modList = getModifiersOfType<Modifier> (t->getModifierList());
-
-                for (int i = modList.size(); --i >= 0;)
+                if (auto modifierList = t->getModifierList())
                 {
-                    if (modList.getObjectPointer (i) == firstSelectedMod)
-                    {
-                        for (auto m : modifiers)
-                        {
-                            EditItemID::remapIDs (m, nullptr, options.edit);
-                            t->getModifierList().insertModifier (m, i + 1, options.selectionManager);
-                        }
+                    auto modList = getModifiersOfType<Modifier> (*modifierList);
 
-                        return true;
+                    for (int i = modList.size(); --i >= 0;)
+                    {
+                        if (modList.getObjectPointer (i) == firstSelectedMod)
+                        {
+                            for (auto m : modifiers)
+                            {
+                                EditItemID::remapIDs (m, nullptr, options.edit);
+                                modifierList->insertModifier (m, i + 1, options.selectionManager);
+                            }
+
+                            return true;
+                        }
                     }
                 }
             }
         }
     }
 
-    if (options.startTrack != nullptr && ! options.startTrack->isMarkerTrack())
+    if (options.startTrack != nullptr)
     {
-        for (auto m : modifiers)
+        if (auto modifierList = options.startTrack->getModifierList())
         {
-            EditItemID::remapIDs (m, nullptr, options.edit);
-            options.startTrack->getModifierList().insertModifier (m, -1, options.selectionManager);
-        }
+            for (auto m : modifiers)
+            {
+                EditItemID::remapIDs (m, nullptr, options.edit);
+                modifierList->insertModifier (m, -1, options.selectionManager);
+            }
 
-        return true;
+            return true;
+        }
     }
 
     return false;

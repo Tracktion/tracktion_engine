@@ -17,7 +17,7 @@ class ClipTrack   : public Track,
                     public ClipOwner
 {
 public:
-    ClipTrack (Edit&, const juce::ValueTree&);
+    ClipTrack (Edit&, const juce::ValueTree&, bool hasModifierList);
     ~ClipTrack() override;
 
     using Ptr   = juce::ReferenceCountedObjectPtr<ClipTrack>;

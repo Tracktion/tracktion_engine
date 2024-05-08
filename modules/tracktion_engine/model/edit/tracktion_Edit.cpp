@@ -1988,8 +1988,9 @@ void Edit::deleteTrack (Track* t)
         t->setFrozen (false, Track::groupFreeze);
 
         // Remove any modifier assignments
-        for (auto mod : t->getModifierList().getModifiers())
-            mod->remove();
+        if (auto modifierList = t->getModifierList())
+            for (auto mod : modifierList->getModifiers())
+                mod->remove();
 
         // this is needed in case we're undoing, and things in the track, like midi notes might be selected
         for (auto sm : getSelectionManagers (*this))
