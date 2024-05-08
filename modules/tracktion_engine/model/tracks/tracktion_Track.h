@@ -19,7 +19,6 @@ namespace tracktion { inline namespace engine
 class Track   : public EditItem,
                 public Selectable,
                 public juce::ReferenceCountedObject,
-                public MacroParameterElement,
                 protected juce::ValueTree::Listener,
                 protected juce::AsyncUpdater
 {

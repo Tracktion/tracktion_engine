@@ -689,7 +689,7 @@ Edit::~Edit()
     rackTypes.reset();
     undoTransactionTimer.reset();
     markerManager.reset();
-    araDocument.reset();
+    araDocumentHolder.reset();
     frozenTrackCallback.reset();
 
     pitchSequence.freeResources();
@@ -757,13 +757,11 @@ void Edit::initialise()
     initialiseTempoAndPitch();
     initialiseTransport();
     initialiseVideo();
-    initialiseAutomap();
     initialiseClickTrack();
     initialiseMetadata();
     initialiseMasterVolume();
     initialiseRacks();
     initialiseMasterPlugins();
-    initialiseAuxBusses();
     initialiseAudioDevices();
     loadTracks();
 
@@ -855,10 +853,7 @@ void Edit::initialiseMetadata()
     auto meta = state.getOrCreateChildWithName (IDs::ID3VORBISMETADATA, nullptr);
 
     if (meta.getNumProperties() == 0)
-    {
-        meta.setProperty (IDs::trackNumber, 1, nullptr);
         meta.setProperty (IDs::date, juce::Time::getCurrentTime().getYear(), nullptr);
-    }
 }
 
 void Edit::initialiseMasterVolume()
@@ -998,11 +993,6 @@ void Edit::initialiseMasterPlugins()
     masterPluginList->initialise (state.getOrCreateChildWithName (IDs::MASTERPLUGINS, nullptr));
 }
 
-void Edit::initialiseAuxBusses()
-{
-    auxBusses = state.getOrCreateChildWithName ("AUXBUSNAMES", nullptr);
-}
-
 void Edit::initialiseVideo()
 {
     auto* um = &undoManager;
@@ -1022,15 +1012,24 @@ void Edit::initialiseControllerMappings()
     parameterControlMappings->loadFrom (controllerMappings);
 }
 
-void Edit::initialiseAutomap()
+juce::ValueTree Edit::getAutomapState()
 {
-    automapState = state.getOrCreateChildWithName (IDs::AUTOMAPXML, nullptr);
+    if (! automapState.isValid())
+        automapState = state.getOrCreateChildWithName (IDs::AUTOMAPXML, &getUndoManager());
+
+    return automapState;
+}
+
+ARADocumentHolder& Edit::getARADocument()
+{
+    if (araDocumentHolder == nullptr)
+        araDocumentHolder = std::make_unique<ARADocumentHolder> (*this, state.getOrCreateChildWithName (IDs::ARADOCUMENT, &getUndoManager()));
+
+    return *araDocumentHolder;
 }
 
 void Edit::initialiseARA()
 {
-    araDocument.reset (new ARADocumentHolder (*this, state.getOrCreateChildWithName (IDs::ARADOCUMENT, nullptr)));
-
     auto areAnyClipsUsingMelodyne = [this]()
     {
         for (auto at : getTracksOfType<AudioTrack> (*this, true))
@@ -1043,7 +1042,7 @@ void Edit::initialiseARA()
     };
 
     if (areAnyClipsUsingMelodyne())
-        araDocument->getPimpl();
+        getARADocument().getPimpl();
 }
 
 void Edit::flushState()
@@ -1075,8 +1074,8 @@ void Edit::flushState()
 
     changedPluginsList->clear();
 
-    if (araDocument != nullptr)
-        araDocument->flushStateToValueTree();
+    if (araDocumentHolder != nullptr)
+        araDocumentHolder->flushStateToValueTree();
 }
 
 void Edit::flushPluginStateIfNeeded (Plugin& p)
@@ -1647,7 +1646,10 @@ void Edit::setMasterPanPos (float p)
 //==============================================================================
 juce::String Edit::getAuxBusName (int bus) const
 {
-    return auxBusses.getChildWithProperty (IDs::bus, bus).getProperty (IDs::name);
+    if (auxBusses.isValid())
+        return auxBusses.getChildWithProperty (IDs::bus, bus).getProperty (IDs::name);
+
+    return {};
 }
 
 void Edit::setAuxBusName (int bus, const juce::String& nm)
@@ -1656,6 +1658,9 @@ void Edit::setAuxBusName (int bus, const juce::String& nm)
 
     if (getAuxBusName (bus) != name)
     {
+        if (! auxBusses.isValid())
+            auxBusses = state.getOrCreateChildWithName ("AUXBUSNAMES", &getUndoManager());
+
         auto b = auxBusses.getChildWithProperty (IDs::bus, bus);
 
         if (name.isEmpty())
@@ -2647,14 +2652,18 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
         // Skip the MasterTrack as that is covered by the masterPluginList above
         auto masterTrack = getMasterTrack();
 
-        for (auto t : getAllTracks (*this))
+        visitAllTracksRecursive ([&] (Track& t)
         {
-            if (t == masterTrack)
-                continue;
+            if (masterTrack != &t)
+            {
+                if (auto m = dynamic_cast<MacroParameterElement*> (&t))
+                    list.addArray (m->macroParameterList.getMacroParameters());
 
-            list.addArray (t->macroParameterList.getMacroParameters());
-            list.addArray (t->getAllAutomatableParams());
-        }
+                list.addArray (t.getAllAutomatableParams());
+            }
+
+            return true;
+        });
     }
 
     return list;
@@ -2692,14 +2701,18 @@ void Edit::visitAllAutomatableParams (bool includeTrackParams, const std::functi
         // Skip the MasterTrack as that is covered by the masterPluginList above
         auto masterTrack = getMasterTrack();
 
-        for (auto t : getAllTracks (*this))
+        visitAllTracksRecursive ([&] (Track& t)
         {
-            if (t == masterTrack)
-                continue;
+            if (masterTrack != &t)
+            {
+                if (auto m = dynamic_cast<MacroParameterElement*> (&t))
+                    m->macroParameterList.visitMacroParameters (visit);
 
-            t->macroParameterList.visitMacroParameters (visit);
-            t->visitAllAutomatableParams (visit);
-        }
+                t.visitAllAutomatableParams (visit);
+            }
+
+            return true;
+        });
     }
 }
 

@@ -728,14 +728,17 @@ public:
 
     //==============================================================================
     /** Returns the ValueTree used as the Auotmap state.
-        You shouldn't normally need this as it's onyl called by the Automap system.
+        You shouldn't normally need this as it's only called by the Automap system.
         @see NovationAutomap
     */
-    juce::ValueTree getAutomapState() const             { return automapState; }
+    juce::ValueTree getAutomapState();
 
     //==============================================================================
     /** Returns the MarkerManager. */
     MarkerManager& getMarkerManager() const noexcept    { return *markerManager; }
+
+    /** Returns the ARA document handler */
+    ARADocumentHolder& getARADocument();
 
     //==============================================================================
     /** Calls an editFinishedLoading method on OwnerType once after the Edit has finished loading. */
@@ -815,9 +818,6 @@ public:
     juce::ValueTree state { IDs::EDIT };    /**< The ValueTree of the Edit state. */
     juce::ValueTree inputDeviceState;   /**< The ValueTree of the input device states. */
 
-    /** Holds the ARA state. */
-    std::unique_ptr<ARADocumentHolder> araDocument;
-
 private:
     //==============================================================================
     const int instanceId;
@@ -831,6 +831,7 @@ private:
     std::unique_ptr<ParameterControlMappings> parameterControlMappings;
     std::unique_ptr<RackTypeList> rackTypes;
     std::unique_ptr<PluginList> masterPluginList;
+    std::unique_ptr<ARADocumentHolder> araDocumentHolder;
 
     // transient properties (i.e. stuff that doesn't get saved)
     struct MirroredPluginUpdateTimer;
@@ -918,11 +919,9 @@ private:
     void initialiseTracks();
     void initialiseAudioDevices();
     void initialiseRacks();
-    void initialiseAuxBusses();
     void initialiseMasterPlugins();
     void initialiseMetadata();
     void initialiseControllerMappings();
-    void initialiseAutomap();
     void initialiseARA();
     void removeZeroLengthClips();
     void loadTracks();

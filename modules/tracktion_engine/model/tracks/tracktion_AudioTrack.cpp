@@ -94,7 +94,8 @@ private:
 
 //==============================================================================
 AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
-    : ClipTrack (ed, v)
+    : ClipTrack (ed, v),
+      MacroParameterElement (ed, v)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     soloIsolated.referTo (state, IDs::soloIsolate, nullptr);

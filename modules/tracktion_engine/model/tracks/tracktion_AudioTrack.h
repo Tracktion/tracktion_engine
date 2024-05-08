@@ -14,6 +14,7 @@ namespace tracktion { inline namespace engine
 
 /** */
 class AudioTrack  : public ClipTrack,
+                    public MacroParameterElement,
                     private juce::Timer
 {
 public:

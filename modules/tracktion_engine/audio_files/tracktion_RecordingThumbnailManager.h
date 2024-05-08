@@ -18,6 +18,8 @@ namespace tracktion { inline namespace engine
 class RecordingThumbnailManager
 {
 public:
+    RecordingThumbnailManager (Engine& e) : engine (e) {}
+
     /**
         A thumbnail represeting a recording file.
         Get one of these for a file with the getThumbnailFor function.
@@ -90,9 +92,6 @@ public:
 private:
     Engine& engine;
     juce::Array<Thumbnail*> thumbs;
-
-    friend class Engine;
-    RecordingThumbnailManager (Engine& e) : engine (e) {}
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordingThumbnailManager)
 };

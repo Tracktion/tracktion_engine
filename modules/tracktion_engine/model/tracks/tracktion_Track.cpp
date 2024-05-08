@@ -14,7 +14,6 @@ namespace tracktion { inline namespace engine
 
 Track::Track (Edit& ed, const juce::ValueTree& v)
     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
-      MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
       state (v),
       pluginList (ed)
 {

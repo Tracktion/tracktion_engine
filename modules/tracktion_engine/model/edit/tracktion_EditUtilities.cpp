@@ -1004,11 +1004,13 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
     destArray.add (&edit.getGlobalMacros().macroParameterList);
 
     edit.visitAllTracksRecursive ([&] (Track& t)
-                                  {
-                                      destArray.add (&t.macroParameterList);
-                                      destArray.addArray (t.getAllAutomatableEditItems());
-                                      return true;
-                                  });
+    {
+        if (auto m = dynamic_cast<MacroParameterElement*> (&t))
+            destArray.add (std::addressof (m->macroParameterList));
+
+        destArray.addArray (t.getAllAutomatableEditItems());
+        return true;
+    });
 
     for (auto p : edit.getMasterPluginList())
     {
@@ -1134,7 +1136,7 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& ed
 
     elements.add (&edit.getGlobalMacros());
     elements.addArray (edit.getRackList().getTypes());
-    elements.addArray (getAllTracks (edit));
+    elements.addArray (getAudioTracks (edit));
     elements.addArray (getAllPlugins (edit, false));
 
     return elements;

@@ -599,7 +599,7 @@ struct ARADocumentHolder::Pimpl
 
         if (araDocument != nullptr)
         {
-            araDocument->beginRestoringState (edit.araDocument->lastState);
+            araDocument->beginRestoringState (edit.getARADocument().lastState);
 
             visitAllTrackItems (edit, [] (TrackItem& i)
             {
@@ -654,9 +654,8 @@ void ARADocumentHolder::flushStateToValueTree()
 
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
 {
-    if (auto l = edit.araDocument.get())
-        if (auto p = l->getPimpl())
-            return p->araDocument.get();
+    if (auto p = edit.getARADocument().getPimpl())
+        return p->araDocument.get();
 
     return {};
 }
