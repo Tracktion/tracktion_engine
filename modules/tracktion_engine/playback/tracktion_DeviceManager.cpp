@@ -1103,6 +1103,35 @@ OutputDevice* DeviceManager::getOutputDeviceAt (int index) const
     return getWaveOutDevice (index);
 }
 
+InputDevice* DeviceManager::findInputDeviceForID (const juce::String& id) const
+{
+    for (auto d : waveInputs)
+        if (d->getDeviceID() == id)
+            return d;
+
+    for (auto d : midiInputs)
+        if (d->getDeviceID() == id)
+            return d;
+
+    return {};
+}
+
+InputDevice* DeviceManager::findInputDeviceWithName (const juce::String& name) const
+{
+    if (name == getDefaultAudioInDeviceName (false))     return getDefaultWaveInDevice();
+    if (name == getDefaultMidiInDeviceName (false))      return getDefaultMidiInDevice();
+
+    for (auto d : waveInputs)
+        if (d->getName() == name)
+            return d;
+
+    for (auto d : midiInputs)
+        if (d->getName() == name)
+            return d;
+
+    return {};
+}
+
 OutputDevice* DeviceManager::findOutputDeviceForID (const juce::String& id) const
 {
     for (auto d : waveOutputs)

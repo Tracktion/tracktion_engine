@@ -154,6 +154,9 @@ public:
     int getNumOutputDevices() const;
     OutputDevice* getOutputDeviceAt (int index) const;
 
+    InputDevice* findInputDeviceForID (const juce::String& id) const;
+    InputDevice* findInputDeviceWithName (const juce::String& name) const;
+
     OutputDevice* findOutputDeviceForID (const juce::String& id) const;
     OutputDevice* findOutputDeviceWithName (const juce::String& name) const;
 
