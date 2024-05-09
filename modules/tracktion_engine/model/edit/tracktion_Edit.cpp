@@ -1008,8 +1008,7 @@ void Edit::initialiseVideo()
 
 void Edit::initialiseControllerMappings()
 {
-    controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
-    parameterControlMappings->loadFrom (controllerMappings);
+    parameterControlMappings->loadFromEdit();
 }
 
 juce::ValueTree Edit::getAutomapState()

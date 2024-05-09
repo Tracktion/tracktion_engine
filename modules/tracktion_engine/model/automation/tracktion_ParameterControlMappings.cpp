@@ -50,10 +50,8 @@ static void removeAddAllCommandIfTooManyItems (juce::PopupMenu& menu)
 }
 
 //==============================================================================
-ParameterControlMappings::ParameterControlMappings (Edit& ed)
-    : edit (ed)
+ParameterControlMappings::ParameterControlMappings (Edit& ed) : edit (ed)
 {
-    loadFrom (juce::ValueTree());
 }
 
 ParameterControlMappings::~ParameterControlMappings()
@@ -216,10 +214,8 @@ void ParameterControlMappings::checkForDeletedParams()
 
             param = nullptr;
 
-            for (int i = allParams.size(); --i >= 0;)
+            for (auto* p : allParams)
             {
-                auto p = allParams.getUnchecked(i);
-
                 if (p->getFullName() == parameterFullNames[j])
                 {
                     jassert (p->getReferenceCount() > 0);
@@ -234,7 +230,7 @@ void ParameterControlMappings::checkForDeletedParams()
 }
 
 //==============================================================================
-void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
+void ParameterControlMappings::loadFromEdit()
 {
     const juce::ScopedLock sl (lock);
 
@@ -243,7 +239,9 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
     parameters.clear();
     parameterFullNames.clear();
 
-    if (state.hasType (IDs::CONTROLLERMAPPINGS))
+    auto state = edit.state.getChildWithName (IDs::CONTROLLERMAPPINGS);
+
+    if (state.isValid())
     {
         juce::Array<AutomatableParameter*> allParams;
 
@@ -289,29 +287,40 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
     }
 }
 
-void ParameterControlMappings::saveTo (juce::ValueTree& state)
+void ParameterControlMappings::saveToEdit()
 {
     const juce::ScopedLock sl (lock);
 
     checkForDeletedParams();
 
-    state.removeAllChildren (nullptr);
-    state.removeAllProperties (nullptr);
+    auto um = &edit.getUndoManager();
 
     if (controllerIDs.isEmpty())
-        return;
-
-    for (int i = 0; i < controllerIDs.size(); ++i)
     {
-        if (parameters[i] != nullptr && controllerIDs[i] != 0)
-        {
-            auto e = createValueTree (IDs::MAP,
-                                      IDs::id, controllerIDs[i],
-                                      IDs::channel, channelIDs[i],
-                                      IDs::param, parameters[i]->getFullName(),
-                                      IDs::pluginID, parameters[i]->getOwnerID());
+        auto state = edit.state.getChildWithName (IDs::CONTROLLERMAPPINGS);
 
-            state.addChild (e, -1, nullptr);
+        if (state.isValid())
+            edit.state.removeChild (state, um);
+    }
+    else
+    {
+        auto state = edit.state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, um);
+
+        state.removeAllChildren (um);
+        state.removeAllProperties (um);
+
+        for (int i = 0; i < controllerIDs.size(); ++i)
+        {
+            if (parameters[i] != nullptr && controllerIDs[i] != 0)
+            {
+                auto e = createValueTree (IDs::MAP,
+                                          IDs::id, controllerIDs[i],
+                                          IDs::channel, channelIDs[i],
+                                          IDs::param, parameters[i]->getFullName(),
+                                          IDs::pluginID, parameters[i]->getOwnerID());
+
+                state.addChild (e, -1, um);
+            }
         }
     }
 }

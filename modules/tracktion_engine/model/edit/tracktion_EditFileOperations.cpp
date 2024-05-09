@@ -241,8 +241,7 @@ bool EditFileOperations::save (bool warnOfFailure,
         return false;
 
     CustomControlSurface::saveAllSettings (edit.engine);
-    auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
-    edit.getParameterControlMappings().saveTo (controllerMappings);
+    edit.getParameterControlMappings().saveToEdit();
 
     auto tempFile = getTempVersionFile();
 
@@ -358,8 +357,7 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
         CRASH_TRACER
 
         CustomControlSurface::saveAllSettings (edit.engine);
-        auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
-        edit.getParameterControlMappings().saveTo (controllerMappings);
+        edit.getParameterControlMappings().saveToEdit();
 
         auto tempFile = getTempVersionFile();
 

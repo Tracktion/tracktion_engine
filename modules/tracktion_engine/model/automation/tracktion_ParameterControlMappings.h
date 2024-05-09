@@ -21,8 +21,8 @@ public:
     ParameterControlMappings (Edit&);
     ~ParameterControlMappings() override;
 
-    void loadFrom (const juce::ValueTree&);
-    void saveTo (juce::ValueTree&);
+    void loadFromEdit();
+    void saveToEdit();
 
     static ParameterControlMappings* getCurrentlyFocusedMappings (Engine&);
 
