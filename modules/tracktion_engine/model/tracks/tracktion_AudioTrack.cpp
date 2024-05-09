@@ -105,8 +105,6 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     ghostTracks.referTo (state, IDs::ghostTracks, nullptr);
     maxInputs.referTo (state, IDs::maxInputs, nullptr, 1);
     compGroup.referTo (state, IDs::compGroup, &edit.getUndoManager(), -1);
-    midiVisibleProportion.referTo (state, IDs::midiVProp, nullptr);
-    midiVerticalOffset.referTo (state, IDs::midiVOffset, nullptr);
     midiNoteMap.referTo (state, IDs::midiNoteMap, nullptr);
     playSlotClips.referTo (state, IDs::playSlotClips, nullptr);
 
@@ -591,19 +589,36 @@ ClipSlotList& AudioTrack::getClipSlotList()
 }
 
 //==============================================================================
+double AudioTrack::getMidiVerticalOffset() const
+{
+    return state.getProperty (IDs::midiVOffset, juce::var (defaultMidiVerticalOffset));
+}
+
+double AudioTrack::getMidiVisibleProportion() const
+{
+    return state.getProperty (IDs::midiVProp, juce::var (defaultMidiVisibleProportion));
+}
+
 void AudioTrack::setMidiVerticalPos (double visibleProp, double offset)
 {
-    visibleProp             = juce::jlimit (0.0, 1.0, visibleProp);
-    midiVerticalOffset      = juce::jlimit (0.0, 1.0 - visibleProp, offset);
-    midiVisibleProportion   = juce::jlimit (0.1, 1.0 - midiVerticalOffset, visibleProp);
+    visibleProp = juce::jlimit (0.0, 1.0, visibleProp);
+    auto vo = juce::jlimit (0.0, 1.0 - visibleProp, offset);
+    auto vp = juce::jlimit (0.1, 1.0 - vo, visibleProp);
+
+    state.setProperty (IDs::midiVOffset, vo, nullptr);
+    state.setProperty (IDs::midiVProp,   vp, nullptr);
 }
 
 void AudioTrack::setVerticalScaleToDefault()
 {
     auto midiNotes = juce::jlimit (1, 128, 12 * static_cast<int> (edit.engine.getPropertyStorage()
                                                                    .getProperty (SettingID::midiEditorOctaves, 3)));
-    midiVisibleProportion = midiNotes / 128.0;
-    midiVerticalOffset = (1.0 - midiVisibleProportion) * 0.5;
+
+    defaultMidiVisibleProportion = midiNotes / 128.0;
+    defaultMidiVerticalOffset = (1.0 - defaultMidiVisibleProportion) * 0.5;
+
+    state.removeProperty (IDs::midiVOffset, nullptr);
+    state.removeProperty (IDs::midiVProp, nullptr);
 }
 
 void AudioTrack::setTrackToGhost (AudioTrack* track, bool shouldGhost)

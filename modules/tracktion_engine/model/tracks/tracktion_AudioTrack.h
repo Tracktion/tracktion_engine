@@ -112,8 +112,8 @@ public:
 
     //==============================================================================
     /** vertical scales for displaying the midi note editor */
-    double getMidiVisibleProportion() const                         { return midiVisibleProportion; }
-    double getMidiVerticalOffset() const                            { return midiVerticalOffset; }
+    double getMidiVisibleProportion() const;
+    double getMidiVerticalOffset() const;
     void setMidiVerticalPos (double visibleProp, double offset);
     void scaleVerticallyToFitMidi();
     void setVerticalScaleToDefault();
@@ -214,7 +214,6 @@ private:
     int freezePointRemovalInhibitor = 0;
     juce::CachedValue<int> maxInputs, compGroup;
 
-    juce::CachedValue<double> midiVisibleProportion, midiVerticalOffset;
     juce::CachedValue<juce::String> ghostTracks;
     juce::CachedValue<juce::String> midiNoteMap;
 
@@ -230,6 +229,8 @@ private:
 
     juce::ListenerList<Listener> listeners;
     std::unique_ptr<ClipSlotList> clipSlotList;
+
+    double defaultMidiVisibleProportion = 0, defaultMidiVerticalOffset = 0;
 
     //==============================================================================
     void freezeTrack();
