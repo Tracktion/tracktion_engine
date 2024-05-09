@@ -521,7 +521,8 @@ void Plugin::baseClassDeinitialise()
 //==============================================================================
 void Plugin::deleteFromParent()
 {
-    macroParameterList.hideMacroParametersFromTracks();
+    if (auto mpl = getMacroParameterList())
+        mpl->hideMacroParametersFromTracks();
 
     for (auto t : getAllTracks (edit))
         t->hideAutomatableParametersForSource (itemID);
@@ -620,12 +621,15 @@ AutomatableParameter::Ptr Plugin::getQuickControlParameter() const
                     if (rf->type != nullptr)
                     {
                         // First check macros
-                        for (auto param : rf->type->macroParameterList.getAutomatableParameters())
+                        if (auto mpl = rf->type->getMacroParameterList())
                         {
-                            if (param->paramID == currentID)
+                            for (auto param : mpl->getAutomatableParameters())
                             {
-                                quickControlParameter = param;
-                                break;
+                                if (param->paramID == currentID)
+                                {
+                                    quickControlParameter = param;
+                                    break;
+                                }
                             }
                         }
 

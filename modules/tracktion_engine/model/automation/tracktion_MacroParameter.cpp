@@ -275,17 +275,43 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
     if (mpl == nullptr)
         return {};
 
-    for (auto af : getAllPlugins (mpl->edit, false))
-        if (af->getNumMacroParameters() > 0 && &af->macroParameterList == mpl)
-            return af;
+    for (auto p : getAllPlugins (mpl->edit, false))
+        if (p->getMacroParameterList() == mpl)
+            return p;
 
     return {};
 }
 
 //==============================================================================
-MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& v)
-    : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
+MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& p)
+    : ownerEdit (e), parentStateForList (p)
 {
+    auto existing = parentStateForList.getChildWithName (IDs::MACROPARAMETERS);
+
+    if (existing.isValid())
+        list = std::make_unique<MacroParameterList> (ownerEdit, existing);
 }
+
+MacroParameterList* MacroParameterElement::getMacroParameterList()
+{
+    return list.get();
+}
+
+MacroParameterList& MacroParameterElement::getMacroParameterListForWriting()
+{
+    if (list == nullptr)
+        list = std::make_unique<MacroParameterList> (ownerEdit, parentStateForList.getOrCreateChildWithName (IDs::MACROPARAMETERS, &ownerEdit.getUndoManager()));
+
+    return *list;
+}
+
+juce::ReferenceCountedArray<MacroParameter> MacroParameterElement::getMacroParameters() const
+{
+    if (list != nullptr)
+        return list->getMacroParameters();
+
+    return {};
+}
+
 
 }} // namespace tracktion { inline namespace engine

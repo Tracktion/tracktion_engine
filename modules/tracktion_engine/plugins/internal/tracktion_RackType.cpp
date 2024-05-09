@@ -1302,9 +1302,10 @@ void RackTypeList::removeRackType (const RackType::Ptr& type)
                     rf->deleteFromParent();
 
         // Remove any Macros or Modifiers that might be assigned
-        type->macroParameterList.hideMacroParametersFromTracks();
+        if (auto mpl = type->getMacroParameterList())
+            mpl->hideMacroParametersFromTracks();
 
-        for (auto macro : type->macroParameterList.getMacroParameters())
+        for (auto macro : type->getMacroParameters())
             for (auto param : getAllParametersBeingModifiedBy (edit, *macro))
                 param->removeModifier (*macro);
 
@@ -1330,13 +1331,13 @@ RackType::Ptr RackTypeList::addNewRack()
     newID.writeID (v, nullptr);
     state.addChild (v, -1, &edit.getUndoManager());
 
-    auto p = getRackTypeForID (newID);
-    jassert (p != nullptr);
+    auto type = getRackTypeForID (newID);
+    jassert (type != nullptr);
 
     if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
-        p->macroParameterList.remapOnTempoChange = true;
+        type->getMacroParameterListForWriting().remapOnTempoChange = true;
 
-    return p;
+    return type;
 }
 
 RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
@@ -1360,9 +1361,8 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
             type = getRackTypeForID (typeID);
             jassert (type != nullptr);
 
-            if (! type->macroParameterList.state.hasProperty (IDs::remapOnTempoChange))
-                if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
-                    type->macroParameterList.remapOnTempoChange = true;
+            if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+                type->getMacroParameterListForWriting().remapOnTempoChange = true;
         }
     }
 

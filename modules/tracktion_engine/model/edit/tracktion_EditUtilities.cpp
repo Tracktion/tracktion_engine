@@ -1001,12 +1001,14 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
     CRASH_TRACER
     juce::Array<AutomatableEditItem*> destArray;
 
-    destArray.add (&edit.getGlobalMacros().macroParameterList);
+    if (auto mpl = edit.getGlobalMacros().getMacroParameterList())
+        destArray.add (mpl);
 
     edit.visitAllTracksRecursive ([&] (Track& t)
     {
         if (auto m = dynamic_cast<MacroParameterElement*> (&t))
-            destArray.add (std::addressof (m->macroParameterList));
+            if (auto mpl = m->getMacroParameterList())
+                destArray.add (mpl);
 
         destArray.addArray (t.getAllAutomatableEditItems());
         return true;
@@ -1014,7 +1016,9 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
 
     for (auto p : edit.getMasterPluginList())
     {
-        destArray.add (&p->macroParameterList);
+        if (auto mpl = p->getMacroParameterList())
+            destArray.add (mpl);
+
         destArray.add (p);
     }
 
@@ -1023,10 +1027,14 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
         for (auto p : r->getPlugins())
         {
             destArray.add (p);
-            destArray.add (&p->macroParameterList);
+
+            if (auto mpl = p->getMacroParameterList())
+                destArray.add (mpl);
         }
 
-        destArray.add (&r->macroParameterList);
+        if (auto mpl = r->getMacroParameterList())
+            destArray.add (mpl);
+
         destArray.addArray (r->getModifierList().getModifiers());
     }
 
@@ -1070,7 +1078,7 @@ juce::Array<AutomatableParameter::ModifierSource*> getAllModifierSources (const 
     sources.addArray (getAllModifiers (edit));
 
     for (auto mpe : getAllMacroParameterElements (edit))
-        sources.addArray (mpe->macroParameterList.getMacroParameters());
+        sources.addArray (mpe->getMacroParameters());
 
     return sources;
 }

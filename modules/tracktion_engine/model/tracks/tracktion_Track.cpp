@@ -269,7 +269,8 @@ juce::Array<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
                 destArray.add (aei);
 
     for (auto p : plugins)
-        destArray.add (&p->macroParameterList);
+        if (auto mpl = p->getMacroParameterList())
+            destArray.add (mpl);
 
     return destArray;
 }
@@ -318,7 +319,7 @@ juce::Array<AutomatableParameter*> Track::getAllAutomatableParams() const
         for (int j = 0; j < p->getNumAutomatableParameters(); ++j)
             params.add (p->getAutomatableParameter (j).get());
 
-        params.addArray (p->macroParameterList.getMacroParameters());
+        params.addArray (p->getMacroParameters());
     }
 
     if (modifierList != nullptr)
@@ -332,7 +333,9 @@ void Track::visitAllAutomatableParams (const std::function<void(AutomatableParam
 {
     for (auto p : getAllPlugins())
     {
-        p->macroParameterList.visitAllAutomatableParams (visit);
+        if (auto mpl = p->getMacroParameterList())
+            mpl->visitAllAutomatableParams (visit);
+        
         p->visitAllAutomatableParams (visit);
     }
 

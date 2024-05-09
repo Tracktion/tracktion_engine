@@ -2624,11 +2624,11 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
     list.add (getMasterSliderPosParameter().get());
     list.add (getMasterPanParameter().get());
 
-    list.addArray (globalMacros->macroParameterList.getMacroParameters());
+    list.addArray (globalMacros->getMacroParameters());
 
     for (auto f : *masterPluginList)
     {
-        list.addArray (f->macroParameterList.getMacroParameters());
+        list.addArray (f->getMacroParameters());
 
         for (int j = 0; j < f->getNumAutomatableParameters(); ++j)
             list.add (f->getAutomatableParameter (j).get());
@@ -2639,11 +2639,13 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
         for (auto mod : rft->getModifierList().getModifiers())
             list.addArray (mod->getAutomatableParameters());
 
-        list.addArray (rft->macroParameterList.getMacroParameters());
+        list.addArray (rft->getMacroParameters());
 
         for (auto p : rft->getPlugins())
         {
-            list.addArray (p->macroParameterList.getMacroParameters());
+            if (auto mpl = p->getMacroParameterList())
+                list.addArray (mpl->getMacroParameters());
+
             list.addArray (p->getAutomatableParameters());
         }
     }
@@ -2658,7 +2660,7 @@ juce::Array<AutomatableParameter*> Edit::getAllAutomatableParams (bool includeTr
             if (masterTrack != &t)
             {
                 if (auto m = dynamic_cast<MacroParameterElement*> (&t))
-                    list.addArray (m->macroParameterList.getMacroParameters());
+                    list.addArray (m->getMacroParameters());
 
                 list.addArray (t.getAllAutomatableParams());
             }
@@ -2675,11 +2677,14 @@ void Edit::visitAllAutomatableParams (bool includeTrackParams, const std::functi
     visit (*masterVolumePlugin->volParam);
     visit (*masterVolumePlugin->panParam);
 
-    globalMacros->macroParameterList.visitMacroParameters (visit);
+    if (auto mpl = globalMacros->getMacroParameterList())
+        mpl->visitMacroParameters (visit);
 
     for (auto p : *masterPluginList)
     {
-        p->macroParameterList.visitMacroParameters (visit);
+        if (auto mpl = p->getMacroParameterList())
+            mpl->visitMacroParameters (visit);
+
         p->visitAllAutomatableParams (visit);
     }
 
@@ -2688,11 +2693,14 @@ void Edit::visitAllAutomatableParams (bool includeTrackParams, const std::functi
         for (auto mod : rft->getModifierList().getModifiers())
             mod->visitAllAutomatableParams (visit);
 
-        rft->macroParameterList.visitMacroParameters (visit);
+        if (auto mpl = rft->getMacroParameterList())
+            mpl->visitMacroParameters (visit);
 
         for (auto p : rft->getPlugins())
         {
-            p->macroParameterList.visitMacroParameters (visit);
+            if (auto mpl = p->getMacroParameterList())
+                mpl->visitMacroParameters (visit);
+
             p->visitAllAutomatableParams (visit);
         }
     }
@@ -2707,7 +2715,8 @@ void Edit::visitAllAutomatableParams (bool includeTrackParams, const std::functi
             if (masterTrack != &t)
             {
                 if (auto m = dynamic_cast<MacroParameterElement*> (&t))
-                    m->macroParameterList.visitMacroParameters (visit);
+                    if (auto mpl = m->getMacroParameterList())
+                        mpl->visitMacroParameters (visit);
 
                 t.visitAllAutomatableParams (visit);
             }

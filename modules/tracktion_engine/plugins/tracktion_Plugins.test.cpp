@@ -195,7 +195,7 @@ public:
             rackType->addPlugin (volumePlugin, {}, true);
 
             // Add macro parameter
-            const auto macroParameter = rackType->macroParameterList.createMacroParameter();
+            const auto macroParameter = rackType->getMacroParameterListForWriting().createMacroParameter();
             macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());

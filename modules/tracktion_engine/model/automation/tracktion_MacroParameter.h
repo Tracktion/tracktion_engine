@@ -106,10 +106,20 @@ public:
     /** Destructor. */
     virtual ~MacroParameterElement() = default;
 
-    /** Returns the number of macro parameters for this object. */
-    int getNumMacroParameters() const                   { return macroParameterList.getMacroParameters().size(); }
+    /** If no parameters have been created, this may return nullptr */
+    MacroParameterList* getMacroParameterList();
 
-    MacroParameterList macroParameterList;
+    /** This ensures that the list has been created */
+    MacroParameterList& getMacroParameterListForWriting();
+
+    juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
+
+    Edit& ownerEdit;
+    juce::ValueTree parentStateForList;
+
+private:
+    std::unique_ptr<MacroParameterList> list;
+//    MacroParameterList macroParameterList;
 };
 
 }} // namespace tracktion { inline namespace engine
