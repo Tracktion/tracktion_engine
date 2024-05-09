@@ -758,7 +758,6 @@ void Edit::initialise()
     initialiseTransport();
     initialiseVideo();
     initialiseClickTrack();
-    initialiseMetadata();
     initialiseMasterVolume();
     initialiseRacks();
     initialiseMasterPlugins();
@@ -846,14 +845,6 @@ void Edit::initialiseTransport()
 {
     auto transportState = state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr);
     initialiseTimecode (transportState);
-}
-
-void Edit::initialiseMetadata()
-{
-    auto meta = state.getOrCreateChildWithName (IDs::ID3VORBISMETADATA, nullptr);
-
-    if (meta.getNumProperties() == 0)
-        meta.setProperty (IDs::date, juce::Time::getCurrentTime().getYear(), nullptr);
 }
 
 void Edit::initialiseMasterVolume()
@@ -2754,23 +2745,27 @@ MasterTrack* Edit::getMasterTrack() const
 Edit::Metadata Edit::getEditMetadata()
 {
     Metadata metadata;
+    metadata.date = juce::String (juce::Time::getCurrentTime().getYear());
 
     auto meta = state.getChildWithName (IDs::ID3VORBISMETADATA);
 
-    metadata.album       = meta[IDs::album];
-    metadata.artist      = meta[IDs::artist];
-    metadata.comment     = meta[IDs::comment];
-    metadata.date        = meta.getProperty (IDs::date, juce::Time::getCurrentTime().getYear());
-    metadata.genre       = meta[IDs::genre];
-    metadata.title       = meta[IDs::title];
-    metadata.trackNumber = meta.getProperty (IDs::trackNumber, 1);
+    if (meta.isValid())
+    {
+        metadata.album       = meta[IDs::album];
+        metadata.artist      = meta[IDs::artist];
+        metadata.comment     = meta[IDs::comment];
+        metadata.date        = meta.getProperty (IDs::date, metadata.date);
+        metadata.genre       = meta[IDs::genre];
+        metadata.title       = meta[IDs::title];
+        metadata.trackNumber = meta.getProperty (IDs::trackNumber, 1);
+    }
 
     return metadata;
 }
 
 void Edit::setEditMetadata (Metadata metadata)
 {
-    auto meta = state.getChildWithName (IDs::ID3VORBISMETADATA);
+    auto meta = state.getOrCreateChildWithName (IDs::ID3VORBISMETADATA, &getUndoManager());
 
     addValueTreeProperties (meta,
                             IDs::album, metadata.album,

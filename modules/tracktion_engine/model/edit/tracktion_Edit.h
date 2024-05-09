@@ -920,7 +920,6 @@ private:
     void initialiseAudioDevices();
     void initialiseRacks();
     void initialiseMasterPlugins();
-    void initialiseMetadata();
     void initialiseControllerMappings();
     void initialiseARA();
     void removeZeroLengthClips();
