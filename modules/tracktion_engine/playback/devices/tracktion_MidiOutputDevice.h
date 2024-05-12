@@ -101,7 +101,6 @@ protected:
     std::unique_ptr<juce::MidiOutput> outputDevice;
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
-    bool defaultMidiDevice = false;
     bool softDevice = false;
     ExternalController* externalController = nullptr;
 
@@ -156,7 +155,7 @@ private:
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
 
     double sampleRate = 0, audioAdjustmentDelay = 0;
-    bool playing = false, isDefaultMidiDevice = false, shouldSendMidiTimecode = false;
+    bool playing = false, shouldSendMidiTimecode = false;
 
     MidiMessageArray midiMessages;
 

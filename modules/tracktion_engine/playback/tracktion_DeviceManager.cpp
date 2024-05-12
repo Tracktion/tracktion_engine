@@ -223,7 +223,7 @@ void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
     defaultNumInputChannelsToOpen = defaultNumInputs;
     defaultNumOutputChannelsToOpen = defaultNumOutputs;
 
-    initialiseMidi();
+    rescanMidiDeviceList();
     loadSettings();
     finishedInitialising = true;
     rebuildWaveDeviceList();
@@ -304,20 +304,20 @@ bool DeviceManager::rebuildWaveDeviceListIfNeeded()
 void DeviceManager::rescanMidiDeviceList()
 {
     CRASH_TRACER
-
-    if (lastMidiIns != juce::MidiInput::getAvailableDevices()
-         || lastMidiOuts != juce::MidiOutput::getAvailableDevices())
-        initialiseMidi();
-}
-
-void DeviceManager::initialiseMidi()
-{
-    CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
+
+    auto midiIns  = juce::MidiInput::getAvailableDevices();
+    auto midiOuts = juce::MidiOutput::getAvailableDevices();
+
+    if (lastMidiIns == midiIns && lastMidiOuts == midiOuts)
+        return;
+
+    TRACKTION_LOG ("Updating MIDI I/O devices");
+
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
     {
-        const std::shared_lock sl (midiInputsMutex);
+        const std::unique_lock sl (midiInputsMutex);
         midiInputs.clear();
     }
 
@@ -330,12 +330,11 @@ void DeviceManager::initialiseMidi()
 
     bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
 
-    TRACKTION_LOG ("Finding MIDI I/O");
     if (openHardwareMidi)
-        lastMidiIns = juce::MidiInput::getAvailableDevices();
+        lastMidiIns = midiIns;
 
     if (openHardwareMidi)
-        lastMidiOuts = juce::MidiOutput::getAvailableDevices();
+        lastMidiOuts = midiOuts;
 
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
@@ -365,15 +364,29 @@ void DeviceManager::initialiseMidi()
         midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
    #endif
 
-    juce::StringArray virtualDevices;
-    virtualDevices.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
-    virtualDevices.removeEmptyStrings();
+    juce::StringArray virtualDeviceNames;
+    virtualDeviceNames.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
+    virtualDeviceNames.removeEmptyStrings();
+
+    auto allMidiInsName = "All MIDI Ins";
+
+    virtualDeviceNames.removeString (allMidiInsName);
+    virtualDeviceNames.insert (0, allMidiInsName);
 
     {
         const std::unique_lock sl (midiInputsMutex);
 
-        for (int i = 0; i < virtualDevices.size(); ++i)
-            midiInputs.add (new VirtualMidiInputDevice (engine, virtualDevices[i], InputDevice::virtualMidiDevice));
+        for (int i = 0; i < virtualDeviceNames.size(); ++i)
+        {
+            auto vmd = new VirtualMidiInputDevice (engine, virtualDeviceNames[i], InputDevice::virtualMidiDevice);
+            midiInputs.add (vmd);
+
+            if (vmd->getName() == allMidiInsName)
+            {
+                vmd->setEnabled (true);
+                vmd->useAllInputs = true;
+            }
+        }
     }
 
     for (auto mo : midiOutputs)
@@ -428,6 +441,12 @@ void DeviceManager::initialiseMidi()
     }
 
     sendChangeMessage();
+}
+
+void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m)
+{
+    if (defaultMidiIn != nullptr)
+        defaultMidiIn->handleIncomingMidiMessage (nullptr, m);
 }
 
 HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
@@ -522,11 +541,11 @@ juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     {
-        juce::StringArray virtualDevices;
-        virtualDevices.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
-        virtualDevices.removeEmptyStrings();
+        juce::StringArray virtualDeviceNames;
+        virtualDeviceNames.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
+        virtualDeviceNames.removeEmptyStrings();
 
-        if (virtualDevices.contains (name))
+        if (virtualDeviceNames.contains (name))
             return juce::Result::fail (TRANS("Name is already in use!"));
     }
 

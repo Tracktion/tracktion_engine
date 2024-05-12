@@ -95,37 +95,44 @@ public:
     //==============================================================================
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }
-    WaveOutputDevice* getDefaultWaveOutDevice() const           { return defaultWaveOut; }
+
     void setDefaultWaveOutDevice (int index);
+    WaveOutputDevice* getDefaultWaveOutDevice() const           { return defaultWaveOut; }
+    juce::String getDefaultWaveOutDeviceID() const              { return defaultWaveOutID; }
 
     int getNumWaveInDevices() const                             { return waveInputs.size(); }
     WaveInputDevice* getWaveInDevice (int index) const          { return waveInputs[index]; }
-    WaveInputDevice* getDefaultWaveInDevice() const             { return defaultWaveIn; }
-    void setDefaultWaveInDevice (int index);
 
+    void setDefaultWaveInDevice (int index);
+    WaveInputDevice* getDefaultWaveInDevice() const             { return defaultWaveIn; }
+    juce::String getDefaultWaveInDeviceID() const               { return defaultWaveInID; }
+
+    void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setDeviceOutChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceOutChannelStereo (int chan) const              { return ! outMonoChans[chan / 2]; }
     bool isDeviceOutEnabled (int chanNum)                       { return outEnabled[chanNum]; }
 
+    void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setDeviceInChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }
     bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
 
-    void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
-    void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
-
     //==============================================================================
     int getNumMidiOutDevices() const                            { return midiOutputs.size(); }
     MidiOutputDevice* getMidiOutDevice (int index) const        { return midiOutputs[index]; }
-    MidiOutputDevice* getDefaultMidiOutDevice() const           { return defaultMidiOut; }
 
     void setDefaultMidiOutDevice (int index);
+    MidiOutputDevice* getDefaultMidiOutDevice() const           { return defaultMidiOut; }
+    juce::String getDefaultMidiOutDeviceID() const              { return defaultMidiOutID; }
 
     int getNumMidiInDevices() const;
     MidiInputDevice* getMidiInDevice (int index) const;
-    MidiInputDevice* getDefaultMidiInDevice() const             { return defaultMidiIn; }
 
     void setDefaultMidiInDevice (int index);
+    MidiInputDevice* getDefaultMidiInDevice() const             { return defaultMidiIn; }
+    juce::String getDefaultMidiInDeviceID() const               { return defaultMidiInID; }
+
+    void injectMIDIMessageToDefaultDevice (const juce::MidiMessage&);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
@@ -266,7 +273,6 @@ private:
 
     void loadSettings();
     bool rebuildWaveDeviceListIfNeeded();
-    void initialiseMidi();
     void updateDefaultDevicePointers();
     void rebuildWaveDeviceList();
     bool waveDeviceListNeedsRebuilding();

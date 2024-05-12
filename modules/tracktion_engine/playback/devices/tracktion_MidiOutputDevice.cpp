@@ -330,8 +330,6 @@ juce::String MidiOutputDevice::prepareToPlay (Edit* edit, TimePosition)
     midiClockGenerator->reset (edit);
     sampleRate = engine.getDeviceManager().getSampleRate();
 
-    defaultMidiDevice = (engine.getDeviceManager().getDefaultMidiOutDevice() == this);
-
     return {};
 }
 
@@ -660,7 +658,6 @@ juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldS
     midiClockGenerator->reset (&edit);
 
     sampleRate = edit.engine.getDeviceManager().getSampleRate();
-    isDefaultMidiDevice = (edit.engine.getDeviceManager().getDefaultMidiOutDevice() == &getMidiOutput());
 
     return {};
 }
