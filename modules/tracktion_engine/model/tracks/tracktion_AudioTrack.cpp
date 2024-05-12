@@ -110,14 +110,15 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
 
     updateMidiNoteMapCache();
 
-    std::vector<ChannelIndex> channels = { ChannelIndex (0, juce::AudioChannelSet::left),
-                                           ChannelIndex (1, juce::AudioChannelSet::right) };
+    WaveDeviceDescription desc;
+    desc.name = itemID.toString();
+    desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
+                      ChannelIndex (1, juce::AudioChannelSet::right) };
 
-    callBlocking ([this, &channels]
+    callBlocking ([this, desc]
     {
-        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, itemID.toString(),
-                                                             TRANS("Track Wave Input"), channels,
-                                                             InputDevice::trackWaveDevice);
+        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, TRANS("Track Wave Input"),
+                                                             desc, InputDevice::trackWaveDevice);
 
         midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemID.toString(),
                                                                     InputDevice::trackMidiDevice);

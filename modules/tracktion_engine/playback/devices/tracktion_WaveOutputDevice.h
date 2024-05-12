@@ -20,7 +20,7 @@ namespace tracktion { inline namespace engine
 class WaveOutputDevice  : public OutputDevice
 {
 public:
-    WaveOutputDevice (Engine&, const juce::String& name, const std::vector<ChannelIndex>& channels);
+    WaveOutputDevice (Engine&, const WaveDeviceDescription&);
     ~WaveOutputDevice() override;
 
     void resetToDefault();
