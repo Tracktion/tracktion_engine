@@ -14,30 +14,7 @@ namespace tracktion { inline namespace engine
 
 class HostedAudioDeviceInterface;
 
-//==============================================================================
-//==============================================================================
-/**
-    Subclass of an AudioDeviceManager which can be used to avoid adding the
-    system audio devices in plugin builds.
-    @see EngineBehaviour::addSystemAudioIODeviceTypes
-*/
-class TracktionEngineAudioDeviceManager : public juce::AudioDeviceManager
-{
-public:
-    /** Creates a TracktionEngineAudioDeviceManager. */
-    TracktionEngineAudioDeviceManager (Engine&);
 
-    /** EngineBehaviour::addSystemAudioIODeviceTypes can be used to avoid creating
-        system devices in plugin or parsing builds.
-    */
-    void createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>&) override;
-
-private:
-    Engine& engine;
-};
-
-
-//==============================================================================
 //==============================================================================
 /**
 */
@@ -57,6 +34,49 @@ public:
     void closeDevices();
     void saveSettings();
 
+    void resetToDefaults (bool deviceSettings,
+                          bool resetInputDevices,
+                          bool resetOutputDevices,
+                          bool latencySettings,
+                          bool mixSettings);
+
+    void rescanMidiDeviceList();
+
+    //==============================================================================
+    double getSampleRate() const;
+    int getBitDepth() const;
+    int getBlockSize() const;
+    TimeDuration getBlockLength() const;
+    double getBlockSizeMs() const;
+    double getOutputLatencySeconds() const;
+
+    // get a time by which recordings should be shifted to sync up with active output channels
+    double getRecordAdjustmentMs();
+    int getRecordAdjustmentSamples();
+
+    //==============================================================================
+    float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }
+
+    // Sets an upper limit on the proportion of CPU time being used - if getCpuUsage() exceeds this,
+    // the processing will be muted to keep the system running. Defaults to 0.98
+    void setCpuLimitBeforeMuting (double newLimit)      { jassert (newLimit > 0); cpuLimitBeforeMuting = newLimit; }
+
+    PerformanceMeasurement::Statistics getCPUStatistics() const;
+    void restCPUStatistics();
+
+    void updateNumCPUs(); // should be called when active num CPUs is changed
+
+    //==============================================================================
+    /** If set to true, clips the output at 0.0. */
+    void enableOutputClipping (bool clipOutput);
+
+    /** Checks if the output has clipped.
+        @param reset    Resets the clipped flag
+    */
+    bool hasOutputClipped (bool reset);
+
+
+    //==============================================================================
     /** If you are using the engine in a plugin or an application
         that accesses the audio device directly, use this interface
         to pass audio and midi to the DeviceManager.
@@ -73,31 +93,6 @@ public:
     void removeHostedAudioDeviceInterface();
 
     //==============================================================================
-    float getCpuUsage() const noexcept                  { return (float) currentCpuUsage; }
-
-    // Sets an upper limit on the proportion of CPU time being used - if getCpuUsage() exceeds this,
-    // the processing will be muted to keep the system running. Defaults to 0.98
-    void setCpuLimitBeforeMuting (double newLimit)      { jassert (newLimit > 0); cpuLimitBeforeMuting = newLimit; }
-
-    void updateNumCPUs(); // should be called when active num CPUs is changed
-
-    //==============================================================================
-    /** If set to true, clips the output at 0.0. */
-    void enableOutputClipping (bool clipOutput);
-
-    /** Checks if the output has clipped.
-        @param reset    Resets the clipped flag
-    */
-    bool hasOutputClipped (bool reset);
-
-
-    //==============================================================================
-    double getSampleRate() const;
-    int getBitDepth() const;
-    int getBlockSize() const;
-    double getBlockSizeMs() const;
-    TimeDuration getBlockLength() const;
-
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }
     WaveOutputDevice* getDefaultWaveOutDevice() const           { return defaultWaveOut; }
@@ -120,9 +115,6 @@ public:
     void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
 
     //==============================================================================
-    bool rebuildWaveDeviceListIfNeeded();
-    void rescanMidiDeviceList (bool forceRescan);
-
     int getNumMidiOutDevices() const                            { return midiOutputs.size(); }
     MidiOutputDevice* getMidiOutDevice (int index) const        { return midiOutputs[index]; }
     MidiOutputDevice* getDefaultMidiOutDevice() const           { return defaultMidiOut; }
@@ -144,7 +136,6 @@ public:
     double getCurrentStreamTime() const noexcept                { return streamTime; }
 
     bool isMSWavetableSynthPresent() const;
-    void resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings);
 
     //==============================================================================
     // list of all input devices..
@@ -172,25 +163,32 @@ public:
     juce::Result createVirtualMidiDevice (const juce::String& name);
     void deleteVirtualMidiDevice (VirtualMidiInputDevice*);
 
-    // get a time by which recordings should be shifted to sync up with active output channels
-    double getRecordAdjustmentMs();
-    int getRecordAdjustmentSamples();
-
-    double getOutputLatencySeconds() const;
-
-    PerformanceMeasurement::Statistics getCPUStatistics() const;
-    void restCPUStatistics();
-
     Engine& engine;
 
-    std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
+    //==============================================================================
+    /**
+        Subclass of an AudioDeviceManager which can be used to avoid adding the
+        system audio devices in plugin builds.
+        @see EngineBehaviour::addSystemAudioIODeviceTypes
+    */
+    struct TracktionEngineAudioDeviceManager  : public juce::AudioDeviceManager
+    {
+        TracktionEngineAudioDeviceManager (Engine&);
+        void createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>&) override;
+
+        Engine& engine;
+    };
+
     TracktionEngineAudioDeviceManager deviceManager { engine };
+
+    std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
 
     juce::OwnedArray<MidiInputDevice> midiInputs; // Only thread-safe from the message thread
     juce::OwnedArray<MidiOutputDevice> midiOutputs;
     juce::OwnedArray<WaveInputDevice> waveInputs;
     juce::OwnedArray<WaveOutputDevice> waveOutputs;
 
+    //==============================================================================
     void addContext (EditPlaybackContext*);
     void removeContext (EditPlaybackContext*);
 
@@ -205,21 +203,24 @@ public:
         DeviceManager& dm;
     };
 
+    //==============================================================================
     /** Sets a global processor to be applied to the output.
         This can be used to set a limiter or similar on the whole ouput.
         It shouldn't be used for musical effects.
     */
-    void setGlobalOutputAudioProcessor (juce::AudioProcessor*);
+    void setGlobalOutputAudioProcessor (std::unique_ptr<juce::AudioProcessor>);
 
     /** Returns a previously set globalOutputAudioProcessor. */
-    juce::AudioProcessor* getGlobalOutputAudioProcessor() const { return globalOutputAudioProcessor.get(); }
+    juce::AudioProcessor* getGlobalOutputAudioProcessor() const     { return globalOutputAudioProcessor.get(); }
 
     /** If this is set, it will get called (possibly on the midi thread) when incoming
         messages seem to be unused. May want to use it to warn the user.
     */
-    std::function<void (InputDevice*)> warnOfWastedMidiMessagesFunction;
+    std::function<void(InputDevice*)> warnOfWastedMidiMessagesFunction;
+
 
 private:
+    //==============================================================================
     struct WaveDeviceList;
     struct ContextDeviceClearer;
     bool finishedInitialising = false;
@@ -229,8 +230,6 @@ private:
     std::atomic<bool> outputHasClipped { false }, outputClippingEnabled { false };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     juce::Array<EditPlaybackContext*> contextsToRestart;
-
-    juce::StringArray lastMidiOutNames, lastMidiInNames;
 
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
@@ -246,6 +245,8 @@ private:
 
     std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
     std::unique_ptr<ContextDeviceClearer> contextDeviceClearer;
+
+    juce::Array<juce::MidiDeviceInfo> lastMidiIns, lastMidiOuts;
 
     std::shared_mutex contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;
@@ -263,13 +264,13 @@ private:
     crill::seqlock_object<PerformanceMeasurement::Statistics> performanceStats;
     std::atomic<bool> clearStatsFlag { false };
 
+    void loadSettings();
+    bool rebuildWaveDeviceListIfNeeded();
     void initialiseMidi();
     void updateDefaultDevicePointers();
     void rebuildWaveDeviceList();
     bool waveDeviceListNeedsRebuilding();
     void sanityCheckEnabledChannels();
-
-    void loadSettings();
 
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
 

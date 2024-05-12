@@ -291,9 +291,9 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const juce::String& deviceName, int deviceIndexToUse)
-   : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
-     deviceIndex (deviceIndexToUse)
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, juce::MidiDeviceInfo info)
+   : MidiInputDevice (e, TRANS("MIDI Input"), info.name),
+     deviceInfo (std::move (info))
 {
     enabled = true;
 
@@ -322,7 +322,7 @@ juce::String PhysicalMidiInputDevice::openDevice()
     if (inputDevice == nullptr)
     {
         CRASH_TRACER
-        inputDevice = juce::MidiInput::openDevice (juce::MidiInput::getAvailableDevices()[deviceIndex].identifier, this);
+        inputDevice = juce::MidiInput::openDevice (deviceInfo.identifier, this);
 
         if (inputDevice != nullptr)
         {

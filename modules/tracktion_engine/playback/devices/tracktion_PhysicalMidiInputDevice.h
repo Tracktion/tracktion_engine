@@ -15,7 +15,7 @@ namespace tracktion { inline namespace engine
 class PhysicalMidiInputDevice  : public MidiInputDevice
 {
 public:
-    PhysicalMidiInputDevice (Engine&, const juce::String& name, int deviceIndex);
+    PhysicalMidiInputDevice (Engine&, juce::MidiDeviceInfo);
     ~PhysicalMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
@@ -58,7 +58,7 @@ public:
         listeners.add (l);
     }
 
-    void removeListener (Listener* l)   
+    void removeListener (Listener* l)
     {
         const std::scoped_lock sl (listenerLock);
         listeners.remove (l);
@@ -72,7 +72,7 @@ private:
     void handleIncomingMidiMessageInt (const juce::MidiMessage&);
 
     friend struct PhysicalMidiInputDeviceInstance;
-    int deviceIndex = 0;
+    juce::MidiDeviceInfo deviceInfo;
     std::unique_ptr<juce::MidiInput> inputDevice;
 
     std::unique_ptr<MidiControllerParser> controllerParser;

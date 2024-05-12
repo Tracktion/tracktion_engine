@@ -260,7 +260,8 @@ class HostedMidiOutputDevice : public MidiOutputDevice
 {
 public:
     HostedMidiOutputDevice (HostedAudioDeviceInterface& aif)
-        : MidiOutputDevice (aif.engine, TRANS("MIDI Output"), -1), audioIf (aif)
+        : MidiOutputDevice (aif.engine, { TRANS("MIDI Output"), juce::String() }), 
+          audioIf (aif)
     {
     }
 
@@ -292,9 +293,8 @@ public:
     }
 
 private:
-    class HostedMidiOutputDeviceInstance : public MidiOutputDeviceInstance
+    struct HostedMidiOutputDeviceInstance : public MidiOutputDeviceInstance
     {
-    public:
         HostedMidiOutputDeviceInstance (HostedMidiOutputDevice& o, EditPlaybackContext& epc)
             : MidiOutputDeviceInstance (o, epc), outputDevice (o)
         {
@@ -313,9 +313,9 @@ private:
     };
 
     HostedAudioDeviceInterface& audioIf;
-
     MidiMessageArray toSend;
 };
+
 //==============================================================================
 HostedAudioDeviceInterface::HostedAudioDeviceInterface (Engine& e)
     : engine (e)
