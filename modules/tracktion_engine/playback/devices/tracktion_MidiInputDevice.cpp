@@ -245,6 +245,7 @@ struct RetrospectiveMidiBuffer
 MidiInputDevice::MidiInputDevice (Engine& e, const juce::String& deviceType, const juce::String& deviceName)
    : InputDevice (e, deviceType, deviceName)
 {
+    enabled = true;
     levelMeasurer.setShowMidi (true);
 
     std::memset (keysDown, 0, sizeof (keysDown));
@@ -262,41 +263,11 @@ MidiInputDevice::~MidiInputDevice()
 
 void MidiInputDevice::setEnabled (bool b)
 {
-    if ((b != enabled) || (! isTrackDevice() && firstSetEnabledCall))
+    if (b != enabled)
     {
-        CRASH_TRACER
         enabled = b;
-        ScopedWaitCursor waitCursor;
-
-        if (b)
-        {
-            enabled = false;
-            saveProps();
-
-            DeadMansPedalMessage dmp (engine.getPropertyStorage(),
-                                      TRANS("The last time the app was started, the MIDI input device \"XZZX\" failed to start "
-                                            "properly, and has been disabled.").replace ("XZZX", getName())
-                                        + "\n\n" + TRANS("Use the settings panel to re-enable it."));
-
-            auto error = openDevice();
-            enabled = error.isEmpty();
-
-            if (! enabled)
-                engine.getUIBehaviour().showWarningMessage (error);
-        }
-        else
-        {
-            closeDevice();
-        }
-
-        firstSetEnabledCall = false;
-
         saveProps();
-
-        engine.getDeviceManager().checkDefaultDevicesAreValid();
-
-        if (! isTrackDevice())
-            engine.getExternalControllerManager().midiInOutDevicesChanged();
+        engine.getDeviceManager().rescanMidiDeviceList();
     }
 }
 

@@ -64,7 +64,6 @@ public:
         listeners.remove (l);
     }
 
-protected:
     juce::String openDevice() override;
     void closeDevice() override;
 

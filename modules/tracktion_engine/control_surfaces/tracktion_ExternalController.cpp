@@ -33,14 +33,17 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
     mainDevice = engine.getPropertyStorage().getPropertyItem (SettingID::externControlMain, getName(), 0);
 
-    inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName());
-    outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName());
+    inputDeviceNames.add (storage.getPropertyItem (SettingID::externControlIn, getName()));
+    outputDeviceNames.add (storage.getPropertyItem (SettingID::externControlOut, getName()));
 
     for (int i = 1; i < maxDevices; i++)
     {
-        inputDeviceName[i]  = storage.getPropertyItem (SettingID::externControlIn, getName() + juce::String (i));
-        outputDeviceName[i] = storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i));
+        inputDeviceNames.add (storage.getPropertyItem (SettingID::externControlIn, getName() + juce::String (i)));
+        outputDeviceNames.add (storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i)));
     }
+
+    inputDevices.resize ((size_t) maxDevices);
+    outputDevices.resize ((size_t) maxDevices);
 
     oscInputPort            = storage.getPropertyItem (SettingID::externOscInputPort, getName());
     oscOutputPort           = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
@@ -105,7 +108,7 @@ juce::String ExternalController::getName() const
     return {};
 }
 
-bool ExternalController::wantsDevice (const MidiID& m) 
+bool ExternalController::wantsDevice (const MidiID& m)
 {
     if (auto cs = controlSurface.get())
         return cs->wantsDevice (m);
@@ -213,11 +216,10 @@ void ExternalController::setMainDevice (int num)
 
 juce::String ExternalController::getMidiInputDevice (int idx) const
 {
-    if (inputDeviceName[idx].isEmpty())
-        return {};
+    auto name = inputDeviceNames[idx];
 
-    if (getMidiInputPorts().contains (inputDeviceName[idx]))
-        return inputDeviceName[idx];
+    if (name.isNotEmpty() && getMidiInputPorts().contains (name))
+        return name;
 
     return {};
 }
@@ -233,19 +235,20 @@ void ExternalController::setMidiInputDevice (int idx, const juce::String& nameOf
                     c->setMidiInputDevice (idx, {});
 
     hasMidiInput = {};
-    inputDeviceName[idx] = nameOfMidiInput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn, getName() + (idx > 0 ? juce::String (idx) : juce::String()), inputDeviceName[idx]);
+    inputDeviceNames.set (idx, nameOfMidiInput);
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn,
+                                                 getName() + (idx > 0 ? juce::String (idx) : juce::String()),
+                                                 nameOfMidiInput);
 
     midiInOutDevicesChanged();
 }
 
 juce::String ExternalController::getBackChannelDevice (int idx) const
 {
-    if (outputDeviceName[idx].isEmpty())
-        return {};
+    auto name = outputDeviceNames[idx];
 
-    if (getMidiOutputPorts().contains (outputDeviceName[idx]))
-        return outputDeviceName[idx];
+    if (name.isNotEmpty() && getMidiOutputPorts().contains (name))
+        return name;
 
     return {};
 }
@@ -295,6 +298,9 @@ void ExternalController::midiInOutDevicesChanged()
 
     auto& dm = engine.getDeviceManager();
 
+    auto oldInputDevices = inputDevices;
+    auto oldOutputDevices = outputDevices;
+
     for (auto& i : inputDevices)
         i = nullptr;
 
@@ -308,9 +314,9 @@ void ExternalController::midiInOutDevicesChanged()
             bool used = false;
             for (int j = 0; j < numDevices; j++)
             {
-                if (min->getName().equalsIgnoreCase (inputDeviceName[j]))
+                if (min->getName().equalsIgnoreCase (inputDeviceNames[j]))
                 {
-                    inputDevices[j] = min;
+                    inputDevices[(size_t) j] = min;
                     used = true;
                 }
             }
@@ -333,9 +339,9 @@ void ExternalController::midiInOutDevicesChanged()
         bool used = false;
         for (int j = 0; j < numDevices; j++)
         {
-            if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceName[j]))
+            if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceNames[j]))
             {
-                outputDevices[j] = mo;
+                outputDevices[(size_t) j] = mo;
                 mo->setSendControllerMidiClock (wantsClock);
                 used = true;
             }
@@ -347,7 +353,8 @@ void ExternalController::midiInOutDevicesChanged()
             mo->removeExternalController (this);
     }
 
-    startTimer (100);
+    if (oldInputDevices != inputDevices || oldOutputDevices != outputDevices)
+        startTimer (100);
 }
 
 void ExternalController::timerCallback()
@@ -389,8 +396,10 @@ void ExternalController::setBackChannelDevice (int idx, const juce::String& name
                     c->setBackChannelDevice (i, {});
     }
 
-    outputDeviceName[idx] = nameOfMidiOutput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut, getName() + (idx > 0 ? juce::String (idx) : juce::String()), outputDeviceName[idx]);
+    outputDeviceNames.set (idx, nameOfMidiOutput);
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut,
+                                                 getName() + (idx > 0 ? juce::String (idx) : juce::String()),
+                                                 nameOfMidiOutput);
 
     midiInOutDevicesChanged();
 }
@@ -1392,11 +1401,12 @@ void ExternalController::acceptMidiMessage (MidiInputDevice& d, const juce::Midi
     const juce::ScopedLock sl (incomingMidiLock);
 
     int idx = 0;
-    for (int i = 0; i < int (std::size (inputDevices)); i++)
-        if (inputDevices[i] == &d)
-            idx = i;
 
-    pendingMidiMessages.add ({idx, m});
+    for (size_t i = 0; i < inputDevices.size(); ++i)
+        if (inputDevices[i] == &d)
+            idx = (int) i;
+
+    pendingMidiMessages.add ({ idx, m });
     processMidi = true;
     triggerAsyncUpdate();
 }
@@ -1404,9 +1414,10 @@ void ExternalController::acceptMidiMessage (MidiInputDevice& d, const juce::Midi
 bool ExternalController::wantsMessage (MidiInputDevice& d, const juce::MidiMessage& m)
 {
     int idx = 0;
-    for (int i = 0; i < int (std::size (inputDevices)); i++)
+
+    for (size_t i = 0; i < inputDevices.size(); ++i)
         if (inputDevices[i] == &d)
-            idx = i;
+            idx = (int) i;
 
     return controlSurface != nullptr && getControlSurface().wantsMessage (idx, m);
 }

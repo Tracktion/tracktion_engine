@@ -21,7 +21,8 @@ class HostedAudioDeviceInterface;
 class DeviceManager     : public juce::ChangeBroadcaster,
                           public juce::ChangeListener,
                           private juce::AudioIODeviceCallback,
-                          private juce::AsyncUpdater
+                          private juce::AsyncUpdater,
+                          private juce::Timer
 {
     friend class Engine;
     DeviceManager (Engine&);
@@ -43,6 +44,8 @@ public:
 
     void rescanMidiDeviceList();
     void rescanWaveDeviceList();
+
+    void setMidiDeviceScanIntervalMs (uint32_t intervalMs);
 
     //==============================================================================
     double getSampleRate() const;
@@ -134,8 +137,8 @@ public:
     bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
 
     //==============================================================================
-    int getNumMidiOutDevices() const                            { return midiOutputs.size(); }
-    MidiOutputDevice* getMidiOutDevice (int index) const        { return midiOutputs[index]; }
+    int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }
+    MidiOutputDevice* getMidiOutDevice (int index) const        { return index >= 0 && index < (int) midiOutputs.size() ? midiOutputs[(size_t) index].get() : nullptr; }
 
     void setDefaultMidiOutDevice (juce::String deviceID);
     MidiOutputDevice* getDefaultMidiOutDevice() const;
@@ -192,8 +195,8 @@ public:
 
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
 
-    juce::OwnedArray<MidiInputDevice> midiInputs; // Only thread-safe from the message thread
-    juce::OwnedArray<MidiOutputDevice> midiOutputs;
+    std::vector<std::shared_ptr<MidiInputDevice>> midiInputs; // Only thread-safe from the message thread
+    std::vector<std::shared_ptr<MidiOutputDevice>> midiOutputs;
     juce::OwnedArray<WaveInputDevice> waveInputs;
     juce::OwnedArray<WaveOutputDevice> waveOutputs;
 
@@ -219,27 +222,29 @@ public:
 
 private:
     //==============================================================================
-    struct AvailableWaveDeviceList;
     bool finishedInitialising = false;
     bool sendMidiTimecode = false;
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
     std::atomic<bool> isSuspended { true }, outputHasClipped { false }, outputClippingEnabled { false };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
-    juce::Array<EditPlaybackContext*> contextsToRestart;
+    int maxBlockSize = 0;
 
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     juce::String defaultWaveOutID, defaultMidiOutID, defaultWaveInID, defaultMidiInID;
 
-    int maxBlockSize = 0;
+    uint32_t midiRescanIntervalMs = 4000;
+    bool onlyRescanMidiOnHardwareChange = true;
 
+    struct MIDIDeviceList;
+    std::unique_ptr<MIDIDeviceList> lastMIDIDeviceList;
+
+    struct AvailableWaveDeviceList;
     std::unique_ptr<AvailableWaveDeviceList> lastAvailableWaveDeviceList;
 
     struct PrepareToStartCaller;
     std::unique_ptr<PrepareToStartCaller> prepareToStartCaller;
-
-    juce::Array<juce::MidiDeviceInfo> lastMidiIns, lastMidiOuts;
 
     std::shared_mutex contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;
@@ -264,6 +269,9 @@ private:
 
     void loadSettings();
     void sanityCheckEnabledChannels();
+
+    bool usesHardwareMidiDevices();
+    void timerCallback() override;
 
     void handleAsyncUpdate() override;
     void changeListenerCallback (juce::ChangeBroadcaster*) override;

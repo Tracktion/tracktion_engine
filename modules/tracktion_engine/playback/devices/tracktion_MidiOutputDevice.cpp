@@ -284,38 +284,11 @@ MidiOutputDevice::~MidiOutputDevice()
 
 void MidiOutputDevice::setEnabled (bool b)
 {
-    if (b != enabled || firstSetEnabledCall)
+    if (b != enabled)
     {
         enabled = b;
-        ScopedWaitCursor waitCursor;
-
-        if (b)
-        {
-            enabled = false;
-            saveProps();
-
-            DeadMansPedalMessage dmp (engine.getPropertyStorage(),
-                                      TRANS("The last time the app was started, the MIDI output device \"XZZX\" failed to "
-                                            "start properly, and has been disabled.").replace ("XZZX", getName())
-                                        + "\n\n" + TRANS("Use the settings panel to re-enable it."));
-
-            enabled = true;
-            auto error = openDevice();
-            enabled = error.isEmpty();
-
-            if (! enabled)
-                engine.getUIBehaviour().showWarningMessage (error);
-        }
-        else
-        {
-            closeDevice();
-        }
-
-        firstSetEnabledCall = false;
         saveProps();
-        engine.getDeviceManager().checkDefaultDevicesAreValid();
-
-        engine.getExternalControllerManager().midiInOutDevicesChanged();
+        engine.getDeviceManager().rescanMidiDeviceList();
     }
 }
 

@@ -135,7 +135,10 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
 {
     auto& dm = edit.engine.getDeviceManager();
     juce::Array<InputDevice*> devices;
-    devices.addArray (dm.midiInputs);
+    
+    for (auto& d : dm.midiInputs)
+        devices.add (d.get());
+    
     devices.addArray (dm.waveInputs);
 
     if (! edit.isLoading())
