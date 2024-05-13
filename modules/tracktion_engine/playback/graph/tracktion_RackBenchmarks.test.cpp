@@ -42,6 +42,7 @@ public:
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         runRackMixBusTest (engine, ts);
+        runMultipleSerialRacksBenchmark (engine);
     }
 
     void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
@@ -236,6 +237,125 @@ public:
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
+            }
+        }
+    }
+
+    void runMultipleSerialRacksBenchmark (Engine& engine)
+    {
+        static auto big_mess_rack = R"rack(
+            <RACK id="1001" name="Big Mess">
+                <PLUGININSTANCE x="0.514056206" y="0.141891897">
+                  <PLUGIN id="1002" type="chorus" enabled="1" depthMs="20" speedHz="1.02258062"
+                          width="1" mix="1">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.357429713" y="0.418918908">
+                  <PLUGIN id="1003" type="reverb" enabled="1" roomSize="1" damp="1" wet="0.333333343"
+                          dry="0" width="1" mode="0">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.202811241" y="0.405405402">
+                  <PLUGIN id="1004" type="lowpass" enabled="1" frequency="584" mode="lowpass">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.514056206" y="0.42567569">
+                  <PLUGIN id="1005" type="phaser" enabled="1" depth="0.100000001" rate="1.01258063"
+                          feedback="0.947419345">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.198795184" y="0.804054081">
+                  <PLUGIN id="1006" type="lowpass" enabled="1" frequency="8359" mode="highpass">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.361445785" y="0.82432431">
+                  <PLUGIN id="1007" type="chorus" enabled="1" depthMs="20" speedHz="2.51290321"
+                          width="1" mix="1">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.536144555" y="0.831081092">
+                  <PLUGIN id="1008" type="reverb" enabled="1" roomSize="1" damp="1" wet="0.333333343"
+                          dry="0" width="1" mode="0">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.151315793" y="0.0675675645">
+                  <PLUGIN id="1009" type="text" title="Read Me" body="Great for: Nothing!&#10;&#10;Creates a big noisy mess out of the track.">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <CONNECTION src="1002" srcPin="0" dst="0" dstPin="0"/>
+                <CONNECTION src="1002" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1002" srcPin="2" dst="0" dstPin="2"/>
+                <CONNECTION src="1003" srcPin="1" dst="1002" dstPin="1"/>
+                <CONNECTION src="1003" srcPin="2" dst="1002" dstPin="2"/>
+                <CONNECTION src="1004" srcPin="1" dst="1003" dstPin="1"/>
+                <CONNECTION src="1004" srcPin="2" dst="1003" dstPin="2"/>
+                <CONNECTION src="0" srcPin="1" dst="1004" dstPin="1"/>
+                <CONNECTION src="0" srcPin="2" dst="1004" dstPin="2"/>
+                <CONNECTION src="1003" srcPin="1" dst="1005" dstPin="1"/>
+                <CONNECTION src="1003" srcPin="2" dst="1005" dstPin="2"/>
+                <CONNECTION src="1005" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1005" srcPin="2" dst="0" dstPin="2"/>
+                <CONNECTION src="0" srcPin="1" dst="1006" dstPin="1"/>
+                <CONNECTION src="0" srcPin="2" dst="1006" dstPin="2"/>
+                <CONNECTION src="1006" srcPin="1" dst="1007" dstPin="1"/>
+                <CONNECTION src="1006" srcPin="2" dst="1007" dstPin="2"/>
+                <CONNECTION src="1007" srcPin="1" dst="1008" dstPin="1"/>
+                <CONNECTION src="1007" srcPin="2" dst="1008" dstPin="2"/>
+                <CONNECTION src="1008" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1008" srcPin="2" dst="0" dstPin="2"/>
+                <INPUT name="midi input" midi="0"/>
+                <INPUT name="input 1 (left)" midi="0"/>
+                <INPUT name="input 2 (right)" midi="0"/>
+                <OUTPUT name="midi output" midi="0"/>
+                <OUTPUT name="output 1 (left)" midi="0"/>
+                <OUTPUT name="output 2 (right)" midi="0"/>
+              </RACK>
+            )rack";
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto at = getAudioTracks (*edit)[0];
+        at->getLevelMeterPlugin()->deleteFromParent();
+        at->getVolumePlugin()->deleteFromParent();
+        auto& pl = at->pluginList;
+
+        {
+            auto xml = juce::parseXML (big_mess_rack);
+            assert (xml);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                auto rackState = juce::ValueTree::fromXml (*xml);
+                EditItemID::remapIDs (rackState, nullptr, *edit, nullptr);
+
+                auto rackType = edit->getRackList().addRackTypeFrom (rackState);
+                pl.insertPlugin (RackInstance::create (*rackType), -1);
+            }
+        }
+
+        {
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, edit->tempoSequence };
+            CreateNodeParams cnp { processState };
+
+            std::unique_ptr<tracktion::graph::Node> editNode;
+
+            {
+                const ScopedBenchmark sb (createBenchmarkDescription ("Node", "Serial Racks", "Create Edit Node for 10 Racks on a track"));
+                editNode = createNodeForEdit (*edit, cnp);
+            }
+
+            {
+                const ScopedBenchmark sb (createBenchmarkDescription ("Node", "Serial Racks", "Build NodeGraph for 10 Racks on a track"));
+                [[ maybe_unused ]] auto graph = createNodeGraph (std::move (editNode));
             }
         }
     }

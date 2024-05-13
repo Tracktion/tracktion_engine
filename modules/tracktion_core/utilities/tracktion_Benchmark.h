@@ -151,7 +151,7 @@ private:
     Helper class for measuring a benchmark and adding it to the singleton BenchmarkList list.
     @code
     {
-        ScopedBenchmark sb (getBenchmarkDescription ("Save random tree as XML"));
+        ScopedBenchmark sb (createBenchmarkDescription ("Save random tree as XML"));
         doSomeLongCalculation();
     }
 
