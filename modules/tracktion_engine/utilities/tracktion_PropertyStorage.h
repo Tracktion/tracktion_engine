@@ -23,7 +23,7 @@ public:
     PropertyStorage (juce::String appName_) : appName (appName_) {}
     virtual ~PropertyStorage() {}
 
-    static juce::String settingToString (SettingID);
+    static juce::StringRef settingToString (SettingID);
 
     //==============================================================================
     virtual juce::File getAppCacheFolder();

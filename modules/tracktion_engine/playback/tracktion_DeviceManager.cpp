@@ -205,7 +205,8 @@ void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
 
     deviceManager.addAudioCallback (this);
 
-    setMidiDeviceScanIntervalMs (4000);
+    midiRescanIntervalSeconds = engine.getPropertyStorage().getProperty (SettingID::midiScanIntervalSeconds, 4);
+    restartMidiCheckTimer();
 }
 
 void DeviceManager::closeDevices()
@@ -269,12 +270,17 @@ void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices
     SelectionManager::refreshAllPropertyPanels();
 }
 
-void DeviceManager::setMidiDeviceScanIntervalMs (uint32_t intervalMs)
+void DeviceManager::setMidiDeviceScanIntervalSeconds (int intervalSeconds)
 {
-    midiRescanIntervalMs = intervalMs;
+    midiRescanIntervalSeconds = intervalSeconds;
+    engine.getPropertyStorage().setProperty (SettingID::midiScanIntervalSeconds, intervalSeconds);
+    restartMidiCheckTimer();
+}
 
-    if (usesHardwareMidiDevices() && midiRescanIntervalMs != 0)
-        startTimer (static_cast<int> (midiRescanIntervalMs));
+void DeviceManager::restartMidiCheckTimer()
+{
+    if (usesHardwareMidiDevices() && midiRescanIntervalSeconds != 0)
+        startTimer (midiRescanIntervalSeconds * 1000);
     else
         stopTimer();
 }
@@ -445,10 +451,7 @@ void DeviceManager::applyNewMidiDeviceList()
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    if (usesHardwareMidiDevices() && midiRescanIntervalMs != 0)
-        startTimer (static_cast<int> (midiRescanIntervalMs));
-    else
-        stopTimer();
+    restartMidiCheckTimer();
 
     if (lastMIDIDeviceList == nullptr)
         lastMIDIDeviceList = std::make_unique<MIDIDeviceList>();

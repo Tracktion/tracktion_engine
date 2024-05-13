@@ -45,7 +45,8 @@ public:
     void rescanMidiDeviceList();
     void rescanWaveDeviceList();
 
-    void setMidiDeviceScanIntervalMs (uint32_t intervalMs);
+    int getMidiDeviceScanIntervalSeconds() const        { return midiRescanIntervalSeconds; }
+    void setMidiDeviceScanIntervalSeconds (int intervalSeconds);
 
     //==============================================================================
     double getSampleRate() const;
@@ -237,7 +238,7 @@ private:
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     juce::String defaultWaveOutID, defaultMidiOutID, defaultWaveInID, defaultMidiInID;
 
-    uint32_t midiRescanIntervalMs = 4000;
+    int midiRescanIntervalSeconds = 4;
     bool onlyRescanMidiOnHardwareChange = true;
 
     struct MIDIDeviceList;
@@ -266,6 +267,7 @@ private:
     std::atomic<bool> clearStatsFlag { false };
 
     void applyNewMidiDeviceList();
+    void restartMidiCheckTimer();
 
     void clearAllContextDevices();
     void reloadAllContextDevices();

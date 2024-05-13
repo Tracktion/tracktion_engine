@@ -43,7 +43,7 @@ juce::PropertiesFile* getApplicationSettings()
 JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)
 
 //==============================================================================
-juce::String PropertyStorage::settingToString (SettingID setting)
+juce::StringRef PropertyStorage::settingToString (SettingID setting)
 {
     switch (setting)
     {
@@ -126,6 +126,7 @@ juce::String PropertyStorage::settingToString (SettingID setting)
         case SettingID::xtIndices:                          return "xtIndices";
         case SettingID::virtualmididevices:                 return "virtualmididevices";
         case SettingID::virtualmidiin:                      return "virtualmidiin";
+        case SettingID::midiScanIntervalSeconds:            return "midiScanIntervalSeconds";
         case SettingID::useSeparateProcessForScanning:      return "useSeparateProcessForScanning";
         case SettingID::useRealtime:                        return "useRealtime";
         case SettingID::wavein:                             return "wavein";
