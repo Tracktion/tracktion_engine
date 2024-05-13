@@ -70,25 +70,19 @@ static juce::String mergeTwoNames (const juce::String& s1, const juce::String& s
     return nm;
 }
 
-static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
+static bool isMicrosoftGSSynth (MidiOutputDevice& mo)
 {
-    juce::StringArray deviceNames;
-
-    for (auto& d : devices)
-        deviceNames.add (d.name);
-
-    deviceNames.appendNumbersToDuplicates (true, false);
-
-    return deviceNames;
+   #if JUCE_WINDOWS
+    return mo.getName().containsIgnoreCase ("Microsoft GS ");
+   #else
+    (void) mo;  return false;
+   #endif
 }
 
 //==============================================================================
-TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e)
-    : engine (e)
-{
-}
+DeviceManager::TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e) : engine (e) {}
 
-void TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
+void DeviceManager::TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
 {
     if (engine.getEngineBehaviour().addSystemAudioIODeviceTypes())
         juce::AudioDeviceManager::createAudioDeviceTypes (types);
@@ -97,7 +91,7 @@ void TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray
 //==============================================================================
 struct DeviceManager::WaveDeviceList
 {
-    WaveDeviceList (DeviceManager& dm_) : dm (dm_)
+    WaveDeviceList (DeviceManager& d) : dm (d)
     {
         if (auto device = dm.deviceManager.getCurrentAudioDevice())
         {
@@ -224,58 +218,17 @@ DeviceManager::~DeviceManager()
     deviceManager.removeChangeListener (this);
 }
 
-HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
+void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
 {
-    if (hostedAudioDeviceInterface == nullptr)
-        hostedAudioDeviceInterface = std::make_unique<HostedAudioDeviceInterface> (engine);
+    defaultNumInputChannelsToOpen = defaultNumInputs;
+    defaultNumOutputChannelsToOpen = defaultNumOutputs;
 
-    return *hostedAudioDeviceInterface;
+    rescanMidiDeviceList();
+    loadSettings();
+    finishedInitialising = true;
+    rebuildWaveDeviceList();
+    updateNumCPUs();
 }
-
-bool DeviceManager::isHostedAudioDeviceInterfaceInUse() const
-{
-    return hostedAudioDeviceInterface != nullptr
-        && deviceManager.getCurrentAudioDeviceType() == "Hosted Device";
-}
-
-void DeviceManager::removeHostedAudioDeviceInterface()
-{
-    for (auto device : deviceManager.getAvailableDeviceTypes())
-    {
-        if (device->getTypeName() == "Hosted Device")
-        {
-            deviceManager.removeAudioDeviceType (device);
-            break;
-        }
-    }
-
-    hostedAudioDeviceInterface.reset();
-}
-
-juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
-{
-    return translated ? ("(" + TRANS("Default audio output") + ")")
-                      : "(default audio output)";
-}
-
-juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)
-{
-    return translated ? ("(" + TRANS("Default MIDI output") + ")")
-                      : "(default MIDI output)";
-}
-
-juce::String DeviceManager::getDefaultAudioInDeviceName (bool translated)
-{
-    return translated ? ("(" + TRANS("Default audio input") + ")")
-                      : "(default audio input)";
-}
-
-juce::String DeviceManager::getDefaultMidiInDeviceName (bool translated)
-{
-    return translated ? ("(" + TRANS("Default MIDI input") + ")")
-                      : "(default MIDI input)";
-}
-
 
 void DeviceManager::closeDevices()
 {
@@ -298,33 +251,73 @@ void DeviceManager::closeDevices()
     waveOutputs.clear();
 }
 
-static bool isMicrosoftGSSynth (MidiOutputDevice& mo)
+void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
 {
-   #if JUCE_WINDOWS
-    return mo.getName().containsIgnoreCase ("Microsoft GS ");
-   #else
-    (void) mo;  return false;
-   #endif
+    TRACKTION_LOG ("Returning audio settings to defaults");
+    deviceManager.removeAudioCallback (this);
+
+    auto& storage = engine.getPropertyStorage();
+
+    if (deviceSettings)
+    {
+        storage.removeProperty (SettingID::audio_device_setup);
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    }
+
+    if (latencySettings)
+    {
+        storage.setProperty (SettingID::maxLatency, 5.0f);
+        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
+    }
+
+    if (mixSettings)
+    {
+        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
+        updateNumCPUs();
+
+        storage.setProperty (SettingID::use64Bit, false);
+    }
+
+    if (resetInputDevices)
+        for (auto wid : waveInputs)
+            wid->resetToDefault();
+
+    if (resetOutputDevices)
+        for (auto wod : waveOutputs)
+            wod->resetToDefault();
+
+    loadSettings();
+    deviceManager.addAudioCallback (this);
+    TransportControl::restartAllTransports (engine, false);
+    SelectionManager::refreshAllPropertyPanels();
 }
 
-DeviceManager::ContextDeviceListRebuilder::ContextDeviceListRebuilder (DeviceManager& d) : dm (d)
+bool DeviceManager::rebuildWaveDeviceListIfNeeded()
 {
-    dm.clearAllContextDevices();
+    if (! waveDeviceListNeedsRebuilding())
+        return false;
+
+    rebuildWaveDeviceList();
+    return true;
 }
 
-DeviceManager::ContextDeviceListRebuilder::~ContextDeviceListRebuilder()
-{
-    dm.reloadAllContextDevices();
-}
-
-void DeviceManager::initialiseMidi()
+void DeviceManager::rescanMidiDeviceList()
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
+
+    auto midiIns  = juce::MidiInput::getAvailableDevices();
+    auto midiOuts = juce::MidiOutput::getAvailableDevices();
+
+    if (lastMidiIns == midiIns && lastMidiOuts == midiOuts)
+        return;
+
+    TRACKTION_LOG ("Updating MIDI I/O devices");
+
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
     {
-        const std::shared_lock sl (midiInputsMutex);
+        const std::unique_lock sl (midiInputsMutex);
         midiInputs.clear();
     }
 
@@ -337,24 +330,23 @@ void DeviceManager::initialiseMidi()
 
     bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
 
-    TRACKTION_LOG ("Finding MIDI I/O");
     if (openHardwareMidi)
-        lastMidiInNames = getMidiDeviceNames (juce::MidiInput::getAvailableDevices());
+        lastMidiIns = midiIns;
 
     if (openHardwareMidi)
-        lastMidiOutNames = getMidiDeviceNames (juce::MidiOutput::getAvailableDevices());
+        lastMidiOuts = midiOuts;
 
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
     // create all the devices before initialising them..
-    for (int i = 0; i < lastMidiOutNames.size(); ++i)
-        midiOutputs.add (new MidiOutputDevice (engine, lastMidiOutNames[i], i));
+    for (auto& info : lastMidiOuts)
+        midiOutputs.add (new MidiOutputDevice (engine, info));
 
     {
         const std::unique_lock sl (midiInputsMutex);
 
-        for (int i = 0; i < lastMidiInNames.size(); ++i)
-            midiInputs.add (new PhysicalMidiInputDevice (engine, lastMidiInNames[i], i));
+        for (auto& info : lastMidiIns)
+            midiInputs.add (new PhysicalMidiInputDevice (engine, info));
     }
 
     if (hostedAudioDeviceInterface != nullptr)
@@ -372,15 +364,29 @@ void DeviceManager::initialiseMidi()
         midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
    #endif
 
-    juce::StringArray virtualDevices;
-    virtualDevices.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
-    virtualDevices.removeEmptyStrings();
+    juce::StringArray virtualDeviceNames;
+    virtualDeviceNames.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
+    virtualDeviceNames.removeEmptyStrings();
+
+    auto allMidiInsName = "All MIDI Ins";
+
+    virtualDeviceNames.removeString (allMidiInsName);
+    virtualDeviceNames.insert (0, allMidiInsName);
 
     {
         const std::unique_lock sl (midiInputsMutex);
 
-        for (int i = 0; i < virtualDevices.size(); ++i)
-            midiInputs.add (new VirtualMidiInputDevice (engine, virtualDevices[i], InputDevice::virtualMidiDevice));
+        for (int i = 0; i < virtualDeviceNames.size(); ++i)
+        {
+            auto vmd = new VirtualMidiInputDevice (engine, virtualDeviceNames[i], InputDevice::virtualMidiDevice);
+            midiInputs.add (vmd);
+
+            if (vmd->getName() == allMidiInsName)
+            {
+                vmd->setEnabled (true);
+                vmd->useAllInputs = true;
+            }
+        }
     }
 
     for (auto mo : midiOutputs)
@@ -437,16 +443,72 @@ void DeviceManager::initialiseMidi()
     sendChangeMessage();
 }
 
-void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
+void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m)
 {
-    defaultNumInputChannelsToOpen = defaultNumInputs;
-    defaultNumOutputChannelsToOpen = defaultNumOutputs;
+    if (defaultMidiIn != nullptr)
+        defaultMidiIn->handleIncomingMidiMessage (nullptr, m);
+}
 
-    initialiseMidi();
-    loadSettings();
-    finishedInitialising = true;
-    rebuildWaveDeviceList();
-    updateNumCPUs();
+HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
+{
+    if (hostedAudioDeviceInterface == nullptr)
+        hostedAudioDeviceInterface = std::make_unique<HostedAudioDeviceInterface> (engine);
+
+    return *hostedAudioDeviceInterface;
+}
+
+bool DeviceManager::isHostedAudioDeviceInterfaceInUse() const
+{
+    return hostedAudioDeviceInterface != nullptr
+        && deviceManager.getCurrentAudioDeviceType() == "Hosted Device";
+}
+
+void DeviceManager::removeHostedAudioDeviceInterface()
+{
+    for (auto device : deviceManager.getAvailableDeviceTypes())
+    {
+        if (device->getTypeName() == "Hosted Device")
+        {
+            deviceManager.removeAudioDeviceType (device);
+            break;
+        }
+    }
+
+    hostedAudioDeviceInterface.reset();
+}
+
+juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default audio output") + ")")
+                      : "(default audio output)";
+}
+
+juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default MIDI output") + ")")
+                      : "(default MIDI output)";
+}
+
+juce::String DeviceManager::getDefaultAudioInDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default audio input") + ")")
+                      : "(default audio input)";
+}
+
+juce::String DeviceManager::getDefaultMidiInDeviceName (bool translated)
+{
+    return translated ? ("(" + TRANS("Default MIDI input") + ")")
+                      : "(default MIDI input)";
+}
+
+DeviceManager::ContextDeviceListRebuilder::ContextDeviceListRebuilder (DeviceManager& d) : dm (d)
+{
+    dm.clearAllContextDevices();
+}
+
+DeviceManager::ContextDeviceListRebuilder::~ContextDeviceListRebuilder()
+{
+    dm.reloadAllContextDevices();
 }
 
 void DeviceManager::changeListenerCallback (ChangeBroadcaster*)
@@ -464,26 +526,6 @@ void DeviceManager::changeListenerCallback (ChangeBroadcaster*)
     }
 }
 
-bool DeviceManager::rebuildWaveDeviceListIfNeeded()
-{
-    if (! waveDeviceListNeedsRebuilding())
-        return false;
-
-    rebuildWaveDeviceList();
-    return true;
-}
-
-void DeviceManager::rescanMidiDeviceList (bool forceRescan)
-{
-    CRASH_TRACER
-
-    auto midiIns  = getMidiDeviceNames (juce::MidiInput::getAvailableDevices());
-    auto midiOuts = getMidiDeviceNames (juce::MidiOutput::getAvailableDevices());
-
-    if (lastMidiOutNames != midiOuts || lastMidiInNames != midiIns || forceRescan)
-        initialiseMidi();
-}
-
 bool DeviceManager::isMSWavetableSynthPresent() const
 {
     for (auto mo : midiOutputs)
@@ -493,58 +535,17 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
-void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
-{
-    TRACKTION_LOG ("Returning audio settings to defaults");
-    deviceManager.removeAudioCallback (this);
-
-    auto& storage = engine.getPropertyStorage();
-
-    if (deviceSettings)
-    {
-        storage.removeProperty (SettingID::audio_device_setup);
-        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
-    }
-
-    if (latencySettings)
-    {
-        storage.setProperty (SettingID::maxLatency, 5.0f);
-        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-    }
-
-    if (mixSettings)
-    {
-        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
-        updateNumCPUs();
-
-        storage.setProperty (SettingID::use64Bit, false);
-    }
-
-    if (resetInputDevices)
-        for (auto wid : waveInputs)
-            wid->resetToDefault();
-
-    if (resetOutputDevices)
-        for (auto wod : waveOutputs)
-            wod->resetToDefault();
-
-    loadSettings();
-    deviceManager.addAudioCallback (this);
-    TransportControl::restartAllTransports (engine, false);
-    SelectionManager::refreshAllPropertyPanels();
-}
-
 juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     {
-        juce::StringArray virtualDevices;
-        virtualDevices.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
-        virtualDevices.removeEmptyStrings();
+        juce::StringArray virtualDeviceNames;
+        virtualDeviceNames.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
+        virtualDeviceNames.removeEmptyStrings();
 
-        if (virtualDevices.contains (name))
+        if (virtualDeviceNames.contains (name))
             return juce::Result::fail (TRANS("Name is already in use!"));
     }
 
@@ -1460,14 +1461,17 @@ void DeviceManager::reloadAllContextDevices()
         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, true);
 }
 
-void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProcessor)
+void DeviceManager::setGlobalOutputAudioProcessor (std::unique_ptr<juce::AudioProcessor> newProcessor)
 {
-    const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
-    globalOutputAudioProcessor.reset (newProcessor);
+    if (newProcessor != nullptr)
+        newProcessor->prepareToPlay (getSampleRate(), getBlockSize());
 
-    if (globalOutputAudioProcessor != nullptr)
-        if (auto* audioIODevice = deviceManager.getCurrentAudioDevice())
-            globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
+    {
+        const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
+        std::swap (globalOutputAudioProcessor, newProcessor);
+    }
+
+    newProcessor.reset();
 }
 
 }} // namespace tracktion { inline namespace engine

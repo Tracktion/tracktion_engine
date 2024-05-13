@@ -1303,7 +1303,7 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList* list, 
+std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList* list,
                                                                    Modifier::ProcessingPosition position,
                                                                    TrackMuteState* trackMuteState,
                                                                    std::unique_ptr<Node> node,
@@ -1325,7 +1325,7 @@ std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList*
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t, 
+std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t,
                                                                   TrackMuteState& trackMuteState,
                                                                   std::unique_ptr<Node> node,
                                                                   tracktion::graph::PlayHeadState& playHeadState,
@@ -1609,7 +1609,7 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
     return makeNode<SinkNode> (std::move (rackOutputNode));
 }
 
-std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, 
+std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList,
                                                         const CreateNodeParams& params)
 {
     std::vector<std::unique_ptr<Node>> nodes;
@@ -1622,7 +1622,7 @@ std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeLi
     return nodes;
 }
 
-std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, 
+std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input,
                                       RackTypeList& rackTypeList,
                                       const CreateNodeParams& params)
 {
@@ -1661,7 +1661,7 @@ std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& 
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit, 
+std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit,
                                                                         OutputDevice& device,
                                                                         ProcessState& processState)
 {
@@ -1696,7 +1696,7 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc, 
+std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc,
                                                              OutputDevice& device,
                                                              PlayHeadState& playHeadState,
                                                              std::unique_ptr<Node> node)
@@ -1718,14 +1718,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
     }
     else if (auto midiInstance = dynamic_cast<MidiOutputDeviceInstance*> (epc.getOutputFor (&device)))
     {
-        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), 
+        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node),
                                                                                   playHeadState.playHead);
     }
 
     return {};
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, 
+std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit,
                                                                  tracktion::graph::PlayHeadState& playHeadState,
                                                                  std::unique_ptr<Node> node,
                                                                  const CreateNodeParams& params)
@@ -1754,7 +1754,7 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit,
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, 
+std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit,
                                                                    std::unique_ptr<Node> node,
                                                                    const CreateNodeParams& params)
 {
@@ -1900,7 +1900,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
 
         if (! deviceIsBeingUsedAsInsert)
         {
-            if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
+            if (edit.engine.getDeviceManager().getDefaultWaveOutDeviceID() == device->getDeviceID())
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
 
             node = createMasterFadeInOutNode (edit, std::move (node), params);

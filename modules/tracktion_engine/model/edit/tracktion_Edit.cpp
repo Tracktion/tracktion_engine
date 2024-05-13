@@ -2334,9 +2334,9 @@ bool Edit::isClickTrackDevice (OutputDevice& dev) const
         return out == &dev;
 
     if (clickTrackDevice == DeviceManager::getDefaultMidiOutDeviceName (false))
-        return dm.getDefaultMidiOutDevice() == &dev;
+        return dm.getDefaultMidiOutDeviceID() == dev.getDeviceID();
 
-    return dm.getDefaultWaveOutDevice() == &dev;
+    return dm.getDefaultWaveOutDeviceID() == dev.getDeviceID();
 }
 
 void Edit::setClickTrackOutput (const juce::String& deviceName)

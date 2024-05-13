@@ -262,9 +262,9 @@ private:
 };
 
 //==============================================================================
-MidiOutputDevice::MidiOutputDevice (Engine& e, const juce::String& deviceName, int index)
-    : OutputDevice (e, TRANS("MIDI Output"), deviceName),
-      deviceIndex (index)
+MidiOutputDevice::MidiOutputDevice (Engine& e, juce::MidiDeviceInfo info)
+    : OutputDevice (e, TRANS("MIDI Output"), info.name),
+      deviceInfo (std::move (info))
 {
     enabled = true;
 
@@ -329,8 +329,6 @@ juce::String MidiOutputDevice::prepareToPlay (Edit* edit, TimePosition)
     timecodeGenerator->update (edit);
     midiClockGenerator->reset (edit);
     sampleRate = engine.getDeviceManager().getSampleRate();
-
-    defaultMidiDevice = (engine.getDeviceManager().getDefaultMidiOutDevice() == this);
 
     return {};
 }
@@ -443,17 +441,7 @@ juce::String MidiOutputDevice::openDevice()
             CRASH_TRACER
             TRACKTION_LOG ("opening MIDI out device:" + getName());
 
-            if (deviceIndex >= 0)
-            {
-                outputDevice = juce::MidiOutput::openDevice (juce::MidiOutput::getAvailableDevices()[deviceIndex].identifier);
-
-                if (outputDevice == nullptr)
-                {
-                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
-                    return TRANS("Couldn't open device");
-                }
-            }
-            else if (softDevice)
+            if (softDevice)
             {
                #if JUCE_MAC
                 outputDevice = juce::MidiOutput::createNewDevice (getName());
@@ -461,6 +449,16 @@ juce::String MidiOutputDevice::openDevice()
                 outputDevice.reset();
                 jassertfalse;
                #endif
+            }
+            else if (deviceInfo.identifier.isNotEmpty())
+            {
+                outputDevice = juce::MidiOutput::openDevice (deviceInfo.identifier);
+
+                if (outputDevice == nullptr)
+                {
+                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
+                    return TRANS("Couldn't open device");
+                }
             }
             else
             {
@@ -660,7 +658,6 @@ juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldS
     midiClockGenerator->reset (&edit);
 
     sampleRate = edit.engine.getDeviceManager().getSampleRate();
-    isDefaultMidiDevice = (edit.engine.getDeviceManager().getDefaultMidiOutDevice() == &getMidiOutput());
 
     return {};
 }

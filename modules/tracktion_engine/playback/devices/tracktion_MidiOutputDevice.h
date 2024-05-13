@@ -16,7 +16,7 @@ namespace tracktion { inline namespace engine
 class MidiOutputDevice   : public OutputDevice
 {
 public:
-    MidiOutputDevice (Engine&, const juce::String& name, int deviceIndex);
+    MidiOutputDevice (Engine&, juce::MidiDeviceInfo);
     ~MidiOutputDevice() override;
 
     void setEnabled (bool) override;
@@ -87,7 +87,7 @@ protected:
     void loadProps();
     void saveProps();
 
-    int deviceIndex = 0;
+    juce::MidiDeviceInfo deviceInfo;
     int preDelayMillisecs = 0, audioAdjustmentDelay = 0;
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
@@ -101,7 +101,6 @@ protected:
     std::unique_ptr<juce::MidiOutput> outputDevice;
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
-    bool defaultMidiDevice = false;
     bool softDevice = false;
     ExternalController* externalController = nullptr;
 
@@ -122,7 +121,7 @@ class SoftwareMidiOutputDevice  : public MidiOutputDevice
 {
 public:
     SoftwareMidiOutputDevice (Engine& e, const juce::String& deviceName)
-        : MidiOutputDevice (e, deviceName, -1)
+       : MidiOutputDevice (e, { deviceName, juce::String() })
     {
         softDevice = true;
     }
@@ -156,7 +155,7 @@ private:
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
 
     double sampleRate = 0, audioAdjustmentDelay = 0;
-    bool playing = false, isDefaultMidiDevice = false, shouldSendMidiTimecode = false;
+    bool playing = false, shouldSendMidiTimecode = false;
 
     MidiMessageArray midiMessages;
 
