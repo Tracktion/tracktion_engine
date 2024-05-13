@@ -289,26 +289,26 @@ MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& p)
     auto existing = parentStateForList.getChildWithName (IDs::MACROPARAMETERS);
 
     if (existing.isValid())
-        list = std::make_unique<MacroParameterList> (ownerEdit, existing);
+        macroParameterList = std::make_unique<MacroParameterList> (ownerEdit, existing);
 }
 
 MacroParameterList* MacroParameterElement::getMacroParameterList()
 {
-    return list.get();
+    return macroParameterList.get();
 }
 
 MacroParameterList& MacroParameterElement::getMacroParameterListForWriting()
 {
-    if (list == nullptr)
-        list = std::make_unique<MacroParameterList> (ownerEdit, parentStateForList.getOrCreateChildWithName (IDs::MACROPARAMETERS, &ownerEdit.getUndoManager()));
+    if (macroParameterList == nullptr)
+        macroParameterList = std::make_unique<MacroParameterList> (ownerEdit, parentStateForList.getOrCreateChildWithName (IDs::MACROPARAMETERS, &ownerEdit.getUndoManager()));
 
-    return *list;
+    return *macroParameterList;
 }
 
 juce::ReferenceCountedArray<MacroParameter> MacroParameterElement::getMacroParameters() const
 {
-    if (list != nullptr)
-        return list->getMacroParameters();
+    if (macroParameterList != nullptr)
+        return macroParameterList->getMacroParameters();
 
     return {};
 }

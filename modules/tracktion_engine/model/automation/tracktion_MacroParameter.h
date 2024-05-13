@@ -118,8 +118,7 @@ public:
     juce::ValueTree parentStateForList;
 
 private:
-    std::unique_ptr<MacroParameterList> list;
-//    MacroParameterList macroParameterList;
+    std::unique_ptr<MacroParameterList> macroParameterList;
 };
 
 }} // namespace tracktion { inline namespace engine
