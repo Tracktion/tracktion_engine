@@ -376,9 +376,9 @@ void RackType::saveWindowPosition()
     }
 }
 
-RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, Edit& ownerEdit)
+RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, Edit& sourceEdit)
 {
-    auto rack = ownerEdit.getRackList().addNewRack();
+    auto rack = sourceEdit.getRackList().addNewRack();
 
     if (plugins.size() == 1)
         rack->rackName = plugins.getFirst()->getName() + " " + TRANS("Wrapper");
