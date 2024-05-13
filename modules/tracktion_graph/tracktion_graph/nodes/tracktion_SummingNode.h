@@ -88,8 +88,7 @@ public:
             hash_combine (props.nodeID, nodeProps.nodeID);
         }
 
-        if (isPrepared)
-            cachedNodeProperties = props;
+        cachedNodeProperties = props;
 
         return props;
     }
@@ -302,6 +301,7 @@ private:
             ownedNodesToAdd.push_back (std::move (latencyNode));
             node = nullptr;
             topologyChanged = true;
+            cachedNodeProperties = std::nullopt;
         }
 
         // Take ownership of any new nodes and also ensure they're reference in the raw array
