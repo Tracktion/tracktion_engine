@@ -94,6 +94,7 @@ public:
 protected:
     std::atomic<bool> enabled { false };
     MonitorMode monitorMode = MonitorMode::automatic;
+    MonitorMode defaultMonitorMode = MonitorMode::automatic;
     bool retrospectiveRecordLock = false;
 
 private:

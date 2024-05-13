@@ -24,27 +24,24 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDeviceInstance)
 };
 
-juce::Array<VirtualMidiInputDevice*, juce::CriticalSection> virtualMidiDevices;
-
 //==============================================================================
 VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const juce::String& deviceName, DeviceType devType)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
                                                      : TRANS("Virtual MIDI Input"), deviceName),
       deviceType (devType)
 {
-    loadProps();
+    if (deviceName == allMidiInsName)
+    {
+        useAllInputs = true;
+        defaultMonitorMode = MonitorMode::on;
+    }
 
-    if (deviceType == MidiInputDevice::virtualMidiDevice)
-        virtualMidiDevices.add (this);
+    loadProps();
 }
 
 VirtualMidiInputDevice::~VirtualMidiInputDevice()
 {
     notifyListenersOfDeletion();
-
-    if (deviceType == MidiInputDevice::virtualMidiDevice)
-        virtualMidiDevices.removeAllInstancesOf (this);
-
     closeDevice();
 }
 
@@ -125,22 +122,6 @@ void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* d
 {
     if (useAllInputs || inputDevices.contains (dev->getName()))
         handleIncomingMidiMessage (m);
-}
-
-void VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (MidiInputDevice* dev, const juce::MidiMessage& m)
-{
-    for (auto d : virtualMidiDevices)
-        d->handleMessageFromPhysicalDevice (dev, m);
-}
-
-void VirtualMidiInputDevice::refreshDeviceNames (Engine& e)
-{
-    juce::String names;
-
-    for (auto d : virtualMidiDevices)
-        names += d->getName() + ";";
-
-    e.getPropertyStorage().setProperty (SettingID::virtualmididevices, names);
 }
 
 juce::String VirtualMidiInputDevice::getSelectableDescription()

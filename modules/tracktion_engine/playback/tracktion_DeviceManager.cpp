@@ -285,6 +285,11 @@ void DeviceManager::rescanMidiDeviceList()
     startTimer (5);
 }
 
+void DeviceManager::timerCallback()
+{
+    applyNewMidiDeviceList();
+}
+
 struct DeviceManager::MIDIDeviceList
 {
     juce::Array<juce::MidiDeviceInfo> midiIns, midiOuts;
@@ -328,13 +333,11 @@ struct DeviceManager::MIDIDeviceList
             }
 
            #if 0 // JUCE_MAC && JUCE_DEBUG
-            {
-                // This is causing problems on macOS as creating the device will cause the OS to send an async
-                // "devices changed" callback which will create the device again etc. in an infinite loop
-                auto d = std::make_unique<SoftwareMidiOutputDevice> (engine, "Tracktion MIDI Device");
-                physicalMidiOuts.push_back (d);
-                physicalMidiOutsEnabled.push_back (d->isEnabled());
-            }
+            // This is causing problems on macOS as creating the device will cause the OS to send an async
+            // "devices changed" callback which will create the device again etc. in an infinite loop
+            auto d = std::make_unique<SoftwareMidiOutputDevice> (engine, "Tracktion MIDI Device");
+            physicalMidiOuts.push_back (d);
+            physicalMidiOutsEnabled.push_back (d->isEnabled());
            #endif
         }
 
@@ -342,16 +345,12 @@ struct DeviceManager::MIDIDeviceList
         juce::StringArray virtualMidiInIDs;
         virtualMidiInIDs.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
         virtualMidiInIDs.removeEmptyStrings();
-        virtualMidiInIDs.removeString (allMidiInsName);
-        virtualMidiInIDs.insert (0, allMidiInsName);
+        virtualMidiInIDs.removeString (VirtualMidiInputDevice::allMidiInsName);
+        virtualMidiInIDs.insert (0, VirtualMidiInputDevice::allMidiInsName);
 
         for (auto& v : virtualMidiInIDs)
         {
             auto d = std::make_shared<VirtualMidiInputDevice> (engine, v, InputDevice::virtualMidiDevice);
-
-            if (v == allMidiInsName)
-                d->useAllInputs = true;
-
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
         }
@@ -360,7 +359,7 @@ struct DeviceManager::MIDIDeviceList
     bool hasHardwareChanged (const MIDIDeviceList& other) const
     {
         return midiIns != other.midiIns
-        || midiOuts != other.midiOuts;
+            || midiOuts != other.midiOuts;
     }
 
     bool hasSameEnablement (const MIDIDeviceList& other) const
@@ -441,7 +440,7 @@ struct DeviceManager::MIDIDeviceList
     }
 };
 
-void DeviceManager::timerCallback()
+void DeviceManager::applyNewMidiDeviceList()
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -587,6 +586,15 @@ void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m
 {
     if (auto input = getDefaultMidiInDevice())
         input->handleIncomingMidiMessage (nullptr, m);
+}
+
+void DeviceManager::broadcastMessageToAllVirtualDevices (MidiInputDevice* source, const juce::MidiMessage& m)
+{
+    const std::shared_lock sl (contextLock);
+
+    for (auto d : midiInputs)
+        if (auto vmd = dynamic_cast<VirtualMidiInputDevice*> (d.get()))
+            vmd->handleMessageFromPhysicalDevice (source, m);
 }
 
 bool DeviceManager::usesHardwareMidiDevices()
@@ -945,7 +953,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
     if (getDefaultMidiInDevice() == nullptr || ! getDefaultMidiInDevice()->isEnabled())
     {
-        if (auto allMidi = findInputDeviceForID (allMidiInsName);
+        if (auto allMidi = findInputDeviceForID (VirtualMidiInputDevice::allMidiInsName);
             allMidi != nullptr && allMidi->isEnabled())
         {
             setDefaultMidiInDevice (allMidi->getDeviceID());

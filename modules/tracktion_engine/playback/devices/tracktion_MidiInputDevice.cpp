@@ -273,7 +273,7 @@ void MidiInputDevice::setEnabled (bool b)
 
 void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
 {
-    monitorMode = MonitorMode::automatic;
+    monitorMode = defaultMonitorMode;
     recordingEnabled = true;
     mergeRecordings = true;
     replaceExistingClips = false;
@@ -291,7 +291,7 @@ void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
         if (! isTrackDevice())
             enabled = n->getBoolAttribute ("enabled", enabled);
 
-        monitorMode = magic_enum::enum_cast<MonitorMode> (n->getStringAttribute ("monitorMode").toStdString()).value_or (MonitorMode::automatic);
+        monitorMode = magic_enum::enum_cast<MonitorMode> (n->getStringAttribute ("monitorMode").toStdString()).value_or (monitorMode);
         recordingEnabled = n->getBoolAttribute ("recEnabled", recordingEnabled);
         mergeRecordings = n->getBoolAttribute ("mergeRecordings", mergeRecordings);
         replaceExistingClips = n->getBoolAttribute ("replaceExisting", replaceExistingClips);

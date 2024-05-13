@@ -29,14 +29,13 @@ public:
     void saveProps() override;
 
     void handleMessageFromPhysicalDevice (MidiInputDevice*, const juce::MidiMessage&);
-    static void broadcastMessageToAllVirtualDevices (MidiInputDevice*, const juce::MidiMessage&);
 
     DeviceType getDeviceType() const override      { return deviceType; }
 
-    static void refreshDeviceNames (Engine&);
-
     bool useAllInputs = false;
     juce::StringArray inputDevices;
+
+    static constexpr const char* allMidiInsName = "All MIDI Ins";
 
 private:
     juce::String openDevice() override;

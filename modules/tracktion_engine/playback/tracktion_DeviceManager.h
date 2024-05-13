@@ -152,6 +152,7 @@ public:
     juce::String getDefaultMidiInDeviceID() const               { return defaultMidiInID; }
 
     void injectMIDIMessageToDefaultDevice (const juce::MidiMessage&);
+    void broadcastMessageToAllVirtualDevices (MidiInputDevice*, const juce::MidiMessage&);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
@@ -193,10 +194,12 @@ public:
 
     TracktionEngineAudioDeviceManager deviceManager { engine };
 
+    //==============================================================================
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
 
     std::vector<std::shared_ptr<MidiInputDevice>> midiInputs; // Only thread-safe from the message thread
     std::vector<std::shared_ptr<MidiOutputDevice>> midiOutputs;
+
     juce::OwnedArray<WaveInputDevice> waveInputs;
     juce::OwnedArray<WaveOutputDevice> waveOutputs;
 
@@ -262,7 +265,7 @@ private:
     crill::seqlock_object<PerformanceMeasurement::Statistics> performanceStats;
     std::atomic<bool> clearStatsFlag { false };
 
-    static constexpr const char* allMidiInsName = "All MIDI Ins";
+    void applyNewMidiDeviceList();
 
     void clearAllContextDevices();
     void reloadAllContextDevices();
