@@ -49,11 +49,6 @@ public:
     juce::String getAlias() const;
     void setAlias (const juce::String& newAlias);
 
-    /** Called after all devices are constructed, so it can use all the device
-        names in its calculations.
-    */
-    void initialiseDefaultAlias();
-
     virtual bool isAvailableToEdit() const      { return isEnabled(); }
 
     bool isEnabled() const;
@@ -84,12 +79,10 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
+    virtual void saveProps() = 0;
+
     Engine& engine;
     LevelMeasurer levelMeasurer;
-
-    juce::String getGlobalPropertyName() const;
-
-    virtual void saveProps() = 0;
 
 protected:
     std::atomic<bool> enabled { false };
@@ -98,7 +91,9 @@ protected:
     bool retrospectiveRecordLock = false;
 
 private:
-    juce::String type, name, alias, defaultAlias;
+    juce::String type, name, alias;
+
+    juce::String getAliasPropName() const;
 };
 
 

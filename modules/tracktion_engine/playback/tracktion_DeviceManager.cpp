@@ -468,8 +468,8 @@ void DeviceManager::applyNewMidiDeviceList()
 
     auto& storage = engine.getPropertyStorage();
 
-    auto newDefaultOut = storage.getProperty (SettingID::defaultMidiOutDevice);
-    auto newDefaultIn = storage.getProperty (SettingID::defaultMidiInDevice);
+    auto newDefaultOut = storage.getProperty (SettingID::defaultMidiOutDevice).toString();
+    auto newDefaultIn = storage.getProperty (SettingID::defaultMidiInDevice).toString();
 
     bool defaultsChanged = (defaultMidiOutID != newDefaultOut
                             || defaultMidiInID != newDefaultIn);
@@ -556,8 +556,6 @@ void DeviceManager::applyNewMidiDeviceList()
         for (auto mi : midiInputs)
         {
             TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
-
-            mi->initialiseDefaultAlias();
 
             if (! mi->isEnabled())
                 mi->closeDevice();
@@ -807,9 +805,6 @@ void DeviceManager::handleAsyncUpdate()
         newWaveOutputs.swapWith (waveOutputs);
         newActiveOutChannels.swapWith (activeOutChannels);
     }
-
-    for (auto wi : waveInputs)
-        wi->initialiseDefaultAlias();
 
     sanityCheckEnabledChannels();
     reloadAllContextDevices();
