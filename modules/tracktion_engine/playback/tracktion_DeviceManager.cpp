@@ -309,30 +309,30 @@ struct DeviceManager::MIDIDeviceList
 
     MIDIDeviceList() = default;
 
-    MIDIDeviceList (Engine& engine,
-                    HostedAudioDeviceInterface* hostedAudioDeviceInterface,
+    MIDIDeviceList (Engine& sourceEngine,
+                    HostedAudioDeviceInterface* sourceHostedAudioDeviceInterface,
                     bool useHardwareDevices)
     {
-        if (hostedAudioDeviceInterface)
+        if (sourceHostedAudioDeviceInterface)
         {
-            hostedMidiOut = std::unique_ptr<MidiOutputDevice> (hostedAudioDeviceInterface->createMidiOutput());
-            hostedMidiIn = std::unique_ptr<MidiInputDevice> (hostedAudioDeviceInterface->createMidiInput());
+            hostedMidiOut = std::unique_ptr<MidiOutputDevice> (sourceHostedAudioDeviceInterface->createMidiOutput());
+            hostedMidiIn = std::unique_ptr<MidiInputDevice> (sourceHostedAudioDeviceInterface->createMidiInput());
         }
 
         if (useHardwareDevices)
         {
-            scanHardwareDevices (engine);
+            scanHardwareDevices (sourceEngine);
 
             for (auto& info : midiOuts)
             {
-                auto d = std::make_shared<MidiOutputDevice> (engine, info);
+                auto d = std::make_shared<MidiOutputDevice> (sourceEngine, info);
                 physicalMidiOuts.push_back (d);
                 physicalMidiOutsEnabled.push_back (d->isEnabled());
             }
 
             for (auto& info : midiIns)
             {
-                auto d = std::make_shared<PhysicalMidiInputDevice> (engine, info);
+                auto d = std::make_shared<PhysicalMidiInputDevice> (sourceEngine, info);
                 physicalMidiIns.push_back (d);
                 physicalMidiInsEnabled.push_back (d->isEnabled());
             }
@@ -346,7 +346,7 @@ struct DeviceManager::MIDIDeviceList
            #endif
         }
 
-        auto& storage = engine.getPropertyStorage();
+        auto& storage = sourceEngine.getPropertyStorage();
         juce::StringArray virtualMidiInIDs;
         virtualMidiInIDs.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
         virtualMidiInIDs.removeEmptyStrings();
@@ -355,7 +355,7 @@ struct DeviceManager::MIDIDeviceList
 
         for (auto& v : virtualMidiInIDs)
         {
-            auto d = std::make_shared<VirtualMidiInputDevice> (engine, v, InputDevice::virtualMidiDevice);
+            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice);
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
         }
