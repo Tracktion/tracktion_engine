@@ -16,7 +16,6 @@ OutputDevice::OutputDevice (Engine& e, const juce::String& t, const juce::String
    : engine (e), type (t), name (n)
 {
     alias = engine.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
-    defaultAlias = n;
 }
 
 OutputDevice::~OutputDevice()
@@ -26,19 +25,6 @@ OutputDevice::~OutputDevice()
 juce::String OutputDevice::getAliasPropName() const
 {
     return type + "out_" + name + "_alias";
-}
-
-void OutputDevice::initialiseDefaultAlias()
-{
-    defaultAlias = getName();
-
-    if (defaultAlias == DeviceManager::getDefaultAudioOutDeviceName (false))
-        defaultAlias = DeviceManager::getDefaultAudioOutDeviceName (true);
-
-    if (defaultAlias == DeviceManager::getDefaultMidiOutDeviceName (false))
-        defaultAlias = DeviceManager::getDefaultMidiOutDeviceName (true);
-
-    defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
 }
 
 juce::String OutputDevice::getName() const
@@ -51,23 +37,22 @@ juce::String OutputDevice::getAlias() const
     if (alias.isNotEmpty())
         return alias;
 
-    return defaultAlias;
+    return getName();
 }
 
 void OutputDevice::setAlias (const juce::String& a)
 {
     if (alias != a)
     {
-        if (a != defaultAlias)
-        {
-            alias = a.substring (0, 20);
-            engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), a);
-        }
-        else
-        {
+        alias = a.substring (0, 40).trim();
+
+        if (alias == getName())
             alias = {};
+
+        if (alias.isNotEmpty())
+            engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
+        else
             engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
-        }
 
         changed();
     }

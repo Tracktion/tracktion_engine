@@ -28,11 +28,6 @@ public:
     juce::String getAlias() const;
     void setAlias (const juce::String& alias);
 
-    /** Called after all devices are constructed, so it can use all the device
-        names in its calculations.
-    */
-    void initialiseDefaultAlias();
-
     juce::String getDeviceID() const;
     juce::String getSelectableDescription() override;
 
@@ -52,7 +47,7 @@ protected:
     virtual void closeDevice() = 0;
 
 private:
-    juce::String type, name, alias, defaultAlias;
+    juce::String type, name, alias;
 
     juce::String getAliasPropName() const;
 };

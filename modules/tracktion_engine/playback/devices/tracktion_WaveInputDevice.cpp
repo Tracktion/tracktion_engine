@@ -1079,12 +1079,15 @@ public:
 
     void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)
     {
-        if (numChannels == 0)
-            return;
-
         auto& wi = getWaveInput();
         auto& channelSet = wi.getChannelSet();
         inputBuffer.setSize (channelSet.size(), numSamples);
+
+        if (numChannels == 0)
+        {
+            inputBuffer.clear();
+            return;
+        }
 
         for (const auto& ci : wi.getChannels())
         {
@@ -1275,13 +1278,14 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, const juce::String& devType,
-                                  const std::vector<ChannelIndex>& channels, DeviceType t)
-    : InputDevice (e, devType, deviceName),
-      deviceChannels (channels),
+WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
+                                  const WaveDeviceDescription& desc, DeviceType t)
+    : InputDevice (e, devType, desc.name),
+      deviceChannels (desc.channels),
       deviceType (t),
-      channelSet (createChannelSet (channels))
+      channelSet (createChannelSet (desc.channels))
 {
+    enabled = desc.enabled;
     loadProps();
 }
 

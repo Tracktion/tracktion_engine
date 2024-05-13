@@ -94,6 +94,7 @@ enum class SettingID
     xtIndices,
     virtualmididevices,
     virtualmidiin,
+    midiScanIntervalSeconds,
     useSeparateProcessForScanning,
     useRealtime,
     wavein,

@@ -20,7 +20,9 @@ class HostedAudioDeviceInterface;
 */
 class DeviceManager     : public juce::ChangeBroadcaster,
                           public juce::ChangeListener,
-                          private juce::AudioIODeviceCallback
+                          private juce::AudioIODeviceCallback,
+                          private juce::AsyncUpdater,
+                          private juce::Timer
 {
     friend class Engine;
     DeviceManager (Engine&);
@@ -41,6 +43,10 @@ public:
                           bool mixSettings);
 
     void rescanMidiDeviceList();
+    void rescanWaveDeviceList();
+
+    int getMidiDeviceScanIntervalSeconds() const        { return midiRescanIntervalSeconds; }
+    void setMidiDeviceScanIntervalSeconds (int intervalSeconds);
 
     //==============================================================================
     double getSampleRate() const;
@@ -93,18 +99,32 @@ public:
     void removeHostedAudioDeviceInterface();
 
     //==============================================================================
+    // list of all input devices..
+    int getNumInputDevices() const;
+    InputDevice* getInputDevice (int index) const;
+
+    int getNumOutputDevices() const;
+    OutputDevice* getOutputDeviceAt (int index) const;
+
+    InputDevice* findInputDeviceForID (const juce::String& id) const;
+    InputDevice* findInputDeviceWithName (const juce::String& name) const;
+
+    OutputDevice* findOutputDeviceForID (const juce::String& id) const;
+    OutputDevice* findOutputDeviceWithName (const juce::String& name) const;
+
+    //==============================================================================
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }
 
-    void setDefaultWaveOutDevice (int index);
-    WaveOutputDevice* getDefaultWaveOutDevice() const           { return defaultWaveOut; }
+    void setDefaultWaveOutDevice (juce::String deviceID);
+    WaveOutputDevice* getDefaultWaveOutDevice() const;
     juce::String getDefaultWaveOutDeviceID() const              { return defaultWaveOutID; }
 
     int getNumWaveInDevices() const                             { return waveInputs.size(); }
     WaveInputDevice* getWaveInDevice (int index) const          { return waveInputs[index]; }
 
-    void setDefaultWaveInDevice (int index);
-    WaveInputDevice* getDefaultWaveInDevice() const             { return defaultWaveIn; }
+    void setDefaultWaveInDevice (juce::String deviceID);
+    WaveInputDevice* getDefaultWaveInDevice() const;
     juce::String getDefaultWaveInDeviceID() const               { return defaultWaveInID; }
 
     void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
@@ -118,21 +138,22 @@ public:
     bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
 
     //==============================================================================
-    int getNumMidiOutDevices() const                            { return midiOutputs.size(); }
-    MidiOutputDevice* getMidiOutDevice (int index) const        { return midiOutputs[index]; }
+    int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }
+    MidiOutputDevice* getMidiOutDevice (int index) const        { return index >= 0 && index < (int) midiOutputs.size() ? midiOutputs[(size_t) index].get() : nullptr; }
 
-    void setDefaultMidiOutDevice (int index);
-    MidiOutputDevice* getDefaultMidiOutDevice() const           { return defaultMidiOut; }
+    void setDefaultMidiOutDevice (juce::String deviceID);
+    MidiOutputDevice* getDefaultMidiOutDevice() const;
     juce::String getDefaultMidiOutDeviceID() const              { return defaultMidiOutID; }
 
     int getNumMidiInDevices() const;
     MidiInputDevice* getMidiInDevice (int index) const;
 
-    void setDefaultMidiInDevice (int index);
-    MidiInputDevice* getDefaultMidiInDevice() const             { return defaultMidiIn; }
+    void setDefaultMidiInDevice (juce::String deviceID);
+    MidiInputDevice* getDefaultMidiInDevice() const;
     juce::String getDefaultMidiInDeviceID() const               { return defaultMidiInID; }
 
     void injectMIDIMessageToDefaultDevice (const juce::MidiMessage&);
+    void broadcastMessageToAllVirtualDevices (MidiInputDevice*, const juce::MidiMessage&);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
@@ -143,20 +164,6 @@ public:
     double getCurrentStreamTime() const noexcept                { return streamTime; }
 
     bool isMSWavetableSynthPresent() const;
-
-    //==============================================================================
-    // list of all input devices..
-    int getNumInputDevices() const;
-    InputDevice* getInputDevice (int index) const;
-
-    int getNumOutputDevices() const;
-    OutputDevice* getOutputDeviceAt (int index) const;
-
-    InputDevice* findInputDeviceForID (const juce::String& id) const;
-    InputDevice* findInputDeviceWithName (const juce::String& name) const;
-
-    OutputDevice* findOutputDeviceForID (const juce::String& id) const;
-    OutputDevice* findOutputDeviceWithName (const juce::String& name) const;
 
     //==============================================================================
     void checkDefaultDevicesAreValid();
@@ -188,27 +195,18 @@ public:
 
     TracktionEngineAudioDeviceManager deviceManager { engine };
 
+    //==============================================================================
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
 
-    juce::OwnedArray<MidiInputDevice> midiInputs; // Only thread-safe from the message thread
-    juce::OwnedArray<MidiOutputDevice> midiOutputs;
+    std::vector<std::shared_ptr<MidiInputDevice>> midiInputs; // Only thread-safe from the message thread
+    std::vector<std::shared_ptr<MidiOutputDevice>> midiOutputs;
+
     juce::OwnedArray<WaveInputDevice> waveInputs;
     juce::OwnedArray<WaveOutputDevice> waveOutputs;
 
     //==============================================================================
     void addContext (EditPlaybackContext*);
     void removeContext (EditPlaybackContext*);
-
-    void clearAllContextDevices();
-    void reloadAllContextDevices();
-
-    struct ContextDeviceListRebuilder
-    {
-        ContextDeviceListRebuilder (DeviceManager&);
-        ~ContextDeviceListRebuilder();
-
-        DeviceManager& dm;
-    };
 
     //==============================================================================
     /** Sets a global processor to be applied to the output.
@@ -228,32 +226,29 @@ public:
 
 private:
     //==============================================================================
-    struct WaveDeviceList;
-    struct ContextDeviceClearer;
     bool finishedInitialising = false;
     bool sendMidiTimecode = false;
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
-    std::atomic<bool> outputHasClipped { false }, outputClippingEnabled { false };
+    std::atomic<bool> isSuspended { true }, outputHasClipped { false }, outputClippingEnabled { false };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
-    juce::Array<EditPlaybackContext*> contextsToRestart;
+    int maxBlockSize = 0;
 
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
     juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     juce::String defaultWaveOutID, defaultMidiOutID, defaultWaveInID, defaultMidiInID;
 
-    SafeSelectable<WaveInputDevice> defaultWaveIn;
-    SafeSelectable<WaveOutputDevice> defaultWaveOut;
+    int midiRescanIntervalSeconds = 4;
+    bool onlyRescanMidiOnHardwareChange = true;
 
-    SafeSelectable<MidiInputDevice> defaultMidiIn;
-    SafeSelectable<MidiOutputDevice> defaultMidiOut;
+    struct MIDIDeviceList;
+    std::unique_ptr<MIDIDeviceList> lastMIDIDeviceList;
 
-    int maxBlockSize = 0;
+    struct AvailableWaveDeviceList;
+    std::unique_ptr<AvailableWaveDeviceList> lastAvailableWaveDeviceList;
 
-    std::unique_ptr<WaveDeviceList> lastWaveDeviceList;
-    std::unique_ptr<ContextDeviceClearer> contextDeviceClearer;
-
-    juce::Array<juce::MidiDeviceInfo> lastMidiIns, lastMidiOuts;
+    struct PrepareToStartCaller;
+    std::unique_ptr<PrepareToStartCaller> prepareToStartCaller;
 
     std::shared_mutex contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;
@@ -271,13 +266,19 @@ private:
     crill::seqlock_object<PerformanceMeasurement::Statistics> performanceStats;
     std::atomic<bool> clearStatsFlag { false };
 
+    void applyNewMidiDeviceList();
+    void restartMidiCheckTimer();
+
+    void clearAllContextDevices();
+    void reloadAllContextDevices();
+
     void loadSettings();
-    bool rebuildWaveDeviceListIfNeeded();
-    void updateDefaultDevicePointers();
-    void rebuildWaveDeviceList();
-    bool waveDeviceListNeedsRebuilding();
     void sanityCheckEnabledChannels();
 
+    bool usesHardwareMidiDevices();
+    void timerCallback() override;
+
+    void handleAsyncUpdate() override;
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
 
     void audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int totalNumInputChannels,
@@ -285,6 +286,7 @@ private:
                                            const juce::AudioIODeviceCallbackContext&) override;
     void audioDeviceAboutToStart (juce::AudioIODevice*) override;
     void audioDeviceStopped() override;
+    void prepareToStart();
 
     void audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
                                         float* const* outputChannelData, int totalNumOutputChannels,

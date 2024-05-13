@@ -21,8 +21,7 @@ class WaveInputDevice   : public InputDevice
 {
 public:
     //==============================================================================
-    WaveInputDevice (Engine&, const juce::String& name, const juce::String& type,
-                     const std::vector<ChannelIndex>&, DeviceType);
+    WaveInputDevice (Engine&, const juce::String& type, const WaveDeviceDescription&, DeviceType);
     ~WaveInputDevice() override;
 
     static juce::StringArray getMergeModes();

@@ -462,7 +462,7 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMess
             }
         }
 
-        VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (this, m);
+        engine.getDeviceManager().broadcastMessageToAllVirtualDevices (this, m);
     }
 }
 

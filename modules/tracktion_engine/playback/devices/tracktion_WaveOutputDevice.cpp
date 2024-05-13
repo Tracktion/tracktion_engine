@@ -12,13 +12,14 @@
 namespace tracktion { inline namespace engine
 {
 
-WaveOutputDevice::WaveOutputDevice (Engine& e, const juce::String& deviceName, const std::vector<ChannelIndex>& channels)
-    : OutputDevice (e, TRANS("Wave Audio Output"), deviceName),
-      deviceChannels (channels),
-      channelSet (createChannelSet (channels)),
+WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
+    : OutputDevice (e, TRANS("Wave Audio Output"), desc.name),
+      deviceChannels (desc.channels),
+      channelSet (createChannelSet (desc.channels)),
       ditheringEnabled (false),
       leftRightReversed (false)
 {
+    enabled = desc.enabled;
     loadProps();
 }
 

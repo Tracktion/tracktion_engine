@@ -159,8 +159,8 @@ public:
 
     static juce::String shortenName (juce::String, int maxLen);
 
-    juce::String getInputDeviceName (int idx) const     { return inputDeviceName[idx]; }
-    juce::String getOutputDeviceName (int idx) const    { return outputDeviceName[idx]; }
+    juce::String getInputDeviceName (int idx) const     { return inputDeviceNames[idx]; }
+    juce::String getOutputDeviceName (int idx) const    { return outputDeviceNames[idx]; }
 
     juce::StringArray getMidiInputPorts() const;
     juce::StringArray getMidiOutputPorts() const;
@@ -181,8 +181,7 @@ private:
 
     int numDevices = 1;
     int mainDevice = 0;
-    juce::String inputDeviceName[maxDevices];
-    juce::String outputDeviceName[maxDevices];
+    juce::StringArray inputDeviceNames, outputDeviceNames;
 
     std::unique_ptr<ControlSurface> controlSurface;
     int oscInputPort, oscOutputPort;
@@ -210,8 +209,8 @@ private:
     bool followsTrackSelection;
     bool processMidi = false, updateParams = false;
 
-    MidiInputDevice* inputDevices[maxDevices] = { nullptr };
-    MidiOutputDevice* outputDevices[maxDevices] = { nullptr };
+    std::vector<MidiInputDevice*> inputDevices;
+    std::vector<MidiOutputDevice*> outputDevices;
 
     juce::Array<std::pair<int, juce::MidiMessage>> pendingMidiMessages;
     juce::CriticalSection incomingMidiLock;

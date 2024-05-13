@@ -22,6 +22,9 @@ public:
     MidiInputDevice (Engine&, const juce::String& type, const juce::String& name);
     ~MidiInputDevice() override;
 
+    virtual juce::String openDevice() = 0;
+    virtual void closeDevice() = 0;
+
     void setEnabled (bool) override;
     bool isMidi() const override                    { return true; }
 
@@ -110,7 +113,6 @@ protected:
     juce::BigInteger disallowedChannels;
     MidiChannel channelToUse;
     int programToUse = 0;
-    bool firstSetEnabledCall = true;
     int bankToUse = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
@@ -134,9 +136,6 @@ protected:
     void saveMidiProps (juce::XmlElement&);
 
     void sendMessageToInstances (const juce::MidiMessage&);
-
-    virtual juce::String openDevice() = 0;
-    virtual void closeDevice() = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDevice)
 };

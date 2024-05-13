@@ -19,6 +19,9 @@ public:
     MidiOutputDevice (Engine&, juce::MidiDeviceInfo);
     ~MidiOutputDevice() override;
 
+    juce::String openDevice() override;
+    void closeDevice() override;
+
     void setEnabled (bool) override;
     bool isMidi() const override                        { return true; }
 
@@ -93,7 +96,6 @@ protected:
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
     bool sendTimecode = false, sendMidiClock = false;
     bool playing = false;
-    bool firstSetEnabledCall = true;
     juce::String programNameSet;
 
     double sampleRate = 0;
@@ -110,9 +112,6 @@ protected:
     MidiMessageArray midiMessages;
 
     juce::CriticalSection noteOnLock;
-
-    juce::String openDevice() override;
-    void closeDevice() override;
 };
 
 //==============================================================================

@@ -15,15 +15,14 @@ namespace tracktion { inline namespace engine
 InputDevice::InputDevice (Engine& e, const juce::String& t, const juce::String& n)
    : engine (e), type (t), name (n)
 {
-    alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getGlobalPropertyName());
-    defaultAlias = n;
+    alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
 }
 
 InputDevice::~InputDevice()
 {
 }
 
-juce::String InputDevice::getGlobalPropertyName() const
+juce::String InputDevice::getAliasPropName() const
 {
     return type + "in_" + name + "_alias";
 }
@@ -34,81 +33,27 @@ bool InputDevice::isTrackDevice() const
             || getDeviceType() == trackMidiDevice;
 }
 
-static juce::String findDefaultAliasNameNotClashingWithInputDevices (Engine& engine, bool isMIDI,
-                                                                     const juce::String& originalName,
-                                                                     juce::String defaultAlias)
-{
-    int maxLength = 20;
-
-    if (defaultAlias.length() <= maxLength)
-        return defaultAlias;
-
-    juce::String bracketed;
-
-    if (defaultAlias.containsChar ('(') && defaultAlias.trim().endsWithChar (')'))
-        bracketed = defaultAlias.fromLastOccurrenceOf ("(", false, false)
-                                .upToFirstOccurrenceOf (")", false, false)
-                                .trim();
-
-    defaultAlias = defaultAlias.substring (0, std::max (10, maxLength - bracketed.length())).trim();
-    defaultAlias = defaultAlias.upToLastOccurrenceOf (" ", false, false).trim();
-
-    if (bracketed.isNotEmpty())
-        defaultAlias << " (" << bracketed << ")";
-
-    while (defaultAlias.endsWithChar ('+') || defaultAlias.endsWithChar ('-'))
-        defaultAlias = defaultAlias.dropLastCharacters (1).trim();
-
-    auto& dm = engine.getDeviceManager();
-
-    auto totalDevs = isMIDI ? dm.getNumMidiInDevices()
-                            : dm.getNumWaveInDevices();
-
-    auto newAlias = defaultAlias;
-    defaultAlias = {};
-
-    for (int i = 0; i < totalDevs; ++i)
-    {
-        auto otherAlias = isMIDI ? dm.getMidiInDevice(i)->getAlias()
-                                 : dm.getWaveInDevice(i)->getAlias();
-
-        if (otherAlias == defaultAlias && otherAlias.isNotEmpty())
-        {
-            // if it's a dupe, just bottle out and use the full name
-            newAlias = originalName.substring (0, 40);
-            break;
-        }
-    }
-
-    return newAlias;
-}
-
-void InputDevice::initialiseDefaultAlias()
-{
-    defaultAlias = getName();
-
-    if (isTrackDevice())
-        return;
-
-    defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
-}
-
 juce::String InputDevice::getAlias() const
 {
     if (alias.trim().isNotEmpty())
         return alias;
 
-    return defaultAlias;
+    return getName();
 }
 
 void InputDevice::setAlias (const juce::String& a)
 {
     if (alias != a)
     {
-        alias = a.substring (0, 20).trim();
+        alias = a.substring (0, 40).trim();
 
-        if (alias == defaultAlias)
+        if (alias == getName())
             alias = {};
+
+        if (alias.isNotEmpty())
+            engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
+        else
+            engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
     }
 }
 
