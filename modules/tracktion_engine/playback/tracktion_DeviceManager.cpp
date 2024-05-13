@@ -321,8 +321,7 @@ struct DeviceManager::MIDIDeviceList
 
         if (useHardwareDevices)
         {
-            midiIns  = juce::MidiInput::getAvailableDevices();
-            midiOuts = juce::MidiOutput::getAvailableDevices();
+            scanHardwareDevices (engine);
 
             for (auto& info : midiOuts)
             {
@@ -359,6 +358,44 @@ struct DeviceManager::MIDIDeviceList
             auto d = std::make_shared<VirtualMidiInputDevice> (engine, v, InputDevice::virtualMidiDevice);
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
+        }
+    }
+
+    void scanHardwareDevices (Engine& e)
+    {
+        StopwatchTimer total;
+        static constexpr double maxAcceptableTimeForAutoScanning = 0.2;
+
+        {
+            StopwatchTimer timer;
+            midiIns = juce::MidiInput::getAvailableDevices();
+            auto scanTime = timer.getSeconds();
+
+            if (scanTime > maxAcceptableTimeForAutoScanning)
+            {
+                TRACKTION_LOG ("MIDI input scan took " + juce::String (scanTime) + " seconds. Disabling auto-scanning");
+                e.getDeviceManager().setMidiDeviceScanIntervalSeconds (0);
+            }
+        }
+
+        {
+            StopwatchTimer timer;
+            midiOuts = juce::MidiOutput::getAvailableDevices();
+            auto scanTime = timer.getSeconds();
+
+            if (scanTime > maxAcceptableTimeForAutoScanning)
+            {
+                TRACKTION_LOG ("MIDI output scan took " + juce::String (scanTime) + " seconds. Disabling auto-scanning");
+                e.getDeviceManager().setMidiDeviceScanIntervalSeconds (0);
+            }
+        }
+
+        static bool hasReported = false;
+
+        if (! hasReported || total.getSeconds() > 0.1)
+        {
+            hasReported = true;
+            TRACKTION_LOG_DEVICE ("MIDI Input devices scanned in: " + total.getDescription());
         }
     }
 
