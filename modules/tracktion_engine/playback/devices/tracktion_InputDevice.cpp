@@ -103,6 +103,8 @@ InputDeviceInstance::InputDeviceInstance (InputDevice& d, EditPlaybackContext& c
                                         }
                                     });
 
+    recordStatusUpdater.setFunction ([this] { updateRecordingStatus(); });
+
     state.addListener (this);
 }
 
@@ -253,7 +255,8 @@ void InputDeviceInstance::valueTreePropertyChanged (juce::ValueTree& v, const ju
                 if (auto t = findTrackForID (edit, targetID))
                     t->changed();
 
-            updateRecordingStatus (targetID);
+            changedTargetTrackIDs.push_back (targetID);
+            recordStatusUpdater.triggerAsyncUpdate();
         }
     }
 }
@@ -267,7 +270,8 @@ void InputDeviceInstance::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTr
         if (auto t = findTrackForID (edit, targetID))
             t->changed();
 
-        updateRecordingStatus (targetID);
+        changedTargetTrackIDs.push_back (targetID);
+        recordStatusUpdater.triggerAsyncUpdate();
     }
 }
 
@@ -280,15 +284,18 @@ void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::Value
         if (auto t = findTrackForID (edit, targetID))
             t->changed();
 
-        updateRecordingStatus (targetID);
+        changedTargetTrackIDs.push_back (targetID);
+        recordStatusUpdater.triggerAsyncUpdate();
     }
 }
 
-void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
+void InputDeviceInstance::updateRecordingStatus()
 {
     for (auto dest : destinations)
     {
-        if (dest->targetID != targetID)
+        auto targetID = dest->targetID;
+
+        if (std::find (changedTargetTrackIDs.begin(), changedTargetTrackIDs.end(), targetID) == changedTargetTrackIDs.end())
             continue;
 
         auto track = findTrackForID (edit, targetID);
@@ -317,6 +324,8 @@ void InputDeviceInstance::updateRecordingStatus (EditItemID targetID)
         if (! wasRecording && isRecordingEnabled (targetID))
             prepareAndPunchRecord (*this, targetID);
     }
+
+    changedTargetTrackIDs.clear();
 }
 
 //==============================================================================

@@ -394,9 +394,10 @@ protected:
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 
 private:
-    mutable AsyncCaller trackDeviceEnabler;
+    mutable AsyncCaller trackDeviceEnabler, recordStatusUpdater;
     bool wasLivePlayActive = false;
-    void updateRecordingStatus (EditItemID);
+    std::vector<EditItemID> changedTargetTrackIDs;
+    void updateRecordingStatus();
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (InputDeviceInstance)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputDeviceInstance)
