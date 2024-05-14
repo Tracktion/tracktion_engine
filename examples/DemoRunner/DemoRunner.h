@@ -119,15 +119,15 @@ public:
     {
         Helpers::addAndMakeVisible (*this, { &loadButton, &pluginListButton, &audioSettingsButton, &currentDemoName });
 
-        loadButton.onClick          = [this] { showLoadDemoMenu(); };
+        loadButton.onClick = [this] { showLoadDemoMenu(); };
 
         // Show the plugin scan dialog
         // If you're loading an Edit with plugins in, you'll need to perform a scan first
-        pluginListButton.onClick    = [this]
+        pluginListButton.onClick = [this]
         {
             DialogWindow::LaunchOptions o;
             o.dialogTitle                   = TRANS("Plugins");
-            o.dialogBackgroundColour        = Colours::black;
+            o.dialogBackgroundColour        = juce::Colours::black;
             o.escapeKeyTriggersCloseButton  = true;
             o.useNativeTitleBar             = true;
             o.resizable                     = true;
@@ -136,11 +136,12 @@ public:
             auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
                                               engine.getPluginManager().knownPluginList,
                                               engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                              te::getApplicationSettings());
+                                              std::addressof (engine.getPropertyStorage().getPropertiesFile()));
             v->setSize (800, 600);
             o.content.setOwned (v);
             o.launchAsync();
         };
+
         audioSettingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
 
         currentDemoName.setJustificationType (juce::Justification::centred);

@@ -114,11 +114,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Engine)
 };
 
-//==============================================================================
-// If you are using the default implementation of PropertyStorage, and need access to the
-// underlying PropertiesFile. Warning: If you have subclassed PropertyStorage, then this
-// PropertiesFile will be empty. This should only be used to pass to juce::PluginListComponent
-// and will be removed in future.
-juce::PropertiesFile* getApplicationSettings();
-
 }} // namespace tracktion { inline namespace engine

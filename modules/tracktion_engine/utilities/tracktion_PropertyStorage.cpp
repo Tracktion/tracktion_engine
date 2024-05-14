@@ -12,37 +12,6 @@
 namespace tracktion { inline namespace engine
 {
 
-static juce::File getApplicationSettingsFile()
-{
-    return Engine::getEngines()[0]->getPropertyStorage().getAppPrefsFolder().getChildFile ("Settings.xml");
-}
-
-static juce::PropertiesFile::Options getSettingsOptions()
-{
-    juce::PropertiesFile::Options opts;
-    opts.millisecondsBeforeSaving = 2000;
-    opts.storageFormat = juce::PropertiesFile::storeAsXML;
-
-    return opts;
-}
-
-struct ApplicationSettings : public juce::PropertiesFile,
-                             public juce::DeletedAtShutdown
-{
-    ApplicationSettings() : PropertiesFile (getApplicationSettingsFile(), getSettingsOptions()) {}
-    ~ApplicationSettings() { clearSingletonInstance(); }
-
-    JUCE_DECLARE_SINGLETON (ApplicationSettings, false)
-};
-
-juce::PropertiesFile* getApplicationSettings()
-{
-    return ApplicationSettings::getInstance();
-}
-
-JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)
-
-//==============================================================================
 juce::StringRef PropertyStorage::settingToString (SettingID setting)
 {
     switch (setting)
@@ -191,71 +160,72 @@ juce::String PropertyStorage::getUserName()
     return juce::SystemStats::getFullUserName();
 }
 
-juce::String PropertyStorage::getApplicationVersion()
+juce::PropertiesFile& PropertyStorage::getPropertiesFile()
 {
-    return "Unknown";
+    if (propertiesFile == nullptr)
+    {
+        auto file = getAppPrefsFolder().getChildFile ("Settings.xml");
+
+        juce::PropertiesFile::Options options;
+        options.millisecondsBeforeSaving = 2000;
+        options.storageFormat = juce::PropertiesFile::storeAsXML;
+
+        propertiesFile = std::make_unique<juce::PropertiesFile> (file, options);
+    }
+
+    return *propertiesFile;
 }
 
 //==============================================================================
 void PropertyStorage::removeProperty (SettingID setting)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.removeValue (PropertyStorage::settingToString (setting));
+    getPropertiesFile().removeValue (PropertyStorage::settingToString (setting));
 }
 
 juce::var PropertyStorage::getProperty (SettingID setting, const juce::var& defaultValue)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    return as.getValue (PropertyStorage::settingToString (setting), defaultValue);
+    return getPropertiesFile().getValue (PropertyStorage::settingToString (setting), defaultValue);
 }
 
 void PropertyStorage::setProperty (SettingID setting, const juce::var& value)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.setValue (PropertyStorage::settingToString (setting), value);
+    getPropertiesFile().setValue (PropertyStorage::settingToString (setting), value);
 }
 
 std::unique_ptr<juce::XmlElement> PropertyStorage::getXmlProperty (SettingID setting)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    return std::unique_ptr<juce::XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting)));
+    return std::unique_ptr<juce::XmlElement> (getPropertiesFile().getXmlValue (PropertyStorage::settingToString (setting)));
 }
 
 void PropertyStorage::setXmlProperty (SettingID setting, const juce::XmlElement& xml)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.setValue (PropertyStorage::settingToString (setting), &xml);
+    getPropertiesFile().setValue (PropertyStorage::settingToString (setting), &xml);
 }
 
 //==============================================================================
 void PropertyStorage::removePropertyItem (SettingID setting, juce::StringRef item)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.removeValue (PropertyStorage::settingToString (setting) + "_" + item);
+    getPropertiesFile().removeValue (PropertyStorage::settingToString (setting) + "_" + item);
 }
 
 juce::var PropertyStorage::getPropertyItem (SettingID setting, juce::StringRef item, const juce::var& defaultValue)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    return as.getValue (PropertyStorage::settingToString (setting) + "_" + item, defaultValue);
+    return getPropertiesFile().getValue (PropertyStorage::settingToString (setting) + "_" + item, defaultValue);
 }
 
 void PropertyStorage::setPropertyItem (SettingID setting, juce::StringRef item, const juce::var& value)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.setValue (PropertyStorage::settingToString (setting) + "_" + item, value);
+    getPropertiesFile().setValue (PropertyStorage::settingToString (setting) + "_" + item, value);
 }
 
 std::unique_ptr<juce::XmlElement> PropertyStorage::getXmlPropertyItem (SettingID setting, juce::StringRef item)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    return std::unique_ptr<juce::XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting) + "_" + item));
+    return std::unique_ptr<juce::XmlElement> (getPropertiesFile().getXmlValue (PropertyStorage::settingToString (setting) + "_" + item));
 }
 
 void PropertyStorage::setXmlPropertyItem (SettingID setting, juce::StringRef item, const juce::XmlElement& xml)
 {
-    auto& as = *ApplicationSettings::getInstance();
-    as.setValue (PropertyStorage::settingToString (setting) + "_" + item, &xml);
+    getPropertiesFile().setValue (PropertyStorage::settingToString (setting) + "_" + item, &xml);
 }
 
 //==============================================================================
