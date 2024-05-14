@@ -214,6 +214,9 @@ void DeviceManager::closeDevices()
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
+    lastMIDIDeviceList.reset();
+    lastAvailableWaveDeviceList.reset();
+
     jassert (activeContexts.isEmpty());
     clearAllContextDevices();
 
