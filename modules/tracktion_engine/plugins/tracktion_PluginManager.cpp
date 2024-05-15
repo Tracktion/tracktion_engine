@@ -639,6 +639,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsVoiceOfTheStarship>();
     createBuiltInType<AirWindowsVoiceTrick>();
     createBuiltInType<AirWindowsWider>();
+    createBuiltInType<AirWindowsYNotBandpass>();
     createBuiltInType<AirWindowscurve>();
     createBuiltInType<AirWindowsuLawDecode>();
     createBuiltInType<AirWindowsuLawEncode>();

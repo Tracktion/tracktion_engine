@@ -312,6 +312,7 @@ AIRWINDOWSPLUGIN(AirWindowsVinylDither, "Vinyl Dither");
 AIRWINDOWSPLUGIN(AirWindowsVoiceOfTheStarship, "Voice Of The Starship");
 AIRWINDOWSPLUGIN(AirWindowsVoiceTrick, "Voice Trick");
 AIRWINDOWSPLUGIN(AirWindowsWider, "Wider");
+AIRWINDOWSPLUGIN(AirWindowsYNotBandpass, "YNotBandpass");
 AIRWINDOWSPLUGIN(AirWindowscurve, "curve");
 AIRWINDOWSPLUGIN(AirWindowsuLawDecode, "u Law Decode");
 AIRWINDOWSPLUGIN(AirWindowsuLawEncode, "u Law Encode");

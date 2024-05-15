@@ -511,6 +511,7 @@ const char* AirWindowsVinylDither::xmlTypeName = "airwindows_vinyldither";
 const char* AirWindowsVoiceOfTheStarship::xmlTypeName = "airwindows_voiceofthestarship";
 const char* AirWindowsVoiceTrick::xmlTypeName = "airwindows_voicetrick";
 const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
+const char* AirWindowsYNotBandpass::xmlTypeName = "airwindows_ynotbandpass";
 const char* AirWindowscurve::xmlTypeName = "airwindows_curve";
 const char* AirWindowsuLawDecode::xmlTypeName = "airwindows_ulawdecode";
 const char* AirWindowsuLawEncode::xmlTypeName = "airwindows_ulawencode";
@@ -700,6 +701,7 @@ AirWindowsVinylDither::Type AirWindowsVinylDither::pluginType = AirWindowsPlugin
 AirWindowsVoiceOfTheStarship::Type AirWindowsVoiceOfTheStarship::pluginType = AirWindowsPlugin::utility;
 AirWindowsVoiceTrick::Type AirWindowsVoiceTrick::pluginType = AirWindowsPlugin::utility;
 AirWindowsWider::Type AirWindowsWider::pluginType = AirWindowsPlugin::imaging;
+AirWindowsYNotBandpass::Type AirWindowsYNotBandpass::pluginType = AirWindowsPlugin::filter;
 AirWindowscurve::Type AirWindowscurve::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawDecode::Type AirWindowsuLawDecode::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawEncode::Type AirWindowsuLawEncode::pluginType = AirWindowsPlugin::utility;
@@ -1074,6 +1076,8 @@ AirWindowsVoiceTrick::AirWindowsVoiceTrick (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::voicetrick::VoiceTrick> (&callback)) {}
 AirWindowsWider::AirWindowsWider (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::wider::Wider> (&callback)) {}
+AirWindowsYNotBandpass::AirWindowsYNotBandpass(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynotbandpass::YNotBandpass>(&callback)) {}
 AirWindowscurve::AirWindowscurve (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::curve::curve> (&callback)) {}
 AirWindowsuLawDecode::AirWindowsuLawDecode (PluginCreationInfo info)

@@ -980,6 +980,11 @@ namespace wider
  #include "3rd_party/airwindows/Wider/Wider.cpp"
  #include "3rd_party/airwindows/Wider/WiderProc.cpp"
 }
+namespace ynotbandpass
+{
+#include "3rd_party/airwindows/YNotBandpass/YNotBandpass.cpp"
+#include "3rd_party/airwindows/YNotBandpass/YNotBandpassProc.cpp"
+}
 namespace curve
 {
  #include "3rd_party/airwindows/curve/curve.cpp"
