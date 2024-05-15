@@ -285,6 +285,7 @@ AIRWINDOWSPLUGIN(AirWindowsSpatializeDither, "Spatialize Dither");
 AIRWINDOWSPLUGIN(AirWindowsSpiral, "Spiral");
 AIRWINDOWSPLUGIN(AirWindowsSpiral2, "Spiral 2");
 AIRWINDOWSPLUGIN(AirWindowsStarChild, "Star Child");
+AIRWINDOWSPLUGIN(AirWindowsStonefire, "Stonefire");
 AIRWINDOWSPLUGIN(AirWindowsStereoFX, "Stereo FX");
 AIRWINDOWSPLUGIN(AirWindowsStudioTan, "Studio Tan");
 AIRWINDOWSPLUGIN(AirWindowsSubsOnly, "Subs Only");

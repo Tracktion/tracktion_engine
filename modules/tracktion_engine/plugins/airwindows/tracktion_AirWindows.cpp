@@ -485,6 +485,7 @@ const char* AirWindowsSpiral::xmlTypeName = "airwindows_spiral";
 const char* AirWindowsSpiral2::xmlTypeName = "airwindows_spiral2";
 const char* AirWindowsStarChild::xmlTypeName = "airwindows_starchild";
 const char* AirWindowsStereoFX::xmlTypeName = "airwindows_stereofx";
+const char* AirWindowsStonefire::xmlTypeName = "airwindows_stonefire";
 const char* AirWindowsStudioTan::xmlTypeName = "airwindows_studiotan";
 const char* AirWindowsSubsOnly::xmlTypeName = "airwindows_subsonly";
 const char* AirWindowsSurge::xmlTypeName = "airwindows_surge";
@@ -672,6 +673,7 @@ AirWindowsSpiral2::Type AirWindowsSpiral2::pluginType = AirWindowsPlugin::distor
 AirWindowsSpiral::Type AirWindowsSpiral::pluginType = AirWindowsPlugin::distortion;
 AirWindowsStarChild::Type AirWindowsStarChild::pluginType = AirWindowsPlugin::filter;
 AirWindowsStereoFX::Type AirWindowsStereoFX::pluginType = AirWindowsPlugin::imaging;
+AirWindowsStonefire::Type AirWindowsStonefire::pluginType = AirWindowsPlugin::filter;
 AirWindowsStudioTan::Type AirWindowsStudioTan::pluginType = AirWindowsPlugin::dither;
 AirWindowsSubsOnly::Type AirWindowsSubsOnly::pluginType = AirWindowsPlugin::utility;
 AirWindowsSurge::Type AirWindowsSurge::pluginType = AirWindowsPlugin::dynamics;
@@ -1018,6 +1020,8 @@ AirWindowsStarChild::AirWindowsStarChild (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::starchild::StarChild> (&callback)) {}
 AirWindowsStereoFX::AirWindowsStereoFX (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::stereofx::StereoFX> (&callback)) {}
+AirWindowsStonefire::AirWindowsStonefire (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::stonefire::Stonefire> (&callback)) {}
 AirWindowsStudioTan::AirWindowsStudioTan (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::studiotan::StudioTan> (&callback)) {}
 AirWindowsSubsOnly::AirWindowsSubsOnly (PluginCreationInfo info)

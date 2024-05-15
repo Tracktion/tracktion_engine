@@ -850,6 +850,11 @@ namespace stereofx
  #include "3rd_party/airwindows/StereoFX/StereoFX.cpp"
  #include "3rd_party/airwindows/StereoFX/StereoFXProc.cpp"
 }
+namespace stonefire
+{
+#include "3rd_party/airwindows/Stonefire/Stonefire.cpp"
+#include "3rd_party/airwindows/Stonefire/StonefireProc.cpp"
+}
 namespace studiotan
 {
  #include "3rd_party/airwindows/StudioTan/StudioTan.cpp"
