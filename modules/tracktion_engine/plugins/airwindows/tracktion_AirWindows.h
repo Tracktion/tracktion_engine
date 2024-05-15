@@ -224,6 +224,7 @@ AIRWINDOWSPLUGIN(AirWindowsHombre, "Hombre");
 AIRWINDOWSPLUGIN(AirWindowsInterstage, "Interstage");
 AIRWINDOWSPLUGIN(AirWindowsIronOxide5, "Iron Oxide 5");
 AIRWINDOWSPLUGIN(AirWindowsIronOxideClassic, "Iron Oxide Classic");
+AIRWINDOWSPLUGIN(AirWindowskCathedral2, "kCathedral 2");
 AIRWINDOWSPLUGIN(AirWindowsLeftoMono, "Lefto Mono");
 AIRWINDOWSPLUGIN(AirWindowsLogical4, "Logical 4");
 AIRWINDOWSPLUGIN(AirWindowsLoud, "Loud");

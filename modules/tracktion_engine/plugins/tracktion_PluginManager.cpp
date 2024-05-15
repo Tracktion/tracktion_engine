@@ -551,6 +551,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsInterstage>();
     createBuiltInType<AirWindowsIronOxide5>();
     createBuiltInType<AirWindowsIronOxideClassic>();
+    createBuiltInType<AirWindowskCathedral2>();
     createBuiltInType<AirWindowsLeftoMono>();
     createBuiltInType<AirWindowsLogical4>();
     createBuiltInType<AirWindowsLoud>();

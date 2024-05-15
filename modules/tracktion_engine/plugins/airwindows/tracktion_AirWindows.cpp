@@ -423,6 +423,7 @@ const char* AirWindowsHombre::xmlTypeName = "airwindows_hombre";
 const char* AirWindowsInterstage::xmlTypeName = "airwindows_interstage";
 const char* AirWindowsIronOxide5::xmlTypeName = "airwindows_ironoxide5";
 const char* AirWindowsIronOxideClassic::xmlTypeName = "airwindows_ironoxideclassic";
+const char* AirWindowskCathedral2::xmlTypeName = "airwindows_kcathedral2";
 const char* AirWindowsLeftoMono::xmlTypeName = "airwindows_leftomono";
 const char* AirWindowsLogical4::xmlTypeName = "airwindows_logical4";
 const char* AirWindowsLoud::xmlTypeName = "airwindows_loud";
@@ -611,6 +612,7 @@ AirWindowsHombre::Type AirWindowsHombre::pluginType = AirWindowsPlugin::delay;
 AirWindowsInterstage::Type AirWindowsInterstage::pluginType = AirWindowsPlugin::filter;
 AirWindowsIronOxide5::Type AirWindowsIronOxide5::pluginType = AirWindowsPlugin::emulation;
 AirWindowsIronOxideClassic::Type AirWindowsIronOxideClassic::pluginType = AirWindowsPlugin::emulation;
+AirWindowskCathedral2::Type AirWindowskCathedral2::pluginType = AirWindowsPlugin::reverb;
 AirWindowsLeftoMono::Type AirWindowsLeftoMono::pluginType = AirWindowsPlugin::utility;
 AirWindowsLogical4::Type AirWindowsLogical4::pluginType = AirWindowsPlugin::dynamics;
 AirWindowsLoud::Type AirWindowsLoud::pluginType = AirWindowsPlugin::distortion;
@@ -898,6 +900,8 @@ AirWindowsIronOxideClassic::AirWindowsIronOxideClassic (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ironoxideclassic::IronOxideClassic> (&callback)) {}
 AirWindowsLeftoMono::AirWindowsLeftoMono (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::leftomono::LeftoMono> (&callback)) {}
+AirWindowskCathedral2::AirWindowskCathedral2 (PluginCreationInfo info)
+	: AirWindowsPlugin (info, std::make_unique<airwindows::kcathedral2::kCathedral2> (&callback)) {}
 AirWindowsLogical4::AirWindowsLogical4 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::logical4::Logical4> (&callback)) {}
 AirWindowsLoud::AirWindowsLoud (PluginCreationInfo info)

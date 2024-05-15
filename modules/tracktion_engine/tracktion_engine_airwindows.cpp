@@ -540,6 +540,11 @@ namespace ironoxideclassic
  #include "3rd_party/airwindows/IronOxideClassic/IronOxideClassic.cpp"
  #include "3rd_party/airwindows/IronOxideClassic/IronOxideClassicProc.cpp"
 }
+namespace kcathedral2
+{
+#include "3rd_party/airwindows/kCathedral2/kCathedral2.cpp"
+#include "3rd_party/airwindows/kCathedral2/kCathedral2Proc.cpp"
+}
 namespace leftomono
 {
  #include "3rd_party/airwindows/LeftoMono/LeftoMono.cpp"
