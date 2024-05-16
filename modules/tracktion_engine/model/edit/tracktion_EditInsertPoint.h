@@ -30,12 +30,21 @@ public:
                             TimePosition& start, bool pasteAfterSelection, SelectionManager*,
                             std::function<bool (Track&)> allowedTrackPredicate);
 
+    // BEATCONNECT MODIFICATION START
+    void setToPlaybackMarker(bool toMarker) { toPlaybackMarker = toMarker; }
+    bool getToPlaybackMarker() { return toPlaybackMarker; }
+    // BEATCONNECT MODIFICATION END
+
 protected:
     Edit& edit;
     TimePosition nextInsertPointTime;
     EditItemID nextInsertPointTrack;
     int lockInsertPointCount = 0;
     bool nextInsertIsAfterSelected = false;
+
+    // BEATCONNECT MODIFICATION START
+    bool toPlaybackMarker = true;
+    // BEATCONNECT MODIFICATION END
 };
 
 }} // namespace tracktion { inline namespace engine
