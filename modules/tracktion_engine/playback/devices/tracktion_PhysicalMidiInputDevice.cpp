@@ -396,6 +396,30 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& messag
 
 void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
+    if (minimumLengthMs > 0)
+    {
+        if (m.isNoteOn())
+        {
+            auto idx = (m.getChannel() - 1) + m.getNoteNumber();
+            lastNoteOns[size_t (idx)] = juce::Time::getMillisecondCounterHiRes();
+        }
+        else if (m.isNoteOff())
+        {
+            auto idx = (m.getChannel() - 1) + m.getNoteNumber();
+            auto now = juce::Time::getMillisecondCounterHiRes();
+
+            if (now - lastNoteOns[size_t (idx)] < minimumLengthMs)
+            {
+                auto delta = minimumLengthMs - (now - lastNoteOns[size_t (idx)]);
+
+                if (noteDispatcher)
+                    noteDispatcher->enqueue (now + delta, m);
+
+                return;
+            }
+        }
+    }
+
     if (m.isNoteOn())
     {
         if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))

@@ -18,6 +18,71 @@ namespace tracktion { inline namespace engine
    Polls a set of targets to see if they should be stopped.
    Used by MidiInputDeviceInstance and WaveInputDeviceInstance.
 */
+class MidiInputDevice::NoteDispatcher : public juce::HighResolutionTimer
+{
+public:
+    NoteDispatcher (MidiInputDevice& o) : owner (o)
+    {
+        startTimer (1);
+        items.reserve (20);
+    }
+
+    ~NoteDispatcher() override
+    {
+        stopTimer();
+    }
+
+    void hiResTimerCallback() override
+    {
+        juce::ScopedLock sl (lock);
+
+        if (items.size() == 0)
+            return;
+
+        auto now = juce::Time::getMillisecondCounterHiRes();
+
+        int sent = 0;
+        for (size_t i = 0; i < items.size(); i++)
+        {
+            if (items[i].when > now)
+                break;
+
+            auto m = items[i].m;
+            m.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
+
+            owner.handleIncomingMidiMessage (m);
+
+            sent++;
+        }
+
+        if (sent > 0)
+            items.erase (items.begin(), items.begin() + sent);
+    }
+
+    void enqueue (double tm, const juce::MidiMessage& m)
+    {
+        juce::ScopedLock sl (lock);
+        items.push_back ({tm, m});
+    }
+
+private:
+    struct Item
+    {
+        double when;
+        juce::MidiMessage m;
+    };
+
+    juce::CriticalSection lock;
+    std::vector<Item> items;
+    MidiInputDevice& owner;
+};
+
+//==============================================================================
+//==============================================================================
+/**
+   Polls a set of targets to see if they should be stopped.
+   Used by MidiInputDeviceInstance and WaveInputDeviceInstance.
+*/
 class RecordStopper
 {
 public:
@@ -280,6 +345,7 @@ void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
     recordToNoteAutomation = isMPEDevice();
     adjustSecs = 0;
     manualAdjustMs = 0;
+    minimumLengthMs = 0;
     channelToUse = {};
     programToUse = 0;
     bankToUse = 0;
@@ -302,10 +368,18 @@ void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
         bankToUse = n->getIntAttribute ("bank", bankToUse);
         overrideNoteVels = n->getBoolAttribute ("useFullVelocity", overrideNoteVels);
         manualAdjustMs = n->getDoubleAttribute ("manualAdjustMs", manualAdjustMs);
+        minimumLengthMs = n->getDoubleAttribute ("minimumLengthMs", minimumLengthMs);
         disallowedChannels.parseString (n->getStringAttribute ("disallowedChannels", disallowedChannels.toString (2)), 2);
 
         connectionStateChanged();
     }
+
+    if (minimumLengthMs > 0 && noteDispatcher == nullptr)
+        noteDispatcher = std::make_unique<NoteDispatcher> (*this);
+    else if (minimumLengthMs <= 0)
+        noteDispatcher = nullptr;
+
+    lastNoteOns.resize (minimumLengthMs > 0 ? 128 * 16 : 0);
 }
 
 void MidiInputDevice::saveMidiProps (juce::XmlElement& n)
@@ -322,6 +396,7 @@ void MidiInputDevice::saveMidiProps (juce::XmlElement& n)
     n.setAttribute ("bank", bankToUse);
     n.setAttribute ("useFullVelocity", overrideNoteVels);
     n.setAttribute ("manualAdjustMs", manualAdjustMs);
+    n.setAttribute ("minimumLengthMs", minimumLengthMs);
     n.setAttribute ("disallowedChannels", disallowedChannels.toString (2));
 }
 
@@ -381,6 +456,23 @@ void MidiInputDevice::setManualAdjustmentMs (double ms)
         manualAdjustMs = ms;
         changed();
         saveProps();
+    }
+}
+
+void MidiInputDevice::setMinimumLengthMs (double ms)
+{
+    if (minimumLengthMs != ms)
+    {
+        minimumLengthMs = ms;
+        changed();
+        saveProps();
+
+        if (minimumLengthMs > 0 && noteDispatcher == nullptr)
+            noteDispatcher = std::make_unique<NoteDispatcher> (*this);
+        else if (minimumLengthMs <= 0)
+            noteDispatcher = nullptr;
+
+        lastNoteOns.resize (minimumLengthMs > 0 ? 128 * 16 : 0);
     }
 }
 

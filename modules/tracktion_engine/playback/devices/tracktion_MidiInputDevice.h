@@ -46,6 +46,9 @@ public:
     void setManualAdjustmentMs (double);
     double getManualAdjustmentMs() const            { return manualAdjustMs; }
 
+    void setMinimumLengthMs (double);
+    double getMinimumLengthMs() const               { return minimumLengthMs; }
+
     /** Returns true if the given device is an MPE device and so should always record incoming MIDI to Note Expression. */
     bool isMPEDevice() const;
 
@@ -106,15 +109,20 @@ public:
 
 protected:
     class MidiEventSnifferNode;
+    class NoteDispatcher;
 
     std::atomic<double> adjustSecs { 0 };
     double manualAdjustMs = 0;
+    double minimumLengthMs = 0;
     bool overrideNoteVels = false, eventReceivedFromDevice = false;
     juce::BigInteger disallowedChannels;
     MidiChannel channelToUse;
     int programToUse = 0;
     int bankToUse = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+
+    std::unique_ptr<NoteDispatcher> noteDispatcher;
+    std::vector<double> lastNoteOns;
 
     juce::CriticalSection noteLock;
     bool keysDown[128], keysUp[128];
