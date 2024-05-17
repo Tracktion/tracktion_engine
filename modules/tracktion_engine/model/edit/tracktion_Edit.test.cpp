@@ -11,8 +11,24 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_EDIT
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
 namespace tracktion { inline namespace engine
 {
+
+//==============================================================================
+//==============================================================================
+TEST_SUITE("tracktion_engine")
+{
+    TEST_CASE("Testing Edit defaults")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+
+        CHECK(edit);
+        CHECK(getAudioTracks (*edit).size() == 1);
+    }
+}
 
 //==============================================================================
 //==============================================================================

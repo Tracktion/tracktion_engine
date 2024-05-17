@@ -27,6 +27,9 @@
 
 #pragma once
 
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
 using namespace tracktion_engine;
 
 //==============================================================================
@@ -203,9 +206,17 @@ namespace TestRunner
                 Logger::writeToLog (res.getErrorMessage());
         }
 
+        doctest::Context doctestContext;
+        // doctestContext.setOption ("success", true);
+        doctestContext.setOption ("duration", true);
+        doctestContext.addFilter("test-suite", "tracktion_core");
+        doctestContext.addFilter("test-suite", "tracktion_graph");
+        doctestContext.addFilter("test-suite", "tracktion_engine");
+        const auto doctestFailed = doctestContext.run();
+
         Logger::setCurrentLogger (nullptr);
 
-        return numFailues > 0 ? 1 : 0;
+        return (numFailues > 0 || doctestFailed) ? 1 : 0;
     }
 }
 
