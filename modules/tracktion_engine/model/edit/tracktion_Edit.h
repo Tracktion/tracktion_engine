@@ -100,6 +100,8 @@ public:
 
         std::function<juce::File()> editFileRetriever = {};                     /**< An optional editFileRetriever to use. */
         std::function<juce::File (const juce::String&)> filePathResolver = {};  /**< An optional filePathResolver to use. */
+
+        uint32_t numAudioTracks = 1;                                            /**< If non-zero, will ensure the edit has this many audio tracks */
     };
 
     /** Creates an Edit from a set of Options. */
@@ -906,7 +908,7 @@ private:
     void moveTrackInternal (Track::Ptr, TrackInsertPoint);
 
     //==============================================================================
-    void initialise();
+    void initialise (const Options&);
     void undoOrRedo (bool isUndo);
 
     //==============================================================================
@@ -916,7 +918,7 @@ private:
     void initialiseMasterVolume();
     void initialiseVideo();
     void initialiseClickTrack();
-    void initialiseTracks();
+    void initialiseTracks (const Options&);
     void initialiseAudioDevices();
     void initialiseRacks();
     void initialiseMasterPlugins();

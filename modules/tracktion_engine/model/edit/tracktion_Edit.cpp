@@ -612,7 +612,7 @@ Edit::Edit (Options options)
 
     undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
 
-    initialise();
+    initialise (options);
 
     undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
 
@@ -734,7 +734,7 @@ Edit::ScopedRenderStatus::~ScopedRenderStatus()
 
 
 //==============================================================================
-void Edit::initialise()
+void Edit::initialise (const Options& options)
 {
     CRASH_TRACER
     const StopwatchTimer loadTimer;
@@ -767,7 +767,7 @@ void Edit::initialise()
     if (loadContext != nullptr)
         loadContext->progress = 1.0f;
 
-    initialiseTracks();
+    initialiseTracks (options);
     initialiseARA();
     updateMuteSoloStatuses();
     readFrozenTracksFiles();
@@ -939,12 +939,12 @@ void Edit::removeZeroLengthClips()
         c->removeFromParent();
 }
 
-void Edit::initialiseTracks()
+void Edit::initialiseTracks (const Options& options)
 {
     // If the tempo track hasn't been created yet this is a new Edit
     if (getTempoTrack() == nullptr)
     {
-        ensureNumberOfAudioTracks (getProjectItemID().getProjectID() == 0 ? 1 : 8);
+        ensureNumberOfAudioTracks (static_cast<int> (options.numAudioTracks));
         updateTrackStatuses();
     }
 
