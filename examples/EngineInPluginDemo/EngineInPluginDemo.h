@@ -198,16 +198,16 @@ private:
             JUCE_ASSERT_MESSAGE_THREAD
             audioInterface.initialise ({});
 
-            setupInputs (edit);
-            setupOutputs (edit);
-            create4OSCPlugin (edit);
+            setupInputs (*edit);
+            setupOutputs (*edit);
+            create4OSCPlugin (*edit);
         }
 
         te::Engine engine { ProjectInfo::projectName, nullptr, std::make_unique<PluginEngineBehaviour>() };
-        te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
-        te::TransportControl& transport { edit.getTransport() };
+        std::unique_ptr<te::Edit> edit { te::Edit::createSingleTrackEdit (engine) };
+        te::TransportControl& transport { edit->getTransport() };
         te::HostedAudioDeviceInterface& audioInterface;
-        te::ExternalPlayheadSynchroniser playheadSynchroniser { edit };
+        te::ExternalPlayheadSynchroniser playheadSynchroniser { *edit };
     };
 
     template<typename Function>
@@ -305,7 +305,7 @@ private:
 
     private:
         EngineInPluginDemo& plugin;
-        te::Edit& edit { plugin.engineWrapper->edit };
+        te::Edit& edit { *plugin.engineWrapper->edit };
         AudioPlayHead::CurrentPositionInfo pluginPositionInfo, editPositionInfo;
         te::LambdaTimer repaintTimer { [this] { update(); } };
         juce::ToggleButton clickTrackButton { "Enable Click Track" };
@@ -327,8 +327,8 @@ private:
             if (plugin.engineWrapper)
             {
                 pluginPositionInfo = plugin.engineWrapper->playheadSynchroniser.getPositionInfo();
-                editPositionInfo = getCurrentPositionInfo (plugin.engineWrapper->edit);
-                clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit.clickTrackEnabled.getPropertyAsValue());
+                editPositionInfo = getCurrentPositionInfo (*plugin.engineWrapper->edit);
+                clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit->clickTrackEnabled.getPropertyAsValue());
 
                 // Update recording button
                 bool isRecording = false;
