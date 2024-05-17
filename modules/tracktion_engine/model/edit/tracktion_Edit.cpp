@@ -3126,10 +3126,10 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 
             if (editToMatch != nullptr)
             {
+                wc->setTimeStretchMode (TimeStretcher::disabled);
                 if (tryToMatchTempo || tryToMatchPitch)
                 {
                     wc->setLoopInfo (af.getInfo().loopInfo);
-                    wc->setTimeStretchMode (TimeStretcher::defaultMode);
 
                     engine.getEngineBehaviour().newClipAdded (*wc, false);
                 }
@@ -3151,6 +3151,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                         if (wc->getLoopInfo().getNumBeats() > 0)
                         {
                             length *= wc->getLoopInfo().getBpm (wi) / targetTempo.getBpm();
+                            wc->setTimeStretchMode (TimeStretcher::defaultMode);
                             wc->setAutoTempo (true);
 
                             if (couldMatchTempo != nullptr)
@@ -3166,7 +3167,15 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                     engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
-                    wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
+                    if (wc->getLoopInfo().getRootNote() != -1)
+                    {
+                        wc->setTimeStretchMode (TimeStretcher::defaultMode);
+                        wc->setAutoPitch (true);
+                    }
+                    else
+                    {
+                        wc->setAutoPitch (false);
+                    }
                 }
             }
 
