@@ -632,7 +632,7 @@ Edit::Edit (Options options)
     isFullyConstructed.store (true, std::memory_order_relaxed);
 }
 
-static Edit::Options getOptionsFor (Engine& engine, EditRole role)
+static Edit::Options getOptionsFor (Engine& engine, Edit::EditRole role)
 {
     auto editState = createEmptyEdit (engine);
 
