@@ -140,7 +140,7 @@ class DistortionEffectDemo : public Component,
 - If you look in the private member section of the `DistortionEffectDemo` again, you'll see similarities to the PitchAndTimeComponent and PlayBackDemo. There is an `Engine` to set up Tracktion Engine, and an `Edit` for editing.
 
 ```
-te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+te::Edit edit { engine, te::Edit::EditRole::forEditing };
 te::TransportControl& transport { edit.getTransport() };
 ```
 - We've added a slider called `gainSlider` to represent distortion gain.

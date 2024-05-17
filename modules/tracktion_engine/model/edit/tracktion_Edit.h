@@ -110,6 +110,9 @@ public:
     /** Creates an Edit from a set of Options. */
     Edit (Options);
 
+    /** Creates a new, empty Edit with default options for a given role. */
+    Edit (Engine&, EditRole);
+
     /** Destructor. */
     ~Edit() override;
 
@@ -220,9 +223,7 @@ public:
     /** Creates an Edit with a single AudioTrack. */
     static std::unique_ptr<Edit> createSingleTrackEdit (Engine&, EditRole role = EditRole::forEditing);
 
-    /** Creates an Edit that loads a state using options that are suitable
-        for using it in a non-editable/non-playable role.
-    */
+    /** Creates an Edit that loads a state, using the role Edit::forExamining */
     static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining);
 
     //==============================================================================
@@ -949,7 +950,7 @@ private:
 
     // This constructor has been deprecated - use the other constructor that takes an Options,
     // or one of the static helper methods for creating an edit
-    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int);
+    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Edit)
 };

@@ -632,6 +632,30 @@ Edit::Edit (Options options)
     isFullyConstructed.store (true, std::memory_order_relaxed);
 }
 
+static Edit::Options getOptionsFor (Engine& engine, EditRole role)
+{
+    auto editState = createEmptyEdit (engine);
+
+    return Edit::Options
+    {
+        engine,
+        editState,
+        ProjectItemID::fromProperty (editState, IDs::projectID),
+        role,
+        nullptr,
+        role == Edit::EditRole::forEditing ? Edit::getDefaultNumUndoLevels() : 1,
+        {},
+        {},
+        1 // min num audio tracks
+    };
+}
+
+Edit::Edit (Engine& e, EditRole roleToUse) : Edit (getOptionsFor (e, roleToUse))
+{
+    if (auto track = getFirstAudioTrack (*this))
+        track->getOutput().setOutputToDefaultDevice (false);
+}
+
 Edit::~Edit()
 {
     CRASH_TRACER
@@ -3196,26 +3220,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
 
 std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& e, EditRole roleToUse)
 {
-    CRASH_TRACER
-    auto editState = createEmptyEdit (e);
-
-    auto edit = createEdit (Options
-    {
-        e,
-        editState,
-        ProjectItemID::fromProperty (editState, IDs::projectID),
-        roleToUse,
-        nullptr,
-        1, // undo levels
-        {},
-        {},
-        1 // min num audio tracks
-    });
-
-    if (auto track = getFirstAudioTrack (*edit))
-        track->getOutput().setOutputToDefaultDevice (false);
-
-    return edit;
+    return std::make_unique<Edit> (e, roleToUse);
 }
 
 std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse)

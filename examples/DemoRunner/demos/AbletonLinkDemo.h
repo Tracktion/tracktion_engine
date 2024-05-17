@@ -119,7 +119,7 @@ struct AbletonLink : public juce::Component,
 
 private:
     te::Engine& engine;
-    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     te::TransportControl& transport { edit.getTransport() };
     te::AbletonLink& abletonLink { edit.getAbletonLink() };
 

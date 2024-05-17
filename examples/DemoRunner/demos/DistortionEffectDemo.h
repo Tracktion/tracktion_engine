@@ -211,7 +211,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     std::unique_ptr<TemporaryFile> oggTempFile;
 
     TextButton playPauseButton { "Play" };

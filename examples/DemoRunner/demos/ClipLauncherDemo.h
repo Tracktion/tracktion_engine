@@ -1186,7 +1186,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     te::TransportControl& transport { edit.getTransport() };
     te::LaunchQuantisation& launchQuantisation { edit.getLaunchQuantisation() };
 

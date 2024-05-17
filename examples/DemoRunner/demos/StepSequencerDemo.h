@@ -444,7 +444,7 @@ public:
 
     //==============================================================================
     void sliderValueChanged (Slider*) override
-    {        
+    {
         if (! ModifierKeys::getCurrentModifiers().isAnyMouseButtonDown())
             edit.tempoSequence.getTempos()[0]->setBpm (tempoSlider.getValue());
     }
@@ -481,7 +481,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     te::TransportControl& transport { edit.getTransport() };
 
     TextButton playPauseButton { "Play" }, randomiseButton { "Randomise" }, clearButton { "Clear" };
