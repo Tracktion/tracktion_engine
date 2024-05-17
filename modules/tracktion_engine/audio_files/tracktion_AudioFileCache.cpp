@@ -392,6 +392,7 @@ public:
     {
         jassert (destSamples != nullptr);
         jassert (startSample >= 0);
+        jassert (startOffsetInDestBuffer >= 0);
 
         bool allDataRead = true;
 
@@ -408,7 +409,7 @@ public:
 
             if (l.isLocked && l.reader != nullptr)
             {
-                auto numThisTime = std::min (numSamples, (int) (l.reader->getMappedSection().getEnd() - startSample));
+                auto numThisTime = int (std::min<int64_t> (numSamples, l.reader->getMappedSection().getEnd() - startSample));
 
                 l.reader->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer, startSample, numThisTime);
 

@@ -450,6 +450,8 @@ public:
     bool followsTrackSelection = false;
     AuxPosition auxMode = AuxPosition::byBus;
 
+    void setFollowsTrackSelection (bool f);
+
     Engine& engine;
     ExternalControllerManager& externalControllerManager;
     ExternalController* owner = nullptr;

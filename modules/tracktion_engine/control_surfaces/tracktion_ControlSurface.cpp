@@ -639,4 +639,11 @@ bool ControlSurface::pickedUp (ControlType type, int index, float value)
     return info.pickedUp;
 }
 
+void ControlSurface::setFollowsTrackSelection (bool f)
+{
+    followsTrackSelection = f;
+    if (owner)
+        owner->followsTrackSelection = f;
+}
+
 }} // namespace tracktion { inline namespace engine
