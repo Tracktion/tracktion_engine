@@ -402,6 +402,9 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage
         {
             auto idx = (m.getChannel() - 1) + m.getNoteNumber();
             lastNoteOns[size_t (idx)] = juce::Time::getMillisecondCounterHiRes();
+
+            if (noteDispatcher)
+                noteDispatcher->clear (m.getChannel(), m.getNoteNumber());
         }
         else if (m.isNoteOff())
         {

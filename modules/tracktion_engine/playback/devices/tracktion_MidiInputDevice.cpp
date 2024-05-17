@@ -62,7 +62,17 @@ public:
     void enqueue (double tm, const juce::MidiMessage& m)
     {
         juce::ScopedLock sl (lock);
+        
         items.push_back ({tm, m});
+    }
+
+    void clear (int channel, int note)
+    {
+        juce::ScopedLock sl (lock);
+
+        items.erase (std::remove_if (items.begin(), items.end(),
+                                     [&](const Item& i) -> bool { return i.m.getChannel() == channel && i.m.getNoteNumber() == note; }),
+                     items.end());
     }
 
 private:
