@@ -109,10 +109,8 @@ bool EditRenderJob::setUpRender()
                                               }
                                           });
         juce::ignoreUnused (contextUpdater);
-        auto edit = new Edit (*params.engine,
-                              loadEditFromProjectManager (params.engine->getProjectManager(), itemID),
-                              Edit::forRendering, &context, 1); // always use saved version!
-        editDeleter.setOwned (edit);
+
+        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID, Edit::EditRole::forRendering);
 
         // it's difficult to determine the marked region or selections at this point, so we'll ignore it,
         // assuming that this code will only be used for rendering entire EditClips, and not sections of edits.
@@ -121,10 +119,12 @@ bool EditRenderJob::setUpRender()
         jassert (! renderOptions.selectedTracks);
 
         params = renderOptions.getRenderParameters (*edit);
-        params.edit         = edit;
+        params.edit         = edit.get();
         params.destFile     = proxy.getFile();
         params.tracksToDo   = renderOptions.getTrackIndexes (*edit);
         params.category     = ProjectItem::Category::none;
+
+        editDeleter.setOwned (edit.release());
     }
 
     CRASH_TRACER

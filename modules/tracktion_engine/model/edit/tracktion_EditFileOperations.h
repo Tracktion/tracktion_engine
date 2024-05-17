@@ -51,13 +51,18 @@ private:
 
 //==============================================================================
 /** Loads an edit from file, ready for playback / editing */
-std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&, Edit::EditRole role = Edit::forEditing);
+std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&,
+                                        Edit::EditRole role = Edit::EditRole::forEditing);
 
 /** Creates a new edit for a file, ready for playback / editing */
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
 
 /** Uses the ProjectManager to find an Edit file and load it as a ValueTree. */
 juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
+
+/** Uses the ProjectManager to find an Edit file and open it. */
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID, 
+                                            Edit::EditRole role = Edit::EditRole::forExamining);
 
 /** Legacy, will be deprecated soon. Use version that returns an edit.
     Loads a ValueTree from a file to load an Edit.

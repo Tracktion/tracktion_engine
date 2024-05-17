@@ -632,13 +632,6 @@ Edit::Edit (Options options)
     isFullyConstructed.store (true, std::memory_order_relaxed);
 }
 
-Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
-            LoadContext* sourceLoadContext, int numUndoLevelsToStore)
-    : Edit ({ e, editState, ProjectItemID::fromProperty (editState, IDs::projectID),
-              role, sourceLoadContext, numUndoLevelsToStore, {}, {} })
-{
-}
-
 Edit::~Edit()
 {
     CRASH_TRACER
@@ -2778,17 +2771,19 @@ void Edit::setEditMetadata (Metadata metadata)
 }
 
 //==============================================================================
+std::unique_ptr<Edit> Edit::createEdit (Options options)
+{
+    return std::make_unique<Edit> (std::move (options));
+}
+
 std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce::ValueTree v, const Edit* editToMatch,
                                                            bool tryToMatchTempo, bool* couldMatchTempo, juce::ValueTree midiPreviewPlugin,
-                                                           juce::ValueTree midiDrumPreviewPlugin, bool forceMidiToDrums, Edit* editToUpdate)
+                                                           juce::ValueTree midiDrumPreviewPlugin, bool forceMidiToDrums, std::unique_ptr<Edit> edit)
 {
     CRASH_TRACER
-    std::unique_ptr<Edit> edit;
 
-    if (editToUpdate != nullptr)
-        edit.reset (editToUpdate);
-    else
-        edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
+    if (edit == nullptr)
+        edit = createSingleTrackEdit (engine);
 
     edit->ensureNumberOfAudioTracks (3);
     edit->isPreviewEdit = true;
@@ -2973,14 +2968,12 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                                                          juce::ValueTree midiPreviewPlugin,
                                                          juce::ValueTree midiDrumPreviewPlugin,
                                                          bool forceMidiToDrums,
-                                                         Edit* editToUpdate)
+                                                         std::unique_ptr<Edit> edit)
 {
     CRASH_TRACER
-    std::unique_ptr<Edit> edit;
-    if (editToUpdate != nullptr)
-        edit.reset (editToUpdate);
-    else
-        edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
+
+    if (edit == nullptr)
+        edit = createSingleTrackEdit (engine);
 
     edit->ensureNumberOfAudioTracks (3);
     edit->isPreviewEdit = true;
@@ -3165,9 +3158,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (clip.edit.engine, createEmptyEdit (clip.edit.engine), forEditing, nullptr, 1);
+    auto edit = createSingleTrackEdit (clip.edit.engine);
     edit->setTempDirectory (clip.edit.getTempDirectory (false));
-    edit->ensureNumberOfAudioTracks (1);
     edit->tempoSequence.copyFrom (clip.edit.tempoSequence);
     edit->pitchSequence.copyFrom (clip.edit.pitchSequence);
     edit->setTimecodeFormat (clip.edit.getTimecodeFormat());
@@ -3202,17 +3194,44 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
     return edit;
 }
 
-std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& engine)
+std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& e, EditRole roleToUse)
 {
     CRASH_TRACER
-    auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), forEditing, nullptr, 1);
+    auto editState = createEmptyEdit (e);
 
-    edit->ensureNumberOfAudioTracks (1);
+    auto edit = createEdit (Options
+    {
+        e,
+        editState,
+        ProjectItemID::fromProperty (editState, IDs::projectID),
+        roleToUse,
+        nullptr,
+        1, // undo levels
+        {},
+        {},
+        1 // min num audio tracks
+    });
 
     if (auto track = getFirstAudioTrack (*edit))
         track->getOutput().setOutputToDefaultDevice (false);
 
     return edit;
+}
+
+std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse)
+{
+    return createEdit (Options
+    {
+        e,
+        editState,
+        ProjectItemID::fromProperty (editState, IDs::projectID),
+        roleToUse,
+        nullptr,
+        1, // undo levels
+        {},
+        {},
+        0 // min num audio tracks
+    });
 }
 
 //==============================================================================

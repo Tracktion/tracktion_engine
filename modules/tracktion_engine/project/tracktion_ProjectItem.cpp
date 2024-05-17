@@ -782,22 +782,14 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
     if (isEdit())
     {
-        auto& pm = engine.getProjectManager();
+        auto ed = loadEditForExamining (engine.getProjectManager(), getID());
 
-        Edit ed (engine,
-                 loadEditFromProjectManager (pm, getID()),
-                 Edit::forExamining, nullptr, 1);
-
-        for (auto exp : Exportable::addAllExportables (ed))
-        {
+        for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())
-            {
                  if (item.itemID.getProjectID() == oldID)
                      exp->reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);
-            }
-        }
 
-        EditFileOperations (ed).save (false, true, false);
+        EditFileOperations (*ed).save (false, true, false);
     }
 }
 

@@ -17,7 +17,8 @@ namespace tracktion { inline namespace engine
 /**
     The Tracktion Edit class!
 
-    An Edit is the containing class for an arrangement that can be played back.
+    An Edit represents an arrangement that can be played, rendered, modified, etc.
+
     It contains all the per-session objects such as tracks, tempo sequences,
     pitches, input devices, Racks, master plugins etc. and any per-Edit management
     objects such as UndoManager, PluginCache etc.
@@ -27,10 +28,12 @@ namespace tracktion { inline namespace engine
 
     To create an Edit to you need construct one with an Edit::Options instance
     supplying at least the Engine to use, the ValueTree state and a ProjectItemID
-    to uniquely identify this Edit.
+    to uniquely identify this Edit, or use some of the static helper methods that
+    return a `std::unique_ptr<Edit>`.
 
     This is a high level overview of the Edit structure and the relevant objects.
     Note that this isn't an exhaustive list but should help you find the most relevant classes.
+
     - Edit
         - TempoSequence
             - TimeSigSetting[s]
@@ -106,9 +109,6 @@ public:
 
     /** Creates an Edit from a set of Options. */
     Edit (Options);
-
-    /** Legacy Edit constructor, will be deprecated soon, use the other consturctor that takes an Options. */
-    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
 
     /** Destructor. */
     ~Edit() override;
@@ -194,13 +194,17 @@ public:
     /** Returns true if the Edit's not yet fully loaded */
     bool isLoading() const                                              { return isLoadInProgress; }
 
+    //==============================================================================
+    /** Creates an Edit for the given options. */
+    static std::unique_ptr<Edit> createEdit (Options);
+
     /** Creates an Edit for previewing a file. */
     static std::unique_ptr<Edit> createEditForPreviewingFile (Engine&, const juce::File&, const Edit* editToMatch,
                                                               bool tryToMatchTempo, bool tryToMatchPitch, bool* couldMatchTempo,
                                                               juce::ValueTree midiPreviewPlugin,
                                                               juce::ValueTree midiDrumPreviewPlugin = {},
                                                               bool forceMidiToDrums = false,
-                                                              Edit* editToUpdate = {});
+                                                              std::unique_ptr<Edit> editToUpdate = {});
 
     /** Creates an Edit for previewing a preset. */
     static std::unique_ptr<Edit> createEditForPreviewingPreset (Engine& engine, juce::ValueTree, const Edit* editToMatch,
@@ -208,13 +212,18 @@ public:
                                                                 juce::ValueTree midiPreviewPlugin,
                                                                 juce::ValueTree midiDrumPreviewPlugin = {},
                                                                 bool forceMidiToDrums = false,
-                                                                Edit* editToUpdate = {});
+                                                                std::unique_ptr<Edit> editToUpdate = {});
 
     /** Creates an Edit for previewing a Clip. */
     static std::unique_ptr<Edit> createEditForPreviewingClip (Clip&);
 
     /** Creates an Edit with a single AudioTrack. */
-    static std::unique_ptr<Edit> createSingleTrackEdit (Engine&);
+    static std::unique_ptr<Edit> createSingleTrackEdit (Engine&, EditRole role = EditRole::forEditing);
+
+    /** Creates an Edit that loads a state using options that are suitable
+        for using it in a non-editable/non-playable role.
+    */
+    static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining);
 
     //==============================================================================
     /** Quick way to find and iterate all Track[s] in the Edit. */
@@ -937,6 +946,10 @@ private:
     void needToUpdateFrozenTracks();
 
     void sanityCheckTrackNames();
+
+    // This constructor has been deprecated - use the other constructor that takes an Options,
+    // or one of the static helper methods for creating an edit
+    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Edit)
 };

@@ -234,21 +234,18 @@ namespace benchmark_utilities
         if (! id.isValid())
             id = ProjectItemID::createNewID (0);
 
-        Edit::Options options =
+        return Edit::createEdit (Edit::Options
         {
             engine,
             editState,
             id,
-
             Edit::forEditing,
             nullptr,
             Edit::getDefaultNumUndoLevels(),
-
             {},
-            {}
-        };
-
-        return std::make_unique<Edit> (options);
+            {},
+            0
+        });
     }
 
     /** Loads an Edit that was saved directly from the state to a GZip stream. */

@@ -153,7 +153,7 @@ public:
     //==============================================================================
     std::unique_ptr<Edit> createEditWithTracksForInputs (Engine& engine, const HostedAudioDeviceInterface::Parameters& params)
     {
-        auto edit = std::make_unique<Edit> (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });
+        auto edit = Edit::createSingleTrackEdit (engine);
         auto& transport = edit->getTransport();
         transport.ensureContextAllocated();
         auto context = transport.getCurrentPlaybackContext();

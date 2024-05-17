@@ -426,6 +426,11 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID it
     return {};
 }
 
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID itemID, Edit::EditRole role)
+{
+    return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role);
+}
+
 juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID itemID)
 {
     CRASH_TRACER
@@ -463,6 +468,11 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID 
     return state;
 }
 
+juce::ValueTree createEmptyEdit (Engine& e)
+{
+    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
+}
+
 std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role)
 {
     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
@@ -471,46 +481,34 @@ std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFi
     if (! id.isValid())
         id = ProjectItemID::createNewID (0);
 
-    Edit::Options options =
+    return Edit::createEdit (Edit::Options
     {
         engine,
         editState,
         id,
-
         role,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-
         [editFile] { return editFile; },
         {}
-    };
-
-    return std::make_unique<Edit> (options);
+    });
 }
 
 std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
 {
     auto id = ProjectItemID::createNewID (0);
-    Edit::Options options =
+
+    return Edit::createEdit (Edit::Options
     {
         engine,
         loadEditFromFile (engine, {}, id),
         id,
-
         Edit::forEditing,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-
         [editFile] { return editFile; },
         {}
-    };
-
-    return std::make_unique<Edit> (options);
-}
-
-juce::ValueTree createEmptyEdit (Engine& e)
-{
-    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
+    });
 }
 
 }} // namespace tracktion { inline namespace engine
