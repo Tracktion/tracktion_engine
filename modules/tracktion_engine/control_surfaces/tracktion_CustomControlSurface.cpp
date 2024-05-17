@@ -224,6 +224,7 @@ juce::XmlElement* CustomControlSurface::createXml()
     element->setAttribute ("channels", numberOfFaderChannels);
     element->setAttribute ("parameters", numParameterControls);
     element->setAttribute ("pickUpMode", pickUpMode);
+    element->setAttribute ("followsSelection", followsTrackSelection);
 
     for (auto m : mappings)
     {
@@ -244,6 +245,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
     pickUpMode                  = xml.getBoolAttribute ("pickUpMode", false);
+    followsTrackSelection       = xml.getBoolAttribute ("followsSelection", false);
 
     mappings.clear();
 
