@@ -88,6 +88,15 @@
  #define TRACKTION_ENABLE_ARA 0
 #endif
 
+/** Config: TRACKTION_ENABLE_CMAJOR
+    Enables Cmajor support.
+    If you turn this flag on, you must add the Cmajor library to your
+    cmake project so that it can find the headers and link the library
+*/
+#ifndef TRACKTION_ENABLE_CMAJOR
+ #define TRACKTION_ENABLE_CMAJOR 0
+#endif
+
 /** Config: TRACKTION_ENABLE_REWIRE
     Enables ReWire support.
  */
@@ -649,6 +658,7 @@ namespace tracktion { inline namespace engine
 #include "plugins/effects/tracktion_SamplerPlugin.h"
 #include "plugins/effects/tracktion_ToneGenerator.h"
 
+#include "plugins/cmajor/tracktion_CmajorPluginFormat.h"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 

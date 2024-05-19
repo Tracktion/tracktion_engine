@@ -91,6 +91,8 @@ using namespace std::literals;
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 
+#include "plugins/cmajor/tracktion_CmajorPluginFormat.cpp"
+
 #include "plugins/tracktion_Plugins.test.cpp"
 
 #ifdef __GNUC__

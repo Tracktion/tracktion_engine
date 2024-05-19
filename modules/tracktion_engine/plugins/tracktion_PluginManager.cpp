@@ -436,6 +436,10 @@ void PluginManager::initialise()
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();
+
+    if (auto patchFormat = createCmajorPatchPluginFormat (engine))
+        pluginFormatManager.addFormat (patchFormat.release());
+
     knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
 
     auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
