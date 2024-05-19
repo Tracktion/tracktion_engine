@@ -8,15 +8,7 @@ inline bool isDPIAware (te::Plugin&)
 }
 
 //==============================================================================
-class PluginEditor : public Component
-{
-public:
-    virtual bool allowWindowResizing() = 0;
-    virtual ComponentBoundsConstrainer* getBoundsConstrainer() = 0;
-};
-
-//==============================================================================
-struct AudioProcessorEditorContentComp : public PluginEditor
+struct AudioProcessorEditorContentComp : public te::Plugin::EditorComponent
 {
     AudioProcessorEditorContentComp (te::ExternalPlugin& plug) : plugin (plug)
     {
@@ -85,9 +77,9 @@ public:
 
     void show();
 
-    void setEditor (std::unique_ptr<PluginEditor>);
-    PluginEditor* getEditor() const         { return editor.get(); }
-    
+    void setEditor (std::unique_ptr<te::Plugin::EditorComponent>);
+    te::Plugin::EditorComponent* getEditor() const         { return editor.get(); }
+
     void recreateEditor();
     void recreateEditorAsync();
 
@@ -97,10 +89,8 @@ private:
     void closeButtonPressed() override              { userTriedToCloseWindow(); }
     float getDesktopScaleFactor() const override    { return 1.0f; }
 
-    std::unique_ptr<PluginEditor> createContentComp();
+    std::unique_ptr<te::Plugin::EditorComponent> editor;
 
-    std::unique_ptr<PluginEditor> editor;
-    
     te::Plugin& plugin;
     te::PluginWindowState& windowState;
 };
@@ -123,7 +113,7 @@ PluginWindow::PluginWindow (te::Plugin& plug)
 
     setResizeLimits (100, 50, 4000, 4000);
     setBoundsConstrained (getLocalBounds() + position);
-    
+
     recreateEditor();
 
     #if JUCE_LINUX
@@ -145,7 +135,7 @@ void PluginWindow::show()
     setBoundsConstrained (getBounds());
 }
 
-void PluginWindow::setEditor (std::unique_ptr<PluginEditor> newEditor)
+void PluginWindow::setEditor (std::unique_ptr<te::Plugin::EditorComponent> newEditor)
 {
     JUCE_AUTORELEASEPOOL
     {
@@ -200,18 +190,10 @@ std::unique_ptr<Component> PluginWindow::create (te::Plugin& plugin)
     return w;
 }
 
-std::unique_ptr<PluginEditor> PluginWindow::createContentComp()
-{
-    if (auto ex = dynamic_cast<te::ExternalPlugin*> (&plugin))
-        return std::make_unique<AudioProcessorEditorContentComp> (*ex);
-
-    return nullptr;
-}
-
 void PluginWindow::recreateEditor()
 {
     setEditor (nullptr);
-    setEditor (createContentComp());
+    setEditor (plugin.createEditor());
 }
 
 void PluginWindow::recreateEditorAsync()
@@ -219,10 +201,10 @@ void PluginWindow::recreateEditorAsync()
     setEditor (nullptr);
 
     Timer::callAfterDelay (50, [this, sp = SafePointer<Component> (this)]
-                                 {
-                                     if (sp != nullptr)
-                                         recreateEditor();
-                                 });
+                               {
+                                   if (sp != nullptr)
+                                       recreateEditor();
+                               });
 }
 
 void PluginWindow::moved()
@@ -236,7 +218,7 @@ class ExtendedUIBehaviour : public te::UIBehaviour
 {
 public:
     ExtendedUIBehaviour() = default;
-    
+
     std::unique_ptr<Component> createPluginWindow (te::PluginWindowState& pws) override
     {
         if (auto ws = dynamic_cast<te::Plugin::WindowState*> (&pws))

@@ -1840,6 +1840,103 @@ void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectI
     engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
 }
 
+
+//==============================================================================
+struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
+{
+    AudioProcessorEditorContentComp (ExternalPlugin& plug) : plugin (plug)
+    {
+        JUCE_AUTORELEASEPOOL
+        {
+            if (auto inst = plugin.getAudioPluginInstance())
+            {
+                std::unique_ptr<juce::ScopedDPIAwarenessDisabler> disableDPIAwareness;
+
+               #if JUCE_WINDOWS && JUCE_WIN_PER_MONITOR_DPI_AWARE
+                if (! isDPIAware (plugin))
+                    disableDPIAwareness = std::make_unique<juce::ScopedDPIAwarenessDisabler>();
+               #endif
+
+                editor.reset (inst->createEditorIfNeeded());
+
+                if (editor == nullptr)
+                    return;
+
+                addAndMakeVisible (*editor);
+            }
+        }
+
+        resizeToFitEditor (true);
+    }
+
+    bool allowWindowResizing() override
+    {
+        if (editor != nullptr && editor->isResizable())
+            return true;
+
+        return plugin.isVST3() && plugin.getVendor().containsIgnoreCase ("Celemony");
+    }
+
+    juce::ComponentBoundsConstrainer* getBoundsConstrainer() override
+    {
+        if (editor != nullptr)
+            return editor->getConstrainer();
+
+        return {};
+    }
+
+    void resized() override
+    {
+        if (editor != nullptr)
+            editor->setBounds (getLocalBounds());
+    }
+
+    void childBoundsChanged (juce::Component* c) override
+    {
+        if (c == editor.get())
+        {
+            plugin.edit.pluginChanged (plugin);
+            resizeToFitEditor (false);
+        }
+    }
+
+    void resizeToFitEditor (bool force)
+    {
+        if (force || ! allowWindowResizing())
+        {
+            setSize (std::max (8, editor != nullptr ? editor->getWidth() : 0),
+                     std::max (8, editor != nullptr ? editor->getHeight() : 0));
+        }
+    }
+
+    void visibilityChanged() override
+    {
+        if (editor != nullptr && isShowing())
+        {
+            if (editor->isShowing())
+                editor->grabKeyboardFocus();
+
+            editor->toFront (true);
+        }
+    }
+
+    ExternalPlugin& plugin;
+    std::unique_ptr<juce::AudioProcessorEditor> editor;
+
+    AudioProcessorEditorContentComp() = delete;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessorEditorContentComp)
+};
+
+std::unique_ptr<Plugin::EditorComponent> ExternalPlugin::createEditor()
+{
+    auto ed = std::make_unique<AudioProcessorEditorContentComp> (*this);
+
+    if (ed->editor != nullptr)
+        return ed;
+
+    return {};
+}
+
 //==============================================================================
 PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name, Plugin& owner)
     : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })

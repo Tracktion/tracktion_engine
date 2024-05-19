@@ -126,6 +126,9 @@ public:
 
     ActiveNoteList getActiveNotes() const           { return activeNotes; }
 
+    //==============================================================================
+    std::unique_ptr<EditorComponent> createEditor() override;
+
 private:
     //==============================================================================
     juce::CriticalSection lock;

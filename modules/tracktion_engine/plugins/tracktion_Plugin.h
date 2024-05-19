@@ -368,6 +368,15 @@ public:
     EditItemID getSidechainSourceID() const                 { return sidechainSourceID; }
 
     //==============================================================================
+    struct EditorComponent  : public juce::Component
+    {
+        virtual bool allowWindowResizing() = 0;
+        virtual juce::ComponentBoundsConstrainer* getBoundsConstrainer() = 0;
+    };
+
+    virtual std::unique_ptr<EditorComponent> createEditor()     { return {}; }
+
+    //==============================================================================
     struct WindowState  : public PluginWindowState
     {
         WindowState (Plugin&);
