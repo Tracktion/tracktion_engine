@@ -1850,13 +1850,6 @@ struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
         {
             if (auto inst = plugin.getAudioPluginInstance())
             {
-                std::unique_ptr<juce::ScopedDPIAwarenessDisabler> disableDPIAwareness;
-
-               #if JUCE_WINDOWS && JUCE_WIN_PER_MONITOR_DPI_AWARE
-                if (! isDPIAware (plugin))
-                    disableDPIAwareness = std::make_unique<juce::ScopedDPIAwarenessDisabler>();
-               #endif
-
                 editor.reset (inst->createEditorIfNeeded());
 
                 if (editor == nullptr)
