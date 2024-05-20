@@ -96,7 +96,6 @@ juce::String getCmajorPatchCompileError (Plugin& p)
 //==============================================================================
 juce::String getCmajorPatchCompileError (Plugin&) { return {}; }
 std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktion::Engine&)  { return {}; }
-std::unique_ptr<Plugin::EditorComponent> createCmajorPatchEditor (ExternalPlugin&) { return {}; }
 
 #endif
 
