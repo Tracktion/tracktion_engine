@@ -525,6 +525,11 @@ namespace hombre
  #include "3rd_party/airwindows/Hombre/Hombre.cpp"
  #include "3rd_party/airwindows/Hombre/HombreProc.cpp"
 }
+namespace inflamer
+{
+ #include "3rd_party/airwindows/Inflamer/Inflamer.cpp"
+ #include "3rd_party/airwindows/Inflamer/InflamerProc.cpp"
+}
 namespace interstage
 {
  #include "3rd_party/airwindows/Interstage/Interstage.cpp"

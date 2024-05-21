@@ -548,6 +548,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsHighpass2>();
     createBuiltInType<AirWindowsHolt>();
     createBuiltInType<AirWindowsHombre>();
+    createBuiltInType<AirWindowsInflamer>();
     createBuiltInType<AirWindowsInterstage>();
     createBuiltInType<AirWindowsIronOxide5>();
     createBuiltInType<AirWindowsIronOxideClassic>();

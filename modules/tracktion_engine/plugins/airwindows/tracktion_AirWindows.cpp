@@ -421,6 +421,7 @@ const char* AirWindowsHighpass2::xmlTypeName = "airwindows_highpass2";
 const char* AirWindowsHolt::xmlTypeName = "airwindows_holt";
 const char* AirWindowsHombre::xmlTypeName = "airwindows_hombre";
 const char* AirWindowsInterstage::xmlTypeName = "airwindows_interstage";
+const char* AirWindowsInflamer::xmlTypeName = "airwindows_inflamer";
 const char* AirWindowsIronOxide5::xmlTypeName = "airwindows_ironoxide5";
 const char* AirWindowsIronOxideClassic::xmlTypeName = "airwindows_ironoxideclassic";
 const char* AirWindowskCathedral2::xmlTypeName = "airwindows_kcathedral2";
@@ -613,6 +614,7 @@ AirWindowsHighpass2::Type AirWindowsHighpass2::pluginType = AirWindowsPlugin::fi
 AirWindowsHighpass::Type AirWindowsHighpass::pluginType = AirWindowsPlugin::filter;
 AirWindowsHolt::Type AirWindowsHolt::pluginType = AirWindowsPlugin::filter;
 AirWindowsHombre::Type AirWindowsHombre::pluginType = AirWindowsPlugin::delay;
+AirWindowsInflamer::Type AirWindowsInflamer::pluginType = AirWindowsPlugin::filter;
 AirWindowsInterstage::Type AirWindowsInterstage::pluginType = AirWindowsPlugin::filter;
 AirWindowsIronOxide5::Type AirWindowsIronOxide5::pluginType = AirWindowsPlugin::emulation;
 AirWindowsIronOxideClassic::Type AirWindowsIronOxideClassic::pluginType = AirWindowsPlugin::emulation;
@@ -902,6 +904,8 @@ AirWindowsHombre::AirWindowsHombre (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::hombre::Hombre> (&callback)) {}
 AirWindowsInterstage::AirWindowsInterstage (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::interstage::Interstage> (&callback)) {}
+AirWindowsInflamer::AirWindowsInflamer(PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::inflamer::Inflamer> (&callback)) {}
 AirWindowsIronOxide5::AirWindowsIronOxide5 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ironoxide5::IronOxide5> (&callback)) {}
 AirWindowsIronOxideClassic::AirWindowsIronOxideClassic (PluginCreationInfo info)
