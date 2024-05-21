@@ -315,6 +315,7 @@ AIRWINDOWSPLUGIN(AirWindowsWider, "Wider");
 AIRWINDOWSPLUGIN(AirWindowsYNotBandpass, "YNotBandpass");
 AIRWINDOWSPLUGIN(AirWindowsYNotHighpass, "YNotHighpass");
 AIRWINDOWSPLUGIN(AirWindowsYNotLowpass, "YNotLowpass");
+AIRWINDOWSPLUGIN(AirWindowsYNotNotch, "YNotNotch");
 AIRWINDOWSPLUGIN(AirWindowscurve, "curve");
 AIRWINDOWSPLUGIN(AirWindowsuLawDecode, "u Law Decode");
 AIRWINDOWSPLUGIN(AirWindowsuLawEncode, "u Law Encode");

@@ -514,6 +514,7 @@ const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
 const char* AirWindowsYNotBandpass::xmlTypeName = "airwindows_ynotbandpass";
 const char* AirWindowsYNotHighpass::xmlTypeName = "airwindows_ynothighpass";
 const char* AirWindowsYNotLowpass::xmlTypeName = "airwindows_ynotlowpass";
+const char* AirWindowsYNotNotch::xmlTypeName = "airwindows_ynotnotch";
 const char* AirWindowscurve::xmlTypeName = "airwindows_curve";
 const char* AirWindowsuLawDecode::xmlTypeName = "airwindows_ulawdecode";
 const char* AirWindowsuLawEncode::xmlTypeName = "airwindows_ulawencode";
@@ -706,6 +707,7 @@ AirWindowsWider::Type AirWindowsWider::pluginType = AirWindowsPlugin::imaging;
 AirWindowsYNotBandpass::Type AirWindowsYNotBandpass::pluginType = AirWindowsPlugin::filter;
 AirWindowsYNotHighpass::Type AirWindowsYNotHighpass::pluginType = AirWindowsPlugin::filter;
 AirWindowsYNotLowpass::Type AirWindowsYNotLowpass::pluginType = AirWindowsPlugin::filter;
+AirWindowsYNotNotch::Type AirWindowsYNotNotch::pluginType = AirWindowsPlugin::filter;
 AirWindowscurve::Type AirWindowscurve::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawDecode::Type AirWindowsuLawDecode::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawEncode::Type AirWindowsuLawEncode::pluginType = AirWindowsPlugin::utility;
@@ -1086,6 +1088,8 @@ AirWindowsYNotHighpass::AirWindowsYNotHighpass(PluginCreationInfo info)
     : AirWindowsPlugin(info, std::make_unique<airwindows::ynothighpass::YNotHighpass>(&callback)) {}
 AirWindowsYNotLowpass::AirWindowsYNotLowpass(PluginCreationInfo info)
     : AirWindowsPlugin(info, std::make_unique<airwindows::ynotlowpass::YNotLowpass>(&callback)) {}
+AirWindowsYNotNotch::AirWindowsYNotNotch(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynotnotch::YNotNotch>(&callback)) {}
 AirWindowscurve::AirWindowscurve (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::curve::curve> (&callback)) {}
 AirWindowsuLawDecode::AirWindowsuLawDecode (PluginCreationInfo info)

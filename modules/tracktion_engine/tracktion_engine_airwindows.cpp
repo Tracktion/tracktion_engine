@@ -995,6 +995,11 @@ namespace ynotlowpass
 #include "3rd_party/airwindows/YNotLowpass/YNotLowpass.cpp"
 #include "3rd_party/airwindows/YNotLowpass/YNotLowpassProc.cpp"
 }
+namespace ynotnotch
+{
+#include "3rd_party/airwindows/YNotNotch/YNotNotch.cpp"
+#include "3rd_party/airwindows/YNotNotch/YNotNotchProc.cpp"
+}
 namespace curve
 {
  #include "3rd_party/airwindows/curve/curve.cpp"
