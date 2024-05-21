@@ -64,8 +64,7 @@ public:
 
     void restorePluginStateFromValueTree (const juce::ValueTree& v) override
     {
-        CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
-        copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+        copyPropertiesToCachedValues (v, gainValue);
 
         for (auto p : getAutomatableParameters())
             p->updateFromAttachedValue();

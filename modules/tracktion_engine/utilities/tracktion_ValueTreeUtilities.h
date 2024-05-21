@@ -555,32 +555,16 @@ static inline juce::ValueTree getChildWithPropertyRecursively (const juce::Value
     return {};
 }
 
-/** Iterates the params array and copies and properties that are present in the ValueTree. */
-template<typename ValueType>
-static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>** params)
+template<typename ValueType, typename... CachedValues>
+static void copyPropertiesToCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>& cachedValue, CachedValues&&... cachedValues)
 {
-    if (params == nullptr)
-    {
-        jassertfalse;
-        return;
-    }
+    if (auto p = v.getPropertyPointer (cachedValue.getPropertyID()))
+        cachedValue = ValueType (*p);
+    else
+        cachedValue.resetToDefault();
 
-    for (;;)
-    {
-        if (juce::CachedValue<ValueType>* cv = *params++)
-        {
-            const juce::Identifier& prop = cv->getPropertyID();
-
-            if (v.hasProperty (prop))
-                *cv = ValueType (v.getProperty (prop));
-            else
-                cv->resetToDefault();
-        }
-        else
-        {
-            break;
-        }
-    }
+    if constexpr (sizeof...(cachedValues) != 0)
+        copyPropertiesToCachedValues (v, std::forward<CachedValues> (cachedValues)...);
 }
 
 /** Strips out any invalid trees from the array. */

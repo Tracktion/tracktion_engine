@@ -117,8 +117,7 @@ juce::String PhaserPlugin::getSelectableDescription()
 
 void PhaserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, depth, rate, feedbackGain);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

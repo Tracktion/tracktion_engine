@@ -60,8 +60,7 @@ juce::String MidiModifierPlugin::getSelectableDescription()
 
 void MidiModifierPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, semitonesValue);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

@@ -194,8 +194,7 @@ void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
         impl->setChunk (data.getData(), int (data.getSize()), false);
     }
 
-    juce::CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, wetValue, dryValue);
 
     for (auto p : parameters)
         if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))

@@ -120,8 +120,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[] = { &depthMs, &width, &mixProportion, &speedHz, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, depthMs, width, mixProportion, speedHz);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

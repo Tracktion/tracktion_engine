@@ -102,10 +102,7 @@ void DelayPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &feedbackValue, &mixValue, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &lengthMs, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToCachedValues (v, feedbackValue, mixValue, lengthMs);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

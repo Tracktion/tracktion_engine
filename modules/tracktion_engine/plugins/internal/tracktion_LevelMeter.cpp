@@ -90,8 +90,7 @@ void LevelMeterPlugin::timerCallback()
 
 void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, showMidiActivity);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

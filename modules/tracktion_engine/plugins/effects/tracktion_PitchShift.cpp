@@ -192,10 +192,7 @@ juce::String PitchShiftPlugin::getSelectableDescription()
 
 void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &mode, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToCachedValues (v, semitonesValue, mode);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

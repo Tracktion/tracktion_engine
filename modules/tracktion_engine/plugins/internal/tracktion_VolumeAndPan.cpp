@@ -312,13 +312,7 @@ void VolumeAndPanPlugin::muteOrUnmute()
 
 void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };
-    juce::CachedValue<bool>* cvsBool[]    = { &applyToMidi, &ignoreVca, &polarity, nullptr };
-
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, volume, pan, panLaw, applyToMidi, ignoreVca, polarity);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
