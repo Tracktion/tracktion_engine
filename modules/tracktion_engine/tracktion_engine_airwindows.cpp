@@ -525,6 +525,11 @@ namespace hombre
  #include "3rd_party/airwindows/Hombre/Hombre.cpp"
  #include "3rd_party/airwindows/Hombre/HombreProc.cpp"
 }
+namespace inflamer
+{
+ #include "3rd_party/airwindows/Inflamer/Inflamer.cpp"
+ #include "3rd_party/airwindows/Inflamer/InflamerProc.cpp"
+}
 namespace interstage
 {
  #include "3rd_party/airwindows/Interstage/Interstage.cpp"
@@ -539,6 +544,11 @@ namespace ironoxideclassic
 {
  #include "3rd_party/airwindows/IronOxideClassic/IronOxideClassic.cpp"
  #include "3rd_party/airwindows/IronOxideClassic/IronOxideClassicProc.cpp"
+}
+namespace kcathedral2
+{
+#include "3rd_party/airwindows/kCathedral2/kCathedral2.cpp"
+#include "3rd_party/airwindows/kCathedral2/kCathedral2Proc.cpp"
 }
 namespace leftomono
 {
@@ -974,6 +984,26 @@ namespace wider
 {
  #include "3rd_party/airwindows/Wider/Wider.cpp"
  #include "3rd_party/airwindows/Wider/WiderProc.cpp"
+}
+namespace ynotbandpass
+{
+#include "3rd_party/airwindows/YNotBandpass/YNotBandpass.cpp"
+#include "3rd_party/airwindows/YNotBandpass/YNotBandpassProc.cpp"
+}
+namespace ynothighpass
+{
+#include "3rd_party/airwindows/YNotHighpass/YNotHighpass.cpp"
+#include "3rd_party/airwindows/YNotHighpass/YNotHighpassProc.cpp"
+}
+namespace ynotlowpass
+{
+#include "3rd_party/airwindows/YNotLowpass/YNotLowpass.cpp"
+#include "3rd_party/airwindows/YNotLowpass/YNotLowpassProc.cpp"
+}
+namespace ynotnotch
+{
+#include "3rd_party/airwindows/YNotNotch/YNotNotch.cpp"
+#include "3rd_party/airwindows/YNotNotch/YNotNotchProc.cpp"
 }
 namespace curve
 {

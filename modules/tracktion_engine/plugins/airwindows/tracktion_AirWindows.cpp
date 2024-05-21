@@ -421,8 +421,10 @@ const char* AirWindowsHighpass2::xmlTypeName = "airwindows_highpass2";
 const char* AirWindowsHolt::xmlTypeName = "airwindows_holt";
 const char* AirWindowsHombre::xmlTypeName = "airwindows_hombre";
 const char* AirWindowsInterstage::xmlTypeName = "airwindows_interstage";
+const char* AirWindowsInflamer::xmlTypeName = "airwindows_inflamer";
 const char* AirWindowsIronOxide5::xmlTypeName = "airwindows_ironoxide5";
 const char* AirWindowsIronOxideClassic::xmlTypeName = "airwindows_ironoxideclassic";
+const char* AirWindowskCathedral2::xmlTypeName = "airwindows_kcathedral2";
 const char* AirWindowsLeftoMono::xmlTypeName = "airwindows_leftomono";
 const char* AirWindowsLogical4::xmlTypeName = "airwindows_logical4";
 const char* AirWindowsLoud::xmlTypeName = "airwindows_loud";
@@ -510,6 +512,10 @@ const char* AirWindowsVinylDither::xmlTypeName = "airwindows_vinyldither";
 const char* AirWindowsVoiceOfTheStarship::xmlTypeName = "airwindows_voiceofthestarship";
 const char* AirWindowsVoiceTrick::xmlTypeName = "airwindows_voicetrick";
 const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
+const char* AirWindowsYNotBandpass::xmlTypeName = "airwindows_ynotbandpass";
+const char* AirWindowsYNotHighpass::xmlTypeName = "airwindows_ynothighpass";
+const char* AirWindowsYNotLowpass::xmlTypeName = "airwindows_ynotlowpass";
+const char* AirWindowsYNotNotch::xmlTypeName = "airwindows_ynotnotch";
 const char* AirWindowscurve::xmlTypeName = "airwindows_curve";
 const char* AirWindowsuLawDecode::xmlTypeName = "airwindows_ulawdecode";
 const char* AirWindowsuLawEncode::xmlTypeName = "airwindows_ulawencode";
@@ -608,9 +614,11 @@ AirWindowsHighpass2::Type AirWindowsHighpass2::pluginType = AirWindowsPlugin::fi
 AirWindowsHighpass::Type AirWindowsHighpass::pluginType = AirWindowsPlugin::filter;
 AirWindowsHolt::Type AirWindowsHolt::pluginType = AirWindowsPlugin::filter;
 AirWindowsHombre::Type AirWindowsHombre::pluginType = AirWindowsPlugin::delay;
+AirWindowsInflamer::Type AirWindowsInflamer::pluginType = AirWindowsPlugin::filter;
 AirWindowsInterstage::Type AirWindowsInterstage::pluginType = AirWindowsPlugin::filter;
 AirWindowsIronOxide5::Type AirWindowsIronOxide5::pluginType = AirWindowsPlugin::emulation;
 AirWindowsIronOxideClassic::Type AirWindowsIronOxideClassic::pluginType = AirWindowsPlugin::emulation;
+AirWindowskCathedral2::Type AirWindowskCathedral2::pluginType = AirWindowsPlugin::reverb;
 AirWindowsLeftoMono::Type AirWindowsLeftoMono::pluginType = AirWindowsPlugin::utility;
 AirWindowsLogical4::Type AirWindowsLogical4::pluginType = AirWindowsPlugin::dynamics;
 AirWindowsLoud::Type AirWindowsLoud::pluginType = AirWindowsPlugin::distortion;
@@ -698,6 +706,10 @@ AirWindowsVinylDither::Type AirWindowsVinylDither::pluginType = AirWindowsPlugin
 AirWindowsVoiceOfTheStarship::Type AirWindowsVoiceOfTheStarship::pluginType = AirWindowsPlugin::utility;
 AirWindowsVoiceTrick::Type AirWindowsVoiceTrick::pluginType = AirWindowsPlugin::utility;
 AirWindowsWider::Type AirWindowsWider::pluginType = AirWindowsPlugin::imaging;
+AirWindowsYNotBandpass::Type AirWindowsYNotBandpass::pluginType = AirWindowsPlugin::filter;
+AirWindowsYNotHighpass::Type AirWindowsYNotHighpass::pluginType = AirWindowsPlugin::filter;
+AirWindowsYNotLowpass::Type AirWindowsYNotLowpass::pluginType = AirWindowsPlugin::filter;
+AirWindowsYNotNotch::Type AirWindowsYNotNotch::pluginType = AirWindowsPlugin::filter;
 AirWindowscurve::Type AirWindowscurve::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawDecode::Type AirWindowsuLawDecode::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawEncode::Type AirWindowsuLawEncode::pluginType = AirWindowsPlugin::utility;
@@ -892,12 +904,16 @@ AirWindowsHombre::AirWindowsHombre (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::hombre::Hombre> (&callback)) {}
 AirWindowsInterstage::AirWindowsInterstage (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::interstage::Interstage> (&callback)) {}
+AirWindowsInflamer::AirWindowsInflamer(PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::inflamer::Inflamer> (&callback)) {}
 AirWindowsIronOxide5::AirWindowsIronOxide5 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ironoxide5::IronOxide5> (&callback)) {}
 AirWindowsIronOxideClassic::AirWindowsIronOxideClassic (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ironoxideclassic::IronOxideClassic> (&callback)) {}
 AirWindowsLeftoMono::AirWindowsLeftoMono (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::leftomono::LeftoMono> (&callback)) {}
+AirWindowskCathedral2::AirWindowskCathedral2 (PluginCreationInfo info)
+	: AirWindowsPlugin (info, std::make_unique<airwindows::kcathedral2::kCathedral2> (&callback)) {}
 AirWindowsLogical4::AirWindowsLogical4 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::logical4::Logical4> (&callback)) {}
 AirWindowsLoud::AirWindowsLoud (PluginCreationInfo info)
@@ -1070,6 +1086,14 @@ AirWindowsVoiceTrick::AirWindowsVoiceTrick (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::voicetrick::VoiceTrick> (&callback)) {}
 AirWindowsWider::AirWindowsWider (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::wider::Wider> (&callback)) {}
+AirWindowsYNotBandpass::AirWindowsYNotBandpass(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynotbandpass::YNotBandpass>(&callback)) {}
+AirWindowsYNotHighpass::AirWindowsYNotHighpass(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynothighpass::YNotHighpass>(&callback)) {}
+AirWindowsYNotLowpass::AirWindowsYNotLowpass(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynotlowpass::YNotLowpass>(&callback)) {}
+AirWindowsYNotNotch::AirWindowsYNotNotch(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynotnotch::YNotNotch>(&callback)) {}
 AirWindowscurve::AirWindowscurve (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::curve::curve> (&callback)) {}
 AirWindowsuLawDecode::AirWindowsuLawDecode (PluginCreationInfo info)

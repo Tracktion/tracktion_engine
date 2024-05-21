@@ -548,9 +548,11 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsHighpass2>();
     createBuiltInType<AirWindowsHolt>();
     createBuiltInType<AirWindowsHombre>();
+    createBuiltInType<AirWindowsInflamer>();
     createBuiltInType<AirWindowsInterstage>();
     createBuiltInType<AirWindowsIronOxide5>();
     createBuiltInType<AirWindowsIronOxideClassic>();
+    createBuiltInType<AirWindowskCathedral2>();
     createBuiltInType<AirWindowsLeftoMono>();
     createBuiltInType<AirWindowsLogical4>();
     createBuiltInType<AirWindowsLoud>();
@@ -638,6 +640,10 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsVoiceOfTheStarship>();
     createBuiltInType<AirWindowsVoiceTrick>();
     createBuiltInType<AirWindowsWider>();
+    createBuiltInType<AirWindowsYNotBandpass>();
+    createBuiltInType<AirWindowsYNotHighpass>();
+    createBuiltInType<AirWindowsYNotLowpass>();
+    createBuiltInType<AirWindowsYNotNotch>();
     createBuiltInType<AirWindowscurve>();
     createBuiltInType<AirWindowsuLawDecode>();
     createBuiltInType<AirWindowsuLawEncode>();
