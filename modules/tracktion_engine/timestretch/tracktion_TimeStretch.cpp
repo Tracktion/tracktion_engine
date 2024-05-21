@@ -83,7 +83,6 @@ struct TimeStretcher::Stretcher
 
     virtual bool isOk() const = 0;
     virtual void reset() = 0;
-    virtual bool canSetSpeedAndPitch() const { return true; }
     virtual bool setSpeedAndPitch (float speedRatio, float semitonesUp) = 0;
     virtual int getFramesNeeded() const = 0;
     virtual int getMaxFramesNeeded() const = 0;
