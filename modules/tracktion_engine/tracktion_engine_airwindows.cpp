@@ -990,6 +990,11 @@ namespace ynothighpass
 #include "3rd_party/airwindows/YNotHighpass/YNotHighpass.cpp"
 #include "3rd_party/airwindows/YNotHighpass/YNotHighpassProc.cpp"
 }
+namespace ynotlowpass
+{
+#include "3rd_party/airwindows/YNotLowpass/YNotLowpass.cpp"
+#include "3rd_party/airwindows/YNotLowpass/YNotLowpassProc.cpp"
+}
 namespace curve
 {
  #include "3rd_party/airwindows/curve/curve.cpp"

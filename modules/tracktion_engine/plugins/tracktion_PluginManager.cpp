@@ -641,6 +641,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsWider>();
     createBuiltInType<AirWindowsYNotBandpass>();
     createBuiltInType<AirWindowsYNotHighpass>();
+    createBuiltInType<AirWindowsYNotLowpass>();
     createBuiltInType<AirWindowscurve>();
     createBuiltInType<AirWindowsuLawDecode>();
     createBuiltInType<AirWindowsuLawEncode>();

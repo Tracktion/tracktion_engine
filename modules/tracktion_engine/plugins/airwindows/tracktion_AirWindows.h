@@ -314,6 +314,7 @@ AIRWINDOWSPLUGIN(AirWindowsVoiceTrick, "Voice Trick");
 AIRWINDOWSPLUGIN(AirWindowsWider, "Wider");
 AIRWINDOWSPLUGIN(AirWindowsYNotBandpass, "YNotBandpass");
 AIRWINDOWSPLUGIN(AirWindowsYNotHighpass, "YNotHighpass");
+AIRWINDOWSPLUGIN(AirWindowsYNotLowpass, "YNotLowpass");
 AIRWINDOWSPLUGIN(AirWindowscurve, "curve");
 AIRWINDOWSPLUGIN(AirWindowsuLawDecode, "u Law Decode");
 AIRWINDOWSPLUGIN(AirWindowsuLawEncode, "u Law Encode");
