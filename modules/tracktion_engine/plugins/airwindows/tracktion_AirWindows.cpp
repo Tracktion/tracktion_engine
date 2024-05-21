@@ -512,6 +512,7 @@ const char* AirWindowsVoiceOfTheStarship::xmlTypeName = "airwindows_voiceofthest
 const char* AirWindowsVoiceTrick::xmlTypeName = "airwindows_voicetrick";
 const char* AirWindowsWider::xmlTypeName = "airwindows_wider";
 const char* AirWindowsYNotBandpass::xmlTypeName = "airwindows_ynotbandpass";
+const char* AirWindowsYNotHighpass::xmlTypeName = "airwindows_ynothighpass";
 const char* AirWindowscurve::xmlTypeName = "airwindows_curve";
 const char* AirWindowsuLawDecode::xmlTypeName = "airwindows_ulawdecode";
 const char* AirWindowsuLawEncode::xmlTypeName = "airwindows_ulawencode";
@@ -702,6 +703,7 @@ AirWindowsVoiceOfTheStarship::Type AirWindowsVoiceOfTheStarship::pluginType = Ai
 AirWindowsVoiceTrick::Type AirWindowsVoiceTrick::pluginType = AirWindowsPlugin::utility;
 AirWindowsWider::Type AirWindowsWider::pluginType = AirWindowsPlugin::imaging;
 AirWindowsYNotBandpass::Type AirWindowsYNotBandpass::pluginType = AirWindowsPlugin::filter;
+AirWindowsYNotBandpass::Type AirWindowsYNotHighpass::pluginType = AirWindowsPlugin::filter;
 AirWindowscurve::Type AirWindowscurve::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawDecode::Type AirWindowsuLawDecode::pluginType = AirWindowsPlugin::utility;
 AirWindowsuLawEncode::Type AirWindowsuLawEncode::pluginType = AirWindowsPlugin::utility;
@@ -1078,6 +1080,8 @@ AirWindowsWider::AirWindowsWider (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::wider::Wider> (&callback)) {}
 AirWindowsYNotBandpass::AirWindowsYNotBandpass(PluginCreationInfo info)
     : AirWindowsPlugin(info, std::make_unique<airwindows::ynotbandpass::YNotBandpass>(&callback)) {}
+AirWindowsYNotHighpass::AirWindowsYNotHighpass(PluginCreationInfo info)
+    : AirWindowsPlugin(info, std::make_unique<airwindows::ynothighpass::YNotHighpass>(&callback)) {}
 AirWindowscurve::AirWindowscurve (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::curve::curve> (&callback)) {}
 AirWindowsuLawDecode::AirWindowsuLawDecode (PluginCreationInfo info)

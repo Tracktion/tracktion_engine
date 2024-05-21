@@ -640,6 +640,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsVoiceTrick>();
     createBuiltInType<AirWindowsWider>();
     createBuiltInType<AirWindowsYNotBandpass>();
+    createBuiltInType<AirWindowsYNotHighpass>();
     createBuiltInType<AirWindowscurve>();
     createBuiltInType<AirWindowsuLawDecode>();
     createBuiltInType<AirWindowsuLawEncode>();
