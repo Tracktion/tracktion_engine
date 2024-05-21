@@ -613,6 +613,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsSpiral2>();
     createBuiltInType<AirWindowsStarChild>();
     createBuiltInType<AirWindowsStereoFX>();
+    createBuiltInType<AirWindowsStonefire>();
     createBuiltInType<AirWindowsStudioTan>();
     createBuiltInType<AirWindowsSubsOnly>();
     createBuiltInType<AirWindowsSurge>();
