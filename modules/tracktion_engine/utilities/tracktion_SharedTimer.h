@@ -41,7 +41,7 @@ public:
     //==============================================================================
     struct Listener
     {
-        ~Listener() = default;
+        virtual ~Listener() = default;
         virtual void sharedTimerCallback() = 0;
     };
 
