@@ -31,8 +31,8 @@ public:
                             std::function<bool (Track&)> allowedTrackPredicate);
 
     // BEATCONNECT MODIFICATION START
-    void setToPlaybackMarker(bool toMarker) { toPlaybackMarker = toMarker; }
-    bool getToPlaybackMarker() { return toPlaybackMarker; }
+    void setToTransport(bool toTrans) { toTransport = toTrans; }
+    bool getToTransport() { return toTransport; }
     // BEATCONNECT MODIFICATION END
 
 protected:
@@ -43,7 +43,7 @@ protected:
     bool nextInsertIsAfterSelected = false;
 
     // BEATCONNECT MODIFICATION START
-    bool toPlaybackMarker = true;
+    bool toTransport = true;
     // BEATCONNECT MODIFICATION END
 };
 

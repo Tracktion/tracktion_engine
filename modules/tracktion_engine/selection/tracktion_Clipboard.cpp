@@ -1277,16 +1277,24 @@ std::pair<juce::Array<MidiNote*>, juce::Array<MidiControllerEvent*>> Clipboard::
                                                                                                            const juce::Array<MidiNote*>& selectedNotes,
                                                                                                            const juce::Array<MidiControllerEvent*>& selectedEvents,
                                                                                                            TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat,
-                                                                                                           int destController) const
+                                                                                                           int destController,
+                                                                                                           // BEATCONNECT MODIFICATION START
+                                                                                                           bool isCtrlDrag
+                                                                                                           // BEATCONNECT MODIFICATION START
+                                                                                                           ) const
 {
-    auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat);
+    auto notesAdded         = pasteNotesIntoClip (clip, selectedNotes, cursorPosition, snapBeat, isCtrlDrag);
     auto controllersAdded   = pasteControllersIntoClip (clip, selectedNotes, selectedEvents, cursorPosition, snapBeat, destController);
 
     return { notesAdded, controllersAdded };
 }
 
 juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip, const juce::Array<MidiNote*>& selectedNotes,
-                                                                  TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat) const
+                                                                  TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat,
+                                                                  // BEATCONNECT MODIFICATION START
+                                                                  bool isCtrlDrag
+                                                                  // BEATCONNECT MODIFICATION START
+                                                                  ) const
 {
     if (notes.empty())
         return {};
@@ -1318,19 +1326,22 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
         insertPos = endOfSelection;
     }
 
-    if (clip.isLooping())
+    if (!isCtrlDrag)
     {
-        const auto offsetBeats = clip.getOffsetInBeats() + toDuration (clip.getLoopStartBeats());
-
-        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - 0.001_bd))
-            return {};
-    }
-    else
-    {
-        const auto offsetBeats = clip.getOffsetInBeats();
-
-        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - 0.001_bd))
-            return {};
+        if (clip.isLooping())
+        {
+            const auto offsetBeats = clip.getOffsetInBeats() + toDuration (clip.getLoopStartBeats());
+        
+            if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - 0.001_bd))
+                return {};
+        }
+        else
+        {
+            const auto offsetBeats = clip.getOffsetInBeats();
+        
+            if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - 0.001_bd))
+                return {};
+        }
     }
 
     auto deltaBeats = insertPos - beatRange.getStart();
