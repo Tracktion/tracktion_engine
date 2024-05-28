@@ -497,6 +497,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsConsole5DarkCh>();
     createBuiltInType<AirWindowsConsole6Buss>();
     createBuiltInType<AirWindowsConsole6Channel>();
+    createBuiltInType<AirWindowsCreature>();
     createBuiltInType<AirWindowsCrunchyGrooveWear>();
     createBuiltInType<AirWindowsCrystal>();
     createBuiltInType<AirWindowsDCVoltage>();
@@ -548,6 +549,7 @@ void PluginManager::initialiseAirWindows()
     createBuiltInType<AirWindowsHighpass2>();
     createBuiltInType<AirWindowsHolt>();
     createBuiltInType<AirWindowsHombre>();
+    createBuiltInType<AirWindowsHuge>();
     createBuiltInType<AirWindowsInflamer>();
     createBuiltInType<AirWindowsInterstage>();
     createBuiltInType<AirWindowsIronOxide5>();

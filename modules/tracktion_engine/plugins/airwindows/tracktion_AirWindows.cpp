@@ -369,6 +369,7 @@ const char* AirWindowsConsole5Channel::xmlTypeName = "airwindows_console5channel
 const char* AirWindowsConsole5DarkCh::xmlTypeName = "airwindows_console5darkch";
 const char* AirWindowsConsole6Buss::xmlTypeName = "airwindows_console6buss";
 const char* AirWindowsConsole6Channel::xmlTypeName = "airwindows_console6channel";
+const char* AirWindowsCreature::xmlTypeName = "airwindows_creature";
 const char* AirWindowsCrunchyGrooveWear::xmlTypeName = "airwindows_crunchygroovewear";
 const char* AirWindowsCrystal::xmlTypeName = "airwindows_crystal";
 const char* AirWindowsDCVoltage::xmlTypeName = "airwindows_dcvoltage";
@@ -420,6 +421,7 @@ const char* AirWindowsHighpass::xmlTypeName = "airwindows_highpass";
 const char* AirWindowsHighpass2::xmlTypeName = "airwindows_highpass2";
 const char* AirWindowsHolt::xmlTypeName = "airwindows_holt";
 const char* AirWindowsHombre::xmlTypeName = "airwindows_hombre";
+const char* AirWindowsHuge::xmlTypeName = "airwindows_huge";
 const char* AirWindowsInterstage::xmlTypeName = "airwindows_interstage";
 const char* AirWindowsInflamer::xmlTypeName = "airwindows_inflamer";
 const char* AirWindowsIronOxide5::xmlTypeName = "airwindows_ironoxide5";
@@ -563,6 +565,7 @@ AirWindowsConsole5Channel::Type AirWindowsConsole5Channel::pluginType = AirWindo
 AirWindowsConsole5DarkCh::Type AirWindowsConsole5DarkCh::pluginType = AirWindowsPlugin::emulation;
 AirWindowsConsole6Buss::Type AirWindowsConsole6Buss::pluginType = AirWindowsPlugin::emulation;
 AirWindowsConsole6Channel::Type AirWindowsConsole6Channel::pluginType = AirWindowsPlugin::emulation;
+AirWindowsCreature::Type AirWindowsCreature::pluginType = AirWindowsPlugin::filter;
 AirWindowsCrunchyGrooveWear::Type AirWindowsCrunchyGrooveWear::pluginType = AirWindowsPlugin::emulation;
 AirWindowsCrystal::Type AirWindowsCrystal::pluginType = AirWindowsPlugin::filter;
 AirWindowsDCVoltage::Type AirWindowsDCVoltage::pluginType = AirWindowsPlugin::utility;
@@ -614,6 +617,7 @@ AirWindowsHighpass2::Type AirWindowsHighpass2::pluginType = AirWindowsPlugin::fi
 AirWindowsHighpass::Type AirWindowsHighpass::pluginType = AirWindowsPlugin::filter;
 AirWindowsHolt::Type AirWindowsHolt::pluginType = AirWindowsPlugin::filter;
 AirWindowsHombre::Type AirWindowsHombre::pluginType = AirWindowsPlugin::delay;
+AirWindowsHombre::Type AirWindowsHuge::pluginType = AirWindowsPlugin::delay;
 AirWindowsInflamer::Type AirWindowsInflamer::pluginType = AirWindowsPlugin::filter;
 AirWindowsInterstage::Type AirWindowsInterstage::pluginType = AirWindowsPlugin::filter;
 AirWindowsIronOxide5::Type AirWindowsIronOxide5::pluginType = AirWindowsPlugin::emulation;
@@ -800,6 +804,8 @@ AirWindowsConsole6Buss::AirWindowsConsole6Buss (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::console6buss::Console6Buss> (&callback)) {}
 AirWindowsConsole6Channel::AirWindowsConsole6Channel (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::console6channel::Console6Channel> (&callback)) {}
+AirWindowsCreature::AirWindowsCreature (PluginCreationInfo info)
+    : AirWindowsPlugin (info, std::make_unique<airwindows::creature::Creature>(&callback)) {}
 AirWindowsCrunchyGrooveWear::AirWindowsCrunchyGrooveWear (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::crunchygroovewear::CrunchyGrooveWear> (&callback)) {}
 AirWindowsCrystal::AirWindowsCrystal (PluginCreationInfo info)
@@ -902,6 +908,8 @@ AirWindowsHolt::AirWindowsHolt (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::holt::Holt> (&callback)) {}
 AirWindowsHombre::AirWindowsHombre (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::hombre::Hombre> (&callback)) {}
+AirWindowsHuge::AirWindowsHuge (PluginCreationInfo info)
+	: AirWindowsPlugin (info, std::make_unique<airwindows::huge::Huge> (&callback)) {}
 AirWindowsInterstage::AirWindowsInterstage (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::interstage::Interstage> (&callback)) {}
 AirWindowsInflamer::AirWindowsInflamer(PluginCreationInfo info)

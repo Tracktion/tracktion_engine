@@ -270,6 +270,11 @@ namespace console6channel
  #include "3rd_party/airwindows/Console6Channel/Console6Channel.cpp"
  #include "3rd_party/airwindows/Console6Channel/Console6ChannelProc.cpp"
 }
+namespace creature
+{
+#include "3rd_party/airwindows/Creature/Creature.cpp"
+#include "3rd_party/airwindows/Creature/CreatureProc.cpp"
+}
 namespace crunchygroovewear
 {
  #include "3rd_party/airwindows/CrunchyGrooveWear/CrunchyGrooveWear.cpp"
@@ -524,6 +529,11 @@ namespace hombre
 {
  #include "3rd_party/airwindows/Hombre/Hombre.cpp"
  #include "3rd_party/airwindows/Hombre/HombreProc.cpp"
+}
+namespace huge
+{
+#include "3rd_party/airwindows/Huge/Huge.cpp"
+#include "3rd_party/airwindows/Huge/HugeProc.cpp"
 }
 namespace inflamer
 {
