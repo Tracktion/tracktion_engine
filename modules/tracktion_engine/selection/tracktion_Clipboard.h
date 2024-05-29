@@ -166,7 +166,11 @@ public:
                                                                                             const juce::Array<MidiNote*>& selectedNotes,
                                                                                             const juce::Array<MidiControllerEvent*>& selectedEvents,
                                                                                             TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat,
-                                                                                            int destController) const;
+                                                                                            int destController,
+                                                                                            // BEATCONNECT MODIFICATION START
+                                                                                            bool isCtrlDrag = false
+                                                                                            // BEATCONNECT MODIFICATION START
+                                                                                            ) const;
 
 
         using ContentType::pasteIntoEdit;
@@ -177,7 +181,11 @@ public:
 
     private:
         juce::Array<MidiNote*> pasteNotesIntoClip (MidiClip&, const juce::Array<MidiNote*>& selectedNotes,
-                                                   TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat) const;
+                                                   TimePosition cursorPosition, const std::function<BeatPosition (BeatPosition)>& snapBeat,
+                                                   // BEATCONNECT MODIFICATION START
+                                                   bool isCtrlDrag
+                                                   // BEATCONNECT MODIFICATION START
+                                                   ) const;
 
         juce::Array<MidiControllerEvent*> pasteControllersIntoClip (MidiClip& clip,
                                                                     const juce::Array<MidiNote*>& selectedNotes,
