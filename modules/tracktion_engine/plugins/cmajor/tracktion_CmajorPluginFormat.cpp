@@ -59,7 +59,7 @@ std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktio
         {
             if (auto p = edit->getPluginCache().getPluginFor (plugin))
             {
-                if (edit->getTransport().isPlayContextActive())
+                if (! p->isInitialising())
                 {
                     if (auto ex = dynamic_cast<ExternalPlugin*> (p.get()))
                     {
