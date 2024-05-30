@@ -1326,8 +1326,11 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
         insertPos = endOfSelection;
     }
 
+    // BEATCONNECT MODIFICATION START
     if (!isCtrlDrag)
     {
+    // BEATCONNECT MODIFICATION END
+
         if (clip.isLooping())
         {
             const auto offsetBeats = clip.getOffsetInBeats() + toDuration (clip.getLoopStartBeats());
@@ -1342,7 +1345,10 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
             if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - 0.001_bd))
                 return {};
         }
+
+    // BEATCONNECT MODIFICATION START
     }
+    // BEATCONNECT MODIFICATION END
 
     auto deltaBeats = insertPos - beatRange.getStart();
 
