@@ -1864,6 +1864,9 @@ struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
 
     bool allowWindowResizing() override
     {
+        if (isCmajorPatchPluginFormat (plugin.desc))
+            return editor != nullptr && editor->isResizable();
+
         // Allowing this for VSTs results in some hard-to-prevent size hysteresis..
         return plugin.isVST3()
                 && plugin.getVendor().containsIgnoreCase ("Celemony");
