@@ -221,6 +221,9 @@ private:
         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
         const choc::buffer::FrameRange sampleRange { startSample, endSample };
 
+        if (sampleRange.size() == 0)
+            return 0;
+
         auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);
         scratchMidi.clear();
 
