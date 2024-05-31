@@ -449,7 +449,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);
-    bool isUpdatingWithoutStopping = false;
+    bool hasUpdatedWithoutStopping = false;
     sampleRate = info.sampleRate;
     blockSizeSamples = info.blockSizeSamples;
     cpuUsageMs = 0.0;
@@ -459,30 +459,18 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
         timeToCpuScale = (msPerBlock > 0.0) ? (1.0 / msPerBlock) : 0.0;
     }
 
+    if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
     {
-        if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
-        {
-            CRASH_TRACER
-           #if JUCE_DEBUG
-            isInitialisingFlag = true;
-           #endif
-
-            initialise (info);
-
-           #if JUCE_DEBUG
-            isInitialisingFlag = true;
-           #endif
-        }
-        else
-        {
-            CRASH_TRACER
-            initialiseWithoutStopping (info);
-            isUpdatingWithoutStopping = true;
-        }
-
-       #if JUCE_DEBUG
+        CRASH_TRACER
+        isInitialisingFlag = true;
+        initialise (info);
         isInitialisingFlag = false;
-       #endif
+    }
+    else
+    {
+        CRASH_TRACER
+        hasUpdatedWithoutStopping = true;
+        initialiseWithoutStopping (info);
     }
 
     {
@@ -490,7 +478,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
         resetRecordingStatus();
     }
 
-    if (! isUpdatingWithoutStopping)
+    if (! hasUpdatedWithoutStopping)
     {
         CRASH_TRACER
         setAutomatableParamPosition (info.startTime);

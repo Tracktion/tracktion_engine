@@ -77,8 +77,8 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) = 0;
     virtual void getProgramName(char *name)                       = 0;
     virtual void setProgramName(char *name)                       = 0;
-    virtual VstInt32 getChunk (void** data, bool isPreset)                          { juce::ignoreUnused (data, isPreset); return 0; };
-    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset)        { juce::ignoreUnused (data, byteSize, isPreset); return 0; };
+    virtual VstInt32 getChunk (void** data, bool isPreset)                          { juce::ignoreUnused (data, isPreset); return 0; }
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset)        { juce::ignoreUnused (data, byteSize, isPreset); return 0; }
     virtual float getParameter(VstInt32 index)                                      { juce::ignoreUnused (index); return 0; }
     virtual void setParameter(VstInt32 index, float value)                          { juce::ignoreUnused (index, value); }
     virtual void getParameterLabel(VstInt32 index, char *text)                      { juce::ignoreUnused (index, text); }
@@ -108,19 +108,19 @@ class AirWindowsAutomatableParameter   : public AutomatableParameter
 public:
     AirWindowsAutomatableParameter (AirWindowsPlugin& p, int idx)
         : AutomatableParameter (getParamId (p, idx), getParamName (p, idx), p, {0, 1}),
-        plugin (p), index (idx)
+          awPlugin (p), index (idx)
     {
         valueToStringFunction = [] (float v)         { return juce::String (v); };
         stringToValueFunction = [] (juce::String v)  { return v.getFloatValue(); };
 
-        defaultValue = plugin.impl->getParameter (idx);
+        defaultValue = awPlugin.impl->getParameter (idx);
 
         setParameter (defaultValue, juce::sendNotification);
 
         autodetectRange();
     }
 
-    ~AirWindowsAutomatableParameter()
+    ~AirWindowsAutomatableParameter() override
     {
         notifyListenersOfDeletion();
     }
@@ -132,22 +132,22 @@ public:
 
     void autodetectRange()
     {
-        float current = plugin.impl->getParameter (index);
+        float current = awPlugin.impl->getParameter (index);
 
-        plugin.impl->setParameter (index, 0.0f);
+        awPlugin.impl->setParameter (index, 0.0f);
         float v1 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
-        plugin.impl->setParameter (index, 1.0f);
+        awPlugin.impl->setParameter (index, 1.0f);
         float v2 = getCurrentValueAsString().retainCharacters ("1234567890-.").getFloatValue();
 
         if (v2 > v1 && (v1 != 0.0f || v2 != 1.0f))
             setConversionRange ({v1, v2});
 
-        plugin.impl->setParameter (index, current);
+        awPlugin.impl->setParameter (index, current);
     }
 
     void refresh()
     {
-        currentValue = currentParameterValue = plugin.impl->getParameter (index);
+        currentValue = currentParameterValue = awPlugin.impl->getParameter (index);
         curveHasChanged();
         listeners.call (&Listener::currentValueChanged, *this);
     }
@@ -161,23 +161,23 @@ public:
 
     void parameterChanged (float newValue, bool byAutomation) override
     {
-        if (plugin.impl->getParameter (index) != newValue)
+        if (awPlugin.impl->getParameter (index) != newValue)
         {
             if (! byAutomation)
                 markAsChanged();
 
-            plugin.impl->setParameter (index, newValue);
+            awPlugin.impl->setParameter (index, newValue);
         }
     }
 
     juce::String getCurrentValueAsString() override
     {
         char paramText[kVstMaxParamStrLen];
-        plugin.impl->getParameterDisplay (index, paramText);
+        awPlugin.impl->getParameterDisplay (index, paramText);
         auto t1 = juce::String (paramText);
 
         char labelText[kVstMaxParamStrLen];
-        plugin.impl->getParameterLabel (index, labelText);
+        awPlugin.impl->getParameterLabel (index, labelText);
         auto t2 = juce::String (labelText);
 
         if (t2.isNotEmpty())
@@ -187,7 +187,7 @@ public:
 
     void markAsChanged() const noexcept
     {
-        getEdit().pluginChanged (plugin);
+        getEdit().pluginChanged (awPlugin);
     }
 
     static juce::String getParamId (AirWindowsPlugin& p, int idx)
@@ -202,7 +202,7 @@ public:
         return juce::String (paramName);
     }
 
-    AirWindowsPlugin& plugin;
+    AirWindowsPlugin& awPlugin;
     int index = 0;
     float defaultValue = 0.0f;
     juce::NormalisableRange<float> conversionRange;

@@ -183,6 +183,8 @@ public:
     */
     virtual void initialiseWithoutStopping (const PluginInitialisationInfo&)  {}
 
+    bool isInitialising() const             { return isInitialisingFlag; }
+
     /** Called after play stops to release resources.
         Don't call this directly or the initialise count will become out of sync.
         @see baseClassDeinitialise
@@ -193,7 +195,7 @@ public:
     virtual void reset();
 
     /** Track name or colour has changed. */
-    virtual void trackPropertiesChanged()                    {}
+    virtual void trackPropertiesChanged() {}
 
     //==============================================================================
     /** Process the next block of data.
@@ -439,10 +441,7 @@ private:
     juce::ValueTree getConnectionsTree();
     struct WireList;
     std::unique_ptr<WireList> sidechainWireList;
-
-   #if JUCE_DEBUG
     std::atomic<bool> isInitialisingFlag { false };
-   #endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)
 };

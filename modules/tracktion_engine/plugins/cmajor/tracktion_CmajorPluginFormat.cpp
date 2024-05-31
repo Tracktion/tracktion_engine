@@ -59,16 +59,19 @@ std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktio
         {
             if (auto p = edit->getPluginCache().getPluginFor (plugin))
             {
-                if (auto ex = dynamic_cast<ExternalPlugin*> (p.get()))
+                if (! p->isInitialising())
                 {
-                    plugin.suspendProcessing (true);
-                    plugin.fillInPluginDescription (ex->desc);
-                    ex->forceFullReinitialise();
-                    plugin.suspendProcessing (false);
-                }
-                else
-                {
-                    jassertfalse;
+                    if (auto ex = dynamic_cast<ExternalPlugin*> (p.get()))
+                    {
+                        plugin.suspendProcessing (true);
+                        plugin.fillInPluginDescription (ex->desc);
+                        ex->forceFullReinitialise();
+                        plugin.suspendProcessing (false);
+                    }
+                    else
+                    {
+                        jassertfalse;
+                    }
                 }
 
                 return;
