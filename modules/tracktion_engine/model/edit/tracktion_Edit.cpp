@@ -572,9 +572,9 @@ Edit::Edit (Options options)
     if (options.editFileRetriever)
         editFileRetriever = std::move (options.editFileRetriever);
     else
-        editFileRetriever = [this]() -> juce::File
+        editFileRetriever = [this] () -> juce::File
         {
-            if (auto item = engine.getProjectManager().getProjectItem (*this))
+            if (auto item = getProjectItemForEdit (*this))
                 return item->getSourceFile();
 
             return {};
@@ -718,7 +718,7 @@ Edit::~Edit()
 //==============================================================================
 juce::String Edit::getName()
 {
-    if (auto item = engine.getProjectManager().getProjectItem (*this))
+    if (auto item = getProjectItemForEdit (*this))
         return item->getName();
 
     return {};
@@ -1567,7 +1567,7 @@ void Edit::loadOldVideoInfo (const juce::ValueTree& videoState)
     const juce::File videoFile (videoState["videoFile"].toString());
 
     if (videoFile.existsAsFile())
-        if (auto proj = engine.getProjectManager().getProject (*this))
+        if (auto proj = getProjectForEdit (*this))
             if (auto newItem = proj->createNewItem (videoFile, ProjectItem::videoItemType(),
                                                     videoFile.getFileNameWithoutExtension(),
                                                     {}, ProjectItem::Category::video, false))
@@ -2600,7 +2600,7 @@ void Edit::setVideoFile (const juce::File& f, juce::String importDesc)
     {
         videoSource.resetToDefault();
 
-        if (auto proj = engine.getProjectManager().getProject (*this))
+        if (auto proj = getProjectForEdit (*this))
         {
             auto item = proj->getProjectItemForFile (f);
 

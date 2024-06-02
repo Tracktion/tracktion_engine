@@ -930,7 +930,7 @@ AudioFile WaveCompManager::getSourceFileForTake (int takeIndex) const
 
 juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 {
-    if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
+    if (auto project = getProjectForEdit (clip.edit))
     {
         auto firstTakeItem = project->getProjectItemForID (clip.getTakes()[0]);
 
@@ -961,7 +961,7 @@ juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 
 ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree& takeTree)
 {
-    if (auto project = clip.edit.engine.getProjectManager().getProject (clip.edit))
+    if (auto project = getProjectForEdit (clip.edit))
     {
         auto takeIndex = takeTree.getParent().indexOf (takeTree);
 

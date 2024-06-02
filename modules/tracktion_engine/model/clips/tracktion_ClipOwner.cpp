@@ -468,7 +468,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
 {
     auto& edit = parent.getClipOwnerEdit();
 
-    if (auto proj = edit.engine.getProjectManager().getProject (edit))
+    if (auto proj = getProjectForEdit (edit))
     {
         if (auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
                                                name, {}, ProjectItem::Category::imported, true))

@@ -12,9 +12,19 @@
 namespace tracktion { inline namespace engine
 {
 
+Project::Ptr getProjectForEdit (const Edit& e)
+{
+    return e.engine.getProjectManager().getProject (e);
+}
+
+ProjectItem::Ptr getProjectItemForEdit (const Edit& e)
+{
+    return e.engine.getProjectManager().getProjectItem (e);
+}
+
 juce::File getEditFileFromProjectManager (Edit& edit)
 {
-    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+    if (auto item = getProjectItemForEdit (edit))
         return item->getSourceFile();
 
     return {};
@@ -1094,7 +1104,7 @@ juce::ReferenceCountedArray<Modifier> getAllModifiers (const Edit& edit)
     {
         if (auto modifierList = t.getModifierList())
             modifiers.addArray (modifierList->getModifiers());
-        
+
         return true;
     });
 

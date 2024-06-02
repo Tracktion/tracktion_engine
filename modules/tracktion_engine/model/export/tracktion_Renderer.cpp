@@ -525,7 +525,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
 {
     CRASH_TRACER
 
-    auto proj = r.engine->getProjectManager().getProject (*r.edit);
+    auto proj = getProjectForEdit (*r.edit);
 
     if (proj == nullptr)
     {

@@ -13,8 +13,14 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
-// Files
+// Projects and Files
 //==============================================================================
+
+/** Tries to find the project that contains this edit (but may return nullptr!) */
+Project::Ptr getProjectForEdit (const Edit&);
+
+/** Tries to find the project item that refers to this edit (but may return nullptr!) */
+ProjectItem::Ptr getProjectItemForEdit (const Edit&);
 
 /** Uses the ProjectManager to look up the file for an Edit. */
 juce::File getEditFileFromProjectManager (Edit&);

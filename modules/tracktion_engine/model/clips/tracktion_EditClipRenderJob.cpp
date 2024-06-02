@@ -218,7 +218,7 @@ EditRenderJob::RenderPass::~RenderPass()
     {
         CRASH_TRACER
 
-        auto proj = owner.engine.getProjectManager().getProject (*r.edit);
+        auto proj = getProjectForEdit (*r.edit);
 
         if (proj == nullptr)
         {

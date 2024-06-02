@@ -76,7 +76,7 @@ static juce::String expandPatterns (Edit& ed, const juce::String& s, Track* trac
     if (track != nullptr)
         trackName = juce::File::createLegalFileName (track->getName());
 
-    if (auto proj = ed.engine.getProjectManager().getProject (ed))
+    if (auto proj = getProjectForEdit (ed))
     {
         projDir = proj->getDirectoryForMedia (ProjectItem::Category::recorded).getFullPathName();
     }
@@ -340,7 +340,7 @@ public:
             if (getContextForID (targetID))
                 return tl::unexpected (TRANS("Recording already in progress"));
 
-            if (auto proj = owner.engine.getProjectManager().getProject (edit))
+            if (auto proj = getProjectForEdit (edit))
                 if (proj->isReadOnly())
                     return tl::unexpected (TRANS("The current project is read-only, so new clips can't be recorded into it!"));
 
@@ -753,7 +753,7 @@ public:
             return tl::unexpected (s);
         }
 
-        if (auto proj = engine.getProjectManager().getProject (edit))
+        if (auto proj = getProjectForEdit (edit))
         {
             if (auto projectItem = proj->createNewItem (recordedFile.getFile(),
                                                         ProjectItem::waveItemType(),
@@ -998,7 +998,7 @@ public:
                 }
             }
 
-            auto proj = owner.engine.getProjectManager().getProject (edit);
+            auto proj = getProjectForEdit (edit);
 
             if (proj == nullptr)
             {

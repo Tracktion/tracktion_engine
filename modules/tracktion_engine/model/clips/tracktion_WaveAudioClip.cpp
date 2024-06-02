@@ -419,7 +419,7 @@ void WaveAudioClip::deleteAllUnusedTakes (bool deleteSourceFiles)
     auto takes = getTakes();
     bool errors = false;
 
-    if (auto proj = edit.engine.getProjectManager().getProject (edit))
+    if (auto proj = getProjectForEdit (edit))
     {
         for (int i = takes.size(); --i >= 0;)
         {

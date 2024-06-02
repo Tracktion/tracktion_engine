@@ -81,7 +81,7 @@ struct SharedEditFileDataCache
             jassert (Selectable::isSelectableValid (&edit));
 
             // If we managed to shutdown cleanly (i.e. without crashing) then delete the temp file
-            if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+            if (auto item = getProjectItemForEdit (edit))
                 EditFileOperations::getTempVersionOfEditFile (item->getSourceFile()).deleteFile();
         }
 
@@ -251,7 +251,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     if (forceSaveEvenIfNotModified || edit.hasChangedSinceSaved())
     {
         // Updates the project list if showing
-        if (auto proj = edit.engine.getProjectManager().getProject (edit))
+        if (auto proj = getProjectForEdit (edit))
             proj->Selectable::changed();
 
         if (offerToDiscardChanges)
@@ -280,7 +280,7 @@ bool EditFileOperations::save (bool warnOfFailure,
 
     tempFile.deleteFile();
 
-    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+    if (auto item = getProjectItemForEdit (edit))
         item->setLength (edit.getLength().inSeconds());
 
     edit.resetChangedStatus();
@@ -318,11 +318,9 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
             return false;
     }
 
-    auto& pm = edit.engine.getProjectManager();
-
-    if (auto project = pm.getProject (edit))
+    if (auto project = getProjectForEdit (edit))
     {
-        if (auto item = pm.getProjectItem (edit))
+        if (auto item = getProjectItemForEdit (edit))
         {
             if (f.create())
             {

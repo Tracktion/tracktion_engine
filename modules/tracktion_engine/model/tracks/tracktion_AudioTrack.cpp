@@ -1034,7 +1034,7 @@ void AudioTrack::freezeTrack()
     const auto desc = TRANS("Creating track freeze for \"XDVX\"")
                         .replace ("XDVX", getName()) + "...";
 
-    if (r.engine->getProjectManager().getProject (edit) != nullptr)
+    if (getProjectForEdit (edit) != nullptr)
         Renderer::renderToProjectItem (desc, r);
     else
         Renderer::renderToFile (desc, r);
