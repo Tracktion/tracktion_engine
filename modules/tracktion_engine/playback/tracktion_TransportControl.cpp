@@ -934,7 +934,10 @@ juce::Result TransportControl::applyRetrospectiveRecord()
         return juce::Result::fail (TRANS("Retrospective record is currently disabled"));
 
     if (playbackContext)
-        return playbackContext->applyRetrospectiveRecord();
+    {
+        juce::Array<Clip*> clips;
+        return playbackContext->applyRetrospectiveRecord (&clips);
+    }
 
     return juce::Result::fail (TRANS("No active audio devices"));
 }

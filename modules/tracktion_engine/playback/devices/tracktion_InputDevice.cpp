@@ -289,6 +289,18 @@ void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::Value
     }
 }
 
+ClipSlot* InputDeviceInstance::getFreeSlot (AudioTrack& t)
+{
+    for (auto slot : t.getClipSlotList().getClipSlots())
+        if (slot->getClip() == nullptr)
+            return slot;
+
+    auto& sl = edit.getSceneList();
+    sl.ensureNumberOfScenes (sl.getNumScenes() + 1);
+
+    return t.getClipSlotList().getClipSlots().getLast();
+}
+
 void InputDeviceInstance::updateRecordingStatus()
 {
     for (auto dest : destinations)

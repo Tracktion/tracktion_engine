@@ -1071,6 +1071,21 @@ public:
 
             edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (dstTrack->edit.engine, recordedFile));
 
+            if (dstTrack->playSlotClips.get())
+            {
+                if (auto slot = getFreeSlot (*dstTrack))
+                {
+                    newClip->setUsesProxy (false);
+                    newClip->setStart (0_tp, false, true);
+
+                    if (! newClip->isLooping())
+                        newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
+
+                    newClip->removeFromParent();
+                    slot->setClip (newClip.get());
+                }
+            }
+
             clips.add (newClip.get());
         }
 

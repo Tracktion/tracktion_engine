@@ -1407,6 +1407,24 @@ public:
                                                      channelToApply);
                 clip->setOffset (TimeDuration::fromSeconds (offset));
                 clips.add (clip);
+
+                if (auto mc = dynamic_cast<MidiClip*> (clip))
+                {
+                    if (track->playSlotClips.get())
+                    {
+                        if (auto slot = getFreeSlot (*track))
+                        {
+                            mc->setUsesProxy (false);
+                            mc->setStart (0_tp, false, true);
+
+                            if (! mc->isLooping ())
+                                mc->setLoopRangeBeats (mc->getEditBeatRange());
+
+                            mc->removeFromParent();
+                            slot->setClip (mc);
+                        }
+                    }
+                }
             }
         }
 

@@ -393,6 +393,8 @@ protected:
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 
+    ClipSlot* getFreeSlot (AudioTrack&);
+
 private:
     mutable AsyncCaller trackDeviceEnabler, recordStatusUpdater;
     bool wasLivePlayActive = false;
