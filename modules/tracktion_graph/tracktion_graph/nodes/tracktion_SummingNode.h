@@ -76,7 +76,7 @@ public:
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
-        props.latencyNumSamples = std::numeric_limits<int>::min();
+        props.latencyNumSamples = nodes.empty() ? 0 : std::numeric_limits<int>::min();
 
         for (auto& node : nodes)
         {
