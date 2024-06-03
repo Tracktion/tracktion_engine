@@ -75,6 +75,10 @@ public:
     //==============================================================================
     void mergeInMidiSequence (juce::MidiMessageSequence&, MidiList::NoteAutomationType);
 
+    // BEATCONNECT MODIFICATION START
+    void mergeInMidiSequenceRelativeToClip(juce::MidiMessageSequence&, MidiList::NoteAutomationType);
+    // BEATCONNECT MODIFICATION END
+
     void addTake (juce::MidiMessageSequence&, MidiList::NoteAutomationType);
 
     /** This will extend the start time backwards, moving the notes along if this takes the offset below 0.0 */

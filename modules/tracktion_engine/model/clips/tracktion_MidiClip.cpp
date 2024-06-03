@@ -651,6 +651,29 @@ void MidiClip::mergeInMidiSequence (juce::MidiMessageSequence& ms,
     changed();
 }
 
+// BEATCONNECT MODIFICATION START
+void MidiClip::mergeInMidiSequenceRelativeToClip(juce::MidiMessageSequence& ms, MidiList::NoteAutomationType automationType)
+{
+    auto& take = getSequence();
+
+    if (automationType == MidiList::NoteAutomationType::none)
+    {
+        auto chan = take.getMidiChannel();
+
+        for (int i = ms.getNumEvents(); --i >= 0;)
+            ms.getEventPointer(i)->message.setChannel(chan.getChannelNumber());
+
+        take.importMidiSequence(ms, &edit, {}, getUndoManager());
+    }
+    else if (automationType == MidiList::NoteAutomationType::expression)
+    {
+        take.importFromEditTimeSequenceWithNoteExpression(ms, &edit, getPosition().getStartOfSource(), getUndoManager());
+    }
+
+    changed();
+}
+// BEATCONNECT MODIFICATION END
+
 //==============================================================================
 bool MidiClip::canGoOnTrack (Track& t)
 {
