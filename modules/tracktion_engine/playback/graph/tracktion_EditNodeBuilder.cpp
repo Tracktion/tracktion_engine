@@ -1733,11 +1733,15 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit,
     if (! params.includeMasterPlugins)
         return node;
 
-    auto tempoModList = edit.getTempoTrack()->getModifierList();
-    auto masterModList = edit.getMasterTrack()->getModifierList();
+    auto tempoTrack = edit.getTempoTrack();
+    auto tempoModList = tempoTrack != nullptr ? tempoTrack->getModifierList() : nullptr;
 
     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,
                                       nullptr, std::move (node), playHeadState, params);
+
+    auto masterTrack = edit.getMasterTrack();
+    auto masterModList = masterTrack != nullptr ? masterTrack->getModifierList() : nullptr;
+
     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,
                                       nullptr, std::move (node), playHeadState, params);
 
