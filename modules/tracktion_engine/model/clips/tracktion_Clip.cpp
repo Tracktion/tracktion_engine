@@ -596,6 +596,16 @@ void Clip::updateLinkedClips()
     }
 }
 
+juce::Array<Exportable::ReferencedItem> Clip::getReferencedItems()
+{
+    return edit.engine.getEngineBehaviour().getReferencedItems (*this);
+}
+
+void Clip::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+{
+    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
+}
+
 ClipPosition Clip::getPosition() const
 {
     auto s = clipStart.get();

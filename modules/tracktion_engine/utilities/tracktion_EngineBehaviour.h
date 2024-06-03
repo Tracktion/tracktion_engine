@@ -63,10 +63,16 @@ public:
     /** Gives the host a chance to do any extra configuration after a plugin is loaded */
     virtual void doAdditionalInitialisation (ExternalPlugin&)                       {}
 
-    /** If you have any special VST plugins that access items in the Edit, you need to return them */
+    /** If you have any special plugins that access items in the Edit, you need to return them */
     virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (ExternalPlugin&) { return {}; }
 
-    /** If you have any special VST plugins that access items in the Edit, you need to reassign them */
+    /** If you have any special plugins that access items in the Edit, you need to reassign them */
+    virtual void reassignReferencedItem (Clip&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
+
+    /** If you have any special clips that access items in the Edit, you need to return them */
+    virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (Clip&) { return {}; }
+
+    /** If you have any special clips that access items in the Edit, you need to reassign them */
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
 
     /** Should return if plugins which have been bypassed should be included in the playback graph.

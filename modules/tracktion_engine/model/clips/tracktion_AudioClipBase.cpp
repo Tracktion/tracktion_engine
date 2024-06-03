@@ -1462,7 +1462,7 @@ void AudioClipBase::snapToOriginalBWavTime()
 //==============================================================================
 juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
 {
-    juce::Array<Exportable::ReferencedItem> results;
+    auto results = Clip::getReferencedItems();
 
     Exportable::ReferencedItem item;
     item.firstTimeUsed = 0;
@@ -1520,7 +1520,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
 void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
                                             ProjectItemID newItemID, double newStartTime)
 {
-    juce::ignoreUnused (item);
+    Clip::reassignReferencedItem (item, newItemID, newStartTime);
 
     if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
     {
