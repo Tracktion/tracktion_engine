@@ -261,27 +261,40 @@ struct RetrospectiveMidiBuffer
 
     void addMessage (const juce::MidiMessage& m, double adjust)
     {
-        auto cutoffTime = juce::Time::getMillisecondCounterHiRes() * 0.001
-                            + adjust - lengthInSeconds;
+        if (lock.try_lock())
+        {
+            auto cutoffTime = juce::Time::getMillisecondCounterHiRes() * 0.001
+            + adjust - lengthInSeconds;
 
-        if (m.getTimeStamp() > cutoffTime)
-            sequence.add (m);
+            if (m.getTimeStamp() > cutoffTime)
+                sequence.add (m);
 
-        // remove all events that are no longer in the time window
-        int unused = 0;
-        for (int i = 0; i < sequence.size() && sequence[i].getTimeStamp() < cutoffTime; i++)
-            unused = i + 1;
+            // remove all events that are no longer in the time window
+            int unused = 0;
+            for (int i = 0; i < sequence.size() && sequence[i].getTimeStamp() < cutoffTime; i++)
+                unused = i + 1;
 
-        if (unused > 0)
-            sequence.removeRange (0, unused);
+            if (unused > 0)
+                sequence.removeRange (0, unused);
+
+            lock.unlock();
+        }
     }
 
-    juce::MidiMessageSequence getMidiMessages()
+    juce::MidiMessageSequence takeMidiMessages()
     {
         juce::MidiMessageSequence result;
 
-        for (auto m : sequence)
-            result.addEvent (m);
+        {
+            lock.lock();
+
+            for (auto m : sequence)
+                result.addEvent (m);
+
+            sequence.clear();
+
+            lock.unlock();
+        }
 
         result.updateMatchedPairs();
 
@@ -314,6 +327,7 @@ struct RetrospectiveMidiBuffer
 
     juce::Array<juce::MidiMessage> sequence;
     double lengthInSeconds = 0;
+    RealTimeSpinLock lock;
 };
 
 //==============================================================================
@@ -1340,7 +1354,7 @@ public:
 
         for (auto track : getTargetTracks (*this))
         {
-            auto sequence = retrospective->getMidiMessages();
+            auto sequence = retrospective->takeMidiMessages();
 
             if (sequence.getNumEvents() == 0)
                 return {};
@@ -1396,8 +1410,6 @@ public:
                 start = 0;
                 length -= offset;
             }
-
-            retrospective->sequence.clear();
 
             if (sequence.getNumEvents() > 0)
             {
