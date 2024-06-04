@@ -1278,7 +1278,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
             activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
         }
 
-        auto sample = juce::jlimit (0, numSamples - 1, (int) (m.getTimeStamp() * sampleRate));
+        auto sample = juce::jlimit (0, numSamples - 1, juce::roundToInt (m.getTimeStamp() * sampleRate));
         midiBuffer.addEvent (m, sample);
     }
 
