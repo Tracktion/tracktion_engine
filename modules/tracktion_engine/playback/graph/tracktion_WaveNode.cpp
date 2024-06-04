@@ -1660,7 +1660,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     }
     else
     {
-        lastSampleFadeLength = 40u;
+        lastSampleFadeLength = std::min (numFrames, 40u);
 
         for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
         {
