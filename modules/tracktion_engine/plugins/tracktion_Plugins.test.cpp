@@ -9,10 +9,14 @@
     For the technical preview this file cannot be licensed commercially.
 */
 
+#if TRACKTION_UNIT_TESTS
+
+#include "../3rd_party/doctest/tracktion_doctest.hpp"
+
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PDC
+#if ENGINE_UNIT_TESTS_PDC
 
 //==============================================================================
 //==============================================================================
@@ -160,7 +164,7 @@ static PDCTests pdcTests;
 
 #endif
 
-#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_MODIFIERS
+#if ENGINE_UNIT_TESTS_MODIFIERS
 
 //==============================================================================
 //==============================================================================
@@ -253,4 +257,47 @@ static ModifiedParameterValuesTests modifiedParameterValuesTests;
 
 #endif
 
+
+#if ENGINE_UNIT_TESTS_AUTOMATION
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("Plugin automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 1);
+        auto volParam = getAudioTracks(*edit)[0]->getVolumePlugin()->volParam;
+        auto& volCurve = volParam->getCurve();
+
+        // Add point with curve=1 to give a square shape
+        volCurve.addPoint (0_tp, 1.0f, 1.0f);
+        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (15_tp), 1.0f);
+
+        volCurve.addPoint (10_tp, 0.0f, 1.0f);
+        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (9.9_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (10.1_tp), 0.0f);
+        CHECK_EQ (volCurve.getValueAt (15_tp), 0.0f);
+
+        // Now check the same with an automation iterator
+        {
+            AutomationIterator iter (*volParam);
+            auto setAndGet = [&iter] (auto t) { iter.setPosition (t); return iter.getCurrentValue(); };
+            CHECK_EQ (setAndGet (0_tp), 1.0f);
+            CHECK_EQ (setAndGet (5_tp), 1.0f);
+            CHECK_EQ (setAndGet (9.9_tp), 1.0f);
+            CHECK_EQ (setAndGet (10_tp), 1.0f);
+            CHECK_EQ (setAndGet (10.1_tp), 0.0f);
+            CHECK_EQ (setAndGet (15_tp), 0.0f);
+        }
+    }
+}
+#endif
+
 }} // namespace tracktion { inline namespace engine
+
+#endif //TRACKTION_UNIT_TESTS

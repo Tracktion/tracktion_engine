@@ -19,6 +19,7 @@
 #define GRAPH_UNIT_TESTS_RACKNODE                       1
 #define GRAPH_UNIT_TESTS_EDITNODE                       1
 
+#define ENGINE_UNIT_TESTS_AUTOMATION                    1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
