@@ -11,7 +11,7 @@
 
 #if TRACKTION_UNIT_TESTS
 
-#include "../3rd_party/doctest/tracktion_doctest.hpp"
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
 
 namespace tracktion { inline namespace engine
 {
