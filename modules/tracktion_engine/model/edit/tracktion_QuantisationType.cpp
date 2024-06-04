@@ -160,6 +160,14 @@ double QuantisationType::getFractionOfBeat() const
 
     return  result;
 }
+
+double QuantisationType::getFractionOfBeat(int index)
+{
+    int size = sizeof(quantisationTypes) / sizeof(QuantisationTypeInfo);
+    if (index >= 0 && index < size)
+        return quantisationTypes[index].beatFraction;
+    return 0;
+}
 // BEATCONNECT MODIFICATION END
 
 TimePosition QuantisationType::roundToNearest (TimePosition time, const Edit& edit) const

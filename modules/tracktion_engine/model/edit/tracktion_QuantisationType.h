@@ -56,6 +56,7 @@ public:
 
     // BEATCONNECT MODIFICATION START
     double getFractionOfBeat() const;
+    static double getFractionOfBeat(int index);
     // BEATCONNECT MODIFICATION END
 
     //==============================================================================
