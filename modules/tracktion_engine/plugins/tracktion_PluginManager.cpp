@@ -734,6 +734,9 @@ juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescript
 
     for (const auto& p : knownPluginList.getTypes())
     {
+        if (p.pluginFormatName != "VST3")
+            continue;
+
         if (p.name.containsIgnoreCase ("Melodyne"))
         {
             auto version = p.version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
