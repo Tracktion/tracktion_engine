@@ -43,7 +43,7 @@ public:
 
     tl::expected<Clip::Array, juce::String> stopRecording (InputDeviceInstance&, bool discardRecordings);
     tl::expected<Clip::Array, juce::String> stopRecording (TimePosition unloopedEnd, bool discardRecordings);
-    juce::Result applyRetrospectiveRecord (juce::Array<Clip*>* clipsCreated = nullptr);
+    juce::Result applyRetrospectiveRecord (juce::Array<Clip*>* clipsCreated = nullptr, bool armedOnly = false);
 
     juce::Array<InputDeviceInstance*> getAllInputs();
     InputDeviceInstance* getInputFor (InputDevice*) const;

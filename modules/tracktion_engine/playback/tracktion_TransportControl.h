@@ -112,7 +112,7 @@ public:
     /** Applys a retrospective record to any assigned input devices, creating clips
         for any historical input.
     */
-    juce::Result applyRetrospectiveRecord();
+    juce::Result applyRetrospectiveRecord (bool armedOnly);
 
     /** Perfoms a retrospective record operation and returns any new files. */
     juce::Array<juce::File> getRetrospectiveRecordAsAudioFiles();

@@ -248,7 +248,7 @@ public:
     /** Takes the retrospective buffer and creates clips from it, as if recording had been
         triggered in the past and stopped at the time of calling this function.
     */
-    virtual juce::Array<Clip*> applyRetrospectiveRecord() = 0;
+    virtual juce::Array<Clip*> applyRetrospectiveRecord (bool armedOnly) = 0;
 
     //==============================================================================
     juce::ValueTree state;          /** The state of this instance. */

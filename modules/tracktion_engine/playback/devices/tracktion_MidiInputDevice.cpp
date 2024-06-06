@@ -1340,7 +1340,7 @@ public:
         return createdClips;
     }
 
-    juce::Array<Clip*> applyRetrospectiveRecord() override
+    juce::Array<Clip*> applyRetrospectiveRecord (bool armedOnly) override
     {
         CRASH_TRACER
 
@@ -1354,6 +1354,9 @@ public:
 
         for (auto track : getTargetTracks (*this))
         {
+            if (armedOnly && ! isRecordingActive (track->itemID))
+                continue;
+            
             auto sequence = retrospective->takeMidiMessages();
 
             if (sequence.getNumEvents() == 0)

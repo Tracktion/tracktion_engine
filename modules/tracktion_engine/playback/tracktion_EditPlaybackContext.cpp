@@ -825,7 +825,7 @@ tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (Time
     return clips;
 }
 
-juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* clips)
+juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* clips, bool armedOnly)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -834,7 +834,7 @@ juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* 
 
     for (auto in : getAllInputs())
     {
-        if (isAttached (*in))
+        if (isAttached (*in) && (! armedOnly || in->isRecordingActive()))
         {
             inputAssigned = true;
             break;
@@ -850,7 +850,7 @@ juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* 
 
     for (auto in : getAllInputs())
     {
-        for (auto clip : in->applyRetrospectiveRecord())
+        for (auto clip : in->applyRetrospectiveRecord (armedOnly))
         {
             if (clips != nullptr)
                 clips->add (clip);

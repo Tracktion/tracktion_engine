@@ -928,7 +928,7 @@ void TransportControl::stopRecording (bool discardRecordings)
     transportState->recording = false;
 }
 
-juce::Result TransportControl::applyRetrospectiveRecord()
+juce::Result TransportControl::applyRetrospectiveRecord (bool armedOnly)
 {
     if (static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::retrospectiveRecord, 30)) == 0)
         return juce::Result::fail (TRANS("Retrospective record is currently disabled"));
@@ -936,7 +936,7 @@ juce::Result TransportControl::applyRetrospectiveRecord()
     if (playbackContext)
     {
         juce::Array<Clip*> clips;
-        return playbackContext->applyRetrospectiveRecord (&clips);
+        return playbackContext->applyRetrospectiveRecord (&clips, armedOnly);
     }
 
     return juce::Result::fail (TRANS("No active audio devices"));

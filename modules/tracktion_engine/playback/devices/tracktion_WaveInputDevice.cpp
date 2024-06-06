@@ -954,12 +954,15 @@ public:
         return false;
     }
 
-    juce::Array<Clip*> applyRetrospectiveRecord() override
+    juce::Array<Clip*> applyRetrospectiveRecord (bool armedOnly) override
     {
         juce::Array<Clip*> clips;
 
         for (auto dstTrack : getTargetTracks (*this))
         {
+            if (armedOnly && ! isRecordingActive (dstTrack->itemID))
+                continue;
+
             auto& wi = getWaveInput();
 
             auto recordBuffer = wi.getRetrospectiveRecordBuffer();
