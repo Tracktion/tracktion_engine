@@ -115,6 +115,9 @@ namespace IDs
     DECLARE_ID (startBeat)
     DECLARE_ID (bpm)
     DECLARE_ID (curve)
+    // BEATCONNECT MODIFICATION START
+    DECLARE_ID(curveType)
+    // BEATCONNECT MODIFICATION END
     DECLARE_ID (numerator)
     DECLARE_ID (denominator)
     DECLARE_ID (triplets)
