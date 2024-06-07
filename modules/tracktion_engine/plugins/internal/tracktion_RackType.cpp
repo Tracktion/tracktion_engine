@@ -191,6 +191,12 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
 {
     CRASH_TRACER
 
+    if (! rackID.isValid())
+    {
+        rackID = edit.createNewItemID();
+        rackID.writeID (state, nullptr);
+    }
+
     auto windowState = state.getChildWithName (IDs::WINDOWSTATE);
 
     if (! windowState.isValid())
