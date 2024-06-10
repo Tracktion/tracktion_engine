@@ -70,7 +70,7 @@ private:
 
             for (int i = 0; i < numThreads; ++i)
             {
-                threads.emplace_back ([&, this]
+                threads.emplace_back ([&, signalTime]
                                       {
                                           ++numThreadsRunning;
                                           event.wait();
