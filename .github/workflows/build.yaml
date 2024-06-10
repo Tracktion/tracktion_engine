@@ -151,7 +151,7 @@ jobs:
   # The steps should be identical to the above, they're only repeated here as 
   # we can't skip jobs based on matrix expressions at the moment
   tooled:
-      if: github.event_name == 'schedule'
+      if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
       strategy:
         fail-fast: false
         matrix:
