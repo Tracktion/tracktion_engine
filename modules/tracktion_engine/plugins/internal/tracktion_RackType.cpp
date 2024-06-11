@@ -75,15 +75,24 @@ struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginIn
         delete p;
     }
 
-    void newObjectAdded (PluginInfo*) override                                          { sendChange(); }
-    void objectRemoved (PluginInfo*) override                                           { sendChange(); }
-    void objectOrderChanged() override                                                  { sendChange(); }
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
-
-    void sendChange()
+    void valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& tree) override
     {
-        // XXX
+        ValueTreeObjectList<RackType::PluginInfo>::valueTreeChildAdded (p, tree);
+
+        if (tree.hasType (IDs::PLUGIN) && p.hasType (IDs::PLUGININSTANCE))
+            for (auto info : objects)
+                if (info->plugin == nullptr && info->state == p)
+                    info->plugin = type.edit.getPluginCache().getOrCreatePluginFor (tree);
     }
+
+    void objectRemoved (PluginInfo*) override
+    {
+        removeBrokenConnections (type.state, type.getUndoManager());
+    }
+
+    void newObjectAdded (PluginInfo*) override {}
+    void objectOrderChanged() override {}
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override {}
 
     RackType& type;
 
@@ -126,15 +135,10 @@ struct RackType::ConnectionList  : public ValueTreeObjectList<RackConnection>
         delete t;
     }
 
-    void newObjectAdded (RackConnection*) override                                      { sendChange(); }
-    void objectRemoved (RackConnection*) override                                       { sendChange(); }
-    void objectOrderChanged() override                                                  { sendChange(); }
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  { sendChange(); }
-
-    void sendChange()
-    {
-        // XXX
-    }
+    void newObjectAdded (RackConnection*) override {}
+    void objectRemoved (RackConnection*) override {}
+    void objectOrderChanged() override {}
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override {}
 
     RackType& type;
 
@@ -187,15 +191,9 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
 RackType::RackType (const juce::ValueTree& v, Edit& owner)
     : MacroParameterElement (owner, v),
       edit (owner), state (v),
-      rackID (EditItemID::fromID (state))
+      rackID (EditItemID::readOrCreateNewID (edit, state))
 {
     CRASH_TRACER
-
-    if (! rackID.isValid())
-    {
-        rackID = edit.createNewItemID();
-        rackID.writeID (state, nullptr);
-    }
 
     auto windowState = state.getChildWithName (IDs::WINDOWSTATE);
 

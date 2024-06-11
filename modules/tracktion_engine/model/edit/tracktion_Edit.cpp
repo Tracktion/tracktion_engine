@@ -119,135 +119,136 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                 }
             }
         }
-        else
+        else if (TrackList::isTrack (v))
         {
-            if (TrackList::isTrack (v))
-            {
-                if (i == IDs::frozenIndividually || i == IDs::compGroup)
-                {
-                    restart();
-                }
-                else if (i == IDs::frozen)
-                {
-                    edit.needToUpdateFrozenTracks();
-                }
-                else if (i == IDs::process)
-                {
-                    restart();
-                }
-                else if (i == IDs::mute || i == IDs::solo || i == IDs::soloIsolate)
-                {
-                    edit.updateMuteSoloStatuses();
-                    edit.markAsChanged();
-                }
-            }
-            else if (Clip::isClipState (v))
-            {
-                if (i == IDs::start || i == IDs::length || i == IDs::offset)
-                {
-                    clipMovedOrAdded (v);
-                }
-                else if (i == IDs::linkID)
-                {
-                    linkedClipsChanged();
-                }
-                else if (i == IDs::speed || i == IDs::source  || i == IDs::mpeMode
-                         || i == IDs::fadeInType || i == IDs::fadeOutType
-                         || i == IDs::fadeInBehaviour || i == IDs::fadeOutBehaviour
-                         || i == IDs::fadeIn || i == IDs::fadeOut
-                         || i == IDs::loopStart || i == IDs::loopLength
-                         || i == IDs::loopStartBeats || i == IDs::loopLengthBeats
-                         || i == IDs::transpose || i == IDs::pitchChange
-                         || i == IDs::elastiqueMode || i == IDs::elastiqueOptions
-                         || i == IDs::autoPitch || i == IDs::autoTempo
-                         || i == IDs::channels || i == IDs::isReversed
-                         || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
-                         || i == IDs::loopedSequenceType || i == IDs::grooveStrength
-                         || i == IDs::proxyAllowed || i == IDs::resamplingQuality || i == IDs::warpTime
-                         || i == IDs::disabled || i == IDs::followActionBeats || i == IDs::followActionNumLoops
-                         || i == IDs::followActionDurationType)
-                {
-                    restart();
-                }
-            }
-            else if (v.hasType (IDs::COMPSECTION))
+            if (i == IDs::frozenIndividually || i == IDs::compGroup)
             {
                 restart();
             }
-            else if (v.hasType (IDs::WARPMARKER))
+            else if (i == IDs::frozen)
             {
-                if (i == IDs::sourceTime || i == IDs::warpTime)
-                    restart();
+                edit.needToUpdateFrozenTracks();
             }
-            else if (v.hasType (IDs::QUANTISATION))
-            {
-                if (i == IDs::type || i == IDs::amount)
-                    restart();
-            }
-            else if (v.hasType (IDs::NOTE) || v.hasType (IDs::CONTROL) || v.hasType (IDs::SYSEX))
-            {
-                if (i != IDs::c)
-                    restart();
-            }
-            else if (MidiExpression::isExpression (v.getType()))
-            {
-                if (i == IDs::b || i == IDs::v)
-                    restart();
-            }
-            else if (v.hasType (IDs::CHANNEL))
-            {
-                if (i == IDs::pattern || i == IDs::channel
-                    || i == IDs::velocities || i == IDs::gates || i == IDs::probabilities
-                     || i == IDs::note || i == IDs::velocity || i == IDs::groove
-                     || i == IDs::grooveStrength)
-                    restart();
-            }
-            else if (v.hasType (IDs::PATTERN))
-            {
-                if (i == IDs::noteLength || i == IDs::numNotes)
-                    restart();
-            }
-            else if (v.hasType (IDs::SEQUENCE))
-            {
-                if (i == IDs::channelNumber)
-                    restart();
-            }
-            else if (v.hasType (IDs::GROOVE))
-            {
-                if (i == IDs::current)
-                    restart();
-            }
-            else if (v.hasType (IDs::TAKES))
-            {
-                if (i == IDs::currentTake)
-                    restart();
-            }
-            else if (v.hasType (IDs::SIDECHAINCONNECTION))
+            else if (i == IDs::process)
             {
                 restart();
             }
-            else if (v.hasType (IDs::CLICKTRACK))
+            else if (i == IDs::mute || i == IDs::solo || i == IDs::soloIsolate)
             {
-                if (i == IDs::active)
-                {
-                    auto& ecm = edit.engine.getExternalControllerManager();
+                edit.updateMuteSoloStatuses();
+                edit.markAsChanged();
+            }
+        }
+        else if (Clip::isClipState (v))
+        {
+            if (i == IDs::start || i == IDs::length || i == IDs::offset)
+            {
+                clipMovedOrAdded (v);
+            }
+            else if (i == IDs::linkID)
+            {
+                linkedClipsChanged();
+            }
+            else if (i == IDs::speed || i == IDs::source  || i == IDs::mpeMode
+                        || i == IDs::fadeInType || i == IDs::fadeOutType
+                        || i == IDs::fadeInBehaviour || i == IDs::fadeOutBehaviour
+                        || i == IDs::fadeIn || i == IDs::fadeOut
+                        || i == IDs::loopStart || i == IDs::loopLength
+                        || i == IDs::loopStartBeats || i == IDs::loopLengthBeats
+                        || i == IDs::transpose || i == IDs::pitchChange
+                        || i == IDs::elastiqueMode || i == IDs::elastiqueOptions
+                        || i == IDs::autoPitch || i == IDs::autoTempo
+                        || i == IDs::channels || i == IDs::isReversed
+                        || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
+                        || i == IDs::loopedSequenceType || i == IDs::grooveStrength
+                        || i == IDs::proxyAllowed || i == IDs::resamplingQuality || i == IDs::warpTime
+                        || i == IDs::disabled || i == IDs::followActionBeats || i == IDs::followActionNumLoops
+                        || i == IDs::followActionDurationType)
+            {
+                restart();
+            }
+        }
+        else if (v.hasType (IDs::COMPSECTION))
+        {
+            restart();
+        }
+        else if (v.hasType (IDs::WARPMARKER))
+        {
+            if (i == IDs::sourceTime || i == IDs::warpTime)
+                restart();
+        }
+        else if (v.hasType (IDs::QUANTISATION))
+        {
+            if (i == IDs::type || i == IDs::amount)
+                restart();
+        }
+        else if (v.hasType (IDs::NOTE) || v.hasType (IDs::CONTROL) || v.hasType (IDs::SYSEX))
+        {
+            if (i != IDs::c)
+                restart();
+        }
+        else if (MidiExpression::isExpression (v.getType()))
+        {
+            if (i == IDs::b || i == IDs::v)
+                restart();
+        }
+        else if (v.hasType (IDs::CHANNEL))
+        {
+            if (i == IDs::pattern || i == IDs::channel
+                || i == IDs::velocities || i == IDs::gates || i == IDs::probabilities
+                    || i == IDs::note || i == IDs::velocity || i == IDs::groove
+                    || i == IDs::grooveStrength)
+                restart();
+        }
+        else if (v.hasType (IDs::PATTERN))
+        {
+            if (i == IDs::noteLength || i == IDs::numNotes)
+                restart();
+        }
+        else if (v.hasType (IDs::SEQUENCE))
+        {
+            if (i == IDs::channelNumber)
+                restart();
+        }
+        else if (v.hasType (IDs::GROOVE))
+        {
+            if (i == IDs::current)
+                restart();
+        }
+        else if (v.hasType (IDs::TAKES))
+        {
+            if (i == IDs::currentTake)
+                restart();
+        }
+        else if (v.hasType (IDs::SIDECHAINCONNECTION))
+        {
+            restart();
+        }
+        else if (v.hasType (IDs::CLICKTRACK))
+        {
+            if (i == IDs::active)
+            {
+                auto& ecm = edit.engine.getExternalControllerManager();
 
-                    if (ecm.isAttachedToEdit (edit))
-                        ecm.clickChanged (edit.clickTrackEnabled);
-                }
+                if (ecm.isAttachedToEdit (edit))
+                    ecm.clickChanged (edit.clickTrackEnabled);
             }
-            else if (v.hasType (IDs::TEMPO) || v.hasType (IDs::TIMESIG))
+        }
+        else if (v.hasType (IDs::TEMPO) || v.hasType (IDs::TIMESIG))
+        {
+            restart();
+            edit.invalidateStoredLength();
+        }
+        else if (v.hasType (IDs::PLUGIN))
+        {
+            if (i == IDs::enabled
+                 && edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph())
             {
                 restart();
-                edit.invalidateStoredLength();
             }
-            else if (v.hasType (IDs::PLUGIN))
+            else
             {
                 const auto type = v[IDs::type].toString();
-
-                if (i == IDs::enabled
-                    && edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph())
-                   restart();
 
                 if (type == AuxSendPlugin::xmlTypeName || type == AuxReturnPlugin::xmlTypeName)
                 {
@@ -258,53 +259,51 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                 {
                     if (i == IDs::enabled
                         || i == IDs::leftTo || i == IDs::rightTo || i == IDs::leftFrom || i == IDs::rightFrom)
-                       restart();
+                        restart();
                 }
                 else if (i == IDs::outputDevice || i == IDs::inputDevice
-                         || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
+                            || i == IDs::manualAdjustMs || i == IDs::sidechainSourceID || i == IDs::ignoreVca || i == IDs::busNum)
                 {
                     restart();
                 }
             }
-            else if (v.hasType (IDs::MASTERVOLUME))
+        }
+        else if (v.hasType (IDs::MASTERVOLUME))
+        {
+            if (i == IDs::fadeIn || i == IDs::fadeOut
+                    || i == IDs::fadeInType || i == IDs::fadeOutType)
+                restart();
+        }
+        else if (v.hasType (IDs::LOOPINFO))
+        {
+            if (i == IDs::numBeats || i == IDs::rootNote
+                || i == IDs::numerator || i == IDs::denominator)
             {
-                if (i == IDs::fadeIn || i == IDs::fadeOut
-                     || i == IDs::fadeInType || i == IDs::fadeOutType)
-                    restart();
+                restart();
             }
-            else if (v.hasType (IDs::LOOPINFO))
-            {
-                if (i == IDs::numBeats || i == IDs::rootNote
-                    || i == IDs::numerator || i == IDs::denominator)
-                {
-                    restart();
-                }
-            }
-            else if (v.hasType (IDs::ACTION) && v.getParent().hasType (IDs::FOLLOWACTIONS))
-            {
-                if (i == IDs::type || i == IDs::weight)
-                    restart();
-            }
+        }
+        else if (v.hasType (IDs::ACTION) && v.getParent().hasType (IDs::FOLLOWACTIONS))
+        {
+            if (i == IDs::type || i == IDs::weight)
+                restart();
         }
     }
 
     void valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c) override
     {
-        childAddedOrRemoved (p, c);
+        childAddedOrRemoved (p, c, true);
     }
 
     void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int) override
     {
-        childAddedOrRemoved (p, c);
+        childAddedOrRemoved (p, c, false);
     }
 
-    void childAddedOrRemoved (juce::ValueTree& p, juce::ValueTree& c)
+    void childAddedOrRemoved (juce::ValueTree& p, juce::ValueTree& c, bool wasAdded)
     {
         if (c.hasType (IDs::NOTE)
              || c.hasType (IDs::CONTROL)
              || c.hasType (IDs::SYSEX)
-             || c.hasType (IDs::PLUGIN)
-             || c.hasType (IDs::RACK)
              || c.hasType (IDs::PLUGININSTANCE)
              || c.hasType (IDs::CONNECTION)
              || p.hasType (IDs::CHANNELS)
@@ -324,13 +323,27 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
         {
             restart();
         }
+        else if (c.hasType (IDs::PLUGIN)
+              || c.hasType (IDs::RACK))
+        {
+            if (wasAdded)
+                EditItemID::readOrCreateNewID (edit, c);
+
+            restart();
+        }
         else if (Clip::isClipState (c))
         {
+            if (wasAdded)
+                EditItemID::readOrCreateNewID (edit, c);
+
             clipMovedOrAdded (c);
             linkedClipsChanged();
         }
         else if (TrackList::isTrack (c))
         {
+            if (wasAdded)
+                EditItemID::readOrCreateNewID (edit, c);
+
             restart();
             edit.invalidateStoredLength();
         }

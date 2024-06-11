@@ -797,8 +797,13 @@ Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, boo
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
 
+    if (! v.isValid())
+        return {};
+
     auto type = v[IDs::type].toString();
     PluginCreationInfo info (ed, v, isNew);
+
+    EditItemID::readOrCreateNewID (ed, v);
 
     if (type == ExternalPlugin::xmlTypeName)
         return new ExternalPlugin (info);

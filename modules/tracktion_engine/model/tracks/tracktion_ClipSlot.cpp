@@ -130,8 +130,7 @@ ClipSlotList::ClipSlotList (const juce::ValueTree& v, Track& t)
 
     for (auto child : state)
         if (child.hasType (IDs::CLIPSLOT))
-            if (EditItemID::fromID (child).isInvalid())
-                track.edit.createNewItemID().writeID (child, nullptr);
+            EditItemID::readOrCreateNewID (track.edit, child);
 
     rebuildObjects();
 }
@@ -151,7 +150,7 @@ void ClipSlotList::ensureNumberOfSlots (int numSlots)
     for (int i = size(); i < numSlots; ++i)
     {
         auto newSlotState = juce::ValueTree (IDs::CLIPSLOT);
-        track.edit.createNewItemID().writeID (newSlotState, nullptr);
+        EditItemID::readOrCreateNewID (track.edit, newSlotState);
         parent.appendChild (newSlotState, &track.edit.getUndoManager());
     }
 
@@ -174,7 +173,7 @@ void ClipSlotList::setNumberOfSlots (int numSlots)
 ClipSlot* ClipSlotList::insertSlot (int index)
 {
     auto newSlotState = juce::ValueTree (IDs::CLIPSLOT);
-    track.edit.createNewItemID().writeID (newSlotState, nullptr);
+    EditItemID::readOrCreateNewID (track.edit, newSlotState);
     parent.addChild (newSlotState, index, &track.edit.getUndoManager());
     return getClipSlots()[index];
 }

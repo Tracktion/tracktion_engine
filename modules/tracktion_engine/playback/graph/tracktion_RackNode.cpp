@@ -346,13 +346,10 @@ namespace RackNodeBuilder
         for (auto c : allConnections)
         {
             if (itemIsSource && c->sourceID != itemID)
-            {
                 continue;
-            }
-            else if (c->destID != itemID)
-            {
+
+            if (c->destID != itemID)
                 continue;
-            }
 
             auto sourceDest = std::make_pair (c->sourceID.get(), c->destID.get());
 
