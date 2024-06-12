@@ -862,6 +862,7 @@ namespace cl
                                     assert (t);
                                     auto tc = std::make_unique<TrackComponent> (*t);
                                     addAndMakeVisible (*tc);
+                                    asyncResizer.resizeAsync();
 
                                     return tc;
                                 });
@@ -1114,12 +1115,6 @@ public:
                                            });
         transportReadoutTimer.startTimerHz (25);
 
-//ddd        edit.tempoSequence.insertTempo (1_bp, 120.0, 0.0f);
-//        edit.tempoSequence.insertTempo (5_bp, 40.0, 0.0f);
-//        edit.tempoSequence.getTempo (0)->setBpm (40.0);
-//        transport.setLoopRange (edit.tempoSequence.toTime ({ 0.25_bp, 6.75_bp }));
-//        transport.setPosition (transport.getLoopRange().getStart());
-//        transport.looping = true;
         transport.addChangeListener (this);
         quantisationValue.addListener (this);
 
@@ -1129,11 +1124,32 @@ public:
         for (auto at : te::getAudioTracks (edit))
             at->getClipSlotList().ensureNumberOfSlots (8);
 
+        auto& ts = edit.tempoSequence;
+        auto um = &edit.getUndoManager();
+
         // Create 4OSC on track 1 & 2
         {
             auto& at = utils::addFourOscWithPatch (*te::getAudioTracks (edit)[0], utils::organPatch);
             at.setName ("Organ");
             at.setColour (juce::Colours::blue);
+
+            {
+                auto mc = te::insertMIDIClip (*at.getClipSlotList().getClipSlots()[0], ts.toTime ({ 0_bp, 16_bp }));
+                auto& seq = mc->getSequence();
+                seq.addNote (36, 0_bp, 4_bd, 127, 0, um);
+                seq.addNote (41, 4_bp, 4_bd, 100, 0, um);
+                seq.addNote (39, 8_bp, 4_bd, 110, 0, um);
+                seq.addNote (38, 12_bp, 4_bd, 100, 0, um);
+            }
+
+            {
+                auto mc = te::insertMIDIClip (*at.getClipSlotList().getClipSlots()[1], ts.toTime ({ 0_bp, 16_bp }));
+                auto& seq = mc->getSequence();
+                seq.addNote (45, 0_bp, 4_bd, 127, 0, um);
+                seq.addNote (43, 4_bp, 4_bd, 100, 0, um);
+                seq.addNote (36, 8_bp, 4_bd, 110, 0, um);
+                seq.addNote (43, 12_bp, 4_bd, 100, 0, um);
+            }
         }
 
         {
@@ -1141,12 +1157,34 @@ public:
             at.setName ("Lead");
             at.setColour (juce::Colours::green);
 
-            auto sc = dynamic_cast<te::StepClip*> (te::insertNewClip (*at.getClipSlotList().getClipSlots()[0], te::TrackItem::Type::step,
-                                                                      edit.tempoSequence.toTime ({ 0_bp, 4_bd })));
-            assert (sc);
-            sc->setLoopRangeBeats (sc->getEditBeatRange());
-            sc->getPattern (0).toggleAtInterval (0, 4);
-            sc->getPattern (0).toggleAtInterval (1, 2);
+            {
+                juce::TemporaryFile tf;
+                tf.getFile().replaceWithData (BinaryData::midi_arp_mid, BinaryData::midi_arp_midSize);
+                auto mc = createClipFromFile (tf.getFile(), *at.getClipSlotList().getClipSlots()[0], false);
+                mc->setName ("Lead");
+                mc->setVolumeDb (-6.0f);
+            }
+
+            {
+                juce::TemporaryFile tf;
+                tf.getFile().replaceWithData (BinaryData::midi_arp_2_mid, BinaryData::midi_arp_2_midSize);
+                auto mc = createClipFromFile (tf.getFile(), *at.getClipSlotList().getClipSlots()[1], false);
+                mc->setName ("Lead");
+                mc->setVolumeDb (-6.0f);
+            }
+        }
+
+        // Drums on track 3
+        {
+            drumTempFile = std::make_unique<TemporaryFile> (".wav");
+            drumTempFile->getFile().replaceWithData (BinaryData::drum_loop_wav, BinaryData::drum_loop_wavSize);
+
+            auto at = te::getAudioTracks (edit)[2];
+            auto clip = insertWaveClip (*at->getClipSlotList().getClipSlots()[0], "Drums", drumTempFile->getFile(),
+                                        createClipPosition (ts, { 0_bp, 8_bp }), te::DeleteExistingClips::no);
+
+            clip->setAutoTempo (true);
+            clip->setUsesProxy (false);
         }
 
         updateQuantisationButtonText();
@@ -1198,6 +1236,8 @@ private:
 
     te::LambdaTimer transportReadoutTimer;
     juce::Value quantisationValue { launchQuantisation.type.getPropertyAsValue() };
+
+    std::unique_ptr<TemporaryFile> drumTempFile;
 
     void showQuantisationMenu()
     {

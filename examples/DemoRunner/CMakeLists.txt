@@ -39,7 +39,9 @@ juce_generate_juce_header(${TARGET_NAME})
 juce_add_binary_data (${TARGET_NAME}BinaryData SOURCES
     resources/edm_song.ogg
     resources/drum_loop.wav
-    resources/synth_loop.wav)
+    resources/synth_loop.wav
+    resources/midi_arp.mid
+    resources/midi_arp_2.mid)
 
 target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
 
