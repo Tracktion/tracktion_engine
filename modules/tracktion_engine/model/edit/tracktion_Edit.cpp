@@ -778,7 +778,9 @@ void Edit::initialise (const Options& options)
     tempDirectory = juce::File();
 
     if (! state.hasProperty (IDs::creationTime))
-        state.setProperty (IDs::creationTime, juce::Time::getCurrentTime().toMilliseconds(), nullptr);
+        addValueTreeProperties (state,
+                                IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(),
+                                IDs::creationTime, juce::Time::getCurrentTime().toMilliseconds());
 
     lastSignificantChange.referTo (state, IDs::lastSignificantChange, nullptr,
                                    juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds()));
