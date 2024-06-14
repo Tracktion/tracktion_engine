@@ -710,6 +710,8 @@ Edit::~Edit()
     for (auto rt : rackTypes->getTypes())
         rt->hideWindowForShutdown();
 
+    pluginCache.reset();
+
     globalMacros.reset();
     masterVolumePlugin.reset();
     masterPluginList->releaseObjects();
