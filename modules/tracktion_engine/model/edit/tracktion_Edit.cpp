@@ -843,6 +843,8 @@ void Edit::initialise (const Options& options)
             na->load (*this);
    #endif
 
+    auxBusses = state.getChildWithName ("AUXBUSNAMES");
+
     getUndoManager().clearUndoHistory();
 
     DBG ("Edit loaded in: " << loadTimer.getDescription());
