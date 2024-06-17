@@ -178,14 +178,21 @@ namespace EngineHelpers
         return clip;
     }
 
-    inline void togglePlay (te::Edit& edit)
+    enum class ReturnToStart { no, yes };
+
+    inline void togglePlay (te::Edit& edit, ReturnToStart rts = ReturnToStart::no)
     {
         auto& transport = edit.getTransport();
 
         if (transport.isPlaying())
             transport.stop (false, false);
         else
-            transport.play (false);
+        {
+            if (rts == ReturnToStart::yes)
+                transport.playFromStart (true);
+            else
+                transport.play (false);
+        }
     }
 
     inline void toggleRecord (te::Edit& edit)

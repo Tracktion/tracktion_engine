@@ -97,11 +97,35 @@ namespace utils
 
     //==============================================================================
     //==============================================================================
-    inline te::BeatDuration getLaunchOffset (const te::LaunchQuantisation& lq, const te::BeatPosition pos,
-                                             std::optional<te::BeatRange> loopRange)
+    inline void pauseForSyncPointChange (te::Edit& edit)
     {
-        // Quantise position first
-        auto quantisedPos = lq.getNext (pos);
+        // Pause until the position change has gone through to the clips
+        if (auto epc = edit.getTransport().getCurrentPlaybackContext())
+            epc->blockUntilSyncPointChange();
+    }
+
+    inline te::TimePosition getStartTimeOfBar (te::TransportControl& tc, te::TimePosition t)
+    {
+        auto& ts = tc.edit.tempoSequence;
+        const auto barsBeats = ts.toBarsAndBeats (t);
+        return ts.toTime (te::tempo::BarsAndBeats { .bars = barsBeats.bars });
+    }
+
+    inline te::BeatDuration getLaunchOffset (const te::LaunchQuantisation& lq, const te::BeatPosition pos,
+                                             std::optional<tracktion::BeatRange> loopRange)
+    {
+        // Quantise position first, ensuring not negative
+        te::BeatPosition quantisedPos = pos;
+
+        for (;;)
+        {
+            quantisedPos = lq.getNext (quantisedPos);
+
+            if (quantisedPos >= 0_bp)
+                break;
+
+            quantisedPos = quantisedPos + 0.001_bd;
+        }
 
         if (! loopRange || quantisedPos < loopRange->getEnd())
             return quantisedPos - pos;
@@ -120,7 +144,29 @@ namespace utils
         return quantisedPos - pos;
     }
 
-    inline te::MonotonicBeat getLaunchPosition (te::Edit& e)
+    inline te::LaunchQuantisation& getLaunchQuantisation (te::Clip& c)
+    {
+        if (! c.usesGlobalLaunchQuatisation())
+            if (auto clipLQ = c.getLaunchQuantisation())
+                return *clipLQ;
+
+        return c.edit.getLaunchQuantisation();
+    }
+
+    inline te::MonotonicBeat getLaunchPosition (te::Edit& e, const te::LaunchQuantisation& lq, te::SyncPoint syncPoint)
+    {
+        auto& t = e.getTransport();
+        auto& ts = e.tempoSequence;
+        auto currentBeat = syncPoint.beat;
+        const auto offset = getLaunchOffset (lq,
+                                             currentBeat,
+                                             t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
+                                                             : std::nullopt);
+
+        return { syncPoint.monotonicBeat.v + offset };
+    }
+
+    inline te::MonotonicBeat getLaunchPosition (te::Edit& e, const te::LaunchQuantisation& lq)
     {
         auto epc = e.getTransport().getCurrentPlaybackContext();
 
@@ -132,20 +178,22 @@ namespace utils
         if (! syncPoint)
             return {};
 
-        auto& t = e.getTransport();
-        auto& ts = e.tempoSequence;
-        auto currentBeat = syncPoint->beat;
-        const auto offset = getLaunchOffset (e.getLaunchQuantisation(),
-                                             currentBeat,
-                                             t.looping.get() ? std::optional (ts.toBeats (t.getLoopRange()))
-                                                             : std::nullopt);
-
-        return { syncPoint->monotonicBeat.v + offset };
+        return getLaunchPosition (e, lq, *syncPoint);
     }
 
-    inline te::MonotonicBeat getStopPosition (te::Edit& e)
+    inline te::MonotonicBeat getLaunchPosition (te::Clip& c)
     {
-        return getLaunchPosition (e);
+        return getLaunchPosition (c.edit, getLaunchQuantisation (c));
+    }
+
+    inline te::MonotonicBeat getLaunchPosition (te::Edit& e)
+    {
+        return getLaunchPosition (e, e.getLaunchQuantisation());
+    }
+
+    inline te::MonotonicBeat getStopPosition (te::Clip& c)
+    {
+        return getLaunchPosition (c);
     }
 
     inline std::shared_ptr<te::LaunchHandle> getPlayingLaunchHandleOnTrack (te::AudioTrack& t)
@@ -171,6 +219,23 @@ namespace utils
         return {};
     }
 
+    inline std::vector<te::Clip*> getPlayingOrQueuedClipsOnTrack (te::AudioTrack& t)
+    {
+        std::vector<te::Clip*> clips;
+
+        for (auto s : t.getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                if (auto lh = c->getLaunchHandle())
+                    if (lh->getPlayingStatus() == te::LaunchHandle::PlayState::playing
+                        || lh->getQueuedStatus() == te::LaunchHandle::QueueState::playQueued)
+                    {
+                        clips.push_back(c);
+                    }
+
+
+        return clips;
+    }
+
     inline std::vector<std::shared_ptr<te::LaunchHandle>> getPlayingOrQueuedLaunchHandlesOnTrack (te::AudioTrack& t)
     {
         std::vector<std::shared_ptr<te::LaunchHandle>> handles;
@@ -185,11 +250,24 @@ namespace utils
         return handles;
     }
 
+    inline std::vector<te::Clip*> getPlayingOrQueuedClips (te::Edit& e)
+    {
+        std::vector<te::Clip*> clips;
+
+        for (auto at : getAudioTracks (e))
+        {
+            auto activeClips = getPlayingOrQueuedClipsOnTrack (*at);
+            std::move (activeClips.begin(), activeClips.end(), std::back_inserter (clips));
+        }
+
+        return clips;
+    }
+
     inline std::vector<std::shared_ptr<te::LaunchHandle>> getPlayingOrQueuedLaunchHandles (te::Edit& e)
     {
         std::vector<std::shared_ptr<te::LaunchHandle>> handles;
 
-        for (auto at : te::getAudioTracks (e))
+        for (auto at : getAudioTracks (e))
         {
             auto trackHandles = getPlayingOrQueuedLaunchHandlesOnTrack (*at);
             std::move (trackHandles.begin(), trackHandles.end(), std::back_inserter (handles));
@@ -198,22 +276,66 @@ namespace utils
         return handles;
     }
 
-    inline void launchClip (te::Clip& c)
+    enum class StartTransport
     {
-        auto lh = c.getLaunchHandle();
-        lh->play (utils::getLaunchPosition (c.edit));
+        no,
+        yes
+    };
 
-        if (! c.edit.getTransport().isPlaying())
-            c.edit.getTransport().play (false);
+    inline void launchClip (te::Clip& c, bool stopOthers, StartTransport startTransport)
+    {
+        if (startTransport == StartTransport::yes
+            && (! c.edit.getTransport().isPlaying()))
+        {
+            auto& tc = c.edit.getTransport();
+            tc.setPosition (getStartTimeOfBar (tc, tc.startPosition));
+            pauseForSyncPointChange (c.edit);
+        }
+
+        if (stopOthers)
+        {
+            if (auto at = dynamic_cast<te::AudioTrack*> (c.getTrack()))
+            {
+                for (auto slot : at->getClipSlotList().getClipSlots())
+                {
+                    if (slot != nullptr)
+                    {
+                        if (auto otherClip = slot->getClip())
+                        {
+                            if (&c == otherClip)
+                                launchClip (c, false, StartTransport::no);
+                            else if (auto lh = otherClip->getLaunchHandle())
+                                lh->stop (c.edit.getTransport().isPlaying() ? std::make_optional (getStopPosition (*otherClip)) : std::nullopt);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            auto lh = c.getLaunchHandle();
+            lh->play (getLaunchPosition (c));
+        }
+
+        if (startTransport == StartTransport::yes)
+            if (! c.edit.getTransport().isPlaying())
+                c.edit.getTransport().play (false);
     }
 
-    inline void launchScene (te::Scene& s)
+    inline void launchScene (te::Scene& s, te::Track* t = nullptr)
     {
         const int sceneIndex = s.sceneList.getScenes().indexOf (&s);
 
-        for (auto at : te::getAudioTracks (s.edit))
+        juce::Array<te::AudioTrack*> tracks;
+        if (t && t->isFolderTrack())
+            tracks = t->getAllAudioSubTracks (true);
+        else
+            tracks = getAudioTracks (s.edit);
+
+        for (auto at : tracks)
         {
             auto slots = at->getClipSlotList().getClipSlots();
+            const bool shouldStopClipsOnTrack = [cs = slots[sceneIndex]] { return cs == nullptr || cs->getClip() != nullptr; }();
 
             for (int i = 0; i < slots.size(); ++i)
             {
@@ -222,9 +344,9 @@ namespace utils
                     if (auto c = slot->getClip())
                     {
                         if (i == sceneIndex)
-                            launchClip (*c);
-                        else if (auto lh = c->getLaunchHandle())
-                            lh->stop (getStopPosition (c->edit));
+                            launchClip (*c, false, StartTransport::yes);
+                        else if (auto lh = c->getLaunchHandle(); lh && shouldStopClipsOnTrack)
+                            lh->stop (at->edit.getTransport().isPlaying() ? std::make_optional (getStopPosition (*c)) : std::nullopt);
                     }
                 }
             }
@@ -237,8 +359,9 @@ namespace utils
             for (auto slot : at->getClipSlotList().getClipSlots())
                 if (auto c = slot->getClip())
                     if (auto lh = c->getLaunchHandle())
-                        lh->stop (getStopPosition (c->edit));
+                        lh->stop (e.getTransport().isPlaying() ? std::make_optional (getStopPosition (*c)) : std::nullopt);
     }
+
 
     //==============================================================================
     // UI
@@ -419,7 +542,7 @@ namespace cl
         {
             if (track)
                 for (auto lh : utils::getPlayingOrQueuedLaunchHandlesOnTrack (*track))
-                    lh->stop (utils::getStopPosition (track->edit));
+                    lh->stop (utils::getLaunchPosition (track->edit));
         }
     };
 
@@ -457,7 +580,7 @@ namespace cl
             : clip (c)
         {
             addAndMakeVisible (playButton);
-            playButton.getButton().onClick = [this] { utils::launchClip (clip); };
+            playButton.getButton().onClick = [this] { utils::launchClip (clip, true, utils::StartTransport::yes); };
 
             refreshPlaybackHandle();
             clip.addSelectableListener (this);
@@ -1098,7 +1221,7 @@ public:
         playPauseButton.setClickingTogglesState (false);
         playPauseButton.onClick = [this]
         {
-            EngineHelpers::togglePlay (edit);
+            EngineHelpers::togglePlay (edit, EngineHelpers::ReturnToStart::yes);
         };
 
         metronomeButton.getToggleStateValue().referTo (edit.clickTrackEnabled.getPropertyAsValue());
