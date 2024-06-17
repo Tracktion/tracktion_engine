@@ -710,6 +710,8 @@ Edit::~Edit()
     for (auto rt : rackTypes->getTypes())
         rt->hideWindowForShutdown();
 
+    pluginCache.reset();
+
     globalMacros.reset();
     masterVolumePlugin.reset();
     masterPluginList->releaseObjects();
@@ -840,6 +842,8 @@ void Edit::initialise (const Options& options)
         if (auto na = engine.getExternalControllerManager().getAutomap())
             na->load (*this);
    #endif
+
+    auxBusses = state.getChildWithName ("AUXBUSNAMES");
 
     getUndoManager().clearUndoHistory();
 
