@@ -466,20 +466,10 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMess
     }
     else
     {
-        if (! (m.isActiveSense() || disallowedChannels[m.getChannel() - 1]))
+        auto message = m;
+
+        if (handleIncomingMessage (message))
         {
-            auto message = m;
-
-            if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))
-                message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
-
-            message.addToTimeStamp (adjustSecs);
-
-            sendNoteOnToMidiKeyListeners (message);
-
-            if (! retrospectiveRecordLock && retrospectiveBuffer != nullptr)
-                retrospectiveBuffer->addMessage (message, adjustSecs);
-
             if (! tryToSendTimecode (message))
             {
                 if (isTakingControllerMessages)

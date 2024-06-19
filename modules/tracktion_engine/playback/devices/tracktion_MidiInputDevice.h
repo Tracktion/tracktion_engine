@@ -40,6 +40,22 @@ public:
     void setChannelAllowed (int midiChannel, bool);
     bool isChannelAllowed (int midiChannel) const   { return ! disallowedChannels[midiChannel - 1]; }
 
+    struct NoteFilterRange
+    {
+        int startNote = 0, endNote = 128;
+
+        void set (int start, int end)
+        {
+            startNote = std::min (127, std::max (0, start));
+            endNote = std::min (128, std::max (startNote + 1, end));
+        }
+
+        bool isAllNotes() const     { return startNote == 0 && endNote == 128; }
+    };
+
+    void setNoteFilterRange (NoteFilterRange);
+    NoteFilterRange getNoteFilterRange() const      { return noteFilterRange; }
+
     void setOverridingNoteVelocities (bool);
     bool isOverridingNoteVelocities() const         { return overrideNoteVels; }
 
@@ -55,6 +71,11 @@ public:
     //==============================================================================
     void masterTimeUpdate (double time) override;
     void connectionStateChanged();
+
+    /// Updates the timestamp of the message and handles sending it out to
+    /// listeners.  false if the given message has been filtered out by channel
+    /// or  number.
+    bool handleIncomingMessage (juce::MidiMessage&);
 
     //==============================================================================
     void addInstance (MidiInputDeviceInstanceBase*);
@@ -119,6 +140,8 @@ protected:
     MidiChannel channelToUse;
     int programToUse = 0;
     int bankToUse = 0;
+    NoteFilterRange noteFilterRange;
+
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     std::unique_ptr<NoteDispatcher> noteDispatcher;

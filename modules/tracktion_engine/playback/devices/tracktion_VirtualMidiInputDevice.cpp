@@ -100,22 +100,10 @@ void VirtualMidiInputDevice::saveProps()
 
 void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
-    if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))
-    {
-        juce::MidiMessage message (m);
-
-        if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())
-            message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
-
-        message.addToTimeStamp (adjustSecs);
-
-        if (! retrospectiveRecordLock && retrospectiveBuffer != nullptr)
-            retrospectiveBuffer->addMessage (message, adjustSecs);
-
-        sendNoteOnToMidiKeyListeners (message);
-
+    auto message = m;
+    
+    if (handleIncomingMessage (message))
         sendMessageToInstances (message);
-    }
 }
 
 void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage& m)

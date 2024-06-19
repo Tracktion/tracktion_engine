@@ -394,6 +394,8 @@ void MidiInputDevice::loadMidiProps (const juce::XmlElement* n)
         manualAdjustMs = n->getDoubleAttribute ("manualAdjustMs", manualAdjustMs);
         minimumLengthMs = n->getDoubleAttribute ("minimumLengthMs", minimumLengthMs);
         disallowedChannels.parseString (n->getStringAttribute ("disallowedChannels", disallowedChannels.toString (2)), 2);
+        noteFilterRange.set (n->getIntAttribute ("noteStart", 0),
+                             n->getIntAttribute ("noteEnd", 128));
 
         connectionStateChanged();
     }
@@ -421,7 +423,15 @@ void MidiInputDevice::saveMidiProps (juce::XmlElement& n)
     n.setAttribute ("useFullVelocity", overrideNoteVels);
     n.setAttribute ("manualAdjustMs", manualAdjustMs);
     n.setAttribute ("minimumLengthMs", minimumLengthMs);
-    n.setAttribute ("disallowedChannels", disallowedChannels.toString (2));
+
+    if (! disallowedChannels.isZero())
+        n.setAttribute ("disallowedChannels", disallowedChannels.toString (2));
+
+    if (! noteFilterRange.isAllNotes())
+    {
+        n.setAttribute ("noteStart", noteFilterRange.startNote);
+        n.setAttribute ("noteEnd", noteFilterRange.endNote);
+    }
 }
 
 juce::Array<AudioTrack*> MidiInputDevice::getDestinationTracks()
@@ -433,11 +443,25 @@ juce::Array<AudioTrack*> MidiInputDevice::getDestinationTracks()
     return {};
 }
 
-void MidiInputDevice::setChannelAllowed (int midiChannel, bool b)
+void MidiInputDevice::setChannelAllowed (int midiChannel, bool allowed)
 {
-    disallowedChannels.setBit (midiChannel - 1, ! b);
-    changed();
-    saveProps();
+    if (allowed != isChannelAllowed (midiChannel))
+    {
+        disallowedChannels.setBit (midiChannel - 1, ! allowed);
+        changed();
+        saveProps();
+    }
+}
+
+void MidiInputDevice::setNoteFilterRange (NoteFilterRange newRange)
+{
+    if (noteFilterRange.startNote != newRange.startNote
+         || noteFilterRange.endNote != newRange.endNote)
+    {
+        noteFilterRange = newRange;
+        changed();
+        saveProps();
+    }
 }
 
 void MidiInputDevice::setChannelToUse (int newChan)
@@ -1518,32 +1542,34 @@ private:
     RecordStopper& getRecordStopper()
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
+
         if (! recordStopper)
+        {
             recordStopper = std::make_unique<RecordStopper> ([this] (auto targetID)
-                                                             {
-                                                                 const auto unloopedTimeNow = context.getUnloopedPosition();
+            {
+                const auto unloopedTimeNow = context.getUnloopedPosition();
+                const std::shared_lock sl (contextLock);
 
-                                                                 const std::shared_lock sl (contextLock);
+                if (auto recContext = getContextForID (targetID))
+                {
+                    if (unloopedTimeNow >= recContext->unloopedStopTime)
+                    {
+                        auto stopParams = recContext->stopParams;
 
-                                                                 if (auto recContext = getContextForID (targetID))
-                                                                 {
-                                                                     if (unloopedTimeNow >= recContext->unloopedStopTime)
-                                                                     {
-                                                                         auto stopParams = recContext->stopParams;
+                        // Temp unlock as stopRecording takes a unique lock
+                        contextLock.unlock_shared();
+                        auto res = stopRecording (stopParams);
+                        contextLock.lock_shared();
 
-                                                                         // Temp unlock as stopRecording takes a unique lock
-                                                                         contextLock.unlock_shared();
-                                                                         auto res = stopRecording (stopParams);
-                                                                         contextLock.lock_shared();
+                        return RecordStopper::HasFinished::yes;
+                    }
 
-                                                                         return RecordStopper::HasFinished::yes;
-                                                                     }
+                    return RecordStopper::HasFinished::no;
+                }
 
-                                                                     return RecordStopper::HasFinished::no;
-                                                                 }
-
-                                                                  return RecordStopper::HasFinished::yes;
-                                                             });
+                 return RecordStopper::HasFinished::yes;
+            });
+        }
 
         return *recordStopper;
     }
@@ -1553,6 +1579,34 @@ private:
 
 
 //==============================================================================
+bool MidiInputDevice::handleIncomingMessage (juce::MidiMessage& m)
+{
+    if (m.isActiveSense())
+        return false;
+
+    if (disallowedChannels[m.getChannel() - 1])
+        return false;
+
+    if (m.isNoteOnOrOff())
+    {
+        auto note = m.getNoteNumber();
+
+        if (note < noteFilterRange.startNote || note >= noteFilterRange.endNote)
+            return false;
+    }
+
+    if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))
+        m.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
+
+    m.addToTimeStamp (adjustSecs);
+
+    if (! retrospectiveRecordLock && retrospectiveBuffer != nullptr)
+        retrospectiveBuffer->addMessage (m, adjustSecs);
+
+    sendNoteOnToMidiKeyListeners (m);
+    return true;
+}
+
 void MidiInputDevice::masterTimeUpdate (double time)
 {
     adjustSecs = time - juce::Time::getMillisecondCounterHiRes() * 0.001;
@@ -1576,7 +1630,7 @@ void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage& message)
     }
 
     if (messageUnused && message.isNoteOn())
-        if (auto&& warnOfWasted = engine.getDeviceManager().warnOfWastedMidiMessagesFunction)
+        if (auto& warnOfWasted = engine.getDeviceManager().warnOfWastedMidiMessagesFunction)
             warnOfWasted (this);
 }
 
