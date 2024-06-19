@@ -93,17 +93,17 @@ struct DemoTypeBase
 //==============================================================================
 //==============================================================================
 // Include demo files to register them
-#include "demos/AbletonLinkDemo.h"
+// #include "demos/AbletonLinkDemo.h"
 #include "demos/DistortionEffectDemo.h"
 #include "demos/IRPluginDemo.h"
 #include "demos/MidiRecordingDemo.h"
-#include "demos/PatternGeneratorDemo.h"
-#include "demos/PitchAndTimeDemo.h"
-#include "demos/PlaybackDemo.h"
+// #include "demos/PatternGeneratorDemo.h"
+// #include "demos/PitchAndTimeDemo.h"
+// #include "demos/PlaybackDemo.h"
 #include "demos/PluginDemo.h"
-#include "demos/RecordingDemo.h"
-#include "demos/StepSequencerDemo.h"
-
+// #include "demos/RecordingDemo.h"
+// #include "demos/StepSequencerDemo.h"
+#include "demos/DemoTemplate.h"
 
 //==============================================================================
 //==============================================================================
@@ -137,6 +137,7 @@ public:
             o.content.setOwned (v);
             o.launchAsync();
         };
+        [[maybe_unused]] int breakpoint = 8888; // =8>
         audioSettingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
 
         currentDemoName.setJustificationType (juce::Justification::centred);

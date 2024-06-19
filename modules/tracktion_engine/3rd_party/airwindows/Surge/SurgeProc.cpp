@@ -23,7 +23,7 @@ void Surge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     long double drySampleL;
     long double drySampleR;
 
-    double chaseMax = 0.0;
+    double l_chaseMax = 0.0;
     double intensity = (1.0-(pow((1.0-A),2)))*0.7;
     double attack = ((intensity+0.1)*0.0005)/overallscale;
     double decay = ((intensity+0.001)*0.00005)/overallscale;
@@ -86,8 +86,8 @@ void Surge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
         if (fabs(inputSampleR) > inputSense)
             inputSense = fabs(inputSampleR);
 
-        if (chaseMax < inputSense) chaseA += attack;
-        if (chaseMax > inputSense) chaseA -= decay;
+        if (l_chaseMax < inputSense) chaseA += attack;
+        if (l_chaseMax > inputSense) chaseA -= decay;
 
         if (chaseA > decay) chaseA = decay;
         if (chaseA < -attack) chaseA = -attack;
@@ -104,16 +104,16 @@ void Surge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
         if (chaseD > 1.0) chaseD = 1.0;
         if (chaseD < 0.0) chaseD = 0.0;
 
-        chaseMax = chaseA;
-        if (chaseMax < chaseB) chaseMax = chaseB;
-        if (chaseMax < chaseC) chaseMax = chaseC;
-        if (chaseMax < chaseD) chaseMax = chaseD;
+        l_chaseMax = chaseA;
+        if (l_chaseMax < chaseB) l_chaseMax = chaseB;
+        if (l_chaseMax < chaseC) l_chaseMax = chaseC;
+        if (l_chaseMax < chaseD) l_chaseMax = chaseD;
 
-        inputSampleL *= chaseMax;
+        inputSampleL *= l_chaseMax;
         inputSampleL = drySampleL - (inputSampleL * intensity);
         inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
 
-        inputSampleR *= chaseMax;
+        inputSampleR *= l_chaseMax;
         inputSampleR = drySampleR - (inputSampleR * intensity);
         inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
 
@@ -152,7 +152,7 @@ void Surge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
     long double drySampleL;
     long double drySampleR;
 
-    double chaseMax = 0.0;
+    double l_chaseMax = 0.0;
     double intensity = (1.0-(pow((1.0-A),2)))*0.7;
     double attack = ((intensity+0.1)*0.0005)/overallscale;
     double decay = ((intensity+0.001)*0.00005)/overallscale;
@@ -214,8 +214,8 @@ void Surge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
         if (fabs(inputSampleR) > inputSense)
             inputSense = fabs(inputSampleR);
 
-        if (chaseMax < inputSense) chaseA += attack;
-        if (chaseMax > inputSense) chaseA -= decay;
+        if (l_chaseMax < inputSense) chaseA += attack;
+        if (l_chaseMax > inputSense) chaseA -= decay;
 
         if (chaseA > decay) chaseA = decay;
         if (chaseA < -attack) chaseA = -attack;
@@ -232,16 +232,16 @@ void Surge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
         if (chaseD > 1.0) chaseD = 1.0;
         if (chaseD < 0.0) chaseD = 0.0;
 
-        chaseMax = chaseA;
-        if (chaseMax < chaseB) chaseMax = chaseB;
-        if (chaseMax < chaseC) chaseMax = chaseC;
-        if (chaseMax < chaseD) chaseMax = chaseD;
+        l_chaseMax = chaseA;
+        if (l_chaseMax < chaseB) l_chaseMax = chaseB;
+        if (l_chaseMax < chaseC) l_chaseMax = chaseC;
+        if (l_chaseMax < chaseD) l_chaseMax = chaseD;
 
-        inputSampleL *= chaseMax;
+        inputSampleL *= l_chaseMax;
         inputSampleL = drySampleL - (inputSampleL * intensity);
         inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
 
-        inputSampleR *= chaseMax;
+        inputSampleR *= l_chaseMax;
         inputSampleR = drySampleR - (inputSampleR * intensity);
         inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
 

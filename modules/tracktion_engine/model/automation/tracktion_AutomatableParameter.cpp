@@ -80,6 +80,8 @@ namespace AutomationScaleHelpers
         }
 
         jassertfalse;
+        // This should never occur, but the compiler is worried.
+        return ((end - start) * value) + start;
     }
     // BEATCONNECT MODIFICATION END
 

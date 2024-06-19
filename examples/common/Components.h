@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace IDs
+namespace DEMO_IDs
 {
     #define DECLARE_ID(name)  const juce::Identifier name (#name);
     DECLARE_ID (EDITVIEWSTATE)
@@ -40,24 +40,24 @@ public:
     EditViewState (te::Edit& e, te::SelectionManager& s)
         : edit (e), selectionManager (s)
     {
-        state = edit.state.getOrCreateChildWithName (IDs::EDITVIEWSTATE, nullptr);
+        state = edit.state.getOrCreateChildWithName (DEMO_IDs::EDITVIEWSTATE, nullptr);
         
         auto um = &edit.getUndoManager();
         
-        showMasterTrack.referTo (state, IDs::showMasterTrack, um, false);
-        showGlobalTrack.referTo (state, IDs::showGlobalTrack, um, false);
-        showMarkerTrack.referTo (state, IDs::showMarkerTrack, um, false);
-        showChordTrack.referTo (state, IDs::showChordTrack, um, false);
-        showArrangerTrack.referTo (state, IDs::showArranger, um, false);
-        drawWaveforms.referTo (state, IDs::drawWaveforms, um, true);
-        showHeaders.referTo (state, IDs::showHeaders, um, true);
-        showFooters.referTo (state, IDs::showFooters, um, false);
-        showMidiDevices.referTo (state, IDs::showMidiDevices, um, false);
-        showWaveDevices.referTo (state, IDs::showWaveDevices, um, true);
+        showMasterTrack.referTo (state, DEMO_IDs::showMasterTrack, um, false);
+        showGlobalTrack.referTo (state, DEMO_IDs::showGlobalTrack, um, false);
+        showMarkerTrack.referTo (state, DEMO_IDs::showMarkerTrack, um, false);
+        showChordTrack.referTo (state, DEMO_IDs::showChordTrack, um, false);
+        showArrangerTrack.referTo (state, DEMO_IDs::showArranger, um, false);
+        drawWaveforms.referTo (state, DEMO_IDs::drawWaveforms, um, true);
+        showHeaders.referTo (state, DEMO_IDs::showHeaders, um, true);
+        showFooters.referTo (state, DEMO_IDs::showFooters, um, false);
+        showMidiDevices.referTo (state, DEMO_IDs::showMidiDevices, um, false);
+        showWaveDevices.referTo (state, DEMO_IDs::showWaveDevices, um, true);
 
-        viewX1.referTo (state, IDs::viewX1, um, 0s);
-        viewX2.referTo (state, IDs::viewX2, um, 60s);
-        viewY.referTo (state, IDs::viewY, um, 0);
+        viewX1.referTo (state, DEMO_IDs::viewX1, um, 0s);
+        viewX2.referTo (state, DEMO_IDs::viewX2, um, 60s);
+        viewY.referTo (state, DEMO_IDs::viewY, um, 0);
     }
     
     int timeToX (te::TimePosition time, int width) const

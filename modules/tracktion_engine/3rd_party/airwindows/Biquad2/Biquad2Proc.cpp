@@ -86,12 +86,12 @@ void Biquad2::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
         long double drySampleL = inputSampleL;
         long double drySampleR = inputSampleR;
 
-        double chasespeed = 50000;
-        if (frequencychase < frequencytarget) chasespeed = 500000;
-        chasespeed /= resonancechase;
-        chasespeed *= overallscale;
+        double l_chasespeed = 50000;
+        if (frequencychase < frequencytarget) l_chasespeed = 500000;
+        l_chasespeed /= resonancechase;
+        l_chasespeed *= overallscale;
 
-        frequencychase = (((frequencychase*chasespeed)+frequencytarget)/(chasespeed+1.0));
+        frequencychase = (((frequencychase* l_chasespeed)+frequencytarget)/(l_chasespeed+1.0));
 
         double fasterchase = 1000 * overallscale;
         resonancechase = (((resonancechase*fasterchase)+resonancetarget)/(fasterchase+1.0));
@@ -298,12 +298,12 @@ void Biquad2::processDoubleReplacing(double **inputs, double **outputs, VstInt32
         long double drySampleL = inputSampleL;
         long double drySampleR = inputSampleR;
 
-        double chasespeed = 50000;
-        if (frequencychase < frequencytarget) chasespeed = 500000;
-        chasespeed /= resonancechase;
-        chasespeed *= overallscale;
+        double l_chasespeed = 50000;
+        if (frequencychase < frequencytarget) l_chasespeed = 500000;
+        l_chasespeed /= resonancechase;
+        l_chasespeed *= overallscale;
 
-        frequencychase = (((frequencychase*chasespeed)+frequencytarget)/(chasespeed+1.0));
+        frequencychase = (((frequencychase* l_chasespeed)+frequencytarget)/(l_chasespeed+1.0));
 
         double fasterchase = 1000 * overallscale;
         resonancechase = (((resonancechase*fasterchase)+resonancetarget)/(fasterchase+1.0));

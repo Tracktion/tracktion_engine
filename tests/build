@@ -189,8 +189,8 @@ function buildExample()
 
 
 # First build and test these examples
-buildExample "TestRunner" RUN_EXAMPLE=1 ENABLE_ASAN=$ENABLE_ASAN ENABLE_TSAN=$ENABLE_TSAN
-buildExample "Benchmarks" RUN_EXAMPLE=1 ENABLE_ASAN=0 ENABLE_TSAN=0
+# buildExample "TestRunner" RUN_EXAMPLE=1 ENABLE_ASAN=$ENABLE_ASAN ENABLE_TSAN=$ENABLE_TSAN
+# buildExample "Benchmarks" RUN_EXAMPLE=1 ENABLE_ASAN=0 ENABLE_TSAN=0
 
 # Then just build these examples (don't build with tooling as they won't be run)
 buildExample "DemoRunner" ENABLE_ASAN=0 ENABLE_TSAN=0

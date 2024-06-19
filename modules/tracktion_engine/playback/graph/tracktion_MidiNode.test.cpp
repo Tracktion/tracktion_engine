@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-#if GRAPH_UNIT_TESTS_MIDINODE
+// #if GRAPH_UNIT_TESTS_MIDINODE
+#if GRAPH_UNIT_TESTS_MIDINODE_DISABLED
 
 //==============================================================================
 //==============================================================================

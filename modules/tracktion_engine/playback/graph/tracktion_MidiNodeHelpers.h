@@ -73,7 +73,7 @@ namespace MidiNodeHelpers
                                 // BEATCONNECT MODIFICATION START
                                 // Used for note animation
                                 m.setTimeInClip(0.0);
-                                m.setEditItemID(editItemID.getRawID());
+                                m.setEditItemID((int)editItemID.getRawID());
                                 // BEATCONNECT MODIFICATION START
                                 
                                 // give these a tiny offset to make sure they're played after the controller updates

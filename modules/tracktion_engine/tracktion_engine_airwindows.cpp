@@ -6,6 +6,7 @@
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 */
 
+#define _CRT_SECURE_NO_WARNINGS
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 

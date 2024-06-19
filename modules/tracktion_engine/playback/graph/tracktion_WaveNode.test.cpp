@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-#if GRAPH_UNIT_TESTS_WAVENODE
+// #if GRAPH_UNIT_TESTS_WAVENODE
+#if GRAPH_UNIT_TESTS_WAVENODE_DISABLED
 
 //==============================================================================
 //==============================================================================

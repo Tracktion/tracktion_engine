@@ -3,6 +3,10 @@
  *  Copyright (c) 2016 airwindows, All rights reserved
  * ======================================== */
 
+ // Disable warning C4458
+#pragma warning(push)
+#pragma warning(disable : 4458)
+
 #ifndef __PocketVerbs_H
 #include "PocketVerbs.h"
 #endif
@@ -18356,3 +18360,5 @@ void PocketVerbs::processDoubleReplacing(double **inputs, double **outputs, VstI
         *out2++;
     }
 }
+
+#pragma warning(pop)

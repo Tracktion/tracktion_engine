@@ -22,6 +22,7 @@ class DistortionPlugin  : public Plugin
 public:
     static const char* getPluginName() { return NEEDS_TRANS ("DistortionEffectDemo"); }
     static const char* xmlTypeName;
+    juce::String getUniqueId() override { return "ea999e85-406c-4e3d-bce3-52a48e378b06"; }
 
     DistortionPlugin (PluginCreationInfo info) : Plugin (info)
     {

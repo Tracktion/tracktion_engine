@@ -409,7 +409,7 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         
                         // BEATCONNECT MODIFICATION START
                         const int pitchWheelSemitoneRange = 25;
-                        const int pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos(cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
+                        const int pitchWheelPosition = juce::MidiMessage::pitchbendToPitchwheelPos((float)cache->getKeyNoteOffset(i), pitchWheelSemitoneRange);
                         result.addEvent(juce::MidiMessage::programChange(chan, note), eventStart); 
                         result.addEvent(juce::MidiMessage::pitchWheel(chan, pitchWheelPosition), eventStart);
                         // BEATCONNECT MODIFICATION END
@@ -427,8 +427,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                             for (int j = 1; j < totalAttacks; j++) 
                             {
-                                float attackTimeOffset = j * attackInterval;
-                                float newEventStart = eventStart + attackTimeOffset;
+                                float attackTimeOffset = (float)j * (float)attackInterval;
+                                float newEventStart = (float)eventStart + attackTimeOffset;
                                 result.addEvent(juce::MidiMessage::noteOn(chan, note, vel * channelVelScale), newEventStart);
                                 result.addEvent(juce::MidiMessage::noteOff(chan, note, (uint8_t)juce::jlimit(0, 127, c.noteValue.get())), newEventStart + attackInterval);
                             }

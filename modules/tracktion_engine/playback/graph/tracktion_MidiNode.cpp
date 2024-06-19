@@ -239,7 +239,7 @@ void MidiNode::processSection (Node::ProcessContext& pc,
                 // BEATCONNECT MODIFICATION START
                 // Used for note animation
                 m.setTimeInClip(timeInClip);
-                m.setEditItemID(editItemID.getRawID());
+                m.setEditItemID((int)editItemID.getRawID());
                 // BEATCONNECT MODIFICATION END
 
                 const auto eventTimeSeconds = eventTime * secondsPerTimeBase;

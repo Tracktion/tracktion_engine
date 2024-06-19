@@ -1142,20 +1142,20 @@ EditComponent::~EditComponent()
 
 void EditComponent::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
-    if (v.hasType (IDs::EDITVIEWSTATE))
+    if (v.hasType (DEMO_IDs::EDITVIEWSTATE))
     {
-        if (i == IDs::viewX1
-            || i == IDs::viewX2
-            || i == IDs::viewY)
+        if (i == DEMO_IDs::viewX1
+            || i == DEMO_IDs::viewX2
+            || i == DEMO_IDs::viewY)
         {
             markAndUpdate (updateZoom);
         }
-        else if (i == IDs::showHeaders
-                 || i == IDs::showFooters)
+        else if (i == DEMO_IDs::showHeaders
+                 || i == DEMO_IDs::showFooters)
         {
             markAndUpdate (updateZoom);
         }
-        else if (i == IDs::drawWaveforms)
+        else if (i == DEMO_IDs::drawWaveforms)
         {
             repaint();
         }

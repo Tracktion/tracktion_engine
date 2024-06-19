@@ -231,7 +231,7 @@ private:
                 {
                     DBG(idi->getPunchInTime());
                     ValueTree recordingMidiClip("RECORDINGMIDICLIP");
-                    recordingMidiClip.setProperty("start", idi->getPunchInTime(), nullptr);
+                    recordingMidiClip.setProperty("start", idi->getPunchInTime().inSeconds(), nullptr); // =8>
                     track->state.addChild(recordingMidiClip, -1, nullptr);
                 }
             }
