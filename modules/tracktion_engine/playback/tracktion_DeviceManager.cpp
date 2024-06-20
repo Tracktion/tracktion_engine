@@ -1185,11 +1185,31 @@ int DeviceManager::getNumMidiInDevices() const
     return (int) midiInputs.size();
 }
 
-MidiInputDevice* DeviceManager::getMidiInDevice (int index) const
+std::shared_ptr<MidiInputDevice> DeviceManager::getMidiInDevice (int index) const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
     const std::shared_lock sl (midiInputsMutex);
-    return index >= 0 && index < (int) midiInputs.size() ? midiInputs[(size_t) index].get() : nullptr;
+
+    if (index >= 0 && index < (int) midiInputs.size())
+        return midiInputs[(size_t) index];
+
+    return {};
+}
+
+std::vector<std::shared_ptr<MidiInputDevice>> DeviceManager::getMidiInDevices() const
+{
+    const std::shared_lock sl (midiInputsMutex);
+    return midiInputs;
+}
+
+std::shared_ptr<MidiInputDevice> DeviceManager::findMidiInputDeviceForID (const juce::String& deviceID) const
+{
+    const std::shared_lock sl (midiInputsMutex);
+
+    for (auto& m : midiInputs)
+        if (m->getDeviceID() == deviceID)
+            return m;
+
+    return {};
 }
 
 void DeviceManager::broadcastStreamTimeToMidiDevices (double timeToBroadcast)
@@ -1209,7 +1229,7 @@ int DeviceManager::getNumInputDevices() const
 InputDevice* DeviceManager::getInputDevice (int index) const
 {
     if (index >= getNumWaveInDevices())
-        return getMidiInDevice (index - getNumWaveInDevices());
+        return getMidiInDevice (index - getNumWaveInDevices()).get();
 
     return getWaveInDevice (index);
 }
@@ -1237,24 +1257,6 @@ InputDevice* DeviceManager::findInputDeviceForID (const juce::String& id) const
 
     for (auto d : midiInputs)
         if (d->getDeviceID() == id)
-            return d.get();
-
-    return {};
-}
-
-InputDevice* DeviceManager::findInputDeviceWithName (const juce::String& name) const
-{
-    if (name == getDefaultAudioInDeviceName (false))     return getDefaultWaveInDevice();
-    if (name == getDefaultMidiInDeviceName (false))      return getDefaultMidiInDevice();
-
-    for (auto d : waveInputs)
-        if (d->getName() == name)
-            return d;
-
-    const std::shared_lock sl (midiInputsMutex);
-
-    for (auto d : midiInputs)
-        if (d->getName() == name)
             return d.get();
 
     return {};

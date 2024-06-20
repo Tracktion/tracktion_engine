@@ -609,10 +609,10 @@ public:
 
     //==============================================================================
     /** Returns the MidiInputDevice being used as the MIDI timecode source. */
-    MidiInputDevice* getCurrentMidiTimecodeSource() const;
+    std::shared_ptr<MidiInputDevice> getCurrentMidiTimecodeSource() const;
 
     /** Sets the MidiInputDevice being to be used as the MIDI timecode source. */
-    void setCurrentMidiTimecodeSource (MidiInputDevice* newDevice);
+    void setCurrentMidiTimecodeSource (std::shared_ptr<MidiInputDevice>);
 
     /** Toggles syncing to MIDI timecode.
         @see midiTimecodeSourceDeviceEnabled
@@ -635,10 +635,10 @@ public:
     void setMidiTimecodeIgnoringHours (bool shouldIgnore);
 
     /** Returns the MidiInputDevice being used as an MMC source. */
-    MidiInputDevice* getCurrentMidiMachineControlSource() const;
+    std::shared_ptr<MidiInputDevice> getCurrentMidiMachineControlSource() const;
 
     /** Sets the MidiInputDevice to be used as an MMC source. */
-    void setCurrentMidiMachineControlSource (MidiInputDevice*);
+    void setCurrentMidiMachineControlSource (std::shared_ptr<MidiInputDevice>);
 
     /** Returns the MidiInputDevice being used as an MMC destination. */
     MidiOutputDevice* getCurrentMidiMachineControlDest() const;

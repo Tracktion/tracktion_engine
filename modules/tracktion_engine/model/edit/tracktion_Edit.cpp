@@ -1412,24 +1412,22 @@ LaunchQuantisation& Edit::getLaunchQuantisation()
 }
 
 //==============================================================================
-MidiInputDevice* Edit::getCurrentMidiTimecodeSource() const
+std::shared_ptr<MidiInputDevice> Edit::getCurrentMidiTimecodeSource() const
 {
     auto& dm = engine.getDeviceManager();
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
-        if (auto min = dm.getMidiInDevice (i))
-            if (min->getName() == midiTimecodeSourceDevice)
-                return min;
+    if (auto min = dm.findMidiInputDeviceForID (midiTimecodeSourceDevice))
+        return min;
 
     return dm.getMidiInDevice (0);
 }
 
-void Edit::setCurrentMidiTimecodeSource (MidiInputDevice* newDevice)
+void Edit::setCurrentMidiTimecodeSource (std::shared_ptr<MidiInputDevice> newDevice)
 {
     if (newDevice == nullptr)
         midiTimecodeSourceDevice.resetToDefault();
     else
-        midiTimecodeSourceDevice = newDevice->getName();
+        midiTimecodeSourceDevice = newDevice->getDeviceID();
 
     updateMidiTimecodeDevices();
     restartPlayback();
@@ -1468,24 +1466,17 @@ void Edit::setTimecodeOffset (TimeDuration newOffset)
     }
 }
 
-MidiInputDevice* Edit::getCurrentMidiMachineControlSource() const
+std::shared_ptr<MidiInputDevice> Edit::getCurrentMidiMachineControlSource() const
 {
-    auto& dm = engine.getDeviceManager();
-
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
-        if (auto min = dm.getMidiInDevice (i))
-            if (min->getName() == midiMachineControlSourceDevice)
-                return min;
-
-    return {};
+    return engine.getDeviceManager().findMidiInputDeviceForID (midiMachineControlSourceDevice);
 }
 
-void Edit::setCurrentMidiMachineControlSource (MidiInputDevice* newDevice)
+void Edit::setCurrentMidiMachineControlSource (std::shared_ptr<MidiInputDevice> newDevice)
 {
     if (newDevice == nullptr)
         midiMachineControlSourceDevice.resetToDefault();
     else
-        midiMachineControlSourceDevice = newDevice->getName();
+        midiMachineControlSourceDevice = newDevice->getDeviceID();
 
     updateMidiTimecodeDevices();
     restartPlayback();
@@ -1525,9 +1516,9 @@ void Edit::updateMidiTimecodeDevices()
 {
     auto& dm = engine.getDeviceManager();
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
+    for (auto d : dm.getMidiInDevices())
     {
-        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i)))
+        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (d.get()))
         {
             min->setReadingMidiTimecode (midiTimecodeSourceDeviceEnabled
                                            && min->getName() == midiTimecodeSourceDevice);

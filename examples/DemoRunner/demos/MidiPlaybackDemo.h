@@ -33,7 +33,7 @@ static const int B64index[256] =
 const std::string b64decode(const void* data, const size_t &len)
 {
     if (len == 0) return "";
-    
+
     unsigned char *p = (unsigned char*) data;
     size_t j = 0,
     pad1 = len % 4 || p[len - 1] == '=',
@@ -41,7 +41,7 @@ const std::string b64decode(const void* data, const size_t &len)
     const size_t last = (len - pad1) / 4 << 2;
     std::string result(last / 4 * 3 + pad1 + pad2, '\0');
     unsigned char *str = (unsigned char*) &result[0];
-    
+
     for (size_t i = 0; i < last; i += 4)
     {
         int n = B64index[p[i]] << 18 | B64index[p[i + 1]] << 12 | B64index[p[i + 2]] << 6 | B64index[p[i + 3]];
@@ -79,29 +79,29 @@ public:
         : engine (e)
     {
         newEditButton.onClick = [this] { createOrLoadEdit(); };
-        
+
         updatePlayButtonText();
-        
+
         editNameLabel.setJustificationType (Justification::centred);
-        
+
         Helpers::addAndMakeVisible (*this, { &newEditButton, &playPauseButton, &showEditButton,
                                              &recordButton, &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
-        
+
         auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("MidiPlaybackDemo");
         d.createDirectory();
-        
+
         auto f = Helpers::findRecentEdit (d);
         if (f.existsAsFile())
             createOrLoadEdit (f);
         else
             createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
-        
+
         selectionManager.addChangeListener (this);
-        
+
         setupButtons();
-        
+
         setSize (600, 400);
     }
 
@@ -130,7 +130,7 @@ public:
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
         topR = r.removeFromTop (30);
         editNameLabel.setBounds (topR);
-        
+
         if (editComponent != nullptr)
             editComponent->setBounds (r);
     }
@@ -170,21 +170,21 @@ private:
             }
 
             auto len = sequence->getEndTime();
-                    
+
             auto time = tracktion::TimeRange(tracktion::TimePosition::fromSeconds(5.0), tracktion::TimeDuration::fromSeconds(len));
             auto valueTree = juce::ValueTree(te::IDs::MIDICLIP);
             te::MidiClip* clip = dynamic_cast<te::MidiClip*>
             (track->insertClipWithState (valueTree, "Clip", te::TrackItem::Type::midi,
                                       { time, tracktion::TimeDuration::fromSeconds(0.0) }, true, false));
             MidiMessageSequence seq = *sequence;
-        
+
             seq.addTimeToMessages(5.0);
 
             clip->mergeInMidiSequence(seq, te::MidiList::NoteAutomationType::none);
             DBG(clip->state.toXmlString ({}));
 
             clip->setMidiChannel(te::MidiChannel(1));
-            
+
         };
         newTrackButton.onClick = [this]
         {
@@ -218,13 +218,13 @@ private:
             showWaveformButton.setToggleState (evs.drawWaveforms, dontSendNotification);
         };
     }
-    
+
     void updatePlayButtonText()
     {
         if (edit != nullptr)
             playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Stop" : "Play");
     }
-        
+
     void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
@@ -235,10 +235,10 @@ private:
             else
                 return;
         }
-        
+
         selectionManager.deselectAll();
         editComponent = nullptr;
-        
+
         if (editFile.existsAsFile())
             edit = te::loadEditFromFile (engine, editFile);
         else
@@ -246,29 +246,29 @@ private:
 
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
-        
+
         auto& transport = edit->getTransport();
         transport.addChangeListener (this);
-        
+
         editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
         showEditButton.onClick = [this, editFile]
         {
             te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
-        
+
         createTracksAndAssignInputs();
-        
+
         te::EditFileOperations (*edit).save (true, true, false);
-        
+
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         editComponent->getEditViewState().showFooters = true;
         editComponent->getEditViewState().showMidiDevices = true;
         editComponent->getEditViewState().showWaveDevices = false;
-        
+
         addAndMakeVisible (*editComponent);
     }
-    
+
     void changeListenerCallback (ChangeBroadcaster* source) override
     {
         if (edit != nullptr && source == &edit->getTransport())
@@ -283,25 +283,21 @@ private:
                                      || dynamic_cast<te::Plugin*> (sel));
         }
     }
-    
+
     void createTracksAndAssignInputs()
     {
-        auto& dm = engine.getDeviceManager();
-        
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : engine.getDeviceManager().getMidiInDevices())
         {
-            if (auto mip = dm.getMidiInDevice (i))
-            {
-                mip->setEndToEndEnabled (true);
-                mip->setEnabled (true);
-            }
+            midiIn->setEndToEndEnabled (true);
+            midiIn->setEnabled (true);
         }
-        
+
         edit->getTransport().ensureContextAllocated();
-        
-        if (te::getAudioTracks (*edit).size () == 0)
+
+        if (te::getAudioTracks (*edit).size() == 0)
         {
             int trackNum = 0;
+
             for (auto instance : edit->getAllInputDevices())
             {
                 if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
@@ -310,13 +306,13 @@ private:
                     {
                         instance->setTargetTrack (*t, 0, true);
                         instance->setRecordingEnabled (*t, true);
-                    
+
                         trackNum++;
                     }
                 }
             }
         }
-        
+
         edit->restartPlayback();
     }
 

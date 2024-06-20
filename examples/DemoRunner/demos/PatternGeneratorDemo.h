@@ -93,7 +93,7 @@ public:
             if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
                 if (auto dev = dm.getMidiInDevice (midiInputsBox.getSelectedItemIndex()))
                     for (auto instance : edit.getAllInputDevices())
-                        if (&instance->getInputDevice() == dev)
+                        if (&instance->getInputDevice() == dev.get())
                             [[ maybe_unused ]] auto res = instance->setTarget (t->itemID, true, &edit.getUndoManager(), 0);
 
             edit.restartPlayback();
@@ -194,12 +194,10 @@ private:
 
     void setupEdit()
     {
-        auto& dm = engine.getDeviceManager();
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : engine.getDeviceManager().getMidiInDevices())
         {
-            auto dev = dm.getMidiInDevice (i);
-            dev->setEnabled (true);
-            dev->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
         }
 
         edit.playInStopEnabled = true;
@@ -285,15 +283,18 @@ private:
 
     void refreshMidiInputs()
     {
-        auto& dm = engine.getDeviceManager();
-
         midiInputsBox.clear();
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+
+        int i = 1;
+
+        for (auto& midiIn : engine.getDeviceManager().getMidiInDevices())
         {
-            auto dev = dm.getMidiInDevice (i);
-            if (dev->isEnabled())
-                midiInputsBox.addItem (dev->getName(), i + 1);
+            if (midiIn->isEnabled())
+                midiInputsBox.addItem (midiIn->getName(), i);
+
+            ++i;
         }
+
         midiInputsBox.setSelectedItemIndex (0, sendNotification);
     }
 

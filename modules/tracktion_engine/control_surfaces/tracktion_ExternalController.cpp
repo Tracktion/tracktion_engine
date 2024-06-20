@@ -83,8 +83,8 @@ ExternalController::~ExternalController()
     auto& dm = engine.getDeviceManager();
     dm.removeChangeListener (this);
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
-        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i)))
+    for (auto& d : dm.getMidiInDevices())
+        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (d.get()))
             if (min->isEnabled())
                 min->removeExternalController (this);
 
@@ -304,27 +304,30 @@ void ExternalController::midiInOutDevicesChanged()
     for (auto& i : inputDevices)
         i = nullptr;
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
+    for (auto& d : dm.getMidiInDevices())
     {
         CRASH_TRACER
-        auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i));
 
-        if (min != nullptr && min->isEnabled())
+        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (d.get()))
         {
-            bool used = false;
-            for (int j = 0; j < numDevices; j++)
+            if (min->isEnabled())
             {
-                if (min->getName().equalsIgnoreCase (inputDeviceNames[j]))
-                {
-                    inputDevices[(size_t) j] = min;
-                    used = true;
-                }
-            }
+                bool used = false;
 
-            if (used)
-                min->setExternalController (this);
-            else
-                min->removeExternalController (this);
+                for (int j = 0; j < numDevices; j++)
+                {
+                    if (min->getName().equalsIgnoreCase (inputDeviceNames[j]))
+                    {
+                        inputDevices[(size_t) j] = min;
+                        used = true;
+                    }
+                }
+
+                if (used)
+                    min->setExternalController (this);
+                else
+                    min->removeExternalController (this);
+            }
         }
     }
 
@@ -1486,10 +1489,9 @@ juce::StringArray ExternalController::getMidiInputPorts() const
         return true;
     };
 
-    for (int i = 0; i < dm.getNumMidiInDevices(); ++i)
-        if (auto m = dm.getMidiInDevice (i))
-            if (m->isEnabled() && wantsDevice (m))
-                inputNames.add (m->getName());
+    for (auto& m : dm.getMidiInDevices())
+        if (m->isEnabled() && wantsDevice (m.get()))
+            inputNames.add (m->getName());
 
     return inputNames;
 }

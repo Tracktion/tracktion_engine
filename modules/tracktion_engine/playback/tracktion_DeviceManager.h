@@ -107,7 +107,7 @@ public:
     OutputDevice* getOutputDeviceAt (int index) const;
 
     InputDevice* findInputDeviceForID (const juce::String& id) const;
-    InputDevice* findInputDeviceWithName (const juce::String& name) const;
+    std::shared_ptr<MidiInputDevice> findMidiInputDeviceForID (const juce::String& id) const;
 
     OutputDevice* findOutputDeviceForID (const juce::String& id) const;
     OutputDevice* findOutputDeviceWithName (const juce::String& name) const;
@@ -146,7 +146,9 @@ public:
     juce::String getDefaultMidiOutDeviceID() const              { return defaultMidiOutID; }
 
     int getNumMidiInDevices() const;
-    MidiInputDevice* getMidiInDevice (int index) const;
+    std::shared_ptr<MidiInputDevice> getMidiInDevice (int index) const;
+
+    std::vector<std::shared_ptr<MidiInputDevice>> getMidiInDevices() const;
 
     void setDefaultMidiInDevice (juce::String deviceID);
     MidiInputDevice* getDefaultMidiInDevice() const;

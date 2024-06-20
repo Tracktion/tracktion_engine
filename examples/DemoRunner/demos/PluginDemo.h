@@ -178,13 +178,10 @@ private:
     {
         auto& dm = engine.getDeviceManager();
 
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : dm.getMidiInDevices())
         {
-            if (auto mip = dm.getMidiInDevice (i))
-            {
-                mip->setMonitorMode (te::InputDevice::MonitorMode::automatic);
-                mip->setEnabled (true);
-            }
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
         }
 
         for (int i = 0; i < dm.getNumWaveInDevices(); i++)

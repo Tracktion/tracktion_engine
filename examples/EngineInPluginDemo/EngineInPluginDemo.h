@@ -115,12 +115,11 @@ private:
     {
         auto& dm = edit.engine.getDeviceManager();
 
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : dm.getMidiInDevices())
         {
-            auto dev = dm.getMidiInDevice (i);
-            dev->setEnabled (true);
-            dev->setMonitorMode (te::InputDevice::MonitorMode::automatic);
-            dev->recordingEnabled = true;
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
+            midiIn->recordingEnabled = true;
         }
 
         edit.playInStopEnabled = true;
@@ -130,7 +129,7 @@ private:
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
-                    if (&instance->getInputDevice() == dev)
+                    if (&instance->getInputDevice() == dev.get())
                         if (auto destination = instance->setTarget (t->itemID, true, &edit.getUndoManager(), 0))
                             (*destination)->recordEnabled = true;
 
@@ -138,7 +137,7 @@ private:
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
-                    if (&instance->getInputDevice() == dev)
+                    if (&instance->getInputDevice() == dev.get())
                         [[ maybe_unused ]] auto res = instance->setTarget (t->itemID, false, &edit.getUndoManager(), 0);
 
         edit.restartPlayback();

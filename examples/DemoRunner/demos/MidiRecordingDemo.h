@@ -210,22 +210,18 @@ private:
 
     void createTracksAndAssignInputs()
     {
-        auto& dm = engine.getDeviceManager();
-
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : engine.getDeviceManager().getMidiInDevices())
         {
-            if (auto mip = dm.getMidiInDevice (i))
-            {
-                mip->setMonitorMode (te::InputDevice::MonitorMode::automatic);
-                mip->setEnabled (true);
-            }
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
         }
 
         edit->getTransport().ensureContextAllocated();
 
-        if (te::getAudioTracks (*edit).size () == 0)
+        if (te::getAudioTracks (*edit).size() == 0)
         {
             int trackNum = 0;
+
             for (auto instance : edit->getAllInputDevices())
             {
                 if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
