@@ -155,7 +155,7 @@ public:
     juce::String getDefaultMidiInDeviceID() const               { return defaultMidiInID; }
 
     void injectMIDIMessageToDefaultDevice (const juce::MidiMessage&);
-    void broadcastMessageToAllVirtualDevices (MidiInputDevice*, const juce::MidiMessage&);
+    void broadcastMessageToAllVirtualDevices (MidiInputDevice&, const juce::MidiMessage&);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }
@@ -177,7 +177,7 @@ public:
     static juce::String getDefaultMidiInDeviceName (bool translated);
 
     juce::Result createVirtualMidiDevice (const juce::String& name);
-    void deleteVirtualMidiDevice (VirtualMidiInputDevice*);
+    void deleteVirtualMidiDevice (VirtualMidiInputDevice&);
 
     Engine& engine;
 

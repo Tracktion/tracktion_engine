@@ -53,14 +53,8 @@ InputDeviceInstance* VirtualMidiInputDevice::createInstance (EditPlaybackContext
     return new VirtualMidiInputDeviceInstance (*this, c);
 }
 
-juce::String VirtualMidiInputDevice::openDevice()
-{
-    return {};
-}
-
-void VirtualMidiInputDevice::closeDevice()
-{
-}
+juce::String VirtualMidiInputDevice::openDevice() { return {}; }
+void VirtualMidiInputDevice::closeDevice() {}
 
 void VirtualMidiInputDevice::setEnabled (bool b)
 {
@@ -68,6 +62,28 @@ void VirtualMidiInputDevice::setEnabled (bool b)
         loadProps();
 
     MidiInputDevice::setEnabled (b);
+}
+
+void VirtualMidiInputDevice::setMIDIInputSourceDevices (const juce::StringArray deviceIDs)
+{
+    if (deviceIDs != inputDeviceIDs)
+    {
+        inputDeviceIDs = deviceIDs;
+        changed();
+        saveProps();
+    }
+}
+
+void VirtualMidiInputDevice::toggleMIDIInputSourceDevice (const juce::String& deviceID)
+{
+    auto devices = inputDeviceIDs;
+
+    if (devices.contains (deviceID))
+        devices.removeString (deviceID);
+    else
+        devices.add (deviceID);
+
+    setMIDIInputSourceDevices (devices);
 }
 
 void VirtualMidiInputDevice::loadProps()
@@ -78,7 +94,7 @@ void VirtualMidiInputDevice::loadProps()
 
     if (! isTrackDevice() && n != nullptr)
     {
-        inputDevices.addTokens (n->getStringAttribute ("inputDevices"), ";", {});
+        inputDeviceIDs.addTokens (n->getStringAttribute ("inputDevices"), ";", {});
         useAllInputs = n->getBoolAttribute ("useAllInputs", false);
     }
 
@@ -89,7 +105,7 @@ void VirtualMidiInputDevice::saveProps()
 {
     juce::XmlElement n ("SETTINGS");
 
-    n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
+    n.setAttribute ("inputDevices", inputDeviceIDs.joinIntoString (";"));
     n.setAttribute ("useAllInputs", useAllInputs);
     MidiInputDevice::saveMidiProps (n);
 
@@ -101,14 +117,14 @@ void VirtualMidiInputDevice::saveProps()
 void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
     auto message = m;
-    
+
     if (handleIncomingMessage (message))
         sendMessageToInstances (message);
 }
 
-void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage& m)
+void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice& dev, const juce::MidiMessage& m)
 {
-    if (useAllInputs || inputDevices.contains (dev->getName()))
+    if (useAllInputs || inputDeviceIDs.contains (dev.getDeviceID()))
         handleIncomingMidiMessage (m);
 }
 

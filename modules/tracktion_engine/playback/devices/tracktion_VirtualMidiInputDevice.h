@@ -28,12 +28,15 @@ public:
     void loadProps() override;
     void saveProps() override;
 
-    void handleMessageFromPhysicalDevice (MidiInputDevice*, const juce::MidiMessage&);
+    juce::StringArray getMIDIInputSourceDevices() const         { return inputDeviceIDs; }
+    void setMIDIInputSourceDevices (const juce::StringArray deviceIDs);
+    void toggleMIDIInputSourceDevice (const juce::String& deviceID);
+
+    void handleMessageFromPhysicalDevice (MidiInputDevice&, const juce::MidiMessage&);
 
     DeviceType getDeviceType() const override      { return deviceType; }
 
     bool useAllInputs = false;
-    juce::StringArray inputDevices;
 
     static constexpr const char* allMidiInsName = "All MIDI Ins";
 
@@ -41,6 +44,7 @@ private:
     juce::String openDevice() override;
     void closeDevice() override;
     DeviceType deviceType;
+    juce::StringArray inputDeviceIDs;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDevice)
 };

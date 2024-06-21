@@ -299,6 +299,21 @@ void DeviceManager::timerCallback()
     applyNewMidiDeviceList();
 }
 
+static juce::StringArray getVirtualDeviceIDs (Engine& engine)
+{
+    juce::StringArray virtualDeviceIDs;
+    virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
+    virtualDeviceIDs.removeEmptyStrings();
+    virtualDeviceIDs.removeString (VirtualMidiInputDevice::allMidiInsName);
+    virtualDeviceIDs.insert (0, VirtualMidiInputDevice::allMidiInsName);
+    return virtualDeviceIDs;
+}
+
+static void setVirtualDeviceIDs (Engine& engine, const juce::StringArray& list)
+{
+    engine.getPropertyStorage().setProperty (SettingID::virtualmididevices, list.joinIntoString (";"));
+}
+
 struct DeviceManager::MIDIDeviceList
 {
     juce::Array<juce::MidiDeviceInfo> midiIns, midiOuts;
@@ -349,14 +364,7 @@ struct DeviceManager::MIDIDeviceList
            #endif
         }
 
-        auto& storage = sourceEngine.getPropertyStorage();
-        juce::StringArray virtualMidiInIDs;
-        virtualMidiInIDs.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
-        virtualMidiInIDs.removeEmptyStrings();
-        virtualMidiInIDs.removeString (VirtualMidiInputDevice::allMidiInsName);
-        virtualMidiInIDs.insert (0, VirtualMidiInputDevice::allMidiInsName);
-
-        for (auto& v : virtualMidiInIDs)
+        for (auto& v : getVirtualDeviceIDs (sourceEngine))
         {
             auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice);
             virtualMidiIns.push_back (d);
@@ -629,7 +637,7 @@ void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m
         input->handleIncomingMidiMessage (nullptr, m);
 }
 
-void DeviceManager::broadcastMessageToAllVirtualDevices (MidiInputDevice* source, const juce::MidiMessage& m)
+void DeviceManager::broadcastMessageToAllVirtualDevices (MidiInputDevice& source, const juce::MidiMessage& m)
 {
     const std::shared_lock sl (contextLock);
 
@@ -718,36 +726,31 @@ juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    juce::StringArray virtualDeviceNames;
-    virtualDeviceNames.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
-    virtualDeviceNames.removeEmptyStrings();
+    auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
 
-    if (virtualDeviceNames.contains (name))
+    if (virtualDeviceIDs.contains (name))
         return juce::Result::fail (TRANS("Name is already in use!"));
 
-    virtualDeviceNames.add (name);
-
-    engine.getPropertyStorage().setProperty (SettingID::virtualmididevices, virtualDeviceNames.joinIntoString (";"));
+    virtualDeviceIDs.add (name);
+    setVirtualDeviceIDs (engine, virtualDeviceIDs);
 
     rescanMidiDeviceList();
 
     return juce::Result::ok();
 }
 
-void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice* vmi)
+void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice& vmi)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    auto name = vmi->getName();
+    auto deviceID = vmi.getDeviceID();
 
-    engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, vmi->getName());
+    engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, deviceID);
 
-    juce::StringArray virtualDeviceNames;
-    virtualDeviceNames.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
-    virtualDeviceNames.removeEmptyStrings();
-    virtualDeviceNames.removeString (name);
-    engine.getPropertyStorage().setProperty (SettingID::virtualmididevices, virtualDeviceNames.joinIntoString (";"));
+    auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
+    virtualDeviceIDs.removeString (deviceID);
+    setVirtualDeviceIDs (engine, virtualDeviceIDs);
 
     rescanMidiDeviceList();
 }
