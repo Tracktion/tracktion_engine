@@ -474,6 +474,10 @@ juce::ValueTree createEmptyEdit (Engine& e)
 std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role)
 {
     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
+
+    if (! editState.isValid())
+        return {};
+
     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
 
     if (! id.isValid())
