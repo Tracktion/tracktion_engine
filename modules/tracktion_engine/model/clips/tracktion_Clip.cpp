@@ -676,8 +676,6 @@ namespace details
 //==============================================================================
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPS
 
-#include "../../../3rd_party/doctest/tracktion_doctest.hpp"
-
 namespace tracktion::inline engine
 {
 
