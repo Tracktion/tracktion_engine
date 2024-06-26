@@ -387,11 +387,14 @@ template<typename RangeType,
          std::enable_if_t<std::is_same_v<TimeRange, RangeType>
                           || std::is_same_v<BeatRange, RangeType>,
                           bool> = true>
-std::string toString (RangeType range)
+std::string to_string (RangeType range)
 {
     return std::to_string (toUnderlyingType (range.getStart())) + ", "
             + std::to_string (toUnderlyingType (range.getEnd()));
 }
+
+inline std::ostream& operator<< (std::ostream& os, const TimeRange& r) { os << to_string (r); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatRange& r) { os << to_string (r); return os; }
 
 }} // namespace tracktion
 

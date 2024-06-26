@@ -386,13 +386,13 @@ void Clip::trimAwayOverlap (TimeRange r)
 {
     auto pos = getPosition();
 
-    if (r.getEnd() > pos.time.getStart())
-    {
-        if (r.getEnd() < pos.time.getEnd())
-            setStart (r.getEnd(), true, false);
-        else if (pos.time.getStart() < r.getStart())
-            setEnd (r.getStart(), true);
-    }
+    if (! pos.time.intersects (r))
+        return;
+
+    if (r.getEnd() < pos.time.getEnd())
+        setStart (r.getEnd(), true, false);
+    else if (pos.time.getStart() < r.getStart())
+        setEnd (r.getStart(), true);
 }
 
 void Clip::removeFromParent()
@@ -671,3 +671,52 @@ namespace details
 }
 
 }} // namespace tracktion { inline namespace engine
+
+//==============================================================================
+//==============================================================================
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPS
+
+#include "../../../3rd_party/doctest/tracktion_doctest.hpp"
+
+namespace tracktion::inline engine
+{
+
+TEST_SUITE("tracktion_engine")
+{
+    TEST_CASE("Trim away overlap")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+
+        auto clip = getAudioTracks (*edit)[0]->insertMIDIClip ({ 4_tp, 8_tp }, nullptr);
+        auto positionBeforeTrim = clip->getPosition();
+
+        SUBCASE ("Overlap at start")
+        {
+            clip->trimAwayOverlap ({ 2_tp, 6_tp });
+            CHECK (clip->getPosition().time == TimeRange (6_tp, 8_tp));
+        }
+
+        SUBCASE ("Overlap at end")
+        {
+            clip->trimAwayOverlap ({ 6_tp, 10_tp });
+            CHECK (clip->getPosition().time == TimeRange (4_tp, 6_tp));
+        }
+
+        SUBCASE ("No overlap at start")
+        {
+            clip->trimAwayOverlap ({ 2_tp, 4_tp });
+            CHECK (clip->getPosition().time == positionBeforeTrim.time);
+        }
+
+        SUBCASE ("No overlap at end")
+        {
+            clip->trimAwayOverlap ({ 10_tp, 12_tp });
+            CHECK (clip->getPosition().time == positionBeforeTrim.time);
+        }
+    }
+}
+
+} // namespace tracktion::inline engine
+
+#endif
