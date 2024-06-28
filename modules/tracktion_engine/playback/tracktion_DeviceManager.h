@@ -167,6 +167,9 @@ public:
 
     bool isMSWavetableSynthPresent() const;
 
+    /** Changes to the devices get applied asyncronously so this function can be called to trigger any pending updates to be flushed. */
+    void dispatchPendingUpdates()                               { handleUpdateNowIfNeeded(); }
+
     //==============================================================================
     void checkDefaultDevicesAreValid();
 

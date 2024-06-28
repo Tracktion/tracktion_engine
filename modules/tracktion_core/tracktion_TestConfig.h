@@ -36,6 +36,7 @@
 #define ENGINE_UNIT_TESTS_MIDILIST                      1
 #define ENGINE_UNIT_TESTS_MODIFIERS                     1
 #define ENGINE_UNIT_TESTS_PAN_LAW                       1
+#define ENGINE_UNIT_TESTS_PLAYBACK                      1
 #define ENGINE_UNIT_TESTS_PLUGINS                       1
 #define ENGINE_UNIT_TESTS_PDC                           1
 #define ENGINE_UNIT_TESTS_TIMESTRETCHER                 1

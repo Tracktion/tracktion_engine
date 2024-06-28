@@ -20,6 +20,7 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 namespace test_utilities
 {
+    //==============================================================================
     /** Creates a random MidiMessageSequence sequence. */
     static inline juce::MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, juce::Random r,
                                                                              juce::Range<double> noteLengthRange = { 0.1, 0.6 })
@@ -424,6 +425,40 @@ namespace test_utilities
             ut.expect (std::vector<float> (aPtr, aPtr + a.getNumSamples())
                        == std::vector<float> (bPtr, bPtr + b.getNumSamples()));
         }
+    }
+
+    inline bool buffersAreEqual (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b, float absSampleTolerance = 0.0f)
+    {
+        if (a.getNumChannels() != b.getNumChannels())
+            return false;
+
+        if (a.getNumSamples() != b.getNumSamples())
+            return false;
+
+        const int numSamples = a.getNumSamples();
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            for (int sample = 0; sample < numSamples; ++sample)
+            {
+                const auto aSamp = *(aPtr + sample);
+                const auto bSamp = *(bPtr + sample);
+                const auto absDiff = std::abs (aSamp - bSamp);
+
+                if (absDiff > absSampleTolerance)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    inline bool buffersAreEqual (const choc::buffer::ChannelArrayView<float>& a, const choc::buffer::ChannelArrayView<float>& b, float absSampleTolerance = 0.0f)
+    {
+        return buffersAreEqual (toAudioBuffer (a), toAudioBuffer (b), absSampleTolerance);
     }
 
     /** Checks that there are no duplicate nodeIDs in a Node. */
