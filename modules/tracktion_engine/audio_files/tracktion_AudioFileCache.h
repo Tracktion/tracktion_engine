@@ -112,6 +112,9 @@ public:
     /** @internal */
     void nextBlockStarted();
 
+    /** @internal */
+    bool hasMappedReader (const AudioFile&, SampleCount) const;
+
 private:
     Engine& engine;
     SampleCount totalBytesUsed = 0, cacheSizeSamples = 0;

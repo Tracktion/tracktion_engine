@@ -775,6 +775,18 @@ void AudioFileCache::nextBlockStarted()
                                std::memory_order_release);
 }
 
+bool AudioFileCache::hasMappedReader (const AudioFile& af, SampleCount c) const
+{
+    const juce::ScopedReadLock rl (fileListLock);
+
+    for (auto s : activeFiles)
+        if (s->info.hashCode == af.getHash())
+            if (CachedFile::LockedReaderFinder (*s, c, 0).reader)
+                return true;
+
+    return false;
+}
+
 //==============================================================================
 AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 {

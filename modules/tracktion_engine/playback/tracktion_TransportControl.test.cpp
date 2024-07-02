@@ -12,97 +12,10 @@
 #if TRACKTION_UNIT_TESTS
 #include <ranges>
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
 
 namespace tracktion { inline namespace engine
 {
-
-    class EnginePlayer
-    {
-    public:
-        EnginePlayer (Engine& e, HostedAudioDeviceInterface::Parameters p)
-            : engine (e), params (p), output (static_cast<size_t> (p.outputChannels))
-        {
-            assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
-            audioIO.initialise (params);
-            audioIO.prepareToPlay (params.sampleRate, params.blockSize);
-            engine.getDeviceManager().dispatchPendingUpdates();
-        }
-
-        ~EnginePlayer()
-        {
-            engine.getDeviceManager().removeHostedAudioDeviceInterface();
-        }
-
-        juce::AudioBuffer<float> process (int numSamples)
-        {
-            juce::AudioBuffer<float> inputAudio (params.inputChannels, numSamples);
-            inputAudio.clear();
-            return process (inputAudio);
-        }
-
-        juce::AudioBuffer<float> process (juce::AudioBuffer<float>& inputAudio)
-        {
-            juce::MidiBuffer inputMidi;
-            return process (inputAudio, inputMidi);
-        }
-
-        juce::AudioBuffer<float> process (juce::AudioBuffer<float>& inputAudio, juce::MidiBuffer& inputMidi)
-        {
-            assert (inputAudio.getNumChannels() == params.inputChannels);
-
-            const auto inputBuffer = toBufferView (inputAudio);
-
-            const auto totalNumFrames = inputBuffer.getNumFrames();
-            choc::buffer::ChannelArrayBuffer<float> processBuffer (choc::buffer::Size::create (std::max (inputAudio.getNumChannels(), params.outputChannels), totalNumFrames));
-            choc::buffer::copyIntersectionAndClearOutside (processBuffer, inputBuffer);
-
-            for (choc::buffer::FrameCount startFrame = 0;;)
-            {
-                const auto numFramesThisTime = std::min (totalNumFrames - startFrame, static_cast<choc::buffer::FrameCount> (params.blockSize));
-                auto subBlock = processBuffer.getFrameRange ({ startFrame, startFrame + numFramesThisTime });
-
-                auto subAudioBuffer = toAudioBuffer (subBlock);
-                audioIO.processBlock (subAudioBuffer, inputMidi);
-
-                startFrame += numFramesThisTime;
-
-                if (startFrame == totalNumFrames)
-                    break;
-            }
-
-            numSamplesProcessed += static_cast<int> (totalNumFrames);
-
-            juce::AudioBuffer<float> outputBlock;
-            outputBlock.makeCopyOf (toAudioBuffer (processBuffer.getChannelRange ({ 0, static_cast<choc::buffer::ChannelCount> (params.outputChannels) })));
-
-            for (auto chan : std::views::iota (static_cast<choc::buffer::ChannelCount> (0),
-                                               static_cast<choc::buffer::ChannelCount> (output.size())))
-            {
-                auto srcChannelData = processBuffer.getChannel (chan).data.data;
-                std::copy_n (srcChannelData, totalNumFrames, std::back_inserter (output[static_cast<size_t> (chan)]));
-            }
-
-            return outputBlock;
-        }
-
-        choc::buffer::ChannelArrayBuffer<float> getOutput() const
-        {
-            choc::buffer::ChannelArrayBuffer<float> destBuffer (choc::buffer::Size::create (output.size(), numSamplesProcessed));
-
-            for (auto chan : std::views::iota (static_cast<size_t> (0), output.size()))
-                choc::buffer::copy (destBuffer.getChannel (static_cast<choc::buffer::ChannelCount> (chan)),
-                                    choc::buffer::createMonoView (output[chan].data(), numSamplesProcessed));
-
-            return destBuffer;
-        }
-
-    private:
-        Engine& engine;
-        HostedAudioDeviceInterface::Parameters params;
-        HostedAudioDeviceInterface& audioIO { engine.getDeviceManager().getHostedAudioDeviceInterface() };
-        std::vector<std::vector<float>> output;
-        int numSamplesProcessed = 0;
-    };
 
 #if ENGINE_UNIT_TESTS_PLAYBACK
     TEST_SUITE ("tracktion_engine")
@@ -110,11 +23,11 @@ namespace tracktion { inline namespace engine
         TEST_CASE ("Playback")
         {
             auto& engine = *Engine::getEngines()[0];
-            EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1 });
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1 });
 
             auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
             auto& tc = edit->getTransport();
-            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+            auto sinFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0);
             auto sinBuffer = *engine::test_utilities::loadFileInToBuffer (engine, sinFile->getFile());
 
             AudioFile af (engine, sinFile->getFile());
@@ -122,11 +35,16 @@ namespace tracktion { inline namespace engine
             clip->setUsesProxy (false);
             tc.play (false);
 
+            test_utilities::waitForFileToBeMapped (af);
+
             player.process (static_cast<int> (af.getLengthInSamples()));
             auto output = player.getOutput();
 
             CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
-            //todo: CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (sinBuffer)));
+
+            // Skip the first 50 frames as they might have a ramp applied to them to avoid clicks (this should probably be avoided if it's the start of the clip
+            // This 0.1f difference comes from the played back file being delayed by 2 samples due to the lagrange resampler latency. This is a bug and when fixed, these two signals shoudl cancel out perfectly
+            CHECK (graph::test_utilities::buffersAreEqual (output.fromFrame (50), toBufferView (sinBuffer).fromFrame (50), 0.1f));
         }
     }
 #endif

@@ -1,0 +1,127 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
+    For the technical preview this file cannot be licensed commercially.
+*/
+
+#pragma once
+
+///@internal
+namespace tracktion::inline engine
+{
+
+#ifndef DOXYGEN
+namespace test_utilities
+{
+
+class EnginePlayer
+{
+public:
+    EnginePlayer (Engine& e, HostedAudioDeviceInterface::Parameters p)
+        : engine (e), params (p), output (static_cast<size_t> (p.outputChannels))
+    {
+        assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
+        audioIO.initialise (params);
+        audioIO.prepareToPlay (params.sampleRate, params.blockSize);
+        engine.getDeviceManager().dispatchPendingUpdates();
+    }
+
+    ~EnginePlayer()
+    {
+        engine.getDeviceManager().removeHostedAudioDeviceInterface();
+    }
+
+    juce::AudioBuffer<float> process (int numSamples)
+    {
+        juce::AudioBuffer<float> inputAudio (params.inputChannels, numSamples);
+        inputAudio.clear();
+        return process (inputAudio);
+    }
+
+    juce::AudioBuffer<float> process (juce::AudioBuffer<float>& inputAudio)
+    {
+        juce::MidiBuffer inputMidi;
+        return process (inputAudio, inputMidi);
+    }
+
+    juce::AudioBuffer<float> process (juce::AudioBuffer<float>& inputAudio, juce::MidiBuffer& inputMidi)
+    {
+        assert (inputAudio.getNumChannels() == params.inputChannels);
+
+        const auto inputBuffer = toBufferView (inputAudio);
+
+        const auto totalNumFrames = inputBuffer.getNumFrames();
+        choc::buffer::ChannelArrayBuffer<float> processBuffer (choc::buffer::Size::create (std::max (inputAudio.getNumChannels(), params.outputChannels), totalNumFrames));
+        choc::buffer::copyIntersectionAndClearOutside (processBuffer, inputBuffer);
+
+        for (choc::buffer::FrameCount startFrame = 0;;)
+        {
+            const auto numFramesThisTime = std::min (totalNumFrames - startFrame, static_cast<choc::buffer::FrameCount> (params.blockSize));
+            auto subBlock = processBuffer.getFrameRange ({ startFrame, startFrame + numFramesThisTime });
+
+            auto subAudioBuffer = toAudioBuffer (subBlock);
+            audioIO.processBlock (subAudioBuffer, inputMidi);
+
+            startFrame += numFramesThisTime;
+
+            if (startFrame == totalNumFrames)
+                break;
+        }
+
+        numSamplesProcessed += static_cast<int> (totalNumFrames);
+
+        juce::AudioBuffer<float> outputBlock;
+        outputBlock.makeCopyOf (toAudioBuffer (processBuffer.getChannelRange ({ 0, static_cast<choc::buffer::ChannelCount> (params.outputChannels) })));
+
+        for (auto chan : std::views::iota (static_cast<choc::buffer::ChannelCount> (0),
+                                           static_cast<choc::buffer::ChannelCount> (output.size())))
+        {
+            auto srcChannelData = processBuffer.getChannel (chan).data.data;
+            std::copy_n (srcChannelData, totalNumFrames, std::back_inserter (output[static_cast<size_t> (chan)]));
+        }
+
+        return outputBlock;
+    }
+
+    choc::buffer::ChannelArrayBuffer<float> getOutput() const
+    {
+        choc::buffer::ChannelArrayBuffer<float> destBuffer (choc::buffer::Size::create (output.size(), numSamplesProcessed));
+
+        for (auto chan : std::views::iota (static_cast<size_t> (0), output.size()))
+            choc::buffer::copy (destBuffer.getChannel (static_cast<choc::buffer::ChannelCount> (chan)),
+                                choc::buffer::createMonoView (output[chan].data(), numSamplesProcessed));
+
+        return destBuffer;
+    }
+
+private:
+    Engine& engine;
+    HostedAudioDeviceInterface::Parameters params;
+    HostedAudioDeviceInterface& audioIO { engine.getDeviceManager().getHostedAudioDeviceInterface() };
+    std::vector<std::vector<float>> output;
+    int numSamplesProcessed = 0;
+};
+
+///@internal
+inline void waitForFileToBeMapped (const AudioFile& af)
+{
+    assert (af.engine);
+
+    for (;;)
+    {
+        if (af.engine->getAudioFileManager().cache.hasMappedReader (af, 0))
+            return;
+
+        std::this_thread::sleep_for (100ms);
+    }
+}
+
+}
+
+} // namespace tracktion::inline engine
+#endif
