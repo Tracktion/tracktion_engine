@@ -27,7 +27,7 @@ namespace tracktion { inline namespace engine
 
             auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
             auto& tc = edit->getTransport();
-            auto sinFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0);
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
             auto sinBuffer = *engine::test_utilities::loadFileInToBuffer (engine, sinFile->getFile());
 
             AudioFile af (engine, sinFile->getFile());
