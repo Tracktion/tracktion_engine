@@ -103,7 +103,7 @@ inline std::optional<typename Container::value_type> get_checked (const Containe
 }
 
 template<class Container, class IndexType>
-inline Container::value_type get_or (const Container& container, IndexType index, const typename Container::value_type& defaultValue)
+inline typename Container::value_type get_or (const Container& container, IndexType index, const typename Container::value_type& defaultValue)
 {
     const auto i = static_cast<typename Container::size_type> (index);
 
