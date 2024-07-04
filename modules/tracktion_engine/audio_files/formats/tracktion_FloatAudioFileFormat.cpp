@@ -146,7 +146,7 @@ public:
     }
 
 private:
-    int lengthInSamples;
+    juce::int64 lengthInSamples;
 
     void writeHeader()
     {
