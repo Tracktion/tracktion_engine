@@ -346,7 +346,7 @@ juce::Array<std::pair<AudioTrack*, int>> getTargetTracksAndIndexes (InputDeviceI
     juce::Array<std::pair<AudioTrack*, int>> tracks;
 
     for (auto dest : instance.destinations)
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (instance.edit, dest->targetID)))
+        if (auto at = findAudioTrackForID (instance.edit, dest->targetID))
             tracks.add ({ at, dest->targetIndex });
 
     return tracks;

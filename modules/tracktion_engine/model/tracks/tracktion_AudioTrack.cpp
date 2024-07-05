@@ -649,7 +649,7 @@ juce::Array<AudioTrack*> AudioTrack::getGhostTracks() const
     juce::Array<AudioTrack*> tracks;
 
     for (auto& trackID : EditItemID::parseStringList (ghostTracks))
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, trackID)))
+        if (auto at = findAudioTrackForID (edit, trackID))
             tracks.add (at);
 
     return tracks;

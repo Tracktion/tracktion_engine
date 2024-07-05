@@ -62,7 +62,7 @@ public:
     void enqueue (double tm, const juce::MidiMessage& m)
     {
         juce::ScopedLock sl (lock);
-        
+
         items.push_back ({tm, m});
     }
 
@@ -696,7 +696,7 @@ Clip* MidiInputDevice::addMidiAsTransaction (Edit& ed, EditItemID targetID,
 {
     CRASH_TRACER
     Clip* createdClip = nullptr;
-    auto track = dynamic_cast<AudioTrack*> (findTrackForID (ed, targetID));
+    auto track = findAudioTrackForID (ed, targetID);
     auto clipSlot = track != nullptr ? nullptr : findClipSlotForID (ed, targetID);
     auto clipOwner = track != nullptr ? static_cast<ClipOwner*> (track)
                                       : static_cast<ClipOwner*> (clipSlot);
@@ -1104,7 +1104,7 @@ public:
         if (recContext->recorded.getNumEvents() == 0)
             return {};
 
-        auto track = dynamic_cast<AudioTrack*> (findTrackForID (edit, recContext->targetID));
+        auto track = findAudioTrackForID (edit, recContext->targetID);
         auto clipSlot = track ? nullptr : findClipSlotForID (edit, recContext->targetID);
 
         if (! track && ! clipSlot)
@@ -1380,7 +1380,7 @@ public:
         {
             if (armedOnly && ! isRecordingActive (track->itemID))
                 continue;
-            
+
             auto sequence = retrospective->takeMidiMessages();
 
             if (sequence.getNumEvents() == 0)

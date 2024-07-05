@@ -42,7 +42,7 @@ void TrackOutput::flushStateToValueTree()
     if (! destTrackID.isValid())
         return;
 
-    if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (owner.edit, destTrackID)))
+    if (auto at = findAudioTrackForID (owner.edit, destTrackID))
         setOutputToTrack (at);
 }
 

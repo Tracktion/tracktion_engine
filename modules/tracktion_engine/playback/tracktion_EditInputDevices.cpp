@@ -135,10 +135,10 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
 {
     auto& dm = edit.engine.getDeviceManager();
     juce::Array<InputDevice*> devices;
-    
+
     for (auto& d : dm.midiInputs)
         devices.add (d.get());
-    
+
     devices.addArray (dm.waveInputs);
 
     if (! edit.isLoading())
@@ -196,7 +196,7 @@ InputDevice* EditInputDevices::getTrackDeviceForState (const juce::ValueTree& v)
 
     if (trackID.isValid())
     {
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, trackID)))
+        if (auto at = findAudioTrackForID (edit, trackID))
         {
             if (isTrackInputDeviceMIDI (v))
                 return &at->getMidiInputDevice();

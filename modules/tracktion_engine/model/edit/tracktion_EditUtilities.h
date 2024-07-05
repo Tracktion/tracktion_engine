@@ -65,6 +65,9 @@ int getTotalNumTracks (const Edit&);
 /** Returns the Track with a given ID if contained in the Edit. */
 Track* findTrackForID (const Edit&, EditItemID);
 
+/** Returns the AudioTrack with a given ID if contained in the Edit. */
+AudioTrack* findAudioTrackForID (const Edit&, EditItemID);
+
 /** Returns the Tracks for the given IDs in the Edit. */
 juce::Array<Track*> findTracksForIDs (const Edit&, const juce::Array<EditItemID>&);
 
