@@ -13,6 +13,7 @@
 
 namespace tracktion { inline namespace engine
 {
+    std::string getCmajorVersion();
     std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (Engine&);
 
     bool isCmajorPatchPluginFormat (const juce::PluginDescription&);
