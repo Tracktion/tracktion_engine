@@ -1066,11 +1066,10 @@ void ExternalController::updatePadColours()
                         if (auto dest = slot->getInputDestination(); dest && dest->input.isRecording (dest->targetID))
                             isPlaying = true;
 
-                        if (auto tc = getTransport())
-                            if (auto c = slot->getClip())
-                                if (auto lh = c->getLaunchHandle())
-                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
-                                        isPlaying = true;
+                        if (auto c = slot->getClip())
+                            if (auto lh = c->getLaunchHandle())
+                                if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                    isPlaying = true;
 
                         if (isPlaying)
                             break;

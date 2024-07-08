@@ -241,7 +241,7 @@ void ClickGenerator::render (choc::buffer::ChannelArrayView<float>& view)
     copyRemappingChannels (view, toBufferView (*currentSample).getFrameRange ({ choc::buffer::FrameCount (samplePos), choc::buffer::FrameCount (samplePos) + todo }));
     applyGain (view, gain);
 
-    samplePos += todo;
+    samplePos += static_cast<int> (todo);
     if (samplePos >= currentSample->getNumSamples())
         reset();
 }

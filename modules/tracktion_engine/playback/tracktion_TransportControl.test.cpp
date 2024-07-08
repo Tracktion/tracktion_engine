@@ -23,7 +23,8 @@ namespace tracktion { inline namespace engine
         TEST_CASE ("Playback")
         {
             auto& engine = *Engine::getEngines()[0];
-            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1 });
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
 
             auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
             auto& tc = edit->getTransport();

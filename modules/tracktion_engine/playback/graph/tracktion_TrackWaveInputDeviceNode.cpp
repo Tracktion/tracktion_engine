@@ -13,9 +13,9 @@
 namespace tracktion { inline namespace engine
 {
 
-TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (ProcessState& processState, WaveInputDevice& owner, std::unique_ptr<Node> inputNode,
+TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (ProcessState& processState_, WaveInputDevice& owner, std::unique_ptr<Node> inputNode,
                                                     bool copyInputsToOutputs_)
-    : TracktionEngineNode (processState),
+    : TracktionEngineNode (processState_),
       waveInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (copyInputsToOutputs_)
 {
     jassert (waveInputDevice.isTrackDevice());
