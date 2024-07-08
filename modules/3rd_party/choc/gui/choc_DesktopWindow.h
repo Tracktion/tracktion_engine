@@ -19,6 +19,8 @@
 #ifndef CHOC_DESKTOPWINDOW_HEADER_INCLUDED
 #define CHOC_DESKTOPWINDOW_HEADER_INCLUDED
 
+#include "../platform/choc_Platform.h"
+
 
 //==============================================================================
 namespace choc::ui
@@ -67,11 +69,14 @@ struct DesktopWindow
     /// Shows or hides the window. It's visible by default when created.
     void setVisible (bool visible);
 
+    /// Changes the window's position
+    void setBounds (Bounds);
+
     /// Enables/disables user resizing of the window
     void setResizable (bool);
 
-    /// Changes the window's position
-    void setBounds (Bounds);
+    /// Enables/disables the window's close button (if applicable).
+    void setClosable (bool);
 
     /// Gives the window a given size and positions it in the middle of the
     /// default monitor
@@ -183,10 +188,8 @@ struct choc::ui::DesktopWindow::Pimpl
             gtk_widget_hide (window);
     }
 
-    void setResizable (bool b)
-    {
-        gtk_window_set_resizable (GTK_WINDOW (window), b);
-    }
+    void setResizable (bool b) { gtk_window_set_resizable (GTK_WINDOW (window), b); }
+    void setClosable (bool b)  { gtk_window_set_deletable (GTK_WINDOW (window), b); }
 
     void setMinimumSize (int w, int h)
     {
@@ -245,24 +248,6 @@ inline void choc::ui::setWindowsDPIAwareness() {}
 namespace choc::ui
 {
 
-namespace
-{
-    // Including CodeGraphics.h can create all kinds of messy C/C++ symbol clashes
-    // with other headers, but all we actually need are these coordinate structs:
-   #if defined (__LP64__) && __LP64__
-    using CGFloat = double;
-   #else
-    using CGFloat = float;
-   #endif
-
-    struct CGPoint { CGFloat x = 0, y = 0; };
-    struct CGSize  { CGFloat width = 0, height = 0; };
-    struct CGRect  { CGPoint origin; CGSize size; };
-}
-
-static inline CGSize createCGSize (double w, double h)  { return { (CGFloat) w, (CGFloat) h }; }
-static inline CGRect createCGRect (choc::ui::Bounds b)  { return { { (CGFloat) b.x, (CGFloat) b.y }, { (CGFloat) b.width, (CGFloat) b.height } }; }
-
 inline void setWindowsDPIAwareness() {}
 
 struct DesktopWindow::Pimpl
@@ -270,88 +255,99 @@ struct DesktopWindow::Pimpl
     Pimpl (DesktopWindow& w, Bounds bounds)  : owner (w)
     {
         using namespace choc::objc;
-        AutoReleasePool autoreleasePool;
-
+        CHOC_AUTORELEASE_BEGIN
         call<void> (getSharedNSApplication(), "setActivationPolicy:", NSApplicationActivationPolicyRegular);
 
-        window = call<id> (call<id> (getClass ("NSWindow"), "alloc"),
+        window = call<id> (callClass<id> ("NSWindow", "alloc"),
                            "initWithContentRect:styleMask:backing:defer:",
                            createCGRect (bounds),
                            NSWindowStyleMaskTitled, NSBackingStoreBuffered, (int) 0);
 
         delegate = createDelegate();
-        objc_setAssociatedObject (delegate, "choc_window", (id) this, OBJC_ASSOCIATION_ASSIGN);
+        setStyleBit (NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable, true);
+        objc_setAssociatedObject (delegate, "choc_window", (CHOC_OBJC_CAST_BRIDGED id) this, OBJC_ASSOCIATION_ASSIGN);
         call<void> (window, "setDelegate:", delegate);
+        CHOC_AUTORELEASE_END
     }
 
     ~Pimpl()
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (window, "setDelegate:", nullptr);
         objc::call<void> (window, "close");
         objc::call<void> (delegate, "release");
+        CHOC_AUTORELEASE_END
     }
 
-    void* getWindowHandle() const     { return (void*) window; }
+    void* getWindowHandle() const     { return (CHOC_OBJC_CAST_BRIDGED void*) window; }
 
     void setWindowTitle (const std::string& newTitle)
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (window, "setTitle:", objc::getNSString (newTitle));
+        CHOC_AUTORELEASE_END
     }
 
     void setContent (void* view)
     {
-        objc::AutoReleasePool autoreleasePool;
-        objc::call<void> (window, "setContentView:", (id) view);
+        CHOC_AUTORELEASE_BEGIN
+        objc::call<void> (window, "setContentView:", (CHOC_OBJC_CAST_BRIDGED id) view);
+        CHOC_AUTORELEASE_END
     }
 
     void setVisible (bool visible)
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (window, "setIsVisible:", (BOOL) visible);
+        CHOC_AUTORELEASE_END
     }
 
-    void setResizable (bool b)
+    void setStyleBit (long bit, bool shouldEnable)
     {
-        objc::AutoReleasePool autoreleasePool;
-        auto style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable
-                        | (b ? NSWindowStyleMaskResizable : 0);
-
-        objc::call<void> (window, "setStyleMask:", (unsigned long) style);
+        CHOC_AUTORELEASE_BEGIN
+        auto style = objc::call<unsigned long> (window, "styleMask");
+        style = shouldEnable ? (style | (unsigned long) bit) : (style & ~(unsigned long) bit);
+        objc::call<void> (window, "setStyleMask:", style);
+        CHOC_AUTORELEASE_END
     }
 
-    void setMinimumSize (int w, int h) { objc::AutoReleasePool p; objc::call<void> (window, "setContentMinSize:", createCGSize (w, h)); }
-    void setMaximumSize (int w, int h) { objc::AutoReleasePool p; objc::call<void> (window, "setContentMaxSize:", createCGSize (w, h)); }
+    void setResizable (bool b) { setStyleBit (NSWindowStyleMaskResizable, b); }
+    void setClosable (bool b)  { setStyleBit (NSWindowStyleMaskClosable, b); }
 
-    CGRect getFrameRectForContent (Bounds b)
+    void setMinimumSize (int w, int h) { CHOC_AUTORELEASE_BEGIN objc::call<void> (window, "setContentMinSize:", createCGSize (w, h)); CHOC_AUTORELEASE_END }
+    void setMaximumSize (int w, int h) { CHOC_AUTORELEASE_BEGIN objc::call<void> (window, "setContentMaxSize:", createCGSize (w, h)); CHOC_AUTORELEASE_END }
+
+    objc::CGRect getFrameRectForContent (Bounds b)
     {
-        return objc::call<CGRect> (window, "frameRectForContentRect:", createCGRect (b));
+        return objc::call<objc::CGRect> (window, "frameRectForContentRect:", createCGRect (b));
     }
 
     void centreWithSize (int w, int h)
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (window, "setFrame:display:animate:", getFrameRectForContent ({ 0, 0, w, h }), (BOOL) 1, (BOOL) 0);
         objc::call<void> (window, "center");
+        CHOC_AUTORELEASE_END
     }
 
     void setBounds (Bounds b)
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (window, "setFrame:display:animate:", getFrameRectForContent (b), (BOOL) 1, (BOOL) 0);
+        CHOC_AUTORELEASE_END
     }
 
     void toFront()
     {
-        objc::AutoReleasePool autoreleasePool;
+        CHOC_AUTORELEASE_BEGIN
         objc::call<void> (objc::getSharedNSApplication(), "activateIgnoringOtherApps:", (BOOL) 1);
         objc::call<void> (window, "makeKeyAndOrderFront:", (id) nullptr);
+        CHOC_AUTORELEASE_END
     }
 
     static Pimpl& getPimplFromContext (id self)
     {
-        auto view = (Pimpl*) objc_getAssociatedObject (self, "choc_window");
+        auto view = (CHOC_OBJC_CAST_BRIDGED Pimpl*) objc_getAssociatedObject (self, "choc_window");
         CHOC_ASSERT (view != nullptr);
         return *view;
     }
@@ -375,32 +371,35 @@ struct DesktopWindow::Pimpl
                 class_addProtocol (delegateClass, p);
 
             class_addMethod (delegateClass, sel_registerName ("windowShouldClose:"),
-                            (IMP) (+[](id self, SEL, id) -> BOOL
-                            {
-                                objc::AutoReleasePool autoreleasePool;
-                                auto& p = getPimplFromContext (self);
-                                p.window = {};
+                             (IMP) (+[](id self, SEL, id) -> BOOL
+                             {
+                                 CHOC_AUTORELEASE_BEGIN
+                                 auto& p = getPimplFromContext (self);
+                                 p.window = {};
 
-                                if (auto callback = p.owner.windowClosed)
-                                    choc::messageloop::postMessage ([callback] { callback(); });
+                                 if (auto callback = p.owner.windowClosed)
+                                     choc::messageloop::postMessage ([callback] { callback(); });
 
-                                return TRUE;
-                            }),
-                            "c@:@");
+                                 CHOC_AUTORELEASE_END
+                                 return TRUE;
+                             }),
+                             "c@:@");
 
             class_addMethod (delegateClass, sel_registerName ("windowDidResize:"),
-                            (IMP) (+[](id self, SEL, id)
-                            {
-                                objc::AutoReleasePool autoreleasePool;
+                             (IMP) (+[](id self, SEL, id)
+                             {
+                                 CHOC_AUTORELEASE_BEGIN
 
-                                if (auto callback = getPimplFromContext (self).owner.windowResized)
-                                    callback();
-                            }),
-                            "v@:@");
+                                 if (auto callback = getPimplFromContext (self).owner.windowResized)
+                                     callback();
+
+                                 CHOC_AUTORELEASE_END
+                             }),
+                             "v@:@");
 
             class_addMethod (delegateClass, sel_registerName ("applicationShouldTerminateAfterLastWindowClosed:"),
-                            (IMP) (+[](id, SEL, id) -> BOOL { return 0; }),
-                            "c@:@");
+                             (IMP) (+[](id, SEL, id) -> BOOL { return 0; }),
+                             "c@:@");
 
             objc_registerClassPair (delegateClass);
         }
@@ -419,6 +418,9 @@ struct DesktopWindow::Pimpl
     static constexpr long NSWindowStyleMaskClosable = 2;
     static constexpr long NSBackingStoreBuffered = 2;
     static constexpr long NSApplicationActivationPolicyRegular = 0;
+
+    static objc::CGSize createCGSize (double w, double h)  { return { (objc::CGFloat) w, (objc::CGFloat) h }; }
+    static objc::CGRect createCGRect (choc::ui::Bounds b)  { return { { (objc::CGFloat) b.x, (objc::CGFloat) b.y }, { (objc::CGFloat) b.width, (objc::CGFloat) b.height } }; }
 };
 
 } // namespace choc::ui
@@ -463,11 +465,13 @@ struct HWNDHolder
     HWNDHolder (const HWNDHolder&) = delete;
     HWNDHolder& operator= (const HWNDHolder&) = delete;
     HWNDHolder (HWNDHolder&& other) : hwnd (other.hwnd) { other.hwnd = {}; }
-    HWNDHolder& operator= (HWNDHolder&& other)  { hwnd = other.hwnd; other.hwnd = {}; return *this; }
-    ~HWNDHolder() { if (IsWindow (hwnd)) DestroyWindow (hwnd); }
+    HWNDHolder& operator= (HWNDHolder&& other)  { reset(); hwnd = other.hwnd; other.hwnd = {}; return *this; }
+    ~HWNDHolder() { reset(); }
 
     operator HWND() const  { return hwnd; }
     operator void*() const  { return (void*) hwnd; }
+
+    void reset() { if (IsWindow (hwnd)) DestroyWindow (hwnd); hwnd = {}; }
 
     HWND hwnd = {};
 };
@@ -476,7 +480,7 @@ struct WindowClass
 {
     WindowClass (std::wstring name, WNDPROC wndProc)
     {
-        name += std::to_wstring (rand());
+        name += std::to_wstring (static_cast<uint32_t> (GetTickCount()));
 
         moduleHandle = GetModuleHandle (nullptr);
         auto icon = (HICON) LoadImage (moduleHandle, IDI_APPLICATION, IMAGE_ICON,
@@ -583,6 +587,11 @@ struct DesktopWindow::Pimpl
         SetFocus (hwnd);
     }
 
+    ~Pimpl()
+    {
+        hwnd.reset();
+    }
+
     void* getWindowHandle() const     { return hwnd; }
 
     void setWindowTitle (const std::string& newTitle)
@@ -628,6 +637,13 @@ struct DesktopWindow::Pimpl
         SetWindowLong (hwnd, GWL_STYLE, style);
     }
 
+    void setClosable (bool closable)
+    {
+        EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE,
+                        closable ? (MF_BYCOMMAND | MF_ENABLED)
+                                 : (MF_BYCOMMAND | MF_DISABLED | MF_GRAYED));
+    }
+
     void setMinimumSize (int w, int h)
     {
         minimumSize.x = w;
@@ -654,7 +670,12 @@ struct DesktopWindow::Pimpl
 
     void centreWithSize (int w, int h)
     {
-        setBounds ({ 0, 0, w, h }, SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_FRAMECHANGED);
+        auto dpi = static_cast<int> (getWindowDPI());
+        auto screenW = (GetSystemMetrics(SM_CXSCREEN) * 96) / dpi;
+        auto screenH = (GetSystemMetrics(SM_CYSCREEN) * 96) / dpi;
+        auto x = (screenW - w) / 2;
+        auto y = (screenH - h) / 2;
+        setBounds ({ x, y, w, h }, SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
     }
 
     void setBounds (Bounds b)
@@ -718,6 +739,20 @@ private:
         }
     }
 
+    void handleClose()
+    {
+        if (owner.windowClosed != nullptr)
+            owner.windowClosed();
+    }
+
+    void handleSizeChange()
+    {
+        resizeContentToFit();
+
+        if (owner.windowResized != nullptr)
+            owner.windowResized();
+    }
+
     static void enableNonClientDPIScaling (HWND h)
     {
         if (auto fn = getUser32Function<BOOL(__stdcall*)(HWND)> ("EnableNonClientDpiScaling"))
@@ -739,8 +774,8 @@ private:
         switch (msg)
         {
             case WM_NCCREATE:        enableNonClientDPIScaling (h); break;
-            case WM_SIZE:            if (auto w = getPimpl (h)) w->resizeContentToFit(); break;
-            case WM_CLOSE:           if (auto w = getPimpl (h)) if (w->owner.windowClosed != nullptr) w->owner.windowClosed(); return 0;
+            case WM_SIZE:            if (auto w = getPimpl (h)) w->handleSizeChange(); break;
+            case WM_CLOSE:           if (auto w = getPimpl (h)) w->handleClose(); return 0;
             case WM_GETMINMAXINFO:   if (auto w = getPimpl (h)) w->getMinMaxInfo (*(LPMINMAXINFO) lp); return 0;
             default:                 break;
         }
@@ -752,7 +787,7 @@ private:
 } // namespace choc::ui
 
 #else
- #error "choc WebView only supports OSX, Windows or Linux!"
+ #error "choc DesktopWindow only supports OSX, Windows or Linux!"
 #endif
 
 namespace choc::ui
@@ -769,6 +804,7 @@ inline void DesktopWindow::setWindowTitle (const std::string& title)       { pim
 inline void DesktopWindow::setMinimumSize (int w, int h)                   { pimpl->setMinimumSize (w, h); }
 inline void DesktopWindow::setMaximumSize (int w, int h)                   { pimpl->setMaximumSize (w, h); }
 inline void DesktopWindow::setResizable (bool b)                           { pimpl->setResizable (b); }
+inline void DesktopWindow::setClosable (bool b)                            { pimpl->setClosable (b); }
 inline void DesktopWindow::setBounds (Bounds b)                            { pimpl->setBounds (b); }
 inline void DesktopWindow::centreWithSize (int w, int h)                   { pimpl->centreWithSize (w, h); }
 inline void DesktopWindow::toFront()                                       { pimpl->toFront(); }

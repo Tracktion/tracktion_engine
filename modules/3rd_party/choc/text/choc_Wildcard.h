@@ -49,6 +49,10 @@ struct WildcardPattern
     /// Returns true if the given string matches the pattern.
     bool matches (const std::string& text) const;
 
+    /// You can iterate the pattern strings within the wildcard
+    std::vector<std::string>::iterator begin()  { return patterns.begin(); }
+    std::vector<std::string>::iterator end()    { return patterns.end(); }
+
 private:
     std::vector<std::string> patterns;
     bool isCaseSensitive;

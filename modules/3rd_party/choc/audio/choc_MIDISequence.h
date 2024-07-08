@@ -36,7 +36,7 @@ struct Sequence
         /// frames, ticks, etc. as appropriate.
         double timeStamp;
 
-        Message message;
+        LongMessage message;
 
         bool operator< (const Event& other) const    { return timeStamp < other.timeStamp; }
     };

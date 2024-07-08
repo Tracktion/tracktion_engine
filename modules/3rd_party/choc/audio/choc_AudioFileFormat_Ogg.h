@@ -59555,7 +59555,7 @@ struct OggAudioFileFormat<supportWriting>::Implementation
         bool fillCache (uint64_t frameIndex)
         {
             if (ov_pcm_tell (std::addressof (oggfile)) != static_cast<int64_t> (frameIndex))
-                if (! ov_pcm_seek (std::addressof (oggfile), static_cast<int64_t> (frameIndex)))
+                if (ov_pcm_seek (std::addressof (oggfile), static_cast<int64_t> (frameIndex)) != 0)
                     return false;
 
             cacheStart = frameIndex;

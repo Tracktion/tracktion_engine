@@ -15,7 +15,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Windows Latest MSVC", artifact: "Windows-MSVC.7z",
+            name: "Windows Latest MSVC",
             os: windows-latest,
             cc: "cl", cxx: "cl",
             build_type: "Release",
@@ -24,7 +24,7 @@ jobs:
             exe: "./Release/choc_tests.exe"
           }
         - {
-            name: "Windows Latest MinGW", artifact: "Windows-MinGW.7z",
+            name: "Windows Latest MinGW",
             os: windows-latest,
             build_type: "Release",
             cc: "gcc", cxx: "g++",
@@ -32,7 +32,7 @@ jobs:
             exe: "./choc_tests"
           }
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.7z",
+            name: "Ubuntu Latest GCC",
             os: ubuntu-latest,
             build_type: "Release",
             cc: "gcc", cxx: "g++",
@@ -41,7 +41,7 @@ jobs:
             install_packages: "sudo apt-get update; sudo apt-get -y install libgtk-3-dev libwebkit2gtk-4.0-dev"
           }
         - {
-            name: "macOS Latest Clang", artifact: "macOS.7z",
+            name: "macOS Latest Clang",
             os: macos-latest,
             build_type: "Release",
             cc: "clang", cxx: "clang++",
@@ -73,4 +73,4 @@ jobs:
     - name: Run tests
       shell: bash
       working-directory: ./tests/build
-      run: ${{ matrix.config.exe }}
+      run: ${{ matrix.config.exe }} --multithread

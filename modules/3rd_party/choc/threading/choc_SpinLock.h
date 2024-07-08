@@ -29,7 +29,7 @@ namespace choc::threading
     A minimal no-frills spin-lock.
 
     To use an RAII pattern for locking a SpinLock, it's compatible with the normal
-    std::lock_guard class.
+    scoped guard locking classes in the standard library.
 */
 struct SpinLock
 {

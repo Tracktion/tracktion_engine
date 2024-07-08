@@ -169,7 +169,7 @@ bool VariableSizeFIFO::push (uint32_t numBytes, DataProvider&& writeSourceData)
 
     auto bytesNeeded = numBytes + headerSize;
 
-    const std::lock_guard<decltype(writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
 
     auto destOffset = writePos.load();
     auto dest = buffer.data() + destOffset;

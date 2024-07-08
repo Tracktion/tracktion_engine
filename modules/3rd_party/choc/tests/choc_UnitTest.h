@@ -100,7 +100,7 @@ inline void TestProgress::print (std::string_view message)
 
 inline void TestProgress::startCategory (std::string category)
 {
-    currentCategory = std::move( category);
+    currentCategory = std::move (category);
 }
 
 inline void TestProgress::startTest (std::string_view testName)

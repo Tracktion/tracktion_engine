@@ -19,7 +19,7 @@ Basically CHOC is aimed at people (like me) who just want to use some decent lib
 
 ### Highlights
 
-The library is getting quite big now. Some of its many delights include:
+The library is getting quite big now! Some of its many delights include:
 
 #### Miscellaneous
 
@@ -31,6 +31,9 @@ The library is getting quite big now. Some of its many delights include:
 - A tempting-but-probably-perilous [in-memory DLL loader](./platform/choc_MemoryDLL.h) which can load a DLL from memory instead of a file (Windows only).
 - Various maths and bit-twiddling [bits and bobs](./math/choc_MathHelpers.h).
 - A system for easily adding and collecting all the [open-source licenses](./text/choc_OpenSourceLicenseList.h) that your project uses into a single string for displaying to a user (for license compliance).
+- A one-file header-only [encapsulation of zlib](./containers/choc_zlib.h), exposing `std::iostream` compatible classes for compressing and decompressing data.
+- A [Zip file reader](./containers/choc_ZipFile.h) and decompressor class.
+- A [HTTP and WebSocket server](./network/choc_HTTPServer.h) class. Life is too short to learn how `boost::beast` works and write all the boilerplate required just to serve some content and talk down a web-socket, so this class hides all the horribleness behind a very simple API.
 
 #### Text and Files
 
@@ -38,10 +41,12 @@ The library is getting quite big now. Some of its many delights include:
 - Some [more esoteric](./text/choc_StringUtilities.h) string utilities like pretty-printing durations and sizes, URI encoding, etc.
 - Some [UTF8](./text/choc_UTF8.h) validation and iteration classes.
 - Some [file utilities](./text/choc_Files.h) to provide single-function-call ways to do obvious things like loading a file's content, or saving a string into a file, creating self-deleting temp files, etc.
+- A [file watcher](./platform/choc_FileWatcher.h) class for monitoring changes to a file or folder.
 - A [CodePrinter](./text/choc_CodePrinter.h) class to help creating indented code listings.
 - A [HTML generator](./text/choc_HTML.h) for creating a tree of DOM objects and generating HTML text for it
 - A [text table generator](./text/choc_TextTable.h), which can take an array of strings and tabulate it to align the columns nicely.
 - A [file wildcard](./text/choc_Wildcard.h) matcher. I claim this is the cleanest possible implementation of this algorithm - I challenge you to prove me wrong!
+- A simple [command-line argumment helper](./containers/choc_ArgumentList.h) which simplifies a lot of basic command-line arg parsing tasks.
 
 #### Containers
 
@@ -71,7 +76,11 @@ The library is getting quite big now. Some of its many delights include:
 
 #### Javascript and JSON
 
-- A cross-engine [Javascript](./javascript/choc_javascript.h) API with implementations for both QuickJS and Duktape! Both QuickJS and Duktape have been squashed into single-file header-only implementations, and you can choose to add either one (or both at once!) to your project by simply including a header file for the one you want. Since both engines provide the same `choc::javascript::Context` base-class, you can switch the javascript engine that your project uses without breaking any of your own code.
+- A cross-engine [Javascript](./javascript/choc_javascript.h) API, with implementations for V8, QuickJS and Duktape!
+
+  Both QuickJS and Duktape have been squashed into single-file header-only implementations, so are trivially easy to add to any project. V8 unfortunately requires you to link to their enormous static libraries, but obviously provides optimum performance.
+  All these engines are abstracted behind the same `choc::javascript::Context` base-class, and you can choose to use any combination of engines interchangeably (or simultaneously) in your project.
+
 - A [JSON](./text/choc_JSON.h) parser that uses choc::value::Value objects.
 
 #### Audio
