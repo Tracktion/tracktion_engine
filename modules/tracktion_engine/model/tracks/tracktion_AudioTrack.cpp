@@ -234,10 +234,9 @@ juce::String AudioTrack::getNameAsTrackNumber() const
 juce::String AudioTrack::getNameAsTrackNumberWithDescription() const
 {
     auto desc = getNameAsTrackNumber();
-    auto trackName = getName();
 
-    if (! trackName.startsWithIgnoreCase (TRANS("Track") + " "))
-        desc << " (" << trackName << ")";
+    if (auto n = getName(); ! n.startsWithIgnoreCase (TRANS("Track") + " "))
+        desc << " (" << n << ")";
 
     return desc;
 }
