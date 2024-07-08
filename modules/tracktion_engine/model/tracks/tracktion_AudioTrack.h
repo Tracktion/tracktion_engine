@@ -27,7 +27,7 @@ public:
     bool isAudioTrack() const override                      { return true; }
 
     //==============================================================================
-    juce::String getSelectableDescription() override        { return TRANS("Track") + " - \"" + getName() + "\""; }
+    juce::String getSelectableDescription() override;
 
     //==============================================================================
     // This isn't an index - it starts from 1
@@ -36,6 +36,14 @@ public:
     /** checks whether the name is 'track n' and if so, makes sure the number is right */
     void sanityCheckName() override;
     juce::String getName() const override;
+
+    /// Returns a name in the form "Track [number]"
+    juce::String getNameAsTrackNumber() const;
+
+    /// Returns a name in the form "Track [number] ([track name])"
+    /// (This is smart enough to not add the parenthesised name if it's just
+    /// a "Track X" type name)
+    juce::String getNameAsTrackNumberWithDescription() const;
 
     bool canContainPlugin (Plugin*) const override;
     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }

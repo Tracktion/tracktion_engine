@@ -202,12 +202,10 @@ void AudioTrack::sanityCheckName()
 
 juce::String AudioTrack::getName() const
 {
-    auto n = ClipTrack::getName();
+    if (auto n = ClipTrack::getName(); ! n.isEmpty())
+        return n;
 
-    if (n.isEmpty())
-        n << TRANS("Track") << ' ' << getAudioTrackNumber();
-
-    return n;
+    return getNameAsTrackNumber();
 }
 
 int AudioTrack::getAudioTrackNumber() const noexcept
@@ -225,7 +223,29 @@ int AudioTrack::getAudioTrackNumber() const noexcept
         return true;
     });
 
-    return result;}
+    return result;
+}
+
+juce::String AudioTrack::getNameAsTrackNumber() const
+{
+    return TRANS("Track") + " " + juce::String (getAudioTrackNumber());
+}
+
+juce::String AudioTrack::getNameAsTrackNumberWithDescription() const
+{
+    auto desc = getNameAsTrackNumber();
+    auto trackName = getName();
+
+    if (! trackName.startsWithIgnoreCase (TRANS("Track") + " "))
+        desc << " (" << trackName << ")";
+
+    return desc;
+}
+
+juce::String AudioTrack::getSelectableDescription()
+{
+    return getNameAsTrackNumberWithDescription();
+}
 
 VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPluginsOfType<VolumeAndPanPlugin>().getLast(); }
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
