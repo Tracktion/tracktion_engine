@@ -45,4 +45,5 @@ cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 rm -rf ${COVERAGE_FILE}
 rm -rf ${HTML_DIR}
 lcov --capture --directory "${CMAKE_BUILD_DIR}/" -exclude "tests/coverage/coverage.h" -exclude "*juce_*" -exclude "*3rd_Party*" -exclude "*3rd_party*" -exclude "/Applications*" -exclude "/usr*" -exclude "*examples*" --output-file "$COVERAGE_FILE"
+lcov --remove "$COVERAGE_FILE" 'tests/coverage/coverage.h' '*juce_*' '*3rd_Party*' '*3rd_party*' '/Applications*' '/usr*' '*examples*' --output-file "$COVERAGE_FILE"
 genhtml "$COVERAGE_FILE" --output-directory ${HTML_DIR}
