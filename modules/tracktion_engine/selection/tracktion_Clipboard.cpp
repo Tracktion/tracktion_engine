@@ -420,7 +420,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                             newClip->snapToOriginalBWavTime();
 
                         // Set sensible defaults for new launcher clips
-                        if (auto clipSlot = newClip->getClipSlot())
+                        if (newClip->getClipSlot())
                         {
                             if (newClip->effectsEnabled())
                                 newClip->enableEffects (false, false);
