@@ -19,7 +19,7 @@ cd "$DIR"
 
 #==============================================================================
 PROJECT_NAME=coverage
-CONFIG=Debug
+CONFIG=RelWithDebInfo
 
 if [ "$PLATFORM" == "mac" ]; then
     CMAKE_BUILD_DIR=build_mac
