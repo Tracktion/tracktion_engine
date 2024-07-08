@@ -9,7 +9,7 @@ endif()
 
 # If we are compiling for macOS we want to target OS versions down to 10.11
 if (APPLE)
-    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE INTERNAL "")
+    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
 endif()
 
 # Compile with werror in release builds
@@ -50,7 +50,7 @@ juce_add_console_app(${CMAKE_PROJECT_NAME})
 
 juce_generate_juce_header(${CMAKE_PROJECT_NAME})
 
-target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_20)
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden

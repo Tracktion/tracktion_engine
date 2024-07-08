@@ -27,9 +27,23 @@
 
 #pragma once
 
-using namespace tracktion_engine;
+using namespace tracktion;
+
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 #include "../../examples/common/tracktion_graph_Dev.h"
+
+inline bool runDocTest()
+{
+    doctest::Context doctestContext;
+    doctestContext.setOption ("duration", true);
+    doctestContext.addFilter("test-suite", "tracktion_core");
+    doctestContext.addFilter("test-suite", "tracktion_graph");
+    doctestContext.addFilter("test-suite", "tracktion_engine");
+
+    return ! doctestContext.run();
+}
 
 //==============================================================================
 //==============================================================================
@@ -43,5 +57,6 @@ int main (int, char**)
                                    "tracktion_core",
                                    "tracktion_graph",
                                    "tracktion_engine",
-                                   "tracktion_graph_performance" });
+                                   "tracktion_graph_performance" })
+        && runDocTest();
 }
