@@ -8906,8 +8906,8 @@ static void byteSwapX16(FLAC__uint32 *buf)
     x = *buf; x = ((x << 8) & 0xff00ff00) | ((x >> 8) & 0x00ff00ff); *buf   = (x >> 16) | (x << 16);
 }
 #else
-#define byteSwap(buf, words)
-#define byteSwapX16(buf)
+static void byteSwap(FLAC__uint32*, unsigned) {}
+static void byteSwapX16(FLAC__uint32*) {}
 #endif
 
 /*
@@ -16140,7 +16140,7 @@ unsigned find_best_partition_order_(
                     residual,
 #endif
                     abs_residual_partition_sums+sum,
-                    raw_bits_per_partition+sum,
+                    raw_bits_per_partition ? (raw_bits_per_partition + sum) : nullptr,
                     residual_samples,
                     predictor_order,
                     rice_parameter,
@@ -17586,7 +17586,7 @@ struct FLACAudioFileFormat<supportWriting>::Implementation
             properties.sampleRate  = static_cast<double> (info.sample_rate);
             properties.bitDepth    = getIntegerBitDepth (static_cast<uint16_t> (info.bits_per_sample));
 
-            intToFloatScaleFactor = 1.0 / ((1u << (31u - info.bits_per_sample)) - 1);
+            intToFloatScaleFactor = 1.0 / ((1u << static_cast<uint16_t> (info.bits_per_sample - 1)) - 1);
 
             setCacheSize (static_cast<uint32_t> (info.max_blocksize));
         }

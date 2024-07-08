@@ -148,7 +148,7 @@ struct WAVAudioFileFormat<supportWriting>::Implementation
                 {
                     namespace sd = choc::audio::sampledata;
                     auto framesToDo = std::min (rawDataFrames, numFrames);
-                    stream->read (rawData, framesToDo * frameStride);
+                    stream->read (rawData, static_cast<std::streamsize> (framesToDo * frameStride));
                     auto dest = buffer.getStart (framesToDo);
 
                     switch (properties.bitDepth)
@@ -536,7 +536,7 @@ struct WAVAudioFileFormat<supportWriting>::Implementation
         {
             std::string s;
             s.resize (size);
-            stream->read (s.data(), size);
+            stream->read (s.data(), static_cast<std::streamsize> (size));
             auto nullChar = s.find ('\0');
             return nullChar != std::string::npos ? s.substr (0, nullChar) : s;
         }
@@ -643,7 +643,7 @@ struct WAVAudioFileFormat<supportWriting>::Implementation
                         default:                return false;
                     }
 
-                    stream->write (rawTempBuffer, sampleStride * numChannels * framesThisTime);
+                    stream->write (rawTempBuffer, static_cast<std::streamsize> (sampleStride * numChannels * framesThisTime));
                     framesToDo -= framesThisTime;
                     source = source.fromFrame (framesThisTime);
                 }
@@ -810,9 +810,9 @@ struct WAVAudioFileFormat<supportWriting>::Implementation
                 uint8_t bytes[64] = {};
 
                 if (umid.length() == 128)
-                    for (size_t i = 0; i < umid.length(); ++i)
-                        bytes[i / 2] = static_cast<uint8_t> (choc::text::hexDigitToInt (static_cast<uint32_t> (umid[i])) * 16
-                                                           + choc::text::hexDigitToInt (static_cast<uint32_t> (umid[i + 1])));
+                    for (size_t i = 0; i < 64; ++i)
+                        bytes[i] = static_cast<uint8_t> (choc::text::hexDigitToInt (static_cast<uint32_t> (umid[i * 2])) * 16
+                                                       + choc::text::hexDigitToInt (static_cast<uint32_t> (umid[i * 2 + 1])));
 
                 stream->write (reinterpret_cast<char*> (bytes), 64);
             };

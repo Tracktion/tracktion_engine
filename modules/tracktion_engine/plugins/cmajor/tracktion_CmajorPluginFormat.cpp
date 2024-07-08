@@ -39,6 +39,8 @@ bool isCmajorPatchPluginFormat (const juce::PluginDescription& pd)
 namespace tracktion { inline namespace engine
 {
 
+std::string getCmajorVersion() { return cmaj::Library::getVersion(); }
+
 cmaj::CacheDatabaseInterface::Ptr createCompilerCache (tracktion::Engine& engine)
 {
     auto cacheFolder = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("cmajor_patch_cache");
@@ -97,6 +99,7 @@ juce::String getCmajorPatchCompileError (Plugin& p)
 #else
 
 //==============================================================================
+std::string getCmajorVersion() { return {}; }
 juce::String getCmajorPatchCompileError (Plugin&) { return {}; }
 std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktion::Engine&)  { return {}; }
 

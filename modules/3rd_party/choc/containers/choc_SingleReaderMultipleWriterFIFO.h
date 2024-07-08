@@ -90,13 +90,13 @@ private:
 
 template <typename Item> bool SingleReaderMultipleWriterFIFO<Item>::push (const Item& item)
 {
-    const std::lock_guard<decltype (writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
     return fifo.push (item);
 }
 
 template <typename Item> bool SingleReaderMultipleWriterFIFO<Item>::push (Item&& item)
 {
-    const std::lock_guard<decltype (writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
     return fifo.push (std::move (item));
 }
 

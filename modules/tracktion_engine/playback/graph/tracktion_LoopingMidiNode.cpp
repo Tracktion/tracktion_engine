@@ -168,7 +168,7 @@ namespace chocMidiHelpers
             if (! event.message.isShortMessage())
                 continue;
 
-            const auto mm = event.message.getShortMessage();
+            const auto& mm = event.message;
 
             if (! (mm.getChannel1to16() == channel && event.timeStamp <= time))
                 continue;
@@ -373,12 +373,10 @@ namespace MidiHelpers
 
         for (size_t i = 0; i < seqLen; ++i)
         {
-            const auto& e = seq.events[i].message;
+            const auto& m = seq.events[i].message;
 
-            if (! e.isShortMessage())
+            if (! m.isShortMessage())
                 continue;
-
-            const auto m = e.getShortMessage();
 
             if (m.isNoteOn())
             {
@@ -387,16 +385,14 @@ namespace MidiHelpers
 
                 for (size_t j = i + 1; j < seqLen; ++j)
                 {
-                    const auto& e2 = seq.events[j].message;
+                    const auto& m2 = seq.events[j].message;
 
-                    if (! e2.isShortMessage())
+                    if (! m2.isShortMessage())
                         continue;
 
-                    const auto m2 = e2.getShortMessage();
-
                     if (m2.getNoteNumber() == note
-                        && m2.getChannel0to15() == chan
-                        && m2.isNoteOff())
+                         && m2.getChannel0to15() == chan
+                         && m2.isNoteOff())
                     {
                         noteOffMap.emplace_back (std::make_pair (i, j));
                         break;
@@ -462,7 +458,7 @@ namespace MidiHelpers
                            if (! e.message.isShortMessage())
                                return;
 
-                           const auto m = e.message.getShortMessage();
+                           const auto& m = e.message;
 
                            if (m.isNoteOn())
                            {
@@ -500,15 +496,8 @@ namespace MidiHelpers
     inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
     {
         for (auto& e : ms)
-        {
-            if (! e.message.isShortMessage())
-                continue;
-
-            const auto m = e.message.getShortMessage();
-
-            if (m.isNoteOn() || m.isNoteOff())
+            if (e.message.isNoteOn() || e.message.isNoteOff())
                 e.timeStamp = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeStamp), grooveStrength).inBeats();
-        }
     }
 
     inline void createMessagesForTime (MidiMessageArray& destBuffer,
@@ -560,11 +549,7 @@ namespace MidiHelpers
                 for (size_t i = 0; i < sourceSequence.events.size(); ++i)
                 {
                     auto e = sourceSequence.events[i];
-
-                    if (! e.message.isShortMessage())
-                        continue;
-
-                    const auto m = e.message.getShortMessage();
+                    const auto& m = e.message;
 
                     if (! m.isNoteOn())
                         continue;
@@ -577,7 +562,8 @@ namespace MidiHelpers
                         // don't play very short notes or ones that have already finished
                         if (noteOffEvent->timeStamp > time + 0.0001)
                         {
-                            juce::MidiMessage m2 ((int) m.data[0], (int) m.data[1], (int) m.data[2], e.timeStamp);
+                            auto data = m.data();
+                            juce::MidiMessage m2 ((int) data[0], (int) data[1], (int) data[2], e.timeStamp);
                             m2.multiplyVelocity (volScale);
 
                             // give these a tiny offset to make sure they're played after the controller updates
@@ -601,12 +587,8 @@ namespace MidiHelpers
 
         for (size_t i = 0; i < sourceSequence.events.size(); ++i)
         {
-            auto e = sourceSequence.events[i];
-
-            if (! e.message.isShortMessage())
-                continue;
-
-            const auto m = e.message.getShortMessage();
+            const auto& e = sourceSequence.events[i];
+            const auto& m = e.message;
 
             if (! m.isNoteOn())
                 continue;
@@ -641,21 +623,17 @@ namespace MidiHelpers
         // First adjust all the note times
         for (auto& m : sequence)
             if (m.message.isShortMessage())
-                if (auto sm = m.message.getShortMessage(); sm.isNoteOn() || sm.isNoteOff())
+                if (auto& sm = m.message; sm.isNoteOn() || sm.isNoteOff())
                    m.timeStamp = clipRange.clipValue (m.timeStamp);
 
         // Then change the timestamps of an zero or negative length notes
         for (int i = (int) sequence.events.size(); --i >= 0;)
         {
-            const size_t index = static_cast<size_t> (i);
-            auto& m = sequence.events[index];
+            auto index = static_cast<size_t> (i);
+            const auto& e = sequence.events[index];
+            const auto& m = e.message;
 
-            if (! m.message.isShortMessage())
-                continue;
-
-            auto sm = m.message.getShortMessage();
-
-            if (! sm.isNoteOn())
+            if (! m.isNoteOn())
                 continue;
 
             if (auto noteOffIndex = getNoteOffIndex (index, noteOffMap))
@@ -663,7 +641,7 @@ namespace MidiHelpers
                 if (*noteOffIndex < index)
                     continue;
 
-                const auto noteLength = sequence.events[*noteOffIndex].timeStamp - m.timeStamp;
+                const auto noteLength = sequence.events[*noteOffIndex].timeStamp - e.timeStamp;
 
                 if (noteLength > 0.0)
                     continue;

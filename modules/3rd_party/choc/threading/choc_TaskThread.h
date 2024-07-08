@@ -22,8 +22,7 @@
 #include <functional>
 #include <atomic>
 #include <thread>
-#include <condition_variable>
-#include <mutex>
+#include <chrono>
 #include "../platform/choc_Assert.h"
 
 namespace choc::threading
@@ -70,9 +69,7 @@ private:
     //==============================================================================
     std::function<void()> taskFunction;
     std::thread thread;
-    std::mutex mutex;
-    std::condition_variable condition;
-    std::atomic<bool> triggered { false };
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
     std::atomic<bool> threadShouldExit { false };
     uint32_t interval = 0;
 
@@ -102,7 +99,7 @@ inline void TaskThread::start (uint32_t repeatIntervalMillisecs, std::function<v
     taskFunction = std::move (f);
     interval = repeatIntervalMillisecs;
     threadShouldExit = false;
-    triggered = false;
+    flag.test_and_set (std::memory_order_acquire);
 
     thread = std::thread ([this]
     {
@@ -128,25 +125,58 @@ inline void TaskThread::stop()
 
 inline void TaskThread::trigger()
 {
-    std::lock_guard<std::mutex> lock (mutex);
-    triggered = true;
-    condition.notify_all();
+    flag.clear (std::memory_order_release);
 }
 
 inline void TaskThread::wait()
 {
-    std::unique_lock<std::mutex> lock (mutex);
+    if (! flag.test_and_set (std::memory_order_acquire))
+        return;
 
-    if (! triggered)
+    uint32_t numTries = 0;
+
+    auto yieldOrSleep = [&numTries]
     {
-        if (interval != 0)
-            condition.wait_for (lock, std::chrono::milliseconds (interval),
-                                [this] { return triggered == true; });
-        else
-            condition.wait (lock, [this] { return triggered == true; });
-    }
+        static constexpr uint32_t numTriesBeforeSleeping = 1000;
+        static constexpr uint32_t sleepDuration = 5;
 
-    triggered = false;
+        if (numTries == numTriesBeforeSleeping)
+        {
+            std::this_thread::sleep_for (std::chrono::milliseconds (sleepDuration));
+        }
+        else
+        {
+            std::this_thread::yield();
+            ++numTries;
+        }
+    };
+
+    if (interval != 0)
+    {
+        auto timeout = std::chrono::high_resolution_clock::now()
+                        + std::chrono::milliseconds (interval);
+
+        for (;;)
+        {
+            yieldOrSleep();
+
+            if (! flag.test_and_set (std::memory_order_acquire))
+                return;
+
+            if (std::chrono::high_resolution_clock::now() >= timeout)
+                return;
+        }
+    }
+    else
+    {
+        for (;;)
+        {
+            yieldOrSleep();
+
+            if (! flag.test_and_set (std::memory_order_acquire))
+                return;
+        }
+    }
 }
 
 

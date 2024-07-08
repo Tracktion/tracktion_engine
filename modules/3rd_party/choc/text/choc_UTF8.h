@@ -332,7 +332,12 @@ inline UTF8Pointer UTF8Pointer::operator--()
 
     while ((*--text & 0xc0) == 0x80)
     {
-        CHOC_ASSERT (bytesSkipped < 3);
+        if (bytesSkipped > 2)
+        {
+            CHOC_ASSERT (bytesSkipped <= 2);
+            break;
+        }
+
         ++bytesSkipped;
     }
 

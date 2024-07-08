@@ -292,7 +292,7 @@ public:
         juce::File recordedFile;
         int take = 1;
 
-        Track* track = findTrackForID (ed, targetID);
+        auto track = findTrackForID (ed, targetID);
 
         if (! track)
             if (auto cs = findClipSlotForID (ed, targetID))

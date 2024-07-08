@@ -108,6 +108,11 @@ Track* findTrackForID (const Edit& edit, EditItemID id)
     return findTrackForPredicate (edit, [id] (Track& t) { return t.itemID == id; });
 }
 
+AudioTrack* findAudioTrackForID (const Edit& edit, EditItemID id)
+{
+    return dynamic_cast<AudioTrack*> (findTrackForID (edit, id));
+}
+
 juce::Array<Track*> findTracksForIDs (const Edit& edit, const juce::Array<EditItemID>& ids)
 {
     juce::Array<Track*> tracks;

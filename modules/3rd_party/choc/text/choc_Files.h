@@ -55,6 +55,20 @@ std::string loadFileAsString (const std::string& filename);
 void replaceFileWithContent (const std::filesystem::path& file,
                              std::string_view newContent);
 
+/// Attempts to create or overwrite the specified file with data from a stream.
+/// This will attempt to create and parent folders needed for the file, and will
+/// throw an Error exception if something goes wrong. If maxBytesToWrite is zero,
+/// the stream will be read until it reaches eof.
+void replaceFileWithContent (const std::filesystem::path& file,
+                             std::istream& sourceStream,
+                             size_t maxBytesToWrite = 0);
+
+/// Sanitises a string to remove illegal chatacters and leave it suitable for use
+/// as a filename. This is intended only for checking a filename, not a whole path,
+/// so it will remove any slashes in the string.
+std::string makeSafeFilename (std::string_view source, size_t maxLength = 80);
+
+
 //==============================================================================
 /// A self-deleting temp file or folder.
 struct TempFile
@@ -122,7 +136,12 @@ size_t readFileContent (const std::string& filename, GetDestBufferFn&& getBuffer
         stream.open (filename, std::ios::binary | std::ios::ate);
 
         if (! stream.is_open())
+        {
+            if (! exists (std::filesystem::path (filename)))
+                throw Error ("File does not exist: " + filename);
+
             throw Error ("Failed to open file: " + filename);
+        }
 
         auto fileSize = stream.tellg();
 
@@ -163,7 +182,8 @@ inline std::string loadFileAsString (const std::string& filename)
     return result;
 }
 
-inline void replaceFileWithContent (const std::filesystem::path& path, std::string_view newContent)
+template <typename WriteFn>
+void createAndWriteToFile (const std::filesystem::path& path, WriteFn&& write)
 {
     try
     {
@@ -178,15 +198,97 @@ inline void replaceFileWithContent (const std::filesystem::path& path, std::stri
         std::ofstream stream;
         stream.exceptions (std::ofstream::failbit | std::ofstream::badbit);
         stream.open (path.string(), std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
-        stream.write (newContent.data(), static_cast<std::streamsize> (newContent.size()));
-        return;
+        write (stream);
     }
     catch (const std::ios_base::failure& e)
     {
         throw Error ("Failed to write to file: " + path.string() + ": " + e.what());
     }
+    catch (...)
+    {
+        throw Error ("Failed to write to file: " + path.string());
+    }
+}
 
-    throw Error ("Failed to open file: " + path.string());
+inline size_t attemptToRead (std::istream& source, std::istream::char_type* buffer, size_t size)
+{
+    size_t numRead = 0;
+
+    while (size != 0)
+    {
+        try
+        {
+            source.read (buffer, static_cast<std::streamsize> (size));
+        }
+        catch (...) {}
+
+        if (auto numDone = static_cast<size_t> (source.gcount()))
+        {
+            numRead += numDone;
+
+            if (numDone != size)
+            {
+                buffer += numDone;
+                size -= numDone;
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    return numRead;
+}
+
+inline void replaceFileWithContent (const std::filesystem::path& path, std::string_view newContent)
+{
+    createAndWriteToFile (path, [=] (std::ofstream& stream)
+    {
+        stream.write (newContent.data(), static_cast<std::streamsize> (newContent.size()));
+    });
+}
+
+inline void replaceFileWithContent (const std::filesystem::path& path, std::istream& source, size_t maxBytes)
+{
+    createAndWriteToFile (path, [&] (std::ofstream& stream)
+    {
+        std::istream::char_type buffer[8192];
+
+        for (;;)
+        {
+            auto numToRead = maxBytes != 0 ? std::min (maxBytes, sizeof(buffer))
+                                           : sizeof(buffer);
+
+            auto numRead = attemptToRead (source, buffer, numToRead);
+
+            if (numRead == 0)
+                return;
+
+            stream.write (buffer, static_cast<std::streamsize> (numRead));
+        }
+    });
+}
+
+inline std::string makeSafeFilename (std::string_view source, size_t maxLength)
+{
+    std::string name;
+    name.reserve (source.length());
+
+    for (auto c : source)
+        if (std::string_view (",;#@*^|?:<>\"\\/").find (c) == std::string_view::npos)
+            name += c;
+
+    if (name.length() >= maxLength)
+    {
+        auto stem = std::filesystem::path (name).stem().string();
+        auto extension = std::filesystem::path (name).extension().string();
+        return stem.substr (0, maxLength - std::min (maxLength - 2, extension.length())) + extension;
+    }
+
+    if (name.empty())
+        return "_";
+
+    return name;
 }
 
 //==============================================================================

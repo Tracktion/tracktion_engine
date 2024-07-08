@@ -32,7 +32,7 @@ struct DynamicLibrary
 {
     DynamicLibrary() = default;
 
-    /// Attempts to laod a library with the given name or path.
+    /// Attempts to load a library with the given name or path.
     DynamicLibrary (std::string_view library);
 
     DynamicLibrary (const DynamicLibrary&) = delete;

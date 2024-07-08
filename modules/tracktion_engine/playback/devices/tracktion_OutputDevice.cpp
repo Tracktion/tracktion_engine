@@ -68,7 +68,7 @@ juce::String OutputDevice::getDeviceID() const
     auto n = getName();
 
     if (isMidi())
-        n += TRANS("MIDI");
+        n += "MIDI";
     else
         n += engine.getDeviceManager().deviceManager.getCurrentAudioDeviceType();
 

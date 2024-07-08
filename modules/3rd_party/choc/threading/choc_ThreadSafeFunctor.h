@@ -108,7 +108,7 @@ template <typename FunctionType>
 template <typename... Args>
 bool ThreadSafeFunctor<FunctionType>::operator() (Args&&... args) const
 {
-    std::lock_guard<decltype(callback->lock)> l (callback->lock);
+    std::scoped_lock l (callback->lock);
 
     if (callback->fn)
     {
@@ -122,7 +122,7 @@ bool ThreadSafeFunctor<FunctionType>::operator() (Args&&... args) const
 template <typename FunctionType>
 ThreadSafeFunctor<FunctionType>& ThreadSafeFunctor<FunctionType>::operator= (FunctionType&& f)
 {
-    std::lock_guard<decltype(callback->lock)> l (callback->lock);
+    std::scoped_lock l (callback->lock);
     callback->fn = std::move (f);
     return *this;
 }
@@ -130,7 +130,7 @@ ThreadSafeFunctor<FunctionType>& ThreadSafeFunctor<FunctionType>::operator= (Fun
 template <typename FunctionType>
 ThreadSafeFunctor<FunctionType>& ThreadSafeFunctor<FunctionType>::operator= (const FunctionType& f)
 {
-    std::lock_guard<decltype(callback->lock)> l (callback->lock);
+    std::scoped_lock l (callback->lock);
     callback->fn = f;
     return *this;
 }
@@ -138,14 +138,14 @@ ThreadSafeFunctor<FunctionType>& ThreadSafeFunctor<FunctionType>::operator= (con
 template <typename FunctionType>
 ThreadSafeFunctor<FunctionType>::operator bool() const
 {
-    std::lock_guard<decltype(callback->lock)> l (callback->lock);
+    std::scoped_lock l (callback->lock);
     return callback->fn;
 }
 
 template <typename FunctionType>
 void ThreadSafeFunctor<FunctionType>::reset()
 {
-    std::lock_guard<decltype(callback->lock)> l (callback->lock);
+    std::scoped_lock l (callback->lock);
     callback->fn = {};
 }
 

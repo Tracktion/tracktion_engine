@@ -12,4 +12,4 @@ https://en.wikipedia.org/wiki/ISC_license
 
 ----
 
-Note that if you use the `choc::webview::WebView` class on Windows, it embeds some Microsoft redistributable code which has its own (permissive) license that you should be aware of. See inside the file `choc_WebView.h` for more details.
+Note that if you use the `choc::ui::WebView` class on Windows, it embeds some Microsoft redistributable code which has its own (permissive) license that you should be aware of. See inside the file `choc_WebView.h` for more details.

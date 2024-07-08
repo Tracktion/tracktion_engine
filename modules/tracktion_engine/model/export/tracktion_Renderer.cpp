@@ -237,8 +237,8 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 
     for (SampleCount pos = 0; pos < reader->lengthInSamples;)
     {
-        auto numLeft = static_cast<int> (reader->lengthInSamples - pos);
-        auto samps = std::min (tempBuffer.getNumSamples(), std::min (blockSize, numLeft));
+        auto numLeft = reader->lengthInSamples - pos;
+        auto samps = int (std::min (juce::int64 (tempBuffer.getNumSamples()), std::min (juce::int64 (blockSize), numLeft)));
 
         reader->read (&tempBuffer, 0, samps, pos, true, reader->numChannels > 1);
 

@@ -84,7 +84,7 @@ private:
 
 template <typename Item> bool MultipleReaderMultipleWriterFIFO<Item>::pop (Item& result)
 {
-    const std::lock_guard<decltype (readLock)> lock (readLock);
+    const std::scoped_lock lock (readLock);
     return fifo.pop (result);
 }
 

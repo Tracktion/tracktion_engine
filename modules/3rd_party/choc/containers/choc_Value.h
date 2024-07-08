@@ -207,6 +207,7 @@ public:
     bool operator!= (const Type&) const;
 
     //==============================================================================
+    static Type createVoid()            { return Type (MainType::void_); }
     static Type createInt32()           { return Type (MainType::int32); }
     static Type createInt64()           { return Type (MainType::int64); }
     static Type createFloat32()         { return Type (MainType::float32); }
@@ -404,11 +405,7 @@ class StringDictionary
 {
 public:
     StringDictionary() = default;
-    StringDictionary (const StringDictionary&) = default;
-
     virtual ~StringDictionary() = default;
-
-    StringDictionary& operator=(const StringDictionary&) = default;
 
     struct Handle
     {
@@ -436,6 +433,12 @@ public:
 */
 struct SimpleStringDictionary  : public StringDictionary
 {
+    SimpleStringDictionary() = default;
+    SimpleStringDictionary (const SimpleStringDictionary& other) : strings (other.strings) {}
+    SimpleStringDictionary (SimpleStringDictionary&& other)      : strings (std::move (other.strings)) {}
+    SimpleStringDictionary& operator= (const SimpleStringDictionary& other) { strings = other.strings; return *this; }
+    SimpleStringDictionary& operator= (SimpleStringDictionary&& other)      { strings = std::move (other.strings); return *this; }
+
     Handle getHandleForString (std::string_view) override;
     std::string_view getStringForHandle (Handle handle) const override;
 
@@ -590,6 +593,14 @@ public:
     /// The functor must take two parameters of type (string_view name, const ValueView& value).
     template <typename Visitor>
     void visitObjectMembers (Visitor&&) const;
+
+    //==============================================================================
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator== (const ValueView&) const;
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator!= (const ValueView&) const;
 
     //==============================================================================
     /// Gets a pointer to the string dictionary that the view is using, or nullptr
@@ -817,6 +828,15 @@ public:
     /// will return a view onto a range of its elements.
     /// Throws an error exception if the object is not a vector or the range is invalid.
     ValueView getElementRange (uint32_t startIndex, uint32_t length) const      { return value.getElementRange (startIndex, length); }
+
+    //==============================================================================
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator== (const ValueView& other) const                      { return value == other; }
+
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator!= (const ValueView& other) const                      { return value != other; }
 
     //==============================================================================
     /// Iterating a Value is only valid for an array, vector or object.
@@ -1577,6 +1597,21 @@ inline void Type::modifyNumElements (uint32_t newNumElements)
         content.vector.numElements = newNumElements;
     else if (isType (MainType::primitiveArray))
         content.primitiveArray.numElements = newNumElements;
+    else if (isType (MainType::complexArray))
+    {
+        uint32_t previousElements = 0;
+
+        for (auto& group : content.complexArray->groups)
+        {
+            if (previousElements + group.repetitions >= newNumElements)
+            {
+                group.repetitions = newNumElements - previousElements;
+                break;
+            }
+
+            previousElements += group.repetitions;
+        }
+    }
     else
         throwError ("This type is not a uniform array or vector");
 }
@@ -1623,15 +1658,17 @@ inline int Type::getObjectMemberIndex (std::string_view name) const
 template <typename PrimitiveType>
 inline constexpr Type::MainType Type::selectMainType()
 {
-    if constexpr (std::is_same<const PrimitiveType, const int32_t>::value)       return MainType::int32;
-    if constexpr (std::is_same<const PrimitiveType, const int64_t>::value)       return MainType::int64;
-    if constexpr (std::is_same<const PrimitiveType, const float>::value)         return MainType::float32;
-    if constexpr (std::is_same<const PrimitiveType, const double>::value)        return MainType::float64;
-    if constexpr (std::is_same<const PrimitiveType, const bool>::value)          return MainType::boolean;
-    if constexpr (std::is_same<const PrimitiveType, const char* const>::value)   return MainType::string;
-    if constexpr (std::is_same<const PrimitiveType, const std::string>::value)   return MainType::string;
+    Type::MainType result = MainType::void_;
 
-    return MainType::void_;
+    if constexpr (std::is_same<const PrimitiveType, const int32_t>::value)          result = MainType::int32;
+    else if constexpr (std::is_same<const PrimitiveType, const int64_t>::value)     result = MainType::int64;
+    else if constexpr (std::is_same<const PrimitiveType, const float>::value)       result = MainType::float32;
+    else if constexpr (std::is_same<const PrimitiveType, const double>::value)      result = MainType::float64;
+    else if constexpr (std::is_same<const PrimitiveType, const bool>::value)        result = MainType::boolean;
+    else if constexpr (std::is_same<const PrimitiveType, const char* const>::value) result = MainType::string;
+    else if constexpr (std::is_same<const PrimitiveType, const std::string>::value) result = MainType::string;
+
+    return result;
 }
 
 template <typename PrimitiveType>
@@ -2351,6 +2388,15 @@ struct ValueView::Iterator
 inline ValueView::Iterator ValueView::begin() const   { return ValueView::Iterator (*this); }
 
 //==============================================================================
+inline bool ValueView::operator== (const ValueView& other) const
+{
+    return type == other.type
+             && (isVoid() || std::memcmp (getRawData(), other.getRawData(), type.getValueDataSize()) == 0);
+}
+
+inline bool ValueView::operator!= (const ValueView& other) const { return ! operator== (other); }
+
+//==============================================================================
 inline Value SerialisedData::deserialise() const        { auto i = getInputData(); return Value::deserialise (i); }
 inline InputData SerialisedData::getInputData() const   { return { data.data(), data.data() + data.size() }; }
 
@@ -2476,10 +2522,10 @@ inline void ValueView::updateStringHandles (StringDictionary& oldDic, StringDict
 {
     if (type.isType (Type::MainType::string, Type::MainType::object, Type::MainType::primitiveArray, Type::MainType::complexArray))
     {
-        type.visitStringHandles (0, [&oldDic, &newDic, data = this->data] (size_t offset)
+        type.visitStringHandles (0, [&oldDic, &newDic, d = this->data] (size_t offset)
         {
-            auto oldHandle = StringDictionary::Handle { readUnaligned<decltype(StringDictionary::Handle::handle)> (data + offset) };
-            writeUnaligned (data + offset, newDic.getHandleForString (oldDic.getStringForHandle (oldHandle)).handle);
+            auto oldHandle = StringDictionary::Handle { readUnaligned<decltype(StringDictionary::Handle::handle)> (d + offset) };
+            writeUnaligned (d + offset, newDic.getHandleForString (oldDic.getStringForHandle (oldHandle)).handle);
         });
     }
 }

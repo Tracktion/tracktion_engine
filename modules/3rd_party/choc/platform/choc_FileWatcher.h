@@ -149,8 +149,10 @@ struct choc::file::Watcher::Pimpl
             FSEventStreamRelease (eventStream);
         }
 
+       #if ! __has_feature(objc_arc)
         if (dispatchQueue)
             dispatch_release (dispatchQueue);
+       #endif
     }
 
     void handleEvents (size_t numEvents, CFArrayRef eventPaths, const FSEventStreamEventFlags* eventFlags)

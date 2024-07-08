@@ -158,7 +158,7 @@ void writeWithEscapeCharacters (OutputStreamType& out, text::UTF8Pointer source)
 
 inline std::string addEscapeCharacters (text::UTF8Pointer source)
 {
-    std::ostringstream result;
+    std::ostringstream result (std::ios::binary);
     writeWithEscapeCharacters (result, source);
     return result.str();
 }
@@ -170,7 +170,7 @@ inline std::string addEscapeCharacters (std::string_view source)
 
 inline std::string getEscapedQuotedString (std::string_view s)
 {
-    std::ostringstream result;
+    std::ostringstream result (std::ios::binary);
     result << '"';
     writeWithEscapeCharacters (result, text::UTF8Pointer (std::string (s).c_str()));
     result << '"';
@@ -285,7 +285,7 @@ void writeAsJSON (Stream& output, const value::ValueView& value, bool useMultipl
 
 inline std::string toString (const value::ValueView& v, bool useLineBreaks)
 {
-    std::ostringstream out;
+    std::ostringstream out (std::ios::binary);
     writeAsJSON (out, v, useLineBreaks);
     return out.str();
 }
@@ -456,7 +456,7 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
         std::string parseString()
         {
-            std::ostringstream s;
+            std::ostringstream s (std::ios::binary);
 
             for (;;)
             {
