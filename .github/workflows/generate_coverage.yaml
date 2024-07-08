@@ -22,6 +22,7 @@ jobs:
       - name: Generate coverage report
         run: |
           sudo apt-get install lcov
+          lcov --version
           tests/coverage/generate_coverage_report
 
       - name: Upload coverage to Codecov
