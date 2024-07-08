@@ -125,6 +125,7 @@ public:
 
         std::vector<SceneInfo> scenes;
 
+        using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
     };
 
