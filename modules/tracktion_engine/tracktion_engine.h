@@ -201,6 +201,13 @@
  #define TRACKTION_ENABLE_ABLETON_LINK 0
 #endif
 
+/** Config: TRACKTION_ENABLE_FFMPEG
+	Uses FFmpeg for mp3 encoding rather than Lame
+*/
+#ifndef TRACKTION_ENABLE_FFMPEG
+ #define TRACKTION_ENABLE_FFMPEG 0
+#endif
+
 /** Config: TRACKTION_UNIT_TESTS
     Enables Tracktion unit tests.
     If enabled, these will be added the UnitTestRunners under the "Tracktion" category.
@@ -545,6 +552,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioFileUtils.h"
 #include "audio_files/tracktion_AudioFifo.h"
 #include "audio_files/tracktion_RecordingThumbnailManager.h"
+#include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.h"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.h"
 #include "audio_files/formats/tracktion_MemoryMappedFileReader.h"
 #include "audio_files/formats/tracktion_LAMEManager.h"
