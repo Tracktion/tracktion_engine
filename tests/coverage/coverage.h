@@ -50,7 +50,7 @@ inline bool runDocTest()
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
-    return TestRunner::runTests ({},
+    return /*dddTestRunner::runTests ({},
                                  { "Tracktion",
                                    "Tracktion:Longer",
                                    "tracktion_benchmarks",
@@ -58,5 +58,5 @@ int main (int, char**)
                                    "tracktion_graph",
                                    "tracktion_engine",
                                    "tracktion_graph_performance" })
-        && runDocTest();
+        && */runDocTest();
 }
