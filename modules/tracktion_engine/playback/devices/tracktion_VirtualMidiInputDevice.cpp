@@ -75,14 +75,14 @@ void VirtualMidiInputDevice::setMIDIInputSourceDevices (const juce::StringArray 
     }
 }
 
-void VirtualMidiInputDevice::toggleMIDIInputSourceDevice (const juce::String& deviceID)
+void VirtualMidiInputDevice::toggleMIDIInputSourceDevice (const juce::String& deviceIDToToggle)
 {
     auto devices = inputDeviceIDs;
 
-    if (devices.contains (deviceID))
-        devices.removeString (deviceID);
+    if (devices.contains (deviceIDToToggle))
+        devices.removeString (deviceIDToToggle);
     else
-        devices.add (deviceID);
+        devices.add (deviceIDToToggle);
 
     setMIDIInputSourceDevices (devices);
 }
