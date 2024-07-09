@@ -56,7 +56,7 @@ static juce::String readOutputFromSystem (juce::String cmd)
    #else
     cmd << " > " << tmpFile.getFile().getFullPathName().quoted();
     auto result = std::system (cmd.toRawUTF8());
-    ignoreUnused (result);
+    juce::ignoreUnused (result);
    #endif
 
     auto contents = tmpFile.getFile().loadFileAsString();
