@@ -20,6 +20,7 @@ jobs:
           # Main maxtix
           - name: linux
             os: ubuntu-latest
+            generator: "-DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIG }}"
           - name: macOS
             os: macos-latest
             generator: "-G Xcode"
