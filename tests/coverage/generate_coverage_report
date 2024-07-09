@@ -54,4 +54,4 @@ rm -rf ${HTML_DIR}
 # N.B. For some reason, harfbuzz in J8 seems to mess with the build and lcov seems to expect a bunch of "hb-" files in the build dir which don't exist, explicitly removing this seems to fix things
 lcov --capture --directory "${CMAKE_BUILD_DIR}/" --exclude "tests/coverage/*"  --exclude "examples/common/*" --exclude "tests/coverage/coverage.h" --exclude "*juce_*" --exclude "*3rd_Party*" --exclude "*3rd_party*" --exclude "modules/3rd_party/*" --exclude "/Applications*" --exclude "/usr*" --exclude "*examples*" --output-file "$COVERAGE_FILE_TMP"
 lcov --remove "$COVERAGE_FILE_TMP" 'tests/coverage/*' 'examples/common/*' 'tests/coverage/coverage.h' '*juce_*' '*3rd_Party*' '*3rd_party*' 'modules/3rd_party/*' '/Applications*' '/usr*' '*examples*' '*hb-*'  'NONE' --output-file "${COVERAGE_FILE}"
-genhtml --demangle-cpp "$COVERAGE_FILE" --output-directory ${HTML_DIR}
+# genhtml --demangle-cpp "$COVERAGE_FILE" --output-directory ${HTML_DIR}
