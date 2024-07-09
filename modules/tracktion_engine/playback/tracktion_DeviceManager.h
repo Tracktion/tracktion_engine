@@ -107,6 +107,7 @@ public:
     OutputDevice* getOutputDeviceAt (int index) const;
 
     InputDevice* findInputDeviceForID (const juce::String& id) const;
+    InputDevice* findInputDeviceWithName (const juce::String& name) const;
     std::shared_ptr<MidiInputDevice> findMidiInputDeviceForID (const juce::String& id) const;
 
     OutputDevice* findOutputDeviceForID (const juce::String& id) const;

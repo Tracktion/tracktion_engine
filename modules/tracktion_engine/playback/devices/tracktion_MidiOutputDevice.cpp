@@ -412,7 +412,7 @@ juce::String MidiOutputDevice::openDevice()
         if (outputDevice == nullptr)
         {
             CRASH_TRACER
-            TRACKTION_LOG ("opening MIDI out device:" + getName());
+            TRACKTION_LOG ("opening MIDI out device: " + getDeviceID() + " (" + getName() + ")");
 
             if (softDevice)
             {

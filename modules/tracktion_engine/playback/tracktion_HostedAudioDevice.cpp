@@ -156,7 +156,7 @@ class HostedMidiInputDevice : public MidiInputDevice
 {
 public:
     HostedMidiInputDevice (HostedAudioDeviceInterface& aif)
-        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), TRANS("MIDI Input")), audioIf (aif)
+        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), TRANS("MIDI Input"), "MIDI Input"), audioIf (aif)
     {
     }
 

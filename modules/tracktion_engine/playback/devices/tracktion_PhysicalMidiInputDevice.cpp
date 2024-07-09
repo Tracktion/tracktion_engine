@@ -292,7 +292,7 @@ private:
 
 //==============================================================================
 PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, juce::MidiDeviceInfo info)
-   : MidiInputDevice (e, TRANS("MIDI Input"), info.name),
+   : MidiInputDevice (e, TRANS("MIDI Input"), info.name, info.identifier),
      deviceInfo (std::move (info))
 {
     enabled = true;
@@ -326,7 +326,7 @@ juce::String PhysicalMidiInputDevice::openDevice()
 
         if (inputDevice != nullptr)
         {
-            TRACKTION_LOG ("opening MIDI in device: " + getName());
+            TRACKTION_LOG ("opening MIDI in device: " + getDeviceID() + " (" + getName() + ")");
             inputDevice->start();
         }
     }
