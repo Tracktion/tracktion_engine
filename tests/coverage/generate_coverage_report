@@ -37,8 +37,10 @@ HTML_DIR="${CMAKE_BUILD_DIR}/coverage_html"
 
 #==============================================================================
 # Generate project and build it
-export CXX=clang++
-export CC=clang
+# export CXX=clang++
+# export CC=clang
+export CC=/usr/bin/gcc-12
+export CXX=/usr/bin/g++-12
 c++ --version
 cmake ${GENERATOR} -B "$CMAKE_BUILD_DIR" -DCMAKE_BUILD_TYPE=${CONFIG}
 cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config ${CONFIG} --parallel
