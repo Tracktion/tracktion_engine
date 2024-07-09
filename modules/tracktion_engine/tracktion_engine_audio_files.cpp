@@ -27,6 +27,12 @@ extern "C"
 
 #include "tracktion_engine.h"
 
+#ifdef  _WIN32
+ #define NOGDI
+ #define NOMINMAX
+ #include <Windows.h>
+#endif
+
 #include <string>
 #include <bitset>
 

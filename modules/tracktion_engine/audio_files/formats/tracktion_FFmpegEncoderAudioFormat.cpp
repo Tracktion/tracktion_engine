@@ -14,6 +14,55 @@ namespace tracktion { inline namespace engine
 
 #if TRACKTION_ENABLE_FFMPEG
 
+static juce::String readOutputFromSystem (juce::String cmd)
+{
+    juce::TemporaryFile tmpFile;
+    juce::TemporaryFile batFile (".bat");
+    
+   #if JUCE_WINDOWS
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory (&si, sizeof (si));
+    si.cb = sizeof (si);
+    ZeroMemory (&pi, sizeof (pi));
+
+    cmd = cmd + " > " + tmpFile.getFile().getFullPathName().quoted();
+
+    if (cmd.length() > 32768)
+    {
+        jassertfalse;
+        return {};
+    }
+
+    batFile.getFile ().replaceWithText (cmd);
+
+    juce::String params = "/c " + batFile.getFile().getFullPathName().quoted();
+
+    juce::HeapBlock<char> commandLine (params.getNumBytesAsUTF8() + 1);
+    strcpy (commandLine.get(), params.toRawUTF8());
+
+    juce::File cmdExe = juce::File::getSpecialLocation (juce::File::windowsSystemDirectory).getChildFile ("cmd.exe");
+    jassert (cmdExe.existsAsFile());
+
+    if (! CreateProcessA (cmdExe.getFullPathName().toRawUTF8(), commandLine.get(), nullptr, nullptr, 
+                          false, CREATE_NO_WINDOW, nullptr, nullptr, &si, &pi))
+        return {};
+    
+    WaitForSingleObject (pi.hProcess, INFINITE);
+
+    CloseHandle (pi.hProcess);
+    CloseHandle (pi.hThread);
+   #else
+    cmd << " > " << tmpFile.getFile().getFullPathName().quoted();
+    auto result = std::system (cmd.toRawUTF8());
+    ignoreUnused (result);
+   #endif
+
+    auto contents = tmpFile.getFile().loadFileAsString();
+    return contents;
+}
+
 class FFmpegEncoderAudioFormat::Writer : public juce::AudioFormatWriter
 {
 public:
@@ -54,16 +103,12 @@ private:
     {
         juce::ChildProcess cp;
 
-        if (cp.start (processArgs))
-        {
-            [[maybe_unused]] auto childOutput = cp.readAllProcessOutput();
-            DBG (childOutput);
-            
-            cp.waitForProcessToFinish (10000);
-            return tempMP3.getFile().getSize() > 0;
-        }
+        DBG(processArgs.joinIntoString (" "));
+
+        [[maybe_unused]] auto output = readOutputFromSystem (processArgs.joinIntoString (" "));
+        DBG(output);
         
-        return false;
+        return tempMP3.getFile().getSize() > 0;
     }
     
     bool convertToMP3() const
