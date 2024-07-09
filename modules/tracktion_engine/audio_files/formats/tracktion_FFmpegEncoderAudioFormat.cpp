@@ -117,9 +117,9 @@ private:
 
         juce::StringArray args;
 
-        args.add (ffmpeg.getFullPathName());
+        args.add (ffmpeg.getFullPathName().quoted());
         args.add ("-i");
-        args.add (tempWav.getFile().getFullPathName());
+        args.add (tempWav.getFile().getFullPathName().quoted());
         args.add ("-codec:a");
         args.add ("libmp3lame");
 
@@ -142,7 +142,7 @@ private:
         addMetadataArg (args, "id3genre",       "genre");
         addMetadataArg (args, "id3trackNumber", "track");
 
-        args.add (tempMP3.getFile().getFullPathName());
+        args.add (tempMP3.getFile().getFullPathName().quoted());
 
         if (runFFmpegChildProcess (tempMP3, args))
         {
