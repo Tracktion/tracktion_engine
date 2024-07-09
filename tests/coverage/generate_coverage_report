@@ -19,7 +19,7 @@ cd "$DIR"
 
 #==============================================================================
 PROJECT_NAME=coverage
-CONFIG=Debug
+CONFIG=RelWithDebInfo
 
 if [ "$PLATFORM" == "mac" ]; then
     CMAKE_BUILD_DIR=build_mac
@@ -38,6 +38,7 @@ HTML_DIR="${CMAKE_BUILD_DIR}/coverage_html"
 #==============================================================================
 # Generate project and build it
 export CXX=clang++
+export CC=clang
 c++ --version
 cmake ${GENERATOR} -B "$CMAKE_BUILD_DIR" -DCMAKE_BUILD_TYPE=${CONFIG}
 cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config ${CONFIG} --parallel
