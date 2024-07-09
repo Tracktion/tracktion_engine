@@ -401,6 +401,14 @@ struct DeviceManager::MIDIDeviceList
             }
         }
 
+        auto comparator = [] (const juce::MidiDeviceInfo& a, const juce::MidiDeviceInfo& b)
+        {
+            return a.identifier < b.identifier;
+        };
+
+        std::sort (midiIns.begin(), midiIns.end(), comparator);
+        std::sort (midiOuts.begin(), midiOuts.end(), comparator);
+
         static bool hasReported = false;
 
         if (! hasReported || total.getSeconds() > 0.1)

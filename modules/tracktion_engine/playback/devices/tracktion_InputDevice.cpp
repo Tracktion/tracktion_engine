@@ -12,8 +12,10 @@
 namespace tracktion { inline namespace engine
 {
 
-InputDevice::InputDevice (Engine& e, juce::String t, juce::String n, juce::String i)
-   : engine (e), type (t), deviceID (i), name (n)
+InputDevice::InputDevice (Engine& e, juce::String t, juce::String n, juce::String idToUse)
+   : engine (e), type (t),
+     deviceID ("in_" + juce::String::toHexString ((t + idToUse).hashCode())),
+     name (n)
 {
     alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
 }

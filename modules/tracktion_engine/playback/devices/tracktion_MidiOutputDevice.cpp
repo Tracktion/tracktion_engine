@@ -263,7 +263,7 @@ private:
 
 //==============================================================================
 MidiOutputDevice::MidiOutputDevice (Engine& e, juce::MidiDeviceInfo info)
-    : OutputDevice (e, TRANS("MIDI Output"), info.name),
+    : OutputDevice (e, NEEDS_TRANS("MIDI Output"), info.name, info.identifier),
       deviceInfo (std::move (info))
 {
     enabled = true;

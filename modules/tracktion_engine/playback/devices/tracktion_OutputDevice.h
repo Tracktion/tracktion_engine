@@ -18,7 +18,7 @@ namespace tracktion { inline namespace engine
 class OutputDevice   : public Selectable
 {
 public:
-    OutputDevice (Engine&, const juce::String& type, const juce::String& name);
+    OutputDevice (Engine&, juce::String type, juce::String name, juce::String deviceID);
     ~OutputDevice() override;
 
     //==============================================================================
@@ -28,7 +28,7 @@ public:
     juce::String getAlias() const;
     void setAlias (const juce::String& alias);
 
-    juce::String getDeviceID() const;
+    juce::String getDeviceID() const                    { return deviceID; }
     juce::String getSelectableDescription() override;
 
     //==============================================================================
@@ -47,7 +47,8 @@ protected:
     virtual void closeDevice() = 0;
 
 private:
-    juce::String type, name, alias;
+    const juce::String type, deviceID, name;
+    juce::String alias;
 
     juce::String getAliasPropName() const;
 };

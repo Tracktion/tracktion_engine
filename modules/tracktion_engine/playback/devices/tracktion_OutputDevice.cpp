@@ -12,8 +12,10 @@
 namespace tracktion { inline namespace engine
 {
 
-OutputDevice::OutputDevice (Engine& e, const juce::String& t, const juce::String& n)
-   : engine (e), type (t), name (n)
+OutputDevice::OutputDevice (Engine& e, juce::String t, juce::String n, juce::String idToUse)
+   : engine (e), type (t),
+     deviceID ("out_" + juce::String::toHexString ((t + idToUse).hashCode())),
+     name (n)
 {
     alias = engine.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
 }
@@ -60,19 +62,7 @@ void OutputDevice::setAlias (const juce::String& a)
 
 juce::String OutputDevice::getSelectableDescription()
 {
-    return name + " (" + type + ")";
-}
-
-juce::String OutputDevice::getDeviceID() const
-{
-    auto n = getName();
-
-    if (isMidi())
-        n += "MIDI";
-    else
-        n += engine.getDeviceManager().deviceManager.getCurrentAudioDeviceType();
-
-    return juce::String::toHexString (n.hashCode());
+    return name + " (" + TRANS(type) + ")";
 }
 
 bool OutputDevice::isEnabled() const
