@@ -85,6 +85,11 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}../../tracktion_engine/tracktion_engine/modules/juce/modules/juce_graphics/juce_graphics_Harfbuzz.cpp"
+        PROPERTIES
+        COMPILE_FLAGS "-Wno-overflow -Wno-implicit-fallthrough")
+
     target_compile_options(${TARGET_NAME} PRIVATE "-Wimplicit-fallthrough")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
