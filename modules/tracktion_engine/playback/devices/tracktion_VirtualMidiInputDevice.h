@@ -15,7 +15,7 @@ namespace tracktion { inline namespace engine
 class VirtualMidiInputDevice  : public MidiInputDevice
 {
 public:
-    VirtualMidiInputDevice (Engine&, juce::String name, DeviceType, juce::String deviceID);
+    VirtualMidiInputDevice (Engine&, juce::String name, DeviceType, juce::String deviceID, bool isAllMIDIIns);
     ~VirtualMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
@@ -37,8 +37,6 @@ public:
     DeviceType getDeviceType() const override      { return deviceType; }
 
     bool useAllInputs = false;
-
-    static constexpr const char* allMidiInsName = "All MIDI Ins";
 
 private:
     juce::String openDevice() override;

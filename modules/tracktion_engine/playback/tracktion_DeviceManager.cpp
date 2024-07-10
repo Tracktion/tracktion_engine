@@ -299,13 +299,16 @@ void DeviceManager::timerCallback()
     applyNewMidiDeviceList();
 }
 
+static constexpr const char* allMidiInsName = "All MIDI Ins";
+static constexpr const char* allMidiInsID = "all_midi_in";
+
 static juce::StringArray getVirtualDeviceIDs (Engine& engine)
 {
     juce::StringArray virtualDeviceIDs;
     virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDeviceIDs.removeEmptyStrings();
-    virtualDeviceIDs.removeString (VirtualMidiInputDevice::allMidiInsName);
-    virtualDeviceIDs.insert (0, VirtualMidiInputDevice::allMidiInsName);
+    virtualDeviceIDs.removeString (allMidiInsID);
+    virtualDeviceIDs.insert (0, allMidiInsID);
     return virtualDeviceIDs;
 }
 
@@ -366,9 +369,10 @@ struct DeviceManager::MIDIDeviceList
 
         for (auto& v : getVirtualDeviceIDs (sourceEngine))
         {
-            auto deviceID = v == VirtualMidiInputDevice::allMidiInsName ? "all_midi_in"
-                                                                        : "vmidiin_" + juce::String::toHexString (v.hashCode());
-            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice, deviceID);
+            bool isAllMidiIn = (v == allMidiInsID);
+            auto deviceName = isAllMidiIn ? juce::String (allMidiInsName) : v;
+            auto deviceID   = isAllMidiIn ? juce::String (allMidiInsID) : ("vmidiin_" + juce::String::toHexString (v.hashCode()));
+            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, deviceName, InputDevice::virtualMidiDevice, deviceID, isAllMidiIn);
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
         }
@@ -1004,7 +1008,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
     if (getDefaultMidiInDevice() == nullptr || ! getDefaultMidiInDevice()->isEnabled())
     {
-        if (auto allMidi = findInputDeviceForID (VirtualMidiInputDevice::allMidiInsName);
+        if (auto allMidi = findInputDeviceForID (allMidiInsID);
             allMidi != nullptr && allMidi->isEnabled())
         {
             setDefaultMidiInDevice (allMidi->getDeviceID());

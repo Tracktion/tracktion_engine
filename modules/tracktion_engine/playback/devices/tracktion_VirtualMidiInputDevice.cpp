@@ -25,17 +25,16 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 };
 
 //==============================================================================
-VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, juce::String deviceName, DeviceType devType, juce::String deviceIDToUse)
+VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, juce::String deviceName, DeviceType devType,
+                                                juce::String deviceIDToUse, bool isAllMIDIIns)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
                                                      : TRANS("Virtual MIDI Input"),
                        deviceName, deviceIDToUse),
+      useAllInputs (isAllMIDIIns),
       deviceType (devType)
 {
-    if (deviceName == allMidiInsName)
-    {
-        useAllInputs = true;
+    if (isAllMIDIIns)
         defaultMonitorMode = MonitorMode::on;
-    }
 
     loadProps();
 }
