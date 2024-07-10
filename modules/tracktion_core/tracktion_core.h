@@ -53,6 +53,7 @@
 #include "utilities/tracktion_AlgorithmAdapters.h"
 #include "utilities/tracktion_CPU.h"
 #include "utilities/tracktion_Hash.h"
+#include "utilities/tracktion_Maths.h"
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"
