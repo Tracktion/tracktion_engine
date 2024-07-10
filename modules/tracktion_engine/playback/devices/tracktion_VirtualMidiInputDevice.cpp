@@ -28,7 +28,8 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, juce::String deviceName, DeviceType devType, juce::String deviceIDToUse)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
                                                      : TRANS("Virtual MIDI Input"),
-                       deviceName, deviceIDToUse),
+                       deviceName,
+                       (deviceName == allMidiInsName ? deviceName : deviceIDToUse)),
       deviceType (devType)
 {
     if (deviceName == allMidiInsName)
