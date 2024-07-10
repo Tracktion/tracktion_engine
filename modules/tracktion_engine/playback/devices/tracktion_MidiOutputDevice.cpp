@@ -263,7 +263,7 @@ private:
 
 //==============================================================================
 MidiOutputDevice::MidiOutputDevice (Engine& e, juce::MidiDeviceInfo info)
-    : OutputDevice (e, TRANS("MIDI Output"), info.name),
+    : OutputDevice (e, NEEDS_TRANS("MIDI Output"), info.name, info.identifier),
       deviceInfo (std::move (info))
 {
     enabled = true;
@@ -412,7 +412,7 @@ juce::String MidiOutputDevice::openDevice()
         if (outputDevice == nullptr)
         {
             CRASH_TRACER
-            TRACKTION_LOG ("opening MIDI out device:" + getName());
+            TRACKTION_LOG ("opening MIDI out device: " + getDeviceID() + " (" + getName() + ")");
 
             if (softDevice)
             {

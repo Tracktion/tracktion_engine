@@ -25,16 +25,16 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 };
 
 //==============================================================================
-VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const juce::String& deviceName, DeviceType devType)
+VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, juce::String deviceName, DeviceType devType,
+                                                juce::String deviceIDToUse, bool isAllMIDIIns)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
-                                                     : TRANS("Virtual MIDI Input"), deviceName),
+                                                     : TRANS("Virtual MIDI Input"),
+                       deviceName, deviceIDToUse),
+      useAllInputs (isAllMIDIIns),
       deviceType (devType)
 {
-    if (deviceName == allMidiInsName)
-    {
-        useAllInputs = true;
+    if (isAllMIDIIns)
         defaultMonitorMode = MonitorMode::on;
-    }
 
     loadProps();
 }
@@ -74,14 +74,14 @@ void VirtualMidiInputDevice::setMIDIInputSourceDevices (const juce::StringArray 
     }
 }
 
-void VirtualMidiInputDevice::toggleMIDIInputSourceDevice (const juce::String& deviceID)
+void VirtualMidiInputDevice::toggleMIDIInputSourceDevice (const juce::String& deviceIDToToggle)
 {
     auto devices = inputDeviceIDs;
 
-    if (devices.contains (deviceID))
-        devices.removeString (deviceID);
+    if (devices.contains (deviceIDToToggle))
+        devices.removeString (deviceIDToToggle);
     else
-        devices.add (deviceID);
+        devices.add (deviceIDToToggle);
 
     setMIDIInputSourceDevices (devices);
 }

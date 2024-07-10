@@ -275,7 +275,7 @@ private:
         {
             auto props = node->getNodeProperties();
             const int nodeLatency = props.latencyNumSamples;
-            const int latencyToAdd = maxLatency - nodeLatency;
+            const int latencyToAdd = subtractNoWrap (maxLatency, nodeLatency);
 
             if (latencyToAdd <= 0)
                 continue;

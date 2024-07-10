@@ -12,8 +12,8 @@
 namespace tracktion { inline namespace engine
 {
 
-InputDevice::InputDevice (Engine& e, const juce::String& t, const juce::String& n)
-   : engine (e), type (t), name (n)
+InputDevice::InputDevice (Engine& e, juce::String t, juce::String n, juce::String idToUse)
+   : engine (e), type (t), deviceID (std::move (idToUse)), name (n)
 {
     alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
 }

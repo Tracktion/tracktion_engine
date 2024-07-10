@@ -299,13 +299,16 @@ void DeviceManager::timerCallback()
     applyNewMidiDeviceList();
 }
 
+static constexpr const char* allMidiInsName = "All MIDI Ins";
+static constexpr const char* allMidiInsID = "all_midi_in";
+
 static juce::StringArray getVirtualDeviceIDs (Engine& engine)
 {
     juce::StringArray virtualDeviceIDs;
     virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDeviceIDs.removeEmptyStrings();
-    virtualDeviceIDs.removeString (VirtualMidiInputDevice::allMidiInsName);
-    virtualDeviceIDs.insert (0, VirtualMidiInputDevice::allMidiInsName);
+    virtualDeviceIDs.removeString (allMidiInsID);
+    virtualDeviceIDs.insert (0, allMidiInsID);
     return virtualDeviceIDs;
 }
 
@@ -366,7 +369,10 @@ struct DeviceManager::MIDIDeviceList
 
         for (auto& v : getVirtualDeviceIDs (sourceEngine))
         {
-            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice);
+            bool isAllMidiIn = (v == allMidiInsID);
+            auto deviceName = isAllMidiIn ? juce::String (allMidiInsName) : v;
+            auto deviceID   = isAllMidiIn ? juce::String (allMidiInsID) : ("vmidiin_" + juce::String::toHexString (v.hashCode()));
+            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, deviceName, InputDevice::virtualMidiDevice, deviceID, isAllMidiIn);
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
         }
@@ -400,6 +406,14 @@ struct DeviceManager::MIDIDeviceList
                 e.getDeviceManager().setMidiDeviceScanIntervalSeconds (0);
             }
         }
+
+        auto comparator = [] (const juce::MidiDeviceInfo& a, const juce::MidiDeviceInfo& b)
+        {
+            return a.identifier < b.identifier;
+        };
+
+        std::sort (midiIns.begin(), midiIns.end(), comparator);
+        std::sort (midiOuts.begin(), midiOuts.end(), comparator);
 
         static bool hasReported = false;
 
@@ -547,6 +561,12 @@ void DeviceManager::applyNewMidiDeviceList()
 
     TRACKTION_LOG ("Updating MIDI I/O devices");
 
+    for (auto mi : newMidiIns)
+        TRACKTION_LOG_DEVICE ("Found MIDI in: " + mi->getDeviceID() + " (\"" + mi->getName() + "\")" + (mi->isEnabled() ? " (enabled)" : ""));
+
+    for (auto mo : newMidiOuts)
+        TRACKTION_LOG_DEVICE ("Found MIDI out: " + mo->getDeviceID() + " (\"" + mo->getName() + "\")" + (mo->isEnabled() ? " (enabled)" : ""));
+
     for (auto& d : newMidiOuts)
     {
         if (d->isEnabled())
@@ -590,8 +610,6 @@ void DeviceManager::applyNewMidiDeviceList()
 
     for (auto mo : midiOutputs)
     {
-        TRACKTION_LOG_DEVICE ("MIDI output: " + mo->getName() + (mo->isEnabled() ? " (enabled)" : ""));
-
         if (mo->isEnabled())
             ++enabledMidiOuts;
         else
@@ -602,12 +620,8 @@ void DeviceManager::applyNewMidiDeviceList()
         const std::shared_lock sl (midiInputsMutex);
 
         for (auto mi : midiInputs)
-        {
-            TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
-
             if (! mi->isEnabled())
                 mi->closeDevice();
-        }
     }
 
     const bool hasEnabledMidiDefaultDevs = storage.getProperty (SettingID::hasEnabledMidiDefaultDevs, false);
@@ -994,7 +1008,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
     if (getDefaultMidiInDevice() == nullptr || ! getDefaultMidiInDevice()->isEnabled())
     {
-        if (auto allMidi = findInputDeviceForID (VirtualMidiInputDevice::allMidiInsName);
+        if (auto allMidi = findInputDeviceForID (allMidiInsID);
             allMidi != nullptr && allMidi->isEnabled())
         {
             setDefaultMidiInDevice (allMidi->getDeviceID());
@@ -1260,6 +1274,21 @@ InputDevice* DeviceManager::findInputDeviceForID (const juce::String& id) const
 
     for (auto d : midiInputs)
         if (d->getDeviceID() == id)
+            return d.get();
+
+    return {};
+}
+
+InputDevice* DeviceManager::findInputDeviceWithName (const juce::String& name) const
+{
+    for (auto d : waveInputs)
+        if (d->getName() == name)
+            return d;
+
+    const std::shared_lock sl (midiInputsMutex);
+
+    for (auto d : midiInputs)
+        if (d->getName() == name)
             return d.get();
 
     return {};

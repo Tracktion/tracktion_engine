@@ -27,6 +27,12 @@ extern "C"
 
 #include "tracktion_engine.h"
 
+#ifdef  _WIN32
+ #define NOGDI
+ #define NOMINMAX
+ #include <Windows.h>
+#endif
+
 #include <string>
 #include <bitset>
 
@@ -35,6 +41,7 @@ extern "C"
  #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
 
+#include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.cpp"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.cpp"
 #include "audio_files/formats/tracktion_RexFileFormat.cpp"
 #include "audio_files/formats/tracktion_LAMEManager.cpp"

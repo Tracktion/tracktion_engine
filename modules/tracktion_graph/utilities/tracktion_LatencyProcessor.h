@@ -43,6 +43,7 @@ struct LatencyProcessor
 
     void setLatencyNumSamples (int numLatencySamples)
     {
+        assert (numLatencySamples < (196'000 * 60) && "Invalid latency size");
         latencyNumSamples = numLatencySamples;
     }
 

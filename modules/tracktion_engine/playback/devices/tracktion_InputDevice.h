@@ -33,14 +33,14 @@ public:
     };
 
     //==============================================================================
-    InputDevice (Engine&, const juce::String& type, const juce::String& name);
+    InputDevice (Engine&, juce::String type, juce::String name, juce::String deviceID);
     ~InputDevice() override;
 
     //==============================================================================
     const juce::String& getName() const         { return name; }
     const juce::String& getType() const         { return type; }
 
-    juce::String getDeviceID() const            { return getName(); }
+    juce::String getDeviceID() const            { return deviceID; }
 
     virtual DeviceType getDeviceType() const = 0;
     bool isTrackDevice() const;
@@ -73,7 +73,7 @@ public:
     /** This is a bit of a hack but allows the time for MIDI devices to be set through the base class interface. */
     virtual void masterTimeUpdate (double time) = 0;
 
-    static void setRetrospectiveLock (Engine& engine, const juce::Array<InputDeviceInstance*>& devices, bool lock);
+    static void setRetrospectiveLock (Engine&, const juce::Array<InputDeviceInstance*>&, bool lock);
     virtual void updateRetrospectiveBufferLength (double length) = 0;
 
     //==============================================================================
@@ -91,7 +91,8 @@ protected:
     bool retrospectiveRecordLock = false;
 
 private:
-    juce::String type, name, alias;
+    const juce::String type, deviceID, name;
+    juce::String alias;
 
     juce::String getAliasPropName() const;
 };

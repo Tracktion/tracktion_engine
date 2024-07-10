@@ -121,7 +121,9 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
                                                              desc, InputDevice::trackWaveDevice);
 
         midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemID.toString(),
-                                                                    InputDevice::trackMidiDevice);
+                                                                    InputDevice::trackMidiDevice,
+                                                                    "TrkMIDI_" + itemID.toString(),
+                                                                    false);
 
         auto& eid = edit.getEditInputDevices();
         waveInputDevice->setEnabled (eid.isInputDeviceAssigned (*waveInputDevice));
