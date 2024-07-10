@@ -86,7 +86,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set_source_files_properties(
-        "${CMAKE_CURRENT_SOURCE_DIR}../../tracktion_engine/tracktion_engine/modules/juce/modules/juce_graphics/juce_graphics_Harfbuzz.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}../../modules/juce/modules/juce_graphics/juce_graphics_Harfbuzz.cpp"
         PROPERTIES
         COMPILE_FLAGS "-Wno-overflow -Wno-implicit-fallthrough")
 
