@@ -31,7 +31,7 @@ int EditInputDevices::getMaxNumInputs() const
     return 4;
 }
 
-static bool isForDevice (const juce::ValueTree& v, const InputDevice& d)
+static bool isForDevice (const juce::ValueTree& v, const InputDevice& d, bool fallbackToNameCheck)
 {
     auto typeProp = v.getPropertyPointer (IDs::type);
 
@@ -41,7 +41,23 @@ static bool isForDevice (const juce::ValueTree& v, const InputDevice& d)
     if (d.getDeviceType() == InputDevice::DeviceType::trackMidiDevice)
         return typeProp != nullptr && *typeProp == "MIDI" && v[IDs::sourceTrack] == d.getName();
 
-    return v[IDs::name] == d.getName();
+    if (v[IDs::deviceID] == d.getDeviceID())
+        return true;
+
+    return fallbackToNameCheck && v[IDs::name] == d.getName();
+}
+
+static juce::ValueTree findDeviceState (const juce::ValueTree& parent, const InputDevice& d)
+{
+    for (const auto& v : parent)
+        if (isForDevice (v, d, false))
+            return v;
+
+    for (const auto& v : parent)
+        if (isForDevice (v, d, true))
+            return v;
+
+    return {};
 }
 
 static bool isTrackInputDeviceMIDI (const juce::ValueTree& v)
@@ -51,11 +67,7 @@ static bool isTrackInputDeviceMIDI (const juce::ValueTree& v)
 
 bool EditInputDevices::isInputDeviceAssigned (const InputDevice& d)
 {
-    for (const auto& v : state)
-        if (isForDevice (v, d))
-            return true;
-
-    return false;
+    return findDeviceState (state, d).isValid();
 }
 
 void EditInputDevices::clearAllInputs (AudioTrack& at, juce::UndoManager* um)
@@ -105,9 +117,13 @@ juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (co
 
 juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDevice& d)
 {
-    for (const auto& v : state)
-        if (isForDevice (v, d))
-            return v;
+    if (auto v = findDeviceState (state, d); v.isValid())
+    {
+        // Refresh the ID to update from legacy edits
+        v.setProperty (IDs::deviceID, d.getDeviceID(), nullptr);
+        v.setProperty (IDs::name, d.getName(), nullptr);
+        return v;
+    }
 
     juce::ValueTree v (IDs::INPUTDEVICE);
 
@@ -123,6 +139,7 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
     }
     else
     {
+        v.setProperty (IDs::deviceID, d.getDeviceID(), nullptr);
         v.setProperty (IDs::name, d.getName(), nullptr);
     }
 
@@ -158,7 +175,7 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
     auto isDevicePresent = [devices] (const juce::ValueTree& v)
     {
         for (auto* d : devices)
-            if (isForDevice (v, *d))
+            if (isForDevice (v, *d, true))
                 return true;
 
         return false;

@@ -1298,7 +1298,7 @@ protected:
 //==============================================================================
 WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
                                   const WaveDeviceDescription& desc, DeviceType t)
-    : InputDevice (e, devType, desc.name, desc.name),
+    : InputDevice (e, devType, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
       deviceChannels (desc.channels),
       deviceType (t),
       channelSet (createChannelSet (desc.channels))

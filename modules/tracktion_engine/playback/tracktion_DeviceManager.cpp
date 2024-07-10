@@ -366,7 +366,9 @@ struct DeviceManager::MIDIDeviceList
 
         for (auto& v : getVirtualDeviceIDs (sourceEngine))
         {
-            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice, v);
+            auto deviceID = v == VirtualMidiInputDevice::allMidiInsName ? "all_midi_in"
+                                                                        : "vmidiin_" + juce::String::toHexString (v.hashCode());
+            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, v, InputDevice::virtualMidiDevice, deviceID);
             virtualMidiIns.push_back (d);
             virtualMidiInsEnabled.push_back (d->isEnabled());
         }
@@ -556,10 +558,10 @@ void DeviceManager::applyNewMidiDeviceList()
     TRACKTION_LOG ("Updating MIDI I/O devices");
 
     for (auto mi : newMidiIns)
-        TRACKTION_LOG_DEVICE ("Found MIDI in: \"" + mi->getDeviceID() + "\" (" + mi->getName() + ")" + (mi->isEnabled() ? " (enabled)" : ""));
+        TRACKTION_LOG_DEVICE ("Found MIDI in: " + mi->getDeviceID() + " (\"" + mi->getName() + "\")" + (mi->isEnabled() ? " (enabled)" : ""));
 
     for (auto mo : newMidiOuts)
-        TRACKTION_LOG_DEVICE ("Found MIDI out: \"" + mo->getDeviceID() + "\" (" + mo->getName() + ")" + (mo->isEnabled() ? " (enabled)" : ""));
+        TRACKTION_LOG_DEVICE ("Found MIDI out: " + mo->getDeviceID() + " (\"" + mo->getName() + "\")" + (mo->isEnabled() ? " (enabled)" : ""));
 
     for (auto& d : newMidiOuts)
     {
