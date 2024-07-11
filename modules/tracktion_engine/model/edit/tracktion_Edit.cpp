@@ -1153,6 +1153,34 @@ AbletonLink& Edit::getAbletonLink() const noexcept
     return *abletonLink;
 }
 
+void Edit::injectMIDIToAllPlugins (const std::span<juce::MidiMessage>& messages)
+{
+    for (auto p : getAllPlugins (*this, false))
+        if (p->isSynth())
+            if (auto at = dynamic_cast<AudioTrack*> (p->getOwnerTrack()))
+                for (auto& m : messages)
+                    at->injectLiveMidiMessage (m, MidiMessageArray::notMPE);
+}
+
+void Edit::midiPanic()
+{
+    juce::Timer::callAfterDelay (100, [weakRef = makeSafeRef (*this)]
+    {
+        if (weakRef)
+        {
+            std::vector<juce::MidiMessage> messages;
+            messages.reserve (16);
+
+            for (auto chan = 1; chan <= 16; ++chan)
+                messages.push_back (juce::MidiMessage::allNotesOff (chan));
+
+            weakRef->injectMIDIToAllPlugins (messages);
+        }
+    });
+
+    ScopedRenderStatus srd (*this, true);
+}
+
 //==============================================================================
 void Edit::addWastedMidiMessagesListener (WastedMidiMessagesListener* l)
 {
