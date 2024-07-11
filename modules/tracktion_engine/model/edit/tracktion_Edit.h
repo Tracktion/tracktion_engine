@@ -12,7 +12,8 @@
 namespace tracktion { inline namespace engine
 {
 
- class ClipEffect;
+class ClipEffect;
+
 //==============================================================================
 /**
     The Tracktion Edit class!
@@ -774,14 +775,6 @@ public:
         OwnerType& owner;
         Edit& edit;
     };
-
-    //==============================================================================
-    /// Sends a list of MIDI messages to all the plugins in this edit
-    void injectMIDIToAllPlugins (const std::span<juce::MidiMessage>& messagesToSend);
-
-    /// Performs a "MIDI panic" on the edit, by resetting playback, and sending some
-    /// all-note-off messages to all plugins in the edit.
-    void midiPanic();
 
     //==============================================================================
     /// Interface for classes that need to know about unused MIDI messages.

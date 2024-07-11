@@ -995,7 +995,7 @@ juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
     return instances;
 }
 
-void muteOrUnmuteAllPlugins (Edit& edit)
+void muteOrUnmuteAllPlugins (const Edit& edit)
 {
     auto allPlugins = getAllPlugins (edit, true);
 
@@ -1007,6 +1007,38 @@ void muteOrUnmuteAllPlugins (Edit& edit)
 
     for (auto p : allPlugins)
         p->setEnabled (numEnabled == 0);
+}
+
+void injectMIDIToAllPlugins (const Edit& edit, const std::span<juce::MidiMessage>& messages)
+{
+    for (auto p : getAllPlugins (edit, false))
+        if (p->isSynth())
+            if (auto at = dynamic_cast<AudioTrack*> (p->getOwnerTrack()))
+                for (auto& m : messages)
+                    at->injectLiveMidiMessage (m, MidiMessageArray::notMPE);
+}
+
+void midiPanic (Edit& edit, bool resetPlugins)
+{
+    juce::Timer::callAfterDelay (100, [weakRef = makeSafeRef (edit), resetPlugins]
+    {
+        if (weakRef)
+        {
+            std::vector<juce::MidiMessage> messages;
+            messages.reserve (16);
+
+            for (auto chan = 1; chan <= 16; ++chan)
+                messages.push_back (juce::MidiMessage::allNotesOff (chan));
+
+            injectMIDIToAllPlugins (*weakRef, messages);
+
+            if (resetPlugins)
+                for (auto p : getAllPlugins (*weakRef, false))
+                    p->reset();
+        }
+    });
+
+    Edit::ScopedRenderStatus srd (edit, true);
 }
 
 
