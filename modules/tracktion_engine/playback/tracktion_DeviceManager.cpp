@@ -307,6 +307,7 @@ static juce::StringArray getVirtualDeviceIDs (Engine& engine)
     juce::StringArray virtualDeviceIDs;
     virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDeviceIDs.removeEmptyStrings();
+    virtualDeviceIDs.removeString (allMidiInsName);
     virtualDeviceIDs.removeString (allMidiInsID);
     virtualDeviceIDs.insert (0, allMidiInsID);
     return virtualDeviceIDs;
