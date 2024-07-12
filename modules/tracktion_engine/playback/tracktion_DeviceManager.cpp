@@ -629,6 +629,8 @@ void DeviceManager::applyNewMidiDeviceList()
     storage.setProperty (SettingID::hasEnabledMidiDefaultDevs, true);
     storage.flushSettingsToDisk();
 
+    checkDefaultDevicesAreValid();
+
     if (enabledMidiOuts == 0 && ! hasEnabledMidiDefaultDevs)
     {
         for (auto& d : midiOutputs)
