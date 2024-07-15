@@ -632,6 +632,9 @@ private:
  #pragma GCC diagnostic ignored "-Wunused-parameter"
  #pragma GCC diagnostic ignored "-Wpedantic"
  #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+ #pragma GCC diagnostic ignored "-Wswitch-enum"
+ #pragma GCC diagnostic ignored "-Wdeprecated-copy-with-user-provided-dtor"
+ #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
 #define WIN32_LEAN_AND_MEAN 1

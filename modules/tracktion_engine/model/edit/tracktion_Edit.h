@@ -12,7 +12,8 @@
 namespace tracktion { inline namespace engine
 {
 
- class ClipEffect;
+class ClipEffect;
+
 //==============================================================================
 /**
     The Tracktion Edit class!
@@ -90,37 +91,37 @@ public:
     };
 
     //==============================================================================
-    /** Determines how the Edit will be created */
+    /// Determines how the Edit will be created
     struct Options
     {
-        Engine& engine;                                                         /**< The Engine to use. */
-        juce::ValueTree editState;                                              /**< The Edit state. @see createEmptyEdit */
-        ProjectItemID editProjectItemID;                                        /**< The editProjectItemID, must be valid. */
+        Engine& engine;                                                         ///< The Engine to use.
+        juce::ValueTree editState;                                              ///< The Edit state. @see createEmptyEdit
+        ProjectItemID editProjectItemID;                                        ///< The editProjectItemID, must be valid.
 
-        EditRole role = forEditing;                                             /**< An optional role to open the Edit with. */
-        LoadContext* loadContext = nullptr;                                     /**< An optional context to be monitor for loading status. */
-        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();             /**< The number of undo levels to use. */
+        EditRole role = forEditing;                                             ///< An optional role to open the Edit with.
+        LoadContext* loadContext = nullptr;                                     ///< An optional context to be monitor for loading status.
+        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();             ///< The number of undo levels to use.
 
-        std::function<juce::File()> editFileRetriever = {};                     /**< An optional editFileRetriever to use. */
-        std::function<juce::File (const juce::String&)> filePathResolver = {};  /**< An optional filePathResolver to use. */
+        std::function<juce::File()> editFileRetriever = {};                     ///< An optional editFileRetriever to use.
+        std::function<juce::File (const juce::String&)> filePathResolver = {};  ///< An optional filePathResolver to use.
 
-        uint32_t numAudioTracks = 1;                                            /**< If non-zero, will ensure the edit has this many audio tracks */
+        uint32_t numAudioTracks = 1;                                            ///< If non-zero, will ensure the edit has this many audio tracks
     };
 
-    /** Creates an Edit from a set of Options. */
+    /// Creates an Edit from a set of Options.
     Edit (Options);
 
-    /** Creates a new, empty Edit with default options for a given role. */
+    /// Creates a new, empty Edit with default options for a given role.
     Edit (Engine&, EditRole);
 
-    /** Destructor. */
+    /// Destructor.
     ~Edit() override;
 
-    /** A reference to the Engine. */
+    /// A reference to the Engine.
     Engine& engine;
 
     //==============================================================================
-    /** Returns the name of the Edit if a ProjectItem can be found for it. */
+    /// Returns the name of the Edit if a ProjectItem can be found for it.
     juce::String getName();
 
     /** This callback can be set to return the file for this Edit.
@@ -746,30 +747,29 @@ public:
     juce::ValueTree getAutomapState();
 
     //==============================================================================
-    /** Returns the MarkerManager. */
+    /// Returns the MarkerManager
     MarkerManager& getMarkerManager() const noexcept    { return *markerManager; }
 
-    /** Returns the ARA document handler */
+    /// Returns the ARA document handler
     ARADocumentHolder& getARADocument();
 
     //==============================================================================
-    /** Calls an editFinishedLoading method on OwnerType once after the Edit has finished loading. */
+    /// Calls an editFinishedLoading method on OwnerType once after the Edit has finished loading.
     template<typename OwnerType>
-    struct LoadFinishedCallback   : public Timer
+    struct LoadFinishedCallback   : public juce::Timer
     {
-        LoadFinishedCallback (OwnerType& o, Edit& e)
-            : owner (o), edit (e)
+        LoadFinishedCallback (OwnerType& o, Edit& e) : owner (o), edit (e)
         {
             startTimer (10);
         }
 
         void timerCallback() override
         {
-            if (edit.isLoading())
-                return;
-
-            stopTimer();
-            owner.editFinishedLoading();
+            if (! edit.isLoading())
+            {
+                stopTimer();
+                owner.editFinishedLoading();
+            }
         }
 
         OwnerType& owner;
@@ -777,58 +777,57 @@ public:
     };
 
     //==============================================================================
-    /** Interface for classes that need to know about unused MIDI messages. */
+    /// Interface for classes that need to know about unused MIDI messages.
     struct WastedMidiMessagesListener
     {
-        /** Destructor. */
         virtual ~WastedMidiMessagesListener() = default;
 
-        /** Callback to be ntified when a MIDI message isn't used by a track because it
-            doesn't have a plugin which receives MIDI input on it.
-        */
+        /// Callback to be notified when a MIDI message isn't used by a track because it
+        /// doesn't have a plugin which receives MIDI input on it.
         virtual void warnOfWastedMidiMessages (InputDevice*, Track*) = 0;
     };
 
-    /** Add a WastedMidiMessagesListener to be notified of wasted MIDI messages. */
+    /// Add a WastedMidiMessagesListener to be notified of wasted MIDI messages.
     void addWastedMidiMessagesListener (WastedMidiMessagesListener*);
 
-    /** Removes a previously added WastedMidiMessagesListener. */
+    /// Removes a previously added WastedMidiMessagesListener.
     void removeWastedMidiMessagesListener (WastedMidiMessagesListener*);
 
-    /** Triggers a callback to any registered WastedMidiMessagesListener[s]. */
+    /// Triggers a callback to any registered WastedMidiMessagesListener[s].
     void warnOfWastedMidiMessages (InputDevice*, Track*);
 
     //==============================================================================
-    /** Returns a previously set SharedLevelMeasurer. */
+    /// Returns a previously set SharedLevelMeasurer.
     SharedLevelMeasurer::Ptr getPreviewLevelMeasurer()          { return previewLevelMeasurer; }
 
-    /** Sets a SharedLevelMeasurer to use. */
+    /// Sets a SharedLevelMeasurer to use.
     void setPreviewLevelMeasurer (SharedLevelMeasurer::Ptr p)   { previewLevelMeasurer = p; }
 
     //==============================================================================
-    juce::CachedValue<juce::String> lastSignificantChange;  /**< The last time a change was made to the Edit. @see getTimeOfLastChange */
+    juce::CachedValue<juce::String> lastSignificantChange;  ///< The last time a change was made to the Edit. @see getTimeOfLastChange
 
-    juce::CachedValue<TimeDuration> masterFadeIn,   /**< The duration in seconds of the fade in. */
-                                    masterFadeOut,  /**< The duration in seconds of the fade out. */
-                                    timecodeOffset,       /**< The duration in seconds of the timecode offset. */
-                                    videoOffset;          /**< The duration in seconds of the video offset. */
+    juce::CachedValue<TimeDuration> masterFadeIn,      ///< The duration in seconds of the fade in.
+                                    masterFadeOut,     ///< The duration in seconds of the fade out.
+                                    timecodeOffset,    ///< The duration in seconds of the timecode offset.
+                                    videoOffset;       ///< The duration in seconds of the video offset.
 
-    juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   /**< The curve type of the fade in. */
-                                            masterFadeOutType;  /**< The curve type of the fade out. */
+    juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   ///< The curve type of the fade in.
+                                            masterFadeOutType;  ///< The curve type of the fade out.
 
-    juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled,    /**< Whether a MIDI timecode source is enabled. */
-                            midiTimecodeIgnoringHours,          /**< Whether the MIDI timecode source ignores hours. */
-                            videoMuted,                         /**< Whether the video source is muted. */
-                            clickTrackEnabled,                  /**< Whether the click track is enabled. */
-                            clickTrackEmphasiseBars,            /**< Whether the click track should emphasise bars. */
-                            clickTrackRecordingOnly,            /**< Whether the click track should be audible only when recording. */
-                            recordingPunchInOut,                /**< Whether recoridng only happens within the in/out markers. */
-                            playInStopEnabled;                  /**< Whether the audio engine should run when playback is stopped. */
-    juce::CachedValue<float> clickTrackGain;        /**< The gain of the click track. */
-    juce::CachedValue<ProjectItemID> videoSource;   /**< The ProjectItemID of the video source. */
+    juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled,    ///< Whether a MIDI timecode source is enabled.
+                            midiTimecodeIgnoringHours,          ///< Whether the MIDI timecode source ignores hours.
+                            videoMuted,                         ///< Whether the video source is muted.
+                            clickTrackEnabled,                  ///< Whether the click track is enabled.
+                            clickTrackEmphasiseBars,            ///< Whether the click track should emphasise bars.
+                            clickTrackRecordingOnly,            ///< Whether the click track should be audible only when recording.
+                            recordingPunchInOut,                ///< Whether recoridng only happens within the in/out markers.
+                            playInStopEnabled;                  ///< Whether the audio engine should run when playback is stopped.
 
-    juce::ValueTree state { IDs::EDIT };    /**< The ValueTree of the Edit state. */
-    juce::ValueTree inputDeviceState;   /**< The ValueTree of the input device states. */
+    juce::CachedValue<float> clickTrackGain;        ///< The gain of the click track.
+    juce::CachedValue<ProjectItemID> videoSource;   ///< The ProjectItemID of the video source.
+
+    juce::ValueTree state { IDs::EDIT };     ///< The ValueTree of the Edit state.
+    juce::ValueTree inputDeviceState;        ///< The ValueTree of the input device states.
 
 private:
     //==============================================================================

@@ -27,7 +27,6 @@ public:
     EnginePlayer (Engine& e, HostedAudioDeviceInterface::Parameters p)
         : engine (e), params (p), output (static_cast<size_t> (p.outputChannels))
     {
-        assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
         audioIO.initialise (params);
         audioIO.prepareToPlay (params.sampleRate, params.blockSize);
         engine.getDeviceManager().dispatchPendingUpdates();
@@ -35,12 +34,14 @@ public:
 
     ~EnginePlayer()
     {
+        engine.getDeviceManager().deviceManager.closeAudioDevice();
         engine.getDeviceManager().removeHostedAudioDeviceInterface();
+        assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
     }
 
-    juce::AudioBuffer<float> process (int numSamples)
+    juce::AudioBuffer<float> process ( std::integral auto numSamples)
     {
-        juce::AudioBuffer<float> inputAudio (params.inputChannels, numSamples);
+        juce::AudioBuffer<float> inputAudio (params.inputChannels, static_cast<int> (numSamples));
         inputAudio.clear();
         return process (inputAudio);
     }
@@ -108,6 +109,26 @@ private:
     std::vector<std::vector<float>> output;
     int numSamplesProcessed = 0;
 };
+
+///@internal
+void waitForFileToBeMapped (const AudioFile&);
+
+inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDeviceInterface::Parameters p,
+                                                         std::vector<AudioFile> filesToMap = {})
+{
+    assert (e.getEditRole() == Edit::forEditing);
+    auto player = std::make_unique<EnginePlayer>  (e.engine, std::move (p));
+
+    e.dispatchPendingUpdatesSynchronously();
+    e.getTransport().ensureContextAllocated();
+
+    for (auto& af : filesToMap)
+        test_utilities::waitForFileToBeMapped (af);
+
+    e.getTransport().play (false);
+
+    return player;
+}
 
 ///@internal
 inline void waitForFileToBeMapped (const AudioFile& af)

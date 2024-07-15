@@ -78,6 +78,11 @@ jobs:
         with:
           submodules: true
 
+      # - name: Add Rubber Band submodule for testing
+      #   run: |
+      #     git submodule add -f git@github.com:breakfastquay/rubberband.git modules/3rd_party/rubberband
+      #     git submodule update --init
+
       # Setup Environment Variables
       - name: Setup Environment Variables
         shell: bash
@@ -86,12 +91,7 @@ jobs:
           ls -la
           VERSION=$(cat VERSION.md)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          
-          if [ "${{ matrix.name }}" = 'linux' ]; then
-            echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts" >> $GITHUB_ENV
-          else
-            echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
-          fi
+          echo "APP_DIR=${{ env.BUILD_DIR }}/examples/${{ matrix.target }}/${{ matrix.target }}_artefacts/${{ env.BUILD_CONFIG }}" >> $GITHUB_ENV
 
           if [ "${{ matrix.name }}" = 'windows' ]; then
             echo "APP_EXE=${{ matrix.target }}.exe" >> $GITHUB_ENV
