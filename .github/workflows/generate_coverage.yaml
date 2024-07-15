@@ -30,10 +30,10 @@ jobs:
       #   run: |
       #     tests/coverage/generate_coverage_report
 
-      - name: Windows - Test and coverage
+      - name: Windows coverage
         if: runner.os == 'Windows'
         working-directory: 
-        run: |
+        bash: |
           cmake -B ./tests/coverage/build -A x64
           cmake --build ./tests/coverage/build --target coverage --config RelWithDebInfo --parallel
           OpenCppCoverage.exe --config_file ./tests/coverage/coverage.txt -- ./tests/coverage/build/coverage_artefacts/RelWithDebInfo/coverage.exe
