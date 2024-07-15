@@ -15,6 +15,7 @@ endif()
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-implicit-fallthrough") #TODO: Remove this when when juce compiles cleanly
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Werror")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -95,6 +96,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     juce::juce_recommended_warning_flags)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 
