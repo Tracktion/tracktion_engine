@@ -80,7 +80,7 @@ jobs:
 
       - name: Add Rubber Band submodule for testing
         run: |
-          git submodule add git@github.com:breakfastquay/rubberband.git modules/3rd_party/rubberband
+          git submodule add -f git@github.com:breakfastquay/rubberband.git modules/3rd_party/rubberband
           git submodule update --init
 
       # Setup Environment Variables
