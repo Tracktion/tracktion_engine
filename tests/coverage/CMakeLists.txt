@@ -76,7 +76,6 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     JUCE_USE_CURL=1
     JUCE_LOAD_CURL_SYMBOLS_LAZILY=1
     JUCE_WEB_BROWSER=0
-    JUCE_REPORT_APP_USAGE=0
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     JUCE_MODAL_LOOPS_PERMITTED=1
     TRACKTION_UNIT_TESTS=1
@@ -96,7 +95,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     juce::juce_recommended_warning_flags)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
+    target_compile_options(coverage PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 
