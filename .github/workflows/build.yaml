@@ -74,6 +74,10 @@ jobs:
         if: runner.os == 'macOS'
         run: sudo xcode-select -s /Applications/Xcode_15.3.app
 
+      - name: Add Rubber Band submodule for testing
+        run: |
+          git submodule add git@github.com:breakfastquay/rubberband.git modules/3rd_party/rubberband
+
       - uses: actions/checkout@v3
         with:
           submodules: true

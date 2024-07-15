@@ -9,10 +9,12 @@
     For the technical preview this file cannot be licensed commercially.
 */
 
-namespace tracktion { inline namespace engine
-{
-
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PLUGINS
+
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
+namespace tracktion::inline engine
+{
 
 //==============================================================================
 //==============================================================================
@@ -131,6 +133,6 @@ private:
 
 static InternalPluginTests internalPluginTests;
 
-#endif // TRACKTION_UNIT_TESTS
+} // namespace tracktion::inline engine
 
-}} // namespace tracktion { inline namespace engine
+#endif // TRACKTION_UNIT_TESTS

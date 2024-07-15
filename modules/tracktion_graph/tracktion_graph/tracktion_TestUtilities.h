@@ -319,6 +319,24 @@ namespace test_utilities
         return f;
     }
 
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTransientFile (double sampleRate, TimeDuration duration,
+                                                           TimePosition transientPos, float transientVal,
+                                                           int numChannels = 1, int qualityOptionIndex = -1)
+    {
+        using namespace choc::buffer;
+        auto transientSample = toSamples (transientPos, sampleRate);
+        auto buffer = createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                [=] (auto, auto frame) { return frame == transientSample ? transientVal : 0.0f; });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
+
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
     static inline void expectMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
@@ -469,6 +487,19 @@ namespace test_utilities
 
         if (! areUnique)
             visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
+    }
+
+    //==============================================================================
+    inline std::optional<std::pair<choc::buffer::FrameCount, float>> findFirstNonZeroSample (choc::buffer::MonoView<float> buffer)
+    {
+        auto size = buffer.getSize();
+        auto samples = buffer.getIterator (0);
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+            if (auto s = *samples++; s > 0.0f)
+                return std::make_pair (i, s);
+
+        return {};
     }
 
     //==============================================================================

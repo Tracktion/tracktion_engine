@@ -12,11 +12,100 @@
 #if TRACKTION_UNIT_TESTS
 
 #include "../../3rd_party/doctest/tracktion_doctest.hpp"
+#include "../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+#include "../testing/tracktion_EnginePlayer.h"
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
 #if ENGINE_UNIT_TESTS_PDC
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("PitchShiftPlugin Latency")
+    {
+        HostedAudioDeviceInterface::Parameters p;
+
+        auto& engine = *Engine::getEngines()[0];
+        engine.getPluginManager().createBuiltInType<LatencyPlugin>();
+        auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+
+        const auto duration = 3_td;
+        const auto numFrames = toSamples (duration, p.sampleRate);
+
+        const auto transientPos = 1_tp;
+        const auto transientFile = graph::test_utilities::getTransientFile<juce::WavAudioFormat> (p.sampleRate, duration, transientPos, 0.5f);
+        const auto af = AudioFile (engine, transientFile->getFile());
+
+        auto track1 = getAudioTracks (*edit)[0];
+        insertWaveClip (*track1, {}, transientFile->getFile(), { { 0_tp, duration } }, DeleteExistingClips::no);
+
+        auto track2 = getAudioTracks (*edit)[1];
+        insertWaveClip (*track2, {}, transientFile->getFile(), { { 0_tp, duration } }, DeleteExistingClips::no);
+
+        auto testTransient = [&] (auto plugin, bool shouldCheck)
+        {
+            auto player = test_utilities::createEnginePlayer (*edit, p, { af });
+            player->process (numFrames);
+            auto output = player->getOutput();
+            const auto expectedTransientSample = toSamples (transientPos + TimeDuration::fromSeconds (plugin->getLatencySeconds()), p.sampleRate);
+
+            auto f = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (output, p.sampleRate, 0);
+            auto transient = graph::test_utilities::findFirstNonZeroSample (output.getChannel (0));
+
+            if (shouldCheck)
+            {
+                CHECK (transient);
+                CHECK_LT (std::abs (transient->first - expectedTransientSample), 5); // 5 sample tolerance
+                CHECK_GT (transient->first, 0.5f);
+            }
+            else
+            {
+                MESSAGE (std::to_string (transient.has_value()));
+                MESSAGE (std::to_string (std::abs (transient->first - expectedTransientSample) < 5)); // 5 sample tolerance
+                MESSAGE (std::to_string (transient->first > 0.5f));
+            }
+        };
+
+        auto insertAndTest = [&] (auto mode, bool shouldCheck)
+        {
+            auto pitchShiftPlugin = insertNewPlugin<PitchShiftPlugin> (*track1);
+            pitchShiftPlugin->mode = mode;
+            testTransient (pitchShiftPlugin, shouldCheck);
+        };
+
+        SUBCASE ("LatencyPlugin")
+        {
+            auto latencyPlugin = insertNewPlugin<LatencyPlugin> (*track1);
+            latencyPlugin->latencyTimeSeconds = 0.25f;
+            testTransient (latencyPlugin, true);
+        }
+
+       #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+        SUBCASE ("soundtouchNormal")
+        {
+            insertAndTest (TimeStretcher::soundtouchNormal, false);
+        }
+
+        SUBCASE ("soundtouchBetter")
+        {
+           insertAndTest (TimeStretcher::soundtouchBetter, false);
+        }
+       #endif
+
+       #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+        SUBCASE ("rubberbandPercussive")
+        {
+            insertAndTest (TimeStretcher::rubberbandPercussive, false);
+        }
+
+        SUBCASE ("rubberbandMelodic")
+        {
+            insertAndTest (TimeStretcher::rubberbandMelodic, false);
+        }
+       #endif
+    }
+}
 
 //==============================================================================
 //==============================================================================
@@ -298,6 +387,6 @@ TEST_SUITE ("tracktion_engine")
 }
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS

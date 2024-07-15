@@ -152,6 +152,12 @@ LatencyPlugin::~LatencyPlugin()
     notifyListenersOfDeletion();
 }
 
+juce::ValueTree LatencyPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
+}
+
 void LatencyPlugin::initialise (const PluginInitialisationInfo&)
 {
     jassert (sampleRate > 0.0);
