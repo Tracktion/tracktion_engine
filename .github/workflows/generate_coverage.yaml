@@ -49,13 +49,20 @@ jobs:
           OpenCppCoverage.exe --config_file coverage.txt -- ./build/coverage_artefacts/RelWithDebInfo/coverage.exe
         shell: bash
 
+      # - name: Linux coverage
+      #   if: runner.os == 'Linux'
+      #   working-directory: ./tests/coverage
+      #   run: |
+      #     cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      #     cmake --build ./build --target coverage --config RelWithDebInfo --parallel
+      #     build/coverage_artefacts/RelWithDebInfo/coverage
+      #     lcov --capture --directory "build" --exclude "tests/coverage/*"  --exclude "examples/common/*" --exclude "tests/coverage/coverage.h" --exclude "*juce_*" --exclude "*3rd_Party*" --exclude "*3rd_party*" --exclude "modules/3rd_party/*" --exclude "/Applications*" --exclude "/usr*" --exclude "*examples*" --output-file coverage.info
       - name: Linux coverage
         if: runner.os == 'Linux'
-        working-directory: ./tests/coverage
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
-          cmake --build ./build --target coverage --config RelWithDebInfo --parallel
-          build/coverage_artefacts/RelWithDebInfo/coverage
+          cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="--coverage"
+          cmake --build ./build --target TestRunner --config RelWithDebInfo --parallel
+          build/TestRunner_artefacts/RelWithDebInfo/TestRunner
           lcov --capture --directory "build" --exclude "tests/coverage/*"  --exclude "examples/common/*" --exclude "tests/coverage/coverage.h" --exclude "*juce_*" --exclude "*3rd_Party*" --exclude "*3rd_party*" --exclude "modules/3rd_party/*" --exclude "/Applications*" --exclude "/usr*" --exclude "*examples*" --output-file coverage.info
 
       - name: macOS coverage
