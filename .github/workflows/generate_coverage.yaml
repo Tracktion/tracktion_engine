@@ -61,7 +61,7 @@ jobs:
       - name: Linux coverage
         if: runner.os == 'Linux'
         run: |
-          cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo 
+          cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo 
           # -DCMAKE_CXX_FLAGS="--coverage"
           cmake --build ./build --target TestRunner --config RelWithDebInfo --parallel
           build/examples/TestRunner/TestRunner_artefacts/RelWithDebInfo/TestRunner
