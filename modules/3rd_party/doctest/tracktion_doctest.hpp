@@ -9,6 +9,7 @@
 */
 
 
+#pragma once
 
 #include "../choc/platform/choc_DisableAllWarnings.h"
  #if __has_include(<doctest.h>)
