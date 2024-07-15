@@ -82,9 +82,6 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_PLUGINHOST_VST3=1
     JUCE_USE_CURL=0
     JUCE_WEB_BROWSER=0
-    JUCER_ENABLE_GPL_MODE=1
-    JUCE_DISPLAY_SPLASH_SCREEN=0
-    JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1)
@@ -102,7 +99,7 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(${TARGET_NAME} PRIVATE "-Wimplicit-fallthrough")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-implicit-fallthrough") #TODO: Remove this when when juce compiles cleanly
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
@@ -114,6 +111,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 
