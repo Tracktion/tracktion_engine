@@ -39,6 +39,11 @@ jobs:
           OpenCppCoverage.exe --config_file coverage.txt -- ./build/coverage_artefacts/RelWithDebInfo/coverage.exe
         shell: bash
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Upload coverage artefacts
+          path: ./tests/coverage/coverage.xml
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
