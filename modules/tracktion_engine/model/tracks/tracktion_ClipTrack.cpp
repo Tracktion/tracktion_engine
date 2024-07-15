@@ -161,7 +161,7 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
     : Track (ed, v, hasModifierList)
 {
-    collectionClipList.reset (new CollectionClipList (*this, state));
+    collectionClipList = std::make_unique<CollectionClipList> (*this, state);
 }
 
 ClipTrack::~ClipTrack()

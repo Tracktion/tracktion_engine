@@ -1089,7 +1089,7 @@ void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
 
-        currentTempoPosition.reset (new tempo::Sequence::Position (createPosition (edit.tempoSequence)));
+        currentTempoPosition = std::make_unique<tempo::Sequence::Position> (createPosition (edit.tempoSequence));
     }
 }
 

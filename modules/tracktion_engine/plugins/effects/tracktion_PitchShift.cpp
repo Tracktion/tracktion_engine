@@ -26,7 +26,7 @@ struct PitchShiftPlugin::Pimpl
         {
             mode = newMode;
             elastiqueOptions = newOptions;
-            timestretcher.reset (new TimeStretcher());
+            timestretcher = std::make_unique<TimeStretcher>();
         }
 
         if (! timestretcher->isInitialised())
@@ -123,7 +123,7 @@ struct PitchShiftPlugin::Pimpl
 //==============================================================================
 PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)
 {
-    pimpl.reset (new Pimpl (*this));
+    pimpl = std::make_unique<Pimpl> (*this);
 
     auto um = getUndoManager();
 

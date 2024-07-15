@@ -358,9 +358,9 @@ public:
             AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
-            rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
-                                                       wi.isStereoPair() ? 2 : 1,
-                                                       rc->sampleRate, wi.bitDepth, metadata, 0));
+            rc->fileWriter = std::make_unique<AudioFileWriter> (AudioFile (edit.engine, recordedFile), format,
+                                                                wi.isStereoPair() ? 2 : 1,
+                                                                rc->sampleRate, wi.bitDepth, metadata, 0);
 
             if (rc->fileWriter->isOpen())
             {
@@ -1338,7 +1338,7 @@ juce::StringArray WaveInputDevice::getRecordFormatNames()
 InputDeviceInstance* WaveInputDevice::createInstance (EditPlaybackContext& ed)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer.reset (new RetrospectiveRecordBuffer (ed.edit.engine));
+        retrospectiveBuffer = std::make_unique<RetrospectiveRecordBuffer> (ed.edit.engine);
 
     return new WaveInputDeviceInstance (*this, ed);
 }

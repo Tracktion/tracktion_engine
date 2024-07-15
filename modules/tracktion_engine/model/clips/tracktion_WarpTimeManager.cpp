@@ -231,7 +231,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
 {
     state = c.state.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
-    markers.reset (new WarpMarkerList (markersTree));
+    markers = std::make_unique<WarpMarkerList> (markersTree);
 
     const auto clipLen = toPosition (TimeDuration::fromSeconds (AudioFile (c.edit.engine, clip->getOriginalFile()).getLength()));
 
@@ -243,7 +243,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
         setWarpEndMarkerTime (clipLen);
     }
 
-    editLoadedCallback.reset (new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit));
+    editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<WarpTimeManager>> (*this, edit);
 
     edit.engine.getWarpTimeFactory().addWarpTimeManager (*this);
 }
@@ -253,7 +253,7 @@ WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, juce::ValueTree p
 {
     state = parentTree.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
-    markers.reset (new WarpMarkerList (markersTree));
+    markers = std::make_unique<WarpMarkerList> (markersTree);
 
     setSourceFile (f);
 
@@ -284,7 +284,7 @@ void WarpTimeManager::setSourceFile (const AudioFile& af)
             insertMarker (WarpMarker (clipLen, clipLen));
             setWarpEndMarkerTime (clipLen);
 
-            editLoadedCallback.reset (new Edit::LoadFinishedCallback<WarpTimeManager> (*this, edit));
+            editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<WarpTimeManager>> (*this, edit);
         }
     }
 }

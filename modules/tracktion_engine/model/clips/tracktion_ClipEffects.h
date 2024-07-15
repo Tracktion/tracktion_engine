@@ -293,7 +293,7 @@ private:
     const CachedClipProperties& getCachedClipProperties() const
     {
         if (cachedClipProperties == nullptr)
-            cachedClipProperties.reset (new CachedClipProperties (*this));
+            cachedClipProperties = std::make_unique<CachedClipProperties> (*this);
 
         return *cachedClipProperties;
     }

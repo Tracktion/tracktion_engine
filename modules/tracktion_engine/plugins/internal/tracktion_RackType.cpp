@@ -215,8 +215,8 @@ RackType::RackType (const juce::ValueTree& v, Edit& owner)
     if (rackName.get().isEmpty())
         rackName = TRANS("New Rack");
 
-    pluginList.reset (new RackPluginList (*this, state));
-    connectionList.reset (new ConnectionList (*this, state));
+    pluginList = std::make_unique<RackPluginList> (*this, state);
+    connectionList = std::make_unique<ConnectionList> (*this, state);
 
     if (getOutputNames().isEmpty())
         addDefaultOutputs();
@@ -1249,7 +1249,7 @@ void RackTypeList::initialise (const juce::ValueTree& v)
     state = v;
     jassert (state.hasType (IDs::RACKS));
 
-    list.reset (new ValueTreeList (*this, v));
+    list = std::make_unique<ValueTreeList> (*this, v);
     list->rebuildObjects();
 }
 

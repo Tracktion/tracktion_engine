@@ -995,14 +995,14 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case elastiqueEfficient:
         case elastiqueMobile:
         case elastiqueMonophonic:
-            stretcher.reset (new ElastiqueStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                     mode, options, realtime ? 0.25f : 0.1f));
+            stretcher = std::make_unique<ElastiqueStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
+                                                              mode, options, realtime ? 0.25f : 0.1f);
             break;
         case elastiqueDirectPro:
         case elastiqueDirectEfficient:
         case elastiqueDirectMobile:
-            stretcher.reset (new ElastiqueDirectStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                           mode, options, realtime ? 0.25f : 0.1f));
+            stretcher = std::make_unique<ElastiqueDirectStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
+                                                                    mode, options, realtime ? 0.25f : 0.1f);
             break;
        #else
         case elastiquePro:              [[fallthrough]];
@@ -1019,8 +1019,8 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case soundtouchNormal:
         case soundtouchBetter:
             juce::ignoreUnused (options, realtime);
-            stretcher.reset (new SoundTouchStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                      mode == soundtouchBetter));
+            stretcher = std::make_unique<SoundTouchStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
+                                                               mode == soundtouchBetter);
             break;
        #else
         case soundtouchNormal:      [[fallthrough]];
@@ -1032,8 +1032,8 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case rubberbandMelodic:
         case rubberbandPercussive:
             juce::ignoreUnused (options, realtime);
-            stretcher.reset (new tracktion::engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
-                                                                        mode == rubberbandPercussive));
+            stretcher = std::make_unique<tracktion::engine::RubberBandStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
+                                                                                  mode == rubberbandPercussive);
             break;
        #else
         case rubberbandMelodic:     [[fallthrough]];

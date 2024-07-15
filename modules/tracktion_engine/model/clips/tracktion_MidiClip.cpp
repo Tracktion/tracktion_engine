@@ -87,7 +87,7 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetPa
 {
     auto um = getUndoManager();
 
-    quantisation.reset (new QuantisationType (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um));
+    quantisation = std::make_unique<QuantisationType> (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um);
 
     if (state.hasProperty (IDs::quantisation))
         quantisation->setType (state.getProperty (IDs::quantisation));
@@ -120,7 +120,7 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetPa
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
     if (pgen.isValid())
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 }
 
 MidiClip::~MidiClip()
@@ -842,7 +842,7 @@ void MidiClip::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
         channelSequence.add (new MidiList (c, getUndoManager()));
 
     if (c.hasType (IDs::PATTERNGENERATOR))
-        patternGenerator.reset (new PatternGenerator (*this, c));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, c);
 }
 
 void MidiClip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)

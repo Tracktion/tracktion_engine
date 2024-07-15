@@ -335,7 +335,7 @@ void Track::visitAllAutomatableParams (const std::function<void(AutomatableParam
     {
         if (auto mpl = p->getMacroParameterList())
             mpl->visitAllAutomatableParams (visit);
-        
+
         p->visitAllAutomatableParams (visit);
     }
 
@@ -480,7 +480,7 @@ void Track::updateTrackList()
     if (TrackList::hasAnySubTracks (state))
     {
         if (trackList == nullptr)
-            trackList.reset (new TrackList (edit, state));
+            trackList = std::make_unique<TrackList> (edit, state);
     }
     else
     {

@@ -54,7 +54,7 @@ StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetPa
     : Clip (v, targetParent, id, Type::step)
 {
     auto um = getUndoManager();
-    channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
+    channelList = std::make_unique<ChannelList> (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um));
     repeatSequence.referTo (state, IDs::repeatSequence, um);
     level->dbGain.referTo (state, IDs::volDb, um, 0.0f);
     level->mute.referTo (state, IDs::mute, um, false);

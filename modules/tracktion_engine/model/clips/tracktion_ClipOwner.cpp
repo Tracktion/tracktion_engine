@@ -22,7 +22,7 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
     {
         rebuildObjects();
 
-        editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, edit));
+        editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<ClipList>> (*this, edit);
     }
 
     ~ClipList() override

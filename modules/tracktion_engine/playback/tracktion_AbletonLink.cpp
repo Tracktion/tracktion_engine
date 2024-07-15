@@ -471,7 +471,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 AbletonLink::AbletonLink (TransportControl& t)
 {
    #if TRACKTION_ENABLE_ABLETON_LINK
-    implementation.reset (new LinkImpl (t));
+    implementation = std::make_unique<LinkImpl> (t);
    #endif
 
     juce::ignoreUnused (t);

@@ -393,7 +393,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
 
     if (selectionManager != nullptr)
     {
-        selectionState.reset (new SelectionManager::ScopedSelectionState (*selectionManager));
+        selectionState = std::make_unique<SelectionManager::ScopedSelectionState> (*selectionManager);
         selectionManager->deselectAll();
     }
 

@@ -642,10 +642,10 @@ void AudioFileCache::setCacheSizeSamples (SampleCount samples)
             releaseAllFiles();
         }
 
-        mapperThread.reset (new MapperThread (*this));
+        mapperThread = std::make_unique<MapperThread> (*this);
         mapperThread->startThread (juce::Thread::Priority::normal);
 
-        refresherThread.reset (new RefresherThread (*this));
+        refresherThread = std::make_unique<RefresherThread> (*this);
         refresherThread->startThread (juce::Thread::Priority::high);
     }
 }

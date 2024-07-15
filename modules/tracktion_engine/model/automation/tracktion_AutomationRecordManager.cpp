@@ -163,7 +163,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 if (curve->getNumPoints() > 0)
                 {
                     newCurves.add (curve.release());
-                    curve.reset (new AutomationCurve());
+                    curve = std::make_unique<AutomationCurve>();
                     curve->setOwnerParameter (&parameter->parameter);
                 }
             }

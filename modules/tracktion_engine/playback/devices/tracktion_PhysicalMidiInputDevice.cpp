@@ -297,7 +297,7 @@ PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, juce::MidiDeviceInf
 {
     enabled = true;
 
-    controllerParser.reset (new MidiControllerParser (e));
+    controllerParser = std::make_unique<MidiControllerParser> (e);
     loadProps();
 }
 
@@ -309,7 +309,7 @@ PhysicalMidiInputDevice::~PhysicalMidiInputDevice()
 InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContext& c)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer.reset (new RetrospectiveMidiBuffer (c.edit.engine));
+        retrospectiveBuffer = std::make_unique<RetrospectiveMidiBuffer> (c.edit.engine);
 
     return new PhysicalMidiInputDeviceInstance (*this, c);
 }
