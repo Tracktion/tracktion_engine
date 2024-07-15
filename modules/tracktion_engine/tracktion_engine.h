@@ -49,6 +49,7 @@
 #include <variant>
 #include <any>
 #include <shared_mutex>
+#include <span>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>

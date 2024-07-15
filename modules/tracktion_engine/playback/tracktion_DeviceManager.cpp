@@ -307,6 +307,7 @@ static juce::StringArray getVirtualDeviceIDs (Engine& engine)
     juce::StringArray virtualDeviceIDs;
     virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
     virtualDeviceIDs.removeEmptyStrings();
+    virtualDeviceIDs.removeString (allMidiInsName);
     virtualDeviceIDs.removeString (allMidiInsID);
     virtualDeviceIDs.insert (0, allMidiInsID);
     return virtualDeviceIDs;
@@ -627,6 +628,8 @@ void DeviceManager::applyNewMidiDeviceList()
     const bool hasEnabledMidiDefaultDevs = storage.getProperty (SettingID::hasEnabledMidiDefaultDevs, false);
     storage.setProperty (SettingID::hasEnabledMidiDefaultDevs, true);
     storage.flushSettingsToDisk();
+
+    checkDefaultDevicesAreValid();
 
     if (enabledMidiOuts == 0 && ! hasEnabledMidiDefaultDevs)
     {

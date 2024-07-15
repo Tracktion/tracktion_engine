@@ -219,7 +219,16 @@ bool areAnyPluginsMissing (const Edit&);
 juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType&);
 
 /** Toggles the enabled state of all plugins in an Edit. */
-void muteOrUnmuteAllPlugins (Edit&);
+void muteOrUnmuteAllPlugins (const Edit&);
+
+/// Sends a list of MIDI messages to all the plugins in this edit
+void injectMIDIToAllPlugins (const Edit&, const std::span<juce::MidiMessage>& messagesToSend);
+
+/// Performs a "MIDI panic" on the edit, by resetting playback, and sending some
+/// all-note-off messages to all plugins in the edit, and optionally resetting them
+/// to kill any reverb tails, etc.
+void midiPanic (Edit&, bool resetPlugins);
+
 
 /** Adds a new instance of the given plugin to the track's plugin list at the specified index. */
 template<typename PluginType>
