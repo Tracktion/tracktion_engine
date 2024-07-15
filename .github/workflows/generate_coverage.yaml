@@ -41,7 +41,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Upload coverage artefacts
+          name: coverage.xml
           path: ./tests/coverage/coverage.xml
 
       - name: Upload coverage to Codecov
