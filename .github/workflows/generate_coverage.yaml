@@ -62,7 +62,7 @@ jobs:
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="--coverage"
           cmake --build ./build --target TestRunner --config RelWithDebInfo --parallel
-          build/TestRunner_artefacts/RelWithDebInfo/TestRunner
+          build/examples/TestRunner/TestRunner_artefacts/RelWithDebInfo/TestRunner
           lcov --capture --directory "build" --exclude "tests/coverage/*"  --exclude "examples/common/*" --exclude "tests/coverage/coverage.h" --exclude "*juce_*" --exclude "*3rd_Party*" --exclude "*3rd_party*" --exclude "modules/3rd_party/*" --exclude "/Applications*" --exclude "/usr*" --exclude "*examples*" --output-file coverage.info
 
       - name: macOS coverage
@@ -99,5 +99,5 @@ jobs:
         if: runner.os == 'Linux'
         uses: codecov/codecov-action@v4
         with:
-          files: ./tests/coverage/coverage.info
+          files: ./coverage.info
           token: ${{ secrets.CODECOV_TOKEN_V4 }}
