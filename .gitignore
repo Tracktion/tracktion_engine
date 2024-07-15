@@ -77,3 +77,4 @@ doxygen/doc
 **/cmake-build**
 **/.idea/**
 coverage.xml
+CoverageReport-*
