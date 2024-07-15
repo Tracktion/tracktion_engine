@@ -221,6 +221,10 @@ juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType&);
 /** Toggles the enabled state of all plugins in an Edit. */
 void muteOrUnmuteAllPlugins (Edit&);
 
+/** Adds a new instance of the given plugin to the track's plugin list at the specified index. */
+template<typename PluginType>
+juce::ReferenceCountedObjectPtr<PluginType> insertNewPlugin (Track&, int index = 0);
+
 //==============================================================================
 // Automation and parameters
 //==============================================================================
@@ -293,6 +297,22 @@ bool isRecording (EditPlaybackContext&);
 
 
 //==============================================================================
+/** @internal */
+template<typename PluginType>
+inline juce::ReferenceCountedObjectPtr<PluginType> insertNewPlugin (Track& track, int index)
+{
+    if (auto p = track.edit.getPluginCache().createNewPlugin (PluginType::create()))
+    {
+        if (auto pluginAsType = dynamic_cast<PluginType*> (p.get()))
+        {
+            track.pluginList.insertPlugin (*p, index, {});
+            return pluginAsType;
+        }
+    }
+
+    return {};
+}
+
 /** @internal */
 template<typename TrackType>
 inline juce::Array<TrackType*> getTracksOfType (const Edit& edit, bool recursive)
