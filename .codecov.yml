@@ -1,4 +1,2 @@
 fixes:
-  - "a\tracktion_engine\tracktion_engine\::"  # move path   e.g., "before/path" => "after/path"
-  - "a\\tracktion_engine\\tracktion_engine\\::"  # move path   e.g., "before/path" => "after/path"
   - "a/tracktion_engine/tracktion_engine/::"  # move path   e.g., "before/path" => "after/path"
