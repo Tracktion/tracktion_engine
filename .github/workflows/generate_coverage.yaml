@@ -101,5 +101,5 @@ jobs:
         if: runner.os == 'Linux'
         uses: codecov/codecov-action@v4
         with:
-          files: ./coverage.info
+          files: ./tests/coverage/build/coverage.info
           token: ${{ secrets.CODECOV_TOKEN_V4 }}
