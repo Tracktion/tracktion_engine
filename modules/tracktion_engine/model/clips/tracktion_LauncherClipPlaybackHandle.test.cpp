@@ -5,8 +5,7 @@
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
-    You may use this code under the terms of the GPL v3 - see LICENCE.md for details.
-    For the technical preview this file cannot be licensed commercially.
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE

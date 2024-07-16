@@ -6,8 +6,6 @@ develop: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflo
 [![codecov](https://codecov.io/gh/Tracktion/tracktion_engine/branch/develop/graph/badge.svg?token=jirhU03pQO)](https://codecov.io/gh/Tracktion/tracktion_engine)
 [![juce_compatability](https://github.com/Tracktion/tracktion_engine/actions/workflows/juce_compat.yaml/badge.svg)](https://github.com/Tracktion/tracktion_engine/actions/workflows/juce_compat.yaml)
 
-# N.B. This is a Tracktion Engine v3 technical preview that cannot be licensed commercially!
-
 # N.B. Enterprise licensees, please check the terms of your license as it may not include v3. Please contact us for upgrade options
 
 # tracktion_engine
