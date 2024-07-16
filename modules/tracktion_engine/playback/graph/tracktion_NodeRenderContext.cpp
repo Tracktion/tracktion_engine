@@ -60,7 +60,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState, r.sampleRateForAudio, r.blockSizeForAudio,
                                                         getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
     nodePlayer->setNumThreads ((size_t) p.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
-    
+
     numLatencySamplesToDrop = nodePlayer->getNode()->getNodeProperties().latencyNumSamples;
     r.time = r.time.withEnd (r.time.getEnd() + TimeDuration::fromSamples (numLatencySamplesToDrop, r.sampleRateForAudio));
 
@@ -89,7 +89,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     {
         auto props = nodePlayer->getNode()->getNodeProperties();
 
-        if (! props.hasAudio)
+        if (p.checkNodesForAudio && ! props.hasAudio)
         {
             status = juce::Result::fail (TRANS("Didn't find any audio to render"));
             return;
@@ -205,7 +205,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     {
         streamTime = r.time.getStart();
         blockEnd = streamTime + blockLength;
-        
+
         playHead->playSyncedToRange (toSamples (TimeRange (streamTime, Edit::getMaximumLength()), r.sampleRateForAudio));
         playHeadState->update (toSamples (TimeRange (streamTime, blockEnd), r.sampleRateForAudio));
     }
@@ -237,14 +237,14 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         {
             // Call prepare for next block here to ensure isReadyToProcess internals are updated
             node->prepareForNextBlock (referenceSampleRange);
-         
+
             if (node->getDirectInputNodes().empty() && ! node->isReadyToProcess())
                 return false;
         }
-        
+
         return true;
     }();
-    
+
     while (! (leafNodesReady || owner.shouldExit()))
         return false;
 
@@ -273,7 +273,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
             auto numToDrop = std::min ((uint32_t) numLatencySamplesToDrop, numSamplesDone);
             numLatencySamplesToDrop -= (int) numToDrop;
             numSamplesDone -= numToDrop;
-            
+
             blockSize = numSamplesDone;
             blockOffset = destView.getNumFrames() - blockSize;
         }
@@ -323,7 +323,7 @@ NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer:
     CRASH_TRACER
     // Prepare buffer to use
     auto blockSizeSamples = (int) block.getNumFrames();
-    
+
     juce::AudioBuffer<float> buffer (block.data.channels, numOutputChans, blockSizeSamples);
 
     // Apply dithering and mag/rms analysis
@@ -357,7 +357,7 @@ NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer:
          && writer->isOpen()
          && ! writer->appendBuffer (buffer, blockSizeSamples))
         return WriteResult::failed;
-    
+
     return WriteResult::succeeded;
 }
 
@@ -375,13 +375,18 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     const auto blockLength = TimeDuration::fromSamples (samplesPerBlock, sampleRate);
     auto streamTime = r.time.getStart();
 
-    auto nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
-                                                             sampleRate, samplesPerBlock,
-                                                             getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+    std::unique_ptr<TracktionNodePlayer> nodePlayer;
+    callBlocking ([&]
+                  {
+                      nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
+                                                                          sampleRate, samplesPerBlock,
+                                                                          getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+                  });
+
     nodePlayer->setNumThreads ((size_t) r.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
-    
+
     //TODO: Should really purge any non-MIDI nodes here then return if no MIDI has been found
-    
+
     playHead->stop();
     playHead->setPosition (toSamples (streamTime, sampleRate));
     playHead->playSyncedToRange (toSamples ({ streamTime, Edit::getMaximumLength() }, sampleRate));
@@ -394,21 +399,21 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         for (auto node : nodes)
             if (node->getDirectInputNodes().empty() && ! node->isReadyToProcess())
                 return false;
-        
+
         return true;
     };
-    
+
     while (! leafNodesReady())
     {
         juce::Thread::sleep (100);
-        
+
         if (owner.shouldExit())
             return TRANS("Render cancelled");
     }
 
     // Then render the blocks
     auto currentTempoPosition = createPosition (r.edit->tempoSequence);
-    
+
     juce::AudioBuffer<float> renderingBuffer (2, samplesPerBlock + 256);
     tracktion::engine::MidiMessageArray blockMidiBuffer;
     juce::MidiMessageSequence outputSequence;
@@ -423,10 +428,10 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
 
         auto blockEnd = streamTime + blockLength;
         const TimeRange streamTimeRange (streamTime, blockEnd);
-        
+
         // Update modifier timers
         r.edit->updateModifierTimers (streamTime, samplesPerBlock);
-        
+
         // Then once eveything is ready, render the block
         currentTempoPosition.set (streamTime);
 
@@ -451,9 +456,9 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
 
         progress = juce::jlimit (0.0f, 1.0f, (float) ((streamTime - r.time.getStart()) / r.time.getLength()));
     }
-    
+
     playHead->stop();
-    
+
     if (outputSequence.getNumEvents() == 0)
         return TRANS("No MIDI found to render");
 

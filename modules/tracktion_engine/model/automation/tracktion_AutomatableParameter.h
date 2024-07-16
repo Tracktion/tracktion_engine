@@ -116,7 +116,7 @@ public:
         Edit& edit;
         juce::ValueTree state;
         juce::CachedValue<float> value, offset, curve;
-        juce::CachedValue<float> inputLimitStart, inputLimitEnd;
+        juce::CachedValue<float> inputStart, inputEnd;
     };
 
     /** Creates an assignment for a given source.
@@ -131,6 +131,9 @@ public:
 
     /** Removes assignments for a ModifierSource. */
     void removeModifier (ModifierSource&);
+
+    /** Returns true if any ModifierSources are currently in use by assignments. */
+    bool hasActiveModifierAssignments() const;
 
     /** Returns all the current ModifierAssignments. */
     juce::ReferenceCountedArray<ModifierAssignment> getAssignments() const;

@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-MarkerClip::MarkerClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-   : Clip (v, targetTrack, id, Type::marker)
+MarkerClip::MarkerClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+   : Clip (v, targetParent, id, Type::marker)
 {
 }
 
@@ -55,9 +55,9 @@ void MarkerClip::setMarkerID (int newID)
 }
 
 //==============================================================================
-bool MarkerClip::canGoOnTrack (Track& t)
+bool MarkerClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isMarkerTrack();
+    return isMarkerTrack (co);
 }
 
 void MarkerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

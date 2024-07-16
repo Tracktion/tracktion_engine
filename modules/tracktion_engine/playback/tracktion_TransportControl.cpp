@@ -104,7 +104,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
 
         videoPosition.referTo (transientState, IDs::videoPosition, um);
         forceVideoJump.referTo (transientState, IDs::forceVideoJump, um);
-        
+
         // CachedValues need to be set so they aren't using their default values
         // to avoid spurious listener callbacks
         playing = playing.get();
@@ -178,7 +178,8 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     juce::CachedValue<bool> playing, recording, safeRecording;
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
                             invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
-    juce::CachedValue<bool> userDragging, lastUserDragTime, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
+    juce::CachedValue<bool> userDragging, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
+    juce::CachedValue<juce::int64> lastUserDragTime;
     juce::CachedValue<TimePosition> startTime, endTime, cursorPosAtPlayStart;
     juce::CachedValue<TimePosition> videoPosition;
     juce::CachedValue<int> reallocationInhibitors, playbackContextAllocation, nudgeLeftCount, nudgeRightCount;
@@ -338,12 +339,12 @@ struct TransportControl::FileFlushTimer  : private Timer
             hasBeenDeactivated = true;
             active = false;
         }
-        
+
         auto canPurge = [this]
         {
             if (owner.isPlaying() || owner.isRecording())
                 return false;
-            
+
             return SmartThumbnail::areThumbnailsFullyLoaded (owner.engine);
         };
 
@@ -477,13 +478,13 @@ struct TransportControl::PlayHeadWrapper
     PlayHeadWrapper (TransportControl& t)
         : transport (t)
     {}
-    
+
     tracktion::graph::PlayHead* getNodePlayHead() const
     {
         return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
                                          : nullptr;
     }
-    
+
     double getSampleRate() const
     {
         return transport.playbackContext ? transport.playbackContext->getSampleRate()
@@ -501,24 +502,24 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
             ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
     }
-    
+
     void setRollInToLoop (TimePosition prerollStartTime)
     {
         if (auto ph = getNodePlayHead())
             ph->setRollInToLoop (tracktion::toSamples (prerollStartTime, getSampleRate()));
     }
-    
+
     void stop()
     {
         if (auto ph = getNodePlayHead())
             ph->stop();
     }
-    
+
     bool isPlaying() const
     {
         if (auto ph = getNodePlayHead())
             return ph->isPlaying();
-        
+
         return false;
     }
 
@@ -535,52 +536,52 @@ struct TransportControl::PlayHeadWrapper
     {
         if (auto ph = getNodePlayHead())
             return TimePosition::fromSamples (ph->getPosition(), getSampleRate());
-        
+
         return {};
     }
-    
+
     TimePosition getUnloopedPosition() const
     {
         if (auto ph = getNodePlayHead())
             return TimePosition::fromSamples (ph->getUnloopedPosition(), getSampleRate());
-        
+
         return {};
     }
-    
+
     void setPosition (TimePosition newPos)
     {
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
     }
-    
+
     bool isLooping() const
     {
         if (auto ph = getNodePlayHead())
             return ph->isLooping();
-        
+
         return false;
     }
-    
+
     TimeRange getLoopTimes() const
     {
         if (auto ph = getNodePlayHead())
             return tracktion::timeRangeFromSamples (ph->getLoopRange(), getSampleRate());
-        
+
         return {};
     }
-    
+
     void setLoopTimes (bool loop, TimeRange newRange)
     {
         if (auto ph = getNodePlayHead())
             ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
     }
-    
+
     void setUserIsDragging (bool isDragging)
     {
          if (auto ph = getNodePlayHead())
              ph->setUserIsDragging (isDragging);
     }
-                              
+
 private:
     TransportControl& transport;
 };
@@ -648,7 +649,7 @@ void TransportControl::stopAllTransports (Engine& engine, bool discardRecordings
 std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> TransportControl::restartAllTransports (Engine& engine, bool clearDevices)
 {
     std::vector<std::unique_ptr<ScopedContextAllocator>> restartHandles;
-    
+
     for (auto tc : getAllActiveTransports (engine))
     {
         std::unique_ptr<ScopedPlaybackRestarter> spr;
@@ -666,8 +667,13 @@ std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> Transport
 
         tc->edit.restartPlayback();
     }
-    
+
     return restartHandles;
+}
+
+void TransportControl::callRecordingAboutToStopListeners (InputDeviceInstance& in)
+{
+    listeners.call (&Listener::recordingAboutToStop, in);
 }
 
 void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, Clip::Array recordedClips)
@@ -889,7 +895,7 @@ juce::Array<juce::File> TransportControl::getRetrospectiveRecordAsAudioFiles()
                     files.add (f);
                 }
 
-                c->removeFromParentTrack();
+                c->removeFromParent();
             }
             return files;
         }
@@ -976,39 +982,44 @@ void TransportControl::timerCallback()
         }
 
         if (isPlaying())
-        {
-            clearPlayingFlags();
-            startedOrStopped();
-        }
-
-        if ((! transportState->userDragging)
-             && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
-            playHeadWrapper->setPosition (position);
+            stop (false, false);
     }
-    else
+    else if (! isPlaying())
     {
-        if ((! transportState->userDragging)
-             && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
+        // Playhead is playing but transport state is stopped so start playing
+        play (false);
+    }
+
+    // Update the transport state from the playhead if we have one
+    if (isPlayContextActive()
+         && (! transportState->userDragging)
+         && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
+    {
+        // Only update if we're not looping or we're playing as otherwise the transport
+        // position will jump and be stuck at the loop in position.
+        // The other way to fix this mught be to change the play head to only snap the position on play start..
+        if (! looping || isPlaying())
         {
             const auto currentTime = playHeadWrapper->getLiveTransportPosition();
             transportState->setVideoPosition (currentTime, false);
             transportState->updatePositionFromPlayhead (currentTime);
         }
+    }
 
-        if (--loopUpdateCounter == 0)
+    // Periodically update the loop times from the transport state
+    if (--loopUpdateCounter == 0)
+    {
+        loopUpdateCounter = 10;
+
+        if (looping)
         {
-            loopUpdateCounter = 10;
-
-            if (looping)
-            {
-                auto lr = getLoopRange();
-                lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + TimeDuration::fromSeconds (0.001)));
-                playHeadWrapper->setLoopTimes (true, lr);
-            }
-            else
-            {
-                playHeadWrapper->setLoopTimes (false, {});
-            }
+            auto lr = getLoopRange();
+            lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
+            playHeadWrapper->setLoopTimes (true, lr);
+        }
+        else
+        {
+            playHeadWrapper->setLoopTimes (false, {});
         }
     }
 }
@@ -1059,6 +1070,9 @@ void TransportControl::setCurrentPosition (double newPos)
 
 void TransportControl::setPosition (TimePosition t)
 {
+    // This drag time update is here to avoid the transport position being updated
+    // from the playhead before the position has a chance to be dispatched by it
+    transportState->lastUserDragTime = juce::Time::getMillisecondCounter();
     position = t;
 }
 
@@ -1298,8 +1312,10 @@ void TransportControl::performPlay()
         {
             playHeadWrapper->play ({ transportState->startTime, transportState->endTime }, looping);
 
-            if (looping)
-                playHeadWrapper->setPosition (position);
+            // Post the position change to be dispatched otherwise what we're effectively doing is setting
+            // the position for "this" block and it will get incremented the next block, actually starting
+            // playback 1 block from the start
+            playHeadWrapper->setPosition (position);
         }
         else
         {
@@ -1418,7 +1434,7 @@ bool TransportControl::performRecord()
                     playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
                     playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
                 }
-                
+
                 playHeadWrapper->setPosition (prerollStart);
                 position = prerollStart;
 
@@ -1439,7 +1455,7 @@ bool TransportControl::performRecord()
                 {
                     edit.setClickTrackRange ({});
                 }
-                
+
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
             }
@@ -1492,7 +1508,7 @@ void TransportControl::performStop()
 
         clearPlayingFlags();
         playHeadWrapper->stop();
-        playbackContext->recordingFinished ({ transportState->startTime, recEndTime },
+        playbackContext->recordingFinished ({ transportState->startTime, std::max (recEndTime, transportState->startTime.get()) },
                                             transportState->discardRecordings);
 
         position = transportState->discardRecordings ? transportState->startTime.get()
@@ -1542,10 +1558,11 @@ void TransportControl::performPositionChange()
     }
     else
     {
-        newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);
+        const auto minStartTime = edit.tempoSequence.toTime (-BeatPosition::fromBeats (edit.getNumCountInBeats())) - 0.5s;
+        newPos = juce::jlimit (minStartTime, Edit::getMaximumEditEnd(), newPos);
     }
 
-    if (playbackContext != nullptr && isPlaying())
+    if (playbackContext != nullptr)
         playHeadWrapper->setPosition (newPos);
 
     position = newPos;

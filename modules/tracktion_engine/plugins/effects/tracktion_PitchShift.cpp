@@ -113,8 +113,8 @@ struct PitchShiftPlugin::Pimpl
 
     AudioFifo inputFifo { 2, 2000 }, outputFifo { 2, 2000 };
 
-    double latencySeconds = 0.0;
-    int latencySamples = 0;
+    int latencySamples = 8192;
+    double latencySeconds = latencySamples / 44100.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)
 };

@@ -259,7 +259,7 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
 
         if (timeRangeToDelete.contains (clipTimeRange))
         {
-            c.removeFromParentTrack();
+            c.removeFromParent();
         }
         else if (clipTimeRange.getStart() < timeRangeToDelete.getStart() && clipTimeRange.getEnd() > timeRangeToDelete.getEnd())
         {
@@ -418,7 +418,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
                     clipsToRemove.add (c);
 
             for (auto c : clipsToRemove)
-                c->removeFromParentTrack();
+                c->removeFromParent();
 
             if (closeGap == CloseGap::yes)
             {
@@ -588,6 +588,15 @@ Clip* findClipForID (const Edit& edit, EditItemID clipID)
                                           return false;
                                       }
 
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                      {
+                                          if (auto c = findClipForID (*cc, clipID))
+                                          {
+                                              result = c;
+                                              return false;
+                                          }
+                                      }
+
                                       return true;
                                   });
 
@@ -617,7 +626,18 @@ Clip* findClipForState (const Edit& edit, const juce::ValueTree& v)
 
 bool containsClip (const Edit& edit, Clip* clip)
 {
-    return findTrackForPredicate (edit, [clip] (Track& t) { return t.indexOfTrackItem (clip) >= 0; }) != nullptr;
+    return findTrackForPredicate (edit,
+                                  [clip] (Track& t)
+                                  {
+                                      if (t.indexOfTrackItem (clip) >= 0)
+                                          return true;
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          if (cc->getClips().contains (clip))
+                                              return true;
+
+                                      return false;
+                                  }) != nullptr;
 }
 
 void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
@@ -632,6 +652,11 @@ void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
                                               if (! f (*ti))
                                                   return false;
                                       }
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          for (auto c : cc->getClips())
+                                              if (! f (*c))
+                                                  return false;
 
                                       return true;
                                   });
@@ -723,7 +748,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                 newClip->getSequence().addFrom (destinationList, &track->edit.getUndoManager());
 
                 for (int i = clips.size(); --i >= 0;)
-                    clips.getUnchecked (i)->removeFromParentTrack();
+                    clips.getUnchecked (i)->removeFromParent();
             }
 
             return juce::Result::ok();
@@ -979,6 +1004,36 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& ed
     elements.addArray (getAllPlugins (edit, false));
 
     return elements;
+}
+
+InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext& context,
+                                                                        TimePosition playStart,
+                                                                        TimePosition punchIn)
+{
+    InputDeviceInstance::RecordingParameters params;
+
+    const auto& edit = context.edit;
+
+    params.punchRange   = { punchIn, Edit::getMaximumEditTimeRange().getEnd() };
+
+    if (edit.recordingPunchInOut)
+    {
+        const auto loopRange = context.transport.getLoopRange();
+        params.punchRange = params.punchRange.withStart (std::max (params.punchRange.getStart(), loopRange.getStart() - 0.5s));
+
+        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
+            params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+
+        // Ignore punch out if we start recording very close to the end of the punch markers
+        if (playStart < loopRange.getEnd() - 0.5s)
+            params.punchRange = params.punchRange.withEnd (loopRange.getEnd());
+    }
+    else if (context.isLooping())
+    {
+        params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+    }
+
+    return params;
 }
 
 }} // namespace tracktion { inline namespace engine

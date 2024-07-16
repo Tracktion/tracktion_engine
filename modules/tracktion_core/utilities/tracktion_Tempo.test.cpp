@@ -12,7 +12,7 @@
 #include "tracktion_Tempo.h"
 #include "../../3rd_party/choc/text/choc_StringUtilities.h"
 
-#if TRACKTION_UNIT_TESTS_TIME
+#if TRACKTION_UNIT_TESTS && TRACKTION_UNIT_TESTS_TIME
 
 namespace tracktion { inline namespace core
 {
@@ -436,7 +436,7 @@ static SequenceTests sequenceTests;
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && CORE_BENCHMARKS_TEMPO
 
 namespace tracktion { inline namespace engine
 {
@@ -447,7 +447,7 @@ class TempoBenchmarks   : public juce::UnitTest
 {
 public:
     TempoBenchmarks()
-        : juce::UnitTest ("Tempo", "tracktion_core")
+        : juce::UnitTest ("Tempo", "tracktion_benchmarks")
     {}
 
     void runTest() override
@@ -477,9 +477,9 @@ public:
 
         using choc::text::replace;
         Benchmark bm1 (createBenchmarkDescription ("Tempo Sequence", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
-        Benchmark bm2 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm3 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm4 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm2 (createBenchmarkDescription ("Tempo Sequence", "Convert 10,000", replace ("100,000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm3 (createBenchmarkDescription ("Tempo Sequence", "Convert 10,000", replace ("100,000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm4 (createBenchmarkDescription ("Tempo Sequence", "Convert 10,000", replace ("100,000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
 
         // Create the tempos first as we don't want to profile that
         std::vector<tempo::TempoChange> tempos;
@@ -549,9 +549,9 @@ public:
 
         using choc::text::replace;
         Benchmark bm1 (createBenchmarkDescription ("Tempo Position", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
-        Benchmark bm2 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm3 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm4 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm2 (createBenchmarkDescription ("Tempo Position", "Convert 10,000", replace ("100,000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm3 (createBenchmarkDescription ("Tempo Position", "Convert 10,000", replace ("100,000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm4 (createBenchmarkDescription ("Tempo Position", "Convert 10,000", replace ("100,000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
 
         // Create the tempos first as we don't want to profile that
         std::vector<tempo::TempoChange> tempos;

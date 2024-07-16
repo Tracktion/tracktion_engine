@@ -50,10 +50,15 @@ namespace AutomationScaleHelpers
                               : offset + getCurvedValue (inputVal, 0.0f, value, curve);
     }
 
-    inline float limitInputValue (float inputVal, juce::Range<float> inputRange)
+    /** Remaps an input value from a given input range to 0-1. */
+    inline float remapInputValue (float inputVal, juce::Range<float> inputRange)
     {
         jassert (juce::isPositiveAndNotGreaterThan (inputVal, 1.0f));
-        return inputRange.clipValue (inputVal);
+        auto remappedValue = juce::jmap (inputRange.clipValue (inputVal),
+                                         inputRange.getStart(), inputRange.getEnd(),
+                                         0.0f, 1.0f);
+        jassert (juce::isPositiveAndNotGreaterThan (remappedValue, 1.0f));
+        return remappedValue;
     }
 }
 
@@ -302,8 +307,8 @@ struct MacroSource : public AutomationModifierSource
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         auto macroValue = macro->getCurve().getValueAt (time);
-        const auto range = juce::Range<float>::between (assignment->inputLimitStart.get(), assignment->inputLimitEnd.get());
-        return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::limitInputValue (macroValue, range),
+        const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
+        return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
                                                  assignment->offset, assignment->value, assignment->curve);
     }
 
@@ -318,8 +323,8 @@ struct MacroSource : public AutomationModifierSource
         macro->updateFromAutomationSources (time);
         auto macroValue = macro->getCurrentValue();
 
-        const auto range = juce::Range<float>::between (assignment->inputLimitStart.get(), assignment->inputLimitEnd.get());
-        currentValue.store (AutomationScaleHelpers::mapValue (AutomationScaleHelpers::limitInputValue (macroValue, range),
+        const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
+        currentValue.store (AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
                                                               assignment->offset, assignment->value, assignment->curve),
                             std::memory_order_release);
     }
@@ -680,8 +685,8 @@ AutomatableParameter::ModifierAssignment::ModifierAssignment (Edit& e, const juc
     value.referTo (state, IDs::value, um);
     curve.referTo (state, IDs::curve, um);
 
-    inputLimitStart.referTo (state, IDs::start, um, 0.0f);
-    inputLimitEnd.referTo (state, IDs::end, um, 1.0f);
+    inputStart.referTo (state, IDs::start, um, 0.0f);
+    inputEnd.referTo (state, IDs::end, um, 1.0f);
 }
 
 AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier (ModifierSource& source, float value, float offset, float curve)
@@ -740,6 +745,12 @@ void AutomatableParameter::removeModifier (ModifierSource& source)
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
     else
         jassertfalse;
+}
+
+bool AutomatableParameter::hasActiveModifierAssignments() const
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    return getAutomationSourceList().isActive();
 }
 
 juce::ReferenceCountedArray<AutomatableParameter::ModifierAssignment> AutomatableParameter::getAssignments() const

@@ -279,4 +279,109 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
     }
 }
 
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_QUANTISATION_TYPE
+
+class QuantisationTypeTests  : public juce::UnitTest
+{
+public:
+    QuantisationTypeTests()
+        : juce::UnitTest ("QuantisationType", "tracktion_engine")
+    {
+    }
+
+    void runTest() override
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto c = insertMIDIClip (*track, {}, { 0_tp , 1_tp });
+        c->setEnd (edit->tempoSequence.toTime (2_bp), true);
+
+        MidiList originalList;
+        originalList.addNote (60, 0_bp,     0.25_bd, 127, 0, nullptr);
+        originalList.addNote (61, 0.75_bp,  0.25_bd, 127, 0, nullptr);
+        originalList.addNote (62, 1.25_bp,  0.25_bd, 127, 0, nullptr);
+        originalList.addNote (63, 1.75_bp,  0.25_bd, 127, 0, nullptr);
+
+        auto& list = c->getSequence();
+        list.copyFrom (originalList, {});
+
+        beginTest ("No quantise");
+        {
+            auto& q = c->getQuantisation();
+            auto notes = list.getNotes();
+            expectEquals (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
+            expectEquals (q.roundBeatToNearest (notes[1]->getStartBeat()), 0.75_bp);
+            expectEquals (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.25_bp);
+            expectEquals (q.roundBeatToNearest (notes[3]->getStartBeat()), 1.75_bp);
+        }
+
+        beginTest ("1/2 bar");
+        {
+            // Apply the quantise directly to the notes
+            QuantisationType q;
+            q.setType ("1/2");
+
+            {
+                auto notes = list.getNotes();
+                expectEquals (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
+                expectEquals (q.roundBeatToNearest (notes[1]->getStartBeat()), 1.0_bp);
+                expectEquals (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.5_bp);
+                expectEquals (q.roundBeatToNearest (notes[3]->getStartBeat()), 2.0_bp);
+            }
+
+            // Apply quatisation to note starts
+            for (auto n : list.getNotes())
+                n->setStartAndLength (q.roundBeatToNearest (n->getStartBeat()),
+                                      n->getLengthBeats(), nullptr);
+
+            {
+                c->setLoopRangeBeats ({ 0_bp, 2_bd });
+                c->setEnd (edit->tempoSequence.toTime (4_bp), true);
+
+                auto notes = c->getSequenceLooped().getNotes();
+                expectEquals (notes.size(), 6);
+
+                expectEquals (notes[0]->getStartBeat(), 0_bp);
+                expectEquals (notes[1]->getStartBeat(), 1.0_bp);
+                expectEquals (notes[2]->getStartBeat(), 1.5_bp);
+                expectEquals (notes[3]->getStartBeat(), 2.0_bp);
+                expectEquals (notes[4]->getStartBeat(), 3.0_bp);
+                expectEquals (notes[5]->getStartBeat(), 3.5_bp);
+            }
+        }
+
+        beginTest ("1 bar");
+        {
+            // Reset the list to the original
+            list.copyFrom (originalList, {});
+
+            // Apply the quantise directly to the notes
+            QuantisationType q;
+            q.setType ("1");
+
+            // Apply quatisation to note starts
+            for (auto n : list.getNotes())
+                n->setStartAndLength (q.roundBeatToNearest (n->getStartBeat()),
+                                      n->getLengthBeats(), nullptr);
+
+            {
+                auto notes = c->getSequenceLooped().getNotes();
+                expectEquals (notes.size(), 6);
+
+                expectEquals (notes[0]->getStartBeat(), 0_bp);
+                expectEquals (notes[1]->getStartBeat(), 1.0_bp);
+                expectEquals (notes[2]->getStartBeat(), 1.0_bp);
+                expectEquals (notes[3]->getStartBeat(), 2.0_bp);
+                expectEquals (notes[4]->getStartBeat(), 3.0_bp);
+                expectEquals (notes[5]->getStartBeat(), 3.0_bp);
+            }
+        }
+    }
+};
+
+static QuantisationTypeTests quantisationTypeTests;
+
+#endif
+
 }} // namespace tracktion { inline namespace engine

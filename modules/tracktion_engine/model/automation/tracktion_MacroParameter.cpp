@@ -35,8 +35,11 @@ MacroParameter::MacroParameter (AutomatableEditItem& automatable, Edit& e, const
 {
     jassert (EditItemID::fromID (v).isValid());
 
-    value.referTo (state, IDs::value, &edit.getUndoManager(), 0.5f);
-    macroName.referTo (state, IDs::name, &edit.getUndoManager());
+    auto um = &edit.getUndoManager();
+    value.referTo (state, IDs::value, um, 0.5f);
+    defaultValue.referTo (state, IDs::defaultValue, um);
+    macroName.referTo (state, IDs::name, um);
+
     attachToCurrentValue (value);
 }
 
@@ -48,6 +51,11 @@ MacroParameter::~MacroParameter()
 void MacroParameter::initialise()
 {
     jassert (! edit.isLoading());
+}
+
+std::optional<float> MacroParameter::getDefaultValue() const
+{
+    return defaultValue;
 }
 
 void MacroParameter::parameterChanged (float, bool byAutomation)
@@ -184,7 +192,7 @@ MacroParameter* MacroParameterList::createMacroParameter()
     edit.createNewItemID().writeID (v, nullptr);
     state.addChild (v, -1, um);
 
-    auto* mp = list->objects.getLast();
+    auto mp = list->objects.getLast();
     mp->macroName = TRANS("Macro") + " " + juce::String (list->objects.size());
     jassert (mp != nullptr);
     jassert (mp->state == v);

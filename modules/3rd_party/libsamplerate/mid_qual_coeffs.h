@@ -3,7 +3,7 @@
 ** All rights reserved.
 **
 ** This code is released under 2-clause BSD license. Please see the
-** file at : https://github.com/erikd/libsamplerate/blob/master/COPYING
+** file at : https://github.com/libsndfile/libsamplerate/blob/master/COPYING
 */
 
 /*
@@ -15,11 +15,16 @@
 **   increment        : 491
 */
 
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable: 4305)
+#endif
+
 static const struct slow_mid_qual_coeffs_s
-{   int increment ;
-    coeff_t coeffs [22438] ;
+{	int increment ;
+	coeff_t coeffs [22438] ;
 } slow_mid_qual_coeffs =
-{   491,
+{	491,
 {
  9.190632349861385109e-01,
  9.190579273831620544e-01,
@@ -22461,3 +22466,7 @@ static const struct slow_mid_qual_coeffs_s
  0.0 /* Need a final zero coefficient */
 }
 } ; /* mid_qual_coeffs */
+
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif

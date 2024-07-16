@@ -152,6 +152,7 @@ const char* VolumeAndPanPlugin::xmlTypeName = "volume";
 void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&)
 {
     refreshVCATrack();
+
     auto sliderPos = getSliderPos();
     getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), lastGainL, lastGainR);
     lastGainS = volumeFaderPositionToGain (sliderPos);
@@ -159,11 +160,13 @@ void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&)
 
 void VolumeAndPanPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     refreshVCATrack();
 }
 
 void VolumeAndPanPlugin::deinitialise()
 {
+    const juce::ScopedLock sl (vcaTrackLock);
     vcaTrack = nullptr;
 }
 
@@ -195,10 +198,15 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
         if (fc.destBuffer != nullptr)
         {
             const int numChansIn = fc.destBuffer->getNumChannels();
-            const float vcaPosDelta = vcaTrack != nullptr
-                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime.getStart()))
-                                        - decibelsToVolumeFaderPosition (0.0f)
-                                    : 0.0f;
+            float vcaPosDelta = 0.0f;
+
+            {
+                const juce::ScopedLock sl (vcaTrackLock);
+                vcaPosDelta = vcaTrack != nullptr
+                                ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime.getStart()))
+                                    - decibelsToVolumeFaderPosition (0.0f)
+                                : 0.0f;
+            }
 
             float lgain, rgain;
             getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);
@@ -232,6 +240,7 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void VolumeAndPanPlugin::refreshVCATrack()
 {
+    const juce::ScopedLock sl (vcaTrackLock);
     vcaTrack = ignoreVca ? nullptr : dynamic_cast<AudioTrack*> (getOwnerTrack());
 }
 

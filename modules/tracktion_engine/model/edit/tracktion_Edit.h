@@ -252,7 +252,7 @@ public:
     /** Returns the AbletonLink object.
         Used to sync an Edit's playback with an AbletonLink session.
     */
-    AbletonLink& getAbletonLink() const noexcept                        { return *abletonLink; }
+    AbletonLink& getAbletonLink() const noexcept;
 
     //==============================================================================
     /**
@@ -818,7 +818,7 @@ private:
     std::unique_ptr<MirroredPluginUpdateTimer> mirroredPluginUpdateTimer;
     juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> masterVolumePlugin;
     std::unique_ptr<TransportControl> transportControl;
-    std::unique_ptr<AbletonLink> abletonLink;
+    mutable std::unique_ptr<AbletonLink> abletonLink;
     std::unique_ptr<AutomationRecordManager> automationRecordManager;
     std::unique_ptr<MarkerManager> markerManager;
     struct UndoTransactionTimer;

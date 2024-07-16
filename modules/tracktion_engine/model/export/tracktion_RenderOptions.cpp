@@ -642,7 +642,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             else
             {
                 for (auto c : allowedClips)
-                    c->removeFromParentTrack();
+                    c->removeFromParent();
             }
         }
     }

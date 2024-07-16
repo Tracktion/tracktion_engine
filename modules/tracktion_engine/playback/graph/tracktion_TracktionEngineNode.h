@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 namespace tracktion { inline namespace engine
 {
 
@@ -21,6 +23,9 @@ struct ProcessState
 
     /** Creates a ProcessState that will update the editBeatRange field. */
     ProcessState (tracktion::graph::PlayHeadState&, const TempoSequence&);
+
+    /** Creates a ProcessState that will update the editBeatRange field. */
+    ProcessState (tracktion::graph::PlayHeadState&, const tempo::Sequence&);
 
     /** An enum to indicate if the PlayHeadState continuity should be updated. */
     enum class UpdateContinuityFlags { no, yes };
@@ -40,13 +45,25 @@ struct ProcessState
     */
     void setPlaybackSpeedRatio (double newRatio);
 
+    /** Sets the TempoSequence this state utilises. */
+    void setTempoSequence (const tempo::Sequence*);
+
+    /** Returns the tempo::Sequence this state has been initialised with one. */
+    const tempo::Sequence* getTempoSequence() const;
+
+    /** Returns the tempo::Sequence::Position this state uses. */
+    const tempo::Sequence::Position* getTempoSequencePosition() const;
+
     tracktion::graph::PlayHeadState& playHeadState;
-    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
     TimeRange editTimeRange;
     BeatRange editBeatRange;
+
+private:
+    const tempo::Sequence* tempoSequence = nullptr;
+    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
 };
 
 
@@ -67,22 +84,22 @@ public:
     
     //==============================================================================
     /** Returns the number of samples in the current process block. */
-    int getNumSamples() const                               { return processState.numSamples; }
+    int getNumSamples() const                               { return processState->numSamples; }
 
     /** Returns the sample rate of the current process block. */
-    double getSampleRate() const                            { return processState.sampleRate; }
+    double getSampleRate() const                            { return processState->sampleRate; }
 
     /** Returns the timeline sample range of the current process block. */
-    juce::Range<int64_t> getTimelineSampleRange() const     { return processState.timelineSampleRange; }
+    juce::Range<int64_t> getTimelineSampleRange() const     { return processState->timelineSampleRange; }
 
     /** Returns the edit time range of the current process block. */
-    TimeRange getEditTimeRange() const                      { return processState.editTimeRange; }
+    TimeRange getEditTimeRange() const                      { return processState->editTimeRange; }
 
     /** Returns the edit beat range of the current process block. */
-    BeatRange getEditBeatRange() const                      { return processState.editBeatRange; }
+    BeatRange getEditBeatRange() const                      { return processState->editBeatRange; }
 
     /** Returns the reference sample range (from the DeviceManager) of the current process block. */
-    juce::Range<int64_t> getReferenceSampleRange() const    { return processState.referenceSampleRange; }
+    juce::Range<int64_t> getReferenceSampleRange() const    { return processState->referenceSampleRange; }
 
     /** Returns the key of the current process block. */
     tempo::Key getKey() const;
@@ -99,14 +116,42 @@ public:
 
     //==============================================================================
     /** Returns the PlayHeadState in use. */
-    tracktion::graph::PlayHeadState& getPlayHeadState()      { return processState.playHeadState; }
+    tracktion::graph::PlayHeadState& getPlayHeadState()      { return processState->playHeadState; }
 
     /** Returns the PlayHead in use. */
     tracktion::graph::PlayHead& getPlayHead()                { return getPlayHeadState().playHead; }
 
-protected:
+    /** Returns the ProcessState in use. */
+    ProcessState& getProcessState()                          { return *processState; }
+
     //==============================================================================
-    ProcessState& processState;
+    /** @internal */
+    void setProcessState (ProcessState&);
+
+private:
+    //==============================================================================
+    ProcessState* processState; // Must never be nullptr
 };
+
+
+//==============================================================================
+//==============================================================================
+class DynamicallyOffsettableNodeBase
+{
+public:
+    DynamicallyOffsettableNodeBase() = default;
+    virtual ~DynamicallyOffsettableNodeBase() = default;
+    
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+     */
+    virtual void setDynamicOffsetBeats (BeatDuration) {}
+
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    virtual void setDynamicOffsetTime (TimeDuration) {}
+};
+
 
 }} // namespace tracktion { inline namespace engine

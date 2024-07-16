@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-AutomationCurve::AutomationCurve()  : state (IDs::AUTOMATIONCURVE)
+AutomationCurve::AutomationCurve()
+    : state (IDs::AUTOMATIONCURVE)
 {
 }
 
@@ -22,21 +23,13 @@ AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTre
         state = juce::ValueTree (IDs::AUTOMATIONCURVE);
 }
 
-AutomationCurve::AutomationCurve (const AutomationCurve& other)
-    : parentState (other.parentState), state (other.state), ownerParam (other.ownerParam)
+AutomationCurve::AutomationCurve (const AutomationCurve& o)
+    : parentState (o.parentState), state (o.state), ownerParam (o.ownerParam)
 {
 }
 
 AutomationCurve::~AutomationCurve()
 {
-}
-
-AutomationCurve& AutomationCurve::operator= (const AutomationCurve& other)
-{
-    parentState = other.parentState;
-    state = other.state;
-    ownerParam = other.ownerParam;
-    return *this;
 }
 
 void AutomationCurve::setState (const juce::ValueTree& v)

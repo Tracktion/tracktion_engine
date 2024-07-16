@@ -27,15 +27,16 @@
 
 #pragma once
 
-#include "common/tracktion_graph_Dev.h"
+#include "../common/tracktion_graph_Dev.h"
 
 
 //==============================================================================
 //==============================================================================
 /** @internal */
-inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkResult> results)
+inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
+                                   std::vector<BenchmarkResult> results)
 {
-    if (apiKey.isEmpty())
+    if (apiKey.isEmpty() || branchName.isEmpty())
     {
         jassertfalse;
         return false;
@@ -51,7 +52,7 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
         fields->setProperty ("benchmark_name",              juce::String (r.description.name).quoted ('\''));
         fields->setProperty ("benchmark_description",       juce::String (r.description.description).quoted ('\''));
         fields->setProperty ("benchmark_platform",          juce::String (r.description.platform).quoted ('\''));
-        fields->setProperty ("benchmark_time",              r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
+        fields->setProperty ("benchmark_time",              r.date.toISO8601 (true).trimCharactersAtEnd ("Z").upToFirstOccurrenceOf ("+", false, false).quoted ('\''));
         fields->setProperty ("benchmark_duration",          r.totalSeconds);
         fields->setProperty ("benchmark_duration_min",      r.minSeconds);
         fields->setProperty ("benchmark_duration_max",      r.maxSeconds);
@@ -62,6 +63,7 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
         fields->setProperty ("benchmark_cycles_max",        (juce::int64) r.maxCycles);
         fields->setProperty ("benchmark_cycles_mean",       (juce::int64) r.meanCycles);
         fields->setProperty ("benchmark_cycles_variance",   r.varianceCycles);
+        fields->setProperty ("benchmark_branch_name",       branchName.quoted ('\''));
 
         records.add (fields.get());
     }
@@ -103,6 +105,7 @@ int main (int, char**)
                   << "\n\t[cycles]\t" << r.totalCycles << "\t(min: " << r.minCycles << ", max: " << r.maxCycles  << ", mean: " << r.meanCycles << ", var: " << r.varianceCycles << ")\n\n";
 
     if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
+                               SystemStats::getEnvironmentVariable ("BM_BRANCH_NAME", {}),
                                std::move (results)))
     {
         std::cout << "INFO: Published benchmark results\n";

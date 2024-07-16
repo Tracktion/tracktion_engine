@@ -28,7 +28,7 @@ void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
     
     // If the source only outputs to this node, we can steal its data
-    if (numOutputNodes == 1)
+    if (input->numOutputNodes == 1)
         pc.buffers.midi.swapWith (sourceBuffers.midi);
     else
         pc.buffers.midi.copyFrom (sourceBuffers.midi);

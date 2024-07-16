@@ -44,7 +44,7 @@ private:
     MidiMessageArray liveRecordedMessages;
     int numLiveMessagesToPlay = 0; // the index of the first message that's been recorded in the current loop
     juce::CriticalSection liveInputLock;
-    unsigned int lastReadTime = 0, maxExpectedMsPerBuffer = 0;
+    unsigned int lastReadTime = juce::Time::getApproximateMillisecondCounter(), maxExpectedMsPerBuffer = 0;
     double sampleRate = 44100.0, lastPlayheadTime = 0;
 
     //==============================================================================

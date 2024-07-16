@@ -1735,6 +1735,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);
+                        midiList->setImportedFileName (f.getFileName());
                         midiList->importMidiSequence (channelSequence, nullptr, TimePosition(), nullptr);
 
                         if (! midiList->isEmpty())

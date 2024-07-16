@@ -189,7 +189,7 @@ juce::Array<int> InputDeviceInstance::getTargetIndexes() const
     return indexes;
 }
 
-void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool moveToTrack)
+void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool moveToTrack, juce::UndoManager* um)
 {
     if (isRecording())
     {
@@ -200,16 +200,16 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
     if (owner.isTrackDevice() || moveToTrack)
     {
         for (auto t : getTargetTracks())
-            removeTargetTrack (*t);
+            removeTargetTrack (*t, um);
     }
     else
     {
-        removeTargetTrack (track);
+        removeTargetTrack (track, um);
     }
 
     auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
-    state.addChild (v, -1, &edit.getUndoManager());
-    
+    state.addChild (v, -1, um);
+
     auto& dest = *destTracks[destTracks.size() - 1];
     dest.targetTrack = track.itemID;
     dest.targetIndex = index;
@@ -217,7 +217,7 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
     trackDeviceEnabler.triggerAsyncUpdate();
 }
 
-void InputDeviceInstance::removeTargetTrack (AudioTrack& track)
+void InputDeviceInstance::removeTargetTrack (AudioTrack& track, juce::UndoManager* um)
 {
     if (isRecording())
     {
@@ -229,16 +229,16 @@ void InputDeviceInstance::removeTargetTrack (AudioTrack& track)
     {
         auto& dt = *destTracks[i];
         if (dt.targetTrack == track.itemID)
-            state.removeChild (dt.state, &edit.getUndoManager());
+            state.removeChild (dt.state, um);
     }
 }
 
-void InputDeviceInstance::removeTargetTrack (AudioTrack& track, int index)
+void InputDeviceInstance::removeTargetTrack (AudioTrack& track, int index, juce::UndoManager* um)
 {
-    removeTargetTrack (track.itemID, index);
+    removeTargetTrack (track.itemID, index, um);
 }
 
-void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index)
+void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index, juce::UndoManager* um)
 {
     if (isRecording())
     {
@@ -250,11 +250,11 @@ void InputDeviceInstance::removeTargetTrack (EditItemID trackID, int index)
     {
         auto& dt = *destTracks[i];
         if (dt.targetTrack == trackID && dt.targetIndex == index)
-            state.removeChild (dt.state, &edit.getUndoManager());
+            state.removeChild (dt.state, um);
     }
 }
 
-void InputDeviceInstance::clearFromTracks()
+void InputDeviceInstance::clearFromTracks (juce::UndoManager* um)
 {
     if (isRecording())
     {
@@ -265,7 +265,7 @@ void InputDeviceInstance::clearFromTracks()
     for (int i = destTracks.size(); --i >= 0;)
     {
         auto& dt = *destTracks[i];
-        state.removeChild (dt.state, &edit.getUndoManager());
+        state.removeChild (dt.state, um);
     }
 
     trackDeviceEnabler.triggerAsyncUpdate();
@@ -365,14 +365,11 @@ void InputDeviceInstance::prepareAndPunchRecord()
         if (! (isRecordingEnabled (*t) && edit.getTransport().isRecording()))
             return;
 
-        auto& dm = edit.engine.getDeviceManager();
-        const auto start = context.getPosition();
-        const double sampleRate = dm.getSampleRate();
-        const int blockSize = dm.getBlockSize();
+        // Punch in at the current play time don't punch out until recording is stopped
+        InputDeviceInstance::RecordingParameters params;
+        params.punchRange   = { context.getPosition(), Edit::getMaximumEditTimeRange().getEnd() };
 
-        auto error = prepareToRecord (start, start, sampleRate, blockSize, true);
-
-        if (error.isNotEmpty())
+        if (const auto error = prepareToRecord (params); error.isNotEmpty())
             edit.engine.getUIBehaviour().showWarningMessage (error);
         else
             startRecording();

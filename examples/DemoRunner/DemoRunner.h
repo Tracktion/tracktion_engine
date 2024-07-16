@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "common/Utilities.h"
+#include "../common/Utilities.h"
 
 using namespace tracktion::literals;
 using namespace std::literals;
@@ -94,7 +94,9 @@ struct DemoTypeBase
 //==============================================================================
 // Include demo files to register them
 #include "demos/AbletonLinkDemo.h"
+#include "demos/ContainerClipDemo.h"
 #include "demos/DistortionEffectDemo.h"
+#include "demos/GlobalQuantiseDemo.h"
 #include "demos/IRPluginDemo.h"
 #include "demos/MidiRecordingDemo.h"
 #include "demos/PatternGeneratorDemo.h"

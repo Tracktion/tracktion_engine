@@ -379,14 +379,10 @@ void Project::redirectIDsFromProject (int oldProjId, int newProjId)
 
                 for (auto exportable : Exportable::addAllExportables (ed))
                 {
-                    int i = 0;
-
                     for (auto& item : exportable->getReferencedItems())
                     {
                          if (item.itemID.getProjectID() == oldProjId)
                              exportable->reassignReferencedItem (item, item.itemID.withNewProjectID (newProjId), 0.0);
-
-                        ++i;
                     }
                 }
 

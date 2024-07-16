@@ -64,7 +64,7 @@ public:
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
         // If the source only outputs to this node, we can steal its data
-        if (numOutputNodes == 1)
+        if (input->numOutputNodes == 1)
         {
             pc.buffers.midi.swapWith (sourceBuffers.midi);
             setAudioOutput (input.get(), sourceBuffers.audio);
@@ -112,7 +112,7 @@ private:
     void initialisePlugin()
     {
         // N.B. This is deliberately zeroed as it (correctly) assumes the LevelMeterPlugin doesn't need the info during initialisation
-        meterPlugin.baseClassInitialise ({ TimePosition(), 0.0, 0 });
+        meterPlugin.baseClassInitialise ({ 0_tp, 0.0, 0 });
         isInitialised = true;
     }
     

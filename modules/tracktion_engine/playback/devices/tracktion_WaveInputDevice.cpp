@@ -307,8 +307,7 @@ public:
         return juce::Result::ok();
     }
 
-    juce::String prepareToRecord (TimePosition playStart, TimePosition punchIn, double sr,
-                                  int /*blockSizeSamples*/, bool isLivePunch) override
+    juce::String prepareToRecord (RecordingParameters params) override
     {
         CRASH_TRACER
 
@@ -331,66 +330,53 @@ public:
                 return res.getErrorMessage();
 
             auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
-            rc->sampleRate = sr;
+            rc->sampleRate = edit.engine.getDeviceManager().getSampleRate();
 
             juce::StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (playStart, sr));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (params.punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
             rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
                                                        wi.isStereoPair() ? 2 : 1,
-                                                       sr, wi.bitDepth, metadata, 0));
+                                                       rc->sampleRate, wi.bitDepth, metadata, 0));
 
             if (rc->fileWriter->isOpen())
             {
                 CRASH_TRACER
-                auto endRecTime = punchIn + Edit::getMaximumEditTimeRange().getLength();
-                auto punchInTime = punchIn;
-
                 rc->firstRecCallback = true;
                 muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
-                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, sr);
+                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
                 rc->adjustSamples += context.getLatencySamples();
 
-                if (! isLivePunch)
+                if (edit.recordingPunchInOut)
                 {
-                    rc->recordingWithPunch = edit.recordingPunchInOut;
+                    rc->recordingWithPunch = true;
 
-                    if (rc->recordingWithPunch)
+                    auto loopRange = context.transport.getLoopRange();
+                    auto muteStart = std::max (params.punchRange.getStart(), loopRange.getStart());
+                    auto muteEnd   = params.punchRange.getEnd();
+
+                    if (params.punchRange.getStart() < loopRange.getEnd() - 0.5s)
                     {
-                        auto loopRange = context.transport.getLoopRange();
-                        punchInTime    = std::max (punchInTime, loopRange.getStart() - 0.5s);
-                        auto muteStart = std::max (punchInTime, loopRange.getStart());
-                        auto muteEnd   = endRecTime;
-
-                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
-                            punchInTime = context.getLoopTimes().getStart();
-
-                        if (playStart < loopRange.getEnd() - 0.5s)
-                        {
-                            endRecTime = loopRange.getEnd() + adjustSeconds + 0.8s;
-                            muteEnd    = loopRange.getEnd();
-                        }
-
-                        rc->muteTimes = { muteStart, muteEnd };
+                        params.punchRange = params.punchRange.withEnd (params.punchRange.getEnd() + 0.8s);
+                        muteEnd = loopRange.getEnd();
                     }
-                    else if (context.isLooping())
-                    {
-                        punchInTime = context.getLoopTimes().getStart();
-                    }
+
+                    rc->muteTimes = { muteStart, muteEnd };
                 }
 
-                rc->punchTimes = { punchInTime, endRecTime };
+                rc->punchTimes = params.punchRange;
+                rc->recordingBlockRange = rc->punchTimes.withEnd (rc->punchTimes.getEnd() + adjustSeconds);
                 rc->hasHitThreshold = (wi.recordTriggerDb <= -50.0f);
 
                 if (edit.engine.getUIBehaviour().shouldGenerateLiveWaveformsWhenRecording())
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, sr);
-                        rc->thumbnail->punchInTime = punchInTime;
+                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
+                        rc->thumbnail->punchInTime = params.punchRange.getStart();
                     }
                 }
 
@@ -447,6 +433,13 @@ public:
         if (recordingContext == nullptr)
             return {};
 
+        // If we didn't get as far as adding any samples, delete the header of the file that will have been written
+        if (recordingContext->punchTimes.getStart() >= context.getUnloopedPosition())
+        {
+            recordWasCancelled();
+            return {};
+        }
+
         return context.stopRecording (*this,
                                       { recordingContext->punchTimes.getStart(),
                                         context.getUnloopedPosition() },
@@ -500,7 +493,10 @@ public:
         Engine& engine;
         juce::File file;
         double sampleRate = 44100.0;
-        TimeRange punchTimes, muteTimes;
+        TimeRange punchTimes;           /**< The Edit time range that the recorded clip should start/stop. */
+        TimeRange muteTimes;            /**< The Edit time range that the destination track should be muted for. */
+        TimeRange recordingBlockRange;  /**< The Edit time range that blocks should be recorded for.
+                                             This might be different to the punch range as it accounts for device and graph latency. */
         bool hasHitThreshold = false, firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
 
@@ -1069,7 +1065,7 @@ public:
 
             muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);
 
-            if (recordingContext->punchTimes.overlaps (blockRange))
+            if (recordingContext->recordingBlockRange.overlaps (blockRange))
             {
                 if (! recordingContext->hasHitThreshold)
                 {
@@ -1089,7 +1085,7 @@ public:
                 {
                     recordingContext->firstRecCallback = false;
 
-                    auto timeDiff = blockRange.getStart() - recordingContext->punchTimes.getStart();
+                    auto timeDiff = blockRange.getStart() - recordingContext->recordingBlockRange.getStart();
                     recordingContext->adjustSamples -= (int) tracktion::toSamples (timeDiff, recordingContext->sampleRate);
                 }
 

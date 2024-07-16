@@ -36,6 +36,8 @@ AuxSendPlugin::~AuxSendPlugin()
 
 bool AuxSendPlugin::shouldProcess()
 {
+    const juce::ScopedLock sl (ownerTrackLock);
+
     if (ownerTrack != nullptr)
     {
         // If this track gets disabled when muted,
@@ -46,12 +48,13 @@ bool AuxSendPlugin::shouldProcess()
 
         return ! ownerTrack->isMuted (true);
     }
+
     return true;
 }
 
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
-juce::String AuxSendPlugin::getName()
+juce::String AuxSendPlugin::getName() const
 {
     juce::String nm (edit.getAuxBusName (busNumber));
 
@@ -80,7 +83,11 @@ void AuxSendPlugin::initialise (const PluginInitialisationInfo& info)
 
 void AuxSendPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
-    ownerTrack = getOwnerTrack();
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    auto newOwnerTrack = getOwnerTrack();
+
+    const juce::ScopedLock sl (ownerTrackLock);
+    ownerTrack = newOwnerTrack;
 }
 
 void AuxSendPlugin::deinitialise()

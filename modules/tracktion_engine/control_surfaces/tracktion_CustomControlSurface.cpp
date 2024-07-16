@@ -182,9 +182,15 @@ juce::Array<ControlSurface*> CustomControlSurface::getCustomSurfaces (ExternalCo
     juce::Array<ControlSurface*> surfaces;
 
     if (auto n = ecm.engine.getPropertyStorage().getXmlProperty (SettingID::customMidiControllers))
+    {
         for (auto controllerXml : n->getChildIterator())
+        {
             if (controllerXml->hasTagName ("MIDICUSTOMCONTROLSURFACE"))
                 surfaces.add (new CustomControlSurface (ecm, *controllerXml));
+            else if (auto ccs = ecm.engine.getEngineBehaviour().getCustomControlSurfaceForXML (ecm, *controllerXml))
+                surfaces.add (ccs);
+        }
+    }
 
     return surfaces;
 }

@@ -19,7 +19,7 @@ class WaveAudioClip  : public AudioClipBase
 {
 public:
     /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */
-    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     
     /** Destructor. */
     ~WaveAudioClip() override;
@@ -72,7 +72,7 @@ public:
     /** @internal */
     bool isMidi() const override                                { return false; }
     /** @internal */
-    bool usesSourceFile() override                              { return true; }
+    bool usesSourceFile() const override                        { return true; }
 
     /** @internal */
     TimeDuration getSourceLength() const override;

@@ -11,6 +11,49 @@
 namespace tracktion { inline namespace engine
 {
 
+//==============================================================================
+//==============================================================================
+FallbackReader::FallbackReader()
+    : juce::AudioFormatReader (nullptr, "FallbackReader")
+{
+}
+
+
+//==============================================================================
+//==============================================================================
+class BufferingAudioReaderWrapper   : public FallbackReader
+{
+public:
+    BufferingAudioReaderWrapper (std::unique_ptr<juce::BufferingAudioReader> sourceReader)
+        : source (std::move (sourceReader))
+    {
+        sampleRate              = source->sampleRate;
+        bitsPerSample           = source->bitsPerSample;
+        lengthInSamples         = source->lengthInSamples;
+        numChannels             = source->numChannels;
+        usesFloatingPointData   = source->usesFloatingPointData;
+        metadataValues          = source->metadataValues;
+    }
+
+    void setReadTimeout (int timeoutMilliseconds) override
+    {
+        source->setReadTimeout (timeoutMilliseconds);
+    }
+
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+                      juce::int64 startSampleInFile, int numSamples) override
+    {
+        return source->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
+                                    startSampleInFile, numSamples);
+    }
+
+private:
+    std::unique_ptr<juce::BufferingAudioReader> source;
+};
+
+
+//==============================================================================
+//==============================================================================
 static void clearSetOfChannels (int* const* channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
@@ -736,8 +779,34 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
     {
         backgroundReaderThread.startThread (juce::Thread::Priority::low);
 
-        return new Reader (*this, nullptr, new juce::BufferingAudioReader (reader, backgroundReaderThread,
-                                                                           48000 * 5));
+        return new Reader (*this, nullptr, std::make_unique<BufferingAudioReaderWrapper> (std::make_unique<juce::BufferingAudioReader> (reader, backgroundReaderThread,
+                                                                                                                                        48000 * 5)));
+    }
+
+    return {};
+}
+
+AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
+                                                          const std::function<std::unique_ptr<FallbackReader> (juce::AudioFormatReader* sourceReader,
+                                                                                                               juce::TimeSliceThread& timeSliceThread,
+                                                                                                               int samplesToBuffer)>& createFallbackReader)
+{
+    CRASH_TRACER
+    const juce::ScopedWriteLock sl (fileListLock);
+
+    if (auto f = getOrCreateCachedFile (file))
+    {
+        auto r = new Reader (*this, f, nullptr);
+        f->addClient (r);
+        return r;
+    }
+
+    if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
+    {
+        backgroundReaderThread.startThread (juce::Thread::Priority::low);
+        auto fallbackReader = createFallbackReader (reader, backgroundReaderThread,
+                                                    48000 * 5);
+        return new Reader (*this, nullptr, std::move (fallbackReader));
     }
 
     return {};
@@ -754,8 +823,8 @@ void AudioFileCache::purgeOrphanReaders()
 }
 
 //==============================================================================
-AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, juce::BufferingAudioReader* fallback)
-    : cache (c), file (f), fallbackReader (fallback)
+AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, std::unique_ptr<FallbackReader> fallback)
+    : cache (c), file (f), fallbackReader (std::move (fallback))
 {
     jassert (file != nullptr || fallbackReader != nullptr);
 }

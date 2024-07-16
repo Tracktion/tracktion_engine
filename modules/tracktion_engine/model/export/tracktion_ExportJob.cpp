@@ -166,7 +166,7 @@ void ExportJob::copyEditFilesToTempDir()
                 if (clip->type != TrackItem::Type::video
                       && clip->type != TrackItem::Type::marker)
                 {
-                    clip->removeFromParentTrack();
+                    clip->removeFromParent();
                 }
             }
         }

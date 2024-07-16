@@ -8,7 +8,8 @@
 # selectively disable behaviour by setting the following 
 # enviroment variables:
 # 
-# DISABLE_BUILD:            Set to 1 to disable building (used for generating IDE files)
+# GENERATE_IDE_PROJECTS:    Set to 1 to generate default IDE files
+# DISABLE_BUILD:            Set to 1 to disable standard building
 # ENABLE_ASAN:              Set to 1 to enable ASan builds
 # ENABLE_TSAN:              Set to 1 to enable TSan builds
 # ENABLE_STATIC_ANALYSER:   Set to 1 to enable Static Analyser builds
@@ -80,6 +81,7 @@ function buildExample()
         # Use the default Unix Makefiles cmake generator
         CMAKE_GENERATOR=""
         CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
+        CMAKE_BUILD_PLATFORM_ARGS="--parallel `nproc`"
     elif [[ "$PLATFORM" == "mac" ]]; then
         BINARY_NAME="$PROJECT_NAME"
         APP_NAME=$BINARY_NAME
@@ -140,13 +142,18 @@ function buildExample()
         cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
     }
 
+    # Conditionally generate the IDE files for the generate_examples script
+    if [ "$GENERATE_IDE_PROJECTS" == "1" ]; then
+        generateBuildFiles
+    fi
+
     # Conditionally build and run project
     if [ "$DISABLE_BUILD" == "1" ]; then
         echo INFO: Not building example: ${APP_FILE}
     else
         generateBuildFiles
 
-        cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
+        cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release $CMAKE_BUILD_PLATFORM_ARGS
 
         if [ "$RUN_EXAMPLE" == "1" ]; then
             echo INFO: Running example: ${APP_FILE}

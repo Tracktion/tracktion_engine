@@ -23,6 +23,11 @@
 
 using namespace std::literals;
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
 //==============================================================================
 #include "tracktion_TestConfig.h"
 #include "utilities/tracktion_Benchmark.h"
@@ -34,3 +39,8 @@ using namespace std::literals;
 #include "utilities/tracktion_Tempo.test.cpp"
 #include "utilities/tracktion_Time.test.cpp"
 #include "utilities/tracktion_TimeRange.test.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif

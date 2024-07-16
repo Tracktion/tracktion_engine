@@ -30,7 +30,11 @@ namespace tracktion { inline namespace core
 /** Returns the CPU cycle count, useful for benchmarking. */
 inline std::uint64_t rdtsc()
 {
-   #if defined __has_builtin
+   #if defined (__aarch64__) || (defined (__arm64__) && defined (__APPLE__))
+    std::uint64_t result;
+    __asm __volatile("mrs %0, CNTVCT_EL0" : "=&r" (result));
+    return result;
+   #elif defined __has_builtin
     #if __has_builtin(__builtin_readcyclecounter)
      return __builtin_readcyclecounter();
     #else

@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "common/Utilities.h"
-#include "common/BinaryData.h"
-#include "common/BinaryData.cpp"
+#include "../common/Utilities.h"
+#include "../common/BinaryData.h"
+#include "../common/BinaryData.cpp"
 
 //==============================================================================
 namespace

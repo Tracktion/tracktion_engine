@@ -21,7 +21,7 @@ class EditClip    : public AudioClipBase,
 {
 public:
     //==============================================================================
-    EditClip (const juce::ValueTree&, EditItemID, ClipTrack&, ProjectItemID sourceEdit);
+    EditClip (const juce::ValueTree&, EditItemID, ClipOwner&, ProjectItemID sourceEdit);
     ~EditClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<EditClip>;
@@ -65,7 +65,7 @@ public:
 
     //==============================================================================
     TimeDuration getSourceLength() const override       { return editSnapshot == nullptr ? 0_td : editSnapshot->getLength(); }
-    bool usesSourceFile() override                      { return false; }
+    bool usesSourceFile() const override                { return false; }
     void sourceMediaChanged() override;
     void changed() override;
 

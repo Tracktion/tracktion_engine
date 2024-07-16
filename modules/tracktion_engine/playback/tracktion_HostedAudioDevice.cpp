@@ -388,21 +388,13 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
     auto newMaxChannels = std::max (parameters.inputChannels,
                                     parameters.outputChannels);
 
-    if (parameters.sampleRate != sampleRate ||
-        parameters.blockSize != blockSize   ||
-        maxChannels != newMaxChannels)
+    if (parameters.sampleRate != sampleRate
+        || parameters.blockSize != blockSize
+        || maxChannels != newMaxChannels)
     {
         maxChannels = newMaxChannels;
         parameters.sampleRate = sampleRate;
         parameters.blockSize  = blockSize;
-
-        if (! parameters.fixedBlockSize)
-        {
-            inputFifo.setSize (maxChannels, blockSize * 4);
-            outputFifo.setSize (maxChannels, blockSize * 4);
-
-            outputFifo.writeSilence (blockSize);
-        }
 
         if (deviceType != nullptr)
             deviceType->settingsChanged();
@@ -411,53 +403,18 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
 
 void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
-    if (parameters.fixedBlockSize)
-    {
-        jassert (buffer.getNumSamples() == parameters.blockSize);
+    for (auto input : midiInputs)
+        if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
+            hostedInput->processBlock (midi);
 
-        for (auto input : midiInputs)
-            if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
-                hostedInput->processBlock (midi);
+    midi.clear();
 
-        midi.clear();
+    if (deviceType != nullptr)
+        deviceType->processBlock (buffer);
 
-        if (deviceType != nullptr)
-            deviceType->processBlock (buffer);
-
-        for (auto output : midiOutputs)
-            if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
-                hostedOutput->processBlock (midi);
-    }
-    else
-    {
-        inputFifo.writeAudioAndMidi (buffer, midi);
-        midi.clear();
-
-        while (inputFifo.getNumSamplesAvailable() >= parameters.blockSize)
-        {
-            juce::MidiBuffer scratchMidi;
-            AudioScratchBuffer scratch (buffer.getNumChannels(), parameters.blockSize);
-
-            inputFifo.readAudioAndMidi (scratch.buffer, scratchMidi);
-
-            for (auto input : midiInputs)
-                if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
-                    hostedInput->processBlock (scratchMidi);
-
-            if (deviceType != nullptr)
-                deviceType->processBlock (scratch.buffer);
-
-            scratchMidi.clear();
-
-            for (auto output : midiOutputs)
-                if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
-                    hostedOutput->processBlock (scratchMidi);
-
-            outputFifo.writeAudioAndMidi (scratch.buffer, scratchMidi);
-        }
-
-        outputFifo.readAudioAndMidi (buffer, midi);
-    }
+    for (auto output : midiOutputs)
+        if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
+            hostedOutput->processBlock (midi);
 }
 
 bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice& d)

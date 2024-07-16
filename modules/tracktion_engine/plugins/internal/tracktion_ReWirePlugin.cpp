@@ -1075,7 +1075,7 @@ void ReWirePlugin::handleAsyncUpdate()
     initialiseFully();
 }
 
-juce::String ReWirePlugin::getName()
+juce::String ReWirePlugin::getName() const
 {
     if (device != nullptr)
         return currentDeviceName;
@@ -1342,12 +1342,10 @@ void ReWirePlugin::setMidiChannel (int channel)
     }
 }
 
-bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
+bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int /*midiChannel*/, juce::String& name)
 {
     if (device != nullptr)
     {
-        --midiChannel;
-
         ReWireEventTarget eventTarget;
         ReWirePrepareEventTarget (&eventTarget, (unsigned short)currentBus, (unsigned short)currentChannel);
 

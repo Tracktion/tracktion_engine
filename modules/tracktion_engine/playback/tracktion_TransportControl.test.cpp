@@ -26,7 +26,6 @@ public:
         params.sampleRate = 44100.0;
         params.blockSize = 256;
         params.inputChannels = 16;
-        params.fixedBlockSize = true;
         runSynchronisationTest (params);
 
         params.sampleRate = 48000.0;
@@ -170,7 +169,7 @@ public:
         {
             auto track = audioTracks.getUnchecked (i);
             auto inputInstance = inputInstances.getUnchecked (i);
-            inputInstance->setTargetTrack (*track, 0, true);
+            inputInstance->setTargetTrack (*track, 0, true, nullptr);
             inputInstance->setRecordingEnabled (*track, true);
         }
 

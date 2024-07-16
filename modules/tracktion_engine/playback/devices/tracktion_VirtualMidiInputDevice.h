@@ -34,6 +34,7 @@ public:
 
     static void refreshDeviceNames (Engine&);
 
+    bool useAllInputs = false;
     juce::StringArray inputDevices;
 
 private:

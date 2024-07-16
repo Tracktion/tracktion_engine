@@ -27,7 +27,7 @@ public:
     bool removeClip (EditItemID);
     bool containsClip (Clip* clip) const noexcept       { return clips.contains (clip); }
 
-    juce::String getName() override;
+    juce::String getName() const override;
 
     ClipPosition getPosition() const override           { return { range, TimeDuration() }; }
     Track* getTrack() const override                    { return track; }

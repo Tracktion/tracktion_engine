@@ -22,7 +22,7 @@ TempoTrack::~TempoTrack()
 }
 
 bool TempoTrack::isTempoTrack() const                  { return true; }
-juce::String TempoTrack::getName()                     { return TRANS ("Tempo"); }
+juce::String TempoTrack::getName() const               { return TRANS ("Tempo"); }
 juce::String TempoTrack::getSelectableDescription()    { return TRANS("Global Track"); }
 bool TempoTrack::canContainPlugin (Plugin*) const      { return false; }
 

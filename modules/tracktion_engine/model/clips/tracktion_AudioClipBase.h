@@ -35,10 +35,12 @@ class AudioClipBase    : public Clip,
 public:
     //==============================================================================
     /** Creates a basic AudioClip. */
-    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipTrack&);
+    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipOwner&);
 
     /** Destructor. */
     ~AudioClipBase() override;
+
+    using Ptr = juce::ReferenceCountedObjectPtr<AudioClipBase>;
 
     //==============================================================================
     /** Returns the maximum length for this clip.
@@ -481,12 +483,6 @@ public:
     /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();
 
-    /** Can be enabled to use a simpler playback node for time-stretched previews. */
-    void setUsesTimestretchedPreview (bool shouldUsePreview) noexcept   { useTimestretchedPreview = shouldUsePreview; }
-
-    /** Returns true if this clp should use a time-stretched preview. */
-    bool usesTimestretchedPreview() const noexcept                      { return useTimestretchedPreview; }
-
     /** Returns an AudioSegmentList describing this file if it is using auto-tempo.
         This can be useful for drawing waveforms.
         [[ message_thread ]]
@@ -566,9 +562,9 @@ public:
 
     //==============================================================================
     /** @internal */
-    void setTrack (ClipTrack*) override;
+    void setParent (ClipOwner*) override;
     /** @internal */
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     /** @internal */
     void changed() override;
 
@@ -638,12 +634,11 @@ protected:
     mutable WarpTimeManager::Ptr warpTimeManager;
     mutable std::unique_ptr<AudioSegmentList> audioSegmentList;
     std::unique_ptr<ClipEffects> clipEffects;
-    AsyncFunctionCaller asyncFunctionCaller;
+    mutable AsyncFunctionCaller asyncFunctionCaller;
 
     juce::AudioChannelSet activeChannels;
     void updateLeftRightChannelActivenessFlags();
 
-    bool useTimestretchedPreview = false;
     PluginList pluginList;
 
     bool lastRenderJobFailed = false;

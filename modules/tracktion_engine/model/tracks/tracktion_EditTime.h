@@ -43,6 +43,9 @@ struct EditTime
     /** Creates an EditTime from a BeatPosition. */
     EditTime (BeatPosition);
 
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
+
 private:
     friend TimePosition toTime (EditTime, const TempoSequence&);
     friend BeatPosition toBeats (EditTime, const TempoSequence&);
@@ -75,6 +78,9 @@ struct EditTimeRange
 
     /** Creates an EditTimeRange from a BeatRange. */
     EditTimeRange (BeatRange);
+
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
 
 private:
     friend TimeRange toTime (EditTimeRange, const TempoSequence&);
@@ -128,6 +134,12 @@ struct ClipPosition
     /** Returns a ClipPosition scaled around an anchor point. Useful for stretching a clip. */
     ClipPosition rescaled (TimePosition anchorTime, double factor) const;
 };
+
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, TimeRange, TimeDuration offset = {});
+
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, BeatRange, BeatDuration offset = {});
 
 
 //==============================================================================
@@ -193,6 +205,11 @@ inline EditTime::EditTime (BeatPosition bp)
 {
 }
 
+inline bool EditTime::isBeats() const
+{
+    return std::holds_alternative<BeatPosition> (position);
+}
+
 //==============================================================================
 inline TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
@@ -220,6 +237,11 @@ inline EditTimeRange::EditTimeRange (TimeRange r)
 inline EditTimeRange::EditTimeRange (BeatRange r)
     : range (r)
 {
+}
+
+inline bool EditTimeRange::isBeats() const
+{
+    return std::holds_alternative<BeatRange> (range);
 }
 
 //==============================================================================

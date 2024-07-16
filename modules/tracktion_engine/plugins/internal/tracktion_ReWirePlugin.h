@@ -75,7 +75,7 @@ public:
     static const char* xmlTypeName;
 
     void initialiseFully() override;
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override                                         { return xmlTypeName; }
 
     void initialise (const PluginInitialisationInfo&) override;

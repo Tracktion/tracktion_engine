@@ -269,6 +269,14 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                      || i == IDs::fadeInType || i == IDs::fadeOutType)
                     restart();
             }
+            else if (v.hasType (IDs::LOOPINFO))
+            {
+                if (i == IDs::numBeats || i == IDs::rootNote
+                    || i == IDs::numerator || i == IDs::denominator)
+                {
+                    restart();
+                }
+            }
         }
     }
 
@@ -348,7 +356,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || v.hasType (IDs::MIDICLIP)
              || v.hasType (IDs::STEPCLIP)
              || v.hasType (IDs::EDITCLIP)
-             || v.hasType (IDs::CHORDCLIP))
+             || v.hasType (IDs::CHORDCLIP)
+             || v.hasType (IDs::CONTAINERCLIP))
             restart();
     }
 
@@ -547,7 +556,6 @@ Edit::Edit (Options options)
     pluginCache                 = std::make_unique<PluginCache> (*this);
     mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
     transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
-    abletonLink                 = std::make_unique<AbletonLink> (*transportControl);
     automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
     markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
     pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
@@ -898,7 +906,7 @@ void Edit::removeZeroLengthClips()
                 clipsToRemove.add (c);
 
     for (auto& c : clipsToRemove)
-        c->removeFromParentTrack();
+        c->removeFromParent();
 }
 
 void Edit::initialiseTracks()
@@ -1066,6 +1074,14 @@ void Edit::restartPlayback()
 EditPlaybackContext* Edit::getCurrentPlaybackContext() const
 {
     return transportControl->getCurrentPlaybackContext();
+}
+
+AbletonLink& Edit::getAbletonLink() const noexcept
+{
+    if (! abletonLink)
+        abletonLink = std::make_unique<AbletonLink> (*transportControl);
+
+    return *abletonLink;
 }
 
 //==============================================================================
@@ -1834,8 +1850,8 @@ void Edit::deleteTrack (Track* t)
 
                 for (auto at : audioTracks)
                 {
-                    if (clearWave)  editInputDevices->clearInputsOfDevice (*at, wid);
-                    if (clearMidi)  editInputDevices->clearInputsOfDevice (*at, mid);
+                    if (clearWave)  editInputDevices->clearInputsOfDevice (*at, wid, &getUndoManager());
+                    if (clearMidi)  editInputDevices->clearInputsOfDevice (*at, mid, &getUndoManager());
                 }
             }
         };
@@ -1859,7 +1875,7 @@ void Edit::deleteTrack (Track* t)
                         ep->hideWindowForShutdown();
 
                 clearEnabledTrackDevices (at);
-                editInputDevices->clearAllInputs (*at);
+                editInputDevices->clearAllInputs (*at, &getUndoManager());
             }
         }
         else
@@ -1871,7 +1887,7 @@ void Edit::deleteTrack (Track* t)
             if (auto at = dynamic_cast<AudioTrack*> (t))
             {
                 clearEnabledTrackDevices (at);
-                editInputDevices->clearAllInputs (*at);
+                editInputDevices->clearAllInputs (*at, &getUndoManager());
             }
         }
 
@@ -2585,7 +2601,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }
@@ -2639,7 +2655,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
         track = drumTrack;
 
         if (auto firstClip = midiTrack->getClips().getFirst())
-            firstClip->moveToTrack (*track);
+            firstClip->moveTo (*track);
     }
 
     if (track->pluginList.size() < 3)
@@ -2777,7 +2793,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }
@@ -2880,7 +2896,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         const AudioFile af (engine, file);
         auto length = af.getLength();
 
-        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { TimePosition(), TimePosition::fromSeconds (1.0) }, nullptr)))
+        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0_tp, 1_tp }, nullptr)))
         {
             wc->setUsesProxy (false);
             wc->getSourceFileReference().setToDirectFileReference (file, false);
@@ -2889,11 +2905,10 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             {
                 if (tryToMatchTempo || tryToMatchPitch)
                 {
-                   #if ! TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
-                    wc->setUsesTimestretchedPreview (true);
-                   #endif
                     wc->setLoopInfo (af.getInfo().loopInfo);
                     wc->setTimeStretchMode (TimeStretcher::defaultMode);
+
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
                 }
 
                 auto& targetTempo = editToMatch->tempoSequence.getTempoAt (TimePosition::fromSeconds (0.01));
@@ -2903,6 +2918,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstTempo = edit->tempoSequence.getTempo (0);
                     firstTempo->setBpm (targetTempo.getBpm());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
                     AudioFileInfo wi = wc->getWaveInfo();
@@ -2924,14 +2940,15 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstPitch = edit->pitchSequence.getPitch (0);
                     firstPitch->setPitch (targetPitch->getPitch());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
                     wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
                 }
             }
 
-            const TimeRange timeRange (TimePosition(), TimeDuration::fromSeconds (length));
-            wc->setPosition ({ timeRange, TimeDuration() });
+            const TimeRange timeRange (0_tp, TimeDuration::fromSeconds (length));
+            wc->setPosition ({ timeRange, 0_td });
             edit->getTransport().setLoopRange (timeRange);
         }
     }

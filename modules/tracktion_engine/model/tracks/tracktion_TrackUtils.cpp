@@ -231,9 +231,9 @@ void TrackList::sortTracksByType (juce::ValueTree& editState, juce::UndoManager*
         {
             if (isMovableTrack (v))     return 6;
             if (isMasterTrack (v))      return 5;
-            if (isChordTrack (v))       return 4;
+            if (isTempoTrack (v))       return 4;
             if (isMarkerTrack (v))      return 3;
-            if (isTempoTrack (v))       return 2;
+            if (isChordTrack (v))       return 2;
             if (isArrangerTrack (v))    return 1;
             return 0;
         }
@@ -352,7 +352,10 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 {
                     TrackAutomationSection::ActiveParameters ap;
                     ap.param = param;
-                    ap.curve = param->getCurve();
+                    ap.curve.setState (param->getCurve().state);
+                    ap.curve.setParentState (param->getCurve().parentState);
+                    ap.curve.setOwnerParameter (param->getCurve().getOwnerParameter());
+                    
                     section.activeParameters.add (ap);
                 }
             }

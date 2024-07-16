@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "common/Utilities.h"
+#include "../common/Utilities.h"
 
 
 //==============================================================================
@@ -138,7 +138,7 @@ private:
                 {
                     if (&instance->getInputDevice() == dev)
                     {
-                        instance->setTargetTrack (*t, 0, true);
+                        instance->setTargetTrack (*t, 0, true, &edit.getUndoManager());
 
                         if (auto destination = instance->getDestination (*t, 0))
                             destination->recordEnabled = true;
@@ -152,7 +152,7 @@ private:
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
                     if (&instance->getInputDevice() == dev)
-                        instance->setTargetTrack (*t, 0, false);
+                        instance->setTargetTrack (*t, 0, false, &edit.getUndoManager());
 
         edit.restartPlayback();
     }
@@ -385,10 +385,10 @@ private:
                 {
                     EngineHelpers::removeAllClips (*EngineHelpers::getOrInsertAudioTrackAt (edit, 0));
 
-                    auto& dm = edit.engine.getDeviceManager();
-                    const auto start = edit.getTransport().getPosition();
+                    te::InputDeviceInstance::RecordingParameters params;
+                    params.punchRange   = { edit.getTransport().getPosition(), te::Edit::getMaximumEditTimeRange().getEnd() };
 
-                    if (auto error = instance->prepareToRecord (start, start, dm.getSampleRate(), dm.getBlockSize(), true); error.isNotEmpty())
+                    if (auto error = instance->prepareToRecord (params); error.isNotEmpty())
                         edit.engine.getUIBehaviour().showWarningMessage (error);
                     else
                         instance->startRecording();
@@ -407,7 +407,7 @@ private:
         void stopVideo() override {}
 
         void recordingFinished (te::InputDeviceInstance&,
-                                juce::ReferenceCountedArray<te::Clip> /*recordedClips*/) override
+                                const juce::ReferenceCountedArray<te::Clip>& /*recordedClips*/) override
         {}
     };
 

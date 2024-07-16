@@ -27,7 +27,7 @@ public:
     static const char* getPluginName()      { return NEEDS_TRANS("Compressor/Limiter"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                                     { return TRANS("Compressor"); }
+    juce::String getName() const override                               { return TRANS("Compressor"); }
     juce::String getPluginType() override                               { return xmlTypeName; }
     juce::String getShortName (int) override                            { return TRANS("Comp"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }

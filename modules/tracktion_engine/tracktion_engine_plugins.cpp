@@ -24,9 +24,12 @@
 #include <chrono>
 using namespace std::literals;
 
-#if TRACKTION_UNIT_TESTS
- #include <tracktion_core/tracktion_TestConfig.h>
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
+
+#include <tracktion_core/tracktion_TestConfig.h>
 
 #include <tracktion_graph/tracktion_graph.h>
 
@@ -34,6 +37,8 @@ using namespace std::literals;
 #include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
 
 #include "tracktion_engine.h"
+
+#include "utilities/tracktion_TestUtilities.h"
 
 #include "playback/graph/tracktion_TracktionEngineNode.h"
 #include "playback/graph/tracktion_PluginNode.h"
@@ -86,5 +91,10 @@ using namespace std::literals;
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
 
 #include "plugins/tracktion_Plugins.test.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 #endif

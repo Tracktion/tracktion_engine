@@ -22,12 +22,11 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getTooltip() override;
 
     void initialise (const PluginInitialisationInfo&) override;
-    void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
 
     bool takesAudioInput() override                     { return true; }
@@ -78,8 +77,6 @@ public:
     static constexpr double rackMaxDb = 12.0;
 
 private:
-    float lastLeftIn = 0.0f, lastRightIn = 0.0f, lastLeftOut = 0.0f, lastRightOut = 0.0f;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RackInstance)
 };
 

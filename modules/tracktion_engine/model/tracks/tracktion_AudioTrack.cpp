@@ -154,8 +154,8 @@ AudioTrack::~AudioTrack()
 
         for (auto at : getTracksOfType<AudioTrack> (edit, true))
         {
-            if (clearWave)  edit.getEditInputDevices().clearInputsOfDevice (*at, *waveInputDevice);
-            if (clearMidi)  edit.getEditInputDevices().clearInputsOfDevice (*at, *midiInputDevice);
+            if (clearWave)  edit.getEditInputDevices().clearInputsOfDevice (*at, *waveInputDevice, &edit.getUndoManager());
+            if (clearMidi)  edit.getEditInputDevices().clearInputsOfDevice (*at, *midiInputDevice, &edit.getUndoManager());
         }
     }
 
@@ -195,7 +195,7 @@ void AudioTrack::sanityCheckName()
     if (midiInputDevice != nullptr) midiInputDevice->setAlias (devName);
 }
 
-juce::String AudioTrack::getName()
+juce::String AudioTrack::getName() const
 {
     auto n = ClipTrack::getName();
 
@@ -205,10 +205,22 @@ juce::String AudioTrack::getName()
     return n;
 }
 
-int AudioTrack::getAudioTrackNumber() noexcept
+int AudioTrack::getAudioTrackNumber() const noexcept
 {
-    return getAudioTracks (edit).indexOf (this) + 1;
-}
+    int result = 1;
+
+    edit.visitAllTracksRecursive ([&] (Track& t)
+    {
+        if (this == &t)
+            return false;
+
+        if (t.isAudioTrack())
+            ++result;
+
+        return true;
+    });
+
+    return result;}
 
 VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPluginsOfType<VolumeAndPanPlugin>().getLast(); }
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
@@ -639,7 +651,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
         if (i == IDs::maxInputs)
         {
             maxInputs.forceUpdateOfCachedValue();
-            edit.getEditInputDevices().clearAllInputs (*this);
+            edit.getEditInputDevices().clearAllInputs (*this, &edit.getUndoManager());
         }
         else if (i == IDs::ghostTracks)
         {

@@ -53,6 +53,11 @@ LevelMeasurer::~LevelMeasurer()
 }
 
 //==============================================================================
+int LevelMeasurer::Client::getNumChannelsUsed() const noexcept
+{
+    return numChannelsUsed;
+}
+
 void LevelMeasurer::Client::reset() noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
@@ -135,7 +140,7 @@ void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
     
-    if (midiLevels.dB >= midiLevels.dB)
+    if (newMidiLevel.dB >= midiLevels.dB)
         midiLevels = newMidiLevel;
 }
 
@@ -149,6 +154,7 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         return;
 
     auto numChans = std::min ((int) Client::maxNumChannels, buffer.getNumChannels());
+    numActiveChannels = numChans;
     auto now = juce::Time::getApproximateMillisecondCounter();
 
     if (mode == LevelMeasurer::peakMode)
@@ -210,6 +216,8 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
 
             c->setNumChannelsUsed (2);
         }
+
+        numActiveChannels = 2;
     }
 }
 

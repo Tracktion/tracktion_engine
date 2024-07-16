@@ -138,7 +138,7 @@ namespace EngineHelpers
         auto clips = track.getClips();
 
         for (int i = clips.size(); --i >= 0;)
-            clips.getUnchecked (i)->removeFromParentTrack();
+            clips.getUnchecked (i)->removeFromParent();
     }
     
     inline te::AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
@@ -291,6 +291,17 @@ struct Thumbnail    : public Component
                                    });
         cursor.setFill (findColour (Label::textColourId));
         addAndMakeVisible (cursor);
+
+        pendingCursorTo.setFill (juce::Colours::cyan);
+        addChildComponent (pendingCursorTo);
+
+        pendingCursorAt.setFill (juce::Colours::lightgreen);
+        addChildComponent (pendingCursorAt);
+    }
+
+    void start()
+    {
+        cursorUpdater.startTimerHz (25);
     }
 
     void setFile (const te::AudioFile& file)
@@ -298,6 +309,11 @@ struct Thumbnail    : public Component
         smartThumbnail.setNewFile (file);
         cursorUpdater.startTimerHz (25);
         repaint();
+    }
+
+    void setQuantisation (std::optional<int> numBars)
+    {
+        quantisationNumBars = numBars;
     }
 
     void paint (Graphics& g) override
@@ -316,41 +332,120 @@ struct Thumbnail    : public Component
         {
             const float brightness = smartThumbnail.isOutOfDate() ? 0.4f : 0.66f;
             g.setColour (colour.withMultipliedBrightness (brightness));
-            smartThumbnail.drawChannels (g, r, true, { 0s, te::TimePosition::fromSeconds (smartThumbnail.getTotalLength()) }, 1.0f);
+            smartThumbnail.drawChannels (g, r, { 0s, te::TimePosition::fromSeconds (smartThumbnail.getTotalLength()) }, 1.0f);
         }
     }
 
     void mouseDown (const MouseEvent& e) override
     {
+        positionToJumpAt = {};
+
         transport.setUserDragging (true);
         mouseDrag (e);
     }
 
     void mouseDrag (const MouseEvent& e) override
     {
+        if (! e.mouseWasDraggedSinceMouseDown())
+            return;
+
         jassert (getWidth() > 0);
         const float proportion = e.position.x / getWidth();
         transport.setPosition (toPosition (transport.getLoopRange().getLength()) * proportion);
     }
 
-    void mouseUp (const MouseEvent&) override
+    void mouseUp (const MouseEvent& e) override
     {
         transport.setUserDragging (false);
+
+        if (e.mouseWasDraggedSinceMouseDown())
+            return;
+
+        if (auto epc = transport.edit.getCurrentPlaybackContext())
+        {
+            auto& ts = transport.edit.tempoSequence;
+
+            // Simple quantisation for demo purposes here
+            //  1. Quantise the position to jump to
+            //  2. Quantise the time to jump to it
+            const float proportion = e.position.x / getWidth();
+            auto positionToJumpTo = toPosition (transport.getLoopRange().getLength()) * proportion;
+
+            if (quantisationNumBars)
+            {
+                positionToJumpTo = roundToNearest (toPosition (transport.getLoopRange().getLength()) * proportion, ts, *quantisationNumBars);
+                positionToJumpAt = roundUp (epc->getPosition(), ts, *quantisationNumBars);
+            }
+            else
+            {
+                positionToJumpAt = {};
+            }
+
+            epc->postPosition (positionToJumpTo, positionToJumpAt);
+        }
     }
 
 private:
     te::TransportControl& transport;
     te::SmartThumbnail smartThumbnail { transport.engine, te::AudioFile (transport.engine), *this, nullptr };
-    DrawableRectangle cursor;
+    DrawableRectangle cursor, pendingCursorTo, pendingCursorAt;
     te::LambdaTimer cursorUpdater;
+    std::optional<int> quantisationNumBars;
+    std::optional<te::TimePosition> positionToJumpAt;
+
+    static te::TimePosition roundTo (te::TimePosition pos, const te::TempoSequence& ts, int quantisationNumBars, double adjustment)
+    {
+        const auto barsBeats = ts.toBarsAndBeats (pos);
+        const auto nearestBar = static_cast<int> ((barsBeats.getTotalBars() / quantisationNumBars) + adjustment)
+                                    * quantisationNumBars;
+
+        return ts.toTime (te::tempo::BarsAndBeats { nearestBar });
+    }
+
+    static te::TimePosition roundToNearest (te::TimePosition pos, const te::TempoSequence& ts, int quantisationNumBars)
+    {
+        return roundTo (pos, ts, quantisationNumBars, 0.5 - 1.0e-10);
+    }
+
+    static te::TimePosition roundUp (te::TimePosition pos, const te::TempoSequence& ts, int quantisationNumBars)
+    {
+        return roundTo (pos, ts, quantisationNumBars, 1.0 - 1.0e-10);
+    }
 
     void updateCursorPosition()
     {
         const auto loopLength = transport.getLoopRange().getLength().inSeconds();
-        const auto proportion = loopLength == 0.0 ? 0.0 : transport.getPosition().inSeconds() / loopLength;
+        const auto proportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : transport.getPosition().inSeconds() / loopLength;
 
         auto r = getLocalBounds().toFloat();
         const float x = r.getWidth() * float (proportion);
         cursor.setRectangle (r.withWidth (2.0f).withX (x));
+
+        // Pending cursor
+        pendingCursorTo.setVisible (false);
+        pendingCursorAt.setVisible (false);
+
+        if (quantisationNumBars)
+        {
+            if (auto epc = transport.edit.getCurrentPlaybackContext())
+            {
+                if (auto pendingChange = epc->getPendingPositionChange())
+                {
+                    {
+                        const auto pendingProportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : pendingChange->inSeconds() / loopLength;
+                        const float pendingX = r.getWidth() * float (pendingProportion);
+                        pendingCursorTo.setRectangle (r.withWidth (2.0f).withX (pendingX));
+                        pendingCursorTo.setVisible (true);
+                    }
+
+                    {
+                        const auto pendingAtProportion = juce::exactlyEqual (loopLength, 0.0) ? 0.0 : positionToJumpAt->inSeconds() / loopLength;
+                        const float pendingX = r.getWidth() * float (pendingAtProportion);
+                        pendingCursorAt.setRectangle (r.withWidth (2.0f).withX (pendingX));
+                        pendingCursorAt.setVisible (true);
+                    }
+                }
+            }
+        }
     }
 };

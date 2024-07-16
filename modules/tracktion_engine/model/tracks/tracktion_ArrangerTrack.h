@@ -21,7 +21,7 @@ public:
 
     bool isArrangerTrack() const override;
     juce::String getSelectableDescription() override;
-    juce::String getName() override;
+    juce::String getName() const override;
     bool canContainPlugin (Plugin*) const override;
 
 private:

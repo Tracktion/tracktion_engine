@@ -11,34 +11,46 @@
 namespace tracktion { inline namespace engine
 {
 
+/** Holds a pool of Thumbnails that are populated whilst recording.
+    These can then be used to draw visual waveforms during the recoridng process.
+*/
 class RecordingThumbnailManager
 {
 public:
+    /**
+        A thumbnail represeting a recording file.
+        Get one of these for a file with the getThumbnailFor function.
+    */
     struct Thumbnail  : public juce::ReferenceCountedObject
     {
         using Ptr = juce::ReferenceCountedObjectPtr<Thumbnail>;
 
-        Engine& engine;
-        TracktionThumbnail thumb;
-        juce::File file;
-        const HashCode hash;
-        TimePosition punchInTime;
+        Engine& engine;             /**< The Engine instance this belongs to. */
+        const std::unique_ptr<juce::AudioThumbnailBase> thumb;  /**< The thumbnail. */
+        juce::File file;            /**< The file this thumbnail represents. */
+        const HashCode hash;        /**< A hash uniquely identifying this thumbnail. */
+        TimePosition punchInTime;   /**< The time the start of this thumbnail represents. */
 
+        /** Destructor. */
         ~Thumbnail()
         {
             TRACKTION_ASSERT_MESSAGE_THREAD
             engine.getRecordingThumbnailManager().thumbs.removeAllInstancesOf (this);
         }
 
+        /** Destructor */
         void reset (int numChannels, double sampleRate)
         {
-            thumb.reset (numChannels, sampleRate);
+            thumb->reset (numChannels, sampleRate, 0);
             nextSampleNum = 0;
         }
 
+        /** Adss a block of recorded data to the thumbnail.
+            This is called by the engine so shouldn't need to be called manually.
+        */
         void addBlock (const juce::AudioBuffer<float>& incoming, int startOffsetInBuffer, int numSamples)
         {
-            thumb.addBlock (nextSampleNum, incoming, startOffsetInBuffer, numSamples);
+            thumb->addBlock (nextSampleNum, incoming, startOffsetInBuffer, numSamples);
             nextSampleNum += numSamples;
         }
 
@@ -48,9 +60,9 @@ public:
 
         Thumbnail (Engine& e, const juce::File& f)
             : engine (e),
-              thumb (1024, engine.getAudioFileFormatManager().readFormatManager,
-                     engine.getAudioFileManager().getAudioThumbnailCache()),
-                file (f), hash (f.hashCode64())
+              thumb (engine.getUIBehaviour().createAudioThumbnail (1024, engine.getAudioFileFormatManager().readFormatManager,
+                                                                   engine.getAudioFileManager().getAudioThumbnailCache())),
+              file (f), hash (f.hashCode64())
         {
             TRACKTION_ASSERT_MESSAGE_THREAD
             engine.getRecordingThumbnailManager().thumbs.addIfNotAlreadyThere (this);
@@ -60,6 +72,9 @@ public:
     };
 
     //==============================================================================
+    /** Returns the Thumbnail for a given audio file.
+        The engine will update this so you should only use it for drawing.
+    */
     Thumbnail::Ptr getThumbnailFor (const juce::File& f)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD

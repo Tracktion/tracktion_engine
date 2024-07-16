@@ -330,7 +330,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         
         if (! thumb.isOutOfDate())
         {
-            drawChannels (g, thumb, area, false,
+            drawChannels (g, thumb, area,
                           getTimeRangeForDrawing (left, right),
                           c.isLeftChannelActive(), c.isRightChannelActive(),
                           gainL, gainR);
@@ -345,28 +345,28 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         
         drawChannels (g, thumb,
                       { left + xOffset, y, right - left, h },
-                      false, { t1, t2 },
+                      { t1, t2 },
                       c.isLeftChannelActive(), c.isRightChannelActive(),
                       gainL, gainR);
     }
 }
 
-void AudioClipComponent::drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
+void AudioClipComponent::drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area,
                                        te::TimeRange time, bool useLeft, bool useRight,
                                        float leftGain, float rightGain)
 {
     if (useLeft && useRight && thumb.getNumChannels() > 1)
     {
-        thumb.drawChannel (g, area.removeFromTop (area.getHeight() / 2), useHighRes, time, 0, leftGain);
-        thumb.drawChannel (g, area, useHighRes, time, 1, rightGain);
+        thumb.drawChannel (g, area.removeFromTop (area.getHeight() / 2), time, 0, leftGain);
+        thumb.drawChannel (g, area, time, 1, rightGain);
     }
     else if (useLeft)
     {
-        thumb.drawChannel (g, area, useHighRes, time, 0, leftGain);
+        thumb.drawChannel (g, area, time, 0, leftGain);
     }
     else if (useRight)
     {
-        thumb.drawChannel (g, area, useHighRes, time, 1, rightGain);
+        thumb.drawChannel (g, area, time, 1, rightGain);
     }
 }
 
@@ -500,7 +500,7 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
     if (w > 0 && w < 10000)
     {
         g.setColour (waveformColour);
-        thumbnail->thumb.drawChannels (g, bounds, w, times, 1.0f);
+        thumbnail->thumb->drawChannels (g, bounds, times.getStart().inSeconds(), times.getEnd().inSeconds(), 1.0f);
     }
 }
 
@@ -530,7 +530,7 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
         auto localBounds = getLocalBounds();
         
         auto timeStarted = thumbnail->punchInTime;
-        auto unloopedPos = timeStarted + te::TimeDuration::fromSeconds (thumbnail->thumb.getTotalLength());
+        auto unloopedPos = timeStarted + te::TimeDuration::fromSeconds (thumbnail->thumb->getTotalLength());
         
         auto t1 = timeStarted;
         auto t2 = unloopedPos;
@@ -687,7 +687,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            instance->setTargetTrack (*at, 0, true, &at->edit.getUndoManager());
                         id++;
                     }
                 }
@@ -700,7 +700,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            instance->setTargetTrack (*at, 0, true, &at->edit.getUndoManager());
                         id++;
                     }
                 }

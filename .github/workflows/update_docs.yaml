@@ -16,7 +16,7 @@ jobs:
           sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
 
       - name: Checkout
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v3
         with:
           submodules: true
           persist-credentials: false

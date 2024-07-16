@@ -89,6 +89,8 @@ juce::BigInteger toBitSet (const juce::Array<Track*>&);
 */
 juce::Array<Track*> toTrackArray (Edit&, const juce::BigInteger&);
 
+template<typename TrackItemType>
+[[ nodiscard ]] juce::Array<TrackItemType*> getTrackItemsOfType (const Track&);
 
 //==============================================================================
 // Clips
@@ -232,6 +234,19 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit&);
 
 
 //==============================================================================
+// Inputs/recording
+//==============================================================================
+/** Returns the default set of recording parameters.
+    This behaviour may not be desirable in which case it might make more sense
+    to just construct your own RecordingParameters and pass them to
+    InputDeviceInstance::prepareToRecord.
+*/
+InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext&,
+                                                                        TimePosition playStart,
+                                                                        TimePosition punchIn);
+
+
+//==============================================================================
 /** @internal */
 template<typename TrackType>
 inline juce::Array<TrackType*> getTracksOfType (const Edit& edit, bool recursive)
@@ -248,6 +263,20 @@ inline juce::Array<TrackType*> getTracksOfType (const Edit& edit, bool recursive
                          }, recursive);
 
     return result;
+}
+
+/** @internal */
+template<typename TrackItemType>
+inline juce::Array<TrackItemType*> getTrackItemsOfType (const Track& track)
+{
+    juce::Array<TrackItemType*> items;
+    const int numItems = track.getNumTrackItems();
+
+    for (int i = 0; i < numItems; ++i)
+        if (auto ti = dynamic_cast<TrackItemType*> (track.getTrackItem (i)))
+            items.add (ti);
+
+    return items;
 }
 
 /** @internal */

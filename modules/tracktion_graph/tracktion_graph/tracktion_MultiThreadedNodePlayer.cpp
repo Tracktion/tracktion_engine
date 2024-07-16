@@ -15,6 +15,8 @@
  #include <emmintrin.h>
 #endif
 
+#define RETURN_MID_NODES_OPTIMISATION 1
+
 namespace tracktion { inline namespace graph
 {
 
@@ -218,6 +220,9 @@ void MultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, double sam
 
 void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
+    if (sampleRateToUse == sampleRate && blockSizeToUse == blockSize)
+        return;
+
     if (! preparedNode)
         return;
 
@@ -381,6 +386,7 @@ void MultiThreadedNodePlayer::buildNodesOutputLists (std::vector<Node*>& allNode
 
         playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
         n->internal = playbackNodes.back().get();
+        n->numOutputNodes = 0;
     }
 
     // Iterate all Nodes, for each input, add to the current Nodes output list
@@ -391,6 +397,7 @@ void MultiThreadedNodePlayer::buildNodesOutputLists (std::vector<Node*>& allNode
             // Check the input is actually still in the graph
             jassert (std::find (allNodes.begin(), allNodes.end(), inputNode) != allNodes.end());
             static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (node);
+            ++inputNode->numOutputNodes;
         }
     }
 }
@@ -453,6 +460,10 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
 {
     auto playbackNode = static_cast<PlaybackNode*> (node.internal);
 
+   #if RETURN_MID_NODES_OPTIMISATION
+    Node* nodeToReturn = nullptr;
+   #endif
+
     for (auto output : playbackNode->outputs)
     {
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
@@ -464,18 +475,35 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
 
+           #if RETURN_MID_NODES_OPTIMISATION
+            // We can return one Node to be processed on this thread, otherwise we can
+            // queue it for another thread to possibly process
+            if (nodeToReturn == nullptr)
+            {
+                nodeToReturn = &outputPlaybackNode->node;
+            }
+            else
+            {
+                preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
+                numNodesQueued.fetch_add (1, std::memory_order_release);
+            }
+           #else
             // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread
             if (playbackNode->outputs.size() == 1
                 || output == playbackNode->outputs.back())
-               return &outputPlaybackNode->node;
-            
+                return &outputPlaybackNode->node;
+
             preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
             numNodesQueued.fetch_add (1, std::memory_order_release);
-            threadPool->signalOne();
+           #endif
         }
     }
 
+   #if RETURN_MID_NODES_OPTIMISATION
+    return nodeToReturn;
+   #else
     return nullptr;
+   #endif
 }
 
 //==============================================================================

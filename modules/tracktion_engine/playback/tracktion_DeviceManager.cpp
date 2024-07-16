@@ -77,7 +77,7 @@ static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> d
         deviceNames.add (d.name);
 
     deviceNames.appendNumbersToDuplicates (true, false);
-    
+
     return deviceNames;
 }
 
@@ -134,7 +134,7 @@ struct DeviceManager::WaveDeviceList
         for (int i = 0; i < channelNames.size(); ++i)
         {
             const bool canBeStereo = i < channelNames.size() - 1;
-            
+
             if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))
             {
                 descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
@@ -330,10 +330,10 @@ void DeviceManager::initialiseMidi()
     TRACKTION_LOG ("Finding MIDI I/O");
     if (openHardwareMidi)
         lastMidiInNames = getMidiDeviceNames (juce::MidiInput::getAvailableDevices());
-    
+
     if (openHardwareMidi)
         lastMidiOutNames = getMidiDeviceNames (juce::MidiOutput::getAvailableDevices());
-    
+
     int enabledMidiIns = 0, enabledMidiOuts = 0;
 
     // create all the devices before initialising them..
@@ -911,7 +911,9 @@ void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
 {
     chan &= ~1;
 
-    if (inStereoChans[chan / 2] != isStereoPair)
+    if (inStereoChans[chan / 2] == isStereoPair)
+        return;
+
     {
         inStereoChans.setBit (chan / 2, isStereoPair);
 
@@ -1249,7 +1251,7 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
         cpuAvgCounter = cpuReportingInterval = 1;
 
     jassert (currentSampleRate > 0.0);
-    
+
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
    #endif

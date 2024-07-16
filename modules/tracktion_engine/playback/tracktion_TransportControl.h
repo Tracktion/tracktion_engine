@@ -327,12 +327,17 @@ public:
         /** Should stop video playback. */
         virtual void stopVideo() = 0;
 
+        /** Called before recording stops for a specific input instance.
+            recordingFinished will be called shortly after with newly created clips.
+        */
+        virtual void recordingAboutToStop (InputDeviceInstance&) {}
+
         /** Called when recording stops for a specific input instance.
             @param InputDeviceInstance  The device instance that just stopped.
             @param recordedClips        The clips resulting from the recording.
         */
         virtual void recordingFinished (InputDeviceInstance&,
-                                        juce::ReferenceCountedArray<Clip> /*recordedClips*/)
+                                        const juce::ReferenceCountedArray<Clip>& /*recordedClips*/)
         {}
     };
 
@@ -355,6 +360,8 @@ public:
     juce::CachedValue<bool> snapToTimecode, looping;
 
     //==============================================================================
+    /** @internal */
+    void callRecordingAboutToStopListeners (InputDeviceInstance&);
     /** @internal */
     void callRecordingFinishedListeners (InputDeviceInstance&, juce::ReferenceCountedArray<Clip> recordedClips);
 

@@ -4,6 +4,63 @@
 
 
 ### Change
+Removed the TRACKTION_ENABLE_REALTIME_TIMESTRETCHING option.
+
+#### Possible Issues
+Most code should be unaffected as it was enabled by default anyway. Along with this are the `setUsesTimestretchedPreview`/`usesTimestretchedPreview` `AudioClipBase` functions. Use `setUsesProxy` instead now for the same effect.
+
+#### Workaround
+None.
+
+#### Rationale
+This was always a temporary flag used to transition to this new feature.
+
+---
+
+### Change
+Added a new ContainerClip type. To facilitate this, a new ClipOwner class has been created.
+
+#### Possible Issues
+You may need to fix code which passes `Track`s to functions, passing in a ClipOwner subclass like a ClipTrack instead.
+
+#### Workaround
+None.
+
+#### Rationale
+The changes required should be small but enable this new feature.
+
+---
+
+### Change
+Removed the fixed buffer size requirement in HostedAudioDeviceInterface for using the Engine inside a plugin.
+
+#### Possible Issues
+You may need to fix code which set the value of this member.
+
+#### Workaround
+None.
+
+#### Rationale
+With the audio playback rewite it's no longer required to have a fixed block size so we don't need to add a block of latency when using the Engine inside a plugin.
+
+---
+
+### Change
+Removed the TracktionThumbnail class.
+
+#### Possible Issues
+If you were using the default thumbnails of Tracktion Engine, these will now be juce::AudioThumbnails and so won't be anti-aliased and appear more jagged.
+
+#### Workaround
+Take a copy of the TracktionThumbnail class from the history and add it to your own project.
+Override the new `UIBehaviour::createAudioThumbnail` function to return instances of it to get back the old behaviour.
+
+#### Rationale
+TracktionThumbnail never really should have been included in the Engine. We needed a way to support multiple thumbnail types in Waveform and in doing so broke all the dependancies on TracktionThumbnail so it seemed cleaner to remove it completely. It's simple to get back the old behaviour but also means it's now a lot easier to use your own thumbnail classes if desired.
+
+---
+
+### Change
 Changed the minimum version of JUCE supported to 7 on commit of October 22.
 
 #### Possible Issues

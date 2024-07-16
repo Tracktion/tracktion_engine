@@ -597,11 +597,13 @@ void TempoSequence::updateTempoData()
 
 void TempoSequence::updateTempoDataIfNeeded() const
 {
+    // The check on isUpdatePending is to avoid triggering a message thread assert
+    // if this is called on a background thread when no update is needed
     if (tempos->isUpdatePending())
-        tempos->handleAsyncUpdate();
+        tempos->handleUpdateNowIfNeeded();
 
     if (timeSigs->isUpdatePending())
-        timeSigs->handleAsyncUpdate();
+        timeSigs->handleUpdateNowIfNeeded();
 }
 
 void TempoSequence::handleAsyncUpdate()
@@ -703,14 +705,23 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     {
         for (auto& c : t->getClips())
         {
-            auto pos = c->getPosition();
+            auto addClip = [this, &tempoSequence] (auto clip)
+            {
+                auto pos = clip->getPosition();
 
-            ClipPos cp;
-            cp.clip = c;
-            cp.startBeat        = tempoSequence.toBeats (pos.getStart());
-            cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
-            cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
-            clips.add (cp);
+                ClipPos cp;
+                cp.clip = clip;
+                cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+                cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+                cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
+                clips.add (cp);
+            };
+
+            addClip (c);
+
+            if (auto cc = dynamic_cast<ClipOwner*> (c))
+                for (auto childClip : cc->getClips())
+                    addClip (childClip);
         }
     }
 
@@ -795,6 +806,8 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
         for (int i = a.beats.size(); --i >= 0;)
             a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));
 }
+
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TEMPO_SEQUENCE
 
 //==============================================================================
 //==============================================================================
@@ -928,5 +941,7 @@ private:
 };
 
 static TempoSequenceTests tempoSequenceTests;
+
+#endif
 
 }} // namespace tracktion { inline namespace engine

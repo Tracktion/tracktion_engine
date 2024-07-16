@@ -58,6 +58,7 @@ public:
     {
         Client() = default;
 
+        int getNumChannelsUsed() const noexcept;
         void reset() noexcept;
         bool getAndClearOverload() noexcept;
         bool getAndClearPeak() noexcept;
@@ -79,7 +80,7 @@ public:
         DbTimePair audioLevels[maxNumChannels];
         bool overload[maxNumChannels] = {};
         DbTimePair midiLevels;
-        int numChannelsUsed = 0;
+        std::atomic<int> numChannelsUsed { 0 };
         bool clearOverload = true;
         bool clearPeak = true;
 
@@ -95,7 +96,7 @@ public:
 
 private:
     Mode mode = peakMode;
-    int numActiveChannels = 1;
+    std::atomic<int> numActiveChannels { 1 };
     bool showMidi = false;
     float levelCacheL = -100.0f;
     float levelCacheR = -100.0f;

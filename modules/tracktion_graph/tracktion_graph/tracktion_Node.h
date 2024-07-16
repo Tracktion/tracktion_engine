@@ -158,6 +158,14 @@ struct NodeProperties
 
 //==============================================================================
 //==============================================================================
+/** Enum to signify the result of the transform function. */
+enum class TransformResult
+{
+    none,               /** No transform has been made. */
+    connectionsMade,    /** New connections have been made. */
+    nodesDeleted        /** Nodes have been deleted. */
+};
+
 enum class ClearBuffers
 {
     no, /**< Don't clear buffers before passing them to process, your subclass will take care of that. */
@@ -175,6 +183,23 @@ struct NodeOptimisations
 {
     ClearBuffers clear = ClearBuffers::yes;
     AllocateAudioBuffer allocate = AllocateAudioBuffer::yes;
+};
+
+//==============================================================================
+//==============================================================================
+class TransformCache
+{
+public:
+    TransformCache() = default;
+
+    template<typename T>
+    void cacheProperty (size_t key, T value);
+
+    template<typename T>
+    T* getCachedProperty (size_t key);
+
+private:
+    std::unordered_map<size_t, std::any> cache;
 };
 
 //==============================================================================
@@ -232,8 +257,23 @@ public:
         This should return true if any changes were made to the topology as this
         indicates that the method may need to be called again after other nodes have
         had their toplogy changed.
+
+        @param postOrderedNodes This is an ordered list obtained from visiting all
+                                the Nodes and can be used for quicker introspection
+                                of the graph
+        @param TransformCache   A cache which can be used to speed up operations
+                                during the transform stage.
+
+        @return TransformResult The type of transformation that has taken place.
+                                If connections have been made AND nodes deleted,
+                                return nodesDeleted
     */
-    virtual bool transform (Node& /*rootNode*/) { return false; }
+    virtual TransformResult transform (Node& /*rootNode*/,
+                                       const std::vector<Node*>& /*postOrderedNodes*/,
+                                       TransformCache&)
+    {
+        return TransformResult::none;
+    }
     
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
@@ -376,10 +416,24 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
         bool needToTransformAgain = false;
 
         auto allNodes = getNodes (rootNode, VertexOrdering::postordering);
+        TransformCache cache;
 
         for (auto node : allNodes)
-            if (node->transform (rootNode))
-                needToTransformAgain = true;
+        {
+            const auto res = node->transform (rootNode, allNodes, cache);
+
+            if (res == TransformResult::none)
+                continue;
+
+            needToTransformAgain = true;
+
+            // Nodes may have been deleted from allNodes so start from the top
+            if (res == TransformResult::nodesDeleted)
+                break;
+
+            // New connections have been made but allNodes is still valid
+            assert (res == TransformResult::connectionsMade);
+        }
 
         if (! needToTransformAgain)
             return allNodes;
@@ -506,6 +560,10 @@ inline bool Node::hasProcessed() const
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
+
+    if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_acquire))
+        jassert (node->hasProcessed());
+
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
 }
@@ -649,17 +707,20 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
     return visitedNodes;
 }
 
+inline void addNodesRecursive (std::vector<NodeAndID>& nodeMap, Node& n)
+{
+    nodeMap.push_back ({ &n, n.getNodeProperties().nodeID });
+
+    for (auto internalNode : n.getInternalNodes())
+        addNodesRecursive (nodeMap, *internalNode);
+}
+
 inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
 {
     std::vector<NodeAndID> nodeMap;
 
     for (auto n : nodes)
-    {
-        nodeMap.push_back ({ n, n->getNodeProperties().nodeID });
-
-        for (auto internalNode : n->getInternalNodes())
-            nodeMap.push_back ({ internalNode, internalNode->getNodeProperties().nodeID });
-    }
+        addNodesRecursive (nodeMap, *n);
 
     std::sort (nodeMap.begin(), nodeMap.end());
     nodeMap.erase (std::unique (nodeMap.begin(), nodeMap.end()),
@@ -680,6 +741,22 @@ inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNod
     nodeGraph->sortedNodes = std::move (sortedNodes);
 
     return nodeGraph;
+}
+
+template<typename T>
+inline void TransformCache::cacheProperty (size_t key, T value)
+{
+    cache[key] = std::move (value);
+}
+
+template<typename T>
+inline T* TransformCache::getCachedProperty (size_t key)
+{
+    if (auto found = cache.find (key); found != cache.end())
+        if (auto* typedValue = std::any_cast<T> (&found->second))
+            return typedValue;
+
+    return {};
 }
 
 }}

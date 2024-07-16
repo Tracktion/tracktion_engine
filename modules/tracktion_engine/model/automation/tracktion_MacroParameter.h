@@ -45,10 +45,11 @@ public:
     void initialise();
 
     juce::String getParameterName() const override         { return macroName; }
+    std::optional<float> getDefaultValue() const override;
 
     Edit& edit;
     juce::ValueTree state;
-    juce::CachedValue<float> value;
+    juce::CachedValue<float> value, defaultValue;
     juce::CachedValue<juce::String> macroName;
 
 private:
@@ -73,7 +74,7 @@ public:
 
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
 
-    juce::String getName() override     { return {}; }
+    juce::String getName() const override     { return {}; }
     Track* getTrack() const;
 
     //==============================================================================

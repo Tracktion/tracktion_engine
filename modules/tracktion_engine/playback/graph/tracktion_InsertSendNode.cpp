@@ -39,14 +39,14 @@ std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectIn
     return inputs;
 }
 
-bool InsertSendReturnDependencyNode::transform (Node& rootNode)
+TransformResult InsertSendReturnDependencyNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
 {
     if (sendNode && returnNode)
-        return false;
-    
+        return TransformResult::none;
+
     bool foundSend = false, foundReturn = false;
     
-    for (auto n : getNodes (rootNode, tracktion::graph::VertexOrdering::postordering))
+    for (auto n : postOrderedNodes)
     {
         if (! sendNode)
         {
@@ -73,7 +73,8 @@ bool InsertSendReturnDependencyNode::transform (Node& rootNode)
         }
     }
     
-    return foundSend || foundReturn;
+    return (foundSend || foundReturn) ? TransformResult::connectionsMade
+                                      : TransformResult::none;
 }
 
 void InsertSendReturnDependencyNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)

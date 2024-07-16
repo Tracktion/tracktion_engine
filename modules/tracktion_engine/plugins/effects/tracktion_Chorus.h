@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Chorus"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Chorus"); }
+    juce::String getName() const override               { return TRANS("Chorus"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
 

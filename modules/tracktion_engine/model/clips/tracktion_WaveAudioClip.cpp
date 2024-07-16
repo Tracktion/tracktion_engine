@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-WaveAudioClip::WaveAudioClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& ct)
-    : AudioClipBase (v, clipID, Type::wave, ct)
+WaveAudioClip::WaveAudioClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& co)
+    : AudioClipBase (v, clipID, Type::wave, co)
 {
 }
 
@@ -247,9 +247,9 @@ void WaveAudioClip::invalidateCurrentTake() noexcept
     currentTakeIndex = takeIndexNeedsUpdating;
 }
 
-void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parent) noexcept
+void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parentState) noexcept
 {
-    if (parent.hasType (IDs::TAKES))
+    if (parentState.hasType (IDs::TAKES))
         invalidateCurrentTake();
 }
 

@@ -20,6 +20,14 @@ struct AudioFileUtils
     static juce::AudioFormatReader* createReaderFindingFormat (Engine&, const juce::File&, juce::AudioFormat*&);
     static juce::MemoryMappedAudioFormatReader* createMemoryMappedReader (Engine&, const juce::File&, juce::AudioFormat*&);
 
+    struct MappedFileAndReader
+    {
+        std::unique_ptr<juce::MemoryMappedFile> mappedFile;
+        std::unique_ptr<juce::AudioFormatReader> reader;
+    };
+
+    static std::unique_ptr<MappedFileAndReader> createMappedFileAndReaderFor (Engine&, const juce::File&);
+
     static juce::AudioFormatWriter* createWriterFor (Engine&, const juce::File&,
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
@@ -62,16 +70,23 @@ struct AudioFileUtils
     //==============================================================================
     template<class TargetFormat>
     static bool convertToFormat (Engine& e, const juce::File& sourceFile, juce::OutputStream& destStream,
-                                 int quality, const juce::StringPairArray& metadata)
+                                 int quality, const juce::StringPairArray& metadata,
+                                 juce::int64 blockSize = -1,
+                                 std::function<bool()> continuePredicate = {},
+                                 std::function<void (float)> updateProgress = {})
     {
         std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (e, sourceFile));
-        return convertToFormat<TargetFormat> (reader.get(), destStream, quality, metadata);
+        return convertToFormat<TargetFormat> (reader.get(), destStream, quality, metadata, blockSize,
+                                              continuePredicate, updateProgress);
     }
 
     template<class TargetFormat>
     static bool convertToFormat (juce::AudioFormatReader* reader,
                                  juce::OutputStream& destStream,
-                                 int quality, const juce::StringPairArray& metadata)
+                                 int quality, const juce::StringPairArray& metadata,
+                                 juce::int64 blockSize = -1,
+                                 std::function<bool()> continuePredicate = {},
+                                 std::function<void (float)> updateProgress = {})
     {
         if (reader != nullptr)
         {
@@ -91,11 +106,45 @@ struct AudioFileUtils
                 {
                     out.release();
 
-                    if (writer->writeFromAudioReader (*reader, 0, -1))
+                    if (blockSize < 0)
                     {
-                        writer = nullptr;
-                        destStream << tempFile.getFile();
-                        return true;
+                        if (writer->writeFromAudioReader (*reader, 0, -1))
+                        {
+                            writer = nullptr;
+                            destStream << tempFile.getFile();
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        juce::int64 numLeft = reader->lengthInSamples;
+
+                        if (numLeft <= 0)
+                            return false;
+
+                        for (juce::int64 startSample = 0;;)
+                        {
+                            if (continuePredicate && ! continuePredicate())
+                                return false;
+
+                            const juce::int64 numThisTime = std::min (blockSize, numLeft);
+
+                            if (! writer->writeFromAudioReader (*reader, startSample, numThisTime))
+                                return false;
+
+                            startSample += numThisTime;
+                            numLeft -= numThisTime;
+
+                            if (updateProgress)
+                                updateProgress (static_cast<float> (startSample) / reader->lengthInSamples);
+
+                            if (numLeft <= 0)
+                            {
+                                writer = nullptr;
+                                destStream << tempFile.getFile();
+                                return true;
+                            }
+                        }
                     }
                 }
             }

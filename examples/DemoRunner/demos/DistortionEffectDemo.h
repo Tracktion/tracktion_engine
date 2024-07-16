@@ -39,7 +39,7 @@ public:
         gainParam->detachFromCurrentValue();
     }
 
-    juce::String getName() override                                     { return getPluginName(); }
+    juce::String getName() const override                               { return getPluginName(); }
     juce::String getPluginType() override                               { return xmlTypeName; }
     bool needsConstantBufferSize() override                             { return false; }
     juce::String getSelectableDescription() override                    { return getName(); }

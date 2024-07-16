@@ -101,32 +101,27 @@ void MidiNoteDispatcher::hiResTimerCallback()
             auto& midiOut = device.getMidiOutput();
 
             if (buffer.isAllNotesOff)
-            {
-                buffer.clear();
                 midiOut.sendNoteOffMessages();
-            }
-            else
+            
+            while (buffer.isNotEmpty())
             {
-                while (buffer.isNotEmpty())
+                auto& message = buffer[0];
+
+                auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());
+                auto currentTime = getCurrentTime();
+
+                if (noteTime > currentTime + TimeDuration::fromSeconds (0.25))
                 {
-                    auto& message = buffer[0];
-
-                    auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());
-                    auto currentTime = getCurrentTime();
-
-                    if (noteTime > currentTime + TimeDuration::fromSeconds (0.25))
-                    {
-                        buffer.remove (0);
-                    }
-                    else if (noteTime <= currentTime)
-                    {
-                        messagesToSend.add ({ &device, message });
-                        buffer.remove (0);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    buffer.remove (0);
+                }
+                else if (noteTime <= currentTime)
+                {
+                    messagesToSend.add ({ &device, message });
+                    buffer.remove (0);
+                }
+                else
+                {
+                    break;
                 }
             }
         }

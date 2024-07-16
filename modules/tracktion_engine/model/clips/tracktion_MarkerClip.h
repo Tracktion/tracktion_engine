@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 class MarkerClip   : public Clip
 {
 public:
-    MarkerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
+    MarkerClip (const juce::ValueTree&, EditItemID, ClipOwner& targetParent);
     ~MarkerClip() override;
 
     int getMarkerID()                                               { return markerID; }
@@ -27,7 +27,7 @@ public:
     bool isSyncBarsBeats() const noexcept                           { return syncType == syncBarsBeats; }
 
     juce::String getSelectableDescription() override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::Colour getColour() const override;
     juce::Colour getDefaultColour() const override;
     void initialise() override;

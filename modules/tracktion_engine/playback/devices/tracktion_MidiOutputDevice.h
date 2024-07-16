@@ -47,6 +47,7 @@ public:
     void flipSendingTimecode();
 
     void setSendControllerMidiClock (bool b) noexcept   { sendControllerMidiClock = b; }
+    bool isSendingControllerMidiClock() const noexcept  { return sendControllerMidiClock; }
 
     //==============================================================================
     void fireMessage (const juce::MidiMessage&);

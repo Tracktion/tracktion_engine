@@ -67,6 +67,7 @@ public:
         bool ditheringEnabled = false;
         bool separateTracks = false;
         bool addAntiDenormalisationNoise = false;
+        bool checkNodesForAudio = true;             /**< If true, attempting to render an Edit that doesn't produce audio will fail. */
 
         int quality = 0;
         juce::StringPairArray metadata;
@@ -88,7 +89,7 @@ public:
                     const Renderer::Parameters&,
                     std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
-        
+
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
                     std::unique_ptr<tracktion::graph::Node>,
@@ -158,6 +159,9 @@ public:
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
 
+    /** Renders an entire Edit to a file. */
+    static bool renderToFile (Edit&, const juce::File&, bool useThread = true);
+
     //==============================================================================
     /** @see measureStatistics()
     */
@@ -199,5 +203,12 @@ public:
         juce::ReferenceCountedArray<ProjectItem> items;
     };
 };
+
+namespace render_utils
+{
+std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                        std::atomic<float>* progressToUpdate,
+                                                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail);
+}
 
 }} // namespace tracktion { inline namespace engine

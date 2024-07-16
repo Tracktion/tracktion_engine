@@ -32,10 +32,69 @@ namespace test_utilities
     }
 
     //==============================================================================
-    inline std::unique_ptr<Edit> createTestEdit (Engine& engine)
+    inline std::unique_ptr<juce::TemporaryFile> renderToTempFileAndLogPath (Edit& edit)
+    {
+        auto tf = std::make_unique<juce::TemporaryFile> (".wav");
+        Renderer::renderToFile (edit, tf->getFile(), false);
+        DBG(tf->getFile().getFullPathName());
+        return tf;
+    }
+
+    struct BufferAndSampleRate
+    {
+        juce::AudioBuffer<float> buffer;
+        double sampleRate = 0;
+        std::unique_ptr<juce::TemporaryFile> file;
+    };
+
+    inline BufferAndSampleRate renderToAudioBuffer (Edit& edit)
+    {
+        auto tf = std::make_unique<juce::TemporaryFile> (".wav");
+        Renderer::renderToFile (edit, tf->getFile(), false);
+
+        juce::AudioFormatManager manager;
+        manager.registerFormat (new juce::WavAudioFormat(), true);
+
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (manager.createReaderFor (tf->getFile())))
+        {
+            juce::AudioBuffer<float> buffer (static_cast<int> (reader->numChannels),
+                                             static_cast<int> (reader->lengthInSamples));
+
+            if (reader->read (&buffer, 0, buffer.getNumSamples(),
+                              0, true, buffer.getNumChannels() > 1))
+            {
+                return { buffer, reader->sampleRate, std::move (tf) };
+            }
+        }
+
+        return {};
+    }
+
+    inline void expectPeak (juce::UnitTest& ut, const BufferAndSampleRate& data, TimeRange tr, float expectedPeak)
+    {
+        const auto sampleRange = toSamples (tr, data.sampleRate);
+        const auto peak = data.buffer.getMagnitude (static_cast<int> (sampleRange.getStart()),
+                                                    static_cast<int> (sampleRange.getLength()));
+        ut.expect (juce::isWithin (peak, expectedPeak, 0.001f),
+                   juce::String ("Expected peak: ") + juce::String (expectedPeak, 4) + ", actual peak: " + juce::String (peak, 4));
+    }
+
+    inline void expectRMS (juce::UnitTest& ut, const BufferAndSampleRate& data, TimeRange tr, int channel, float expectedRMS)
+    {
+        const auto sampleRange = toSamples (tr, data.sampleRate);
+        ut.expectWithinAbsoluteError (data.buffer.getRMSLevel (channel,
+                                                               static_cast<int> (sampleRange.getStart()),
+                                                               static_cast<int> (sampleRange.getLength())),
+                                      expectedRMS, 0.01f);
+    }
+
+    //==============================================================================
+    inline std::unique_ptr<Edit> createTestEdit (Engine& engine, int numAudioTracks = 1)
     {
         // Make tempo 60bpm and 0dB master vol for easy calculations
-        auto edit = Edit::createSingleTrackEdit (engine);
+        auto edit = std::make_unique<Edit> (engine, createEmptyEdit (engine), Edit::forRendering, nullptr, 1);
+        edit->ensureNumberOfAudioTracks (numAudioTracks);
+
         edit->tempoSequence.getTempo (0)->setBpm (60.0);
         edit->getMasterVolumePlugin()->setVolumeDb (0.0);
 

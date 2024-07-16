@@ -1329,6 +1329,10 @@ RackType::Ptr RackTypeList::addNewRack()
 
     auto p = getRackTypeForID (newID);
     jassert (p != nullptr);
+
+    if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+        p->macroParameterList.remapOnTempoChange = true;
+
     return p;
 }
 
@@ -1352,6 +1356,10 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
 
             type = getRackTypeForID (typeID);
             jassert (type != nullptr);
+
+            if (! type->macroParameterList.state.hasProperty (IDs::remapOnTempoChange))
+                if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+                    type->macroParameterList.remapOnTempoChange = true;
         }
     }
 

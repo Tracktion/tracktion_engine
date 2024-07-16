@@ -49,8 +49,8 @@ struct StepClip::ChannelList  : public ValueTreeObjectList<StepClip::Channel>
 };
 
 //==============================================================================
-StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::step)
+StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::step)
 {
     auto um = getUndoManager();
     channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
@@ -199,9 +199,9 @@ void StepClip::valueTreeChildOrderChanged (juce::ValueTree& p, int o, int n)
 }
 
 //==============================================================================
-bool StepClip::canGoOnTrack (Track& t)
+bool StepClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 juce::String StepClip::getSelectableDescription()
