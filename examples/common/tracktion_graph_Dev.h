@@ -12,6 +12,10 @@
 
 #include <tracktion_core/utilities/tracktion_Benchmark.h>
 
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#undef DOCTEST_CONFIG_IMPLEMENT
+
 using namespace tracktion_engine;
 
 //==============================================================================
