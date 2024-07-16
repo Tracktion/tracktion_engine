@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -29,7 +29,7 @@ public:
         runSemaphoreTests<Semaphore> ("Semaphore");
         runSemaphoreTests<LightweightSemaphore> ("LightweightSemaphore");
     }
-    
+
 private:
     template<typename SemaphoreType>
     void runSemaphoreTests (juce::String semaphoreName)
@@ -56,24 +56,24 @@ private:
                 expect (! event.timed_wait (100)); // Timed wait fails
             }
         }
-        
+
         beginTest (juce::String ("Semaphore wakeup tests").replace ("Semaphore", semaphoreName));
         {
             constexpr int numThreads = 10;
             std::atomic<int> counter { 0 }, numThreadsRunning { 0 };
             SemaphoreType event;
             auto signalTime = std::chrono::steady_clock::now();
-            
+
             // Start all the threads
             std::vector<std::thread> threads;
-            
+
             for (int i = 0; i < numThreads; ++i)
             {
-                threads.emplace_back ([&, this]
+                threads.emplace_back ([&, signalTime]
                                       {
                                           ++numThreadsRunning;
                                           event.wait();
-                                          
+
                                           auto signalDuration = std::chrono::steady_clock::now() - signalTime;
                                           logMessage (juce::String (std::chrono::duration_cast<std::chrono::microseconds> (signalDuration).count()) + "us");
 
@@ -86,21 +86,21 @@ private:
             {
                 if (numThreadsRunning == numThreads)
                     break;
-            
+
                 std::this_thread::sleep_for (std::chrono::milliseconds (1));
             }
-            
+
             // Sleep for a few more ms to ensure they're all waiting
             std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
             // Signal all the threads to increment the counter
             signalTime = std::chrono::steady_clock::now();
             event.signal (numThreads);
-            
+
             // Wait for the threads to complete
             for (auto& t : threads)
                 t.join();
-            
+
             expectEquals (counter.load(), numThreads);
         }
     }
@@ -163,6 +163,31 @@ public:
 
 static ChronoNowBenchmarks chronoNowBenchmarks;
 
+//==============================================================================
+//==============================================================================
+class JUCEMsCounterHiRes   : public juce::UnitTest
+{
+public:
+    JUCEMsCounterHiRes()
+        : juce::UnitTest ("juce::Time::getMillisecondCounterHiRes()", "tracktion_benchmarks") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        Benchmark benchmark (createBenchmarkDescription ("Time", "juce ms timer hi-res", "juce::Time::getMillisecondCounterHiRes()"));
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            [[ maybe_unused ]] volatile auto now = juce::Time::getMillisecondCounterHiRes();
+            benchmark.stop();
+        }
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
+    }
+};
+
+static JUCEMsCounterHiRes juceMsCounterHiRes;
 
 //==============================================================================
 //==============================================================================

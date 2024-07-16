@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ public:
         : juce::UnitTest ("WaveNode", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -54,7 +54,7 @@ private:
                                                                       ts, numChannels, durationInSeconds, true);
         return testProcess.processAll();
     }
-    
+
     //==============================================================================
     //==============================================================================
     template<typename NodeType>
@@ -66,7 +66,7 @@ private:
         const double fileLengthSeconds = 5.0;
         auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
-        
+
         tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (toSamples (0.08_tp, ts.sampleRate));
         tracktion::graph::PlayHeadState playHeadState (playHead);
@@ -76,7 +76,7 @@ private:
             playHead.play ({ 0, std::numeric_limits<int64_t>::max() }, false);
         else
             playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
-        
+
         beginTest (nodeTypeName + " at time 0s");
         {
             auto node = makeNode<NodeType> (sinAudioFile,
@@ -90,7 +90,7 @@ private:
                                             processState,
                                             EditItemID(),
                                             true);
-            
+
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
@@ -112,9 +112,9 @@ private:
                                             processState,
                                             EditItemID(),
                                             true);
-            
+
             playHead.setUserIsDragging (true);
-            
+
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
@@ -136,7 +136,7 @@ private:
                                             processState,
                                             EditItemID(),
                                             true);
-            
+
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
@@ -158,7 +158,7 @@ private:
                                             processState,
                                             EditItemID(),
                                             true);
-            
+
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
@@ -177,7 +177,7 @@ private:
         const double fileLengthSeconds = 1.0;
         auto sinFile = getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
-        
+
         tracktion::graph::PlayHead playHead;
         tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
@@ -319,17 +319,17 @@ private:
     {
         using namespace tracktion::graph::test_utilities;
         auto& engine = *Engine::getEngines()[0];
-        
+
         const auto fileLength = 1_td;
         const auto fileLengthBeats = 1_bd;
-        
+
         tempo::Sequence fileTempoSequence ({{ 0_bp, 60.0, 0.0f }},
                                            {{ 0_bp, 4, 4, false }},
                                            tempo::LengthOfOneBeat::dependsOnTimeSignature);
-        
+
         auto squareFile = getSquareFile<juce::WavAudioFormat> (ts.sampleRate, fileLength.inSeconds());
         AudioFile squareAudioFile (engine, squareFile->getFile());
-        
+
         tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (toSamples (0.08_tp, ts.sampleRate));
         tracktion::graph::PlayHeadState playHeadState (playHead);
@@ -355,20 +355,20 @@ private:
                                                                 SpeedFadeDescription(),
                                                                 std::nullopt,
                                                                 TimeStretcher::Mode::disabled);
-                
+
                 // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
                 auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
-                
+
                 auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
-                
+
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
-                
+
                 // Check last 0.1s of the time period for increased accuraccy
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
             }
-            
+
             beginTest ("WaveNodeRealTime at time 1b, length 1b");
             {
                 auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
@@ -391,16 +391,16 @@ private:
                                                                 WaveNodeRealTime::SyncTempo::yes,
                                                                 WaveNodeRealTime::SyncPitch::no,
                                                                 std::nullopt);
-                
+
                 // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
                 auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
-                
+
                 auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
-                
+
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
-                
+
                 // Check lat 0.1s of the time period for increased accuraccy
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
             }

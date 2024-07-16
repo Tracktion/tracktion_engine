@@ -2,6 +2,88 @@
 
 ## Develop
 
+### Change
+The APIs around `InputDevice` and `InputDeviceInstance` have been simplified to work more with `EditItemID`s.
+
+#### Possible Issues
+Some existing code might not compile.
+
+#### Workaround
+Update to new APIs in `InputDeviceInstance`: `prepareToRecord`, `startRecording` and `stopRecording` along with other property setters/getters.
+There are also some non-member functions at the bottom of `tracktion_InputDevice.h` which may replicate the old APIs (but with non-member arguments). 
+
+#### Rationale
+This change was required to implement `ClipSlot` recording and async-record-stopping.  
+
+___
+### Change
+`InputDevice::setEndToEnd` has been replaced by `MonitorMode`.
+
+#### Possible Issues
+Code won't compile.
+
+#### Workaround
+Use the more explicit an clear `get/setMonitorMode`.
+
+#### Rationale
+`MonitorMode` provides a way to only enable audible input whilst record is enabled.  
+
+___
+### Change
+An `Edit` constructor has been removed.
+
+#### Possible Issues
+Code using that constructor will fail to compile.
+
+#### Workaround
+Use the new constructor that takes an `Edit::Options` or an `EditRole`.
+
+#### Rationale
+The behaviour old constructor was ambiguous and this cleans up the API.
+
+___
+
+### Change
+Removed the `float newValue` parameter to `AutomatableParameter::currentValueChanged (AutomatableParameter&)`.
+
+#### Possible Issues
+Existing code overriding the function will no longer compile.
+
+#### Workaround
+Remove the `float newValue` argument and use `AutomatoableParameter::getCurrentValue()` instead.
+
+#### Rationale
+This simplifies the API a bit as with Modifiers, the current value gets remapped a lot. Always getting the value via `getCurrentValue, getCurrentExplicitValue, getCurrentBaseValue, getCurrentModifierValue` avoids ambiguity about what `newValue` means.
+
+___
+
+### Change
+Removed `DeviceManager::CPUUsageListener`
+
+#### Possible Issues
+Existing code using it will no longer compile.
+
+#### Workaround
+Use `getCPUStatistics()/restCPUStatistics()` instead.
+
+#### Rationale
+The old listener code wasn't thread safe. The new funtion returns more information and is wait-free from the audio side. 
+
+---
+
+### Change
+`CurveEditor::getCurrentLineColour()` is no longer `const`
+
+#### Possible Issues
+Code implementing `CurveEditor::getCurrentLineColour()` will fail to compile.
+
+#### Workaround
+Remove `const` qualifier in sub classes.
+
+#### Rationale
+Better API design.
+
+---
 
 ### Change
 Removed the TRACKTION_ENABLE_REALTIME_TIMESTRETCHING option.

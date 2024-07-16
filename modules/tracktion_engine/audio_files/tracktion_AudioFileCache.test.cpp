@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -72,36 +72,6 @@ static AudioFileCacheTests audioFileCacheTests;
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_AUDIOFILECACHE
 namespace tracktion { inline namespace engine
 {
-
-//==============================================================================
-struct MemoryMappedFileReader    : public FallbackReader
-{
-    MemoryMappedFileReader (std::unique_ptr<AudioFileUtils::MappedFileAndReader> mappedFileAndReader)
-        : source (std::move (mappedFileAndReader))
-    {
-        sampleRate              = source->reader->sampleRate;
-        bitsPerSample           = source->reader->bitsPerSample;
-        lengthInSamples         = source->reader->lengthInSamples;
-        numChannels             = source->reader->numChannels;
-        usesFloatingPointData   = source->reader->usesFloatingPointData;
-        metadataValues          = source->reader->metadataValues;
-    }
-
-    void setReadTimeout (int) override
-    {
-    }
-
-    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples) override
-    {
-        return source->reader->readSamples (destSamples, numDestChannels, startOffsetInDestBuffer,
-                                            startSampleInFile, numSamples);
-    }
-
-private:
-    std::unique_ptr<AudioFileUtils::MappedFileAndReader> source;
-};
-
 
 //==============================================================================
 class JUCEBufferingAudioReaderWrapper   : public FallbackReader

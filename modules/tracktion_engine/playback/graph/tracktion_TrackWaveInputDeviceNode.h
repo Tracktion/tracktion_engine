@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -14,10 +14,11 @@ namespace tracktion { inline namespace engine
 /**
     A Node that takes audio from the output of a track and sends it to its corresponding InputDevice.
 */
-class TrackWaveInputDeviceNode final    : public tracktion::graph::Node
+class TrackWaveInputDeviceNode final    : public tracktion::graph::Node,
+                                          private TracktionEngineNode
 {
 public:
-    TrackWaveInputDeviceNode (WaveInputDevice&, std::unique_ptr<Node>);
+    TrackWaveInputDeviceNode (ProcessState&, WaveInputDevice&, std::unique_ptr<Node>, bool copyInputsToOutputs);
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -30,7 +31,7 @@ private:
     WaveInputDevice& waveInputDevice;
     std::unique_ptr<Node> input;
     double sampleRate = 44100.0;
-    int offsetSamples = 0;
+    TimeDuration offset;
     const bool copyInputsToOutputs = false;
 };
 

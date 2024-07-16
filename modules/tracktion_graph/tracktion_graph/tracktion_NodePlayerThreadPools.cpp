@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -46,17 +46,23 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
+
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
 
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -76,7 +82,7 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -139,17 +145,21 @@ private:
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
     mutable std::atomic<bool> triggered { false };
+    juce::AudioWorkgroup workgroup;
 
     bool shouldWaitOrIsNotTriggered()
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -171,17 +181,23 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
+
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
 
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -241,9 +257,13 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
 private:
     std::vector<std::thread> threads;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -276,17 +296,23 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
+        workgroup = workgroupToUse;
+
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                              .withPriority (10)
+                              .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
 
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -306,7 +332,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -387,17 +413,22 @@ private:
     mutable std::mutex mutex;
     mutable std::condition_variable condition;
     mutable std::atomic<bool> triggered { false };
+    juce::AudioWorkgroup workgroup;
+
 
     bool shouldWaitOrIsNotTriggered()
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -420,18 +451,24 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+        workgroup = workgroupToUse;
+
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
 
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -492,9 +529,13 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 private:
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+
         for (;;)
         {
             if (shouldExit())
@@ -517,18 +558,24 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
-    void createThreads (size_t numThreads) override
+    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
     {
         if (threads.size() == numThreads)
             return;
 
         resetExitSignal();
         semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+        workgroup = workgroupToUse;
+
+        const auto rtOpts = juce::Thread::RealtimeOptions()
+                      .withPriority (10)
+                      .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
 
         for (size_t i = 0; i < numThreads; ++i)
         {
             threads.emplace_back ([this] { runThread(); });
             setThreadPriority (threads.back(), 10);
+            tryToUpgradeCurrentThreadToRealtime (rtOpts);
         }
     }
 
@@ -614,9 +661,15 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 private:
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
+    juce::AudioWorkgroup workgroup;
 
     void runThread()
     {
+        juce::WorkgroupToken token;
+        workgroup.join (token);
+        
+        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
+
         for (;;)
         {
             if (shouldExit())

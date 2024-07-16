@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -93,7 +93,8 @@ private:
 
 //==============================================================================
 AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
-    : ClipTrack (ed, v, 50, 13, 2000)
+    : ClipTrack (ed, v, true),
+      MacroParameterElement (ed, v)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     soloIsolated.referTo (state, IDs::soloIsolate, nullptr);
@@ -103,23 +104,25 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     ghostTracks.referTo (state, IDs::ghostTracks, nullptr);
     maxInputs.referTo (state, IDs::maxInputs, nullptr, 1);
     compGroup.referTo (state, IDs::compGroup, &edit.getUndoManager(), -1);
-    midiVisibleProportion.referTo (state, IDs::midiVProp, nullptr);
-    midiVerticalOffset.referTo (state, IDs::midiVOffset, nullptr);
     midiNoteMap.referTo (state, IDs::midiNoteMap, nullptr);
+    playSlotClips.referTo (state, IDs::playSlotClips, nullptr);
 
     updateMidiNoteMapCache();
 
-    std::vector<ChannelIndex> channels = { ChannelIndex (0, juce::AudioChannelSet::left),
-                                           ChannelIndex (1, juce::AudioChannelSet::right) };
+    WaveDeviceDescription desc;
+    desc.name = itemID.toString();
+    desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
+                      ChannelIndex (1, juce::AudioChannelSet::right) };
 
-    callBlocking ([this, &channels]
+    callBlocking ([this, desc]
     {
-        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, itemID.toString(),
-                                                             TRANS("Track Wave Input"), channels,
-                                                             InputDevice::trackWaveDevice);
+        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, TRANS("Track Wave Input"),
+                                                             desc, InputDevice::trackWaveDevice);
 
         midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemID.toString(),
-                                                                    InputDevice::trackMidiDevice);
+                                                                    InputDevice::trackMidiDevice,
+                                                                    "TrkMIDI_" + itemID.toString(),
+                                                                    false);
 
         auto& eid = edit.getEditInputDevices();
         waveInputDevice->setEnabled (eid.isInputDeviceAssigned (*waveInputDevice));
@@ -168,6 +171,9 @@ void AudioTrack::initialise()
 
     ClipTrack::initialise();
 
+    if (! edit.isLoading())
+        getClipSlotList().ensureNumberOfSlots (edit.getSceneList().getNumScenes());
+
     if (frozenIndividually && ! getFreezeFile().existsAsFile())
         setFrozen (false, individualFreeze);
 
@@ -197,12 +203,10 @@ void AudioTrack::sanityCheckName()
 
 juce::String AudioTrack::getName() const
 {
-    auto n = ClipTrack::getName();
+    if (auto n = ClipTrack::getName(); ! n.isEmpty())
+        return n;
 
-    if (n.isEmpty())
-        n << TRANS("Track") << ' ' << getAudioTrackNumber();
-
-    return n;
+    return getNameAsTrackNumber();
 }
 
 int AudioTrack::getAudioTrackNumber() const noexcept
@@ -220,18 +224,58 @@ int AudioTrack::getAudioTrackNumber() const noexcept
         return true;
     });
 
-    return result;}
+    return result;
+}
+
+juce::String AudioTrack::getNameAsTrackNumber() const
+{
+    return TRANS("Track") + " " + juce::String (getAudioTrackNumber());
+}
+
+juce::String AudioTrack::getNameAsTrackNumberWithDescription() const
+{
+    auto desc = getNameAsTrackNumber();
+
+    if (auto n = getName(); ! n.startsWithIgnoreCase (TRANS("Track") + " "))
+        desc << " (" << n << ")";
+
+    return desc;
+}
+
+juce::String AudioTrack::getSelectableDescription()
+{
+    return getNameAsTrackNumberWithDescription();
+}
 
 VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPluginsOfType<VolumeAndPanPlugin>().getLast(); }
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }
 EqualiserPlugin* AudioTrack::getEqualiserPlugin()     { return pluginList.getPluginsOfType<EqualiserPlugin>().getLast(); }
 
-AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
+AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus, AuxPosition ap) const
 {
-    for (auto p : pluginList)
-        if (auto f = dynamic_cast<AuxSendPlugin*> (p))
-            if (bus < 0 || bus == f->getBusNumber())
-                return f;
+    if (ap == AuxPosition::byBus)
+    {
+        for (auto p : pluginList)
+            if (auto f = dynamic_cast<AuxSendPlugin*> (p))
+                if (bus < 0 || bus == f->getBusNumber())
+                    return f;
+    }
+    else if (ap == AuxPosition::byPosition)
+    {
+        jassert(bus >= 0);
+
+        int idx = 0;
+        for (auto p : pluginList)
+        {
+            if (auto f = dynamic_cast<AuxSendPlugin*> (p))
+            {
+                if (idx == bus)
+                    return f;
+
+                idx++;
+            }
+        }
+    }
 
     return {};
 }
@@ -289,7 +333,7 @@ void AudioTrack::updateMidiNoteMapCache()
         for (int i = 0; i < l.length(); i++)
         {
             auto c = l[i];
-            
+
             if (juce::CharacterFunctions::isDigit (c))
                 digits++;
             else
@@ -383,7 +427,7 @@ bool AudioTrack::isMuted (bool includeMutingByDestination) const
     {
         if (auto p = getParentFolderTrack())
             return p->isMuted (true);
-        
+
         if (auto dest = output->getDestinationTrack())
             return dest->isMuted (true);
     }
@@ -483,6 +527,49 @@ juce::String AudioTrack::getTrackPlayabilityWarning() const
     return {};
 }
 
+juce::String AudioTrack::getLauncherPlayabilityWarning() const
+{
+    bool hasMidi = false, hasWave = false;
+
+    if (clipSlotList)
+    {
+        for (auto slot : clipSlotList->getClipSlots())
+        {
+            if (slot)
+            {
+                if (auto c = slot->getClip())
+                {
+                    auto type = c->type;
+
+                    if (! hasMidi && (type == TrackItem::Type::midi || type == TrackItem::Type::step))
+                        hasMidi = true;
+
+                    if (! hasWave && type == TrackItem::Type::wave)
+                        hasWave = true;
+
+                    if (hasMidi && hasWave)
+                        break;
+                }
+            }
+        }
+    }
+
+    if (hasMidi && ! canPlayMidi())
+        return TRANS("This track contains MIDI-generating clips which may be inaudible as it doesn't output to a MIDI device or a plugin synthesiser.")
+                  + "\n\n" + TRANS("To change a track's destination, select the track and use its destination list.");
+
+    if (hasWave && ! canPlayAudio())
+    {
+        if (! getOutput().canPlayAudio())
+            return TRANS("This track contains wave clips which may be inaudible as it doesn't output to an audio device.")
+                        + "\n\n" + TRANS("To change a track's destination, select the track and use its destination list.");
+
+        return TRANS("This track contains wave clips which may be inaudible as the audio will be blocked by some of the track's plugins.");
+    }
+
+    return {};
+}
+
 bool AudioTrack::canPlayAudio() const
 {
     if (! getOutput().canPlayAudio())
@@ -513,19 +600,46 @@ bool AudioTrack::canPlayMidi() const
     return false;
 }
 
+//==============================================================================
+ClipSlotList& AudioTrack::getClipSlotList()
+{
+    if (! clipSlotList)
+        clipSlotList = std::make_unique<ClipSlotList> (state.getOrCreateChildWithName (IDs::CLIPSLOTS, &edit.getUndoManager()), *this);
+
+    return *clipSlotList;
+}
+
+//==============================================================================
+double AudioTrack::getMidiVerticalOffset() const
+{
+    return state.getProperty (IDs::midiVOffset, juce::var (defaultMidiVerticalOffset));
+}
+
+double AudioTrack::getMidiVisibleProportion() const
+{
+    return state.getProperty (IDs::midiVProp, juce::var (defaultMidiVisibleProportion));
+}
+
 void AudioTrack::setMidiVerticalPos (double visibleProp, double offset)
 {
-    visibleProp             = juce::jlimit (0.0, 1.0, visibleProp);
-    midiVerticalOffset      = juce::jlimit (0.0, 1.0 - visibleProp, offset);
-    midiVisibleProportion   = juce::jlimit (0.1, 1.0 - midiVerticalOffset, visibleProp);
+    visibleProp = juce::jlimit (0.0, 1.0, visibleProp);
+    auto vo = juce::jlimit (0.0, 1.0 - visibleProp, offset);
+    auto vp = juce::jlimit (0.1, 1.0 - vo, visibleProp);
+
+    state.setProperty (IDs::midiVOffset, vo, nullptr);
+    state.setProperty (IDs::midiVProp,   vp, nullptr);
 }
 
 void AudioTrack::setVerticalScaleToDefault()
 {
     auto midiNotes = juce::jlimit (1, 128, 12 * static_cast<int> (edit.engine.getPropertyStorage()
                                                                    .getProperty (SettingID::midiEditorOctaves, 3)));
-    midiVisibleProportion = midiNotes / 128.0;
-    midiVerticalOffset = (1.0 - midiVisibleProportion) * 0.5;
+
+    defaultMidiVisibleProportion = midiNotes / 128.0;
+    defaultMidiVerticalOffset = (1.0 - defaultMidiVisibleProportion) * 0.5;
+
+    state.removeProperty (IDs::midiVOffset, nullptr);
+    state.removeProperty (IDs::midiVProp, nullptr);
 }
 
 void AudioTrack::setTrackToGhost (AudioTrack* track, bool shouldGhost)
@@ -549,10 +663,13 @@ void AudioTrack::setTrackToGhost (AudioTrack* track, bool shouldGhost)
 
 juce::Array<AudioTrack*> AudioTrack::getGhostTracks() const
 {
+    if (ghostTracks.get().isEmpty())
+        return {};
+
     juce::Array<AudioTrack*> tracks;
 
     for (auto& trackID : EditItemID::parseStringList (ghostTracks))
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, trackID)))
+        if (auto at = findAudioTrackForID (edit, trackID))
             tracks.add (at);
 
     return tracks;
@@ -611,7 +728,7 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
 void AudioTrack::turnOffGuideNotes()
 {
     stopTimer();
-    
+
     for (int ch = 1; ch <= 16; ch++)
         turnOffGuideNotes (MidiChannel (ch));
 }
@@ -660,6 +777,16 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
 
             changed();
         }
+        else if (i == IDs::playSlotClips)
+        {
+            playSlotClips.forceUpdateOfCachedValue();
+
+            if (! playSlotClips.get())
+                for (auto cs : getClipSlotList().getClipSlots())
+                    if (auto c = cs->getClip())
+                        if (auto lh = c->getLaunchHandle(); lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                            lh->stop ({});
+        }
         else if (i == IDs::compGroup)
         {
             changed();
@@ -681,7 +808,7 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
         else if (i == IDs::name)
         {
             auto devName = getName();
-            
+
             waveInputDevice->setAlias (devName);
             midiInputDevice->setAlias (devName);
         }
@@ -706,12 +833,20 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
     ClipTrack::valueTreePropertyChanged (v, i);
 }
 
+void AudioTrack::valueTreeParentChanged (juce::ValueTree& v)
+{
+    ClipTrack::valueTreeParentChanged (v);
+
+    if (state.getParent().isValid())
+        if (int numScenes = getClipSlotList().getClipSlots().size(); numScenes > 0)
+            edit.getSceneList().ensureNumberOfScenes (getClipSlotList().getClipSlots().size());
+}
 
 //==============================================================================
 bool AudioTrack::hasAnyLiveInputs()
 {
     for (auto in : edit.getAllInputDevices())
-        if (in->isRecordingActive (*this) && in->isOnTargetTrack (*this))
+        if (in->isRecordingActive (itemID) && in->getTargets().contains (itemID))
             return true;
 
     return false;
@@ -742,17 +877,15 @@ void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageA
     injectLiveMidiMessage ({ m, source });
 }
 
-bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original, TimePosition startTime,
+bool AudioTrack::mergeInMidiSequence (juce::MidiMessageSequence ms, TimePosition startTime,
                                       MidiClip* mc, MidiList::NoteAutomationType automationType)
 {
-    auto ms = original;
-    ms.addTimeToMessages (startTime.inSeconds());
-
-    const auto start = TimePosition::fromSeconds (ms.getStartTime());
-    const auto end = TimePosition::fromSeconds (ms.getEndTime());
 
     if (mc == nullptr)
     {
+        const auto start = TimePosition::fromSeconds (ms.getStartTime()) + toDuration (startTime);
+        const auto end = TimePosition::fromSeconds (ms.getEndTime()) + toDuration (startTime);
+
         for (auto c : getClips())
         {
             if (c->getPosition().time.overlaps ({ start, end }))
@@ -767,15 +900,7 @@ bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original,
 
     if (mc != nullptr)
     {
-        auto pos = mc->getPosition();
-
-        if (pos.getStart() > start)
-            mc->extendStart (std::max (TimePosition(), start - TimeDuration::fromSeconds (0.1)));
-
-        if (pos.getEnd() < end)
-            mc->setEnd (end + TimeDuration::fromSeconds (0.1), true);
-
-        mc->mergeInMidiSequence (ms, automationType);
+        tracktion::mergeInMidiSequence (*mc, std::move (ms), toDuration (startTime), automationType);
         return true;
     }
 
@@ -851,10 +976,10 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
                 {
                     if (auto folder = getParentFolderTrack())
                         return folder->isSubmixFolder();
-                        
+
                     return false;
                 };
-                
+
                 if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
                 {
                     edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
@@ -928,8 +1053,8 @@ void AudioTrack::freezeTrack()
     const Edit::ScopedRenderStatus srs (edit, true);
     const auto desc = TRANS("Creating track freeze for \"XDVX\"")
                         .replace ("XDVX", getName()) + "...";
-    
-    if (r.engine->getProjectManager().getProject (edit) != nullptr)
+
+    if (getProjectForEdit (edit) != nullptr)
         Renderer::renderToProjectItem (desc, r);
     else
         Renderer::renderToFile (desc, r);

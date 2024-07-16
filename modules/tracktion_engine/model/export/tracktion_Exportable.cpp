@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -24,6 +24,10 @@ juce::Array<Exportable*> Exportable::addAllExportables (Edit& edit)
             if (auto plugins = c->getPluginList())
                 list.addArray (plugins->getPlugins());
         }
+
+        for (auto s : t->getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                list.add (c);
 
         list.addArray (t->pluginList.getPlugins());
     }

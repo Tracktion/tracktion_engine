@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -171,7 +171,7 @@ struct IDRemapping
     static bool isIDReference (const juce::Identifier& parentType, juce::StringRef att)
     {
         for (auto p : { IDs::currentAutoParamPluginID, IDs::currentAutoParamTag,
-                        IDs::targetTrack, IDs::sourceTrack, IDs::src, IDs::dst,
+                        IDs::targetID, IDs::sourceTrack, IDs::src, IDs::dst,
                         IDs::pluginID, IDs::rackType, IDs::paramID })
             if (p == att)
                 return true;
@@ -398,6 +398,12 @@ void EditItemID::remapIDs (juce::ValueTree& v, juce::UndoManager* um,
         if (oldIDString.isNotEmpty())
         {
             auto& remapped = newIDs[oldIDString];
+
+            if (remapped.isInvalid() && remappedIDs != nullptr && remappedIDs->contains (EditItemID::fromString (oldIDString)))
+            {
+                remapped = remappedIDs->at (EditItemID::fromString (oldIDString));
+                //DBG ("Remapping ID: " << oldIDString << "  " << remapped.toString());
+            }
 
             if (remapped.isInvalid())
             {

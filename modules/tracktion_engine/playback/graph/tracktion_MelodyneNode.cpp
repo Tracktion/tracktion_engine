@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -131,11 +131,11 @@ tracktion::graph::NodeProperties MelodyneNode::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = fileInfo.numChannels;
-    
+
     if (auto plugin = melodyneProxy->getPlugin())
         if (auto p = plugin->getAudioPluginInstance())
             props.numberOfChannels = juce::jmax (props.numberOfChannels, p->getTotalNumInputChannels(), p->getTotalNumOutputChannels());
-    
+
     return props;
 }
 
@@ -172,7 +172,7 @@ bool MelodyneNode::isReadyToProcess()
 {
     if (! isOfflineRender)
         return true;
-    
+
     return ! analysingContent;
 }
 

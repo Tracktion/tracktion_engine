@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 
 /**
     Handles time/pitch stretching using various supported libraries.
-    
+
     Currently supported libraries are SoundTouch, RubberBand and Elastique.
     These libraries may require additional module config options to enable and
     fall under their own licence terms so make sure to check those before
@@ -25,7 +25,7 @@ public:
     //==============================================================================
     /** Creates an TimeStretcher using the default mode. */
     TimeStretcher();
-    
+
     /** Destructor. */
     ~TimeStretcher();
 
@@ -45,6 +45,9 @@ public:
         elastiqueMonophonic = 9,        /**< Elastique which can sound better for monophonic sounds. */
         rubberbandMelodic = 10,         /**< RubberBand tailored to melodic sounds prioritising pitch accuracy. */
         rubberbandPercussive = 11,      /**< RubberBand tailored to percussive sounds prioritising transient accuracy. */
+        elastiqueDirectPro = 12,        /**< Elastique Direct Pro good all round (@see ElastiqueProOptions). */
+        elastiqueDirectEfficient = 13,  /**< Elastique Direct lower quality and lower CPU usage. */
+        elastiqueDirectMobile = 14,     /**< Elastique Direct lower quality and lower CPU usage, optimised for mobile. */
 
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         defaultMode = elastiquePro      /**< Default mode. */
@@ -116,10 +119,10 @@ public:
 
     /** Returns true if this has been fully initialised. */
     bool isInitialised() const;
-    
+
     /** Resets the TimeStretcher ready for a new set of audio data, maintains mode, speed and pitch ratios. */
     void reset();
-    
+
     /** Sets the timestretch speed ratio and semitones pitch shift.
         @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.
         @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.
@@ -130,12 +133,12 @@ public:
         This can be used to size FIFOs for real-time use accordingly.
     */
     int getMaxFramesNeeded() const;
-    
+
     /** Returns the expected number of frames required to generate some output.
         This should be queried each block and the returned number of frames be passes to processData.
     */
     int getFramesNeeded() const;
-    
+
     /** Processes some input frames and fills some output frames with the applied speed ratio and pitch shift.
         @param inChannels   The input sample data in non-interleaved format
         @param numSamples   The number of input frames to read from inChannels
@@ -154,7 +157,7 @@ public:
         @returns            The number of frames read and hence written to outFifo
     */
     int processData (AudioFifo& inFifo, int numSamples, AudioFifo& outFifo);
-    
+
     /** Flushes the end of the stream when input data is exhausted but there is still output data available.
         Once you have called this, you can no longer call processData.
         @param outChannels  The destination for non-interleaved output samples. This should be as big as samplesPerBlock

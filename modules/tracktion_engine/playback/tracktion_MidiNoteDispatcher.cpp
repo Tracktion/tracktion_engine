@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
 
 void MidiNoteDispatcher::dispatchPendingMessagesForDevices (TimePosition editTime)
 {
-    juce::ScopedLock s (deviceLock);
+    const std::shared_lock sl (deviceMutex);
 
     for (auto state : devices)
         dispatchPendingMessages (*state, editTime);
@@ -30,7 +30,7 @@ void MidiNoteDispatcher::dispatchPendingMessagesForDevices (TimePosition editTim
 
 void MidiNoteDispatcher::masterTimeUpdate (TimePosition editTime)
 {
-    const juce::ScopedLock s (timeLock);
+    const std::scoped_lock s (timeLock);
     masterTime = editTime;
     hiResClockOfMasterTime = juce::Time::getMillisecondCounterHiRes();
 }
@@ -42,7 +42,7 @@ void MidiNoteDispatcher::prepareToPlay (TimePosition editTime)
 
 TimePosition MidiNoteDispatcher::getCurrentTime() const
 {
-    const juce::ScopedLock s (timeLock);
+    const std::scoped_lock s (timeLock);
     return masterTime + TimeDuration::fromSeconds ((juce::Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001);
 }
 
@@ -52,7 +52,7 @@ void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, TimePositi
     auto& pendingBuffer = state.device.getPendingMessages();
     state.device.context.masterLevels.processMidi (pendingBuffer, nullptr);
     const auto delay = state.device.getMidiOutput().getDeviceDelay();
-    
+
     if (! state.device.sendMessages (pendingBuffer, editTime - delay))
         state.buffer.mergeFromAndClear (pendingBuffer);
 }
@@ -71,7 +71,7 @@ void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray<MidiOutputDev
     bool startTimerFlag = false;
 
     {
-        const juce::ScopedLock sl (deviceLock);
+        const std::unique_lock sl (deviceMutex);
         newDevices.swapWith (devices);
         startTimerFlag = ! devices.isEmpty();
     }
@@ -92,7 +92,7 @@ void MidiNoteDispatcher::hiResTimerCallback()
     messagesToSend.ensureStorageAllocated (32);
 
     {
-        const juce::ScopedLock sl (deviceLock);
+        const std::shared_lock sl (deviceMutex);
 
         for (auto d : devices)
         {

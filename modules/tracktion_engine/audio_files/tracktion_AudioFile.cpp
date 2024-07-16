@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -179,7 +179,7 @@ void AudioFileWriter::closeForWriting()
         const juce::ScopedLock sl (writerLock);
         writer.reset();
     }
-    
+
     auto& audioFileManager = file.engine->getAudioFileManager();
     audioFileManager.releaseFile (file);
     audioFileManager.checkFileForChanges (file);
@@ -348,7 +348,7 @@ AudioFileInfo::AudioFileInfo (Engine& e)
 AudioFileInfo::AudioFileInfo (const AudioFile& file, juce::AudioFormatReader* reader, juce::AudioFormat* f)
     : engine (file.engine), hashCode (file.getHash()), format (f),
       fileModificationTime (file.getFile().getLastModificationTime()),
-      loopInfo (*file.engine, reader, f)
+      loopInfo (*file.engine, reader, f, file.getFile())
 {
     if (reader != nullptr)
     {
@@ -530,7 +530,7 @@ bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
     for (auto thumb : engine.getAudioFileManager().activeThumbnails)
         if (! thumb->isFullyLoaded())
             return false;
-    
+
     return true;
 }
 
@@ -598,7 +598,7 @@ void SmartThumbnail::createThumbnailReader()
 
         // this breaks thumbnails in 64-bit mode
         //setReader (new CacheAudioFormatReader (file), hashCode);
-        
+
         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), hashCode);
         thumbnailIsInvalid = false;
     }
@@ -778,7 +778,7 @@ void SmartThumbnail::timerCallback()
 
 //==============================================================================
 AudioFileManager::AudioFileManager (Engine& e)
-    : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache (e))
+    : engine (e), cache (e), thumbnailCache (std::make_unique<TracktionThumbnailCache> (e))
 {
 }
 

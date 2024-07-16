@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 struct SpeedRampWaveNode::PerChannelState
 {
     PerChannelState()    { resampler.reset(); }
-    
+
     juce::LagrangeInterpolator resampler;
     float lastSample = 0;
 };
@@ -85,7 +85,7 @@ bool SpeedRampWaveNode::isReadyToProcess()
     // Only check this whilst rendering or it will block whilst the proxies are being created
     if (! isOfflineRender)
         return true;
-    
+
     // If the hash is 0 it means an empty file path which means a missing file so
     // this will never return a valid reader and we should just bail
     if (audioFile.isNull())
@@ -142,10 +142,10 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (TimePosition editTime) const no
 
         editTime = speedFadeDescription.outTimeRange.getStart()
                     + TimeDuration::fromSeconds (rescaledProportion * speedFadeDescription.outTimeRange.getLength().inSeconds());
-        
+
         jassert (speedFadeDescription.outTimeRange.containsInclusive (editTime));
     }
-        
+
     return (int64_t) ((editTime - (editPosition.getStart() - offset)).inSeconds()
                        * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
@@ -153,7 +153,7 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (TimePosition editTime) const no
 bool SpeedRampWaveNode::updateFileSampleRate()
 {
     using namespace tracktion::graph;
-    
+
     if (reader == nullptr)
         return false;
 
@@ -161,7 +161,7 @@ bool SpeedRampWaveNode::updateFileSampleRate()
 
     if (audioFileSampleRate <= 0)
         return false;
-    
+
     if (! loopSection.isEmpty())
         reader->setLoopRange ({ tracktion::toSamples (loopSection.getStart(), audioFileSampleRate),
                                 tracktion::toSamples (loopSection.getEnd(), audioFileSampleRate) });
@@ -172,7 +172,7 @@ bool SpeedRampWaveNode::updateFileSampleRate()
 void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto sectionEditTime = tracktion::timeRangeFromSamples (timelineRange, outputSampleRate);
-    
+
     if (reader == nullptr
          || sectionEditTime.getEnd() <= editPosition.getStart()
          || sectionEditTime.getStart() >= editPosition.getEnd())
@@ -186,13 +186,13 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     const auto fileStart       = editTimeToFileSample (sectionEditTime.getStart());
     const auto fileEnd         = editTimeToFileSample (sectionEditTime.getEnd());
     const auto numFileSamples  = (int) (fileEnd - fileStart);
-    
+
     if (numFileSamples <= 3)
     {
         playedLastBlock = false;
         return;
     }
-    
+
     reader->setReadPosition (fileStart);
 
     auto destBuffer = pc.buffers.audio;
@@ -240,7 +240,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
 
     if (ratio <= 0.0)
         return;
-    
+
     jassert ((int) numChannels <= channelState.size()); // this should always have been made big enough
 
     for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
@@ -269,7 +269,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
             destBuffer.getChannel (channel).clear();
         }
     }
-    
+
     // If the ratio goes below 0.05, this will be too low to hear so fade out the block if it was played
     // If this is the first block, fade it in
     if (ratio < 0.05)
@@ -283,7 +283,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
         auto bufferRef = tracktion::graph::toAudioBuffer (destBuffer);
         bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                  1.0f, 0.0f);
-        
+
         playedLastBlock = false;
         return;
     }
@@ -295,11 +295,11 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
             bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                      0.0f, 1.0f);
         }
-        
+
         playedLastBlock = true;
     }
 
-    
+
     // Silence any samples before or after our edit time range
     // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
     {

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,8 +20,8 @@ public:
     ParameterControlMappings (Edit&);
     ~ParameterControlMappings() override;
 
-    void loadFrom (const juce::ValueTree&);
-    void saveTo (juce::ValueTree&);
+    void loadFromEdit();
+    void saveToEdit();
 
     static ParameterControlMappings* getCurrentlyFocusedMappings (Engine&);
 

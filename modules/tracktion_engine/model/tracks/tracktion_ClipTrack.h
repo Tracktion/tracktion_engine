@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,7 +16,7 @@ class ClipTrack   : public Track,
                     public ClipOwner
 {
 public:
-    ClipTrack (Edit&, const juce::ValueTree&, double defaultHeight, double minHeight, double maxHeight);
+    ClipTrack (Edit&, const juce::ValueTree&, bool hasModifierList);
     ~ClipTrack() override;
 
     using Ptr   = juce::ReferenceCountedObjectPtr<ClipTrack>;
@@ -106,6 +106,8 @@ public:
 
     /** @internal */
     juce::ValueTree& getClipOwnerState() override;
+    /** @internal */
+    EditItemID getClipOwnerID() override;
     /** @internal */
     Selectable* getClipOwnerSelectable() override;
     /** @internal */

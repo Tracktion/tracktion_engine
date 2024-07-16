@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -32,8 +32,8 @@ public:
     /** Creates a LoopInfo for an audio file. */
     LoopInfo (Engine&, const juce::File&);
 
-    /** Creates a LoopInfo for a reader. */
-    LoopInfo (Engine&, const juce::AudioFormatReader*, const juce::AudioFormat*);
+    /** Creates a LoopInfo for a reader. Optionally pass filename to extract metadata from name */
+    LoopInfo (Engine&, const juce::AudioFormatReader*, const juce::AudioFormat*, const juce::File& f);
 
     /** Creates a copy of another LoopInfo. */
     LoopInfo& operator= (const LoopInfo&);
@@ -156,7 +156,7 @@ private:
     juce::UndoManager* um = nullptr;
     bool maintainParent = false;
 
-    void init (const juce::AudioFormatReader*, const juce::AudioFormat*);
+    void init (const juce::AudioFormatReader*, const juce::AudioFormat*, const juce::File& file);
     void initialiseMissingProps();
     void duplicateIfShared();
     LoopInfo& copyFrom (const juce::ValueTree&);
@@ -166,6 +166,11 @@ private:
     juce::ValueTree getTags() const;
     juce::ValueTree getOrCreateTags();
     void setBpm (double newBpm, double currentBpm);
+    
+    bool deduceTempo (const juce::File& file, const juce::AudioFormatReader&);
+    std::optional<float> getCueTempo (const juce::StringPairArray& metadata);
+    std::optional<float> getFileNameTempo (const juce::String& rawName);
+    std::optional<int> getFileNameRootNote (const juce::String& rawName);
 
     template<typename Type>
     void setProp (const juce::Identifier& i, Type v)

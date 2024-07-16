@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -435,6 +435,10 @@ void PluginManager::initialise()
 
     initialised = true;
     pluginFormatManager.addDefaultFormats();
+
+    if (auto patchFormat = createCmajorPatchPluginFormat (engine))
+        pluginFormatManager.addFormat (patchFormat.release());
+
     knownPluginList.setCustomScanner (std::make_unique<CustomScanner> (engine));
 
     auto xml = engine.getPropertyStorage().getXmlProperty (getPluginListPropertyName());
@@ -683,7 +687,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
     {
         // If you're creating a RackInstance, you need to specify the Rack index!
         jassert (desc.fileOrIdentifier.isNotEmpty());
-        
+
         RackType::Ptr rackType;
         auto rackIndex = desc.fileOrIdentifier.getTrailingIntValue();
 
@@ -729,6 +733,9 @@ juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescript
 
     for (const auto& p : knownPluginList.getTypes())
     {
+        if (p.pluginFormatName != "VST3")
+            continue;
+
         if (p.name.containsIgnoreCase ("Melodyne"))
         {
             auto version = p.version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
@@ -789,8 +796,13 @@ Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, boo
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
 
+    if (! v.isValid())
+        return {};
+
     auto type = v[IDs::type].toString();
     PluginCreationInfo info (ed, v, isNew);
+
+    EditItemID::readOrCreateNewID (ed, v);
 
     if (type == ExternalPlugin::xmlTypeName)
         return new ExternalPlugin (info);

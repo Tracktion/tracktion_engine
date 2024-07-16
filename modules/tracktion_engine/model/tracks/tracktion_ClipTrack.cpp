@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -157,10 +157,10 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 };
 
 //==============================================================================
-ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
-    : Track (ed, v, defaultHeight, minHeight, maxHeight)
+ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
+    : Track (ed, v, hasModifierList)
 {
-    collectionClipList.reset (new CollectionClipList (*this, state));
+    collectionClipList = std::make_unique<CollectionClipList> (*this, state);
 }
 
 ClipTrack::~ClipTrack()
@@ -280,6 +280,12 @@ Clip* ClipTrack::findClipForID (EditItemID id) const
     for (auto c : getClips())
         if (c->itemID == id)
             return c;
+
+    if (auto at = dynamic_cast<const AudioTrack*> (this))
+        for (auto slot : const_cast<AudioTrack*> (at)->getClipSlotList().getClipSlots())
+            if (auto c = slot->getClip())
+                if (c->itemID == id)
+                    return c;
 
     return {};
 }
@@ -453,6 +459,11 @@ bool ClipTrack::containsAnyMIDIClips() const
 juce::ValueTree& ClipTrack::getClipOwnerState()
 {
     return state;
+}
+
+EditItemID ClipTrack::getClipOwnerID()
+{
+    return itemID;
 }
 
 Selectable* ClipTrack::getClipOwnerSelectable()

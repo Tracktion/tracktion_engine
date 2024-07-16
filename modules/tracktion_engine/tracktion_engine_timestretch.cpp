@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,6 +20,7 @@
 
   // If you get a build error here you'll need to add the Elastique SDK to your header search path!
   #include "elastique_pro/incl/elastiqueProV3API.h"
+  #include "elastique_pro/incl/elastiqueProV3DirectAPI.h"
 
  #ifdef __GNUC__
   #pragma GCC diagnostic pop
@@ -69,6 +70,7 @@
 
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"
+#include "timestretch/tracktion_ReadAheadTimeStretcher.cpp"
 
 namespace tracktion { inline namespace engine
 {

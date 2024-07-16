@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,13 +20,13 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 /**
     A lock-free pool of audio buffers.
- 
+
     If you need to quickly create and then return some audio buffers this class
     enables you to do that in a lock free way.
- 
+
     Note that the buffers can be pre-allocated but if you ask for a buffer which
     isn't in the pool, it will either resize an existing one or allocate a new one.
-    
+
     After processing a constant audio graph for a while though this should be
     completely allocation and lock-free.
 */
@@ -49,22 +49,22 @@ public:
         This will attempt to get a buffer from the pre-allocated pool that can
         fit the size but if one can't easily be found, it will allocate one with
         new and return it.
-        
+
         Additionally, the returned buffer may be bigger than the size asked for
         so be sure to only use a view of it but retain ownership of the whole buffer.
         You can release it back to the pool later.
         It will also contain junk so be sure to clear or initialise the view
         required before use.
         @see release
-     
+
         [[ thread_safe ]]
     */
     choc::buffer::ChannelArrayBuffer<float> allocate (choc::buffer::Size);
-    
+
     /** Releases an allocated buffer back to the pool.
         @returns true if the buffer was able to fit in the pool, false if it
         couldn't and had to be deallocated in place
-     
+
         [[ thread_safe ]]
     */
     bool release (choc::buffer::ChannelArrayBuffer<float>&&);
@@ -132,7 +132,7 @@ inline choc::buffer::ChannelArrayBuffer<float> AudioBufferPool::allocate (choc::
     {
         buffer.resize (size);
     }
-        
+
     return buffer;
 }
 
@@ -145,10 +145,10 @@ inline bool AudioBufferPool::release (choc::buffer::ChannelArrayBuffer<float>&& 
 inline void  AudioBufferPool::setCapacity (size_t maxCapacity)
 {
     maxCapacity = (size_t) juce::nextPowerOfTwo ((int) maxCapacity);
-    
+
     if (maxCapacity <= capacity)
         return;
-    
+
     fifo = std::make_unique<farbot::fifo<choc::buffer::ChannelArrayBuffer<float>>> ((int) maxCapacity);
     capacity = maxCapacity;
 }
@@ -156,7 +156,7 @@ inline void  AudioBufferPool::setCapacity (size_t maxCapacity)
 inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size)
 {
     std::vector<choc::buffer::ChannelArrayBuffer<float>> buffers;
-    
+
     // Remove all the buffers
     for (;;)
     {
@@ -167,7 +167,7 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
 
         buffers.emplace_back (std::move (tempBuffer));
     }
-    
+
     // Ensure their size is as big as required
     for (auto& b : buffers)
     {
@@ -178,7 +178,7 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
             b.resize (size);
         }
     }
-    
+
     // Reset the fifo storage to hold the new number of buffers
     const int numToAdd = static_cast<int> (numBuffers) - static_cast<int> (buffers.size());
 
@@ -188,7 +188,7 @@ inline void AudioBufferPool::reserve (size_t numBuffers, choc::buffer::Size size
         [[ maybe_unused ]] bool succeeded = release (std::move (b));
         assert (succeeded); // Capacity too small?
     }
-    
+
     // Push any additional buffers
     for (int i = 0; i < numToAdd; ++i)
     {
@@ -213,7 +213,7 @@ inline size_t AudioBufferPool::getNumBuffers()
     }
 
     const auto numBuffers = buffers.size();
-    
+
     // Push the temp buffers back
     for (auto& b : buffers)
     {
@@ -233,17 +233,17 @@ inline size_t AudioBufferPool::getAllocatedSize()
     for (;;)
     {
         choc::buffer::ChannelArrayBuffer<float> tempBuffer;
-        
+
         if (! fifo->pop (tempBuffer))
             break;
-        
+
         buffers.emplace_back (std::move (tempBuffer));
     }
 
     // Calculate the size of them
     for (auto& b : buffers)
         size +=  b.getView().data.getBytesNeeded (b.getSize());
-    
+
     // Then put them back in the fifo
     for (auto& b : buffers)
         fifo->push (std::move (b));

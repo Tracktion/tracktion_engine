@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,6 +17,8 @@ namespace tracktion { inline namespace engine
 class RecordingThumbnailManager
 {
 public:
+    RecordingThumbnailManager (Engine& e) : engine (e) {}
+
     /**
         A thumbnail represeting a recording file.
         Get one of these for a file with the getThumbnailFor function.
@@ -79,7 +81,7 @@ public:
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        for (auto* t : thumbs)
+        for (auto t : thumbs)
             if (t->file == f)
                 return *t;
 
@@ -89,9 +91,6 @@ public:
 private:
     Engine& engine;
     juce::Array<Thumbnail*> thumbs;
-
-    friend class Engine;
-    RecordingThumbnailManager (Engine& e) : engine (e) {}
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordingThumbnailManager)
 };

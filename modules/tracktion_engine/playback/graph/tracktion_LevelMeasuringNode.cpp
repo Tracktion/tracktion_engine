@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -26,7 +26,7 @@ void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
 
     // Just pass out input on to our output
     setAudioOutput (input.get(), sourceBuffers.audio);
-    
+
     // If the source only outputs to this node, we can steal its data
     if (input->numOutputNodes == 1)
         pc.buffers.midi.swapWith (sourceBuffers.midi);

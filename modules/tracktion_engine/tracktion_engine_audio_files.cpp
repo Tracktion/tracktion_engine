@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -26,6 +26,12 @@ extern "C"
 
 #include "tracktion_engine.h"
 
+#ifdef  _WIN32
+ #define NOGDI
+ #define NOMINMAX
+ #include <Windows.h>
+#endif
+
 #include <string>
 #include <bitset>
 
@@ -34,6 +40,7 @@ extern "C"
  #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
 
+#include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.cpp"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.cpp"
 #include "audio_files/formats/tracktion_RexFileFormat.cpp"
 #include "audio_files/formats/tracktion_LAMEManager.cpp"
@@ -47,6 +54,7 @@ extern "C"
 #include "audio_files/tracktion_AudioFile.test.cpp"
 #include "audio_files/tracktion_AudioFileUtils.cpp"
 #include "audio_files/tracktion_AudioFormatManager.cpp"
+#include "audio_files/tracktion_BufferedAudioReader.cpp"
 
 #include "midi/tracktion_MidiList.cpp"
 #include "midi/tracktion_MidiProgramManager.cpp"

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,7 +20,7 @@ public:
         : juce::UnitTest ("SampleConversion", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         constexpr double sampleRate = 44100.0;
@@ -32,7 +32,7 @@ public:
             {
                 auto time = sampleToTime (i, sampleRate);
                 auto sample = timeToSample (time, sampleRate);
-                
+
                 if (i != sample)
                     expect (false, juce::String ("Sample to time and back not equal s1=S1, t=TIME, s2=S2")
                                     .replace ("S1", STR (i)).replace ("TIME", STR (time)).replace ("S2", STR (sample)));
@@ -50,7 +50,7 @@ public:
             {
                 auto sample = timeToSample (t, sampleRate);
                 auto time = sampleToTime (sample, sampleRate);
-                
+
                 if (! juce::isWithin (t, time, minTimeDiff))
                     expect (false, juce::String ("Time to sample and back not equal t1=TIME1, s=S1 t=TIME2")
                                     .replace ("TIME1", STR (t)).replace ("S1", STR (sample)).replace ("TIME2", STR (time)));

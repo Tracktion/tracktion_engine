@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,6 +13,7 @@ namespace tracktion { inline namespace engine
 
 /** */
 class AudioTrack  : public ClipTrack,
+                    public MacroParameterElement,
                     private juce::Timer
 {
 public:
@@ -25,7 +26,7 @@ public:
     bool isAudioTrack() const override                      { return true; }
 
     //==============================================================================
-    juce::String getSelectableDescription() override        { return TRANS("Track") + " - \"" + getName() + "\""; }
+    juce::String getSelectableDescription() override;
 
     //==============================================================================
     // This isn't an index - it starts from 1
@@ -35,18 +36,30 @@ public:
     void sanityCheckName() override;
     juce::String getName() const override;
 
+    /// Returns a name in the form "Track [number]"
+    juce::String getNameAsTrackNumber() const;
+
+    /// Returns a name in the form "Track [number] ([track name])"
+    /// (This is smart enough to not add the parenthesised name if it's just
+    /// a "Track X" type name)
+    juce::String getNameAsTrackNumberWithDescription() const;
+
     bool canContainPlugin (Plugin*) const override;
     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }
+
+    /** Determines if the track's arrange clips or clip slots should be audible. */
+    juce::CachedValue<AtomicWrapper<bool>> playSlotClips;
 
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
     juce::String getTrackPlayabilityWarning() const;
+    juce::String getLauncherPlayabilityWarning() const;
 
     //==============================================================================
     VolumeAndPanPlugin* getVolumePlugin();
     LevelMeterPlugin* getLevelMeterPlugin();
     EqualiserPlugin* getEqualiserPlugin();
-    AuxSendPlugin* getAuxSendPlugin (int bus = -1) const; // -1 == any bus, first aux found
+    AuxSendPlugin* getAuxSendPlugin (int bus = -1, AuxPosition ap = AuxPosition::byBus) const; // -1 == any bus, first aux found
 
     //==============================================================================
     /** looks for a name for a midi note by trying all the plugins, and returning a
@@ -73,6 +86,10 @@ public:
         the plugins, and is the track going to an audio output */
     bool canPlayAudio() const;
     bool canPlayMidi() const;
+
+    //==============================================================================
+    /** Returns the ClipSlotList for this track. */
+    ClipSlotList& getClipSlotList();
 
     //==============================================================================
     bool isFrozen (FreezeType) const override;
@@ -102,8 +119,8 @@ public:
 
     //==============================================================================
     /** vertical scales for displaying the midi note editor */
-    double getMidiVisibleProportion() const                         { return midiVisibleProportion; }
-    double getMidiVerticalOffset() const                            { return midiVerticalOffset; }
+    double getMidiVisibleProportion() const;
+    double getMidiVerticalOffset() const;
     void setMidiVerticalPos (double visibleProp, double offset);
     void scaleVerticallyToFitMidi();
     void setVerticalScaleToDefault();
@@ -125,7 +142,7 @@ public:
 
         @returns False if there's no existing clips in the places it needs them.
     */
-    bool mergeInMidiSequence (const juce::MidiMessageSequence&, TimePosition startTime,
+    bool mergeInMidiSequence (juce::MidiMessageSequence, TimePosition startTime,
                               MidiClip*, MidiList::NoteAutomationType);
 
     void playGuideNote (int note, MidiChannel midiChannel, int velocity,
@@ -173,12 +190,14 @@ public:
 
     /** Removes a Listener. */
     void removeListener (Listener*);
-    
+
     /** Returns the listener list so Nodes can manually call them. */
     juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+    void valueTreeParentChanged (juce::ValueTree& v) override;
+
     bool isTrackAudible (bool areAnyTracksSolo) const override;
 
     void timerCallback() override   { turnOffGuideNotes(); }
@@ -202,7 +221,6 @@ private:
     int freezePointRemovalInhibitor = 0;
     juce::CachedValue<int> maxInputs, compGroup;
 
-    juce::CachedValue<double> midiVisibleProportion, midiVerticalOffset;
     juce::CachedValue<juce::String> ghostTracks;
     juce::CachedValue<juce::String> midiNoteMap;
 
@@ -217,6 +235,9 @@ private:
     AsyncFunctionCaller asyncCaller;
 
     juce::ListenerList<Listener> listeners;
+    std::unique_ptr<ClipSlotList> clipSlotList;
+
+    double defaultMidiVisibleProportion = 0, defaultMidiVerticalOffset = 0;
 
     //==============================================================================
     void freezeTrack();

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -66,7 +66,7 @@ inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track
     auto crossfadeTimeMs = trackComp.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
     auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
     auto nonMuteTimes = trackComp.getNonMuteTimes (t, crossfadeTime);
-    
+
     return createTrackCompAudioNode (input, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),
                                      nonMuteTimes, crossfadeTime);
 }

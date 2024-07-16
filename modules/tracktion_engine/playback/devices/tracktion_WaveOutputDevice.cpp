@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,13 +11,14 @@
 namespace tracktion { inline namespace engine
 {
 
-WaveOutputDevice::WaveOutputDevice (Engine& e, const juce::String& deviceName, const std::vector<ChannelIndex>& channels)
-    : OutputDevice (e, TRANS("Wave Audio Output"), deviceName),
-      deviceChannels (channels),
-      channelSet (createChannelSet (channels)),
+WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
+    : OutputDevice (e, NEEDS_TRANS("Wave Audio Output"), desc.name, desc.name),
+      deviceChannels (desc.channels),
+      channelSet (createChannelSet (desc.channels)),
       ditheringEnabled (false),
       leftRightReversed (false)
 {
+    enabled = desc.enabled;
     loadProps();
 }
 
@@ -140,11 +141,11 @@ bool WaveOutputDevice::isStereoPair() const
 void WaveOutputDevice::setStereoPair (bool stereo)
 {
     auto& dm = engine.getDeviceManager();
-    
+
     if (deviceChannels.size() == 2)
         dm.setDeviceOutChannelStereo (std::max (getLeftChannel(), getRightChannel()), stereo);
     else if (deviceChannels.size() == 1)
         dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
 }
-    
+
 }} // namespace tracktion { inline namespace engine

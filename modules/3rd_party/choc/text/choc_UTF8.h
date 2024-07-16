@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -29,7 +29,7 @@ namespace choc::text
 using UnicodeChar = uint32_t;
 
 //==============================================================================
-/** A non-owning pointer which can iterate over a chunk of null-terminated UTF8 text
+/** A non-owning pointer which can iterate over a chunk of null-terminated UTF-8 text
     and read it as wide unicode characters.
 */
 struct UTF8Pointer
@@ -154,16 +154,16 @@ private:
 };
 
 //==============================================================================
-/// Checks a given chunk of data to see whether it's valid, null-terminated UTF8.
+/// Checks a given chunk of data to see whether it's valid UTF-8.
 /// If no errors are found, this returns nullptr. If an error is found, it returns the address
-/// of the offending byte.
-const char* findInvalidUTF8Data (const void* dataToCheck, size_t maxNumBytesToRead);
+/// of the offending byte. Note that zero bytes in the data are considered to be valid UTF-8.
+const char* findInvalidUTF8Data (const void* dataToCheck, size_t numBytesToRead);
 
 /// Writes the bytes for a unicode character, and returns the number of bytes that were needed.
 /// The buffer passed in needs to have at least 4 bytes capacity.
 uint32_t convertUnicodeCodepointToUTF8 (char* dest, UnicodeChar codepoint);
 
-/// Appends a unicode codepoint to a std::string as a sequence of UTF8 bytes.
+/// Appends a unicode codepoint to a std::string as a sequence of UTF-8 bytes.
 void appendUTF8 (std::string& target, UnicodeChar codepoint);
 
 /// Checks whether a given codepoint is a high-surrogate
@@ -249,23 +249,20 @@ inline const char* findInvalidUTF8Data (const void* dataToCheck, size_t numBytes
 {
     CHOC_ASSERT (dataToCheck != nullptr);
     auto source = static_cast<const char*> (dataToCheck);
-    size_t offset = 0;
+    const auto end = source + numBytes;
 
     for (;;)
     {
-        if (offset >= numBytes)
+        if (source >= end)
             return nullptr;
 
-        auto byte = static_cast<signed char> (source[offset]);
+        auto byte = static_cast<signed char> (*source);
 
-        if (byte > 0)
+        if (byte >= 0)
         {
-            ++offset;
+            ++source;
             continue;
         }
-
-        if (byte == 0)
-            return nullptr;
 
         int testBit = 0x40, numExtraBytes = 0;
 
@@ -275,25 +272,26 @@ inline const char* findInvalidUTF8Data (const void* dataToCheck, size_t numBytes
             ++numExtraBytes;
 
             if (numExtraBytes > 3
-                || offset + static_cast<size_t> (numExtraBytes) >= numBytes
-                || (numExtraBytes == 3 && *UTF8Pointer (source + offset) > 0x10ffff))
+                || source + static_cast<size_t> (numExtraBytes) >= end
+                || (numExtraBytes == 3 && *UTF8Pointer (source) > 0x10ffff))
             {
-                numExtraBytes = 0;
-                break;
+                return source;
             }
         }
 
         if (numExtraBytes == 0)
-            break;
+            return source;
 
-        ++offset;
+        ++source;
 
         for (int i = 0; i < numExtraBytes; ++i)
-            if ((source[offset++] & 0xc0) != 0x80)
-                break;
-    }
+        {
+            if ((*source & 0xc0) != 0x80)
+                return source;
 
-    return source + offset;
+            ++source;
+        }
+    }
 }
 
 inline UnicodeChar UTF8Pointer::operator*() const
@@ -334,7 +332,12 @@ inline UTF8Pointer UTF8Pointer::operator--()
 
     while ((*--text & 0xc0) == 0x80)
     {
-        CHOC_ASSERT (bytesSkipped < 3);
+        if (bytesSkipped > 2)
+        {
+            CHOC_ASSERT (bytesSkipped <= 2);
+            break;
+        }
+
         ++bytesSkipped;
     }
 

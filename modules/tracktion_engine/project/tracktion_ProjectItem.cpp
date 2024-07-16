@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -344,13 +344,19 @@ bool ProjectItem::isForFile (const juce::File& f)
     return file.endsWithIgnoreCase (f.getFileName()) && getSourceFile() == f;
 }
 
-void ProjectItem::setSourceFile (const juce::File& f)
+void ProjectItem::setSourceFile (const juce::File& f, FileMode mode)
 {
     if (auto pp = getProject())
     {
         auto projectDir = pp->getDefaultDirectory();
+        bool relative = false;
 
-        if (f.isAChildOf (projectDir))
+        if (mode == FileMode::relativeIfWithinProject)
+            relative = f.isAChildOf (projectDir);
+        else if (mode == FileMode::relative)
+            relative = true;
+
+        if (relative)
             file = f.getRelativePathFrom (projectDir);
         else
             file = f.getFullPathName();
@@ -362,6 +368,27 @@ void ProjectItem::setSourceFile (const juce::File& f)
 
         triggerAsyncUpdate();
     }
+}
+
+bool ProjectItem::isAbsolutePath() const
+{
+    return file.isNotEmpty() && juce::File::isAbsolutePath (getRawFileName());
+}
+
+void ProjectItem::convertToRelativePath()
+{
+    auto source = getSourceFile();
+
+    if (source.existsAsFile() && isAbsolutePath())
+        setSourceFile (source, FileMode::relative);
+}
+
+void ProjectItem::convertToAbsolutePath()
+{
+    auto source = getSourceFile();
+
+    if (source.existsAsFile() && ! isAbsolutePath())
+        setSourceFile (source, FileMode::absolute);
 }
 
 void ProjectItem::handleAsyncUpdate()
@@ -376,10 +403,15 @@ void ProjectItem::handleAsyncUpdate()
 
 juce::String ProjectItem::getFileName() const
 {
-    if (auto pp = getProject())
-        return pp->getDefaultDirectory().getChildFile (file).getFileName();
+    if (file.isEmpty())
+        return {};
 
-    return {};
+    auto standardised = file.replaceCharacter ('\\', '/');
+
+    if (standardised.containsChar ('/'))
+        return standardised.fromLastOccurrenceOf ("/", false, false);
+
+    return standardised;
 }
 
 juce::File ProjectItem::getEditPreviewFile() const
@@ -781,22 +813,14 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
     if (isEdit())
     {
-        auto& pm = engine.getProjectManager();
+        auto ed = loadEditForExamining (engine.getProjectManager(), getID());
 
-        Edit ed (engine,
-                 loadEditFromProjectManager (pm, getID()),
-                 Edit::forExamining, nullptr, 1);
-
-        for (auto exp : Exportable::addAllExportables (ed))
-        {
+        for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())
-            {
                  if (item.itemID.getProjectID() == oldID)
                      exp->reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);
-            }
-        }
 
-        EditFileOperations (ed).save (false, true, false);
+        EditFileOperations (*ed).save (false, true, false);
     }
 }
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -71,6 +71,25 @@ public:
 
     template <typename Type>
     void createBuiltInType()  { registerBuiltInType (std::make_unique<BuiltInTypeBase<Type>>()); }
+
+    static constexpr const char* builtInPluginFormatName = "TracktionInternal";
+
+    static bool isBuiltInPlugin (const juce::PluginDescription& d)
+    {
+        return d.pluginFormatName == builtInPluginFormatName;
+    }
+
+    template<class PluginClass>
+    static juce::PluginDescription createBuiltInPluginDescription (bool synth = false)
+    {
+        juce::PluginDescription desc;
+        desc.name = TRANS(PluginClass::getPluginName());
+        desc.pluginFormatName = builtInPluginFormatName;
+        desc.category = synth ? TRANS("Synth") : TRANS("Effect");
+        desc.manufacturerName = "Tracktion Software Corporation";
+        desc.fileOrIdentifier = PluginClass::xmlTypeName;
+        return desc;
+    }
 
     //==============================================================================
     /** Callback that is used to create plugin instances from a PluginDescription.

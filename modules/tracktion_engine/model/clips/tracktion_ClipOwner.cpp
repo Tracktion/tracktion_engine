@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,8 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
-                             private juce::AsyncUpdater,
-                             private TransportControl::Listener
+                             private juce::AsyncUpdater
 {
     ClipList (ClipOwner& co, Edit& e, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<Clip> (parentTree),
@@ -22,14 +21,11 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
     {
         rebuildObjects();
 
-        editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, edit));
-        edit.getTransport().addListener (this);
+        editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<ClipList>> (*this, edit);
     }
 
     ~ClipList() override
     {
-        edit.getTransport().removeListener (this);
-
         for (auto c : objects)
         {
             c->flushStateToValueTree();
@@ -72,7 +68,7 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
         objectAddedOrRemoved (c);
 
         if (c && ! edit.getUndoManager().isPerformingUndoRedo())
-            edit.engine.getEngineBehaviour().newClipAdded (*c, recordingIsStopping);
+            edit.engine.getEngineBehaviour().newClipAdded (*c, edit.getTransport().isRecordingStopping());
     }
 
     void objectRemoved (Clip* c) override       { objectAddedOrRemoved (c); }
@@ -163,26 +159,6 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
         clipOwner.clipPositionChanged();
     }
 
-private:
-    bool recordingIsStopping = false;
-
-    void playbackContextChanged() override {}
-    void autoSaveNow() override {}
-    void setAllLevelMetersActive (bool) override {}
-    void setVideoPosition (TimePosition, bool) override {}
-    void startVideo() override {}
-    void stopVideo() override {}
-
-    void recordingAboutToStop (InputDeviceInstance&) override
-    {
-        recordingIsStopping = true;
-    }
-
-    void recordingFinished (InputDeviceInstance&, const juce::ReferenceCountedArray<Clip>&) override
-    {
-        recordingIsStopping = false;
-    }
-    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)
 };
 
@@ -338,6 +314,10 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
     if (clipOwner.getClips().size() < engineBehaviour.getEditLimits().maxClipsInTrack)
     {
+        if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            if (auto existingClip = clipSlot->getClip())
+                existingClip->removeFromParent();
+
         clipOwner.getClipOwnerState().addChild (clipState, -1, &edit.getUndoManager());
 
         if (auto newClip = findClipForState (clipOwner, clipState))
@@ -346,7 +326,9 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
             {
                 if (newClip->getColour() == newClip->getDefaultColour())
                 {
-                    float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
+                    auto col = at->getColour();
+
+                    float hue = col.isTransparent() ? ((at->getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
                     newClip->setColour (newClip->getDefaultColour().withHue (hue));
                 }
 
@@ -363,6 +345,43 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
                     if (! clipState.hasProperty (IDs::resamplingQuality))
                         acb->setResamplingQuality (defaults.resamplingQuality);
+                }
+            }
+            else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            {
+                if (newClip->getColour() == newClip->getDefaultColour())
+                {
+                    auto col = cs->track.getColour();
+                    float hue = col.isTransparent() ? ((cs->track.getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
+                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
+                }
+
+                if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
+                {
+                    if (acb->effectsEnabled())
+                        acb->enableEffects (false, false);
+
+                    acb->setUsesProxy (false);
+                    acb->setAutoTempo (true);
+                    acb->setStart (0_tp, false, true);
+
+                    if (! acb->isLooping())
+                        acb->setLoopRangeBeats ({ 0_bp, acb->getLengthInBeats() });
+                }
+                else if (auto mc = dynamic_cast<MidiClip*> (newClip))
+                {
+                    mc->setUsesProxy (false);
+                    mc->setStart (0_tp, false, true);
+
+                    if (! mc->isLooping ())
+                        mc->setLoopRangeBeats (mc->getEditBeatRange());
+                }
+                else if (auto sc = dynamic_cast<StepClip*> (newClip))
+                {
+                    sc->setStart (0_tp, false, true);
+
+                    if (! sc->isLooping())
+                        sc->setLoopRangeBeats ({ 0_bp, sc->getLengthInBeats() });
                 }
             }
 
@@ -423,12 +442,12 @@ Clip* insertClipWithState (ClipOwner& parent,
     return {};
 }
 
-Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, TimeRange pos)
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, EditTimeRange pos)
 {
-    return insertNewClip (parent, type, name, { pos, 0_td });
+    return insertNewClip (parent, type, name, { toTime (pos, parent.getClipOwnerEdit().tempoSequence), 0_td });
 }
 
-Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, TimeRange pos)
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, EditTimeRange pos)
 {
     return insertNewClip (parent, type, TrackItem::getSuggestedNameForNewItem (type), pos);
 }
@@ -448,7 +467,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
 {
     auto& edit = parent.getClipOwnerEdit();
 
-    if (auto proj = edit.engine.getProjectManager().getProject (edit))
+    if (auto proj = getProjectForEdit (edit))
     {
         if (auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
                                                name, {}, ProjectItem::Category::imported, true))

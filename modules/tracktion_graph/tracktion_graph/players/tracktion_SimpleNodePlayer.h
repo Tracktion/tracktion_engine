@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -30,14 +30,14 @@ public:
         assert (nodeToPlay);
         graph = node_player_utils::prepareToPlay (std::move (nodeToPlay), nullptr, sampleRateToUse, blockSizeToUse);
     }
-    
+
     /** Processes a block of audio and MIDI data. */
     void process (const Node::ProcessContext& pc)
     {
         // Prepare all nodes for the next block
         for (auto node : graph->orderedNodes)
             node->prepareForNextBlock (pc.referenceSampleRange);
-        
+
         // Then process them all in sequence
         for (auto node : graph->orderedNodes)
             node->process (pc.numSamples, pc.referenceSampleRange);
@@ -46,14 +46,14 @@ public:
         auto output = graph->rootNode->getProcessedOutput();
         auto numAudioChannels = std::min (output.audio.getNumChannels(),
                                           pc.buffers.audio.getNumChannels());
-                
+
         if (numAudioChannels > 0)
             add (pc.buffers.audio.getFirstChannels (numAudioChannels),
                  output.audio.getFirstChannels (numAudioChannels));
 
         pc.buffers.midi.mergeFrom (output.midi);
     }
-    
+
 private:
     std::unique_ptr<NodeGraph> graph;
 };

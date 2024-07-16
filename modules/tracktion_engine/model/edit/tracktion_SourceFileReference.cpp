@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -94,7 +94,7 @@ void SourceFileReference::setToDirectFileReference (const juce::File& newFile, b
 void SourceFileReference::setToProjectFileReference (const juce::File& file, bool updateProjectItem)
 {
     auto oldFile = getFile();
-    auto project = edit.engine.getProjectManager().getProject (edit);
+    auto project = getProjectForEdit (edit);
 
     if (updateProjectItem)
     {

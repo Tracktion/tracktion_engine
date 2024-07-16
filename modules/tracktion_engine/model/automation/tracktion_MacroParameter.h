@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -73,6 +73,7 @@ public:
     void hideMacroParametersFromTracks() const;
 
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
+    void visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const;
 
     juce::String getName() const override     { return {}; }
     Track* getTrack() const;
@@ -104,10 +105,19 @@ public:
     /** Destructor. */
     virtual ~MacroParameterElement() = default;
 
-    /** Returns the number of macro parameters for this object. */
-    int getNumMacroParameters() const                   { return macroParameterList.getMacroParameters().size(); }
+    /** If no parameters have been created, this may return nullptr */
+    MacroParameterList* getMacroParameterList();
 
-    MacroParameterList macroParameterList;
+    /** This ensures that the list has been created */
+    MacroParameterList& getMacroParameterListForWriting();
+
+    juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
+
+    Edit& ownerEdit;
+    juce::ValueTree parentStateForList;
+
+private:
+    std::unique_ptr<MacroParameterList> macroParameterList;
 };
 
 }} // namespace tracktion { inline namespace engine

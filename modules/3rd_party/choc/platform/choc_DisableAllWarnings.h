@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -44,22 +44,54 @@
  #pragma GCC diagnostic ignored "-Wunused-parameter"
  #pragma GCC diagnostic ignored "-Wconversion"
  #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wsign-compare"
+ #pragma GCC diagnostic ignored "-Wfloat-conversion"
  #pragma GCC diagnostic ignored "-Wswitch-enum"
+ #pragma GCC diagnostic ignored "-Wswitch"
  #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
  #pragma GCC diagnostic ignored "-Wunused-variable"
  #pragma GCC diagnostic ignored "-Wredundant-decls"
- #pragma GCC diagnostic ignored "-Wswitch-enum"
  #pragma GCC diagnostic ignored "-Wsubobject-linkage"
  #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
  #pragma GCC diagnostic ignored "-Wredundant-move"
  #pragma GCC diagnostic ignored "-Wstrict-aliasing"
  #pragma GCC diagnostic ignored "-Woverloaded-virtual"
  #pragma GCC diagnostic ignored "-Wc99-extensions"
+ #pragma GCC diagnostic ignored "-Wmisleading-indentation"
+ #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+ #pragma GCC diagnostic ignored "-Wcast-function-type"
+ #pragma GCC diagnostic ignored "-Wunused-label"
+ #pragma GCC diagnostic ignored "-Wnarrowing"
+ #pragma GCC diagnostic ignored "-Wparentheses"
+ #pragma GCC diagnostic ignored "-Wwrite-strings"
+ #pragma GCC diagnostic ignored "-Wformat-overflow"
+ #pragma GCC diagnostic ignored "-Wdeprecated-copy-with-dtor"
+ #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+ #pragma GCC diagnostic ignored "-Wdeprecated"
+ #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
  #ifndef __MINGW32__
   #pragma GCC diagnostic ignored "-Wredundant-move"
  #endif
 #else
  #pragma warning (push, 0)
+ #pragma warning (disable: 2440)
+ #pragma warning (disable: 2664)
+ #pragma warning (disable: 4244)
+ #pragma warning (disable: 4701)
  #pragma warning (disable: 4702)
+ #pragma warning (disable: 4706)
+ #pragma warning (disable: 4722)
+ #pragma warning (disable: 6011)
+ #pragma warning (disable: 6246)
+ #pragma warning (disable: 6255)
+ #pragma warning (disable: 6262)
+ #pragma warning (disable: 6297)
+ #pragma warning (disable: 6308)
+ #pragma warning (disable: 6323)
+ #pragma warning (disable: 6340)
+ #pragma warning (disable: 6385)
+ #pragma warning (disable: 6386)
+ #pragma warning (disable: 28182)
 #endif

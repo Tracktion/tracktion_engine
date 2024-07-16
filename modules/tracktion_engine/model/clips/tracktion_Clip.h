@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -75,7 +75,7 @@ public:
         You would usually create a clip using ClipOwner::insertNewClip
     */
     Clip (const juce::ValueTree&, ClipOwner&, EditItemID, Type);
-    
+
     /** Destructor. */
     ~Clip() override;
 
@@ -136,10 +136,56 @@ public:
 
     //==============================================================================
     /** Returns an array of any ReferencedItem[s] e.g. audio files. */
-    juce::Array<ReferencedItem> getReferencedItems() override  { return {}; }
+    juce::Array<ReferencedItem> getReferencedItems() override;
 
     /** Should be implemented to change the underlying source to a new ProjectItemID. */
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override {}
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override;
+
+    //==============================================================================
+    /** Some clip types can be launched, if that's possible, this returns a handle to
+        trigger starting/stopping the clip.
+    */
+    virtual std::shared_ptr<LaunchHandle> getLaunchHandle()     { return {}; }
+
+    /** Some clip types can be launched, if that's possible, this sets whether the
+        clip's quantisation or the global quantisation should be used.
+        @see getLaunchQuantisation, Edit::getLaunchQuantisation
+    */
+    virtual void setUsesGlobalLaunchQuatisation (bool)          {}
+
+    /** Some clip types can be launched, if that's possible, this returns whether the
+        clip's quantisation or the global quantisation should be used.
+        @see getLaunchQuantisation, Edit::getLaunchQuantisation
+    */
+    virtual bool usesGlobalLaunchQuatisation()                  { return true; }
+
+    /** Some clip types can be launched, if that's possible, this returns a quantisation
+        that can be used for this clip.
+        N.B. This will always be the clip's LaunchQuantisation, to find out if you should use the Edit's
+        LaunchQuantisation, check usesGlobalLaunchQuatisation first
+    */
+    virtual LaunchQuantisation* getLaunchQuantisation()         { return {}; }
+
+    /** Some clip types can be launched, if that's possible, this can be used to determine the
+        action to perform after a clip has played.
+    */
+    virtual FollowActions* getFollowActions()                   { return {}; }
+
+    /** Defines the types of duration follow actions can use. */
+    enum class FollowActionDurationType
+    {
+        beats,  /**< A number of beats */
+        loops   /**< A number of loops */
+    };
+
+    /** The type of duration to use for when to trigger the follow action. */
+    juce::CachedValue<FollowActionDurationType> followActionDurationType;
+
+    /** Determines the time for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<BeatDuration> followActionBeats;
+
+    /** Determines the number of loops for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<double> followActionNumLoops;
 
     //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
@@ -251,7 +297,7 @@ public:
     //==============================================================================
     /** Returns the speed ratio i.e. how quickly the clip plays back. */
     double getSpeedRatio() const noexcept           { return speedRatio; }
-    
+
     /** Sets a speed ratio i.e. how quickly the clip plays back. */
     virtual void setSpeedRatio (double);
 
@@ -288,6 +334,8 @@ public:
     ClipTrack* getClipTrack() const;
     /** Returns the parent Track this clip is on (if any). */
     Track* getTrack() const override;
+    /** Returns the parent ClipSlot this clip is on (if any). */
+    ClipSlot* getClipSlot() const;
 
     //==============================================================================
     /** Returns the colour property of this clip. */
@@ -338,7 +386,7 @@ public:
     virtual void setShowingTakes (bool shouldShow)          { showingTakes = shouldShow; }
     /** Returns true if the clip is showing takes. */
     virtual bool isShowingTakes() const                     { return showingTakes;  }
-    
+
     /** Attempts to unpack the takes to new clips.
         @param toNewTracks  If true this will create new tracks for the new clips,
                             otherwise they'll be placed on existing tracks
@@ -391,6 +439,10 @@ public:
 
     juce::ValueTree state;                      /**< The ValueTree of the Clip state. */
     juce::CachedValue<juce::Colour> colour;     /**< The colour property. */
+    juce::CachedValue<bool> disabled;           /**< Whether the Clip is disabled or not.
+                                                     Changed to disabled clips won't rebuild the
+                                                     audio graph and they won't get added to
+                                                     playback graph. */
 
     /** @internal.
         Not intended for public use!
@@ -446,14 +498,34 @@ namespace ClipConstants
     const double speedRatioMax = 20.0;  /**< Maximum speed ratio. */
 }
 
+namespace details
+{
+    Clip::FollowActionDurationType followActionDurationTypeFromString (juce::String);
+    juce::String toString (Clip::FollowActionDurationType);
+}
+
 }} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
-    template <>
+    template<>
     struct VariantConverter<tracktion::engine::Clip::SyncType>
     {
         static tracktion::engine::Clip::SyncType fromVar (const var& v)   { return (tracktion::engine::Clip::SyncType) static_cast<int> (v); }
         static var toVar (tracktion::engine::Clip::SyncType v)            { return static_cast<int> (v); }
+    };
+
+    template<>
+    struct VariantConverter<tracktion::engine::Clip::FollowActionDurationType>
+    {
+        static tracktion::engine::Clip::FollowActionDurationType fromVar (const var& v)
+        {
+            return tracktion::engine::details::followActionDurationTypeFromString (v);
+        }
+
+        static var toVar (tracktion::engine::Clip::FollowActionDurationType v)
+        {
+            return tracktion::engine::details::toString (v);
+        }
     };
 }

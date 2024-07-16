@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -24,9 +24,7 @@
 #include <cwctype>
 #include <stdexcept>
 #include <random>
-#ifndef __MINGW32__
- #include <filesystem>
-#endif
+#include <filesystem>
 #include "../text/choc_UTF8.h"
 
 namespace choc::file
@@ -54,12 +52,24 @@ std::string loadFileAsString (const std::string& filename);
 /// Attempts to create or overwrite the specified file with some new data.
 /// This will attempt to create and parent folders needed for the file, and will
 /// throw an Error exception if something goes wrong.
-void replaceFileWithContent (const std::string& filename,
+void replaceFileWithContent (const std::filesystem::path& file,
                              std::string_view newContent);
 
-//==============================================================================
-#ifndef __MINGW32__ // sorry, MINGW doesn't seem to have std::filesystem support yet
+/// Attempts to create or overwrite the specified file with data from a stream.
+/// This will attempt to create and parent folders needed for the file, and will
+/// throw an Error exception if something goes wrong. If maxBytesToWrite is zero,
+/// the stream will be read until it reaches eof.
+void replaceFileWithContent (const std::filesystem::path& file,
+                             std::istream& sourceStream,
+                             size_t maxBytesToWrite = 0);
 
+/// Sanitises a string to remove illegal chatacters and leave it suitable for use
+/// as a filename. This is intended only for checking a filename, not a whole path,
+/// so it will remove any slashes in the string.
+std::string makeSafeFilename (std::string_view source, size_t maxLength = 80);
+
+
+//==============================================================================
 /// A self-deleting temp file or folder.
 struct TempFile
 {
@@ -100,8 +110,6 @@ struct TempFile
     std::filesystem::path file;
 };
 
-#endif
-
 
 
 //==============================================================================
@@ -128,7 +136,12 @@ size_t readFileContent (const std::string& filename, GetDestBufferFn&& getBuffer
         stream.open (filename, std::ios::binary | std::ios::ate);
 
         if (! stream.is_open())
+        {
+            if (! exists (std::filesystem::path (filename)))
+                throw Error ("File does not exist: " + filename);
+
             throw Error ("Failed to open file: " + filename);
+        }
 
         auto fileSize = stream.tellg();
 
@@ -169,27 +182,116 @@ inline std::string loadFileAsString (const std::string& filename)
     return result;
 }
 
-inline void replaceFileWithContent (const std::string& filename, std::string_view newContent)
+template <typename WriteFn>
+void createAndWriteToFile (const std::filesystem::path& path, WriteFn&& write)
 {
     try
     {
+        try
+        {
+            if (path.has_parent_path())
+                if (auto parent = path.parent_path(); ! exists (parent))
+                    create_directories (parent);
+        }
+        catch (const std::ios_base::failure&) {}
+
         std::ofstream stream;
         stream.exceptions (std::ofstream::failbit | std::ofstream::badbit);
-        stream.open (filename, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
-        stream.write (newContent.data(), static_cast<std::streamsize> (newContent.size()));
-        return;
+        stream.open (path.string(), std::ios_base::out | std::ios_base::trunc | std::ios_base::binary);
+        write (stream);
     }
     catch (const std::ios_base::failure& e)
     {
-        throw Error ("Failed to write to file: " + filename + ": " + e.what());
+        throw Error ("Failed to write to file: " + path.string() + ": " + e.what());
+    }
+    catch (...)
+    {
+        throw Error ("Failed to write to file: " + path.string());
+    }
+}
+
+inline size_t attemptToRead (std::istream& source, std::istream::char_type* buffer, size_t size)
+{
+    size_t numRead = 0;
+
+    while (size != 0)
+    {
+        try
+        {
+            source.read (buffer, static_cast<std::streamsize> (size));
+        }
+        catch (...) {}
+
+        if (auto numDone = static_cast<size_t> (source.gcount()))
+        {
+            numRead += numDone;
+
+            if (numDone != size)
+            {
+                buffer += numDone;
+                size -= numDone;
+                continue;
+            }
+        }
+
+        break;
     }
 
-    throw Error ("Failed to open file: " + filename);
+    return numRead;
+}
+
+inline void replaceFileWithContent (const std::filesystem::path& path, std::string_view newContent)
+{
+    createAndWriteToFile (path, [=] (std::ofstream& stream)
+    {
+        stream.write (newContent.data(), static_cast<std::streamsize> (newContent.size()));
+    });
+}
+
+inline void replaceFileWithContent (const std::filesystem::path& path, std::istream& source, size_t maxBytes)
+{
+    createAndWriteToFile (path, [&] (std::ofstream& stream)
+    {
+        std::istream::char_type buffer[8192];
+
+        for (;;)
+        {
+            auto numToRead = maxBytes != 0 ? std::min (maxBytes, sizeof(buffer))
+                                           : sizeof(buffer);
+
+            auto numRead = attemptToRead (source, buffer, numToRead);
+
+            if (numRead == 0)
+                return;
+
+            stream.write (buffer, static_cast<std::streamsize> (numRead));
+        }
+    });
+}
+
+inline std::string makeSafeFilename (std::string_view source, size_t maxLength)
+{
+    std::string name;
+    name.reserve (source.length());
+
+    for (auto c : source)
+        if (std::string_view (",;#@*^|?:<>\"\\/").find (c) == std::string_view::npos)
+            name += c;
+
+    if (name.length() >= maxLength)
+    {
+        auto stem = std::filesystem::path (name).stem().string();
+        auto extension = std::filesystem::path (name).extension().string();
+        return stem.substr (0, maxLength - std::min (maxLength - 2, extension.length())) + extension;
+    }
+
+    if (name.empty())
+        return "_";
+
+    return name;
 }
 
 //==============================================================================
-#ifndef __MINGW32__ // sorry, MINGW doesn't seem to have std::filesystem support yet
-
 inline TempFile::TempFile() = default;
 
 inline TempFile::TempFile (std::string_view folder)
@@ -216,22 +318,22 @@ inline TempFile::TempFile (std::string_view folder, std::string_view root, std::
 
 inline std::string TempFile::createRandomFilename (std::string_view root, std::string_view suffix)
 {
-    if (! suffix.empty() && suffix[0] == '.')
-        return createRandomFilename (root, suffix.substr (1));
-
     std::random_device seed;
     std::mt19937 rng (seed());
     std::uniform_int_distribution<> dist (1, 99999999);
     auto randomID = std::to_string (static_cast<uint32_t> (dist (rng)));
-    return std::string (root) + "_" + randomID + "." + std::string (suffix);
+    auto name = std::string (root) + "_" + randomID;
+
+    if (! suffix.empty())
+        name += (suffix[0] == '.' ? "" : ".") + std::string (suffix);
+
+    return name;
 }
 
 inline TempFile::~TempFile()
 {
     remove_all (file);
 }
-
-#endif
 
 } // namespace choc::file
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -835,6 +835,11 @@ inline juce::String& operator<< (juce::String& s, TimeDuration d)  { return s <<
 inline juce::String& operator<< (juce::String& s, TimePosition p)  { return s << juce::String (p.inSeconds()); }
 inline juce::String& operator<< (juce::String& s, BeatDuration d)  { return s << juce::String (d.inBeats()); }
 inline juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
+
+inline std::ostream& operator<< (std::ostream& os, const TimeDuration& v) { os << v.inSeconds(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const TimePosition& v) { os << v.inSeconds(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatDuration& v) { os << v.inBeats(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatPosition& v) { os << v.inBeats(); return os; }
 
 }} // namespace tracktion
 

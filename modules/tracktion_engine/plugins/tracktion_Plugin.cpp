@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -81,7 +81,7 @@ Plugin::Plugin (PluginCreationInfo info)
     auto wires = state.getChildWithName (IDs::SIDECHAINCONNECTIONS);
 
     if (wires.isValid())
-        sidechainWireList.reset (new WireList (*this, wires));
+        sidechainWireList = std::make_unique<WireList> (*this, wires);
 
     enabled.referTo (state, IDs::enabled, um, true);
 
@@ -99,12 +99,11 @@ Plugin::Plugin (PluginCreationInfo info)
    #if TRACKTION_ENABLE_AUTOMAP && TRACKTION_ENABLE_CONTROL_SURFACES
     if (! edit.isLoading())
     {
-        Plugin::WeakRef ref (this);
         auto& e = engine;
 
-        juce::MessageManager::callAsync ([=, &e]() mutable
+        juce::MessageManager::callAsync ([ref = makeSafeRef (*this), &e]() mutable
         {
-            if (auto plugin = dynamic_cast<Plugin*> (ref.get()))
+            if (auto plugin = ref.get())
                 if (auto na = e.getExternalControllerManager().getAutomap())
                     na->pluginChanged (plugin);
         });
@@ -389,7 +388,7 @@ void Plugin::valueTreeChanged()
 void Plugin::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
-        sidechainWireList.reset (new WireList (*this, c));
+        sidechainWireList = std::make_unique<WireList> (*this, c);
 
     valueTreeChanged();
 }
@@ -405,7 +404,7 @@ void Plugin::valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int)
 void Plugin::valueTreeParentChanged (juce::ValueTree& v)
 {
     isClipEffect = state.getParent().hasType (IDs::EFFECT);
-    
+
     if (v.hasType (IDs::PLUGIN))
         hideWindowForShutdown();
 }
@@ -422,7 +421,7 @@ void Plugin::changed()
 void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
-    
+
     if (! enabled.get())
         cpuUsageMs = 0.0;
 }
@@ -449,7 +448,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);
-    bool isUpdatingWithoutStopping = false;
+    bool hasUpdatedWithoutStopping = false;
     sampleRate = info.sampleRate;
     blockSizeSamples = info.blockSizeSamples;
     cpuUsageMs = 0.0;
@@ -459,30 +458,18 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
         timeToCpuScale = (msPerBlock > 0.0) ? (1.0 / msPerBlock) : 0.0;
     }
 
+    if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
     {
-        if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
-        {
-            CRASH_TRACER
-           #if JUCE_DEBUG
-            isInitialisingFlag = true;
-           #endif
-
-            initialise (info);
-
-           #if JUCE_DEBUG
-            isInitialisingFlag = true;
-           #endif
-        }
-        else
-        {
-            CRASH_TRACER
-            initialiseWithoutStopping (info);
-            isUpdatingWithoutStopping = true;
-        }
-
-       #if JUCE_DEBUG
+        CRASH_TRACER
+        isInitialisingFlag = true;
+        initialise (info);
         isInitialisingFlag = false;
-       #endif
+    }
+    else
+    {
+        CRASH_TRACER
+        hasUpdatedWithoutStopping = true;
+        initialiseWithoutStopping (info);
     }
 
     {
@@ -490,7 +477,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
         resetRecordingStatus();
     }
 
-    if (! isUpdatingWithoutStopping)
+    if (! hasUpdatedWithoutStopping)
     {
         CRASH_TRACER
         setAutomatableParamPosition (info.startTime);
@@ -521,11 +508,12 @@ void Plugin::baseClassDeinitialise()
 //==============================================================================
 void Plugin::deleteFromParent()
 {
-    macroParameterList.hideMacroParametersFromTracks();
+    if (auto mpl = getMacroParameterList())
+        mpl->hideMacroParametersFromTracks();
 
     for (auto t : getAllTracks (edit))
         t->hideAutomatableParametersForSource (itemID);
-    
+
     hideWindowForShutdown();
     deselect();
     removeFromParent();
@@ -620,12 +608,15 @@ AutomatableParameter::Ptr Plugin::getQuickControlParameter() const
                     if (rf->type != nullptr)
                     {
                         // First check macros
-                        for (auto param : rf->type->macroParameterList.getAutomatableParameters())
+                        if (auto mpl = rf->type->getMacroParameterList())
                         {
-                            if (param->paramID == currentID)
+                            for (auto param : mpl->getAutomatableParameters())
                             {
-                                quickControlParameter = param;
-                                break;
+                                if (param->paramID == currentID)
+                                {
+                                    quickControlParameter = param;
+                                    break;
+                                }
                             }
                         }
 
@@ -664,7 +655,10 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
-    const ScopedCpuMeter cpuMeter (cpuUsageMs, 0.2);
+    std::optional<ScopedCpuMeter> cpuMeter;
+
+    if (shoulMeasureCpuUsage())
+        cpuMeter.emplace (cpuUsageMs, 0.2);
 
     auto& arm = edit.getAutomationRecordManager();
     jassert (initialiseCount > 0);
@@ -879,7 +873,7 @@ void Plugin::sortPlugins (std::vector<Plugin*>& plugins)
 {
     if (plugins.size() == 0 || plugins[0] == nullptr)
         return;
-    
+
     auto first = plugins[0];
 
     PluginList list (first->edit);

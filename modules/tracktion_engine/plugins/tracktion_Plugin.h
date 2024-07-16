@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -182,6 +182,8 @@ public:
     */
     virtual void initialiseWithoutStopping (const PluginInitialisationInfo&)  {}
 
+    bool isInitialising() const             { return isInitialisingFlag; }
+
     /** Called after play stops to release resources.
         Don't call this directly or the initialise count will become out of sync.
         @see baseClassDeinitialise
@@ -192,7 +194,7 @@ public:
     virtual void reset();
 
     /** Track name or colour has changed. */
-    virtual void trackPropertiesChanged()                    {}
+    virtual void trackPropertiesChanged() {}
 
     //==============================================================================
     /** Process the next block of data.
@@ -212,6 +214,12 @@ public:
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);
 
+    /** Plugins can return false if they want to avoid the overhead of measuring the CPU usage.
+        It's a small overhead but with many tracks, the level meters and vol/pan plugins can make a difference.
+    */
+    virtual bool shoulMeasureCpuUsage() const noexcept  { return true; }
+
+    /** Returns the proportion of the current buffer size spent processing this plugin. */
     double getCpuUsage() const noexcept     { return juce::jlimit (0.0, 1.0, timeToCpuScale * cpuUsageMs.load()); }
 
     //==============================================================================
@@ -361,6 +369,15 @@ public:
     EditItemID getSidechainSourceID() const                 { return sidechainSourceID; }
 
     //==============================================================================
+    struct EditorComponent  : public juce::Component
+    {
+        virtual bool allowWindowResizing() = 0;
+        virtual juce::ComponentBoundsConstrainer* getBoundsConstrainer() = 0;
+    };
+
+    virtual std::unique_ptr<EditorComponent> createEditor()     { return {}; }
+
+    //==============================================================================
     struct WindowState  : public PluginWindowState
     {
         WindowState (Plugin&);
@@ -423,10 +440,7 @@ private:
     juce::ValueTree getConnectionsTree();
     struct WireList;
     std::unique_ptr<WireList> sidechainWireList;
-
-   #if JUCE_DEBUG
     std::atomic<bool> isInitialisingFlag { false };
-   #endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)
 };

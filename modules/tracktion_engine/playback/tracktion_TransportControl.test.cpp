@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,10 +8,46 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#if TRACKTION_UNIT_TESTS
+#include <ranges>
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_UNIT_TESTS
+#if ENGINE_UNIT_TESTS_PLAYBACK
+    TEST_SUITE ("tracktion_engine")
+    {
+        TEST_CASE ("Playback")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+            auto sinBuffer = *engine::test_utilities::loadFileInToBuffer (engine, sinFile->getFile());
+
+            AudioFile af (engine, sinFile->getFile());
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+            tc.play (false);
+
+            test_utilities::waitForFileToBeMapped (af);
+
+            player.process (static_cast<int> (af.getLengthInSamples()));
+            auto output = player.getOutput();
+
+            CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
+
+            // Skip the first 50 frames as they might have a ramp applied to them to avoid clicks (this should probably be avoided if it's the start of the clip
+            // This 0.1f difference comes from the played back file being delayed by 2 samples due to the lagrange resampler latency. This is a bug and when fixed, these two signals shoudl cancel out perfectly
+            CHECK (graph::test_utilities::buffersAreEqual (output.fromFrame (50), toBufferView (sinBuffer).fromFrame (50), 0.1f));
+        }
+    }
+#endif
 
 class RecordingSyncTests    : public juce::UnitTest
 {
@@ -109,17 +145,17 @@ public:
                           audioFiles.size(), "Some files don't have an impulse in them");
 
             int fileIndex = 0;
-            
+
             for (auto index : sampleIndicies)
             {
                 expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
-                
+
                 if (index != sampleIndicies[0])
                     expect (false, juce::String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
                                     .replace ("FIRST", juce::String (index))
                                     .replace ("SECOND", juce::String (sampleIndicies[0]))
                                     .replace ("DIFF", juce::String (index - sampleIndicies[0])));
-                
+
                 ++fileIndex;
             }
         }
@@ -140,11 +176,11 @@ public:
         while (Clock::now() < sleep_time)
             std::this_thread::yield();
     }
-    
+
     void waitUntilPlayheadPosition (const EditPlaybackContext& epc, TimePosition time)
     {
         using namespace std::chrono_literals;
-        
+
         while (epc.getUnloopedPosition() < time)
             std::this_thread::sleep_for (1ms);
     }
@@ -152,7 +188,7 @@ public:
     //==============================================================================
     std::unique_ptr<Edit> createEditWithTracksForInputs (Engine& engine, const HostedAudioDeviceInterface::Parameters& params)
     {
-        auto edit = std::make_unique<Edit> (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });
+        auto edit = Edit::createSingleTrackEdit (engine);
         auto& transport = edit->getTransport();
         transport.ensureContextAllocated();
         auto context = transport.getCurrentPlaybackContext();
@@ -169,8 +205,8 @@ public:
         {
             auto track = audioTracks.getUnchecked (i);
             auto inputInstance = inputInstances.getUnchecked (i);
-            inputInstance->setTargetTrack (*track, 0, true, nullptr);
-            inputInstance->setRecordingEnabled (*track, true);
+            [[ maybe_unused ]] auto res = inputInstance->setTarget (track->itemID, true, nullptr, 0);
+            inputInstance->setRecordingEnabled (track->itemID, true);
         }
 
         return edit;
@@ -189,7 +225,7 @@ public:
             processThread = std::thread ([&, msPerBlock]
                                          {
                                              hasStarted = true;
-                
+
                                              while (! shouldStop.load())
                                              {
                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);
@@ -212,7 +248,7 @@ public:
             shouldStop.store (true);
             processThread.join();
         }
-        
+
         void waitForThreadToStart()
         {
             while (! hasStarted)
@@ -223,7 +259,7 @@ public:
         {
             insertImpulse.store (true);
         }
-        
+
         bool needsToInsertImpulse() const
         {
             return insertImpulse;
@@ -303,7 +339,7 @@ public:
 
         return sampleIndicies;
     }
-    
+
     double getFileLength (Engine& engine, const juce::File& file)
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))
@@ -318,6 +354,6 @@ public:
 static RecordingSyncTests recordingSyncTests;
 #endif
 
-#endif // TRACKTION_UNIT_TESTS
-
 }} // namespace tracktion { inline namespace engine
+
+#endif // TRACKTION_UNIT_TESTS

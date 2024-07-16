@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,6 +27,19 @@ juce::File LAMEManager::getLameEncoderExe()
     return defaultLame;
 }
 
+juce::File LAMEManager::getFFmpegExe()
+{
+   #if JUCE_WINDOWS
+    auto defaultFFmpeg = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getSiblingFile ("ffmpeg.exe");
+   #elif JUCE_MAC
+    auto defaultFFmpeg = juce::File::getSpecialLocation (juce::File::currentExecutableFile).getSiblingFile ("../Resources/ffmpeg");
+   #else
+    juce::File defaultFFmpeg ("/usr/bin/ffmpeg");
+   #endif
+
+    return defaultFFmpeg;
+}
+
 /** Adds lame encoders to the audio file format manager if necessary. */
 void LAMEManager::registerAudioFormat (AudioFileFormatManager& affm)
 {
@@ -34,15 +47,26 @@ void LAMEManager::registerAudioFormat (AudioFileFormatManager& affm)
     {
         TRACKTION_LOG ("LAME: using exe: " + LAMEManager::getLameEncoderExe().getFullPathName());
 
+       #if TRACKTION_ENABLE_FFMPEG
+        affm.addLameFormat (std::make_unique<FFmpegEncoderAudioFormat> (LAMEManager::getFFmpegExe()),
+                            std::make_unique<FFmpegEncoderAudioFormat> (LAMEManager::getFFmpegExe()));
+       #else
         affm.addLameFormat (std::make_unique<juce::LAMEEncoderAudioFormat> (LAMEManager::getLameEncoderExe()),
                             std::make_unique<juce::LAMEEncoderAudioFormat> (LAMEManager::getLameEncoderExe()));
+
+       #endif
     }
 }
 
 bool LAMEManager::lameIsAvailable()
 {
+   #if TRACKTION_ENABLE_FFMPEG
+    auto ffmpeg = getFFmpegExe();
+    return ffmpeg.exists() && ffmpeg.getFileName().containsIgnoreCase ("ffmpeg");
+   #else
     auto lameEnc = getLameEncoderExe();
     return lameEnc.exists() && lameEnc.getFileName().containsIgnoreCase ("lame");
+   #endif
 }
 
 //==============================================================================

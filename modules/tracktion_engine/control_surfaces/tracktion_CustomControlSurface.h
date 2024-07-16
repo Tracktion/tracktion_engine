@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -15,7 +15,8 @@ namespace tracktion { inline namespace engine
 class CustomControlSurface  : public ControlSurface,
                               public juce::ChangeBroadcaster,
                               private juce::AsyncUpdater,
-                              private juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>
+                              private juce::OSCReceiver::Listener<juce::OSCReceiver::MessageLoopCallback>,
+                              private juce::Timer
 {
 public:
     //==============================================================================
@@ -44,6 +45,15 @@ public:
         jumpToMarkInId              = 21,
         jumpToMarkOutId             = 22,
         timecodeId                  = 25,
+
+        marker1Id                   = 400,
+        marker2Id                   = 401,
+        marker3Id                   = 402,
+        marker4Id                   = 403,
+        marker5Id                   = 404,
+        marker6Id                   = 405,
+        marker7Id                   = 406,
+        marker8Id                   = 407,
 
         toggleBeatsSecondsModeId    = 50,
         toggleLoopId                = 51,
@@ -76,6 +86,23 @@ public:
         selectTrackId               = 1400,
         auxTrackId                  = 1500,
         auxTextTrackId              = 2300,
+
+        clip1TrackId                = 3100,
+        clip2TrackId                = 3200,
+        clip3TrackId                = 3300,
+        clip4TrackId                = 3400,
+        clip5TrackId                = 3500,
+        clip6TrackId                = 3600,
+        clip7TrackId                = 3700,
+        clip8TrackId                = 3800,
+        stopClipsTrackId            = 3900,
+        sceneId                     = 4000,
+        clipBankUp1Id               = 320,
+        clipBankUp4Id               = 321,
+        clipBankUp8Id               = 322,
+        clipBankDown1Id             = 323,
+        clipBankDown4Id             = 324,
+        clipBankDown8Id             = 325,
 
         zoomInId                    = 100,
         zoomOutId                   = 101,
@@ -183,9 +210,10 @@ public:
     bool canSetEatsAllMessages() override;
     void setEatsAllMessages(bool eatAll) override;
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
+    void moveMasterLevelFader (float newSliderPos) override;
+    void moveMasterPanPot (float newPos) override;
     void movePanPot (int channelNum, float newPan) override;
-    void moveAux (int channel, const char* bus, float newPos) override;
+    void moveAux (int channel, int auxNum, const char* bus, float newPos) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
     void playStateChanged (bool isPlaying) override;
@@ -223,6 +251,11 @@ public:
     //==============================================================================
     struct Mapping
     {
+        bool isControllerAssigned()
+        {
+            return id != 0 || addr.isNotEmpty() || note != -1;
+        }
+
         int id = 0;
         juce::String addr;
         int note = -1;
@@ -235,7 +268,7 @@ public:
     int getRowBeingListenedTo() const;
     bool allowsManualEditing() const { return needsOSCSocket; }
     void showMappingsListForRow (int);
-    void setLearntParam(bool keepListening);
+    void setLearntParam (bool keepListening);
     void removeMapping (int index);
     Mapping* getMappingForRow (int) const;
     std::pair<juce::String, juce::String> getTextForRow (int) const;
@@ -256,6 +289,14 @@ public:
     virtual void addMarker (float val, int param);
     virtual void prevMarker (float val, int param);
     virtual void nextMarker (float val, int param);
+    virtual void marker1 (float val, int param);
+    virtual void marker2 (float val, int param);
+    virtual void marker3 (float val, int param);
+    virtual void marker4 (float val, int param);
+    virtual void marker5 (float val, int param);
+    virtual void marker6 (float val, int param);
+    virtual void marker7 (float val, int param);
+    virtual void marker8 (float val, int param);
     virtual void nudgeLeft (float val, int param);
     virtual void nudgeRight (float val, int param);
     virtual void abort (float val, int param);
@@ -290,6 +331,25 @@ public:
     virtual void armTrack (float val, int param);
     virtual void selectTrack (float val, int param);
     virtual void auxTrack (float val, int param);
+
+    // clip launcher
+    virtual void launchClip1 (float val, int param);
+    virtual void launchClip2 (float val, int param);
+    virtual void launchClip3 (float val, int param);
+    virtual void launchClip4 (float val, int param);
+    virtual void launchClip5 (float val, int param);
+    virtual void launchClip6 (float val, int param);
+    virtual void launchClip7 (float val, int param);
+    virtual void launchClip8 (float val, int param);
+    virtual void stopClips (float val, int param);
+
+    virtual void launchScene (float val, int param);
+    virtual void clipBankUp1 (float val, int param);
+    virtual void clipBankUp4 (float val, int param);
+    virtual void clipBankUp8 (float val, int param);
+    virtual void clipBankDown1 (float val, int param);
+    virtual void clipBankDown4 (float val, int param);
+    virtual void clipBankDown8 (float val, int param);
 
     // navigation
     virtual void zoomIn (float val, int param);
@@ -409,6 +469,9 @@ private:
     std::unique_ptr<juce::OSCReceiver> oscReceiver;
 
     //==============================================================================
+    void timerCallback() override;
+
+    //==============================================================================
     struct RPNParser
     {
         void parseControllerMessage (const juce::MidiMessage& m, int& paramID,
@@ -457,6 +520,7 @@ private:
     virtual void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    virtual void addSceneFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
     virtual void addAllCommandItem (juce::PopupMenu&);
 
     virtual void sendCommandToControllerForActionID (int actionID, bool);

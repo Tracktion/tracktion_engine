@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -76,8 +76,20 @@ struct EditTimeRange
     /** Creates an EditTimeRange from a TimeRange. */
     EditTimeRange (TimeRange);
 
+    /** Creates an EditTimeRange from a TimeRange. */
+    EditTimeRange (TimePosition, TimePosition);
+
+    /** Creates an EditTimeRange from a TimeRange. */
+    EditTimeRange (TimePosition, TimeDuration);
+
     /** Creates an EditTimeRange from a BeatRange. */
     EditTimeRange (BeatRange);
+
+    /** Creates an EditTimeRange from a BeatRange. */
+    EditTimeRange (BeatPosition, BeatPosition);
+
+    /** Creates an EditTimeRange from a BeatRange. */
+    EditTimeRange (BeatPosition, BeatDuration);
 
     /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
     bool isBeats() const;
@@ -236,6 +248,26 @@ inline EditTimeRange::EditTimeRange (TimeRange r)
 
 inline EditTimeRange::EditTimeRange (BeatRange r)
     : range (r)
+{
+}
+
+inline EditTimeRange::EditTimeRange (TimePosition start, TimePosition end)
+    : range (TimeRange (start, end))
+{
+}
+
+inline EditTimeRange::EditTimeRange (TimePosition start, TimeDuration length)
+    : range (TimeRange (start, length))
+{
+}
+
+inline EditTimeRange::EditTimeRange (BeatPosition start, BeatPosition end)
+    : range (BeatRange (start, end))
+{
+}
+
+inline EditTimeRange::EditTimeRange (BeatPosition start, BeatDuration length)
+    : range (BeatRange (start, length))
 {
 }
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -69,34 +69,28 @@ static juce::String mergeTwoNames (const juce::String& s1, const juce::String& s
     return nm;
 }
 
-static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> devices)
+static bool isMicrosoftGSSynth (MidiOutputDevice& mo)
 {
-    juce::StringArray deviceNames;
-
-    for (auto& d : devices)
-        deviceNames.add (d.name);
-
-    deviceNames.appendNumbersToDuplicates (true, false);
-
-    return deviceNames;
+   #if JUCE_WINDOWS
+    return mo.getName().containsIgnoreCase ("Microsoft GS ");
+   #else
+    (void) mo;  return false;
+   #endif
 }
 
 //==============================================================================
-TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e)
-    : engine (e)
-{
-}
+DeviceManager::TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e) : engine (e) {}
 
-void TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
+void DeviceManager::TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
 {
     if (engine.getEngineBehaviour().addSystemAudioIODeviceTypes())
         juce::AudioDeviceManager::createAudioDeviceTypes (types);
 }
 
 //==============================================================================
-struct DeviceManager::WaveDeviceList
+struct DeviceManager::AvailableWaveDeviceList
 {
-    WaveDeviceList (DeviceManager& dm_) : dm (dm_)
+    AvailableWaveDeviceList (DeviceManager& d) : dm (d)
     {
         if (auto device = dm.deviceManager.getCurrentAudioDevice())
         {
@@ -117,7 +111,8 @@ struct DeviceManager::WaveDeviceList
 
     void describeStandardDevices (std::vector<WaveDeviceDescription>& descriptions, juce::AudioIODevice& device, bool isInput)
     {
-        juce::StringArray channelNames (isInput ? device.getInputChannelNames() : device.getOutputChannelNames());
+        auto channelNames = isInput ? device.getInputChannelNames()
+                                    : device.getOutputChannelNames();
 
         if (channelNames.size() == 2)
         {
@@ -135,7 +130,8 @@ struct DeviceManager::WaveDeviceList
         {
             const bool canBeStereo = i < channelNames.size() - 1;
 
-            if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))
+            if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i)
+                                        : dm.isDeviceOutChannelStereo (i)))
             {
                 descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
                                                                i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
@@ -152,8 +148,8 @@ struct DeviceManager::WaveDeviceList
         }
     }
 
-    bool operator== (const WaveDeviceList& other) const noexcept    { return deviceName == other.deviceName && inputs == other.inputs && outputs == other.outputs; }
-    bool operator!= (const WaveDeviceList& other) const noexcept    { return ! operator== (other); }
+    bool operator== (const AvailableWaveDeviceList& other) const noexcept    { return deviceName == other.deviceName && inputs == other.inputs && outputs == other.outputs; }
+    bool operator!= (const AvailableWaveDeviceList& other) const noexcept    { return ! operator== (other); }
 
     DeviceManager& dm;
     juce::String deviceName;
@@ -162,45 +158,17 @@ struct DeviceManager::WaveDeviceList
 
 
 //==============================================================================
-struct DeviceManager::ContextDeviceClearer : private juce::AsyncUpdater
+struct DeviceManager::PrepareToStartCaller  : public juce::AsyncUpdater
 {
-    ContextDeviceClearer (DeviceManager& owner)
-        : deviceManager (owner)
-    {}
-
-    ~ContextDeviceClearer() override
-    {
-        handleUpdateNowIfNeeded();
-    }
-
-    void triggerClearDevices()
-    {
-        if (juce::MessageManager::getInstance()->isThisTheMessageThread())
-            clearDevices();
-        else
-            triggerAsyncUpdate();
-    }
-
-    void dispatchPendingUpdates()
-    {
-        JUCE_ASSERT_MESSAGE_THREAD
-        handleUpdateNowIfNeeded();
-    }
-
-private:
-    DeviceManager& deviceManager;
-
-    void clearDevices()
-    {
-        deviceManager.clearAllContextDevices();
-    }
+    PrepareToStartCaller (DeviceManager& owner) : deviceManager (owner) {}
 
     void handleAsyncUpdate() override
     {
-        clearDevices();
+        deviceManager.prepareToStart();
     }
-};
 
+    DeviceManager& deviceManager;
+};
 
 //==============================================================================
 //==============================================================================
@@ -208,7 +176,7 @@ DeviceManager::DeviceManager (Engine& e) : engine (e)
 {
     CRASH_TRACER
 
-    contextDeviceClearer = std::make_unique<ContextDeviceClearer> (*this);
+    prepareToStartCaller = std::make_unique<PrepareToStartCaller> (*this);
 
     deviceManager.addChangeListener (this);
 
@@ -221,6 +189,483 @@ DeviceManager::~DeviceManager()
 
     CRASH_TRACER
     deviceManager.removeChangeListener (this);
+}
+
+void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
+{
+    defaultNumInputChannelsToOpen = defaultNumInputs;
+    defaultNumOutputChannelsToOpen = defaultNumOutputs;
+
+    loadSettings();
+    finishedInitialising = true;
+    rescanMidiDeviceList();
+    rescanWaveDeviceList();
+    updateNumCPUs();
+
+    deviceManager.addAudioCallback (this);
+
+    midiRescanIntervalSeconds = engine.getPropertyStorage().getProperty (SettingID::midiScanIntervalSeconds, 4);
+    restartMidiCheckTimer();
+}
+
+void DeviceManager::closeDevices()
+{
+    CRASH_TRACER
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    lastMIDIDeviceList.reset();
+    lastAvailableWaveDeviceList.reset();
+
+    jassert (activeContexts.isEmpty());
+    clearAllContextDevices();
+
+    deviceManager.removeAudioCallback (this);
+
+    midiOutputs.clear();
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+        midiInputs.clear();
+    }
+
+    waveInputs.clear();
+    waveOutputs.clear();
+}
+
+void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices,
+                                     bool resetOutputDevices, bool latencySettings, bool mixSettings)
+{
+    TRACKTION_LOG ("Returning audio settings to defaults");
+
+    auto& storage = engine.getPropertyStorage();
+
+    if (deviceSettings)
+    {
+        storage.removeProperty (SettingID::audio_device_setup);
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    }
+
+    if (latencySettings)
+    {
+        storage.setProperty (SettingID::maxLatency, 5.0f);
+        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
+    }
+
+    if (mixSettings)
+    {
+        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
+        updateNumCPUs();
+
+        storage.setProperty (SettingID::use64Bit, false);
+    }
+
+    if (resetInputDevices)
+        for (auto wid : waveInputs)
+            wid->resetToDefault();
+
+    if (resetOutputDevices)
+        for (auto wod : waveOutputs)
+            wod->resetToDefault();
+
+    loadSettings();
+    TransportControl::restartAllTransports (engine, false);
+    SelectionManager::refreshAllPropertyPanels();
+}
+
+void DeviceManager::setMidiDeviceScanIntervalSeconds (int intervalSeconds)
+{
+    midiRescanIntervalSeconds = intervalSeconds;
+    engine.getPropertyStorage().setProperty (SettingID::midiScanIntervalSeconds, intervalSeconds);
+    restartMidiCheckTimer();
+}
+
+void DeviceManager::restartMidiCheckTimer()
+{
+    if (usesHardwareMidiDevices() && midiRescanIntervalSeconds != 0)
+        startTimer (midiRescanIntervalSeconds * 1000);
+    else
+        stopTimer();
+}
+
+void DeviceManager::rescanMidiDeviceList()
+{
+    onlyRescanMidiOnHardwareChange = false;
+    startTimer (5);
+}
+
+void DeviceManager::timerCallback()
+{
+    applyNewMidiDeviceList();
+}
+
+static constexpr const char* allMidiInsName = "All MIDI Ins";
+static constexpr const char* allMidiInsID = "all_midi_in";
+
+static juce::StringArray getVirtualDeviceIDs (Engine& engine)
+{
+    juce::StringArray virtualDeviceIDs;
+    virtualDeviceIDs.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
+    virtualDeviceIDs.removeEmptyStrings();
+    virtualDeviceIDs.removeString (allMidiInsName);
+    virtualDeviceIDs.removeString (allMidiInsID);
+    virtualDeviceIDs.insert (0, allMidiInsID);
+    return virtualDeviceIDs;
+}
+
+static void setVirtualDeviceIDs (Engine& engine, const juce::StringArray& list)
+{
+    engine.getPropertyStorage().setProperty (SettingID::virtualmididevices, list.joinIntoString (";"));
+}
+
+struct DeviceManager::MIDIDeviceList
+{
+    juce::Array<juce::MidiDeviceInfo> midiIns, midiOuts;
+
+    std::shared_ptr<MidiInputDevice> hostedMidiIn;
+    std::shared_ptr<MidiOutputDevice> hostedMidiOut;
+    std::vector<std::shared_ptr<MidiOutputDevice>> physicalMidiOuts;
+    std::vector<std::shared_ptr<PhysicalMidiInputDevice>> physicalMidiIns;
+    std::vector<std::shared_ptr<VirtualMidiInputDevice>> virtualMidiIns;
+    std::vector<bool> physicalMidiOutsEnabled, physicalMidiInsEnabled, virtualMidiInsEnabled;
+
+    MIDIDeviceList() = default;
+
+    MIDIDeviceList (Engine& sourceEngine,
+                    HostedAudioDeviceInterface* sourceHostedAudioDeviceInterface,
+                    bool useHardwareDevices)
+    {
+        if (sourceHostedAudioDeviceInterface)
+        {
+            hostedMidiOut = std::unique_ptr<MidiOutputDevice> (sourceHostedAudioDeviceInterface->createMidiOutput());
+            hostedMidiIn = std::unique_ptr<MidiInputDevice> (sourceHostedAudioDeviceInterface->createMidiInput());
+        }
+
+        if (useHardwareDevices)
+        {
+            scanHardwareDevices (sourceEngine);
+
+            for (auto& info : midiOuts)
+            {
+                auto d = std::make_shared<MidiOutputDevice> (sourceEngine, info);
+                physicalMidiOuts.push_back (d);
+                physicalMidiOutsEnabled.push_back (d->isEnabled());
+            }
+
+            for (auto& info : midiIns)
+            {
+                auto d = std::make_shared<PhysicalMidiInputDevice> (sourceEngine, info);
+                physicalMidiIns.push_back (d);
+                physicalMidiInsEnabled.push_back (d->isEnabled());
+            }
+
+           #if 0 // JUCE_MAC && JUCE_DEBUG
+            // This is causing problems on macOS as creating the device will cause the OS to send an async
+            // "devices changed" callback which will create the device again etc. in an infinite loop
+            auto d = std::make_unique<SoftwareMidiOutputDevice> (engine, "Tracktion MIDI Device");
+            physicalMidiOuts.push_back (d);
+            physicalMidiOutsEnabled.push_back (d->isEnabled());
+           #endif
+        }
+
+        for (auto& v : getVirtualDeviceIDs (sourceEngine))
+        {
+            bool isAllMidiIn = (v == allMidiInsID);
+            auto deviceName = isAllMidiIn ? juce::String (allMidiInsName) : v;
+            auto deviceID   = isAllMidiIn ? juce::String (allMidiInsID) : ("vmidiin_" + juce::String::toHexString (v.hashCode()));
+            auto d = std::make_shared<VirtualMidiInputDevice> (sourceEngine, deviceName, InputDevice::virtualMidiDevice, deviceID, isAllMidiIn);
+            virtualMidiIns.push_back (d);
+            virtualMidiInsEnabled.push_back (d->isEnabled());
+        }
+    }
+
+    void scanHardwareDevices (Engine& e)
+    {
+        StopwatchTimer total;
+        static constexpr double maxAcceptableTimeForAutoScanning = 0.2;
+
+        {
+            StopwatchTimer timer;
+            midiIns = juce::MidiInput::getAvailableDevices();
+            auto scanTime = timer.getSeconds();
+
+            if (scanTime > maxAcceptableTimeForAutoScanning)
+            {
+                TRACKTION_LOG ("MIDI input scan took " + juce::String (scanTime) + " seconds. Disabling auto-scanning");
+                e.getDeviceManager().setMidiDeviceScanIntervalSeconds (0);
+            }
+        }
+
+        {
+            StopwatchTimer timer;
+            midiOuts = juce::MidiOutput::getAvailableDevices();
+            auto scanTime = timer.getSeconds();
+
+            if (scanTime > maxAcceptableTimeForAutoScanning)
+            {
+                TRACKTION_LOG ("MIDI output scan took " + juce::String (scanTime) + " seconds. Disabling auto-scanning");
+                e.getDeviceManager().setMidiDeviceScanIntervalSeconds (0);
+            }
+        }
+
+        auto comparator = [] (const juce::MidiDeviceInfo& a, const juce::MidiDeviceInfo& b)
+        {
+            return a.identifier < b.identifier;
+        };
+
+        std::sort (midiIns.begin(), midiIns.end(), comparator);
+        std::sort (midiOuts.begin(), midiOuts.end(), comparator);
+
+        static bool hasReported = false;
+
+        if (! hasReported || total.getSeconds() > 0.1)
+        {
+            hasReported = true;
+            TRACKTION_LOG_DEVICE ("MIDI Input devices scanned in: " + total.getDescription());
+        }
+    }
+
+    bool hasHardwareChanged (const MIDIDeviceList& other) const
+    {
+        return midiIns != other.midiIns
+            || midiOuts != other.midiOuts;
+    }
+
+    bool hasSameEnablement (const MIDIDeviceList& other) const
+    {
+        return physicalMidiOutsEnabled == other.physicalMidiOutsEnabled
+            && physicalMidiInsEnabled == other.physicalMidiInsEnabled
+            && virtualMidiInsEnabled == other.virtualMidiInsEnabled;
+    }
+
+    bool operator== (const MIDIDeviceList& other) const
+    {
+        return midiIns == other.midiIns
+            && midiOuts == other.midiOuts
+            && hostedMidiIn == other.hostedMidiIn
+            && hostedMidiOut == other.hostedMidiOut
+            && physicalMidiOuts == other.physicalMidiOuts
+            && physicalMidiIns == other.physicalMidiIns
+            && virtualMidiIns == other.virtualMidiIns
+            && hasSameEnablement (other);
+    }
+
+    bool operator!= (const MIDIDeviceList& other) const
+    {
+        return ! operator== (other);
+    }
+
+    void harvestExistingDevices (MIDIDeviceList& current)
+    {
+        if (hostedMidiIn && current.hostedMidiIn)
+            hostedMidiIn = current.hostedMidiIn;
+
+        if (hostedMidiOut && current.hostedMidiOut)
+            hostedMidiOut = current.hostedMidiOut;
+
+        for (auto& d : physicalMidiIns)
+            for (auto& old : current.physicalMidiIns)
+                if (old->getDeviceID() == d->getDeviceID())
+                    d = old;
+
+        for (auto& d : virtualMidiIns)
+            for (auto& old : current.virtualMidiIns)
+                if (old->getDeviceID() == d->getDeviceID())
+                    d = old;
+
+        for (auto& d : physicalMidiOuts)
+            for (auto& old : current.physicalMidiOuts)
+                if (old->getDeviceID() == d->getDeviceID())
+                    d = old;
+    }
+
+    std::vector<std::shared_ptr<MidiInputDevice>> getAllIns()
+    {
+        std::vector<std::shared_ptr<MidiInputDevice>> list;
+
+        if (hostedMidiIn)
+            list.push_back (hostedMidiIn);
+
+        for (auto& d : physicalMidiIns)
+            list.push_back (d);
+
+        for (auto& d : virtualMidiIns)
+            list.push_back (d);
+
+        return list;
+    }
+
+    std::vector<std::shared_ptr<MidiOutputDevice>> getAllOuts()
+    {
+        std::vector<std::shared_ptr<MidiOutputDevice>> list;
+
+        if (hostedMidiOut)
+            list.push_back (hostedMidiOut);
+
+        for (auto& d : physicalMidiOuts)
+            list.push_back (d);
+
+        return list;
+    }
+};
+
+void DeviceManager::applyNewMidiDeviceList()
+{
+    CRASH_TRACER
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    restartMidiCheckTimer();
+
+    if (lastMIDIDeviceList == nullptr)
+        lastMIDIDeviceList = std::make_unique<MIDIDeviceList>();
+
+    auto newList = std::make_unique<MIDIDeviceList> (engine,
+                                                     hostedAudioDeviceInterface.get(),
+                                                     usesHardwareMidiDevices());
+
+    if (onlyRescanMidiOnHardwareChange
+         && ! newList->hasHardwareChanged (*lastMIDIDeviceList))
+        return;
+
+    onlyRescanMidiOnHardwareChange = true;
+
+    auto& storage = engine.getPropertyStorage();
+
+    auto newDefaultOut = storage.getProperty (SettingID::defaultMidiOutDevice).toString();
+    auto newDefaultIn = storage.getProperty (SettingID::defaultMidiInDevice).toString();
+
+    bool defaultsChanged = (defaultMidiOutID != newDefaultOut
+                            || defaultMidiInID != newDefaultIn);
+
+    if (! defaultsChanged && *newList == *lastMIDIDeviceList)
+        return;
+
+    defaultMidiOutID = newDefaultOut;
+    defaultMidiInID  = newDefaultIn;
+
+    bool enablementChanged = ! newList->hasSameEnablement (*lastMIDIDeviceList);
+
+    newList->harvestExistingDevices (*lastMIDIDeviceList);
+
+    auto newMidiIns  = newList->getAllIns();
+    auto newMidiOuts = newList->getAllOuts();
+
+    lastMIDIDeviceList = std::move (newList);
+
+    if (! (defaultsChanged || enablementChanged))
+    {
+        const std::shared_lock sl (midiInputsMutex);
+
+        if (newMidiIns == midiInputs && newMidiOuts == midiOutputs)
+            return;
+    }
+
+    TRACKTION_LOG ("Updating MIDI I/O devices");
+
+    for (auto mi : newMidiIns)
+        TRACKTION_LOG_DEVICE ("Found MIDI in: " + mi->getDeviceID() + " (\"" + mi->getName() + "\")" + (mi->isEnabled() ? " (enabled)" : ""));
+
+    for (auto mo : newMidiOuts)
+        TRACKTION_LOG_DEVICE ("Found MIDI out: " + mo->getDeviceID() + " (\"" + mo->getName() + "\")" + (mo->isEnabled() ? " (enabled)" : ""));
+
+    for (auto& d : newMidiOuts)
+    {
+        if (d->isEnabled())
+        {
+            auto error = d->openDevice();
+
+            if (! error.isEmpty())
+            {
+                d->setEnabled (false);
+                engine.getUIBehaviour().showWarningMessage (error);
+            }
+        }
+    }
+
+    for (auto& d : newMidiIns)
+    {
+        if (d->isEnabled())
+        {
+            auto error = d->openDevice();
+
+            if (! error.isEmpty())
+            {
+                d->setEnabled (false);
+                engine.getUIBehaviour().showWarningMessage (error);
+            }
+        }
+    }
+
+    clearAllContextDevices();
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+
+        std::swap (newMidiIns, midiInputs);
+        std::swap (newMidiOuts, midiOutputs);
+    }
+
+    reloadAllContextDevices();
+
+    int enabledMidiOuts = 0;
+
+    for (auto mo : midiOutputs)
+    {
+        if (mo->isEnabled())
+            ++enabledMidiOuts;
+        else
+            mo->closeDevice();
+    }
+
+    {
+        const std::shared_lock sl (midiInputsMutex);
+
+        for (auto mi : midiInputs)
+            if (! mi->isEnabled())
+                mi->closeDevice();
+    }
+
+    const bool hasEnabledMidiDefaultDevs = storage.getProperty (SettingID::hasEnabledMidiDefaultDevs, false);
+    storage.setProperty (SettingID::hasEnabledMidiDefaultDevs, true);
+    storage.flushSettingsToDisk();
+
+    checkDefaultDevicesAreValid();
+
+    if (enabledMidiOuts == 0 && ! hasEnabledMidiDefaultDevs)
+    {
+        for (auto& d : midiOutputs)
+        {
+            if (! isMicrosoftGSSynth (*d))
+            {
+                d->setEnabled (true);
+                break;
+            }
+        }
+    }
+
+    sendChangeMessage();
+
+    engine.getExternalControllerManager().midiInOutDevicesChanged();
+}
+
+void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m)
+{
+    if (auto input = getDefaultMidiInDevice())
+        input->handleIncomingMidiMessage (nullptr, m);
+}
+
+void DeviceManager::broadcastMessageToAllVirtualDevices (MidiInputDevice& source, const juce::MidiMessage& m)
+{
+    const std::shared_lock sl (contextLock);
+
+    for (auto d : midiInputs)
+        if (auto vmd = dynamic_cast<VirtualMidiInputDevice*> (d.get()))
+            vmd->handleMessageFromPhysicalDevice (source, m);
+}
+
+bool DeviceManager::usesHardwareMidiDevices()
+{
+    return hostedAudioDeviceInterface == nullptr
+            || hostedAudioDeviceInterface->parameters.useMidiDevices;
 }
 
 HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
@@ -275,177 +720,12 @@ juce::String DeviceManager::getDefaultMidiInDeviceName (bool translated)
                       : "(default MIDI input)";
 }
 
-
-void DeviceManager::closeDevices()
-{
-    CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
-
-    jassert (activeContexts.isEmpty());
-    clearAllContextDevices();
-
-    deviceManager.removeAudioCallback (this);
-
-    midiOutputs.clear();
-    midiInputs.clear();
-    waveInputs.clear();
-    waveOutputs.clear();
-}
-
-static bool isMicrosoftGSSynth (MidiOutputDevice& mo)
-{
-   #if JUCE_WINDOWS
-    return mo.getName().containsIgnoreCase ("Microsoft GS ");
-   #else
-    (void) mo;  return false;
-   #endif
-}
-
-DeviceManager::ContextDeviceListRebuilder::ContextDeviceListRebuilder (DeviceManager& d) : dm (d)
-{
-    dm.clearAllContextDevices();
-}
-
-DeviceManager::ContextDeviceListRebuilder::~ContextDeviceListRebuilder()
-{
-    dm.reloadAllContextDevices();
-}
-
-void DeviceManager::initialiseMidi()
-{
-    CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
-    ContextDeviceListRebuilder deviceRebuilder (*this);
-
-    midiInputs.clear();
-    midiOutputs.clear();
-
-    auto& storage = engine.getPropertyStorage();
-
-    defaultMidiOutIndex = storage.getProperty (SettingID::defaultMidiOutDevice);
-    defaultMidiInIndex = storage.getProperty (SettingID::defaultMidiInDevice);
-
-    bool openHardwareMidi = hostedAudioDeviceInterface == nullptr || hostedAudioDeviceInterface->parameters.useMidiDevices;
-
-    TRACKTION_LOG ("Finding MIDI I/O");
-    if (openHardwareMidi)
-        lastMidiInNames = getMidiDeviceNames (juce::MidiInput::getAvailableDevices());
-
-    if (openHardwareMidi)
-        lastMidiOutNames = getMidiDeviceNames (juce::MidiOutput::getAvailableDevices());
-
-    int enabledMidiIns = 0, enabledMidiOuts = 0;
-
-    // create all the devices before initialising them..
-    for (int i = 0; i < lastMidiOutNames.size(); ++i)  midiOutputs.add (new MidiOutputDevice (engine, lastMidiOutNames[i], i));
-    for (int i = 0; i < lastMidiInNames.size(); ++i)   midiInputs.add (new PhysicalMidiInputDevice (engine, lastMidiInNames[i], i));
-
-    if (hostedAudioDeviceInterface != nullptr)
-    {
-        midiOutputs.add (hostedAudioDeviceInterface->createMidiOutput());
-        midiInputs.add (hostedAudioDeviceInterface->createMidiInput());
-    }
-
-   #if JUCE_MAC && JUCE_DEBUG
-    if (openHardwareMidi)
-        midiOutputs.add (new SoftwareMidiOutputDevice (engine, "Tracktion MIDI Device"));
-   #endif
-
-    juce::StringArray virtualDevices;
-    virtualDevices.addTokens (storage.getProperty (SettingID::virtualmididevices).toString(), ";", {});
-    virtualDevices.removeEmptyStrings();
-
-    for (int i = 0; i < virtualDevices.size(); ++i)
-        midiInputs.add (new VirtualMidiInputDevice (engine, virtualDevices[i], InputDevice::virtualMidiDevice));
-
-    for (auto mo : midiOutputs)
-    {
-        TRACKTION_LOG_DEVICE ("MIDI output: " + mo->getName() + (mo->isEnabled() ? " (enabled)" : ""));
-
-        JUCE_TRY
-        {
-            mo->setEnabled (mo->isEnabled());
-
-            if (mo->isEnabled())
-                ++enabledMidiOuts;
-        }
-        JUCE_CATCH_EXCEPTION
-    }
-
-    for (auto mi : midiInputs)
-    {
-        TRACKTION_LOG_DEVICE ("MIDI input: " + mi->getName() + (mi->isEnabled() ? " (enabled)" : ""));
-
-        JUCE_TRY
-        {
-            mi->setEnabled (mi->isEnabled());
-            mi->initialiseDefaultAlias();
-
-            if (mi->isEnabled())
-                ++enabledMidiIns;
-        }
-        JUCE_CATCH_EXCEPTION
-    }
-
-    const bool hasEnabledMidiDefaultDevs = storage.getProperty (SettingID::hasEnabledMidiDefaultDevs, false);
-    storage.setProperty (SettingID::hasEnabledMidiDefaultDevs, true);
-    storage.flushSettingsToDisk();
-
-    if (enabledMidiOuts + enabledMidiIns == 0 && ! hasEnabledMidiDefaultDevs)
-    {
-        if (auto firstIn = midiInputs[0])
-            firstIn->setEnabled (true);
-
-        if (auto firstOut = midiOutputs[0])
-            if (! isMicrosoftGSSynth (*firstOut))
-                firstOut->setEnabled (true);
-    }
-}
-
-void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
-{
-    defaultNumInputChannelsToOpen = defaultNumInputs;
-    defaultNumOutputChannelsToOpen = defaultNumOutputs;
-
-    initialiseMidi();
-    loadSettings();
-    finishedInitialising = true;
-    rebuildWaveDeviceList();
-    updateNumCPUs();
-}
-
+// This is a change in the juce::AudioDeviceManager
 void DeviceManager::changeListenerCallback (ChangeBroadcaster*)
 {
     CRASH_TRACER
-
-    if (! rebuildWaveDeviceListIfNeeded())
-    {
-        // force all plugins to be restarted, to cope with changes in rate + buffer size
-        const juce::ScopedLock sl (contextLock);
-
-        for (auto c : activeContexts)
-            c->edit.restartPlayback();
-    }
-}
-
-bool DeviceManager::rebuildWaveDeviceListIfNeeded()
-{
-    if (! waveDeviceListNeedsRebuilding())
-        return false;
-
-    rebuildWaveDeviceList();
-    return true;
-}
-
-void DeviceManager::rescanMidiDeviceList (bool forceRescan)
-{
-    CRASH_TRACER
-
-    auto midiIns  = getMidiDeviceNames (juce::MidiInput::getAvailableDevices());
-    auto midiOuts = getMidiDeviceNames (juce::MidiOutput::getAvailableDevices());
-
-    if (lastMidiOutNames != midiOuts || lastMidiInNames != midiIns || forceRescan)
-        initialiseMidi();
+    saveSettings();
+    rescanWaveDeviceList();
 }
 
 bool DeviceManager::isMSWavetableSynthPresent() const
@@ -457,88 +737,38 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
-void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
-{
-    TRACKTION_LOG ("Returning audio settings to defaults");
-    deviceManager.removeAudioCallback (this);
-
-    auto& storage = engine.getPropertyStorage();
-
-    if (deviceSettings)
-    {
-        storage.removeProperty (SettingID::audio_device_setup);
-        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
-    }
-
-    if (latencySettings)
-    {
-        storage.setProperty (SettingID::maxLatency, 5.0f);
-        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-    }
-
-    if (mixSettings)
-    {
-        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
-        updateNumCPUs();
-
-        storage.setProperty (SettingID::use64Bit, false);
-    }
-
-    if (resetInputDevices)
-        for (auto wid : waveInputs)
-            wid->resetToDefault();
-
-    if (resetOutputDevices)
-        for (auto wod : waveOutputs)
-            wod->resetToDefault();
-
-    loadSettings();
-    deviceManager.addAudioCallback (this);
-    TransportControl::restartAllTransports (engine, false);
-    SelectionManager::refreshAllPropertyPanels();
-}
-
 juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    {
-        juce::StringArray virtualDevices;
-        virtualDevices.addTokens (engine.getPropertyStorage().getProperty (SettingID::virtualmididevices).toString(), ";", {});
-        virtualDevices.removeEmptyStrings();
+    auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
 
-        if (virtualDevices.contains (name))
-            return juce::Result::fail (TRANS("Name is already in use!"));
-    }
+    if (virtualDeviceIDs.contains (name))
+        return juce::Result::fail (TRANS("Name is already in use!"));
 
-    {
-        ContextDeviceListRebuilder deviceRebuilder (*this);
+    virtualDeviceIDs.add (name);
+    setVirtualDeviceIDs (engine, virtualDeviceIDs);
 
-        auto vmi = new VirtualMidiInputDevice (engine, name, InputDevice::virtualMidiDevice);
-        midiInputs.add (vmi);
-
-        vmi->setEnabled (true);
-        vmi->initialiseDefaultAlias();
-        vmi->saveProps();
-    }
-
-    VirtualMidiInputDevice::refreshDeviceNames (engine);
-    sendChangeMessage();
+    rescanMidiDeviceList();
 
     return juce::Result::ok();
 }
 
-void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice* vmi)
+void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice& vmi)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
-    ContextDeviceListRebuilder deviceRebuilder (*this);
 
-    engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, vmi->getName());
-    midiInputs.removeObject (vmi);
-    VirtualMidiInputDevice::refreshDeviceNames (engine);
-    sendChangeMessage();
+    auto deviceID = vmi.getDeviceID();
+
+    engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, deviceID);
+
+    auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
+    virtualDeviceIDs.removeString (deviceID);
+    setVirtualDeviceIDs (engine, virtualDeviceIDs);
+
+    rescanMidiDeviceList();
 }
 
 void DeviceManager::sanityCheckEnabledChannels()
@@ -569,13 +799,18 @@ void DeviceManager::sanityCheckEnabledChannels()
         currentSampleRate = 44100.0;
 }
 
-bool DeviceManager::waveDeviceListNeedsRebuilding()
+void DeviceManager::rescanWaveDeviceList()
 {
-    WaveDeviceList newList (*this);
-    return lastWaveDeviceList == nullptr || newList != *lastWaveDeviceList;
+    auto newList = std::make_unique<AvailableWaveDeviceList> (*this);
+
+    if (lastAvailableWaveDeviceList == nullptr || *newList != *lastAvailableWaveDeviceList)
+    {
+        lastAvailableWaveDeviceList = std::move (newList);
+        triggerAsyncUpdate();
+    }
 }
 
-void DeviceManager::rebuildWaveDeviceList()
+void DeviceManager::handleAsyncUpdate()
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -590,52 +825,51 @@ void DeviceManager::rebuildWaveDeviceList()
 
     TRACKTION_LOG ("Rebuilding Wave Device List...");
 
-    contextDeviceClearer->dispatchPendingUpdates();
-    TransportControl::stopAllTransports (engine, false, true);
+    prepareToStartCaller->handleUpdateNowIfNeeded();
 
-    ContextDeviceListRebuilder deviceRebuilder (*this);
+    if (lastAvailableWaveDeviceList == nullptr)
+        lastAvailableWaveDeviceList = std::make_unique<AvailableWaveDeviceList> (*this);
 
-    deviceManager.removeAudioCallback (this);
+    juce::OwnedArray<WaveInputDevice>  newWaveInputs;
+    juce::OwnedArray<WaveOutputDevice> newWaveOutputs;
+    juce::BigInteger newActiveOutChannels;
 
-    waveInputs.clear();
-    waveOutputs.clear();
-
-    sanityCheckEnabledChannels();
-
-    lastWaveDeviceList.reset (new WaveDeviceList (*this));
-
-    for (const auto& d : lastWaveDeviceList->inputs)
+    for (auto& d : lastAvailableWaveDeviceList->inputs)
     {
-        auto wi = new WaveInputDevice (engine, d.name, TRANS("Wave Audio Input"), d.channels, InputDevice::waveDevice);
-        wi->enabled = d.enabled;
-        waveInputs.add (wi);
+        auto wi = new WaveInputDevice (engine, TRANS("Wave Audio Input"), d, InputDevice::waveDevice);
+        newWaveInputs.add (wi);
 
         TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
-                              + createDescriptionOfChannels (wi->deviceChannels));
+                               + createDescriptionOfChannels (wi->deviceChannels));
     }
 
-    for (auto wi : waveInputs)
-        wi->initialiseDefaultAlias();
-
-    for (const auto& d : lastWaveDeviceList->outputs)
+    for (auto& d : lastAvailableWaveDeviceList->outputs)
     {
-        auto wo = new WaveOutputDevice (engine, d.name, d.channels);
-        wo->enabled = d.enabled;
-        waveOutputs.add (wo);
+        auto wo = new WaveOutputDevice (engine, d);
+        newWaveOutputs.add (wo);
 
-        TRACKTION_LOG_DEVICE ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
-                              + createDescriptionOfChannels (wo->deviceChannels));
-    }
-
-    activeOutChannels.clear();
-
-    for (auto wo : waveOutputs)
         if (wo->isEnabled())
             for (const auto& ci : wo->getChannels())
-                activeOutChannels.setBit (ci.indexInDevice);
+                newActiveOutChannels.setBit (ci.indexInDevice);
 
+        TRACKTION_LOG_DEVICE ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
+                               + createDescriptionOfChannels (wo->deviceChannels));
+    }
+
+    clearAllContextDevices();
+
+    {
+        const std::unique_lock sl (contextLock);
+        newWaveInputs.swapWith (waveInputs);
+        newWaveOutputs.swapWith (waveOutputs);
+        newActiveOutChannels.swapWith (activeOutChannels);
+    }
+
+    sanityCheckEnabledChannels();
+    reloadAllContextDevices();
     saveSettings();
     checkDefaultDevicesAreValid();
+    sendChangeMessage();
 
    #if TRACKTION_LOG_ENABLED
     auto wo = getDefaultWaveOutDevice();
@@ -650,13 +884,6 @@ void DeviceManager::rebuildWaveDeviceList()
     auto mi = getDefaultMidiInDevice();
     TRACKTION_LOG ("Default MIDI In: " + (mi != nullptr ? mi->getName() : juce::String()));
    #endif
-
-    sendChangeMessage();
-
-    TransportControl::restartAllTransports (engine, false);
-
-    checkDefaultDevicesAreValid();
-    deviceManager.addAudioCallback (this);
 }
 
 void DeviceManager::loadSettings()
@@ -710,8 +937,8 @@ void DeviceManager::loadSettings()
     }
 
     auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
-    defaultWaveOutIndex = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, 0);
-    defaultWaveInIndex = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, 0);
+    defaultWaveOutID = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType);
+    defaultWaveInID  = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType);
 
     TRACKTION_LOG ("Audio block size: " + juce::String (getBlockSize())
                     + "  Rate: " + juce::String ((int) getSampleRate()));
@@ -745,78 +972,62 @@ void DeviceManager::checkDefaultDevicesAreValid()
     if (! finishedInitialising)
         return;
 
-    auto& storage = engine.getPropertyStorage();
-
-    if (getDefaultWaveOutDevice() == nullptr
-         || ! getDefaultWaveOutDevice()->isEnabled())
+    if (getDefaultWaveOutDevice() == nullptr || ! getDefaultWaveOutDevice()->isEnabled())
     {
-        defaultWaveOutIndex = -1;
-
-        for (int i = 0; i < getNumWaveOutDevices(); ++i)
+        for (auto d : waveOutputs)
         {
-            if (getWaveOutDevice(i) != nullptr && getWaveOutDevice(i)->isEnabled())
+            if (d->isEnabled())
             {
-                defaultWaveOutIndex = i;
+                setDefaultWaveOutDevice (d->getDeviceID());
                 break;
             }
         }
-
-        if (defaultWaveOutIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveOutIndex);
     }
 
-    if (getDefaultMidiOutDevice() == nullptr
-         || ! getDefaultMidiOutDevice()->isEnabled())
+    if (getDefaultWaveInDevice() == nullptr || ! getDefaultWaveInDevice()->isEnabled())
     {
-        defaultMidiOutIndex = -1;
-
-        for (int i = 0; i < getNumMidiOutDevices(); ++i)
+        for (auto d : waveInputs)
         {
-            if (getMidiOutDevice(i) != nullptr && getMidiOutDevice(i)->isEnabled())
+            if (d->isEnabled())
             {
-                defaultMidiOutIndex = i;
+                setDefaultWaveInDevice (d->getDeviceID());
                 break;
             }
         }
-
-        if (defaultMidiOutIndex >= 0)
-            storage.setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
     }
 
-    if (getDefaultWaveInDevice() == nullptr
-        || ! getDefaultWaveInDevice()->isEnabled())
+    if (getDefaultMidiOutDevice() == nullptr || ! getDefaultMidiOutDevice()->isEnabled())
     {
-        defaultWaveInIndex = -1;
-
-        for (int i = 0; i < getNumWaveInDevices(); ++i)
+        for (auto d : midiOutputs)
         {
-            if (getWaveInDevice(i) != nullptr && getWaveInDevice(i)->isEnabled())
+            if (d->isEnabled())
             {
-                defaultWaveInIndex = i;
+                setDefaultMidiOutDevice (d->getDeviceID());
                 break;
             }
         }
-
-        if (defaultWaveInIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInIndex);
     }
 
-    if (getDefaultMidiInDevice() == nullptr
-        || ! getDefaultMidiInDevice()->isEnabled())
+    if (getDefaultMidiInDevice() == nullptr || ! getDefaultMidiInDevice()->isEnabled())
     {
-        defaultMidiInIndex = -1;
-
-        for (int i = 0; i < getNumMidiInDevices(); ++i)
+        if (auto allMidi = findInputDeviceForID (allMidiInsID);
+            allMidi != nullptr && allMidi->isEnabled())
         {
-            if (getMidiInDevice(i) != nullptr && getMidiInDevice(i)->isEnabled())
+            setDefaultMidiInDevice (allMidi->getDeviceID());
+        }
+        else
+        {
+            const std::shared_lock sl (midiInputsMutex);
+
+            for (auto d : midiInputs)
             {
-                defaultMidiInIndex = i;
-                break;
+                if (d->isEnabled())
+                {
+                    setDefaultMidiInDevice (d->getDeviceID());
+                    break;
+                }
             }
         }
-
-        if (defaultMidiInIndex >= 0)
-            storage.setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
     }
 }
 
@@ -854,43 +1065,82 @@ TimeDuration DeviceManager::getBlockLength() const
     return TimeDuration::fromSamples (getBlockSize(), getSampleRate());
 }
 
-void DeviceManager::setDefaultWaveOutDevice (int index)
+WaveInputDevice* DeviceManager::getDefaultWaveInDevice() const      { return dynamic_cast<WaveInputDevice*> (findInputDeviceForID (getDefaultWaveInDeviceID())); }
+WaveOutputDevice* DeviceManager::getDefaultWaveOutDevice() const    { return dynamic_cast<WaveOutputDevice*> (findOutputDeviceForID (getDefaultWaveOutDeviceID())); }
+MidiInputDevice* DeviceManager::getDefaultMidiInDevice() const      { return dynamic_cast<MidiInputDevice*> (findInputDeviceForID (getDefaultMidiInDeviceID())); }
+MidiOutputDevice* DeviceManager::getDefaultMidiOutDevice() const    { return dynamic_cast<MidiOutputDevice*> (findOutputDeviceForID (getDefaultMidiOutDeviceID())); }
+
+void DeviceManager::setDefaultWaveOutDevice (juce::String deviceID)
 {
-    if (auto wod = getWaveOutDevice (index))
+    if (defaultWaveOutID != deviceID)
     {
-        if (wod->isEnabled())
+        if (auto d = findOutputDeviceForID (deviceID))
         {
-            defaultWaveOutIndex = index;
-            engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveOutDevice,
-                                                         deviceManager.getCurrentAudioDeviceType(), index);
+            if (d->isEnabled())
+            {
+                defaultWaveOutID = deviceID;
+                engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveOutDevice,
+                                                             deviceManager.getCurrentAudioDeviceType(),
+                                                             deviceID);
+                rescanWaveDeviceList();
+            }
         }
     }
-
-    checkDefaultDevicesAreValid();
-    rebuildWaveDeviceList();
 }
 
-void DeviceManager::setDefaultWaveInDevice (int index)
+void DeviceManager::setDefaultWaveInDevice (juce::String deviceID)
 {
-    if (auto wod = getWaveInDevice (index))
+    if (defaultWaveInID != deviceID)
     {
-        if (wod->isEnabled())
+        if (auto d = findInputDeviceForID (deviceID))
         {
-            defaultWaveInIndex = index;
-            engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveInDevice,
-                                                         deviceManager.getCurrentAudioDeviceType(), index);
+            if (d->isEnabled())
+            {
+                defaultWaveInID = deviceID;
+                engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveInDevice,
+                                                             deviceManager.getCurrentAudioDeviceType(),
+                                                             deviceID);
+                rescanWaveDeviceList();
+            }
         }
     }
+}
 
-    checkDefaultDevicesAreValid();
-    rebuildWaveDeviceList();
+void DeviceManager::setDefaultMidiOutDevice (juce::String deviceID)
+{
+    if (defaultMidiOutID != deviceID)
+    {
+        if (auto d = findOutputDeviceForID (deviceID))
+        {
+            if (d->isEnabled())
+            {
+                engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, deviceID);
+                rescanMidiDeviceList();
+            }
+        }
+    }
+}
+
+void DeviceManager::setDefaultMidiInDevice (juce::String deviceID)
+{
+    if (defaultMidiInID != deviceID)
+    {
+        if (auto d = findInputDeviceForID (deviceID))
+        {
+            if (d->isEnabled())
+            {
+                engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, deviceID);
+                rescanMidiDeviceList();
+            }
+        }
+    }
 }
 
 void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
 {
     chan &= ~1;
 
-    if (outMonoChans[chan / 2] == isStereoPair)
+    if (isDeviceOutChannelStereo (chan) != isStereoPair)
     {
         outMonoChans.setBit (chan / 2, ! isStereoPair);
 
@@ -901,19 +1151,15 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
             outEnabled.setBit (chan + 1, en);
         }
 
-        rebuildWaveDeviceList();
+        rescanWaveDeviceList();
     }
-
-    checkDefaultDevicesAreValid();
 }
 
 void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
 {
     chan &= ~1;
 
-    if (inStereoChans[chan / 2] == isStereoPair)
-        return;
-
+    if (isDeviceInChannelStereo (chan) != isStereoPair)
     {
         inStereoChans.setBit (chan / 2, isStereoPair);
 
@@ -923,83 +1169,71 @@ void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
             inEnabled.setBit (chan, en);
             inEnabled.setBit (chan + 1, en);
         }
-    }
 
-    rebuildWaveDeviceList();
+        rescanWaveDeviceList();
+    }
 }
 
 void DeviceManager::setWaveOutChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
-    bool needsRebuilding = false;
-
-    for (const auto& ci : channels)
+    for (auto& ci : channels)
     {
         if (outEnabled[ci.indexInDevice] != b)
         {
-            needsRebuilding = true;
             outEnabled.setBit (ci.indexInDevice, b);
+            rescanWaveDeviceList();
         }
     }
-
-    if (needsRebuilding)
-        rebuildWaveDeviceList();
 }
 
 void DeviceManager::setWaveInChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
-    bool needsRebuilding = false;
-
-    for (const auto& ci : channels)
+    for (auto& ci : channels)
     {
         if (inEnabled[ci.indexInDevice] != b)
         {
-            needsRebuilding = true;
             inEnabled.setBit (ci.indexInDevice, b);
+            rescanWaveDeviceList();
         }
     }
-
-    if (needsRebuilding)
-        rebuildWaveDeviceList();
-}
-
-void DeviceManager::setDefaultMidiOutDevice (int index)
-{
-    if (midiOutputs[index] != nullptr && midiOutputs[index]->isEnabled())
-    {
-        defaultMidiOutIndex = index;
-        engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, defaultMidiOutIndex);
-    }
-
-    checkDefaultDevicesAreValid();
-    rebuildWaveDeviceList();
-}
-
-void DeviceManager::setDefaultMidiInDevice (int index)
-{
-    if (midiInputs[index] != nullptr && midiInputs[index]->isEnabled())
-    {
-        defaultMidiInIndex = index;
-        engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, defaultMidiInIndex);
-    }
-
-    checkDefaultDevicesAreValid();
-    rebuildWaveDeviceList();
 }
 
 int DeviceManager::getNumMidiInDevices() const
 {
-    return midiInputs.size();
+    const std::shared_lock sl (midiInputsMutex);
+    return (int) midiInputs.size();
 }
 
-MidiInputDevice* DeviceManager::getMidiInDevice (int index) const
+std::shared_ptr<MidiInputDevice> DeviceManager::getMidiInDevice (int index) const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
-    return midiInputs[index];
+    const std::shared_lock sl (midiInputsMutex);
+
+    if (index >= 0 && index < (int) midiInputs.size())
+        return midiInputs[(size_t) index];
+
+    return {};
+}
+
+std::vector<std::shared_ptr<MidiInputDevice>> DeviceManager::getMidiInDevices() const
+{
+    const std::shared_lock sl (midiInputsMutex);
+    return midiInputs;
+}
+
+std::shared_ptr<MidiInputDevice> DeviceManager::findMidiInputDeviceForID (const juce::String& deviceID) const
+{
+    const std::shared_lock sl (midiInputsMutex);
+
+    for (auto& m : midiInputs)
+        if (m->getDeviceID() == deviceID)
+            return m;
+
+    return {};
 }
 
 void DeviceManager::broadcastStreamTimeToMidiDevices (double timeToBroadcast)
 {
-    const juce::ScopedLock sl (midiInputs.getLock());
+    const std::shared_lock sl (midiInputsMutex);
 
     for (auto mi : midiInputs)
         if (mi->isEnabled())
@@ -1014,7 +1248,7 @@ int DeviceManager::getNumInputDevices() const
 InputDevice* DeviceManager::getInputDevice (int index) const
 {
     if (index >= getNumWaveInDevices())
-        return getMidiInDevice (index - getNumWaveInDevices());
+        return getMidiInDevice (index - getNumWaveInDevices()).get();
 
     return getWaveInDevice (index);
 }
@@ -1032,6 +1266,36 @@ OutputDevice* DeviceManager::getOutputDeviceAt (int index) const
     return getWaveOutDevice (index);
 }
 
+InputDevice* DeviceManager::findInputDeviceForID (const juce::String& id) const
+{
+    for (auto d : waveInputs)
+        if (d->getDeviceID() == id)
+            return d;
+
+    const std::shared_lock sl (midiInputsMutex);
+
+    for (auto d : midiInputs)
+        if (d->getDeviceID() == id)
+            return d.get();
+
+    return {};
+}
+
+InputDevice* DeviceManager::findInputDeviceWithName (const juce::String& name) const
+{
+    for (auto d : waveInputs)
+        if (d->getName() == name)
+            return d;
+
+    const std::shared_lock sl (midiInputsMutex);
+
+    for (auto d : midiInputs)
+        if (d->getName() == name)
+            return d.get();
+
+    return {};
+}
+
 OutputDevice* DeviceManager::findOutputDeviceForID (const juce::String& id) const
 {
     for (auto d : waveOutputs)
@@ -1040,7 +1304,7 @@ OutputDevice* DeviceManager::findOutputDeviceForID (const juce::String& id) cons
 
     for (auto d : midiOutputs)
         if (d->getDeviceID() == id)
-            return d;
+            return d.get();
 
     return {};
 }
@@ -1056,7 +1320,7 @@ OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String& name)
 
     for (auto d : midiOutputs)
         if (d->getName() == name)
-            return d;
+            return d.get();
 
     return {};
 }
@@ -1082,11 +1346,37 @@ double DeviceManager::getOutputLatencySeconds() const
     return outputLatencyTime;
 }
 
+PerformanceMeasurement::Statistics DeviceManager::getCPUStatistics() const
+{
+    return performanceStats.load();
+}
+
+void DeviceManager::restCPUStatistics()
+{
+    clearStatsFlag.store (true, std::memory_order_relaxed);
+}
+
 void DeviceManager::audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int numInputChannels,
                                                       float* const* outputChannelData, int totalNumOutputChannels,
                                                       int numSamples,
                                                       const juce::AudioIODeviceCallbackContext&)
 {
+    CRASH_TRACER
+    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
+
+   #if JUCE_ANDROID
+    const ScopedSteadyLoad load (steadyLoadContext, numSamples);
+   #endif
+
+    if (isSuspended)
+    {
+        for (int i = 0; i < totalNumOutputChannels; ++i)
+            if (auto dest = outputChannelData[i])
+                juce::FloatVectorOperations::clear (dest, numSamples);
+
+        return;
+    }
+
     // Some interfaces ask for blocks larger than the current buffer size so in
     // these cases we need to render the buffer in chunks
     if (numSamples <= maxBlockSize)
@@ -1123,17 +1413,13 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                                                    float* const* outputChannelData, int totalNumOutputChannels,
                                                    int numSamples)
 {
-    jassert (numSamples <= maxBlockSize);
-
-    CRASH_TRACER
-    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
-
     {
-       #if JUCE_ANDROID
-        const ScopedSteadyLoad load (steadyLoadContext, numSamples);
-       #endif
+        engine.getAudioFileManager().cache.nextBlockStarted();
 
-        const auto startTimeTicks = juce::Time::getHighResolutionTicks();
+        if (clearStatsFlag.exchange (false))
+            performanceMeasurement.getStatisticsAndReset();
+
+        const ScopedPerformanceMeasurement spm (performanceMeasurement);
 
         if (currentCpuUsage > cpuLimitBeforeMuting)
         {
@@ -1150,7 +1436,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
 
             {
                 SCOPED_REALTIME_CHECK
-                const juce::ScopedLock sl (contextLock);
+                const std::shared_lock sl (contextLock);
 
                 for (auto wi : waveInputs)
                     wi->consumeNextAudioBlock (inputChannelData, numInputChannels, numSamples, streamTime);
@@ -1185,82 +1471,102 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
             globalOutputAudioProcessor->processBlock (ab, mb);
         }
 
+        // Output clipping
+        if (outputClippingEnabled.load (std::memory_order_relaxed))
         {
-            const auto timeWindowSec = numSamples / static_cast<float> (currentSampleRate);
+            bool hasClipped = false;
 
-            const auto currentCpuUtilisation = float (juce::Time::getHighResolutionTicks() - startTimeTicks)
-                                                / juce::Time::getHighResolutionTicksPerSecond() / timeWindowSec;
-
-            cpuAvg += currentCpuUtilisation;
-            cpuMin = std::min (cpuMin, currentCpuUtilisation);
-            cpuMax = std::max (cpuMax, currentCpuUtilisation);
-
-            if (currentCpuUtilisation > 1)
-                ++glitchCntr;
-
-            if (--cpuAvgCounter == 0)
+            for (int i = totalNumOutputChannels; --i >= 0;)
             {
-                cpuAvg /= static_cast<float> (cpuReportingInterval);
+                if (auto dest = outputChannelData[i])
+                {
+                    if (activeOutChannels[i])
+                    {
+                        for (int j = 0; j < numSamples; ++j)
+                        {
+                            auto samp = dest[j];
 
-                cpuUsageListeners.call (&CPUUsageListener::reportCPUUsage, cpuAvg, cpuMin, cpuMax, glitchCntr);
+                            if (samp < -1.0f)
+                            {
+                                samp = -1.0f;
+                                hasClipped = true;
+                            }
+                            else if (samp > 1.0f)
+                            {
+                                samp = 1.0f;
+                                hasClipped = true;
+                            }
+                            else
+                            {
+                                continue;
+                            }
 
-                cpuAvg = 0;
-                cpuMin = 1;
-                cpuMax = 0;
-                glitchCntr = 0;
-                cpuAvgCounter = cpuReportingInterval;
+                            dest[j] = samp;
+                        }
+                    }
+                }
             }
+
+            if (hasClipped)
+                outputHasClipped.store (true, std::memory_order_relaxed);
         }
     }
+
+    performanceStats.store (performanceMeasurement.getStatistics());
 }
 
 void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
 {
-    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
-    contextDeviceClearer->dispatchPendingUpdates();
-
     streamTime = 0;
     currentCpuUsage = 0.0f;
-    maxBlockSize = device->getCurrentBufferSizeSamples();
-    currentSampleRate = device->getCurrentSampleRate();
-    currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
-    outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
-    defaultWaveOutIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), 0);
-    defaultWaveInIndex = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), 0);
-
-    inputChannelsScratch.realloc (device->getInputChannelNames().size());
-    outputChannelsScratch.realloc (device->getOutputChannelNames().size());
-
-    if (waveDeviceListNeedsRebuilding())
-        rebuildWaveDeviceList();
-
-    reloadAllContextDevices();
-
-    const juce::ScopedLock sl (contextLock);
-
-    for (auto c : activeContexts)
-        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate }, currentSampleRate);
 
     if (globalOutputAudioProcessor != nullptr)
-        globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
-
-    if (device->getCurrentBufferSizeSamples() > 0)
-        cpuAvgCounter = cpuReportingInterval = std::max (1, static_cast<int> (device->getCurrentSampleRate())
-                                                             / device->getCurrentBufferSizeSamples());
-    else
-        cpuAvgCounter = cpuReportingInterval = 1;
-
-    jassert (currentSampleRate > 0.0);
+        globalOutputAudioProcessor->prepareToPlay (device->getCurrentSampleRate(), device->getCurrentBufferSizeSamples());
 
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
    #endif
+
+    // A lot of the prep has to happen on the message thread, so we'll suspend
+    // the callbacks until prepareToStart() has been called
+    isSuspended = true;
+    prepareToStartCaller->triggerAsyncUpdate();
+}
+
+void DeviceManager::prepareToStart()
+{
+    if (auto device = deviceManager.getCurrentAudioDevice())
+    {
+        maxBlockSize = device->getCurrentBufferSizeSamples();
+        currentSampleRate = device->getCurrentSampleRate();
+        jassert (currentSampleRate > 0.0);
+        currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
+        outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
+        defaultWaveOutID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName());
+        defaultWaveInID  = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName());
+
+        inputChannelsScratch.realloc (device->getInputChannelNames().size());
+        outputChannelsScratch.realloc (device->getOutputChannelNames().size());
+
+        {
+            const std::shared_lock sl (contextLock);
+
+            for (auto c : activeContexts)
+            {
+                const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, true);
+                c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate }, currentSampleRate);
+                c->edit.restartPlayback();
+            }
+        }
+
+        isSuspended = false;
+    }
 }
 
 void DeviceManager::audioDeviceStopped()
 {
+    isSuspended = true;
     currentCpuUsage = 0.0f;
-    contextDeviceClearer->triggerClearDevices();
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->releaseResources();
@@ -1269,10 +1575,26 @@ void DeviceManager::audioDeviceStopped()
 void DeviceManager::updateNumCPUs()
 {
     const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
-    const juce::ScopedLock cl (contextLock);
+    const std::shared_lock cl (contextLock);
 
     for (auto c : activeContexts)
         c->updateNumCPUs();
+}
+
+//==============================================================================
+void DeviceManager::enableOutputClipping (bool clipOutput)
+{
+    outputClippingEnabled.store (clipOutput, std::memory_order_relaxed);
+}
+
+bool DeviceManager::hasOutputClipped (bool reset)
+{
+    const auto hasClipped = outputHasClipped.load (std::memory_order_relaxed);
+
+    if (hasClipped && reset)
+        outputHasClipped.store (false, std::memory_order_relaxed);
+
+    return hasClipped;
 }
 
 void DeviceManager::addContext (EditPlaybackContext* c)
@@ -1282,7 +1604,7 @@ void DeviceManager::addContext (EditPlaybackContext* c)
     double lastStreamTime;
 
     {
-        const juce::ScopedLock sl (contextLock);
+        const std::unique_lock sl (contextLock);
         lastStreamTime = streamTime;
         c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate }, currentSampleRate);
         activeContexts.addIfNotAlreadyThere (c);
@@ -1298,13 +1620,13 @@ void DeviceManager::addContext (EditPlaybackContext* c)
 
 void DeviceManager::removeContext (EditPlaybackContext* c)
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::unique_lock sl (contextLock);
     activeContexts.removeAllInstancesOf (c);
 }
 
 void DeviceManager::clearAllContextDevices()
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::shared_lock sl (contextLock);
 
     for (auto c : activeContexts)
         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, false);
@@ -1312,20 +1634,26 @@ void DeviceManager::clearAllContextDevices()
 
 void DeviceManager::reloadAllContextDevices()
 {
-    const juce::ScopedLock sl (contextLock);
+    const std::shared_lock sl (contextLock);
 
     for (auto c : activeContexts)
+    {
         const EditPlaybackContext::ScopedDeviceListReleaser rebuilder (*c, true);
+        c->edit.restartPlayback();
+    }
 }
 
-void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProcessor)
+void DeviceManager::setGlobalOutputAudioProcessor (std::unique_ptr<juce::AudioProcessor> newProcessor)
 {
-    const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
-    globalOutputAudioProcessor.reset (newProcessor);
+    if (newProcessor != nullptr)
+        newProcessor->prepareToPlay (getSampleRate(), getBlockSize());
 
-    if (globalOutputAudioProcessor != nullptr)
-        if (auto* audioIODevice = deviceManager.getCurrentAudioDevice())
-            globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
+    {
+        const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
+        std::swap (globalOutputAudioProcessor, newProcessor);
+    }
+
+    newProcessor.reset();
 }
 
 }} // namespace tracktion { inline namespace engine

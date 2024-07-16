@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -131,6 +131,47 @@ void render (BufferView&& targetView, double frequency, double sampleRate)
     setAllFrames (targetView, [&] { return static_cast<TargetType> (osc.getSample()); });
 }
 
+// Creates a buffer object of the specified buffer type and size, and fills it
+// with a signal of the given type.
+template <typename BufferType, typename OscillatorType>
+BufferType createBuffer (choc::buffer::Size size, double frequency, double sampleRate)
+{
+    BufferType buffer (size);
+    OscillatorType osc;
+    osc.setFrequency (frequency, sampleRate);
+    render (buffer, osc);
+    return buffer;
+}
+
+// Creates an interleaved buffer of the specified sample type and size, and fills it
+// with a signal of the given type.
+template <typename OscillatorType, typename SampleType>
+choc::buffer::InterleavedBuffer<SampleType> createInterleaved (choc::buffer::Size size, double frequency, double sampleRate)
+{
+    return createBuffer<choc::buffer::InterleavedBuffer<SampleType>, OscillatorType> (size, frequency, sampleRate);
+}
+
+// Creates a discrete-channel buffer of the specified sample type and size, and fills it
+// with a signal of the given type.
+template <typename OscillatorType, typename SampleType>
+choc::buffer::ChannelArrayBuffer<SampleType> createChannelArray (choc::buffer::Size size, double frequency, double sampleRate)
+{
+    return createBuffer<choc::buffer::ChannelArrayBuffer<SampleType>, OscillatorType> (size, frequency, sampleRate);
+}
+
+// Creates an interleaved sine buffer with the given size and frequency details
+template <typename SampleType>
+choc::buffer::InterleavedBuffer<SampleType> createInterleavedSine (choc::buffer::Size size, double frequency, double sampleRate)
+{
+    return createInterleaved<Sine<double>, SampleType> (size, frequency, sampleRate);
+}
+
+// Creates a discrete-channel sine buffer with the given size and frequency details
+template <typename SampleType>
+choc::buffer::InterleavedBuffer<SampleType> createChannelArraySine (choc::buffer::Size size, double frequency, double sampleRate)
+{
+    return createChannelArray<Sine<double>, SampleType> (size, frequency, sampleRate);
+}
 
 //==============================================================================
 //        _        _           _  _

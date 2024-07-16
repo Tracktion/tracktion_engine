@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -29,7 +29,7 @@
     - If they have, that node can be processed. If they haven't the processor can try another node
     - If one node reports latency, every other node being summed with it will need to be delayed up to the same ammount
     - The reported latency of a node is the max of all its input latencies
- 
+
     //==============================================================================
     Initialisation:
     - There really needs to be two stages for this:
@@ -47,7 +47,7 @@
         - visitAcyclic (Visitor) [only visit nodes that it was constructed with, used to create the flat list]
         - initialise (const PlaybackInitialisationInfo&) [used to add extra connections and balance latency etc.]
         - visitDFS (Visitor) [used to get list of nodes to process and can be called multiple times to optimise graph etc.]
- 
+
     Avoiding incontinuities when latency changes:
     - One of the bg problems with this latency balancing approach is when the graph is rebuilt, any stateful buffers will be lost.
     - The only way I can think of solving this is to either reusue the latency nodes directly or reuse the buffers
@@ -58,7 +58,7 @@
         - There will probably need to be some validation to ensure that two nodes don't have the same UID
         - For things like clip/plugin nodes the UID is simple (EditItemID)
         - For latency nodes etc. it will probably have to be based on the input ID and channel index etc.
- 
+
     Buffer optimisation:
     - As there will be a lot of nodes, it makes sense to reduce the memory footprint by reusing audio and MIDI buffers
     - There are two ways I can think of doing this:
@@ -144,6 +144,7 @@ struct PlaybackInitialisationInfo
     NodeGraph* nodeGraphToReplace = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
+    bool enableNodeMemorySharing = false; //** @internal */
 };
 
 /** Holds some really basic properties of a node */
@@ -208,7 +209,7 @@ private:
     Main graph Node processor class.
     Nodes are combined together to form a graph with a root Node which can then
     be initialsed and processed.
-    
+
     Subclasses should implement the various virtual methods but never call these
     directly. They will be called automatically by the non-virtual methods.
 */
@@ -217,14 +218,14 @@ class Node
 public:
     Node() = default;
     virtual ~Node() = default;
-    
+
     //==============================================================================
     /** Call once after the graph has been constructed to initialise buffers etc. */
     void initialise (const PlaybackInitialisationInfo&);
-    
+
     /** Call before processing the next block, used to reset the process status. */
     void prepareForNextBlock (juce::Range<int64_t> referenceSampleRange);
-    
+
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
         @param numSamples           The number of samples that need to be processed.
@@ -236,10 +237,10 @@ public:
                                     samples to be processed so don't rely on them being the same!
     */
     void process (choc::buffer::FrameCount numSamples, juce::Range<int64_t> referenceSampleRange);
-    
+
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
-    
+
     /** Contains the buffers for a processing operation. */
     struct AudioAndMidiBuffer
     {
@@ -274,7 +275,7 @@ public:
     {
         return TransformResult::none;
     }
-    
+
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
 
@@ -296,7 +297,7 @@ public:
         This is usually when its input's output buffers are ready.
     */
     virtual bool isReadyToProcess() = 0;
-    
+
     /** Struct to describe a single iteration of a process call. */
     struct ProcessContext
     {
@@ -323,6 +324,7 @@ public:
     void* internal = nullptr;
     int numOutputNodes = -1;
     virtual size_t getAllocatedBytes() const;
+    void enablePreProcess (bool);
 
 protected:
     /** Called once before playback begins for each node.
@@ -343,26 +345,42 @@ protected:
     */
     virtual void process (ProcessContext&) = 0;
 
+    /** Called when the node is to be processed, just before process.
+        You shouldn't normally have to use this but it gives Nodes an opportunity to perform
+        optimisations like steal input buffers from source if appropriate.
+    */
+    virtual void preProcess (choc::buffer::FrameCount /*numSamples*/,
+                             juce::Range<int64_t> /*referenceSampleRange*/)
+    {}
+
     //==============================================================================
     /** This can be called to provide some hints about allocating or playing back a Node to improve efficiency.
         Be careful with these as they change the default and often expected behaviour.
     */
     void setOptimisations (NodeOptimisations);
-    
+
+    /** This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.
+        Be careful with this. It's intended to use an input buffer as the internal buffer for this Node
+        but that can only be done if the input Node only has a single output (or this Node doesn't write to it).
+    */
+    void setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>&);
+
     /** This can be called during your process function to set a view to the output.
         This is useful to avoid having to allocate an internal buffer and always fill it if you're
         just passing on data.
     */
     void setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>&);
-    
+
 private:
     std::atomic<bool> hasBeenProcessed { false };
     choc::buffer::Size audioBufferSize;
     choc::buffer::ChannelArrayBuffer<float> audioBuffer;
     choc::buffer::ChannelArrayView<float> audioView, allocatedView;
+    std::optional<choc::buffer::ChannelArrayView<float>> referencedViewToUse;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     NodeOptimisations nodeOptimisations;
+
 
     std::vector<Node*> directInputNodes;
     std::atomic<Node*> nodeToRelease { nullptr };
@@ -379,7 +397,7 @@ private:
 /** Should call the visitor for any direct inputs to the node exactly once.
     If preordering is true, nodes will be visited before their inputs, if
     false, inputs will be visited first.
- 
+
     @param Visitor has the signature @code void (Node&) @endcode
 */
 template<typename Visitor>
@@ -446,7 +464,7 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
 inline void Node::initialise (const PlaybackInitialisationInfo& info)
 {
     prepareToPlay (info);
-    
+
     auto props = getNodeProperties();
     audioBufferSize = choc::buffer::Size::create ((choc::buffer::ChannelCount) props.numberOfChannels,
                                                   (choc::buffer::FrameCount) info.blockSize);
@@ -460,7 +478,7 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     {
         audioBuffer.resize (audioBufferSize);
     }
-    
+
     directInputNodes = getDirectInputNodes();
 }
 
@@ -471,13 +489,13 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     {
         assert (directInputNodes.size() == getDirectInputNodes().size());
         nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes
-        
+
         retain();
-        
+
         for (auto& n : directInputNodes)
             n->retain();
     }
-    
+
     hasBeenProcessed.store (false, std::memory_order_release);
     prefetchBlock (referenceSampleRange);
 }
@@ -487,11 +505,13 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
    #if JUCE_DEBUG
     assert (! isBeingProcessed);
     isBeingProcessed = true;
-    
+
     for (auto n : directInputNodes)
         assert (n->hasProcessed());
    #endif
-    
+
+    preProcess (numSamples, referenceSampleRange);
+
     // First, allocate buffers if possible
     if (allocateAudioBuffer)
     {
@@ -506,14 +526,14 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
         audioBuffer.clear();
         midiBuffer.clear();
     }
-    
+
     const auto numChannelsBeforeProcessing = audioBuffer.getNumChannels();
     const auto numSamplesBeforeProcessing = audioBuffer.getNumFrames();
     juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
     jassert (numSamples > 0); // This must be a valid number of samples to process
     jassert (numChannelsBeforeProcessing == 0 || numSamples <= audioBuffer.getNumFrames());
-    
+
     if (allocatedView.getSize() == audioBufferSize)
     {
         // Use a pre-allocated view if one has been initialised
@@ -523,24 +543,25 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     {
         // Fallback to the internal buffer or an empty view
         audioView = ((nodeOptimisations.allocate == AllocateAudioBuffer::yes ? audioBuffer.getView()
-                                                                             : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
+                                                                             : referencedViewToUse ? referencedViewToUse->getFirstChannels (audioBufferSize.numChannels)
+                                                                                                   : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
     }
-    
+
     audioView = audioView.getStart (numSamples);
 
     auto destAudioView = audioView;
     ProcessContext pc { numSamples, referenceSampleRange, { destAudioView, midiBuffer } };
     process (pc);
     numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
-    
+
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
 
     release();
-    
+
     for (auto& n : directInputNodes)
         n->release();
-    
+
     // If you've set a new view with setAudioOutput, they must be the same size!
     jassert (destAudioView.getSize() == audioView.getSize());
 
@@ -561,8 +582,10 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 {
     jassert (hasProcessed());
 
+   #if JUCE_DEBUG
     if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_acquire))
         jassert (node->hasProcessed());
+   #endif
 
     return { audioView.getStart ((choc::buffer::FrameCount) numSamplesProcessed.load (std::memory_order_acquire)),
              midiBuffer };
@@ -579,13 +602,30 @@ inline void Node::setOptimisations (NodeOptimisations newOptimisations)
     nodeOptimisations = newOptimisations;
 }
 
-inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
+inline void Node::setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& view)
 {
     if (sourceNode)
+    {
         sourceNode->retain();
-    
+        nodeToRelease.store (sourceNode, std::memory_order_relaxed);
+    }
+
+    referencedViewToUse = view;
+}
+
+inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& newAudioView)
+{
+    if ([[ maybe_unused ]] auto node = nodeToRelease.load (std::memory_order_relaxed))
+    {
+        assert (sourceNode == node);
+    }
+    else if (sourceNode)
+    {
+        sourceNode->retain();
+        nodeToRelease.store (sourceNode, std::memory_order_relaxed);
+    }
+
     audioView = newAudioView;
-    nodeToRelease.store (sourceNode, std::memory_order_relaxed);
 }
 
 inline void Node::retain()
@@ -597,7 +637,7 @@ inline void Node::retain()
 inline void Node::release()
 {
     assert (retainCount.load() > 0);
-    
+
     if (retainCount.fetch_sub (1, std::memory_order_acq_rel) == 1)
     {
         if (auto node = nodeToRelease.load (std::memory_order_relaxed))
@@ -619,7 +659,7 @@ namespace detail
         {
             if (std::find (visitedNodes.begin(), visitedNodes.end(), &visitingNode) != visitedNodes.end())
                 return;
-            
+
             if (preordering)
             {
                 visitedNodes.push_back (&visitingNode);
@@ -647,9 +687,9 @@ namespace detail
                 visitedNodes.push_back (&visitingNode);
                 visitor (visitingNode);
             }
-            
+
             auto inputs = visitingNode.getDirectInputNodes();
-            
+
             // Visit each node then go back to the first and recurse
             for (auto n : inputs)
             {
@@ -659,7 +699,7 @@ namespace detail
                     visitor (visitingNode);
                 }
             }
-            
+
             for (auto n : inputs)
                 visit  (visitedNodes, *n, visitor);
         }
@@ -693,17 +733,17 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
 
         return visitedNodes;
     }
-    
+
     bool preordering = vertexOrdering == VertexOrdering::preordering
                     || vertexOrdering == VertexOrdering::reversePreordering;
-    
+
     std::vector<Node*> visitedNodes;
     detail::VisitNodesWithRecord::visit (visitedNodes, node, [](auto&){}, preordering);
 
     if (vertexOrdering == VertexOrdering::reversePreordering
         || vertexOrdering == VertexOrdering::reversePostordering)
        std::reverse (visitedNodes.begin(), visitedNodes.end());
-    
+
     return visitedNodes;
 }
 
@@ -734,6 +774,14 @@ inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNod
     assert (rootNode != nullptr);
     auto orderedNodes = transformNodes (*rootNode);
     auto sortedNodes = createNodeMap (orderedNodes);
+
+    // Iterate all nodes, for each input, increment the dest Node output count
+    for (auto node : orderedNodes)
+        node->numOutputNodes = 0;
+
+    for (auto node : orderedNodes)
+        for (auto inputNode : node->getDirectInputNodes())
+            ++inputNode->numOutputNodes;
 
     auto nodeGraph = std::make_unique<NodeGraph>();
     nodeGraph->rootNode = std::move (rootNode);

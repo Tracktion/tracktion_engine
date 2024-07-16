@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,10 +23,13 @@ public:
     /** Returns the current LAME file. */
     static juce::File getLameEncoderExe();
 
+    /** Returns the current FFmpeg file. */
+    static juce::File getFFmpegExe();
+
     /** Add the LAMEAudioFormat to the AudioFileFormatManager */
     static void registerAudioFormat (AudioFileFormatManager&);
 
-    /** Returns true if a valid LAME file is found. */
+    /** Returns true if a valid LAME/FFmpeg file is found. */
     static bool lameIsAvailable();
 
 private:

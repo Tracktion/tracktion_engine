@@ -119,7 +119,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     te::TransportControl& transport { edit.getTransport() };
 
     FileChooser audioFileChooser { "Please select an audio file to load...",
@@ -208,7 +208,7 @@ private:
         {
             m.addItem (TRANS("Load a file first to set the time-stretch algorithm"), false, false, {});
         }
-        
+
         m.showMenuAsync ({});
     }
 

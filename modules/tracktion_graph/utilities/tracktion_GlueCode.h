@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,6 +27,14 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
 }
 
+/** Creates a FrameRange from any integral type. */
+inline choc::buffer::FrameRange createFrameRange (std::integral auto start, std::integral auto end)
+{
+    return { .start = static_cast<choc::buffer::FrameCount> (start),
+             .end = static_cast<choc::buffer::FrameCount> (end) };
+}
+
+
 //==============================================================================
 /** Converts a choc::midi event to a juce::MidiMessage */
 inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
@@ -47,7 +55,7 @@ void multiplyBy (BufferViewType& view, juce::SmoothedValue<SampleType, Smoothing
     {
         const auto numChannels = view.getNumChannels();
         const auto numFrames = view.getNumFrames();
-        
+
         for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
         {
             const auto scaler = value.getNextValue();
@@ -55,6 +63,24 @@ void multiplyBy (BufferViewType& view, juce::SmoothedValue<SampleType, Smoothing
             for (choc::buffer::ChannelCount ch = 0; ch < numChannels; ++ch)
                 view.getSample (ch, i) *= scaler;
         }
+    }
+}
+
+/** Applies a gain ram to a choc::buffer::BufferView. */
+template<typename BufferType, typename GainType>
+void applyGainRamp (BufferType&& buffer,
+                    GainType startGain, GainType endGain) noexcept
+{
+    if (juce::approximatelyEqual (startGain, endGain))
+    {
+        choc::buffer::applyGain (buffer, startGain);
+    }
+    else
+    {
+        auto size = buffer.getSize();
+        const auto increment = (endGain - startGain) / (float) size.getNumFrames();
+        choc::buffer::applyGainPerFrame (buffer,
+                                         [startGain, increment] (auto frameNum) { return startGain * (increment * frameNum); });
     }
 }
 
@@ -72,13 +98,23 @@ inline choc::buffer::ChannelRange channelRangeWithStartAndLength (choc::buffer::
 
 
 //==============================================================================
+template<typename Buffer>
+void sanitise (Buffer& buffer)
+{
+    choc::buffer::setAllSamples (buffer,
+        [] (auto s)
+        {
+            return std::isnan (s) ? typename Buffer::Sample() : s;
+        });
+}
+
 /** Checks that the channels have valid pointers if they have a non-zero number of frames. */
 template <typename SampleType, template<typename> typename LayoutType>
 void sanityCheckView (const choc::buffer::BufferView<SampleType, LayoutType>& view)
 {
     if (view.getNumFrames() == 0)
         return;
-    
+
     for (choc::buffer::ChannelCount channel = 0; channel < view.getNumChannels(); ++channel)
         jassert (view.getIterator (channel).sample != nullptr);
 }
@@ -110,7 +146,7 @@ static void addApplyingGainRamp (DestBuffer&& dest, const SourceBuffer& source, 
 {
     auto size = source.getSize();
     CHOC_ASSERT (size == dest.getSize());
-    
+
     const auto delta = (endGain - startGain) / size.numFrames;
 
     for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
@@ -143,7 +179,7 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
     {
         auto src = source.getIterator (chan);
         auto dst = dest.getIterator (chan);
-        
+
         if (src.sample == dst.sample)
             continue;
 

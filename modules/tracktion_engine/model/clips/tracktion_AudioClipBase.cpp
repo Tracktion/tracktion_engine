@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -255,6 +255,8 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
     checkFadeLengthsForOverrun();
 
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
+
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
     updateClipEffectsState();
 
@@ -269,7 +271,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
     if (pgen.isValid())
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 }
 
 AudioClipBase::~AudioClipBase()
@@ -879,7 +881,7 @@ void AudioClipBase::setNumberOfLoops (int num)
     auto pos = getPosition();
     auto len = std::min (getSourceLength() / speedRatio, pos.getLength());
 
-    if (len <= TimeDuration())
+    if (len <= 0_td)
         return;
 
     if (autoTempo)
@@ -915,7 +917,7 @@ void AudioClipBase::disableLooping()
 
     setLoopRange ({});
     setPosition (pos);
-    
+
     if (getPosition().getLength() > getMaximumLength())
         setLength (getMaximumLength(), true);
 }
@@ -929,6 +931,12 @@ TimeRange AudioClipBase::getLoopRange() const
 
     return { TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps),
              TimePosition::fromSeconds ((loopStartBeats + loopLengthBeats).inBeats() / bps) };
+}
+
+bool AudioClipBase::canLoop() const
+{
+    return isUsingMelodyne() ? false
+                             : loopInfo.isLoopable();
 }
 
 TimePosition AudioClipBase::getLoopStart() const
@@ -976,32 +984,34 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
     else
     {
         auto sourceLen = getSourceLength();
-        jassert (sourceLen > 0s);
 
-        // limits the number of times longer than the source file length the loop length can be
-        const double maxMultiplesOfSourceLengthForLooping = 50.0;
-
-        auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
-        auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
-
-        if (loopStart != newStart || loopLength != newLength)
+        if (sourceLen > 0s)
         {
-            loopStart = newStart;
-            loopLength = newLength;
+            // limits the number of times longer than the source file length the loop length can be
+            const double maxMultiplesOfSourceLengthForLooping = 50.0;
+
+            auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
+            auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
+
+            if (loopStart != newStart || loopLength != newLength)
+            {
+                loopStart = newStart;
+                loopLength = newLength;
+            }
         }
     }
 }
 
 void AudioClipBase::setLoopRangeBeats (BeatRange newRangeBeats)
 {
-    auto newStartBeat  = juce::jlimit (BeatPosition(), BeatPosition::fromBeats (loopInfo.getNumBeats()), newRangeBeats.getStart());
-    auto newLengthBeat = juce::jlimit (BeatDuration(), BeatDuration::fromBeats (loopInfo.getNumBeats() * 2), newRangeBeats.getLength());
+    auto newStartBeat  = juce::jlimit (0_bp, BeatPosition::fromBeats (loopInfo.getNumBeats()), newRangeBeats.getStart());
+    auto newLengthBeat = juce::jlimit (0_bd, BeatDuration::fromBeats (loopInfo.getNumBeats() * 2), newRangeBeats.getLength());
 
     if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
     {
         Clip::setSpeedRatio (1.0);
         setAutoTempo (true);
-        
+
         loopStartBeats  = newStartBeat;
         loopLengthBeats = newLengthBeat;
     }
@@ -1294,6 +1304,7 @@ void AudioClipBase::enableEffects (bool enable, bool warn)
 
     if (enable)
     {
+        setUsesProxy (true);
         if (! v.isValid())
         {
             state.addChild (ClipEffects::create(), -1, um);
@@ -1450,7 +1461,7 @@ void AudioClipBase::snapToOriginalBWavTime()
 //==============================================================================
 juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
 {
-    juce::Array<Exportable::ReferencedItem> results;
+    auto results = Clip::getReferencedItems();
 
     Exportable::ReferencedItem item;
     item.firstTimeUsed = 0;
@@ -1508,7 +1519,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
 void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
                                             ProjectItemID newItemID, double newStartTime)
 {
-    juce::ignoreUnused (item);
+    Clip::reassignReferencedItem (item, newItemID, newStartTime);
 
     if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
     {
@@ -1530,6 +1541,32 @@ juce::Array<ProjectItemID> AudioClipBase::getTakes() const
     jassert (! hasAnyTakes());
     return {};
 }
+
+//==============================================================================
+std::shared_ptr<LaunchHandle> AudioClipBase::getLaunchHandle()
+{
+    if (! launchHandle)
+        launchHandle = std::make_shared<LaunchHandle>();
+
+    return launchHandle;
+}
+
+LaunchQuantisation* AudioClipBase::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
+}
+
+FollowActions* AudioClipBase::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
+}
+
 
 //==============================================================================
 juce::String AudioClipBase::canAddClipPlugin (const Plugin::Ptr& p) const
@@ -1871,7 +1908,7 @@ AudioFile AudioClipBase::getProxyFileToCreate (bool renderTimestretched)
 struct StretchSegment
 {
     static constexpr int maxNumChannels = 8;
-    
+
     StretchSegment (Engine& engine, const AudioFile& file,
                     const AudioClipBase::ProxyRenderingInfo& info,
                     double sampleRate, const AudioSegmentList::Segment& s)
@@ -1960,13 +1997,13 @@ struct StretchSegment
     {
         CRASH_TRACER
         float* outs[maxNumChannels] = {};
-        
+
         for (int i = 0; i < numChannelsToUse; ++i)
             outs[i] = fifo.getWritePointer (i);
 
         const int needed = timestretcher.getFramesNeeded();
         int numRead = 0;
-        
+
         if (needed >= 0)
         {
             AudioScratchBuffer scratch (numChannelsToUse, needed);
@@ -1984,7 +2021,7 @@ struct StretchSegment
             }
 
             const float* ins[maxNumChannels] = {};
-            
+
             for (int i = 0; i < numChannelsToUse; ++i)
                 ins[i] = scratch.buffer.getReadPointer (i);
 
@@ -1998,7 +2035,7 @@ struct StretchSegment
 
         readySamplesStart = 0;
         readySamplesEnd = numRead;
-        
+
         return numRead;
     }
 
@@ -2126,7 +2163,7 @@ bool AudioClipBase::ProxyRenderingInfo::render (Engine& engine, const AudioFile&
     return true;
 }
 
-AudioFile AudioClipBase::getPlaybackFile() 
+AudioFile AudioClipBase::getPlaybackFile()
 {
     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway
     const AudioFile af (getAudioFile());
@@ -2188,13 +2225,13 @@ void AudioClipBase::beginRenderingNewProxyIfNeeded()
 {
     if (! canUseProxy())
         return;
-    
+
     if (isTimerRunning())
     {
         startTimer (1);
         return;
     }
-    
+
     const AudioFile playFile (getPlaybackFile());
 
     if (playFile.isNull())
@@ -2304,12 +2341,14 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             || id == IDs::transpose || id == IDs::pitchChange
             || id == IDs::elastiqueMode || id == IDs::autoPitch
             || id == IDs::elastiqueOptions || id == IDs::warpTime
-            || id == IDs::effectsVisible || id == IDs::autoPitchMode)
+            || id == IDs::effectsVisible || id == IDs::autoPitchMode
+            || id == IDs::resamplingQuality
+            || id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
         {
             if (id == IDs::warpTime)
             {
                 warpTime.forceUpdateOfCachedValue();
-                
+
                 if (! getWarpTime())
                 {
                     if (shouldAttemptRender())
@@ -2318,7 +2357,7 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
                         setCurrentSourceFile (getOriginalFile());
                 }
             }
-            
+
             changed();
         }
         else if (id == IDs::gain)
@@ -2343,8 +2382,11 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         }
         else if (id == IDs::autoTempo)
         {
-            autoTempo.forceUpdateOfCachedValue();
-            updateAutoTempoState();
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                autoTempo.forceUpdateOfCachedValue();
+                updateAutoTempoState();
+            }
         }
         else if (id == IDs::isReversed)
         {
@@ -2391,7 +2433,7 @@ void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parentState, juce::Val
         else if (child.hasType (IDs::EFFECTS))
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
-            patternGenerator.reset (new PatternGenerator (*this, child));
+            patternGenerator = std::make_unique<PatternGenerator> (*this, child);
         else if (child.hasType (IDs::LOOPINFO) && isInitialised)
             loopInfo.state = child;
     }

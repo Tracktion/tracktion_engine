@@ -32,21 +32,21 @@ public:
     {
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<ImpulseResponsePlugin>();
-        
+
         Helpers::addAndMakeVisible (*this, { &preGainSlider, &highPassCutoffSlider, &lowPassCutoffSlider,
                                              &playPauseButton, &IRButton, &preGainLabel, &postGainLabel,
                                              &highPassCutoffLabel, &lowPassCutoffLabel });
 
         // Load demo audio file
         oggTempFile = std::make_unique<TemporaryFile> (".ogg");
-        auto demoFile = oggTempFile->getFile();      
+        auto demoFile = oggTempFile->getFile();
         demoFile.replaceWithData (PlaybackDemoAudio::guitar_loop_ogg, PlaybackDemoAudio::guitar_loop_oggSize);
 
         // Creates clip. Loads clip from file f
         // Creates track. Loads clip into track
         auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0);
         jassert (track != nullptr);
-        
+
         // Add a new clip to this track
         te::AudioFile audioFile (edit.engine, demoFile);
 
@@ -57,7 +57,7 @@ public:
         // Creates new instance of IR Loader Plugin and inserts to track 1
         auto plugin = edit.getPluginCache().createNewPlugin (ImpulseResponsePlugin::xmlTypeName, {});
         track->pluginList.insertPlugin (plugin, 0, nullptr);
-        
+
         // Set the loop points to the start/end of the clip, enable looping and start playback
         edit.getTransport().addChangeListener (this);
         EngineHelpers::loopAroundClip (*clip);
@@ -109,7 +109,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     std::unique_ptr<TemporaryFile> oggTempFile, IRTempFile;
 
     TextButton IRButton { "Load IR" }, playPauseButton { "Play" };
@@ -117,7 +117,7 @@ private:
 
     Label preGainLabel, postGainLabel, highPassCutoffLabel, lowPassCutoffLabel;
     std::unique_ptr<juce::FileChooser> fileChooser;
-    
+
     //==============================================================================
     void showIRButtonMenu()
     {
@@ -126,7 +126,7 @@ private:
         m.addItem ("Casette Recorder",  [this] { loadIRFileIntoPluginBuffer (IRs::cassette_recorder_wav, IRs::cassette_recorder_wavSize); });
         m.addSeparator();
         m.addItem ("Load from file...", [this] { loadIRFileIntoPluginBuffer(); });
-        
+
         m.showMenuAsync ({});
     }
 
@@ -136,7 +136,7 @@ private:
         plugin->loadImpulseResponse (sourceData, sourceDataSize);
 
     }
-    
+
     void loadIRFileIntoPluginBuffer()
     {
         if (! fileChooser)

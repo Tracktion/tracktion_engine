@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -55,10 +55,10 @@ void HostedMidiInputDeviceNode::process (ProcessContext& pc)
     for (auto m : incomingMessages)
         if (localTimeRange.contains (m.getTimeStamp()))
             destMidi.add (m);
-    
+
     // Subtract time from messages and trim any negative
     incomingMessages.addToTimestamps (-localTimeRange.getLength());
-    
+
     for (int i = incomingMessages.size(); --i >= 0;)
         if (incomingMessages[i].getTimeStamp() < 0.0)
             incomingMessages.remove (i);

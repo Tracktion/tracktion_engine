@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -131,8 +131,19 @@ public:
     juce::File getSourceFile();
     juce::String getRawFileName() const       { return file; }
     juce::String getFileName() const;
-    void setSourceFile (const juce::File&);
+
+    enum class FileMode
+    {
+        absolute,
+        relative,
+        relativeIfWithinProject
+    };
+
+    void setSourceFile (const juce::File&, FileMode mode = FileMode::relativeIfWithinProject);
     bool isForFile (const juce::File&);
+    bool isAbsolutePath() const;
+    void convertToRelativePath();
+    void convertToAbsolutePath();
 
     /** lets the user rename the file. */
     void renameSourceFile();

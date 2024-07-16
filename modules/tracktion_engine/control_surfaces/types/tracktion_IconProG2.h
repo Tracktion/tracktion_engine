@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,7 +18,7 @@ public:
     ~IconProG2();
 
     void acceptMidiMessageInt (int deviceIdx, const juce::MidiMessage&) override;
-    
+
     void loopOnOffChanged (bool isLoopOn) override;
     void punchOnOffChanged (bool isPunching) override;
     void clickOnOffChanged (bool isClickOn) override;

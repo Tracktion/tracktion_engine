@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,6 +22,17 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
+/** Ensures a property is a given type which can avoid having to parse a string
+    every time it is read after loading from XML.
+*/
+template<typename VarType>
+inline void convertPropertyToType (juce::ValueTree& v, const juce::Identifier& id)
+{
+    if (const auto* prop = v.getPropertyPointer (id))
+        if (prop->isString())
+            (*const_cast<juce::var*> (prop)) = static_cast<VarType> (*prop);
+}
+
 /** Sets a value if it is different and returns true, otherwise simply returns false. */
 template <typename T>
 static bool setIfDifferent (T& val, T newVal) noexcept
@@ -543,32 +554,16 @@ static inline juce::ValueTree getChildWithPropertyRecursively (const juce::Value
     return {};
 }
 
-/** Iterates the params array and copies and properties that are present in the ValueTree. */
-template<typename ValueType>
-static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>** params)
+template<typename ValueType, typename... CachedValues>
+static void copyPropertiesToCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>& cachedValue, CachedValues&&... cachedValues)
 {
-    if (params == nullptr)
-    {
-        jassertfalse;
-        return;
-    }
+    if (auto p = v.getPropertyPointer (cachedValue.getPropertyID()))
+        cachedValue = ValueType (*p);
+    else
+        cachedValue.resetToDefault();
 
-    for (;;)
-    {
-        if (juce::CachedValue<ValueType>* cv = *params++)
-        {
-            const juce::Identifier& prop = cv->getPropertyID();
-
-            if (v.hasProperty (prop))
-                *cv = ValueType (v.getProperty (prop));
-            else
-                cv->resetToDefault();
-        }
-        else
-        {
-            break;
-        }
-    }
+    if constexpr (sizeof...(cachedValues) != 0)
+        copyPropertiesToCachedValues (v, std::forward<CachedValues> (cachedValues)...);
 }
 
 /** Strips out any invalid trees from the array. */

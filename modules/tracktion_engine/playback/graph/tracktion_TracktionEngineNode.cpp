@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -32,7 +32,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
 {
     if (sampleRate != newSampleRate)
         playHeadState.playHead.setScrubbingBlockLength (toSamples (TimeDuration (0.08s), newSampleRate));
-    
+
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
 
     if (updateContinuityFlags == UpdateContinuityFlags::yes)
@@ -41,7 +41,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     sampleRate = newSampleRate;
     numSamples = (int) newReferenceSampleRange.getLength();
     referenceSampleRange = newReferenceSampleRange;
-    
+
     const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, newReferenceSampleRange);
     jassert (! splitTimelineRange.isSplit);
     timelineSampleRange = splitTimelineRange.timelineRange1;
@@ -58,6 +58,28 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     tempoPosition->set (editTimeRange.getEnd());
     const auto beatEnd = tempoPosition->getBeats();
     editBeatRange = { beatStart, beatEnd };
+
+    if (updateContinuityFlags == UpdateContinuityFlags::no)
+        return;
+
+    // Only update the sync range if the continuity is being updated as the player can call this
+    // multiple times and we don't want to increment the monotonic beat each call
+    const auto unloopTimelineSample = playHeadState.playHead.referenceSamplePositionToTimelinePositionUnlooped (referenceSampleRange.getEnd());
+    auto oldSyncPoint = getSyncPoint();
+    const auto newSyncPoint = SyncPoint ({
+                                             referenceSampleRange.getEnd(),
+                                             { oldSyncPoint.monotonicBeat.v + editBeatRange.getLength() },
+                                             TimePosition::fromSamples (unloopTimelineSample, sampleRate),
+                                             editTimeRange.getEnd(),
+                                             beatEnd
+                                         });
+
+    oldSyncPoint.time = editTimeRange.getStart();
+    oldSyncPoint.beat = beatStart;
+    syncRange.store ({ oldSyncPoint, newSyncPoint });
+
+    if (onContinuityUpdated)
+        onContinuityUpdated();
 }
 
 void ProcessState::setPlaybackSpeedRatio (double newRatio)
@@ -88,6 +110,20 @@ const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
     return tempoPosition.get();
 }
 
+SyncPoint ProcessState::getSyncPoint() const
+{
+    return getSyncRange().end;
+}
+
+SyncRange ProcessState::getSyncRange() const
+{
+    return syncRange.load();
+}
+
+void ProcessState::setSyncRange (SyncRange r)
+{
+    syncRange.store (std::move (r));
+}
 
 //==============================================================================
 //==============================================================================

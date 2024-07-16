@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -62,10 +62,16 @@ public:
     /** Gives the host a chance to do any extra configuration after a plugin is loaded */
     virtual void doAdditionalInitialisation (ExternalPlugin&)                       {}
 
-    /** If you have any special VST plugins that access items in the Edit, you need to return them */
+    /** If you have any special plugins that access items in the Edit, you need to return them */
     virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (ExternalPlugin&) { return {}; }
 
-    /** If you have any special VST plugins that access items in the Edit, you need to reassign them */
+    /** If you have any special plugins that access items in the Edit, you need to reassign them */
+    virtual void reassignReferencedItem (Clip&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
+
+    /** If you have any special clips that access items in the Edit, you need to return them */
+    virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (Clip&) { return {}; }
+
+    /** If you have any special clips that access items in the Edit, you need to reassign them */
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
 
     /** Should return if plugins which have been bypassed should be included in the playback graph.
@@ -81,6 +87,16 @@ public:
         muted or other tracks are soloed.
     */
     virtual bool shouldProcessAuxSendWhenTrackIsMuted (AuxSendPlugin&)            { return true; }
+
+    /** If this returns false, ClipSlot Clips won't be included in the playback graph
+        and arranger track clips will always be audible.
+    */
+    virtual bool areClipSlotsEnabled()                                            { return true; }
+
+    /** TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background
+        thread to reduce audio CPU use.
+    */
+    virtual bool enableReadAheadForTimeStretchNodes()                             { return false; }
 
     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */
     virtual void saveCustomPluginProperties (juce::ValueTree&, juce::AudioPluginInstance&, juce::UndoManager*) {}
@@ -133,13 +149,15 @@ public:
 
     virtual bool shouldPlayMidiGuideNotes()                                         { return false; }
 
+    virtual bool ignoreBWavTimestamps()                                             { return false; }
+
     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }
 
     /** Should muted tracks processing be disabled to save CPU */
     virtual bool shouldProcessMutedTracks()                                         { return false; }
 
-    /** Should audio inputs be audible when monitor-enabled but not record enabled.  */
-    virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }
+    /** Should track contents be audible whilst a recording is in progress. */
+    virtual bool muteTrackContentsWhilstRecording()                                 { return false; }
 
     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }
     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}
@@ -200,7 +218,7 @@ public:
     {
         return MidiList::createDefaultPlaybackMidiSequence (list, clip, tb, generateMPE);
     }
-    
+
     /** Must return the default looped sequence type to use.
 
         Current options are:
@@ -211,6 +229,9 @@ public:
 
     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
     virtual bool autoAddClipEdgeFades()                                             { return false; }
+    
+    /** Interpolate automation at 10ms intervals (faster) or calculate actual value (slower) */
+    virtual bool interpolateAutomation()                                            { return true; }
 
     /** Determines the default properties of clips. */
     struct ClipDefaults
@@ -236,7 +257,7 @@ public:
         bool remoteSLCompact = true;
         bool automap = true;
     };
-    
+
     /** Return the control surfaces you want enabled in the engine */
     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }
 

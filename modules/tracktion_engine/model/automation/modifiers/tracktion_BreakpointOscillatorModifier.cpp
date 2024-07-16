@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -316,7 +316,7 @@ void BreakpointOscillatorModifier::applyToBuffer (const PluginRenderContext& prc
 {
     if (prc.bufferForMidiMessages == nullptr)
         return;
-    
+
     for (auto& m : *prc.bufferForMidiMessages)
         if (m.isNoteOn())
             modifierTimer->resync (prc.bufferNumSamples / getSampleRate());

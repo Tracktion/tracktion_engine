@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -30,7 +30,7 @@
   #pragma intrinsic (_BitScanReverse64)
  #endif
 
- #if ! (defined (_M_ARM) || defined (_M_ARM64))
+ #ifdef _M_X64
   #pragma intrinsic (_umul128)
   #define CHOC_HAS_UMUL128 1
  #endif
@@ -74,7 +74,6 @@ inline uint32_t countUpperClearBits (uint64_t value)
     return static_cast<uint32_t> (__builtin_clzll (value));
    #endif
 }
-
 
 /// Returns the number of decimal digits required to print a given unsigned number
 inline int getNumDecimalDigits (uint32_t n)

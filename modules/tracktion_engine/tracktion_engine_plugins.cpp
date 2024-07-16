@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -89,6 +89,8 @@ using namespace std::literals;
 #include "plugins/effects/tracktion_ToneGenerator.cpp"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
+
+#include "plugins/cmajor/tracktion_CmajorPluginFormat.cpp"
 
 #include "plugins/tracktion_Plugins.test.cpp"
 

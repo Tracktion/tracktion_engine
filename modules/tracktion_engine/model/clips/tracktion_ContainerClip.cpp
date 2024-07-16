@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -127,6 +127,11 @@ void ContainerClip::pitchTempoTrackChanged()
 juce::ValueTree& ContainerClip::getClipOwnerState()
 {
     return clipListState;
+}
+
+EditItemID ContainerClip::getClipOwnerID()
+{
+    return itemID;
 }
 
 Selectable* ContainerClip::getClipOwnerSelectable()

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ public:
     PropertyStorage (juce::String appName_) : appName (appName_) {}
     virtual ~PropertyStorage() {}
 
-    static juce::String settingToString (SettingID);
+    static juce::StringRef settingToString (SettingID);
 
     //==============================================================================
     virtual juce::File getAppCacheFolder();
@@ -57,10 +57,18 @@ public:
     //==============================================================================
     virtual juce::String getUserName();
     virtual juce::String getApplicationName()       { return appName; }
-    virtual juce::String getApplicationVersion();
+    virtual juce::String getApplicationVersion()    { return "Unknown"; }
+
+    //==============================================================================
+    // If you are using the default implementation of PropertyStorage, it uses a
+    // PropertiesFile to store its state. This accessor method lets you use it in
+    // case you need it for things like a juce::PluginListComponent.
+    virtual juce::PropertiesFile& getPropertiesFile();
 
 private:
     juce::String appName;
+
+    std::unique_ptr<juce::PropertiesFile> propertiesFile;
 };
 
 }} // namespace tracktion { inline namespace engine

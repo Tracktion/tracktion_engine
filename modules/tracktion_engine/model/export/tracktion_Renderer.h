@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -68,6 +68,7 @@ public:
         bool separateTracks = false;
         bool addAntiDenormalisationNoise = false;
         bool checkNodesForAudio = true;             /**< If true, attempting to render an Edit that doesn't produce audio will fail. */
+        bool addAcidMetadata = false;
 
         int quality = 0;
         juce::StringPairArray metadata;
@@ -156,6 +157,7 @@ public:
                               TimeRange range,
                               const juce::BigInteger& tracksToDo,
                               bool usePlugins = true,
+                              bool useACID = true,
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
 
@@ -201,6 +203,36 @@ public:
 
         juce::Result result;
         juce::ReferenceCountedArray<ProjectItem> items;
+    };
+
+    //==============================================================================
+    /** Temporarily disables clip slots. Useful for rendering */
+    struct ScopedClipSlotDisabler
+    {
+        ScopedClipSlotDisabler (Edit& e, Track::Array& ta)
+            : edit (e), tracks (ta)
+        {
+            for (auto t : tracks)
+            {
+                if (auto at = dynamic_cast<AudioTrack*> (t))
+                {
+                    playSlotClips.push_back (at->playSlotClips.get());
+                    at->playSlotClips = false;
+                }
+            }
+        }
+
+        ~ScopedClipSlotDisabler()
+        {
+            for (size_t i = 0; auto t : tracks)
+                if (auto at = dynamic_cast<AudioTrack*> (t))
+                    at->playSlotClips = playSlotClips[i++];
+        }
+
+        Edit& edit;
+        Track::Array tracks;
+        std::vector<bool> playSlotClips;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedClipSlotDisabler)
     };
 };
 

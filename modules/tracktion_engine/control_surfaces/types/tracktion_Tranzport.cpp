@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -344,7 +344,7 @@ void TranzportControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m
 void TranzportControlSurface::moveFader (int channelNum, float newSliderPos)
 {
     ControlSurface::moveFader (channelNum, newSliderPos);
-    
+
     if (channelNum == 0)
         faderPos = newSliderPos;
 
@@ -354,7 +354,7 @@ void TranzportControlSurface::moveFader (int channelNum, float newSliderPos)
 void TranzportControlSurface::movePanPot (int channelNum, float newPan)
 {
     ControlSurface::movePanPot (channelNum, newPan);
-    
+
     if (channelNum == 0)
         pan = newPan;
 

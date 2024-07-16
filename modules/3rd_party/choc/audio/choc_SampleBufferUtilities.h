@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -31,27 +31,26 @@ namespace choc::buffer
 template <typename SampleType>
 struct InterleavingScratchBuffer
 {
-    InterleavedBuffer<SampleType> buffer;
-
-    InterleavedView<SampleType> getInterleavedBuffer (choc::buffer::Size size)
+    [[nodiscard]] InterleavedView<SampleType> getInterleavedBuffer (choc::buffer::Size size)
     {
-        if (buffer.getNumChannels() < size.numChannels || buffer.getNumFrames() < size.numFrames)
-        {
-            buffer.resize (size);
-            return buffer.getView();
-        }
+        auto spaceNeeded = size.numChannels * size.numFrames;
 
-        return buffer.getSection ({ 0, size.numChannels },
-                                  { 0, size.numFrames });
+        if (spaceNeeded > buffer.size())
+            buffer.resize (spaceNeeded);
+
+        return createInterleavedView (buffer.data(), size.numChannels, size.numFrames);
     }
 
     template <typename SourceBufferType>
-    InterleavedView<SampleType> interleave (const SourceBufferType& source)
+    [[nodiscard]] InterleavedView<SampleType> interleave (const SourceBufferType& source)
     {
         auto dest = getInterleavedBuffer (source.getSize());
         copy (dest, source);
         return dest;
     }
+
+private:
+    std::vector<SampleType> buffer;
 };
 
 /// Helper class which holds a ChannelArrayBuffer which it re-uses as intermediate
@@ -59,9 +58,7 @@ struct InterleavingScratchBuffer
 template <typename SampleType>
 struct DeinterleavingScratchBuffer
 {
-    ChannelArrayBuffer<SampleType> buffer;
-
-    ChannelArrayView<SampleType> getDeinterleavedBuffer (choc::buffer::Size size)
+    [[nodiscard]] ChannelArrayView<SampleType> getDeinterleavedBuffer (choc::buffer::Size size)
     {
         if (buffer.getNumChannels() < size.numChannels || buffer.getNumFrames() < size.numFrames)
         {
@@ -74,12 +71,15 @@ struct DeinterleavingScratchBuffer
     }
 
     template <typename SourceBufferType>
-    ChannelArrayView<SampleType> deinterleave (const SourceBufferType& source)
+    [[nodiscard]] ChannelArrayView<SampleType> deinterleave (const SourceBufferType& source)
     {
         auto dest = getDeinterleavedBuffer (source.getSize());
         copy (dest, source);
         return dest;
     }
+
+private:
+    ChannelArrayBuffer<SampleType> buffer;
 };
 
 

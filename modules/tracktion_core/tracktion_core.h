@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -47,8 +47,12 @@
 
 #include "audio/tracktion_AudioReader.h"
 
+#include "threads/tracktion_MultipleWriterSeqLock.h"
+
+#include "utilities/tracktion_AlgorithmAdapters.h"
 #include "utilities/tracktion_CPU.h"
 #include "utilities/tracktion_Hash.h"
+#include "utilities/tracktion_Maths.h"
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,11 +17,11 @@ TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool 
 {
     processMidiWhileMuted = true;
     callInputWhileMuted = t.processAudioNodesWhileMuted();
-    
+
     if (muteForInputsWhenRecording)
         if (auto at = dynamic_cast<AudioTrack*> (&t))
             for (auto in : edit.getAllInputDevices())
-                if (in->isRecordingActive (t) && in->getTargetTracks().contains (at))
+                if (in->isRecordingActive (t.itemID) && in->getTargets().contains (at->itemID))
                     inputDevicesToMuteFor.add (in);
 
     wasBeingPlayedFlag = t.shouldBePlayed();
@@ -64,7 +64,7 @@ bool TrackMuteState::isBeingPlayed() const
         return false;
 
     for (int i = inputDevicesToMuteFor.size(); --i >= 0;)
-        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted())
+        if (inputDevicesToMuteFor.getUnchecked (i)->shouldTrackContentsBeMuted (*track))
             return false;
 
     return true;
@@ -105,6 +105,25 @@ std::vector<tracktion::graph::Node*> TrackMutingNode::getDirectInputNodes()
     return { input.get() };
 }
 
+void TrackMutingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
+{
+    if (! info.enableNodeMemorySharing)
+        return;
+
+    if (input->numOutputNodes > 1)
+        return;
+
+    const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+    if (inputNumChannels >= desiredNumChannels)
+    {
+        canUseSourceBuffers = true;
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
+    }
+}
+
 bool TrackMutingNode::isReadyToProcess()
 {
     return input->hasProcessed();
@@ -115,12 +134,18 @@ void TrackMutingNode::prefetchBlock (juce::Range<int64_t>)
     trackMuteState->update();
 }
 
+void TrackMutingNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseSourceBuffers)
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
+}
+
 void TrackMutingNode::process (ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
     auto destAudioView = pc.buffers.audio;
     jassert (sourceBuffers.audio.getSize() == destAudioView.getSize());
-    
+
     const bool ignoreMuteStates = dontMuteIfTrackContentsShouldBeProcessed && trackMuteState->shouldTrackContentsBeProcessed();
     const bool wasJustMuted     = ! ignoreMuteStates && trackMuteState->wasJustMuted();
     const bool wasJustUnMuted   = ! ignoreMuteStates && trackMuteState->wasJustUnMuted();
@@ -128,11 +153,11 @@ void TrackMutingNode::process (ProcessContext& pc)
     if (trackMuteState->shouldTrackBeAudible() || ignoreMuteStates)
     {
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        
+
         // If we've just been muted/unmuted we need to copy the data to
         // apply a fade to, otherwise we can just pass on the view
         if (wasJustMuted || wasJustUnMuted)
-            copy (destAudioView, sourceBuffers.audio);
+            copyIfNotAliased (destAudioView, sourceBuffers.audio);
         else
             setAudioOutput (input.get(), sourceBuffers.audio);
     }
@@ -153,7 +178,7 @@ void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float> view, flo
 {
     if (view.getNumChannels() == 0)
         return;
-    
+
     auto buffer = tracktion::graph::toAudioBuffer (view);
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
 }

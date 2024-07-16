@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,7 +21,9 @@ struct ScopedCpuMeter
     ~ScopedCpuMeter() noexcept
     {
         const double msTaken = juce::Time::getMillisecondCounterHiRes() - callbackStartTime;
-        valueToUpdate.store (filterAmount * (msTaken - valueToUpdate));
+        const auto lastValue = valueToUpdate.load (std::memory_order_acquire);
+        valueToUpdate.store (lastValue + filterAmount * (msTaken - lastValue),
+                             std::memory_order_release);
     }
 
 private:

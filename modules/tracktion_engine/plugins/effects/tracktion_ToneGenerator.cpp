@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ ToneGeneratorPlugin::ToneGeneratorPlugin (PluginCreationInfo info)
     : Plugin (info)
 {
     initialiseOscilators();
-    
+
     auto um = getUndoManager();
 
     oscType.referTo (state, IDs::oscType, um, static_cast<float> (OscType::sin));
@@ -34,7 +34,7 @@ ToneGeneratorPlugin::ToneGeneratorPlugin (PluginCreationInfo info)
     bandLimitParam  = createDiscreteParameter (*this, "bandLimit",    TRANS("Band Limit"), { 0.0f, 1.0f },                                   bandLimit,  { NEEDS_TRANS("Aliased"), NEEDS_TRANS("Band Limited") });
     frequencyParam  = createSuffixedParameter (*this, "frequency",    TRANS("Frequency"),  { 1.0f, 22050.0f }, 1000.0f,                      frequency,  {});
     levelParam      = createSuffixedParameter (*this, "level",        TRANS("Level"),      { 0.00001f, 1.0f }, 0.5f,                         level,      {});
-    
+
     addAutomatableParameter (oscTypeParam);
     addAutomatableParameter (bandLimitParam);
     addAutomatableParameter (frequencyParam);
@@ -112,8 +112,7 @@ void ToneGeneratorPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ToneGeneratorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, oscType, bandLimit, frequency, level);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

@@ -1,12 +1,11 @@
-
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -20,7 +19,7 @@
 #ifndef CHOC_INT_TO_SAMPLE_CONVERSION_HEADER_INCLUDED
 #define CHOC_INT_TO_SAMPLE_CONVERSION_HEADER_INCLUDED
 
-#include "../platform/choc_Endianness.h"
+#include "../memory/choc_Endianness.h"
 
 
 //==============================================================================
@@ -215,8 +214,8 @@ template <typename FloatType> void Int16LittleEndian::write (void* dest, FloatTy
 template <typename FloatType> FloatType Int24BigEndian::read (const void* source) noexcept
 {
     auto s = static_cast<const uint8_t*> (source);
-    auto i = (static_cast<int32_t> (static_cast<int8_t> (s[0])) << 16) | static_cast<int32_t> (s[1] << 8) | static_cast<int32_t> (s[1]);
-    return convertToFloat<FloatType, 0x7fffff> (i);
+    auto i = (static_cast<uint32_t> (static_cast<int32_t> (static_cast<int8_t> (s[0]))) << 16) | static_cast<uint32_t> (s[1] << 8) | static_cast<uint32_t> (s[1]);
+    return convertToFloat<FloatType, 0x7fffff> (static_cast<int32_t> (i));
 }
 
 template <typename FloatType> void Int24BigEndian::write (void* dest, FloatType v) noexcept
@@ -231,8 +230,8 @@ template <typename FloatType> void Int24BigEndian::write (void* dest, FloatType 
 template <typename FloatType> FloatType Int24LittleEndian::read (const void* source) noexcept
 {
     auto s = static_cast<const uint8_t*> (source);
-    auto i = (static_cast<int32_t> (static_cast<int8_t> (s[2])) << 16) | static_cast<int32_t> (s[1] << 8) | static_cast<int32_t> (s[0]);
-    return convertToFloat<FloatType, 0x7fffff> (i);
+    auto i = (static_cast<uint32_t> (static_cast<int32_t> (static_cast<int8_t> (s[2]))) << 16) | static_cast<uint32_t> (s[1] << 8) | static_cast<uint32_t> (s[0]);
+    return convertToFloat<FloatType, 0x7fffff> (static_cast<int32_t> (i));
 }
 
 template <typename FloatType> void Int24LittleEndian::write (void* dest, FloatType v) noexcept

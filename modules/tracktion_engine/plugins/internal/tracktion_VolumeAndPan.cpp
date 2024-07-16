@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -166,8 +166,12 @@ void VolumeAndPanPlugin::initialiseWithoutStopping (const PluginInitialisationIn
 
 void VolumeAndPanPlugin::deinitialise()
 {
-    const juce::ScopedLock sl (vcaTrackLock);
-    vcaTrack = nullptr;
+    juce::ReferenceCountedObjectPtr<AudioTrack> deleter;
+
+    {
+        const std::scoped_lock sl (vcaTrackLock);
+        std::swap (vcaTrack, deleter);
+    }
 }
 
 //==============================================================================
@@ -201,7 +205,7 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
             float vcaPosDelta = 0.0f;
 
             {
-                const juce::ScopedLock sl (vcaTrackLock);
+                const std::scoped_lock sl (vcaTrackLock);
                 vcaPosDelta = vcaTrack != nullptr
                                 ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime.getStart()))
                                     - decibelsToVolumeFaderPosition (0.0f)
@@ -240,8 +244,12 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void VolumeAndPanPlugin::refreshVCATrack()
 {
-    const juce::ScopedLock sl (vcaTrackLock);
-    vcaTrack = ignoreVca ? nullptr : dynamic_cast<AudioTrack*> (getOwnerTrack());
+    juce::ReferenceCountedObjectPtr<AudioTrack> newVcaTrack (ignoreVca ? nullptr : dynamic_cast<AudioTrack*> (getOwnerTrack()));
+
+    {
+        const std::scoped_lock sl (vcaTrackLock);
+        std::swap (vcaTrack, newVcaTrack);
+    }
 }
 
 float VolumeAndPanPlugin::getVolumeDb() const
@@ -303,13 +311,7 @@ void VolumeAndPanPlugin::muteOrUnmute()
 
 void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };
-    juce::CachedValue<bool>* cvsBool[]    = { &applyToMidi, &ignoreVca, &polarity, nullptr };
-
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, volume, pan, panLaw, applyToMidi, ignoreVca, polarity);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

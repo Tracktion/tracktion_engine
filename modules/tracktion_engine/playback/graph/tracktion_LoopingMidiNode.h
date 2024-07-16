@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,7 +23,8 @@ class GeneratorAndNoteList;
     time base must be in beats.
 */
 class LoopingMidiNode final : public tracktion::graph::Node,
-                              public TracktionEngineNode
+                              public TracktionEngineNode,
+                              public DynamicallyOffsettableNodeBase
 {
 public:
     LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequences,
@@ -51,6 +52,18 @@ public:
     */
     const std::shared_ptr<ActiveNoteList>& getActiveNoteList() const;
 
+    //==============================================================================
+    /** Sets an offset to be applied to all times in this node, effectively shifting
+        it forwards or backwards in time.
+    */
+    void setDynamicOffsetBeats (BeatDuration) override;
+
+    /** Iterates the ActiveNoteList adding note-off events for the active notes and
+        then resets them.
+    */
+    void killActiveNotes (MidiMessageArray&, double timestampForNoteOffs);
+
+    //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
@@ -65,6 +78,7 @@ private:
     LiveClipLevel clipLevel;
     EditItemID editItemID;
     std::function<bool()> shouldBeMutedDelegate = nullptr;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats = std::make_shared<BeatDuration>();
 
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
     bool wasMute = false;

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -73,10 +73,10 @@ void WaveInputDeviceNode::process (ProcessContext& pc)
         auto destSubView = destAudio.getFirstChannels (numChannelsToRead)
                                     .getStart (numToRead);
         audioFifo.readAdding (destSubView);
-    
+
         // Copy any additional channels from the last one
         auto lastChannelView = destSubView.getChannel (destSubView.getNumChannels() - 1);
-        
+
         for (auto c = numChannelsToRead; c < destAudio.getNumChannels(); ++c)
             copy (destAudio.getChannel (c).getStart (numToRead), lastChannelView);
     }

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -24,6 +24,7 @@ public:
     //==============================================================================
     static const char* getPluginName()                      { return NEEDS_TRANS("Latency Tester"); }
     static const char* xmlTypeName;
+    static juce::ValueTree create();
 
     juce::String getName() const override                   { return getPluginName(); }
     juce::String getPluginType() override                   { return xmlTypeName; }

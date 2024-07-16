@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,6 +10,7 @@
 
 // Defined in tracktion_core
 #define TRACKTION_UNIT_TESTS_TIME                       1
+#define TRACKTION_UNIT_TESTS_ALGORITHM                  1
 
 // Defined in tracktion_engine
 #define GRAPH_UNIT_TESTS_WAVENODE                       1
@@ -17,17 +18,24 @@
 #define GRAPH_UNIT_TESTS_RACKNODE                       1
 #define GRAPH_UNIT_TESTS_EDITNODE                       1
 
+#define ENGINE_UNIT_TESTS_AUTOMATION                    1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
+#define ENGINE_UNIT_TESTS_CLIPSLOT                      1
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
 #define ENGINE_UNIT_TESTS_DELAY_PLUGIN                  1
 #define ENGINE_UNIT_TESTS_EDIT                          1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
+#define ENGINE_UNIT_TESTS_FOLLOW_ACTIONS                1
+#define ENGINE_UNIT_TESTS_LAUNCH_HANDLE                 1
+#define ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE 1
+#define ENGINE_UNIT_TESTS_LAUNCH_QUANTISATION           1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE               1
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
 #define ENGINE_UNIT_TESTS_MIDILIST                      1
 #define ENGINE_UNIT_TESTS_MODIFIERS                     1
 #define ENGINE_UNIT_TESTS_PAN_LAW                       1
+#define ENGINE_UNIT_TESTS_PLAYBACK                      1
 #define ENGINE_UNIT_TESTS_PLUGINS                       1
 #define ENGINE_UNIT_TESTS_PDC                           1
 #define ENGINE_UNIT_TESTS_TIMESTRETCHER                 1
@@ -63,4 +71,5 @@
 #define ENGINE_BENCHMARKS_WAVENODE                      1
 #define ENGINE_BENCHMARKS_RESAMPLING                    1
 #define ENGINE_BENCHMARKS_RACKS                         1
+#define ENGINE_BENCHMARKS_SELECTABLE                    1
 #define ENGINE_BENCHMARKS_PLUGINNODE                    1

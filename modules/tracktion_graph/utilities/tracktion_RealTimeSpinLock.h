@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -45,13 +45,13 @@ public:
             }
         }
     }
-    
+
     /** Releases the lock, this should only be called after a successful call to try_lock or lock. */
     void unlock() noexcept
     {
         flag.clear (std::memory_order_release);
     }
-    
+
     /** Attempts to take the lock once, returning true if successful. */
     bool try_lock() noexcept
     {

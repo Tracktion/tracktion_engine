@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,7 +25,7 @@ public:
         : juce::UnitTest ("PlayHead", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         runBasicTests();
@@ -69,7 +69,7 @@ private:
                 expectEquals<int64_t> (tr.timelineRange2.getEnd(), 0);
             }
         }
-        
+
         beginTest ("PlayHead playing");
         {
             {
@@ -106,18 +106,18 @@ private:
                 expectEquals<int64_t> (playHead.getPosition(), 2000);
                 expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), -500);
             }
-            
+
             {
                 PlayHead playHead;
                 playHead.play ({ 0, 2'000 }, true);
                 int64_t referencePos = 0;
-                
+
                 auto incrementReferencePos = [&] (int64_t numSamples)
                 {
                     referencePos += numSamples;
                     playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
-                
+
                 expectEquals<int64_t> (playHead.getPosition(), 0);
                 incrementReferencePos (1000);
                 expectEquals<int64_t> (playHead.getPosition(), 1000);
@@ -152,13 +152,13 @@ private:
                 PlayHead playHead;
                 playHead.play ({ 1'000, 3'000 }, true);
                 int64_t referencePos = 0;
-                
+
                 auto incrementReferencePos = [&] (int64_t numSamples)
                 {
                     referencePos += numSamples;
                     playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
-                
+
                 expectEquals<int64_t> (playHead.getPosition(), 1'000);
                 incrementReferencePos (1'000);
                 expectEquals<int64_t> (playHead.getPosition(), 2'000);
@@ -188,7 +188,7 @@ private:
                     expectEquals<int64_t> (tr.timelineRange2.getEnd(), 1'500);
                 }
             }
-            
+
             {
                 PlayHead playHead;
                 playHead.play ({ 1'000, 3'000 }, true);

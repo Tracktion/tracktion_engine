@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -62,11 +62,12 @@ namespace node_player_utils
     static std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
                                                      double sampleRate, int blockSize,
                                                      std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
-                                                     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
+                                                     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr,
+                                                     bool nodeMemorySharingEnabled = false)
     {
         if (node == nullptr)
             return {};
-        
+
         // First give the Nodes a chance to transform
         auto nodeGraph = createNodeGraph (std::move (node));
         assert (! areThereAnyCycles (nodeGraph->orderedNodes));
@@ -74,7 +75,8 @@ namespace node_player_utils
         // Next, initialise all the nodes, this will call prepareToPlay on them
         const PlaybackInitialisationInfo info { sampleRate, blockSize,
                                                 *nodeGraph, oldGraph,
-                                                allocateAudioBuffer, deallocateAudioBuffer };
+                                                allocateAudioBuffer, deallocateAudioBuffer,
+                                                nodeMemorySharingEnabled };
 
         for (auto n : nodeGraph->orderedNodes)
             n->initialise (info);
@@ -94,7 +96,7 @@ namespace node_player_utils
         // - Then multiply that by the number of threads that will be used (or the num leaf Nodes if that’s smaller)
         // - Add one for the root node so the ouput can be retained
         [[ maybe_unused ]] size_t maxNumChannels = 0, maxNumInputs = 0, numLeafNodes = 0;
-        
+
         // However, this algorithm is too pessimistic as it assumes there can be
         // numThreads * maxNumInputs which is unlikely to be true.
         // It's probably better to stack up numThreads maxNumInputs and use the min of that size and numThreads
@@ -105,11 +107,11 @@ namespace node_player_utils
             const auto props = n->getNodeProperties();
             maxNumInputs    = std::max (maxNumInputs, numInputs);
             maxNumChannels  = std::max (maxNumChannels, (size_t) props.numberOfChannels);
-            
+
             if (numInputs == 0)
                 ++numLeafNodes;
         }
-        
+
         const size_t numBuffersRequired = std::max ((size_t) 2, std::min (allNodes.size(), 1 + numThreads));
         audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }

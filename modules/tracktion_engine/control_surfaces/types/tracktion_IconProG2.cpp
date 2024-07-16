@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -24,7 +24,7 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
 {
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];
-    
+
     if (d[0] == 0xb0)
     {
         if (d1 == 0x3c)
@@ -53,7 +53,7 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                 }
                 else if (assignmentMode == AuxMode)
                 {
-                    userMovedAux (chan, (panPos[chan] + 1.0f) * 0.5f);
+                    userMovedAux (chan, 0, (panPos[chan] + 1.0f) * 0.5f);
                     userMovedAuxes.addIfNotAlreadyThere(chan);
                     auxTimer->startTimer(2000);
                 }
@@ -86,7 +86,7 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                 }
                 else if (assignmentMode == AuxMode)
                 {
-                    userMovedAux ((d[0] & 0x0f) + deviceIndex * 8, pos);
+                    userMovedAux ((d[0] & 0x0f) + deviceIndex * 8, 0, pos);
                     userMovedAuxes.addIfNotAlreadyThere((d[0] & 0x0f) + deviceIndex * 8);
                     auxTimer->startTimer(2000);
                 }
@@ -163,7 +163,7 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                     }
                     else if (assignmentMode == AuxMode)
                     {
-                        userPressedAux(chan);
+                        userPressedAux (chan, 0);
                     }
                     else if (assignmentMode == MarkerMode)
                     {

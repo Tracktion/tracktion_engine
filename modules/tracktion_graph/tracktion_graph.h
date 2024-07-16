@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -34,7 +34,7 @@
 
 /*******************************************************************************
  PLEASE READ!
- 
+
  tracktion_graph is an experimental module. It is currently in an early stage of
  development so the API or functionality it contains is in no way stable. It
  will change so if you do want to use this in your own code please be aware of
@@ -77,6 +77,9 @@
  #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
  #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
+
+#include "../3rd_party/rigtorp/tracktion_rigtorp.hpp"
+
 
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>

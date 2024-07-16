@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -102,18 +102,26 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const
     {
         juce::ReferenceCountedArray<MacroParameter> params;
-        
+
         // This is verbose but directly returning macroParameters causes a
         // crash in optimised gcc Linux builds, could be a compiler bug
         {
             const juce::ScopedLock sl (macroParameters.getLock());
             params.ensureStorageAllocated (macroParameters.size());
-            
+
             for (auto& p : macroParameters)
                 params.add (p);
         }
-        
+
         return params;
+    }
+
+    void visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const
+    {
+        const juce::ScopedLock sl (macroParameters.getLock());
+
+        for (auto& p : macroParameters)
+            visit (*p);
     }
 
     MacroParameterList& macroParameterList;
@@ -245,6 +253,11 @@ juce::ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParamete
     return list->getMacroParameters();
 }
 
+void MacroParameterList::visitMacroParameters (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    list->visitMacroParameters (visit);
+}
+
 Track* MacroParameterList::getTrack() const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -261,17 +274,43 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
     if (mpl == nullptr)
         return {};
 
-    for (auto af : getAllPlugins (mpl->edit, false))
-        if (af->getNumMacroParameters() > 0 && &af->macroParameterList == mpl)
-            return af;
+    for (auto p : getAllPlugins (mpl->edit, false))
+        if (p->getMacroParameterList() == mpl)
+            return p;
 
     return {};
 }
 
 //==============================================================================
-MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& v)
-    : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
+MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& p)
+    : ownerEdit (e), parentStateForList (p)
 {
+    auto existing = parentStateForList.getChildWithName (IDs::MACROPARAMETERS);
+
+    if (existing.isValid())
+        macroParameterList = std::make_unique<MacroParameterList> (ownerEdit, existing);
 }
+
+MacroParameterList* MacroParameterElement::getMacroParameterList()
+{
+    return macroParameterList.get();
+}
+
+MacroParameterList& MacroParameterElement::getMacroParameterListForWriting()
+{
+    if (macroParameterList == nullptr)
+        macroParameterList = std::make_unique<MacroParameterList> (ownerEdit, parentStateForList.getOrCreateChildWithName (IDs::MACROPARAMETERS, &ownerEdit.getUndoManager()));
+
+    return *macroParameterList;
+}
+
+juce::ReferenceCountedArray<MacroParameter> MacroParameterElement::getMacroParameters() const
+{
+    if (macroParameterList != nullptr)
+        return macroParameterList->getMacroParameters();
+
+    return {};
+}
+
 
 }} // namespace tracktion { inline namespace engine

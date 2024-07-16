@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -40,7 +40,7 @@ public:
         : input (inputNode)
     {
         latencyProcessor->setLatencyNumSamples (numSamplesToDelay);
-        
+
         setOptimisations ({ tracktion::graph::ClearBuffers::no,
                             tracktion::graph::AllocateAudioBuffer::yes });
     }
@@ -49,15 +49,15 @@ public:
     {
         auto props = input->getNodeProperties();
         props.latencyNumSamples += latencyProcessor->getLatencyNumSamples();
-        
-        constexpr size_t latencyNodeMagicHash = 0x95ab5e9dcc;
-        
+
+        constexpr size_t latencyNodeMagicHash = size_t (0x95ab5e9dcc);
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, latencyNodeMagicHash);
-        
+
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { input };
@@ -67,13 +67,13 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, getNodeProperties().numberOfChannels);
         replaceLatencyProcessorIfPossible (info.nodeGraphToReplace);
     }
-    
+
     void process (ProcessContext& pc) override
     {
         auto inputBuffer = input->getProcessedOutput().audio;
@@ -83,25 +83,25 @@ public:
 
         latencyProcessor->writeAudio (inputBuffer);
         latencyProcessor->writeMIDI (inputMidi);
-        
+
         pc.buffers.midi.clear();
         latencyProcessor->readAudioOverwriting (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
     }
-    
+
 private:
     std::unique_ptr<Node> ownedInput;
     std::shared_ptr<Node> sharedInput;
     Node* input = nullptr;
     std::shared_ptr<LatencyProcessor> latencyProcessor { std::make_shared<LatencyProcessor>() };
-    
+
     void replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplace)
     {
         if (nodeGraphToReplace == nullptr)
             return;
-        
+
         const auto nodeIDToLookFor = getNodeProperties().nodeID;
-        
+
         if (nodeIDToLookFor == 0)
             return;
 

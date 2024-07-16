@@ -24,17 +24,17 @@ namespace Helpers
     {
         return stringToTest.isEmpty() ? stringToReturnIfEmpty : stringToTest;
     }
-    
+
     static inline File findRecentEdit (const File& dir)
     {
         auto files = dir.findChildFiles (File::findFiles, false, "*.tracktionedit");
-        
+
         if (files.size() > 0)
         {
             files.sort();
             return files.getLast();
         }
-        
+
         return {};
     }
 }
@@ -140,7 +140,7 @@ namespace EngineHelpers
         for (int i = clips.size(); --i >= 0;)
             clips.getUnchecked (i)->removeFromParent();
     }
-    
+
     inline te::AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)
     {
         edit.ensureNumberOfAudioTracks (index + 1);
@@ -178,72 +178,87 @@ namespace EngineHelpers
         return clip;
     }
 
-    inline void togglePlay (te::Edit& edit)
+    enum class ReturnToStart { no, yes };
+
+    inline void togglePlay (te::Edit& edit, ReturnToStart rts = ReturnToStart::no)
     {
         auto& transport = edit.getTransport();
 
         if (transport.isPlaying())
             transport.stop (false, false);
         else
-            transport.play (false);
+        {
+            if (rts == ReturnToStart::yes)
+                transport.playFromStart (true);
+            else
+                transport.play (false);
+        }
     }
-    
+
     inline void toggleRecord (te::Edit& edit)
     {
         auto& transport = edit.getTransport();
-        
+
         if (transport.isRecording())
             transport.stop (true, false);
         else
             transport.record (false);
     }
-    
+
     inline void armTrack (te::AudioTrack& t, bool arm, int position = 0)
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->isOnTargetTrack (t, position))
-                instance->setRecordingEnabled (t, arm);
+            if (te::isOnTargetTrack (*instance, t, position))
+                instance->setRecordingEnabled (t.itemID, arm);
     }
-    
+
     inline bool isTrackArmed (te::AudioTrack& t, int position = 0)
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->isOnTargetTrack (t, position))
-                return instance->isRecordingEnabled (t);
-        
+            if (te::isOnTargetTrack (*instance, t, position))
+                return instance->isRecordingEnabled (t.itemID);
+
         return false;
     }
-    
+
     inline bool isInputMonitoringEnabled (te::AudioTrack& t, int position = 0)
     {
-        auto& edit = t.edit;
-        for (auto instance : edit.getAllInputDevices())
-            if (instance->isOnTargetTrack (t, position))
-                return instance->getInputDevice().isEndToEndEnabled();
-        
+        for (auto instance : t.edit.getAllInputDevices())
+            if (te::isOnTargetTrack (*instance, t, position))
+                return instance->isLivePlayEnabled (t);
+
         return false;
     }
-    
+
     inline void enableInputMonitoring (te::AudioTrack& t, bool im, int position = 0)
     {
         if (isInputMonitoringEnabled (t, position) != im)
         {
-            auto& edit = t.edit;
-            for (auto instance : edit.getAllInputDevices())
-                if (instance->isOnTargetTrack (t, position))
-                    instance->getInputDevice().flipEndToEnd();
+            for (auto instance : t.edit.getAllInputDevices())
+            {
+                if (te::isOnTargetTrack (*instance, t, position))
+                {
+                    if (auto mode = instance->getInputDevice().getMonitorMode();
+                        mode == te::InputDevice::MonitorMode::on ||  mode == te::InputDevice::MonitorMode::off)
+                    {
+                        instance->getInputDevice().setMonitorMode (mode == te::InputDevice::MonitorMode::on
+                                                                    ? te::InputDevice::MonitorMode::off
+                                                                    : te::InputDevice::MonitorMode::on);
+                    }
+                }
+            }
         }
     }
-    
+
     inline bool trackHasInput (te::AudioTrack& t, int position = 0)
     {
         auto& edit = t.edit;
         for (auto instance : edit.getAllInputDevices())
-            if (instance->isOnTargetTrack (t, position))
+            if (te::isOnTargetTrack (*instance, t, position))
                 return true;
-        
+
         return false;
     }
 
@@ -265,12 +280,12 @@ class FlaggedAsyncUpdater : public AsyncUpdater
 public:
     //==============================================================================
     void markAndUpdate (bool& flag)     { flag = true; triggerAsyncUpdate(); }
-    
+
     bool compareAndReset (bool& flag) noexcept
     {
         if (! flag)
             return false;
-        
+
         flag = false;
         return true;
     }

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,41 +22,70 @@ public:
           meterPlugin (levelMeterPlugin)
     {
     }
-    
+
     ~LevelMeasurerProcessingNode() override
     {
         if (isInitialised && ! meterPlugin.baseClassNeedsInitialising())
             meterPlugin.baseClassDeinitialise();
     }
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override
     {
         return input->getNodeProperties();
     }
-    
-    std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
-    bool isReadyToProcess() override                                    { return input->hasProcessed(); }
-        
+
+    std::vector<tracktion::graph::Node*> getDirectInputNodes() override
+    {
+        return { input.get() };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
         initialisePlugin();
-        
+
+        const auto inputProps = input->getNodeProperties();
+        const auto nodeProps = getNodeProperties();
+
+        if (info.enableNodeMemorySharing && input->numOutputNodes == 1)
+        {
+            const auto inputNumChannels = inputProps.numberOfChannels;
+            const auto desiredNumChannels = nodeProps.numberOfChannels;
+
+            if (inputNumChannels >= desiredNumChannels)
+            {
+                canUseSourceBuffers = true;
+                setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                                    tracktion::graph::AllocateAudioBuffer::no });
+            }
+        }
+
         const int latencyAtRoot = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
-        const int latencyAtInput = input->getNodeProperties().latencyNumSamples;
+        const int latencyAtInput = inputProps.latencyNumSamples;
 
         const int numSamplesLatencyToIntroduce = latencyAtRoot - latencyAtInput;
-        
+
         if (numSamplesLatencyToIntroduce <= 0)
             return;
-        
+
         latencyProcessor = std::make_shared<tracktion::graph::LatencyProcessor>();
         latencyProcessor->setLatencyNumSamples (numSamplesLatencyToIntroduce);
-        latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, getNodeProperties().numberOfChannels);
-        
-        tempAudioBuffer.resize ({ (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels,
+        latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, nodeProps.numberOfChannels);
+
+        tempAudioBuffer.resize ({ (choc::buffer::ChannelCount) nodeProps.numberOfChannels,
                                   (choc::buffer::FrameCount) info.blockSize });
     }
-    
+
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override
+    {
+        if (canUseSourceBuffers)
+            setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
+    }
+
     void process (ProcessContext& pc) override
     {
         // Copy the input buffers to the outputs without applying latency
@@ -72,28 +101,28 @@ public:
         else
         {
             pc.buffers.midi.copyFrom (sourceBuffers.midi);
-            copy (pc.buffers.audio, sourceBuffers.audio);
+            copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
         }
-            
+
         // If we have no latency, simply process the meter
         if (! latencyProcessor)
         {
             processLevelMeasurer (meterPlugin.measurer, sourceBuffers.audio, pc.buffers.midi);
             return;
         }
-        
+
         // Otherwise, pass the buffers through the latency processor and process the meter
         const auto numFrames = sourceBuffers.audio.getNumFrames();
 
         latencyProcessor->writeAudio (sourceBuffers.audio);
         latencyProcessor->writeMIDI (sourceBuffers.midi);
-        
+
         tempMidiBuffer.clear();
-        
+
         auto tempBlock = tempAudioBuffer.getStart (numFrames);
         latencyProcessor->readAudioOverwriting (tempBlock);
         latencyProcessor->readMIDI (tempMidiBuffer, (int) numFrames);
-        
+
         processLevelMeasurer (meterPlugin.measurer, tempBlock, tempMidiBuffer);
     }
 
@@ -101,10 +130,10 @@ private:
     std::unique_ptr<tracktion::graph::Node> input;
     LevelMeterPlugin& meterPlugin;
     Plugin::Ptr pluginPtr { meterPlugin };
-    bool isInitialised = false;
-    
+    bool isInitialised = false, canUseSourceBuffers = false;
+
     std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
-    
+
     choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
     MidiMessageArray tempMidiBuffer;
 
@@ -115,7 +144,7 @@ private:
         meterPlugin.baseClassInitialise ({ 0_tp, 0.0, 0 });
         isInitialised = true;
     }
-    
+
     void processLevelMeasurer (LevelMeasurer& measurer, choc::buffer::ChannelArrayView<float> block, MidiMessageArray& midi)
     {
         auto buffer = tracktion::graph::toAudioBuffer (block);

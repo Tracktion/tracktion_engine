@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -9,6 +9,8 @@
 */
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
+
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
 
 #include <future>
 using namespace std::literals;
@@ -37,6 +39,8 @@ using namespace std::literals;
 #include "model/tracks/tracktion_ArrangerTrack.cpp"
 #include "model/tracks/tracktion_AutomationTrack.cpp"
 #include "model/tracks/tracktion_ChordTrack.cpp"
+#include "model/tracks/tracktion_ClipSlot.cpp"
+#include "model/tracks/tracktion_ClipSlot.test.cpp"
 #include "model/tracks/tracktion_ClipTrack.cpp"
 #include "model/tracks/tracktion_MarkerTrack.cpp"
 #include "model/tracks/tracktion_MasterTrack.cpp"
@@ -48,6 +52,8 @@ using namespace std::literals;
 #include "model/tracks/tracktion_TrackCompManager.cpp"
 
 #include "model/edit/tracktion_GrooveTemplate.cpp"
+#include "model/edit/tracktion_LaunchQuantisation.cpp"
+#include "model/edit/tracktion_LaunchQuantisation.test.cpp"
 #include "model/edit/tracktion_MarkerManager.cpp"
 #include "model/edit/tracktion_PitchSequence.cpp"
 #include "model/edit/tracktion_PitchSetting.cpp"

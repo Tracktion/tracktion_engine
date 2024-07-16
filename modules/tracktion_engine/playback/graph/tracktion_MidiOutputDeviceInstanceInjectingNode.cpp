@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -51,14 +51,14 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
 
     // Block the audio input from reaching the output by not copying
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
-    
+
     const auto timelineSampleRange = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
     assert (! timelineSampleRange.isSplit);
     const auto editTimeRange = tracktion::timeRangeFromSamples (timelineSampleRange.timelineRange1, sampleRate);
 
     // Add MIDI clock for the current time to the device to be dispatched
     deviceInstance.addMidiClockMessagesToCurrentBlock (playHead.isPlaying(), playHead.isUserDragging(), editTimeRange);
-    
+
     if (sourceBuffers.midi.isEmpty() && ! sourceBuffers.midi.isAllNotesOff)
         return;
 

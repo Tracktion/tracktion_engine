@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc tracktion_graph
+  dependencies:     juce_audio_devices juce_audio_utils juce_dsp juce_osc tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
@@ -36,7 +36,6 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
-#include <sys/stat.h>
 #include <memory>
 #include <map>
 #include <set>
@@ -46,10 +45,12 @@
 #include <random>
 #include <optional>
 #include <variant>
+#include <any>
+#include <shared_mutex>
+#include <span>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
-#include <juce_gui_extra/juce_gui_extra.h>
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
 
@@ -64,6 +65,8 @@
  #include "../3rd_party/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
  #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
+
+#include "../3rd_party/expected/expected.hpp"
 
 #undef __TEXT
 
@@ -80,6 +83,15 @@
 */
 #ifndef TRACKTION_ENABLE_ARA
  #define TRACKTION_ENABLE_ARA 0
+#endif
+
+/** Config: TRACKTION_ENABLE_CMAJOR
+    Enables Cmajor support.
+    If you turn this flag on, you must add the Cmajor library to your
+    cmake project so that it can find the headers and link the library
+*/
+#ifndef TRACKTION_ENABLE_CMAJOR
+ #define TRACKTION_ENABLE_CMAJOR 0
 #endif
 
 /** Config: TRACKTION_ENABLE_REWIRE
@@ -146,7 +158,7 @@
     Enables time-stretching with the RubberBand library.
     You must have RubberBand in your search path if you enable this.
     @see TRACKTION_BUILD_RUBBERBAND
-    
+
     N.B. RubberBand is not owned by Tracktion and is licensed separately.
     Please make sure you have a suitable licence if building with RubberBand
     support. You can find more information here: https://breakfastquay.com/rubberband/
@@ -162,7 +174,7 @@
     less optimised version on some platforms as RubberBand can be configured
     with IPP on Windows etc.
     You must have RubberBand in your search path if you enable this.
-    
+
     N.B. RubberBand is not owned by Tracktion and is licensed separately.
     Please make sure you have a suitable licence if building with RubberBand
     support. You can find more information here: https://breakfastquay.com/rubberband/
@@ -184,6 +196,13 @@
 */
 #ifndef TRACKTION_ENABLE_ABLETON_LINK
  #define TRACKTION_ENABLE_ABLETON_LINK 0
+#endif
+
+/** Config: TRACKTION_ENABLE_FFMPEG
+	Uses FFmpeg for mp3 encoding rather than Lame
+*/
+#ifndef TRACKTION_ENABLE_FFMPEG
+ #define TRACKTION_ENABLE_FFMPEG 0
 #endif
 
 /** Config: TRACKTION_UNIT_TESTS
@@ -258,17 +277,14 @@ namespace tracktion { inline namespace engine
     class EngineBehaviour;
     class Engine;
     class DeviceManager;
-    class MidiProgramManager;
     class GrooveTemplateManager;
     class Edit;
     class Track;
     class Clip;
     class ClipOwner;
     class Plugin;
-    struct AudioRenderContext;
     struct PluginRenderContext;
     class AudioFile;
-    class PlayHead;
     class Project;
     class InputDevice;
     class OutputDevice;
@@ -294,18 +310,15 @@ namespace tracktion { inline namespace engine
     class LoopInfo;
     class RenderOptions;
     class AutomatableParameter;
-    class AutomatableParameterTree;
     class MacroParameterList;
     class MelodyneFileReader;
     struct ARADocumentHolder;
     class ClipEffects;
     class WaveAudioClip;
-    class ContainerClip;
     class CollectionClip;
     class MidiClip;
     class EditClip;
     class MidiList;
-    class SelectedMidiEvents;
     class MarkerManager;
     class TransportControl;
     class AbletonLink;
@@ -333,8 +346,6 @@ namespace tracktion { inline namespace engine
     class MidiControllerParser;
     class MidiInputDeviceInstanceBase;
     struct RetrospectiveMidiBuffer;
-    struct MidiMessageArray;
-    struct ModifierTimer;
     class MidiLearnState;
     struct EditDeleter;
     struct ActiveEdits;
@@ -342,25 +353,14 @@ namespace tracktion { inline namespace engine
     class AutomatableEditItem;
     class RecordingThumbnailManager;
     class WaveInputRecordingThread;
-    class SearchOperation;
     class ProjectManager;
     class ExternalAutomatableParameter;
-    class ExternalPlugin;
-    struct PluginWindowState;
-    class PluginInstanceWrapper;
-    struct LiveClipLevel;
-    struct ARAClipPlayer;
-    class RackEditorWindow;
     class PitchShiftPlugin;
     struct PluginUnloadInhibitor;
-    class ArrangerClip;
     class ChordClip;
     struct TimecodeSnapType;
     class MidiNote;
-    class MackieXT;
-    class ParameterisableDragDropSource;
     class AutomationCurveSource;
-    class MacroParameter;
     struct Modifier;
     class MidiTimecodeGenerator;
     class MidiClockGenerator;
@@ -370,14 +370,20 @@ namespace tracktion { inline namespace engine
     struct RetrospectiveRecordBuffer;
     class Clipboard;
     class PropertyStorage;
-    class TrackOutput;
-    class BufferedFileReader;
+    class ClipSlotList;
+    class ClipSlot;
+    class LaunchHandle;
+    class LaunchQuantisation;
+    class BufferedAudioFileManager;
 }} // namespace tracktion { inline namespace engine
 
 #ifdef __GNUC__
  #pragma GCC diagnostic push
  #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
+
+//==============================================================================
+#include "../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
@@ -402,9 +408,13 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_BackgroundJobs.h"
 #include "utilities/tracktion_MiscUtilities.h"
 #include "utilities/tracktion_TemporaryFileManager.h"
+#include "utilities/tracktion_Types.h"
 #include "utilities/tracktion_PluginComponent.h"
 #include "utilities/tracktion_BinaryData.h"
 #include "utilities/tracktion_SettingID.h"
+#include "utilities/tracktion_SharedTimer.h"
+#include "utilities/tracktion_SafeScopedListener.h"
+#include "utilities/tracktion_ScopedListener.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"
 #include "utilities/tracktion_Envelope.h"
@@ -473,10 +483,12 @@ namespace tracktion { inline namespace engine
 #include "plugins/internal/tracktion_AuxSend.h"
 #include "plugins/effects/tracktion_Equaliser.h"
 
+#include "model/clips/tracktion_LaunchHandle.h"
 #include "model/edit/tracktion_EditSnapshot.h"
 #include "model/edit/tracktion_EditInsertPoint.h"
 #include "model/tracks/tracktion_TrackItem.h"
 #include "model/tracks/tracktion_Track.h"
+#include "model/edit/tracktion_Scene.h"
 #include "model/edit/tracktion_TimeSigSetting.h"
 #include "model/edit/tracktion_TempoSetting.h"
 #include "model/edit/tracktion_TempoSequence.h"
@@ -496,6 +508,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_LoopInfo.h"
 #include "audio_files/tracktion_AudioFile.h"
 #include "model/edit/tracktion_SourceFileReference.h"
+#include "model/clips/tracktion_FollowActions.h"
 #include "model/clips/tracktion_Clip.h"
 
 #include "utilities/tracktion_EngineBehaviour.h"
@@ -506,6 +519,7 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioProxyGenerator.h"
 #include "audio_files/tracktion_AudioFileManager.h"
 #include "audio_files/tracktion_AudioFileWriter.h"
+#include "audio_files/tracktion_BufferedAudioReader.h"
 
 #include "model/clips/tracktion_CompManager.h"
 
@@ -513,7 +527,9 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioFileUtils.h"
 #include "audio_files/tracktion_AudioFifo.h"
 #include "audio_files/tracktion_RecordingThumbnailManager.h"
+#include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.h"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.h"
+#include "audio_files/formats/tracktion_MemoryMappedFileReader.h"
 #include "audio_files/formats/tracktion_LAMEManager.h"
 #include "audio_files/formats/tracktion_RexFileFormat.h"
 
@@ -532,6 +548,7 @@ namespace tracktion { inline namespace engine
 
 #include "timestretch/tracktion_BeatDetect.h"
 #include "timestretch/tracktion_TimeStretch.h"
+#include "timestretch/tracktion_ReadAheadTimeStretcher.h"
 
 #include "model/export/tracktion_ArchiveFile.h"
 #include "model/export/tracktion_ExportJob.h"
@@ -548,6 +565,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_ClipEffects.h"
 #include "model/clips/tracktion_CollectionClip.h"
 #include "model/clips/tracktion_ContainerClip.h"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.h"
 #include "model/clips/tracktion_MarkerClip.h"
 #include "model/clips/tracktion_MidiClip.h"
 #include "model/clips/tracktion_ReverseRenderJob.h"
@@ -556,6 +574,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_WaveAudioClip.h"
 
 #include "model/edit/tracktion_GrooveTemplate.h"
+#include "model/edit/tracktion_LaunchQuantisation.h"
 #include "model/edit/tracktion_MarkerManager.h"
 
 #include "model/clips/tracktion_EditClip.h"
@@ -581,6 +600,8 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_MidiOutputDevice.h"
 #include "playback/devices/tracktion_WaveInputDevice.h"
 #include "playback/devices/tracktion_WaveOutputDevice.h"
+
+#include "model/tracks/tracktion_ClipSlot.h"
 
 #include "model/edit/tracktion_EditUtilities.h"
 
@@ -620,6 +641,7 @@ namespace tracktion { inline namespace engine
 #include "plugins/effects/tracktion_SamplerPlugin.h"
 #include "plugins/effects/tracktion_ToneGenerator.h"
 
+#include "plugins/cmajor/tracktion_CmajorPluginFormat.h"
 
 #include "plugins/ARA/tracktion_MelodyneFileReader.h"
 

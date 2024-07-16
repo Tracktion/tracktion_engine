@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,6 +19,7 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 namespace test_utilities
 {
+    //==============================================================================
     /** Creates a random MidiMessageSequence sequence. */
     static inline juce::MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, juce::Random r,
                                                                              juce::Range<double> noteLengthRange = { 0.1, 0.6 })
@@ -105,10 +106,10 @@ namespace test_utilities
                                                        [=] (auto, auto frame)
                                                        {
                                                            const auto sinValue = std::sin ((float) (frame * phaseIncrement));
-      
+
                                                            if (sinValue > 0.0f) return 1.0f;
                                                            if (sinValue < 0.0f) return -1.0f;
-      
+
                                                            return 0.0f;
                                                        });
     }
@@ -182,10 +183,21 @@ namespace test_utilities
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
     {
-        return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
-                                [] (size_t total, Node* n)
+        auto nodesWithInternalNodes = createNodeMap (nodes);
+        return std::accumulate (nodesWithInternalNodes.begin(), nodesWithInternalNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
                                 {
-                                    return total + n->getAllocatedBytes();
+                                    return total + nodeAndID.node->getAllocatedBytes();
+                                });
+    }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (const NodeGraph& graph)
+    {
+        return std::accumulate (graph.sortedNodes.begin(), graph.sortedNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
+                                {
+                                    return total + nodeAndID.node->getAllocatedBytes();
                                 });
     }
 
@@ -235,12 +247,12 @@ namespace test_utilities
             static void visitInputs (Node& n, int depth)
             {
                 logNode (n, depth);
-                
+
                 for (auto input : n.getDirectInputNodes())
                     visitInputs (*input, depth + 1);
             }
         };
-        
+
         Visitor::visitInputs (node, 0);
     }
 
@@ -305,6 +317,24 @@ namespace test_utilities
 
         return f;
     }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTransientFile (double sampleRate, TimeDuration duration,
+                                                           TimePosition transientPos, float transientVal,
+                                                           int numChannels = 1, int qualityOptionIndex = -1)
+    {
+        using namespace choc::buffer;
+        auto transientSample = toSamples (transientPos, sampleRate);
+        auto buffer = createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                [=] (auto, auto frame) { return frame == transientSample ? transientVal : 0.0f; });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
 
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
@@ -414,6 +444,40 @@ namespace test_utilities
         }
     }
 
+    inline bool buffersAreEqual (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b, float absSampleTolerance = 0.0f)
+    {
+        if (a.getNumChannels() != b.getNumChannels())
+            return false;
+
+        if (a.getNumSamples() != b.getNumSamples())
+            return false;
+
+        const int numSamples = a.getNumSamples();
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            for (int sample = 0; sample < numSamples; ++sample)
+            {
+                const auto aSamp = *(aPtr + sample);
+                const auto bSamp = *(bPtr + sample);
+                const auto absDiff = std::abs (aSamp - bSamp);
+
+                if (absDiff > absSampleTolerance)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    inline bool buffersAreEqual (const choc::buffer::ChannelArrayView<float>& a, const choc::buffer::ChannelArrayView<float>& b, float absSampleTolerance = 0.0f)
+    {
+        return buffersAreEqual (toAudioBuffer (a), toAudioBuffer (b), absSampleTolerance);
+    }
+
     /** Checks that there are no duplicate nodeIDs in a Node. */
     static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
@@ -422,6 +486,19 @@ namespace test_utilities
 
         if (! areUnique)
             visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
+    }
+
+    //==============================================================================
+    inline std::optional<std::pair<choc::buffer::FrameCount, float>> findFirstNonZeroSample (choc::buffer::MonoView<float> buffer)
+    {
+        auto size = buffer.getSize();
+        auto samples = buffer.getIterator (0);
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+            if (auto s = *samples++; s > 0.0f)
+                return std::make_pair (i, s);
+
+        return {};
     }
 
     //==============================================================================
@@ -492,7 +569,7 @@ namespace test_utilities
                     jassertfalse;
                 }
             }
-            
+
             setPlayer (std::move (playerToUse));
         }
 
@@ -503,12 +580,17 @@ namespace test_utilities
                     .replace ("{numChannels}", juce::String (numChannels))
                     .replace ("{durationInSeconds}", juce::String (durationInSeconds)).toStdString();
         }
-        
+
+        const PerformanceMeasurement& getPerformanceMeasurement()
+        {
+            return performanceMeasurement;
+        }
+
         PerformanceMeasurement::Statistics getStatisticsAndReset()
         {
             return performanceMeasurement.getStatisticsAndReset();
         }
-        
+
         Node& getNode() const
         {
             return *player->getNode();
@@ -545,7 +627,7 @@ namespace test_utilities
             for (;;)
             {
                 const ScopedPerformanceMeasurement spm (performanceMeasurement);
-                
+
                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
                                                                     : std::min (testSetup.blockSize, numSamplesToDo);
                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
@@ -628,7 +710,7 @@ namespace test_utilities
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
         int numProcessMisses = 0;
-        
+
         PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
     };
 

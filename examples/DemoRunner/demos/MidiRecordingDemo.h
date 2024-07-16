@@ -24,30 +24,30 @@ public:
         : engine (e)
     {
         newEditButton.onClick = [this] { createOrLoadEdit(); };
-        
+
         updatePlayButtonText();
         updateRecordButtonText();
-        
+
         editNameLabel.setJustificationType (Justification::centred);
-        
+
         Helpers::addAndMakeVisible (*this, { &newEditButton, &playPauseButton, &showEditButton,
                                              &recordButton, &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
-        
+
         auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("MidiRecordingDemo");
         d.createDirectory();
-        
+
         auto f = Helpers::findRecentEdit (d);
         if (f.existsAsFile())
             createOrLoadEdit (f);
         else
             createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
-        
+
         selectionManager.addChangeListener (this);
-        
+
         setupButtons();
-        
+
         setSize (600, 400);
     }
 
@@ -76,7 +76,7 @@ public:
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
         topR = r.removeFromTop (30);
         editNameLabel.setBounds (topR);
-        
+
         if (editComponent != nullptr)
             editComponent->setBounds (r);
     }
@@ -135,19 +135,19 @@ private:
             showWaveformButton.setToggleState (evs.drawWaveforms, dontSendNotification);
         };
     }
-    
+
     void updatePlayButtonText()
     {
         if (edit != nullptr)
             playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Stop" : "Play");
     }
-    
+
     void updateRecordButtonText()
     {
         if (edit != nullptr)
             recordButton.setButtonText (edit->getTransport().isRecording() ? "Abort" : "Record");
     }
-    
+
     void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
@@ -158,10 +158,10 @@ private:
             else
                 return;
         }
-        
+
         selectionManager.deselectAll();
         editComponent = nullptr;
-        
+
         if (editFile.existsAsFile())
             edit = te::loadEditFromFile (engine, editFile);
         else
@@ -169,29 +169,29 @@ private:
 
         edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
-        
+
         auto& transport = edit->getTransport();
         transport.addChangeListener (this);
-        
+
         editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
         showEditButton.onClick = [this, editFile]
         {
             te::EditFileOperations (*edit).save (true, true, false);
             editFile.revealToUser();
         };
-        
+
         createTracksAndAssignInputs();
-        
+
         te::EditFileOperations (*edit).save (true, true, false);
-        
+
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         editComponent->getEditViewState().showFooters = true;
         editComponent->getEditViewState().showMidiDevices = true;
         editComponent->getEditViewState().showWaveDevices = false;
-        
+
         addAndMakeVisible (*editComponent);
     }
-    
+
     void changeListenerCallback (ChangeBroadcaster* source) override
     {
         if (edit != nullptr && source == &edit->getTransport())
@@ -207,40 +207,36 @@ private:
                                      || dynamic_cast<te::Plugin*> (sel));
         }
     }
-    
+
     void createTracksAndAssignInputs()
     {
-        auto& dm = engine.getDeviceManager();
-        
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
+        for (auto& midiIn : engine.getDeviceManager().getMidiInDevices())
         {
-            if (auto mip = dm.getMidiInDevice (i))
-            {
-                mip->setEndToEndEnabled (true);
-                mip->setEnabled (true);
-            }
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
         }
-        
+
         edit->getTransport().ensureContextAllocated();
-        
-        if (te::getAudioTracks (*edit).size () == 0)
+
+        if (te::getAudioTracks (*edit).size() == 0)
         {
             int trackNum = 0;
+
             for (auto instance : edit->getAllInputDevices())
             {
                 if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                 {
                     if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
                     {
-                        instance->setTargetTrack (*t, 0, true, &edit->getUndoManager());
-                        instance->setRecordingEnabled (*t, true);
-                    
+                        [[ maybe_unused ]] auto res = instance->setTarget (t->itemID, true, &edit->getUndoManager(), 0);
+                        instance->setRecordingEnabled (t->itemID, true);
+
                         trackNum++;
                     }
                 }
             }
         }
-        
+
         edit->restartPlayback();
     }
 

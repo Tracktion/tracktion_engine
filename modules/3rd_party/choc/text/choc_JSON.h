@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -55,6 +55,18 @@ value::Value parse (std::string_view);
 /// Attempts to parse a bare JSON value such as a number, string, object etc
 value::Value parseValue (std::string_view);
 
+/// A helper function to create a JSON-friendly Value object with a set of properties.
+/// The argument list must be contain pairs of names and values, e.g.
+///
+///  auto myObject = choc::json::create ("property1", 1234,
+///                                      "property2", "hello",
+///                                      "property3", 100.0f);
+///
+/// Essentially, this is a shorthand for calling choc::value::createObject()
+/// and passing it an empty type name.
+template <typename... Properties>
+value::Value create (Properties&&... propertyNamesAndValues);
+
 //==============================================================================
 /// Formats a value as a JSON string.
 /// If useLineBreaks is true, it'll be formatted as multi-line JSON, if false it'll
@@ -80,6 +92,8 @@ std::string getEscapedQuotedString (std::string_view sourceString);
 
 /// Converts a double to a JSON-format string representation.
 std::string doubleToString (double value);
+
+
 
 //==============================================================================
 //        _        _           _  _
@@ -144,7 +158,7 @@ void writeWithEscapeCharacters (OutputStreamType& out, text::UTF8Pointer source)
 
 inline std::string addEscapeCharacters (text::UTF8Pointer source)
 {
-    std::ostringstream result;
+    std::ostringstream result (std::ios::binary);
     writeWithEscapeCharacters (result, source);
     return result.str();
 }
@@ -156,7 +170,7 @@ inline std::string addEscapeCharacters (std::string_view source)
 
 inline std::string getEscapedQuotedString (std::string_view s)
 {
-    std::ostringstream result;
+    std::ostringstream result (std::ios::binary);
     result << '"';
     writeWithEscapeCharacters (result, text::UTF8Pointer (std::string (s).c_str()));
     result << '"';
@@ -174,104 +188,104 @@ inline std::string doubleToString (double value)
 
 //==============================================================================
 template <typename Stream>
-void writeAsJSON (Stream& output, const value::ValueView& value, bool useMultipleLines)
+struct Writer
 {
+    Stream& out;
+    uint32_t indentSize, currentIndent = 0;
     static constexpr const char newLine = '\n';
 
-    struct Writer
+    std::string getIndent() const         { return std::string (currentIndent, ' '); }
+    void startIndent()                    { currentIndent += indentSize; out << newLine << getIndent(); }
+    void endIndent()                      { currentIndent -= indentSize; out << newLine << getIndent(); }
+
+    void dump (const value::ValueView& v)
     {
-        Stream& out;
-        uint32_t indentSize, currentIndent = 0;
+        if (v.isVoid())                   { out << "null"; return; }
+        if (v.isString())                 { out << getEscapedQuotedString (v.getString()); return; }
+        if (v.isBool())                   { out << (v.getBool() ? "true" : "false"); return; }
+        if (v.isFloat())                  { out << doubleToString (v.get<double>()); return; }
+        if (v.isInt())                    { out << v.get<int64_t>(); return; }
+        if (v.isObject())                 return dumpObject (v);
+        if (v.isArray() || v.isVector())  return dumpArrayOrVector (v);
+    }
 
-        std::string getIndent() const         { return std::string (currentIndent, ' '); }
-        void startIndent()                    { currentIndent += indentSize; out << newLine << getIndent(); }
-        void endIndent()                      { currentIndent -= indentSize; out << newLine << getIndent(); }
+    void dumpArrayOrVector (const value::ValueView& v)
+    {
+        out << '[';
+        auto numElements = v.size();
 
-        void dump (const value::ValueView& v)
+        if (indentSize != 0 && numElements != 0)
         {
-            if (v.isVoid())                   { out << "null"; return; }
-            if (v.isString())                 { out << getEscapedQuotedString (v.getString()); return; }
-            if (v.isBool())                   { out << (v.getBool() ? "true" : "false"); return; }
-            if (v.isFloat())                  { out << doubleToString (v.get<double>()); return; }
-            if (v.isInt())                    { out << v.get<int64_t>(); return; }
-            if (v.isObject())                 return dumpObject (v);
-            if (v.isArray() || v.isVector())  return dumpArrayOrVector (v);
+            startIndent();
+
+            for (uint32_t i = 0; i < numElements; ++i)
+            {
+                dump (v[i]);
+
+                if (i != numElements - 1)
+                    out << "," << newLine << getIndent();
+            }
+
+            endIndent();
+        }
+        else
+        {
+            for (uint32_t i = 0; i < numElements; ++i)
+            {
+                if (i != 0) out << ", ";
+                dump (v[i]);
+            }
         }
 
-        void dumpArrayOrVector (const value::ValueView& v)
+        out << ']';
+    }
+
+    void dumpObject (const value::ValueView& object)
+    {
+        out << '{';
+        auto numMembers = object.size();
+
+        if (indentSize != 0 && numMembers != 0)
         {
-            out << '[';
-            auto numElements = v.size();
+            startIndent();
 
-            if (indentSize != 0 && numElements != 0)
+            for (uint32_t i = 0; i < numMembers; ++i)
             {
-                startIndent();
+                auto member = object.getObjectMemberAt (i);
+                out << getEscapedQuotedString (member.name) << ": ";
+                dump (member.value);
 
-                for (uint32_t i = 0; i < numElements; ++i)
-                {
-                    dump (v[i]);
-
-                    if (i != numElements - 1)
-                        out << "," << newLine << getIndent();
-                }
-
-                endIndent();
-            }
-            else
-            {
-                for (uint32_t i = 0; i < numElements; ++i)
-                {
-                    if (i != 0) out << ", ";
-                    dump (v[i]);
-                }
+                if (i != numMembers - 1)
+                    out << "," << newLine << getIndent();
             }
 
-            out << ']';
+            endIndent();
+        }
+        else
+        {
+            for (uint32_t i = 0; i < numMembers; ++i)
+            {
+                if (i != 0) out << ", ";
+
+                auto member = object.getObjectMemberAt (i);
+                out << getEscapedQuotedString (member.name) << ": ";
+                dump (member.value);
+            }
         }
 
-        void dumpObject (const value::ValueView& object)
-        {
-            out << '{';
-            auto numMembers = object.size();
+        out << '}';
+    }
+};
 
-            if (indentSize != 0 && numMembers != 0)
-            {
-                startIndent();
-
-                for (uint32_t i = 0; i < numMembers; ++i)
-                {
-                    auto member = object.getObjectMemberAt (i);
-                    out << getEscapedQuotedString (member.name) << ": ";
-                    dump (member.value);
-
-                    if (i != numMembers - 1)
-                        out << "," << newLine << getIndent();
-                }
-
-                endIndent();
-            }
-            else
-            {
-                for (uint32_t i = 0; i < numMembers; ++i)
-                {
-                    if (i != 0) out << ", ";
-
-                    auto member = object.getObjectMemberAt (i);
-                    out << getEscapedQuotedString (member.name) << ": ";
-                    dump (member.value);
-                }
-            }
-
-            out << '}';
-        }
-    };
-
-    Writer { output, useMultipleLines ? 2u : 0u }.dump (value);
+template <typename Stream>
+void writeAsJSON (Stream& output, const value::ValueView& value, bool useMultipleLines)
+{
+    Writer<Stream> { output, useMultipleLines ? 2u : 0u }.dump (value);
 }
 
 inline std::string toString (const value::ValueView& v, bool useLineBreaks)
 {
-    std::ostringstream out;
+    std::ostringstream out (std::ios::binary);
     writeAsJSON (out, v, useLineBreaks);
     return out.str();
 }
@@ -375,22 +389,23 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
             switch (pop())
             {
-                case '[':                                 return parseArray();
-                case '{':                                 return parseObject();
-                case '"':                                 return value::createString (parseString());
-                case '-':                                 skipWhitespace(); return parseNumber (true);
-                case '0': case '1': case '2':
-                case '3': case '4': case '5':
-                case '6': case '7': case '8': case '9':   current = startPos; return parseNumber (false);
-                default:                                  break;
+                case '[':    return parseArray();
+                case '{':    return parseObject();
+                case '"':    return value::createString (parseString());
+                case '-':    skipWhitespace(); return parseNumber (true);
+                case 'n':    if (popIf ("ull")) return {}; break;
+                case 't':    if (popIf ("rue"))  return value::createBool (true); break;
+                case 'f':    if (popIf ("alse")) return value::createBool (false); break;
+
+                case '0': case '1': case '2': case '3': case '4':
+                case '5': case '6': case '7': case '8': case '9':
+                    current = startPos;
+                    return parseNumber (false);
+
+                default: break;
             }
 
-            current = startPos;
-            if (popIf ("null"))   return {};
-            if (popIf ("true"))   return value::createBool (true);
-            if (popIf ("false"))  return value::createBool (false);
-
-            throwError ("Syntax error");
+            throwError ("Syntax error", startPos);
         }
 
         value::Value parseNumber (bool negate)
@@ -403,9 +418,16 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
                 auto lastPos = current;
                 auto c = pop();
 
-                if (c >= '0' && c <= '9')                        continue;
-                if (c == '.' && ! hadDot)                        { hadDot = true; continue; }
-                if (! hadExponent && (c == 'e' || c == 'E'))     { hadDot = true; hadExponent = true; continue; }
+                if (c >= '0' && c <= '9')  continue;
+                if (c == '.' && ! hadDot)  { hadDot = true; continue; }
+
+                if (! hadExponent && (c == 'e' || c == 'E'))
+                {
+                    hadDot = true;
+                    hadExponent = true;
+                    popIf ('-');
+                    continue;
+                }
 
                 if (isWhitespace (c) || c == ',' || c == '}' || c == ']' || c == 0)
                 {
@@ -434,7 +456,7 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
         std::string parseString()
         {
-            std::ostringstream s;
+            std::ostringstream s (std::ios::binary);
 
             for (;;)
             {
@@ -513,8 +535,8 @@ inline value::Value parse (const char* text, size_t numbytes, bool parseBareValu
 {
     if (text == nullptr)
     {
-        CHOC_ASSERT (numbytes == 0);
         text = "";
+        numbytes = 0;
     }
 
     if (auto error = text::findInvalidUTF8Data (text, numbytes))
@@ -525,6 +547,13 @@ inline value::Value parse (const char* text, size_t numbytes, bool parseBareValu
 
 inline value::Value parse (std::string_view text)       { return parse (text.data(), text.length(), false); }
 inline value::Value parseValue (std::string_view text)  { return parse (text.data(), text.length(), true); }
+
+template <typename... Properties>
+value::Value create (Properties&&... properties)
+{
+    static_assert ((sizeof...(properties) & 1) == 0, "The arguments must be a sequence of name, value pairs");
+    return choc::value::createObject ({}, std::forward<Properties> (properties)...);
+}
 
 
 } // namespace choc::json

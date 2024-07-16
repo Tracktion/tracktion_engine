@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,11 +27,19 @@ public:
     static SelectableClass* findClassFor (const Selectable&);
     static SelectableClass* findClassFor (const Selectable*);
 
+    template<typename SelectableType>
+    static SelectableClass* findClassFor();
+
     //==============================================================================
     /** Must return a description of this particular group of objects.
         This will be shown on the properties panel.
     */
     virtual juce::String getDescriptionOfSelectedGroup (const SelectableList&);
+
+    /** If it's possible for an object to be selected. Things like currently recording
+        clips should not be selectable
+    */
+    virtual bool canBeSelected (const Selectable& object);
 
     /** if it's possible for an object of this class to be selected at the same
         time as an object of the class passed in, this should return true. Default
@@ -58,10 +66,17 @@ public:
     /** A class should use this to create XML clipboard entries for the given set of items. */
     virtual void addClipboardEntriesFor (AddClipboardEntryParams&);
 
+    struct DeleteSelectedParams
+    {
+        SelectionManager* selectionManager = nullptr;
+        SelectableList items;
+        bool partOfCutOperation;
+    };
+
     /** Deletes this set of objects.
         The partOfCutOperation flag is set if it's being called from SelectableManager::cutSelected()
     */
-    virtual void deleteSelected (const SelectableList&, bool partOfCutOperation);
+    virtual void deleteSelected (const DeleteSelectedParams& params);
 
     /** This gives the selected items a first chance to paste the clipboard contents when the
         user presses ctrl-v. If it doesn't want to handle this, it should return false, and the

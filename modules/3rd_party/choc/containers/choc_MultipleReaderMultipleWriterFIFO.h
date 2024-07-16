@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -27,6 +27,9 @@ namespace choc::fifo
 //==============================================================================
 /**
     A simple atomic multiple-reader, multiple-writer FIFO.
+
+    This does use some spin-locks, so it's not technically lock-free, although in
+    practice it's very unlikely to cause any issues if used on a realtime thread.
 */
 template <typename Item>
 struct MultipleReaderMultipleWriterFIFO
@@ -81,7 +84,7 @@ private:
 
 template <typename Item> bool MultipleReaderMultipleWriterFIFO<Item>::pop (Item& result)
 {
-    const std::lock_guard<decltype (readLock)> lock (readLock);
+    const std::scoped_lock lock (readLock);
     return fifo.pop (result);
 }
 

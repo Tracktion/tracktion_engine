@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -30,9 +30,9 @@ namespace choc::file
 */
 struct DynamicLibrary
 {
-    DynamicLibrary() = delete;
+    DynamicLibrary() = default;
 
-    /// Attempts to laod a library with the given name or path.
+    /// Attempts to load a library with the given name or path.
     DynamicLibrary (std::string_view library);
 
     DynamicLibrary (const DynamicLibrary&) = delete;
@@ -118,28 +118,43 @@ inline void* choc::file::DynamicLibrary::findFunction (std::string_view name)
 #else
 
 //==============================================================================
-#ifndef _WINDOWS_ // only use these local definitions if windows.h isn't already included
- namespace choc_win32_library_fns
- {
-    extern "C" __declspec(dllimport)  void* __stdcall LoadLibraryA (const char*);
-    extern "C" __declspec(dllimport)  int __stdcall FreeLibrary (void*);
-    extern "C" __declspec(dllimport)  void* GetProcAddress (void*, const char*);
- }
- using CHOC_HMODULE = void*;
+namespace choc::win32_defs
+{
+#if ! (defined (_WINDOWS_) || defined (_APISETLIBLOADER_)) // only use these local definitions if windows.h isn't already included
+  using CHOC_HMODULE = void*;
+ #ifdef _MSC_VER
+  extern "C" CHOC_HMODULE __stdcall choc_LoadLibraryA (const char*);
+  extern "C" int          __stdcall choc_FreeLibrary (CHOC_HMODULE);
+  extern "C" void*        __stdcall choc_GetProcAddress (CHOC_HMODULE, const char*);
+  #pragma comment(linker,"/alternatename:choc_LoadLibraryA=LoadLibraryA")
+  #pragma comment(linker,"/alternatename:choc_FreeLibrary=FreeLibrary")
+  #pragma comment(linker,"/alternatename:choc_GetProcAddress=GetProcAddress")
+  static inline CHOC_HMODULE  LoadLibraryA (const char* l)                    { return choc_LoadLibraryA (l); }
+  static inline int           FreeLibrary (CHOC_HMODULE m)                    { return choc_FreeLibrary (m); }
+  static inline void*         GetProcAddress (CHOC_HMODULE m, const char* f)  { return choc_GetProcAddress (m, f); }
+ #else
+  extern "C" __declspec(dllimport)  CHOC_HMODULE __stdcall LoadLibraryA (const char*);
+  extern "C" __declspec(dllimport)  int          __stdcall FreeLibrary (CHOC_HMODULE);
+  extern "C" __declspec(dllimport)  void*        __stdcall GetProcAddress (CHOC_HMODULE, const char*);
+ #endif
 #else
  using CHOC_HMODULE = HMODULE;
+ static inline CHOC_HMODULE LoadLibraryA (const char* l)                    { return ::LoadLibraryA (l); }
+ static inline int          FreeLibrary (CHOC_HMODULE m)                    { return ::FreeLibrary (m); }
+ static inline void*        GetProcAddress (CHOC_HMODULE m, const char* f)  { return (void*) ::GetProcAddress (m, f); }
 #endif
+}
 
 inline choc::file::DynamicLibrary::DynamicLibrary (std::string_view library)
 {
-    handle = choc_win32_library_fns::LoadLibraryA (std::string (library).c_str());
+    handle = (void*) win32_defs::LoadLibraryA (std::string (library).c_str());
 }
 
 inline void choc::file::DynamicLibrary::close()
 {
     if (handle != nullptr)
     {
-        choc_win32_library_fns::FreeLibrary ((CHOC_HMODULE) handle);
+        win32_defs::FreeLibrary ((win32_defs::CHOC_HMODULE) handle);
         handle = nullptr;
     }
 }
@@ -147,7 +162,7 @@ inline void choc::file::DynamicLibrary::close()
 inline void* choc::file::DynamicLibrary::findFunction (std::string_view name)
 {
     if (handle != nullptr)
-        return choc_win32_library_fns::GetProcAddress ((CHOC_HMODULE) handle, std::string (name).c_str());
+        return (void*) win32_defs::GetProcAddress ((win32_defs::CHOC_HMODULE) handle, std::string (name).c_str());
 
     return {};
 }

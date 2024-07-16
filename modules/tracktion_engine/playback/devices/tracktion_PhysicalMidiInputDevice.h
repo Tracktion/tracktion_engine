@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 class PhysicalMidiInputDevice  : public MidiInputDevice
 {
 public:
-    PhysicalMidiInputDevice (Engine&, const juce::String& name, int deviceIndex);
+    PhysicalMidiInputDevice (Engine&, juce::MidiDeviceInfo);
     ~PhysicalMidiInputDevice() override;
 
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
@@ -43,7 +43,26 @@ public:
 
     bool isTakingControllerMessages = true;
 
-protected:
+    class Listener
+    {
+    public:
+        virtual ~Listener() {}
+
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
+    };
+
+    void addListener (Listener* l)
+    {
+        const std::scoped_lock sl (listenerLock);
+        listeners.add (l);
+    }
+
+    void removeListener (Listener* l)
+    {
+        const std::scoped_lock sl (listenerLock);
+        listeners.remove (l);
+    }
+
     juce::String openDevice() override;
     void closeDevice() override;
 
@@ -51,7 +70,7 @@ private:
     void handleIncomingMidiMessageInt (const juce::MidiMessage&);
 
     friend struct PhysicalMidiInputDeviceInstance;
-    int deviceIndex = 0;
+    juce::MidiDeviceInfo deviceInfo;
     std::unique_ptr<juce::MidiInput> inputDevice;
 
     std::unique_ptr<MidiControllerParser> controllerParser;
@@ -61,6 +80,9 @@ private:
     bool tryToSendTimecode (const juce::MidiMessage&);
 
     ActiveNoteList activeNotes;
+
+    RealTimeSpinLock listenerLock;
+    juce::ListenerList<Listener> listeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)
 };

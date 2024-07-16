@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -555,7 +555,7 @@ void TrackCompManager::initialise (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::TRACKCOMPS));
     state = v;
-    trackCompList.reset (new TrackCompList (edit, v));
+    trackCompList = std::make_unique<TrackCompList> (edit, v);
 }
 
 int TrackCompManager::getNumGroups() const

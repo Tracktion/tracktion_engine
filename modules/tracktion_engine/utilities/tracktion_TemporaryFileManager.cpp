@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -350,7 +350,7 @@ void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit& edit)
             }
             else if (name.startsWith (getTrackFreezePrefix()))
             {
-                if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, itemID)))
+                if (auto at = findAudioTrackForID (edit, itemID))
                     if (! at->isFrozen (Track::individualFreeze))
                         filesToDelete.add (entry.getFile());
             }

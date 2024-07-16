@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -137,7 +137,7 @@ public:
         }
     }
 
-    void willCreatePlaybackRegionOnTrack (Track* track) 
+    void willCreatePlaybackRegionOnTrack (Track* track)
     {
         if (regionSequences.count (track) == 0)
             regionSequences[track] = std::make_unique<RegionSequenceWrapper> (*this, track);
@@ -348,11 +348,11 @@ public:
             document.dci->updateMusicalContextContent (document.dcRef, musicalContextRef,
                                                        nullptr, kARAContentUpdateEverythingChanged);
     }
-    
+
     SizedStruct<ARA_STRUCT_MEMBER (ARAMusicalContextProperties, color)> getMusicalContextProperties()
     {
-        return 
-        { 
+        return
+        {
             nullptr, // name
             0,       // index
             nullptr  // color
@@ -498,13 +498,13 @@ private:
             // compute the range of time signature indices given the specified
             // range, or walk all time signatures if no range is specified
             int beginTimeSig, endTimeSig;
-            
-            if (range) 
+
+            if (range)
             {
                 beginTimeSig = ed.tempoSequence.indexOfTimeSigAt (TimePosition::fromSeconds (range->start));
                 endTimeSig = ed.tempoSequence.indexOfTimeSigAt (TimePosition::fromSeconds (range->start + range->duration)) + 1;
             }
-            else 
+            else
             {
                 beginTimeSig = 0;
                 endTimeSig = ed.tempoSequence.getNumTimeSigs();
@@ -555,7 +555,7 @@ private:
                     break;
             }
 
-            // if the last tempo setting is included, extrapolate a new entry 
+            // if the last tempo setting is included, extrapolate a new entry
             // so that plug-ins can calculate tempo at the range boundary
             if (foundLastTempo)
             {
@@ -633,7 +633,7 @@ private:
                 }
             }
 
-            // if the range is null or goes beyond the last chord clip, 
+            // if the range is null or goes beyond the last chord clip,
             // add the no chord here
             if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
             {
@@ -848,7 +848,7 @@ private:
 
     const juce::String itemID;
     juce::String name;
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioSourceWrapper)
 };
 
@@ -894,7 +894,7 @@ public:
     ARADocument& doc;
     AudioSourceWrapper& audioSource;
     ARAAudioModificationRef audioModificationRef = nullptr;
-    
+
 private:
     void updateAudioModificationProperties() {}
 
@@ -998,7 +998,7 @@ public:
         if (playbackRegionRef != nullptr)
         {
             CRASH_TRACER
-            
+
             updatePlaybackRegionProperties();
             auto playbackRegionProperties = getPlaybackRegionProperties();
             doc.dci->updatePlaybackRegionProperties (doc.dcRef, playbackRegionRef, &playbackRegionProperties);

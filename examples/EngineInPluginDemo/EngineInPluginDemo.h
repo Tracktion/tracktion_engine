@@ -52,7 +52,7 @@ public:
         // On Linux the plugin and prepareToPlay may not be called on the message thread.
         // Engine needs to be created on the message thread so we'll do that now
         ensureEngineCreatedOnMessageThread();
-        
+
         setLatencySamples (expectedBlockSize);
         ensurePrepareToPlayCalledOnMessageThread (sampleRate, expectedBlockSize);
     }
@@ -66,7 +66,7 @@ public:
         engineWrapper->playheadSynchroniser.synchronise (*this);
 
         ScopedNoDenormals noDenormals;
-        
+
         auto totalNumInputChannels  = getTotalNumInputChannels();
         auto totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -114,45 +114,31 @@ private:
     static void setupInputs (te::Edit& edit)
     {
         auto& dm = edit.engine.getDeviceManager();
-        
-        for (int i = 0; i < dm.getNumMidiInDevices(); i++)
-        {
-            auto dev = dm.getMidiInDevice (i);
-            dev->setEnabled (true);
-            dev->setEndToEndEnabled (true);
-            dev->recordingEnabled = true;
 
-            if (! dev->isEndToEndEnabled())
-                dev->flipEndToEnd();
+        for (auto& midiIn : dm.getMidiInDevices())
+        {
+            midiIn->setMonitorMode (te::InputDevice::MonitorMode::automatic);
+            midiIn->setEnabled (true);
+            midiIn->recordingEnabled = true;
         }
-        
+
         edit.playInStopEnabled = true;
         edit.getTransport().ensureContextAllocated (true);
 
         // Add the midi input to track 1
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
-        {
             if (auto dev = dm.getMidiInDevice (0))
-            {
                 for (auto instance : edit.getAllInputDevices())
-                {
-                    if (&instance->getInputDevice() == dev)
-                    {
-                        instance->setTargetTrack (*t, 0, true, &edit.getUndoManager());
-
-                        if (auto destination = instance->getDestination (*t, 0))
-                            destination->recordEnabled = true;
-                    }
-                }
-            }
-        }
+                    if (&instance->getInputDevice() == dev.get())
+                        if (auto destination = instance->setTarget (t->itemID, true, &edit.getUndoManager(), 0))
+                            (*destination)->recordEnabled = true;
 
         // Also add the same midi input to track 2
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
             if (auto dev = dm.getMidiInDevice (0))
                 for (auto instance : edit.getAllInputDevices())
-                    if (&instance->getInputDevice() == dev)
-                        instance->setTargetTrack (*t, 0, false, &edit.getUndoManager());
+                    if (&instance->getInputDevice() == dev.get())
+                        [[ maybe_unused ]] auto res = instance->setTarget (t->itemID, false, &edit.getUndoManager(), 0);
 
         edit.restartPlayback();
     }
@@ -185,15 +171,15 @@ private:
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
             auto vt = ValueTree::fromXml (organPatch);
-            
+
             if (vt.isValid())
                 synth->restorePluginStateFromValueTree (vt);
-            
+
             if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
                 t->pluginList.insertPlugin (*synth, 0, nullptr);
         }
     }
-    
+
     //==============================================================================
     class PluginEngineBehaviour : public te::EngineBehaviour
     {
@@ -201,7 +187,7 @@ private:
         bool autoInitialiseDeviceManager() override { return false; }
         bool addSystemAudioIODeviceTypes() override { return false; }
     };
-    
+
     //==============================================================================
     struct EngineWrapper
     {
@@ -211,18 +197,18 @@ private:
             JUCE_ASSERT_MESSAGE_THREAD
             audioInterface.initialise ({});
 
-            setupInputs (edit);
-            setupOutputs (edit);
-            create4OSCPlugin (edit);
+            setupInputs (*edit);
+            setupOutputs (*edit);
+            create4OSCPlugin (*edit);
         }
 
         te::Engine engine { ProjectInfo::projectName, nullptr, std::make_unique<PluginEngineBehaviour>() };
-        te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
-        te::TransportControl& transport { edit.getTransport() };
+        std::unique_ptr<te::Edit> edit { te::Edit::createSingleTrackEdit (engine) };
+        te::TransportControl& transport { edit->getTransport() };
         te::HostedAudioDeviceInterface& audioInterface;
-        te::ExternalPlayheadSynchroniser playheadSynchroniser { edit };
+        te::ExternalPlayheadSynchroniser playheadSynchroniser { *edit };
     };
-    
+
     template<typename Function>
     void callFunctionOnMessageThread (Function&& func)
     {
@@ -242,19 +228,19 @@ private:
             finishedSignal.wait (-1);
         }
     }
-    
+
     void ensureEngineCreatedOnMessageThread()
     {
         if (! engineWrapper)
             callFunctionOnMessageThread ([&] { engineWrapper = std::make_unique<EngineWrapper>(); });
     }
-    
+
     void ensurePrepareToPlayCalledOnMessageThread (double sampleRate, int expectedBlockSize)
     {
         jassert (engineWrapper);
         callFunctionOnMessageThread ([&] { engineWrapper->audioInterface.prepareToPlay (sampleRate, expectedBlockSize); });
     }
-    
+
     //==============================================================================
     std::unique_ptr<EngineWrapper> engineWrapper;
 
@@ -289,11 +275,11 @@ private:
         {
             plugin.engineWrapper->transport.removeListener (this);
         }
-        
+
         void paint (Graphics& g) override
         {
             g.fillAll (Colours::darkgrey);
-            
+
             auto r = getLocalBounds();
             String text;
             text << "Host Info:" << newLine
@@ -306,7 +292,7 @@ private:
             g.setFont (15.0f);
             g.drawFittedText (text, r.reduced (10), Justification::topLeft, 5);
         }
-        
+
         void resized() override
         {
             auto r = getLocalBounds();
@@ -315,10 +301,10 @@ private:
             recordMidiButton.setBounds (r.removeFromBottom (26));
             clickTrackButton.setBounds (r.removeFromBottom (26));
         }
-        
+
     private:
         EngineInPluginDemo& plugin;
-        te::Edit& edit { plugin.engineWrapper->edit };
+        te::Edit& edit { *plugin.engineWrapper->edit };
         AudioPlayHead::CurrentPositionInfo pluginPositionInfo, editPositionInfo;
         te::LambdaTimer repaintTimer { [this] { update(); } };
         juce::ToggleButton clickTrackButton { "Enable Click Track" };
@@ -340,8 +326,8 @@ private:
             if (plugin.engineWrapper)
             {
                 pluginPositionInfo = plugin.engineWrapper->playheadSynchroniser.getPositionInfo();
-                editPositionInfo = getCurrentPositionInfo (plugin.engineWrapper->edit);
-                clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit.clickTrackEnabled.getPropertyAsValue());
+                editPositionInfo = getCurrentPositionInfo (*plugin.engineWrapper->edit);
+                clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit->clickTrackEnabled.getPropertyAsValue());
 
                 // Update recording button
                 bool isRecording = false;
@@ -360,7 +346,7 @@ private:
                     recordMidiButton.setColour (juce::TextButton::buttonColourId, getLookAndFeel().findColour (juce::TextButton::buttonColourId));
                 }
             }
-            
+
             repaint();
         }
 
@@ -379,7 +365,7 @@ private:
             {
                 if (instance->isRecording())
                 {
-                    instance->stopRecording();
+                    te::punchOutRecording (*instance);
                 }
                 else
                 {
@@ -388,27 +374,13 @@ private:
                     te::InputDeviceInstance::RecordingParameters params;
                     params.punchRange   = { edit.getTransport().getPosition(), te::Edit::getMaximumEditTimeRange().getEnd() };
 
-                    if (auto error = instance->prepareToRecord (params); error.isNotEmpty())
-                        edit.engine.getUIBehaviour().showWarningMessage (error);
+                    if (auto [preparedContexts, errors] = te::extract (instance->prepareToRecord (params)); errors.isEmpty())
+                        instance->startRecording (std::move (preparedContexts));
                     else
-                        instance->startRecording();
+                        edit.engine.getUIBehaviour().showWarningMessage (errors.joinIntoString ("\n"));
                 }
             }
         }
-
-        void playbackContextChanged() override
-        {
-        }
-
-        void autoSaveNow() override {}
-        void setAllLevelMetersActive (bool /*metersBecameInactive*/) override {}
-        void setVideoPosition (te::TimePosition, bool /*forceJump*/) override {}
-        void startVideo() override {}
-        void stopVideo() override {}
-
-        void recordingFinished (te::InputDeviceInstance&,
-                                const juce::ReferenceCountedArray<te::Clip>& /*recordedClips*/) override
-        {}
     };
 
     //==============================================================================

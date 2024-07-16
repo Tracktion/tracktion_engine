@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -9,6 +9,7 @@
 */
 
 #include "tracktion_TestUtilities.h"
+#include "../../3rd_party/choc/text/choc_StringUtilities.h"
 
 #if __has_include (<cxxabi.h>)
 #include <cxxabi.h>
@@ -20,7 +21,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
     {
        #if __has_include (<cxxabi.h>)
         int status;
-        
+
         if (char* demangled = abi::__cxa_demangle (name.c_str(), nullptr, nullptr, &status); status == 0)
         {
             std::string demangledString (demangled);
@@ -28,7 +29,7 @@ namespace tracktion { inline namespace graph { namespace test_utilities
             return demangledString;
         }
        #endif
-        
+
         return name;
     }
 
@@ -38,7 +39,9 @@ namespace tracktion { inline namespace graph { namespace test_utilities
         {
             std::string label;
             size_t memorySizeBytes = 0;
+            int numOutputs = -1;
             bool containsInternalNodes = false;
+            int latencyNumSamples = 0;
         };
 
         struct Visitor
@@ -56,6 +59,8 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 destNodeInfo.label = destNodeString;
                 destNodeInfo.memorySizeBytes = n.getAllocatedBytes();
                 destNodeInfo.containsInternalNodes = ! n.getInternalNodes().empty();
+                destNodeInfo.numOutputs = n.numOutputNodes;
+                destNodeInfo.latencyNumSamples = n.getNodeProperties().latencyNumSamples;
 
                 for (auto input : n.getDirectInputNodes())
                 {
@@ -72,33 +77,45 @@ namespace tracktion { inline namespace graph { namespace test_utilities
                 }
             }
         };
-        
+
         std::map<std::string, NodeInfo> idNameMap;
         std::vector<std::string> edges;
         Visitor::visitInputs (node, edges, idNameMap);
-        
+
         // Build graph
         std::string output;
         output += "digraph {\n";
-        
+
         for (auto [id, info] : idNameMap)
         {
+            std::string label = choc::text::replace (info.label,
+                                                     "tracktion::engine", "te",
+                                                     "tracktion::graph", "tg");
+
             std::string colourString, shapeString;
 
             if (info.memorySizeBytes > 0)
+            {
+                label += "*";
                 colourString += "color=red ";
+            }
+
+            label += " (" + std::to_string (info.numOutputs) + ")";
+
+            if (info.latencyNumSamples > 0)
+                label += choc::text::replace ("\n{}", "{}", std::to_string (info.latencyNumSamples));
 
             if (info.containsInternalNodes)
                 shapeString += "shape=box";
 
-            output += id + "[label=\"" + info.label + "\" " + colourString + shapeString + "]\n";
+            output += id + "[label=\"" + label + "\" " + colourString + shapeString + "]\n";
         }
 
         for (auto edge : edges)
             output += edge += "\n";
-        
+
         output += "\n}";
-        
+
         return output;
     }
 }}}

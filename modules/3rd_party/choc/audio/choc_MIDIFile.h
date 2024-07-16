@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -49,7 +49,7 @@ struct File
 
     struct Event
     {
-        Message message;
+        LongMessage message;
         uint32_t tickPosition = 0;
     };
 
@@ -59,7 +59,7 @@ struct File
     };
 
     /// Iterates all the events on all tracks, returning each one with its playback time in seconds.
-    void iterateEvents (const std::function<void(const Message&, double timeInSeconds)>&) const;
+    void iterateEvents (const std::function<void(const LongMessage&, double timeInSeconds)>&) const;
 
     /// Merges all the events from this file into a single MIDI Sequence object.
     choc::midi::Sequence toSequence() const;
@@ -212,19 +212,19 @@ namespace
                 auto length = reader.readVariableLength();
                 reader.skip (length);
 
-                Message meta (std::addressof (statusByte), 1);
-                meta.appendData (start, static_cast<size_t> (reader.data - start));
+                LongMessage meta (std::addressof (statusByte), 1);
+                meta.midiData.storage.append (reinterpret_cast<const char*> (start), static_cast<size_t> (reader.data - start));
                 result.push_back ({ std::move (meta), tickPosition });
             }
             else if (statusByte == 0xf0) // sysex
             {
-                Message sysex (std::addressof (statusByte), 1);
+                LongMessage sysex (std::addressof (statusByte), 1);
                 auto start = reader.data;
 
                 while (reader.read<uint8_t>() < 0x80)
                 {}
 
-                sysex.appendData (start, static_cast<size_t> (reader.data - start));
+                sysex.midiData.storage.append (reinterpret_cast<const char*> (start), static_cast<size_t> (reader.data - start));
                 result.push_back ({ std::move (sysex), tickPosition });
             }
             else
@@ -232,10 +232,10 @@ namespace
                 ShortMessage m (statusByte, 0, 0);
                 auto length = m.length();
 
-                if (length > 1)  m.data[1] = reader.read<uint8_t>();
-                if (length > 2)  m.data[2] = reader.read<uint8_t>();
+                if (length > 1)  m.midiData.bytes[1] = reader.read<uint8_t>();
+                if (length > 2)  m.midiData.bytes[2] = reader.read<uint8_t>();
 
-                result.push_back ({ Message (m), tickPosition });
+                result.push_back ({ LongMessage (m), tickPosition });
             }
         }
 
@@ -279,7 +279,7 @@ inline void File::load (const void* midiFileData, size_t dataSize)
     }
 }
 
-inline void File::iterateEvents (const std::function<void(const Message&, double timeInSeconds)>& handleEvent) const
+inline void File::iterateEvents (const std::function<void(const LongMessage&, double timeInSeconds)>& handleEvent) const
 {
     std::vector<Event> allEvents;
 
@@ -332,7 +332,7 @@ inline choc::midi::Sequence File::toSequence() const
 {
     choc::midi::Sequence sequence;
 
-    iterateEvents ([&] (const Message& m, double time)
+    iterateEvents ([&] (const LongMessage& m, double time)
     {
         sequence.events.push_back ({ time, m });
     });

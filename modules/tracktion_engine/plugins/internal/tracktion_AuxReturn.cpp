@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -57,8 +57,7 @@ void AuxReturnPlugin::applyToBuffer (const PluginRenderContext&)
 
 void AuxReturnPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToCachedValues (v, busNumber);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

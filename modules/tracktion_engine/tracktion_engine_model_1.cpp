@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,6 +12,8 @@
 
 #include <future>
 #include <chrono>
+
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
 
 using namespace std::literals;
 
@@ -35,6 +37,7 @@ using namespace std::literals;
 #include "model/edit/tracktion_Edit.cpp"
 #include "model/edit/tracktion_Edit.test.cpp"
 #include "model/edit/tracktion_EditUtilities.cpp"
+#include "model/edit/tracktion_Scene.cpp"
 #include "model/edit/tracktion_SourceFileReference.cpp"
 #include "model/clips/tracktion_Clip.cpp"
 
@@ -61,6 +64,12 @@ using namespace std::literals;
 #include "model/clips/tracktion_WaveAudioClip.cpp"
 #include "model/clips/tracktion_ChordClip.cpp"
 #include "model/clips/tracktion_EditClip.cpp"
+#include "model/clips/tracktion_FollowActions.cpp"
+#include "model/clips/tracktion_FollowActions.test.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.test.cpp"
+#include "model/clips/tracktion_LaunchHandle.cpp"
+#include "model/clips/tracktion_LaunchHandle.test.cpp"
 #include "model/clips/tracktion_MarkerClip.cpp"
 #include "model/clips/tracktion_CollectionClip.cpp"
 #include "model/clips/tracktion_ContainerClip.cpp"

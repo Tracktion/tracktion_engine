@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -33,7 +33,7 @@ tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
     auto props = input->getNodeProperties();
     props.hasMidi = true;
     hash_combine (props.nodeID, track->itemID.getRawID());
-    
+
     return props;
 }
 
@@ -70,10 +70,10 @@ void LiveMidiInjectingNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     const juce::ScopedLock sl (liveMidiLock);
-    
+
     if (liveMidiMessages.isEmpty())
         return;
-    
+
     destMidiBlock.mergeFromAndClear (liveMidiMessages);
 }
 

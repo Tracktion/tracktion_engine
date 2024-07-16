@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -103,7 +103,7 @@ juce::StringArray MIDITrackerModifier::getMidiInputNames()
 void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
     setEditTime (pc.editTime.getStart());
-    
+
     if (pc.bufferForMidiMessages != nullptr)
         for (auto& m : *pc.bufferForMidiMessages)
             if (m.isNoteOn())

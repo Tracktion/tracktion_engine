@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,6 +17,7 @@ namespace tracktion { inline namespace engine
 class ExternalController  : private juce::AsyncUpdater,
                             private SelectableListener,
                             private AutomatableParameter::Listener,
+                            private juce::ChangeListener,
                             private juce::Timer
 {
 public:
@@ -26,6 +27,8 @@ public:
 
     //==============================================================================
     juce::String getName() const;
+
+    bool wantsDevice (const MidiID& m);
 
     bool needsMidiChannel() const               { return needsChannel; }
     bool needsMidiBackChannel() const           { return needsBackChannel; }
@@ -64,14 +67,16 @@ public:
     bool wantsMidiClock() const                 { return wantsClock; }
 
     void currentEditChanged (Edit*);
+    void currentSelectionManagerChanged (SelectionManager*);
 
     // these will be called by tracktion when stuff happens, and
     // will pass the message on to the controller.
 
     // channels are virtual - i.e. not restricted to physical chans
     void moveFader (int channelNum, float newSliderPos);
-    void moveMasterFaders (float newLeftPos, float newRightPos);
+    void moveMasterFader (float newPos);
     void movePanPot (int channelNum, float newPan);
+    void moveMasterPanPot (float newPos);
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright);
     void soloCountChanged (bool);
     void playStateChanged (bool isPlaying);
@@ -98,12 +103,14 @@ public:
     void selectableObjectChanged (Selectable*) override;
     void selectableObjectAboutToBeDeleted (Selectable*) override;
     void curveHasChanged (AutomatableParameter&) override;
-    void currentValueChanged (AutomatableParameter&, float /*newValue*/) override;
+    void currentValueChanged (AutomatableParameter&) override;
     void updateTrackSelectLights();
     void updateTrackRecordLights();
     void updatePunchLights();
     void updateScrollLights();
     void updateUndoLights();
+    void updatePadColours();
+    void clearPadColours();
 
     int getNumFaderChannels() const noexcept;
     int getFaderIndexInActiveRegion (int num) const noexcept;
@@ -125,12 +132,15 @@ public:
 
     //==============================================================================
     juce::Colour getSelectionColour() const             { return selectionColour; }
-    bool getShowSelectionColour() const                 { return showSelection; }
+    bool getShowTrackSelectionColour() const            { return showTrackSelection; }
+    bool getShowClipSlotSelectionColour() const         { return showClipSlotSelection; }
     void setSelectionColour (juce::Colour);
-    void setShowSelectionColour (bool);
+    void setShowTrackSelectionColour (bool);
+    void setShowClipSlotSelectionColour (bool);
 
     bool shouldTrackBeColoured (int channelNum);
     void getTrackColour (int channelNum, juce::Colour&);
+    std::optional<ColourArea> getColouredArea (const Edit&);
 
     bool shouldPluginBeColoured (Plugin*);
     void getPluginColour (Plugin*, juce::Colour&);
@@ -148,8 +158,8 @@ public:
 
     static juce::String shortenName (juce::String, int maxLen);
 
-    juce::String getInputDeviceName (int idx) const     { return inputDeviceName[idx]; }
-    juce::String getOutputDeviceName (int idx) const    { return outputDeviceName[idx]; }
+    juce::String getInputDeviceName (int idx) const     { return inputDeviceNames[idx]; }
+    juce::String getOutputDeviceName (int idx) const    { return outputDeviceNames[idx]; }
 
     juce::StringArray getMidiInputPorts() const;
     juce::StringArray getMidiOutputPorts() const;
@@ -160,6 +170,7 @@ public:
 
 private:
     void timerCallback() override;
+    void changeListenerCallback (juce::ChangeBroadcaster*) override;
 
     static constexpr int maxDevices = 4;
     friend class ExternalControllerManager;
@@ -169,16 +180,17 @@ private:
 
     int numDevices = 1;
     int mainDevice = 0;
-    juce::String inputDeviceName[maxDevices];
-    juce::String outputDeviceName[maxDevices];
+    juce::StringArray inputDeviceNames, outputDeviceNames;
 
     std::unique_ptr<ControlSurface> controlSurface;
     int oscInputPort, oscOutputPort;
     juce::String oscOutputAddr;
 
     bool enabled;
+    mutable std::optional<bool> hasMidiInput;
     int maxTrackNameChars;
     int channelStart = 0;
+    int padStart = 0;
     int startParamNumber = 0;
     bool needsBackChannel = false;
     bool needsChannel = false;
@@ -187,16 +199,17 @@ private:
     bool deletable = false;
     bool allowBankingOffEnd = false;
     AutomatableParameter::Array currentParams;
-    Selectable::WeakRef currentParamSource, lastRegisteredSelectable;
-    bool showSelection = false;
+    SafeSelectable<Selectable> currentParamSource, lastRegisteredSelectable;
+    bool showTrackSelection = false;
+    bool showClipSlotSelection = true;
     juce::Colour selectionColour;
     int startMarkerNumber = 0;
     int auxBank = 0;
     bool followsTrackSelection;
     bool processMidi = false, updateParams = false;
 
-    MidiInputDevice* inputDevices[maxDevices] = { nullptr };
-    MidiOutputDevice* outputDevices[maxDevices] = { nullptr };
+    std::vector<MidiInputDevice*> inputDevices;
+    std::vector<MidiOutputDevice*> outputDevices;
 
     juce::Array<std::pair<int, juce::MidiMessage>> pendingMidiMessages;
     juce::CriticalSection incomingMidiLock;
@@ -205,20 +218,25 @@ private:
     int getFaderBankOffset() const    { return channelStart;      }
     int getAuxBankOffset() const      { return auxBank;           }
     int getParamBankOffset() const    { return startParamNumber;  }
+    int getClipSlotOffset() const     { return padStart;          }
 
     void changeFaderBank (int delta, bool moveSelection);
+    void changePadBank (int delta);
     void changeParamBank (int delta);
     void updateParamList();
     void changeMarkerBank (int delta);
     void changeAuxBank (int delta);
+    void setAuxBank (int num);
 
-    void userMovedParameterControl (int paramNumber, float newValue);
+    void userMovedParameterControl (int paramNumber, float newValue, bool delta);
     void userPressedParameterControl (int paramNumber);
     void userPressedGoToMarker (int marker);
 
     Plugin* getCurrentPlugin() const;
 
     bool wantsClock;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExternalController)
 };
 
 }} // namespace tracktion { inline namespace engine

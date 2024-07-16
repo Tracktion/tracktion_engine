@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,7 +25,7 @@ namespace render_utils
                                                             juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
-        
+
         // Initialise playhead and continuity
         auto playHead = std::make_unique<tracktion::graph::PlayHead>();
         auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
@@ -41,13 +41,14 @@ namespace render_utils
         cnp.includeMasterPlugins = r.useMasterPlugins;
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
+        cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
         std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
         if (! node)
             return {};
-        
+
         return std::make_unique<Renderer::RenderTask> (desc, r,
                                                        std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
                                                        progressToUpdate, thumbnail);
@@ -120,7 +121,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
       sourceToUpdate (source)
 {
     auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
-    
+
     // Initialise playhead and continuity
     playHead = std::make_unique<tracktion::graph::PlayHead>();
     playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
@@ -136,6 +137,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.includeMasterPlugins = r.useMasterPlugins;
     cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
     cnp.includeBypassedPlugins = false;
+    cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
     callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
 }
@@ -234,8 +236,8 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 
     for (SampleCount pos = 0; pos < reader->lengthInSamples;)
     {
-        auto numLeft = static_cast<int> (reader->lengthInSamples - pos);
-        auto samps = std::min (tempBuffer.getNumSamples(), std::min (blockSize, numLeft));
+        auto numLeft = reader->lengthInSamples - pos;
+        auto samps = int (std::min (juce::int64 (tempBuffer.getNumSamples()), std::min (juce::int64 (blockSize), numLeft)));
 
         reader->read (&tempBuffer, 0, samps, pos, true, reader->numChannels > 1);
 
@@ -255,7 +257,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
-    
+
     if (! nodeRenderContext)
     {
         callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
@@ -277,13 +279,13 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
             return true;
         }
     }
-    
+
     if (! nodeRenderContext->renderNextBlock (progress))
         return false;
-    
+
     nodeRenderContext.reset();
     progress = 1.0f;
-    
+
     return true;
 }
 
@@ -410,6 +412,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
                              TimeRange range,
                              const juce::BigInteger& tracksToDo,
                              bool usePlugins,
+                             bool useACID,
                              juce::Array<Clip*> clips,
                              bool useThread)
 {
@@ -422,6 +425,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         tracks.add (getAllTracks (edit)[bit]);
 
     const FreezePointPlugin::ScopedTrackSoloIsolator isolator (edit, tracks);
+    const Renderer::ScopedClipSlotDisabler slotDisabler (edit, tracks);
 
     TransportControl::stopAllTransports (engine, false, true);
     turnOffAllPlugins (edit);
@@ -442,8 +446,9 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         r.allowedClips = clips;
         r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-        addAcidInfo (edit, r);
-        
+        if (useACID)
+            addAcidInfo (edit, r);
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             if (useThread)
@@ -465,7 +470,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
 
 bool Renderer::renderToFile (Edit& edit, const juce::File& f, bool useThread)
 {
-    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, {}, useThread);
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, true, {}, useThread);
 }
 
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)
@@ -485,7 +490,7 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
          && ! r.destFile.isDirectory())
     {
         auto& ui = r.edit->engine.getUIBehaviour();
-        
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             ui.runTaskWithProgressBar (*task);
@@ -519,7 +524,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
 {
     CRASH_TRACER
 
-    auto proj = r.engine->getProjectManager().getProject (*r.edit);
+    auto proj = getProjectForEdit (*r.edit);
 
     if (proj == nullptr)
     {
@@ -587,7 +592,7 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
         r.time = range;
         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
         r.tracksToDo = tracksToDo;
-        
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -28,6 +28,9 @@ public:
 
     /** Must return the state of this ClipOwner. */
     virtual juce::ValueTree& getClipOwnerState() = 0;
+
+    /** Must return the ID of this ClipOwner. */
+    virtual EditItemID getClipOwnerID() = 0;
 
     /** Must return the selectable if this ClipOwner is one. */
     virtual Selectable* getClipOwnerSelectable() = 0;
@@ -91,10 +94,10 @@ Clip* insertClipWithState (ClipOwner&,
 
 //==============================================================================
 /** Inserts a new clip with the given type and a default name. */
-Clip* insertNewClip (ClipOwner&, TrackItem::Type, TimeRange);
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, EditTimeRange);
 
 /** Inserts a new clip with the given type and name. */
-Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, TimeRange);
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, EditTimeRange);
 
 /** Inserts a new clip with the given type and name. */
 Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, ClipPosition);

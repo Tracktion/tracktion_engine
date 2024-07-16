@@ -16,7 +16,7 @@ class PitchAndTimeComponent   : public Component,
 #### Private Members
 - If you look in the private members section of the `PitchAndTimeComponent` again, you'll see similarities with the PlaybackDemo: There's an `Engine` to setup the Tracktion Engine, and an `Edit`. However, this time the `Edit` is a member which we create as an empty Edit, ready for editing.
 ```
-te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+te::Edit edit { engine, te::Edit::EditRole::forEditing };
 ```
 
 - For speed, the next line take a reference to the `Edit`'s `TransportControl`.

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -131,6 +131,14 @@ public:
         callback = std::move (newCallback);
     }
 
+    template<typename DurationType>
+    void startTimer (std::chrono::duration<DurationType> interval)
+    {
+        juce::Timer::startTimer (static_cast<int> (std::chrono::duration_cast<std::chrono::milliseconds> (interval).count()));
+    }
+
+    using juce::Timer::startTimer;
+
     void timerCallback() override
     {
         if (callback)
@@ -139,6 +147,8 @@ public:
 
 private:
     std::function<void()> callback;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LambdaTimer)
 };
 
 //==============================================================================
@@ -175,7 +185,7 @@ public:
                 hasBeenCancelled = true;
                 cancelPendingUpdate();
             }
-            
+
             return;
         }
 
@@ -183,7 +193,7 @@ public:
         {
             while (! (thread->threadShouldExit() || hasFinished()))
                 waiter.wait (50);
-            
+
             if (thread->threadShouldExit())
             {
                 hasBeenCancelled = true;
@@ -214,7 +224,7 @@ private:
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
-        
+
         if (hasBeenCancelled)
             return;
 

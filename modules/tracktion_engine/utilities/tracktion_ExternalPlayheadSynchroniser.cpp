@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,12 +16,12 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     juce::AudioPlayHead::CurrentPositionInfo info;
     auto& transport = edit.getTransport();
     auto& tempoSequence = edit.tempoSequence;
-    
+
     auto currentTime = transport.getPosition();
-    
+
     if (auto epc = transport.getCurrentPlaybackContext())
         currentTime = epc->getPosition();
-    
+
     auto position = createPosition (tempoSequence);
     position.set (currentTime);
     const auto timeSig = position.getTimeSignature();
@@ -57,9 +57,9 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
 {
     if (info.bpm == 0.0)
         return;
-    
+
     auto& transport = edit.getTransport();
-    
+
     // First synchronise position
     if (auto epc = transport.getCurrentPlaybackContext())
     {
@@ -69,29 +69,29 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         const double beatsSinceStart = (info.ppqPosition * info.timeSigDenominator) / 4.0;
         const double secondsPerBeat = 240.0 / (info.bpm * info.timeSigDenominator);
         const TimeDuration timeOffset = TimeDuration::fromSeconds (beatsSinceStart * secondsPerBeat);
-        
+
         const TimeDuration blockSizeInSeconds = TimeDuration::fromSeconds (edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0);
         const TimePosition currentPositionInSeconds = epc->getPosition() + blockSizeInSeconds;
         // N.B we add the blockSizeInSeconds here as the playhead position will be at the end of the last block.
         // This avoids us re-syncing every block
-        
+
         if (info.isPlaying)
         {
             if (TimeDuration::fromSeconds (std::abs ((currentPositionInSeconds - timeOffset).inSeconds())) > (blockSizeInSeconds / 2.0))
                 epc->postPosition (toPosition (timeOffset));
-            
+
             if (! epc->isPlaying())
                 epc->play();
         }
         else
         {
             transport.setPosition (toPosition (timeOffset));
-            
+
             if (epc->isPlaying())
                 epc->stop();
         }
     }
-    
+
     // Then the tempo info
     {
         auto position = createPosition (edit.tempoSequence);
@@ -104,23 +104,22 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         const auto newDenominator = info.timeSigDenominator;
 
         if (tempo != newBpm
-            || timeSig.numerator != newNumerator
-            || timeSig.denominator != newDenominator)
+             || timeSig.numerator != newNumerator
+             || timeSig.denominator != newDenominator)
         {
-            juce::MessageManager::callAsync ([&edit, editRef = Edit::WeakRef (&edit),
-                                              newBpm, newNumerator, newDenominator]
+            juce::MessageManager::callAsync ([editRef = makeSafeRef (edit), newBpm, newNumerator, newDenominator]
             {
-                 if (! editRef)
-                     return;
+                 if (auto ed = editRef.get())
+                 {
+                     // N.B. This assumes only a simple tempo sequence with a single point
+                     auto& tempoSequence = ed->tempoSequence;
+                     auto tempoSetting = tempoSequence.getTempo (0);
+                     auto timeSigSetting = tempoSequence.getTimeSig (0);
 
-                 // N.B. This assumes only a simple tempo sequence with a single point
-                 auto& tempoSequence = edit.tempoSequence;
-                 auto tempoSetting = tempoSequence.getTempo (0);
-                 auto timeSigSetting = tempoSequence.getTimeSig (0);
-
-                 tempoSetting->setBpm (newBpm);
-                 timeSigSetting->numerator = newNumerator;
-                 timeSigSetting->denominator = newDenominator;
+                     tempoSetting->setBpm (newBpm);
+                     timeSigSetting->numerator = newNumerator;
+                     timeSigSetting->denominator = newDenominator;
+                 }
             });
         }
     }
@@ -190,11 +189,11 @@ bool ExternalPlayheadSynchroniser::synchronise (juce::AudioPlayHead& playhead)
         {
             // Synchronise the Edit's position and tempo info based on the host
             synchroniseEditPosition (edit, positionInfo);
-            
+
             return true;
         }
     }
-    
+
     return false;
 }
 

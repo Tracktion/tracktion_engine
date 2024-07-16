@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -41,7 +41,7 @@ void TrackOutput::flushStateToValueTree()
     if (! destTrackID.isValid())
         return;
 
-    if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (owner.edit, destTrackID)))
+    if (auto at = findAudioTrackForID (owner.edit, destTrackID))
         setOutputToTrack (at);
 }
 
@@ -160,7 +160,7 @@ OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
 juce::String TrackOutput::getOutputName() const
 {
     if (auto t = getDestinationTrack())
-        return TRANS("Track") + " " + juce::String (t->getAudioTrackNumber());
+        return t->getNameAsTrackNumber();
 
     return outputDevice;
 }
@@ -301,13 +301,7 @@ void TrackOutput::getPossibleOutputNames (const juce::Array<AudioTrack*>& tracks
     {
         if (t->createsOutput() && ! feedsIntoAnyOf (t, tracks))
         {
-            juce::String trackName, trackNum (t->getAudioTrackNumber());
-
-            if (! t->getName().startsWithIgnoreCase (TRANS("Track") + " "))
-                trackName = (TRANS("Track") + " " + trackNum + " (" + t->getName() + ")");
-            else
-                trackName = (TRANS("Track") + " " + trackNum);
-
+            auto trackName = t->getNameAsTrackNumberWithDescription();
             s.add (trackName);
             a.add (trackName);
         }

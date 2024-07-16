@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,8 +20,7 @@ class WaveInputDevice   : public InputDevice
 {
 public:
     //==============================================================================
-    WaveInputDevice (Engine&, const juce::String& name, const juce::String& type,
-                     const std::vector<ChannelIndex>&, DeviceType);
+    WaveInputDevice (Engine&, const juce::String& type, const WaveDeviceDescription&, DeviceType);
     ~WaveInputDevice() override;
 
     static juce::StringArray getMergeModes();
@@ -34,8 +33,6 @@ public:
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     //==============================================================================
-    void flipEndToEnd() override;
-    void setEndToEnd (bool);
     void setRecordAdjustmentMs (double ms);
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;
@@ -92,7 +89,7 @@ private:
     std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
 
     void loadProps();
-    void saveProps();
+    void saveProps() override;
     juce::AudioFormat* getFormatToUse() const;
 
     juce::Array<WaveInputDeviceInstance*> instances;

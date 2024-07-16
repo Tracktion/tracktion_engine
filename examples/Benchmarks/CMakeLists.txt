@@ -36,7 +36,7 @@ juce_add_console_app(${TARGET_NAME})
 
 juce_generate_juce_header(${TARGET_NAME})
 
-target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
@@ -64,9 +64,6 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_USE_CURL=1
     JUCE_LOAD_CURL_SYMBOLS_LAZILY=1
     JUCE_WEB_BROWSER=0
-    JUCER_ENABLE_GPL_MODE=1
-    JUCE_DISPLAY_SPLASH_SCREEN=0
-    JUCE_REPORT_APP_USAGE=0
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     JUCE_MODAL_LOOPS_PERMITTED=1
     TRACKTION_BENCHMARKS=1
@@ -84,18 +81,24 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-implicit-fallthrough") #TODO: Remove this when when juce compiles cleanly
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_compile_options(${TARGET_NAME} PRIVATE "-fno-aligned-allocation")
+endif()
+
 # If we are compiling for Linux specify the arch to enable sse and avx instructions
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_compile_options(${TARGET_NAME} PRIVATE "-march=sandybridge")
 endif()
-    
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
     target_compile_options(${TARGET_NAME} PRIVATE "-Wno-unknown-pragmas")
 endif()
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,12 +18,12 @@ class LevelMeasuringNode final  : public tracktion::graph::Node
 {
 public:
     LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeasurer&);
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override        { return input->getNodeProperties(); }
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
     void process (tracktion::graph::Node::ProcessContext&) override;
-    
+
 private:
     std::unique_ptr<tracktion::graph::Node> input;
     LevelMeasurer& levelMeasurer;

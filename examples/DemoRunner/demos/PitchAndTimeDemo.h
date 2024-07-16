@@ -83,7 +83,7 @@ public:
             modeButton.onClick = [this, p = dynamic_cast<te::PitchShiftPlugin*> (pitchShiftPlugin.get())]
                                  { showModeMenu (*p); };
         }
-        
+
         // Load some example audio to start
         {
             defaultTempFile = std::make_unique<TemporaryFile> (".ogg");
@@ -103,7 +103,7 @@ public:
     {
         const auto c = getLookAndFeel().findColour (ResizableWindow::backgroundColourId);
         g.fillAll (c);
-        
+
         g.setColour (c.contrasting (0.2f));
         g.fillRect (getLocalBounds().reduced (2).withHeight (2).withY (pitchShiftLabel.getY() - 6));
     }
@@ -124,7 +124,7 @@ public:
             modeButton.setBounds (bottomR.removeFromRight (80).reduced (2));
             pitchShiftSlider.setBounds (bottomR.reduced (2));
         }
-        
+
         {
             auto bottomR = r.removeFromBottom (60);
             auto left = bottomR.removeFromLeft (bottomR.getWidth() / 2);
@@ -141,7 +141,7 @@ public:
 private:
     //==============================================================================
     te::Engine& engine;
-    te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
+    te::Edit edit { engine, te::Edit::EditRole::forEditing };
     te::TransportControl& transport { edit.getTransport() };
 
     FileChooser audioFileChooser { "Please select an audio file to load...",
@@ -155,7 +155,7 @@ private:
     Slider keySlider, tempoSlider, pitchShiftSlider;
     TextButton modeButton { "Algorithm" };
     Label pitchShiftLabel { {}, "Real-time Pitch Shift:" };
-    
+
     //==============================================================================
     te::WaveAudioClip::Ptr getClip()
     {
@@ -231,18 +231,18 @@ private:
             thumbnail.setFile (EngineHelpers::loopAroundClip (*clip)->getPlaybackFile());
         }
     }
-    
+
     void showModeMenu (te::PitchShiftPlugin& plugin)
     {
         PopupMenu m;
         const int currentMode = plugin.mode;
-        
+
         for (auto modeName : tracktion_engine::TimeStretcher::getPossibleModes (plugin.engine, true))
         {
             const auto mode = static_cast<int> (tracktion_engine::TimeStretcher::getModeFromName (plugin.engine, modeName));
             m.addItem (PopupMenu::Item (modeName).setTicked (currentMode == mode).setAction ([&plugin, mode] { plugin.mode = mode; }));
         }
-        
+
         m.showMenuAsync ({});
     }
 

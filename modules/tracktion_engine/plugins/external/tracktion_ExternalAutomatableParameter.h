@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -48,7 +48,7 @@ public:
         unregisterAsListener();
         notifyListenersOfDeletion();
     }
-    
+
     void registerAsListener()
     {
         if (auto p = getParam())
@@ -310,7 +310,7 @@ private:
     {
         if (! juce::MessageManager::existsAndIsCurrentThread())
             return;
-        
+
         if (parameterIndex == index)
         {
             if (gestureIsStarting)
@@ -337,7 +337,7 @@ private:
         // It would be nice to be able to rely on the begin/end gestures to figure out if the user
         // is actively changing the parameter but as this isn't mandated by the plguin APIs, we can't
         // do this and we just have to disable control from the plugin UI when there are active Modifiers
-        if (hasActiveModifierAssignments())
+        if (automatableEditElement.edit.isLoading() || hasActiveModifierAssignments())
             return;
 
         valueChangedByPlugin();

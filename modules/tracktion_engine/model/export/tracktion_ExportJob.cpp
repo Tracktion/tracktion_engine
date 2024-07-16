@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -169,6 +169,13 @@ void ExportJob::copyEditFilesToTempDir()
                     clip->removeFromParent();
                 }
             }
+        }
+
+        for (auto t : getAudioTracks (*edit))
+        {
+            for (auto s : t->getClipSlotList().getClipSlots())
+                if (auto c = s->getClip())
+                    c->removeFromParent();
         }
     }
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -61,7 +61,7 @@ public:
             std::unique_lock<std::mutex> lock (mutex);
             triggered.store (true, std::memory_order_release);
         }
-        
+
         condition.notify_one();
     }
 
@@ -120,13 +120,13 @@ public:
         threadsShouldExit = true;
         signalAll();
     }
-    
+
     /** Signals the pool that all the threads should continue to run and not exit. */
     void resetExitSignal()
     {
         threadsShouldExit = false;
     }
-    
+
     /** Returns true if all the threads should exit. */
     bool shouldExit() const
     {
@@ -140,7 +140,7 @@ public:
     {
         if (shouldExit())
             return false;
-        
+
         return player.numNodesQueued == 0;
     }
 
@@ -152,11 +152,11 @@ public:
     {
         return player.processNextFreeNode();
     }
-    
+
 private:
     //==============================================================================
     MultiThreadedNodePlayer& player;
-    
+
     std::atomic<bool> threadsShouldExit { false };
     std::vector<std::thread> threads;
     mutable std::mutex mutex;
@@ -167,10 +167,10 @@ private:
     {
         if (! triggered.load (std::memory_order_acquire))
             return false;
-        
+
         return shouldWait();
     }
-    
+
     void runThread()
     {
         for (;;)
@@ -234,7 +234,7 @@ void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSi
 int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 {
     std::unique_lock<RealTimeSpinLock> tryLock (clearNodesLock, std::try_to_lock);
-    
+
     if (! tryLock.owns_lock())
         return -1;
 
@@ -242,7 +242,7 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
         return -1;
 
     const std::lock_guard<RealTimeSpinLock> lock (preparedNodeMutex);
-    
+
     // Reset the stream range
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
@@ -291,12 +291,12 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 void MultiThreadedNodePlayer::clearNode()
 {
     std::lock_guard<RealTimeSpinLock> sl (clearNodesLock);
-    
+
     // N.B. The threads will be trying to read the preparedNodes so we need to actually stop these first
     clearThreads();
     setNode (nullptr);
     createThreads();
-    
+
     assert (preparedNode == nullptr);
     assert (getNode() == nullptr);
 }
@@ -346,7 +346,7 @@ void MultiThreadedNodePlayer::setNewGraph (std::unique_ptr<NodeGraph> newGraph)
         preparedNode = {};
         return;
     }
-    
+
     // Ensure the Nodes ready to be processed are at the front of the queue
     std::stable_sort (newGraph->orderedNodes.begin(), newGraph->orderedNodes.end(),
                       [] (auto n1, auto n2)
@@ -469,7 +469,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         auto outputPlaybackNode = static_cast<PlaybackNode*> (output->internal);
 
         // fetch_sub returns the previous value so it will now be 0
-        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_release) == 1)
+        if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
             jassert (! outputPlaybackNode->hasBeenQueued);
@@ -485,7 +485,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
             else
             {
                 preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
-                numNodesQueued.fetch_add (1, std::memory_order_release);
+                numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
             }
            #else
             // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread
@@ -494,7 +494,7 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
                 return &outputPlaybackNode->node;
 
             preparedNode->nodesReadyToBeProcessed.push (&outputPlaybackNode->node);
-            numNodesQueued.fetch_add (1, std::memory_order_release);
+            numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
            #endif
         }
     }
@@ -517,7 +517,7 @@ bool MultiThreadedNodePlayer::processNextFreeNode()
     if (! preparedNode->nodesReadyToBeProcessed.pop (nodeToProcess))
         return false;
 
-    numNodesQueued.fetch_sub (1, std::memory_order_release);
+    numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);
 
     assert (nodeToProcess != nullptr);
     processNode (*nodeToProcess);

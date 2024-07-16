@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -31,10 +31,6 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
       inputs (std::move (inputNodes))
 {
     assert (getProcessState().getTempoSequence() != nullptr);
-    setOptimisations ({ inputs.empty() ? graph::ClearBuffers::yes
-                                       : graph::ClearBuffers::no,
-                        graph::AllocateAudioBuffer::yes });
-
     dynamicOffsetNodes.reserve (inputs.size());
 
     for (auto& i : inputs)
@@ -53,6 +49,14 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
                 dynamicOffsetNodes.push_back (dynamicNode);
         }
     }
+}
+
+void DynamicOffsetNode::setDynamicOffsetBeats (BeatDuration newOffset)
+{
+    if (juce::approximatelyEqual (dynamicOffsetBeats->inBeats(), newOffset.inBeats()))
+        return;
+
+    (*dynamicOffsetBeats) = newOffset;
 }
 
 //==============================================================================
@@ -105,7 +109,6 @@ void DynamicOffsetNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
 
 bool DynamicOffsetNode::isReadyToProcess()
 {
-    // This should really be leaf nodes...
     for (auto& i : leafNodes)
         if (! i->isReadyToProcess())
             return false;
@@ -121,14 +124,15 @@ void DynamicOffsetNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange
 
 void DynamicOffsetNode::process (ProcessContext& pc)
 {
+    const auto dynamicOffset = *dynamicOffsetBeats;
     const auto sectionEditBeatRange = getEditBeatRange();
     const auto sectionEditSampleRange = getTimelineSampleRange();
 
-    if (sectionEditBeatRange.getEnd() <= clipPosition.getStart()
-        || sectionEditBeatRange.getStart() >= clipPosition.getEnd())
+    if (sectionEditBeatRange.getEnd() <= (clipPosition.getStart() + dynamicOffset)
+        || sectionEditBeatRange.getStart() >= (clipPosition.getEnd() + dynamicOffset))
        return;
 
-    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() - clipOffset;
+    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() + dynamicOffset - getOffset();
 
     auto section1 = sectionEditBeatRange;
     std::optional<BeatRange> section2;
@@ -162,7 +166,7 @@ void DynamicOffsetNode::process (ProcessContext& pc)
     //      1. Use a local ProcessState for the dynamic offset Node and update it
     //         each DynamicOffsetNode::processSection call (This is currently in place and in testing)
     //      2. Convey a point of interest to the main Edit player so it chunks the whole buffer on a
-    //         ContainerClip loop boundry
+    //         ContainerClip loop boundary
     if (! section2)
     {
         processSection (pc, section1);
@@ -208,8 +212,8 @@ void DynamicOffsetNode::process (ProcessContext& pc)
 
     // Silence any samples before or after our edit time range
     {
-        const TimeRange clipTimeRange (tempoPosition.set (clipPosition.getStart()),
-                                       tempoPosition.set (clipPosition.getEnd()));
+        const TimeRange clipTimeRange (tempoPosition.set (clipPosition.getStart() + dynamicOffset),
+                                       tempoPosition.set (clipPosition.getEnd() + dynamicOffset));
         const auto editPositionInSamples = toSamples ({ clipTimeRange.getStart(), clipTimeRange.getEnd() }, getSampleRate());
 
         const auto destBuffer = pc.buffers.audio;
@@ -225,19 +229,25 @@ void DynamicOffsetNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
+BeatDuration DynamicOffsetNode::getOffset() const
+{
+    return clipOffset - *dynamicOffsetBeats;
+}
+
 void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRange)
 {
-    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() - clipOffset;
+    const auto dynamicOffset = *dynamicOffsetBeats;
+    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() + dynamicOffset - getOffset();
 
     const auto playbackStartBeatRelativeToClip = sectionRange.getStart() - editStartBeatOfLocalTimeline;
     const auto loopIteration = loopRange.isEmpty() ? 0
                                                    : static_cast<int> (playbackStartBeatRelativeToClip.inBeats() / loopRange.getLength().inBeats());
     const auto loopIterationOffset = loopRange.getLength() * loopIteration;
-    const auto dynamicOffsetBeats =  toDuration (editStartBeatOfLocalTimeline) + loopIterationOffset - toDuration (loopRange.getStart());
+    const auto dynamicOffsetBeatsForChildNodes =  toDuration (editStartBeatOfLocalTimeline) + loopIterationOffset - toDuration (loopRange.getStart());
 
     const auto offsetStartTime = tempoPosition.set (editStartBeatOfLocalTimeline);
-    const auto offsetEndTime = tempoPosition.add (dynamicOffsetBeats);
-    const auto dynamicOffsetTime = offsetEndTime - offsetStartTime;
+    const auto offsetEndTime = tempoPosition.add (dynamicOffsetBeatsForChildNodes);
+    const auto dynamicOffsetTimeForChildNodes = offsetEndTime - offsetStartTime;
 
     localProcessState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
@@ -246,8 +256,8 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
     // Update the offset for compatible Nodes
     for (auto n : dynamicOffsetNodes)
     {
-        n->setDynamicOffsetBeats (dynamicOffsetBeats);
-        n->setDynamicOffsetTime (dynamicOffsetTime);
+        n->setDynamicOffsetBeats (dynamicOffsetBeatsForChildNodes);
+        n->setDynamicOffsetTime (dynamicOffsetTimeForChildNodes);
     }
 
     // Process ordered Nodes
@@ -278,6 +288,7 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
 
         if (nodesWithMidi > 1)
             pc.buffers.midi.sortByTimestamp();
-    }}
+    }
+}
 
 }} // namespace tracktion { inline namespace engine

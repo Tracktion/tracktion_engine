@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -126,7 +126,7 @@ struct MidiMessageArray
         for (auto& m : source)
             messages.add (m);
     }
-    
+
     void mergeFromWithOffset (const MidiMessageArray& source, double delta)
     {
         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
@@ -146,24 +146,27 @@ struct MidiMessageArray
 
     void mergeFromAndClear (MidiMessageArray& source)
     {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
         if (isEmpty())
         {
             swapWith (source);
         }
         else
         {
-            isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
             messages.ensureStorageAllocated (messages.size() + source.size());
 
             for (auto& m : source)
                 messages.add (std::move (m));
-
-            source.clear();
         }
+
+        source.clear();
     }
 
     void mergeFromAndClearWithOffset (MidiMessageArray& source, double delta)
     {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
         if (isEmpty())
         {
             swapWith (source);
@@ -171,7 +174,6 @@ struct MidiMessageArray
         }
         else
         {
-            isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
             messages.ensureStorageAllocated (messages.size() + source.size());
 
             for (auto& m : source)
@@ -179,9 +181,9 @@ struct MidiMessageArray
                 messages.add (std::move (m));
                 messages.getReference (messages.size() - 1).addToTimeStamp (delta);
             }
-
-            source.clear();
         }
+
+        source.clear();
     }
 
     void mergeFromAndClearWithOffsetAndLimit (MidiMessageArray& source, double delta, int numItemsToTake)

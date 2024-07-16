@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,7 +27,7 @@ public:
 
     /** Call once per block to update the mute status. */
     void update();
-    
+
     //==============================================================================
     /** Returns true if the track's mix bus should be audible. */
     bool shouldTrackBeAudible() const;
@@ -55,7 +55,7 @@ private:
     juce::ReferenceCountedObjectPtr<Track> track;
     bool wasBeingPlayedFlag = false;
     std::atomic<bool> wasJustMutedFlag { false }, wasJustUnMutedFlag { false };
-    
+
     bool callInputWhileMuted = false;
     bool processMidiWhileMuted = false;
     juce::Array<InputDeviceInstance*> inputDevicesToMuteFor;
@@ -80,9 +80,10 @@ public:
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override {}
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t>) override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
 
 private:
@@ -90,6 +91,7 @@ private:
     std::unique_ptr<TrackMuteState> trackMuteState;
     std::unique_ptr<tracktion::graph::Node> input;
     bool dontMuteIfTrackContentsShouldBeProcessed = false;
+    bool canUseSourceBuffers = false;
 
     //==============================================================================
     void rampBlock (choc::buffer::ChannelArrayView<float>, float start, float end);

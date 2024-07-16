@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -92,6 +92,11 @@ public:
                                                                                    int samplesToBuffer)>&
                               createFallbackReader);
 
+    /** @internal */
+    Reader::Ptr createFallbackReader (const std::function<std::unique_ptr<FallbackReader> (juce::TimeSliceThread& timeSliceThread,
+                                                                                           int samplesToBuffer)>&
+                                      createFallbackReader);
+
     //==============================================================================
     void setCacheSizeSamples (SampleCount samplesPerFile);
     SampleCount getCacheSizeSamples() const         { return cacheSizeSamples; }
@@ -100,14 +105,22 @@ public:
 
     bool hasCacheMissed (bool clearMissedFlag);
 
-    /** Returns the amount of time spent reading files. */
-    double getCpuUsage()                            { return cpuUsage.load (std::memory_order_relaxed); }
+    /** Returns the amount of time spent reading files in the last block. */
+    TimeDuration getCpuUsage() const;
+
+    /** @internal */
+    void nextBlockStarted();
+
+    /** @internal */
+    bool hasMappedReader (const AudioFile&, SampleCount) const;
 
 private:
     Engine& engine;
     SampleCount totalBytesUsed = 0, cacheSizeSamples = 0;
     bool cacheMissed = false;
-    std::atomic<double> cpuUsage { 0 };
+
+    std::atomic<double> blockDurationMs { 0.0 }, lastBlockDurationMs { 0.0 };
+    struct ScopedFileRead;
 
     class CacheBuffer;
     class CachedFile;

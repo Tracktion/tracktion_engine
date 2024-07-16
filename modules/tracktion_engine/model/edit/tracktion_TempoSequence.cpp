@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -383,7 +383,7 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 void TempoSequence::deleteRegion (TimeRange range)
 {
     const auto beatRange = toBeats (range);
-    
+
     removeTemposBetween (range, false);
     removeTimeSigsBetween (range);
 
@@ -700,29 +700,34 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
 
     clips.clear();
+    
+    auto addClip = [this, &tempoSequence] (auto clip)
+    {
+        auto pos = clip->getPosition();
+
+        ClipPos cp;
+        cp.clip = clip;
+        cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+        cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+        cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
+        clips.add (cp);
+    };
 
     for (auto t : getClipTracks (ed))
     {
         for (auto& c : t->getClips())
         {
-            auto addClip = [this, &tempoSequence] (auto clip)
-            {
-                auto pos = clip->getPosition();
-
-                ClipPos cp;
-                cp.clip = clip;
-                cp.startBeat        = tempoSequence.toBeats (pos.getStart());
-                cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
-                cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
-                clips.add (cp);
-            };
-
             addClip (c);
 
             if (auto cc = dynamic_cast<ClipOwner*> (c))
                 for (auto childClip : cc->getClips())
                     addClip (childClip);
         }
+        
+        if (auto at = dynamic_cast<AudioTrack*> (t))
+            for (auto slot : at->getClipSlotList().getClipSlots())
+                if (auto cc = slot->getClip())
+                    addClip (cc);
     }
 
     automation.clear();
@@ -756,6 +761,8 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     const auto loopRange = ed.getTransport().getLoopRange();
     loopPositionBeats = { tempoSequence.toBeats (loopRange.getStart()),
                           tempoSequence.toBeats (loopRange.getEnd()) };
+
+    startPositionBeats = tempoSequence.toBeats (ed.getTransport().startPosition);
 }
 
 void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
@@ -764,11 +771,12 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
     tempoSequence.updateTempoData();
 
+    transport.startPosition = tempoSequence.toTime (startPositionBeats);
     transport.setLoopRange (tempoSequence.toTime (loopPositionBeats));
 
     for (auto& cp : clips)
     {
-        if (auto c = dynamic_cast<Clip*> (cp.clip.get()))
+        if (auto c = cp.clip.get())
         {
             auto newStart  = tempoSequence.toTime (cp.startBeat);
             auto newEnd    = tempoSequence.toTime (cp.endBeat);
@@ -785,7 +793,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
                 if (c->type == TrackItem::Type::wave)
                 {
-                    auto ac = dynamic_cast<AudioClipBase*> (cp.clip.get());
+                    auto ac = dynamic_cast<AudioClipBase*> (c);
 
                     if (ac != nullptr && ac->getAutoTempo())
                         c->setPosition ({ { newStart, newEnd }, newOffset });

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -43,7 +43,7 @@ private:
 
         juce::WavAudioFormat format;
         juce::TemporaryFile tempFile (format.getFileExtensions()[0]);
-        
+
         AudioFile audioFile (engine, tempFile.getFile());
         const int numChannels = 2;
         const double sampleRate = 44100.0;
@@ -63,7 +63,7 @@ private:
 
             AudioFileWriter writer (audioFile, &format, numChannels, sampleRate, bitDepth, {}, 0);
             expect (writer.isOpen());
-            
+
             if (writer.isOpen())
             {
                 juce::AudioBuffer<float> buffer (numChannels, numSamplesToWrite);

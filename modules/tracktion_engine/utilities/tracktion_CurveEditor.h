@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -61,6 +61,7 @@ public:
 
     void paint (juce::Graphics&) override;
     bool hitTest (int x, int y) override;
+    void visibilityChanged() override;
 
     void mouseDown (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
@@ -115,7 +116,8 @@ public:
     virtual bool isShowingCurve() const = 0;
     virtual void updateFromTrack() = 0;
 
-    virtual juce::Colour getCurrentLineColour() const = 0;
+    virtual juce::Colour getCurrentLineColour() = 0;
+    virtual juce::Colour getCurrentFillColour();
     virtual juce::Colour getDefaultLineColour() const = 0;
     virtual juce::Colour getSelectedLineColour() const = 0;
     virtual juce::Colour getBackgroundColour() const = 0;

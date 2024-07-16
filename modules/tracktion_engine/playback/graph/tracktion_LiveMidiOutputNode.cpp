@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -75,16 +75,17 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     bool needToUpdate = false;
-    
+
+    if (sourceBuffers.midi.isNotEmpty())
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
 
         for (auto& m : sourceBuffers.midi)
             pendingMessages.add (m);
 
         needToUpdate = ! pendingMessages.isEmpty();
     }
-    
+
     if (needToUpdate)
         triggerAsyncUpdate();
 }
@@ -93,7 +94,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
 void LiveMidiOutputNode::handleAsyncUpdate()
 {
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
         pendingMessages.swapWith (dispatchingMessages);
     }
 

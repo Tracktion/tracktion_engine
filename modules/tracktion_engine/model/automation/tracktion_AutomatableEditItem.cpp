@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -41,6 +41,12 @@ int AutomatableEditItem::getNumAutomatableParameters() const
     return automatableParams.size();
 }
 
+void AutomatableEditItem::visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    for (auto p : automatableParams)
+        visit (*p);
+}
+
 AutomatableParameter::Ptr AutomatableEditItem::getAutomatableParameterByID (const juce::String& paramID) const
 {
     for (auto p : automatableParams)
@@ -74,8 +80,15 @@ void AutomatableEditItem::deleteAutomatableParameters()
     automatableParams.clear();
     parameterTree.clear();
 
-    const juce::ScopedLock sl (activeParameterLock);
-    activeParameters.clear();
+    {
+        // N.B. swap under the lock here to minimise the time held
+        juce::ReferenceCountedArray<AutomatableParameter> nowActiveParams;
+
+        {
+            const std::scoped_lock sl (activeParameterLock);
+            std::swap (activeParameters, nowActiveParams);
+        }
+    }
 
     sendListChangeMessage();
 }
@@ -136,7 +149,7 @@ void AutomatableEditItem::updateAutomatableParamPosition (TimePosition time)
 
 void AutomatableEditItem::updateParameterStreams (TimePosition time)
 {
-    const juce::ScopedLock sl (activeParameterLock);
+    const std::scoped_lock sl (activeParameterLock);
 
     for (auto p : activeParameters)
         p->updateFromAutomationSources (time);
@@ -203,11 +216,13 @@ void AutomatableEditItem::updateActiveParameters()
         if (ap->isAutomationActive())
             nowActiveParams.add (ap);
 
-    const juce::ScopedLock sl (activeParameterLock);
-    activeParameters.swapWith (nowActiveParams);
-    automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);
+    {
+        const std::scoped_lock sl (activeParameterLock);
+        activeParameters.swapWith (nowActiveParams);
+        automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);
+    }
 
-    lastTime = TimePosition::fromSeconds (-1.0);
+    lastTime = -1.0s;
 }
 
 void AutomatableEditItem::saveChangedParametersToState()

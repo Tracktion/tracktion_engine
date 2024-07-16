@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -167,6 +167,9 @@ namespace tempo
 
         /** Returns the key at a position. */
         Key getKeyAt (TimePosition) const;
+
+        /** Returns the TimeSignature at a position. */
+        TimeSignature getTimeSignatureAt (TimePosition) const;
 
         /** Returns a unique hash of this sequence. */
         size_t hash() const;
@@ -710,6 +713,20 @@ inline Key Sequence::getKeyAt (TimePosition t) const
 
         if (it.startTime <= t || i == 0)
             return it.key;
+    }
+
+    assert(false);
+    return {};
+}
+
+inline TimeSignature Sequence::getTimeSignatureAt (TimePosition t) const
+{
+    for (int i = (int) sections.size(); --i >= 0;)
+    {
+        auto& it = sections[(size_t) i];
+
+        if (it.startTime <= t || i == 0)
+            return { .numerator = it.numerator, .denominator = it.denominator };
     }
 
     assert(false);

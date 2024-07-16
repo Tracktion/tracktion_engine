@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -61,15 +61,15 @@ struct CombiningNode::TimedNode
                                     {
                                         jassert (size.numFrames == view.getNumFrames());
                                         jassert (size.numChannels <= view.getNumChannels());
-                                        
+
                                         return { view.getFirstChannels (size.numChannels), {} };
                                     };
         info2.deallocateAudioBuffer = nullptr;
-        
+
         for (auto n : nodesToProcess)
             n->initialise (info2);
     }
-    
+
     bool isReadyToProcess() const
     {
         return nodesToProcess.front()->isReadyToProcess();
@@ -92,7 +92,7 @@ struct CombiningNode::TimedNode
         // Process all the Nodes
         for (auto n : nodesToProcess)
             n->process (pc.numSamples, pc.referenceSampleRange);
-        
+
         // Then get the output from the source Node
         auto nodeOutput = node->getProcessedOutput();
         const auto numDestChannels = pc.buffers.audio.getNumChannels();
@@ -101,7 +101,7 @@ struct CombiningNode::TimedNode
         if (numChannelsToAdd > 0)
             add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
                  nodeOutput.audio.getFirstChannels (numChannelsToAdd));
-        
+
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
 
        #if JUCE_DEBUG
@@ -112,13 +112,13 @@ struct CombiningNode::TimedNode
     size_t getAllocatedBytes() const
     {
         size_t size = 0;
-        
+
         for (auto n : nodesToProcess)
             size += n->getAllocatedBytes();
 
         return size;
     }
-    
+
     const BeatRange time;
 
 private:
@@ -249,7 +249,7 @@ void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisatio
     for (auto& i : inputs)
     {
         i->prepareToPlay (info, tempAudioBuffer.getView());
-        
+
         if (! i->isReadyToProcess())
             isReadyToProcessBlock.store (false, std::memory_order_release);
     }
@@ -279,7 +279,7 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
-    
+
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
@@ -315,7 +315,7 @@ void CombiningNode::process (ProcessContext& pc)
 
                 // Clear the allocated storage
                 tempAudioBuffer.clear();
-                
+
                 // Then process the buffer.
                 // This will use the local buffer for the Nodes in the TimedNode and put the result in pc.buffers
                 tan->process (pc);
@@ -330,10 +330,10 @@ void CombiningNode::process (ProcessContext& pc)
 size_t CombiningNode::getAllocatedBytes() const
 {
     size_t size = tempAudioBuffer.getView().data.getBytesNeeded (tempAudioBuffer.getSize());
-    
+
     for (const auto& i : inputs)
         size += i->getAllocatedBytes();
-    
+
     return size;
 }
 

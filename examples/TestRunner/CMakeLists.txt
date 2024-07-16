@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME TestRunner)
 
+set(HAS_RUBBERBAND 0)
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/rubberband/")
+    message(STATUS "Found rubberband, enabling")
+    set(HAS_RUBBERBAND 1)
+endif()
+
 if (DEFINED PROJECT_NAME)
     message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
 else()
@@ -37,7 +44,7 @@ juce_add_console_app(${TARGET_NAME})
 
 juce_generate_juce_header(${TARGET_NAME})
 
-target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
+target_compile_features(${TARGET_NAME} PRIVATE cxx_std_20)
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
@@ -58,20 +65,24 @@ if (DEFINED ENV{VST2_SDK_DIR})
         JUCE_PLUGINHOST_VST=1)
 endif()
 
+if (HAS_RUBBERBAND)
+    target_include_directories(${TARGET_NAME} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party")
+endif()
+
 target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_PLUGINHOST_AU=1
     JUCE_PLUGINHOST_LADSPA=1
     JUCE_PLUGINHOST_VST3=1
     JUCE_USE_CURL=0
     JUCE_WEB_BROWSER=0
-    JUCER_ENABLE_GPL_MODE=1
-    JUCE_DISPLAY_SPLASH_SCREEN=0
-    JUCE_REPORT_APP_USAGE=0
     JUCE_STRICT_REFCOUNTEDPOINTER=1
     JUCE_MODAL_LOOPS_PERMITTED=1
     TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
     TRACKTION_UNIT_TESTS=1
-    TRACKTION_LOG_DEVICES=0)
+    TRACKTION_LOG_DEVICES=0
+    TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND=${HAS_RUBBERBAND}
+    TRACKTION_BUILD_RUBBERBAND=${HAS_RUBBERBAND})
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     tracktion::tracktion_core
@@ -85,13 +96,19 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 # Compile with werror in release builds
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-implicit-fallthrough") #TODO: Remove this when when juce compiles cleanly
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:-Werror>")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(${TARGET_NAME} PRIVATE "/W4")
     target_compile_options(${TARGET_NAME} PRIVATE "$<$<CONFIG:Release>:/WX>")
 endif()
-    
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_compile_options(${TARGET_NAME} PRIVATE "-fno-aligned-allocation")
+endif()
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${TARGET_NAME} PRIVATE "-Wno-overflow") #TODO: Remove this when when juce compiles cleanly
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 

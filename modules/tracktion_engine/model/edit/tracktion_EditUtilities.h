@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,8 +12,14 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
-// Files
+// Projects and Files
 //==============================================================================
+
+/** Tries to find the project that contains this edit (but may return nullptr!) */
+Project::Ptr getProjectForEdit (const Edit&);
+
+/** Tries to find the project item that refers to this edit (but may return nullptr!) */
+ProjectItem::Ptr getProjectItemForEdit (const Edit&);
 
 /** Uses the ProjectManager to look up the file for an Edit. */
 juce::File getEditFileFromProjectManager (Edit&);
@@ -58,6 +64,9 @@ int getTotalNumTracks (const Edit&);
 /** Returns the Track with a given ID if contained in the Edit. */
 Track* findTrackForID (const Edit&, EditItemID);
 
+/** Returns the AudioTrack with a given ID if contained in the Edit. */
+AudioTrack* findAudioTrackForID (const Edit&, EditItemID);
+
 /** Returns the Tracks for the given IDs in the Edit. */
 juce::Array<Track*> findTracksForIDs (const Edit&, const juce::Array<EditItemID>&);
 
@@ -91,6 +100,20 @@ juce::Array<Track*> toTrackArray (Edit&, const juce::BigInteger&);
 
 template<typename TrackItemType>
 [[ nodiscard ]] juce::Array<TrackItemType*> getTrackItemsOfType (const Track&);
+
+/** Returns the ClipOwner with a given ID if it can be found in the Edit. */
+ClipOwner* findClipOwnerForID (const Edit&, EditItemID);
+
+
+//==============================================================================
+// ClipSlots
+//==============================================================================
+/** Returns the ClipSlot for the given ID. */
+ClipSlot* findClipSlotForID (const Edit&, EditItemID);
+
+/** Returns the index of the ClipSlot in the list it is owned by. */
+int findClipSlotIndex (ClipSlot&);
+
 
 //==============================================================================
 // Clips
@@ -160,7 +183,16 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
 MidiNote* findNoteForState (const Edit&, const juce::ValueTree&);
 
 /** Merges a set of MIDI clips in to one new one. */
-juce::Result mergeMidiClips (juce::Array<MidiClip*>);
+juce::Result mergeMidiClips (juce::Array<MidiClip*>, SelectionManager* sm = nullptr);
+
+/** Helper function to read a file to a number of MidiLists. */
+juce::OwnedArray<MidiList> readFileToMidiList (juce::File midiFile, bool importAsNoteExpression);
+
+/** Helper function to read a MIDI file and create a MidiClip from it.
+    N.B. This will only use the first track in the file, any other tracks will be discarded.
+    The clip will be positioned at 0 with a beat length the duration of the imported list.
+*/
+MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner&, bool importAsNoteExpression);
 
 
 //==============================================================================
@@ -186,7 +218,20 @@ bool areAnyPluginsMissing (const Edit&);
 juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType&);
 
 /** Toggles the enabled state of all plugins in an Edit. */
-void muteOrUnmuteAllPlugins (Edit&);
+void muteOrUnmuteAllPlugins (const Edit&);
+
+/// Sends a list of MIDI messages to all the plugins in this edit
+void injectMIDIToAllPlugins (const Edit&, const std::span<juce::MidiMessage>& messagesToSend);
+
+/// Performs a "MIDI panic" on the edit, by resetting playback, and sending some
+/// all-note-off messages to all plugins in the edit, and optionally resetting them
+/// to kill any reverb tails, etc.
+void midiPanic (Edit&, bool resetPlugins);
+
+
+/** Adds a new instance of the given plugin to the track's plugin list at the specified index. */
+template<typename PluginType>
+juce::ReferenceCountedObjectPtr<PluginType> insertNewPlugin (Track&, int index = 0);
 
 //==============================================================================
 // Automation and parameters
@@ -245,8 +290,37 @@ InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const Ed
                                                                         TimePosition playStart,
                                                                         TimePosition punchIn);
 
+/** Starts an InputDeviceInstance recording to the given target without any count-in etc.
+    N.B. The input must already be assigned to the target and armed for the punch to start.
+*/
+juce::Result prepareAndPunchRecord (InputDeviceInstance&, EditItemID);
+
+/** If the instance is currently recording, this will stop it and return any
+    created clips or an error message.
+*/
+tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance&);
+
+/** Returns true if any inputs are currently recording. */
+bool isRecording (EditPlaybackContext&);
+
 
 //==============================================================================
+/** @internal */
+template<typename PluginType>
+inline juce::ReferenceCountedObjectPtr<PluginType> insertNewPlugin (Track& track, int index)
+{
+    if (auto p = track.edit.getPluginCache().createNewPlugin (PluginType::create()))
+    {
+        if (auto pluginAsType = dynamic_cast<PluginType*> (p.get()))
+        {
+            track.pluginList.insertPlugin (*p, index, {});
+            return pluginAsType;
+        }
+    }
+
+    return {};
+}
+
 /** @internal */
 template<typename TrackType>
 inline juce::Array<TrackType*> getTracksOfType (const Edit& edit, bool recursive)

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -861,7 +861,7 @@ void ExternalPlugin::doFullInitialisation()
 
 void ExternalPlugin::trackPropertiesChanged()
 {
-    juce::MessageManager::callAsync ([this, pluginRef = getWeakRef()]
+    juce::MessageManager::callAsync ([this, pluginRef = makeSafeRef (*this)]
     {
         if (pluginRef == nullptr)
             return;
@@ -1277,7 +1277,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
             activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
         }
 
-        auto sample = juce::jlimit (0, numSamples - 1, (int) (m.getTimeStamp() * sampleRate));
+        auto sample = juce::jlimit (0, numSamples - 1, juce::roundToInt (m.getTimeStamp() * sampleRate));
         midiBuffer.addEvent (m, sample);
     }
 
@@ -1837,6 +1837,98 @@ juce::Array<Exportable::ReferencedItem> ExternalPlugin::getReferencedItems()
 void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
 {
     engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
+}
+
+
+//==============================================================================
+struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
+{
+    AudioProcessorEditorContentComp (ExternalPlugin& plug) : plugin (plug)
+    {
+        JUCE_AUTORELEASEPOOL
+        {
+            if (auto inst = plugin.getAudioPluginInstance())
+            {
+                editor.reset (inst->createEditorIfNeeded());
+
+                if (editor == nullptr)
+                    return;
+
+                addAndMakeVisible (*editor);
+            }
+        }
+
+        resizeToFitEditor (true);
+    }
+
+    bool allowWindowResizing() override
+    {
+        if (isCmajorPatchPluginFormat (plugin.desc))
+            return editor != nullptr && editor->isResizable();
+
+        // Allowing this for VSTs results in some hard-to-prevent size hysteresis..
+        return plugin.isVST3()
+                && plugin.getVendor().containsIgnoreCase ("Celemony");
+    }
+
+    juce::ComponentBoundsConstrainer* getBoundsConstrainer() override
+    {
+        if (editor != nullptr)
+            return editor->getConstrainer();
+
+        return {};
+    }
+
+    void resized() override
+    {
+        if (editor != nullptr)
+            editor->setBounds (getLocalBounds());
+    }
+
+    void childBoundsChanged (juce::Component* c) override
+    {
+        if (c == editor.get())
+        {
+            plugin.edit.pluginChanged (plugin);
+            resizeToFitEditor (false);
+        }
+    }
+
+    void resizeToFitEditor (bool force)
+    {
+        if (force || ! allowWindowResizing())
+        {
+            setSize (std::max (8, editor != nullptr ? editor->getWidth() : 0),
+                     std::max (8, editor != nullptr ? editor->getHeight() : 0));
+        }
+    }
+
+    void visibilityChanged() override
+    {
+        if (editor != nullptr && isShowing())
+        {
+            if (editor->isShowing())
+                editor->grabKeyboardFocus();
+
+            editor->toFront (true);
+        }
+    }
+
+    ExternalPlugin& plugin;
+    std::unique_ptr<juce::AudioProcessorEditor> editor;
+
+    AudioProcessorEditorContentComp() = delete;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProcessorEditorContentComp)
+};
+
+std::unique_ptr<Plugin::EditorComponent> ExternalPlugin::createEditor()
+{
+    auto ed = std::make_unique<AudioProcessorEditorContentComp> (*this);
+
+    if (ed->editor != nullptr)
+        return ed;
+
+    return {};
 }
 
 //==============================================================================

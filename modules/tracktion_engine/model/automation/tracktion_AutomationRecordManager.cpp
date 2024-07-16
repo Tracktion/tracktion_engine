@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -31,7 +31,7 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
             jassertfalse;
     }
 
-    
+
     readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
 }
 
@@ -162,7 +162,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 if (curve->getNumPoints() > 0)
                 {
                     newCurves.add (curve.release());
-                    curve.reset (new AutomationCurve());
+                    curve = std::make_unique<AutomationCurve>();
                     curve->setOwnerParameter (&parameter->parameter);
                 }
             }

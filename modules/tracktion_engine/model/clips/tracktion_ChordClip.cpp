@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,7 +21,7 @@ ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipOwner& target
 
     if (pgen.isValid())
     {
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });
@@ -64,7 +64,7 @@ void ChordClip::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PATTERNGENERATOR))
     {
-        patternGenerator.reset (new PatternGenerator (*this, c));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, c);
 
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });

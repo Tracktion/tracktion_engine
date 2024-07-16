@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -149,6 +149,12 @@ LatencyPlugin::LatencyPlugin (PluginCreationInfo info)
 LatencyPlugin::~LatencyPlugin()
 {
     notifyListenersOfDeletion();
+}
+
+juce::ValueTree LatencyPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 void LatencyPlugin::initialise (const PluginInitialisationInfo&)

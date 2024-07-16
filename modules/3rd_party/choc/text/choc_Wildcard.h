@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -48,6 +48,10 @@ struct WildcardPattern
 
     /// Returns true if the given string matches the pattern.
     bool matches (const std::string& text) const;
+
+    /// You can iterate the pattern strings within the wildcard
+    std::vector<std::string>::iterator begin()  { return patterns.begin(); }
+    std::vector<std::string>::iterator end()    { return patterns.end(); }
 
 private:
     std::vector<std::string> patterns;

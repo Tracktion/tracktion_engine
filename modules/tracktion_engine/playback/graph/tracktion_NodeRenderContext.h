@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,7 +27,7 @@ public:
                        std::unique_ptr<tracktion::graph::PlayHeadState>,
                        std::unique_ptr<ProcessState>,
                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate);
-    
+
     /** Destructor. */
     ~NodeRenderContext();
 
@@ -77,12 +77,12 @@ private:
     Renderer::RenderTask& owner;
     Renderer::Parameters r, originalParams;
     bool needsToNormaliseAndTrim = false;
-    
+
     std::unique_ptr<tracktion::graph::PlayHead> playHead;
     std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
     std::unique_ptr<ProcessState> processState;
     std::unique_ptr<TracktionNodePlayer> nodePlayer;
-    
+
     int numOutputChans = 0;
     std::unique_ptr<AudioFileWriter> writer;
     Plugin::Array plugins;
@@ -122,7 +122,7 @@ private:
         succeeded,
         failed
     };
-    
+
     WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
 };
 

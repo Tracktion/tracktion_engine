@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -295,7 +295,7 @@ void MackieMCU::auxTimerCallback()
         int chan = auxCopy.getUnchecked(i);
         float level = auxLevels[chan];
         auxLevels[chan] = -1000.0f;
-        moveAux (chan, auxBusNames[chan], level);
+        moveAux (chan, 0, auxBusNames[chan], level);
     }
 }
 
@@ -337,7 +337,7 @@ void MackieMCU::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                 }
                 else if (assignmentMode == AuxMode)
                 {
-                    userMovedAux (chan, (panPos[chan] + 1.0f) * 0.5f);
+                    userMovedAux (chan, 0, (panPos[chan] + 1.0f) * 0.5f);
                     userMovedAuxes.addIfNotAlreadyThere(chan);
                     auxTimer->startTimer(2000);
                 }
@@ -370,7 +370,7 @@ void MackieMCU::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                 }
                 else if (assignmentMode == AuxMode)
                 {
-                    userMovedAux ((d[0] & 0x0f) + deviceIndex * 8, pos);
+                    userMovedAux ((d[0] & 0x0f) + deviceIndex * 8, 0, pos);
                     userMovedAuxes.addIfNotAlreadyThere((d[0] & 0x0f) + deviceIndex * 8);
                     auxTimer->startTimer(2000);
                 }
@@ -522,7 +522,7 @@ void MackieMCU::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
                     }
                     else if (assignmentMode == AuxMode)
                     {
-                        userPressedAux(chan);
+                        userPressedAux (chan, 0);
                     }
                     else if (assignmentMode == MarkerMode)
                     {
@@ -1063,11 +1063,11 @@ void MackieMCU::moveFader (int channelNum_, float newSliderPos)
     }
 }
 
-void MackieMCU::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+void MackieMCU::moveMasterLevelFader (float newPos)
 {
-    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
-    
-    moveFaderInt (deviceIdx, 8, (newLeftSliderPos + newRightSliderPos) * 0.5f);
+    ControlSurface::moveMasterLevelFader (newPos);
+
+    moveFaderInt (deviceIdx, 8, newPos);
 }
 
 void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
@@ -1082,7 +1082,7 @@ void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
 void MackieMCU::movePanPot (int channelNum_, float newPan)
 {
     ControlSurface::movePanPot (channelNum_, newPan);
-    
+
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1097,47 +1097,53 @@ juce::String MackieMCU::auxString (int chan) const
     return juce::Decibels::toString (volumeFaderPositionToDB (auxLevels[chan]), 1, -96.0f);
 }
 
-void MackieMCU::moveAux (int channelNum_, const char* bus, float newPos)
+void MackieMCU::moveAux (int channelNum_, int num, const char* bus, float newPos)
 {
-    ControlSurface::moveAux (channelNum_, bus, newPos);
-    
-    int channelNum = channelNum_ % 8;
-    int dev        = channelNum_ / 8;
+    ControlSurface::moveAux (channelNum_, num, bus, newPos);
 
-    if ((auxLevels[channelNum_] != newPos || strcmp (bus, auxBusNames[channelNum_]) != 0)
-         && channelNum >= 0 && channelNum < 8)
+    if (num == 0)
     {
-        auxLevels[channelNum_] = newPos;
-        strcpy (auxBusNames[channelNum_], bus);
+        int channelNum = channelNum_ % 8;
+        int dev        = channelNum_ / 8;
 
-        if (assignmentMode == AuxMode)
+        if ((auxLevels[channelNum_] != newPos || strcmp (bus, auxBusNames[channelNum_]) != 0)
+            && channelNum >= 0 && channelNum < 8)
         {
-            if (flipped)
-                moveFaderInt (dev, channelNum, newPos);
-            else
-                movePanPotInt (dev, channelNum, newPos * 2.0f - 1.0f);
+            auxLevels[channelNum_] = newPos;
+            strcpy (auxBusNames[channelNum_], bus);
 
-            if (userMovedAuxes.contains (channelNum_))
-                setDisplaySegment (dev, channelNum, 1, auxString (channelNum_));
-            else
-                setDisplaySegment (dev, channelNum, 1, juce::String (bus));
+            if (assignmentMode == AuxMode)
+            {
+                if (flipped)
+                    moveFaderInt (dev, channelNum, newPos);
+                else
+                    movePanPotInt (dev, channelNum, newPos * 2.0f - 1.0f);
+
+                if (userMovedAuxes.contains (channelNum_))
+                    setDisplaySegment (dev, channelNum, 1, auxString (channelNum_));
+                else
+                    setDisplaySegment (dev, channelNum, 1, juce::String (bus));
+            }
         }
     }
 }
 
-void MackieMCU::clearAux (int channel_)
+void MackieMCU::clearAux (int channel_, int num)
 {
-    int channel = channel_ % 8;
-    int dev     = channel_ / 8;
-
-    if (assignmentMode == AuxMode)
+    if (num == 0)
     {
-        clearDisplaySegment (dev, channel, 1);
+        int channel = channel_ % 8;
+        int dev     = channel_ / 8;
 
-        if (flipped)
-            moveFaderInt (dev, channel, 0);
-        else
-            movePanPotInt (dev, channel, 0);
+        if (assignmentMode == AuxMode)
+        {
+            clearDisplaySegment (dev, channel, 1);
+
+            if (flipped)
+                moveFaderInt (dev, channel, 0);
+            else
+                movePanPotInt (dev, channel, 0);
+        }
     }
 }
 
@@ -1216,7 +1222,7 @@ void MackieMCU::automationWriteModeChanged (bool isWriting)
 void MackieMCU::parameterChanged (int parameterNumber_, const ParameterSetting& newValue)
 {
     ControlSurface::parameterChanged (parameterNumber_, newValue);
-    
+
     int parameterNumber = parameterNumber_ % 8;
     int dev             = parameterNumber_ / 8;
 

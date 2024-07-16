@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ public:
         : juce::UnitTest ("MidiNode", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -46,7 +46,7 @@ private:
                                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
                                                                              ts, numChannels, durationInSeconds, true);
         testProcess.setPlayHead (&processState.playHeadState.playHead);
-        
+
         return testProcess.processAll();
     }
 
@@ -58,7 +58,7 @@ private:
 
         const double sampleRate = 44100.0;
         const double duration = 5.0;
-        
+
         // Avoid creating events at the end of the duration as they'll get lost after latency is applied
         const auto masterSequence = createRandomMidiMessageSequence (duration - 0.5, ts.random);
 
@@ -70,8 +70,8 @@ private:
         if (playSyncedToRange)
             playHead.play ({ 0, std::numeric_limits<int64_t>::max() }, false);
         else
-            playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });        
-        
+            playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
+
         beginTest ("Basic MIDI");
         {
             auto sequence = masterSequence;
@@ -89,7 +89,7 @@ private:
             expectGreaterThan (sequence.getNumEvents(), 0);
             expectMidiBuffer (*this, testContext->midi, sampleRate, sequence);
         }
-        
+
         beginTest ("Offset MIDI");
         {
             const auto editTimeRange = juce::Range<double>::withStartAndLength (1.0, duration);

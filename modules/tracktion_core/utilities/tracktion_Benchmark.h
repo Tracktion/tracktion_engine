@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -62,7 +62,7 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
     To masure a benchmark, simply create one of these with a valid description
     then before the code you are measuring call start and stop afterwards.
     Once you've done that, call getResult() to return the duration the benchmark took to run.
- 
+
     To collect a set of BenchmarkResults see @BenchmarkList
 */
 class Benchmark
@@ -73,25 +73,25 @@ public:
         : description (std::move (desc))
     {
     }
-    
+
     /** Starts timing the benchmark. */
     void start()
     {
         measurement.start();
     }
-    
+
     /** Stops timing the benchmark. */
     void stop()
     {
         measurement.stop();
     }
-    
+
     /** Returns the timing results. */
     BenchmarkResult getResult() const
     {
         return createBenchmarkResult (description, measurement.getStatistics());
     }
-    
+
 private:
     BenchmarkDescription description;
     tracktion::graph::PerformanceMeasurement measurement { {}, -1, false };
@@ -102,7 +102,7 @@ private:
     Contans a list of BenchmarkResult[s].
     For easy use, this can be used as a singleton so results can easily be added
     to it from anywhere in your code.
-    
+
     Once you've finished benchmarking, you can get all the results to publish
     them to your database.
 */
@@ -111,14 +111,14 @@ class BenchmarkList
 public:
     /** Constructs a BenchmarkList. @see getInstance */
     BenchmarkList() = default;
-    
+
     /** Adds a result to the list. [[ thread_safe ]] */
     void addResult (BenchmarkResult r)
     {
         std::lock_guard lock (mutex);
         results.emplace_back (std::move (r));
     }
-    
+
     /** Returns all the results. [[ thread_safe ]] */
     std::vector<BenchmarkResult> getResults() const
     {
@@ -139,7 +139,7 @@ public:
         static BenchmarkList list;
         return list;
     }
-    
+
 private:
     mutable std::mutex mutex;
     std::vector<BenchmarkResult> results;
@@ -150,10 +150,10 @@ private:
     Helper class for measuring a benchmark and adding it to the singleton BenchmarkList list.
     @code
     {
-        ScopedBenchmark sb (getBenchmarkDescription ("Save random tree as XML"));
+        ScopedBenchmark sb (createBenchmarkDescription ("Save random tree as XML"));
         doSomeLongCalculation();
     }
- 
+
     publish (BenchmarkList::getInstance().getResults());
     @endcode
 */
@@ -165,14 +165,14 @@ struct ScopedBenchmark
     {
         benchmark.start();
     }
-    
+
     /** Stops the Benchmark and adds the result to the BenchmarkList. */
     ~ScopedBenchmark()
     {
         benchmark.stop();
         BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
-    
+
 private:
     Benchmark benchmark;
 };

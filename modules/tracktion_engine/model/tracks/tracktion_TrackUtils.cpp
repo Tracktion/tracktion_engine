@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -202,18 +202,18 @@ void TrackList::deleteObject (Track* t)
 
 void TrackList::newObjectAdded (Track* t)
 {
-    if (! edit.isLoading())
-    {
-        triggerAsyncUpdate();
-        t->refreshCurrentAutoParam();
+    if (edit.isLoading())
+        return;
 
-        if (auto tl = t->getSubTrackList())
-            tl->visitAllRecursive ([] (Track& track)
-                                   {
-                                       track.refreshCurrentAutoParam();
-                                       return true;
-                                   });
-    }
+    triggerAsyncUpdate();
+    t->refreshCurrentAutoParam();
+
+    if (auto tl = t->getSubTrackList())
+        tl->visitAllRecursive ([] (Track& track)
+                               {
+                                   track.refreshCurrentAutoParam();
+                                   return true;
+                               });
 }
 
 void TrackList::objectRemoved (Track*) {}
@@ -355,7 +355,7 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                     ap.curve.setState (param->getCurve().state);
                     ap.curve.setParentState (param->getCurve().parentState);
                     ap.curve.setOwnerParameter (param->getCurve().getOwnerParameter());
-                    
+
                     section.activeParameters.add (ap);
                 }
             }

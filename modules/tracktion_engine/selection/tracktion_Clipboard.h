@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -36,9 +36,10 @@ public:
             EditInsertPoint& insertPoint;
             Track::Ptr startTrack;
             TimePosition startTime;
+            EditItemID targetClipOwnerID;
             SelectionManager* selectionManager = nullptr;
             bool silent = false;
-            FileDragList::PreferredLayout preferredLayout = FileDragList::horizontal;
+            FileDragList::PreferredLayout preferredLayout = FileDragList::sameTrack;
             bool setTransportToEnd = false;
         };
 
@@ -80,7 +81,7 @@ public:
             no, /**< Don't copy autmation. */
             yes /**< Do copy autmation. */
         };
-        
+
         void addClip (int trackOffset, const juce::ValueTree& state);
         void addSelectedClips (const SelectableList&, TimeRange, AutomationLocked);
         void addAutomation (const juce::Array<TrackSection>&, TimeRange);
@@ -89,10 +90,12 @@ public:
         {
             juce::ValueTree state;
             int trackOffset = 0;
+            std::optional<int> slotOffset;
             bool hasBeatTimes = false;
             BeatPosition startBeats;
             BeatDuration lengthBeats;
             BeatPosition offsetBeats;
+            bool grouped = false;
         };
 
         std::vector<ClipInfo> clips;
@@ -106,6 +109,23 @@ public:
         };
 
         std::vector<AutomationCurveSection> automationCurves;
+    };
+
+    struct Scenes  : public ContentType
+    {
+        Scenes();
+        ~Scenes() override;
+
+        struct SceneInfo
+        {
+            juce::ValueTree state;
+            std::vector<juce::ValueTree> clips;
+        };
+
+        std::vector<SceneInfo> scenes;
+
+        using ContentType::pasteIntoEdit;
+        bool pasteIntoEdit (const EditPastingOptions&) const override;
     };
 
     struct Tracks  : public ContentType
@@ -213,7 +233,7 @@ public:
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
         std::vector<juce::ValueTree> plugins;
-        std::vector<std::pair<Selectable::WeakRef /* editRef */, juce::ValueTree>> rackTypes;
+        std::vector<std::pair<SafeSelectable<Edit>, juce::ValueTree>> rackTypes;
     };
 
     struct Takes  : public ContentType
@@ -263,5 +283,7 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clipboard)
 };
+
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex);
 
 }} // namespace tracktion { inline namespace engine

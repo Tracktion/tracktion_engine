@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -51,7 +51,7 @@ TimePosition TempoSetting::getStartTime() const
     ownerSequence.updateTempoDataIfNeeded();
     return startTime;
 }
-    
+
 void TempoSetting::set (BeatPosition newStartBeat, double newBPM, float newCurve, bool remapEditPositions)
 {
     startBeatNumber.forceUpdateOfCachedValue();
