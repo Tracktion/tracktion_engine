@@ -26,7 +26,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_gui_extra juce_dsp juce_osc tracktion_graph
+  dependencies:     juce_audio_devices juce_audio_utils juce_dsp juce_osc tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
@@ -37,7 +37,6 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
-#include <sys/stat.h>
 #include <memory>
 #include <map>
 #include <set>
@@ -53,7 +52,6 @@
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
-#include <juce_gui_extra/juce_gui_extra.h>
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
 
@@ -70,7 +68,6 @@
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
-#include "../tracktion_graph/utilities/tracktion_RealTimeSpinLock.h"
 
 #undef __TEXT
 
@@ -281,17 +278,14 @@ namespace tracktion { inline namespace engine
     class EngineBehaviour;
     class Engine;
     class DeviceManager;
-    class MidiProgramManager;
     class GrooveTemplateManager;
     class Edit;
     class Track;
     class Clip;
     class ClipOwner;
     class Plugin;
-    struct AudioRenderContext;
     struct PluginRenderContext;
     class AudioFile;
-    class PlayHead;
     class Project;
     class InputDevice;
     class OutputDevice;
@@ -317,18 +311,15 @@ namespace tracktion { inline namespace engine
     class LoopInfo;
     class RenderOptions;
     class AutomatableParameter;
-    class AutomatableParameterTree;
     class MacroParameterList;
     class MelodyneFileReader;
     struct ARADocumentHolder;
     class ClipEffects;
     class WaveAudioClip;
-    class ContainerClip;
     class CollectionClip;
     class MidiClip;
     class EditClip;
     class MidiList;
-    class SelectedMidiEvents;
     class MarkerManager;
     class TransportControl;
     class AbletonLink;
@@ -356,8 +347,6 @@ namespace tracktion { inline namespace engine
     class MidiControllerParser;
     class MidiInputDeviceInstanceBase;
     struct RetrospectiveMidiBuffer;
-    struct MidiMessageArray;
-    struct ModifierTimer;
     class MidiLearnState;
     struct EditDeleter;
     struct ActiveEdits;
@@ -365,25 +354,14 @@ namespace tracktion { inline namespace engine
     class AutomatableEditItem;
     class RecordingThumbnailManager;
     class WaveInputRecordingThread;
-    class SearchOperation;
     class ProjectManager;
     class ExternalAutomatableParameter;
-    class ExternalPlugin;
-    struct PluginWindowState;
-    class PluginInstanceWrapper;
-    struct LiveClipLevel;
-    struct ARAClipPlayer;
-    class RackEditorWindow;
     class PitchShiftPlugin;
     struct PluginUnloadInhibitor;
-    class ArrangerClip;
     class ChordClip;
     struct TimecodeSnapType;
     class MidiNote;
-    class MackieXT;
-    class ParameterisableDragDropSource;
     class AutomationCurveSource;
-    class MacroParameter;
     struct Modifier;
     class MidiTimecodeGenerator;
     class MidiClockGenerator;
@@ -393,11 +371,8 @@ namespace tracktion { inline namespace engine
     struct RetrospectiveRecordBuffer;
     class Clipboard;
     class PropertyStorage;
-    class TrackOutput;
-    class BufferedFileReader;
     class ClipSlotList;
     class ClipSlot;
-    class Scene;
     class LaunchHandle;
     class LaunchQuantisation;
     class BufferedAudioFileManager;

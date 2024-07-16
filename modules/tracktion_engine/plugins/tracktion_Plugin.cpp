@@ -82,7 +82,7 @@ Plugin::Plugin (PluginCreationInfo info)
     auto wires = state.getChildWithName (IDs::SIDECHAINCONNECTIONS);
 
     if (wires.isValid())
-        sidechainWireList.reset (new WireList (*this, wires));
+        sidechainWireList = std::make_unique<WireList> (*this, wires);
 
     enabled.referTo (state, IDs::enabled, um, true);
 
@@ -389,7 +389,7 @@ void Plugin::valueTreeChanged()
 void Plugin::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.getType() == IDs::SIDECHAINCONNECTIONS)
-        sidechainWireList.reset (new WireList (*this, c));
+        sidechainWireList = std::make_unique<WireList> (*this, c);
 
     valueTreeChanged();
 }

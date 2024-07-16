@@ -272,7 +272,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
     if (pgen.isValid())
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 }
 
 AudioClipBase::~AudioClipBase()
@@ -2434,7 +2434,7 @@ void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parentState, juce::Val
         else if (child.hasType (IDs::EFFECTS))
             updateClipEffectsState();
         else if (child.hasType (IDs::PATTERNGENERATOR))
-            patternGenerator.reset (new PatternGenerator (*this, child));
+            patternGenerator = std::make_unique<PatternGenerator> (*this, child);
         else if (child.hasType (IDs::LOOPINFO) && isInitialised)
             loopInfo.state = child;
     }

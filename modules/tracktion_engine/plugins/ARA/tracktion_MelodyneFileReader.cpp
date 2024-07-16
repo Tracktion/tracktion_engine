@@ -502,7 +502,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    player.reset (new ARAClipPlayer (ed, *this, clip));
+    player = std::make_unique<ARAClipPlayer> (ed, *this, clip);
 
     if (! player->initialise (nullptr))
         player = nullptr;
@@ -515,7 +515,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
 
     if (other.player != nullptr)
     {
-        player.reset (new ARAClipPlayer (ed, *this, clip));
+        player = std::make_unique<ARAClipPlayer> (ed, *this, clip);
 
         if (! player->initialise (other.player.get()))
             player = nullptr;
@@ -636,7 +636,7 @@ ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()
     if (pimpl == nullptr)
     {
         CRASH_TRACER
-        pimpl.reset (new Pimpl (edit));
+        pimpl = std::make_unique<Pimpl> (edit);
         callBlocking ([this]() { pimpl->initialise(); });
     }
 

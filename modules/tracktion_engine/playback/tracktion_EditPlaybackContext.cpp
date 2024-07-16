@@ -673,7 +673,7 @@ void EditPlaybackContext::startPlaying (TimePosition start)
     prepareOutputDevices (start);
 
     if (priorityBooster == nullptr)
-        priorityBooster.reset (new ProcessPriorityBooster (edit.engine));
+        priorityBooster = std::make_unique<ProcessPriorityBooster> (edit.engine);
 
     for (auto mo : midiOutputs)
         mo->start();

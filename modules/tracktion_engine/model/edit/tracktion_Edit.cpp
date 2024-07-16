@@ -397,7 +397,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     void updateTrackStatusesAsync()
     {
         if (trackStatusUpdater == nullptr)
-            trackStatusUpdater.reset (new TrackStatusUpdater (*this));
+            trackStatusUpdater = std::make_unique<TrackStatusUpdater> (*this);
     }
 
     struct TrackStatusUpdater  : private juce::AsyncUpdater
@@ -1007,7 +1007,7 @@ void Edit::initialiseTracks (const Options& options)
 void Edit::initialiseAudioDevices()
 {
     inputDeviceState = state.getOrCreateChildWithName (IDs::INPUTDEVICES, nullptr);
-    editInputDevices.reset (new EditInputDevices (*this, inputDeviceState));
+    editInputDevices = std::make_unique<EditInputDevices> (*this, inputDeviceState);
 }
 
 void Edit::initialiseRacks()

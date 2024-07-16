@@ -94,7 +94,7 @@ void PluginList::initialise (const juce::ValueTree& v)
               || v.hasType (IDs::CONTAINERCLIP));
 
     state = v;
-    list.reset (new ObjectList (*this, state));
+    list = std::make_unique<ObjectList> (*this, state);
     callBlocking ([this] { list->rebuildObjects(); });
 }
 

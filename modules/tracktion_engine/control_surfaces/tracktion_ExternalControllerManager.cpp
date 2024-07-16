@@ -199,7 +199,7 @@ private:
 //==============================================================================
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
-    blinkTimer.reset (new BlinkTimer (*this));
+    blinkTimer = std::make_unique<BlinkTimer> (*this);
     masterLevelsTimer.setCallback ([this]
     {
         if (currentEdit == nullptr)

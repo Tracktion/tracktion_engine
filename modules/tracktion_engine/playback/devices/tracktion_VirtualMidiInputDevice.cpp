@@ -48,7 +48,7 @@ VirtualMidiInputDevice::~VirtualMidiInputDevice()
 InputDeviceInstance* VirtualMidiInputDevice::createInstance (EditPlaybackContext& c)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer.reset (new RetrospectiveMidiBuffer (c.edit.engine));
+        retrospectiveBuffer = std::make_unique<RetrospectiveMidiBuffer> (c.edit.engine);
 
     return new VirtualMidiInputDeviceInstance (*this, c);
 }

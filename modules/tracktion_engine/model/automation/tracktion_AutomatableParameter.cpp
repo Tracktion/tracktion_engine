@@ -912,7 +912,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<float>& v)
 {
     currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
-    attachedValue.reset (new AttachedFloatValue (*this, v));
+    attachedValue = std::make_unique<AttachedFloatValue> (*this, v);
     v.getValueTree().addListener (this);
 }
 
@@ -920,7 +920,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<int>& v)
 {
     currentParameterValue = currentValue = (float) v.get();
     jassert (attachedValue == nullptr);
-    attachedValue.reset (new AttachedIntValue (*this, v));
+    attachedValue = std::make_unique<AttachedIntValue> (*this, v);
     v.getValueTree().addListener (this);
 }
 
@@ -928,7 +928,7 @@ void AutomatableParameter::attachToCurrentValue (juce::CachedValue<bool>& v)
 {
     currentParameterValue = currentValue = v;
     jassert (attachedValue == nullptr);
-    attachedValue.reset (new AttachedBoolValue (*this, v));
+    attachedValue = std::make_unique<AttachedBoolValue> (*this, v);
     v.getValueTree().addListener (this);
 }
 
@@ -1272,7 +1272,7 @@ AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& as
 AutomationIterator::AutomationIterator (const AutomatableParameter& p)
 {
     hiRes = ! p.automatableEditElement.edit.engine.getEngineBehaviour().interpolateAutomation();
-    
+
     if (hiRes)
         copy (p);
     else
@@ -1288,12 +1288,12 @@ void AutomationIterator::copy (const AutomatableParameter& param)
     for (int i = 0; i < curve.getNumPoints(); i++)
     {
         auto src = curve.getPoint (i);
-        
+
         AutoPoint dst;
         dst.time = src.time;
         dst.value = src.value;
         dst.curve = src.curve;
-        
+
         points.add (dst);
     }
 }
@@ -1410,28 +1410,28 @@ void AutomationIterator::setPosition (TimePosition newTime) noexcept
 void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
 {
     jassert (points.size() > 0);
-    
+
     auto newIndex = updateIndex (newTime);
-    
+
     if (newTime < points[0].time)
     {
         currentIndex = newIndex;
         currentValue = points.getReference (0).value;
         return;
     }
-    
+
     if (newIndex == points.size() - 1)
     {
         currentIndex = newIndex;
         currentValue = points.getReference (newIndex).value;
         return;
     }
-        
+
     const auto& p1 = points.getReference (newIndex);
     const auto& p2 = points.getReference (newIndex + 1);
-    
+
     const auto t = newTime;
-    
+
     const auto t1 = p1.time;
     const auto t2 = p2.time;
 
@@ -1439,7 +1439,7 @@ void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
     const auto v2 = p2.value;
 
     const auto c = p1.curve;
-    
+
     float v = p2.value;
 
     if (t2 != t1)
@@ -1457,13 +1457,13 @@ void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
         {
             double x1end = 0, x2end = 0;
             double y1end = 0, y2end = 0;
-            
+
             auto bp = getBezierPoint (p1.time.inSeconds(), p1.value, p2.time.inSeconds(), p2.value, p1.curve);
             getBezierEnds (p1.time.inSeconds(), p1.value,
                            p2.time.inSeconds(), p2.value,
                            p1.curve,
                            x1end, y1end, x2end, y2end);
-            
+
             if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
                 v = v1;
             else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
@@ -1488,14 +1488,14 @@ void AutomationIterator::setPositionInterpolated (TimePosition newTime) noexcept
         currentIndex = newIndex;
         currentValue = points.getReference (newIndex).value;
     }
-    
+
     if (newTime >= points[0].time && newIndex < points.size() - 1)
     {
         const auto& p1 = points.getReference (newIndex);
         const auto& p2 = points.getReference (newIndex + 1);
-        
+
         const auto t = newTime.inSeconds();
-        
+
         const auto t1 = p1.time.inSeconds();
         const auto t2 = p2.time.inSeconds();
 

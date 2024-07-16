@@ -779,7 +779,7 @@ void SmartThumbnail::timerCallback()
 
 //==============================================================================
 AudioFileManager::AudioFileManager (Engine& e)
-    : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache (e))
+    : engine (e), cache (e), thumbnailCache (std::make_unique<TracktionThumbnailCache> (e))
 {
 }
 

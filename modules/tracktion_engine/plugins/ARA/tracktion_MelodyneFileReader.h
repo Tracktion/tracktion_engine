@@ -12,6 +12,8 @@
 namespace tracktion { inline namespace engine
 {
 
+struct ARAClipPlayer;
+
 class MelodyneFileReader   : public juce::ReferenceCountedObject,
                              public juce::ChangeBroadcaster
 {
