@@ -25,7 +25,7 @@
   website:          http://www.tracktion.com
   license:          Proprietary
 
-  dependencies:     juce_audio_devices juce_audio_utils juce_dsp juce_osc tracktion_graph
+  dependencies:     juce_audio_devices juce_audio_utils juce_dsp juce_osc, juce_gui_extra tracktion_graph
 
  END_JUCE_MODULE_DECLARATION
 
@@ -53,6 +53,7 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
+#include <juce_gui_extra/juce_gui_extra.h>
 
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>

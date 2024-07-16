@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+class MackieXT;
+
 class MackieMCU  : public ControlSurface,
                    protected juce::Timer,
                    protected juce::AsyncUpdater
