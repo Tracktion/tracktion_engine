@@ -80,7 +80,7 @@ jobs:
       #     # llvm-cov gcov --capture --directory "build" --exclude "tests/coverage/*"  --exclude "examples/common/*" --exclude "tests/coverage/coverage.h" --exclude "*juce_*" --exclude "*3rd_Party*" --exclude "*3rd_party*" --exclude "modules/3rd_party/*" --exclude "/Applications*" --exclude "/usr*" --exclude "*examples*" --output-file coverage.info
       #     gcovr -j ${{env.nproc}} --delete --print-summary --xml-pretty --xml coverage.xml . --gcov-executable 'llvm-cov gcov'
 
-      # - uses: actions/upload-artifact@v3
+      # - uses: actions/upload-artifact@v4
       #   if: runner.os == 'Windows'
       #   with:
       #     name: coverage.xml
