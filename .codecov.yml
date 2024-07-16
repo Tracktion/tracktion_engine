@@ -3,4 +3,4 @@ ignore:
   - "examples"
   - "modules/3rd_party"
   - "modules/juce"
-  - "**/3rd_party"
+  - "**3rd_party"
