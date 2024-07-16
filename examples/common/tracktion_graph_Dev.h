@@ -215,7 +215,7 @@ namespace TestRunner
             if (test->getName() == name)
                 tests.add (test);
 
-        return runUnitTests (junitResultsFile, std::move (tests), {});
+        return runUnitTests (junitResultsFile, std::move (tests), nullptr);
     }
 }
 
