@@ -34,22 +34,18 @@ using namespace tracktion;
 
 #include "../../examples/common/tracktion_graph_Dev.h"
 
-inline bool runDocTest()
-{
-    doctest::Context doctestContext;
-    doctestContext.setOption ("duration", true);
-    doctestContext.addFilter("test-suite", "tracktion_core");
-    doctestContext.addFilter("test-suite", "tracktion_graph");
-    doctestContext.addFilter("test-suite", "tracktion_engine");
-
-    return ! doctestContext.run();
-}
-
 //==============================================================================
 //==============================================================================
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
+
+    auto doctestContext = std::make_unique<doctest::Context>();
+    doctestContext->setOption ("duration", true);
+    doctestContext->addFilter("test-suite", "tracktion_core");
+    doctestContext->addFilter("test-suite", "tracktion_graph");
+    doctestContext->addFilter("test-suite", "tracktion_engine");
+
     return TestRunner::runTests ({},
                                  std::vector<juce::String> {
                                     "Tracktion",
@@ -58,6 +54,6 @@ int main (int, char**)
                                     "tracktion_core",
                                     "tracktion_graph",
                                     "tracktion_engine",
-                                    "tracktion_graph_performance" })
-        && runDocTest();
+                                    "tracktion_graph_performance" },
+                                    std::move (doctestContext));
 }
