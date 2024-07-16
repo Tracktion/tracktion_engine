@@ -76,3 +76,5 @@ doxygen/doc
 **/3rd_party/rubberband
 **/cmake-build**
 **/.idea/**
+coverage.xml
+CoverageReport-*

@@ -1,0 +1,7 @@
+export_type=cobertura:coverage.xml
+modules=coverage.exe
+sources=*\modules\tracktion_core*
+sources=*\modules\tracktion_graph*
+sources=*\modules\tracktion_engine*
+excluded_sources=*3rd_party*
+excluded_sources=*\modules\juce*
