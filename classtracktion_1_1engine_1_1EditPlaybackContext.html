@@ -115,12 +115,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5c97fc28b774c28107297313acc08dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd3b413fd8d88cfcc0db5b669c65242f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#abd3b413fd8d88cfcc0db5b669c65242f">syncToContext</a> (<a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> *contextToSyncTo, TimePosition previousBarTime, TimeDuration syncInterval)</td></tr>
 <tr class="separator:abd3b413fd8d88cfcc0db5b669c65242f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03bd5361400471c2b4a6c3cb6369011b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a03bd5361400471c2b4a6c3cb6369011b">stopRecording</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, TimeRange recordedRange, bool discardRecordings)</td></tr>
-<tr class="separator:a03bd5361400471c2b4a6c3cb6369011b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a48e49c9cbf543f61df2f1ecd0bd69b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a5a48e49c9cbf543f61df2f1ecd0bd69b">recordingFinished</a> (TimeRange recordedRange, bool discardRecordings)</td></tr>
-<tr class="separator:a5a48e49c9cbf543f61df2f1ecd0bd69b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbb1a195268898210c6fae3316d11b0c"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#adbb1a195268898210c6fae3316d11b0c">applyRetrospectiveRecord</a> (juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt; *clipsCreated=nullptr)</td></tr>
-<tr class="separator:adbb1a195268898210c6fae3316d11b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04988e26d62d3f7112273ce8e4fbf7b0"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a04988e26d62d3f7112273ce8e4fbf7b0">stopRecording</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, bool discardRecordings)</td></tr>
+<tr class="separator:a04988e26d62d3f7112273ce8e4fbf7b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6968630c8cf2bbf1ae910ac89b12a9a3"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a6968630c8cf2bbf1ae910ac89b12a9a3">stopRecording</a> (TimePosition unloopedEnd, bool discardRecordings)</td></tr>
+<tr class="separator:a6968630c8cf2bbf1ae910ac89b12a9a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad84f7eca6234de43834fa7d82447ee0f"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ad84f7eca6234de43834fa7d82447ee0f">applyRetrospectiveRecord</a> (juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt; *clipsCreated=nullptr, bool armedOnly=false)</td></tr>
+<tr class="separator:ad84f7eca6234de43834fa7d82447ee0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac145d0da3702acb74dd5f385956429c0"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac145d0da3702acb74dd5f385956429c0">getAllInputs</a> ()</td></tr>
 <tr class="separator:ac145d0da3702acb74dd5f385956429c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa364fa861b618e0bc45ad5f1a52dcd23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aa364fa861b618e0bc45ad5f1a52dcd23">getInputFor</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *) const</td></tr>
@@ -164,6 +164,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6dbb645295a059e229cc6e77670248b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa762fe1a3089087538b0becab48d49c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aa762fe1a3089087538b0becab48d49c0">stop</a> ()</td></tr>
 <tr class="separator:aa762fe1a3089087538b0becab48d49c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a402a342387064eda5f5de461225d26b7"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a402a342387064eda5f5de461225d26b7">getSyncPoint</a> () const</td></tr>
+<tr class="memdesc:a402a342387064eda5f5de461225d26b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the last reference sample position and the edit time and beat that it corresponded to.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a402a342387064eda5f5de461225d26b7">More...</a><br /></td></tr>
+<tr class="separator:a402a342387064eda5f5de461225d26b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad51466a2a661345dfb2fc041aba5af0e"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ad51466a2a661345dfb2fc041aba5af0e">globalStreamTimeToEditTime</a> (double) const</td></tr>
 <tr class="separator:ad51466a2a661345dfb2fc041aba5af0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b1f7f1ca6dbe36fc9c64f15bdb92210"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a1b1f7f1ca6dbe36fc9c64f15bdb92210">globalStreamTimeToEditTimeUnlooped</a> (double) const</td></tr>
@@ -172,6 +175,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac7e5d36307c7e83de97ffaa97b70a32a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a675b8525dbf2256135a69c9f310b9f33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html">tracktion::graph::PlayHead</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a675b8525dbf2256135a69c9f310b9f33">getNodePlayHead</a> () const</td></tr>
 <tr class="separator:a675b8525dbf2256135a69c9f310b9f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d5c46f23637cba5ece214e9b2650ffc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a3d5c46f23637cba5ece214e9b2650ffc">blockUntilSyncPointChange</a> ()</td></tr>
+<tr class="separator:a3d5c46f23637cba5ece214e9b2650ffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74fe035681ac1d9c23c5f2c5d4a93ca3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a74fe035681ac1d9c23c5f2c5d4a93ca3">getNumActivelyRecordingDevices</a> () const</td></tr>
+<tr class="separator:a74fe035681ac1d9c23c5f2c5d4a93ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03aab2a6b55fd42453ebe0e26c9f8267"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a03aab2a6b55fd42453ebe0e26c9f8267">incrementNumActivelyRecordingDevices</a> ()</td></tr>
+<tr class="separator:a03aab2a6b55fd42453ebe0e26c9f8267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69df7a669014802e96afb994ae53e77f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a69df7a669014802e96afb994ae53e77f">decrementNumActivelyRecordingDevices</a> ()</td></tr>
+<tr class="separator:a69df7a669014802e96afb994ae53e77f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -186,6 +197,12 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aebd8d59e161d18c4951f3a9323dd9ba4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aebd8d59e161d18c4951f3a9323dd9ba4">enablePooledMemory</a> (bool)</td></tr>
 <tr class="memdesc:aebd8d59e161d18c4951f3a9323dd9ba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reusing of audio buffers during graph processing which may reduce the memory use at the cost of some additional overhead.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aebd8d59e161d18c4951f3a9323dd9ba4">More...</a><br /></td></tr>
 <tr class="separator:aebd8d59e161d18c4951f3a9323dd9ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e7a3e67e3b8bba6558bf41a1e65d78"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aa4e7a3e67e3b8bba6558bf41a1e65d78">enableNodeMemorySharing</a> (bool)</td></tr>
+<tr class="memdesc:aa4e7a3e67e3b8bba6558bf41a1e65d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables reusing of audio buffers during graph processing which may reduce the memory use at the cost of some additional overhead.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aa4e7a3e67e3b8bba6558bf41a1e65d78">More...</a><br /></td></tr>
+<tr class="separator:aa4e7a3e67e3b8bba6558bf41a1e65d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7f9a29d167292b7cbe5a655f911194e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ae7f9a29d167292b7cbe5a655f911194e">enableAudioWorkgroup</a> (bool)</td></tr>
+<tr class="memdesc:ae7f9a29d167292b7cbe5a655f911194e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables using AudioWorkgroups.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ae7f9a29d167292b7cbe5a655f911194e">More...</a><br /></td></tr>
+<tr class="separator:ae7f9a29d167292b7cbe5a655f911194e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -460,14 +477,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a03bd5361400471c2b4a6c3cb6369011b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03bd5361400471c2b4a6c3cb6369011b">&#9670;&nbsp;</a></span>stopRecording()</h2>
+<a id="a04988e26d62d3f7112273ce8e4fbf7b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04988e26d62d3f7112273ce8e4fbf7b0">&#9670;&nbsp;</a></span>stopRecording() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a> tracktion::engine::EditPlaybackContext::stopRecording </td>
+          <td class="memname">tl::expected&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String&gt; tracktion::engine::EditPlaybackContext::stopRecording </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
           <td class="paramname">, </td>
@@ -475,12 +492,6 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TimeRange&#160;</td>
-          <td class="paramname"><em>recordedRange</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>discardRecordings</em>&#160;</td>
         </tr>
@@ -494,17 +505,17 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5a48e49c9cbf543f61df2f1ecd0bd69b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a48e49c9cbf543f61df2f1ecd0bd69b">&#9670;&nbsp;</a></span>recordingFinished()</h2>
+<a id="a6968630c8cf2bbf1ae910ac89b12a9a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6968630c8cf2bbf1ae910ac89b12a9a3">&#9670;&nbsp;</a></span>stopRecording() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a> tracktion::engine::EditPlaybackContext::recordingFinished </td>
+          <td class="memname">tl::expected&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String&gt; tracktion::engine::EditPlaybackContext::stopRecording </td>
           <td>(</td>
-          <td class="paramtype">TimeRange&#160;</td>
-          <td class="paramname"><em>recordedRange</em>, </td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname"><em>unloopedEnd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -522,8 +533,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adbb1a195268898210c6fae3316d11b0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbb1a195268898210c6fae3316d11b0c">&#9670;&nbsp;</a></span>applyRetrospectiveRecord()</h2>
+<a id="ad84f7eca6234de43834fa7d82447ee0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad84f7eca6234de43834fa7d82447ee0f">&#9670;&nbsp;</a></span>applyRetrospectiveRecord()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -532,8 +543,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">juce::Result tracktion::engine::EditPlaybackContext::applyRetrospectiveRecord </td>
           <td>(</td>
           <td class="paramtype">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt; *&#160;</td>
-          <td class="paramname"><em>clipsCreated</em> = <code>nullptr</code></td><td>)</td>
+          <td class="paramname"><em>clipsCreated</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>armedOnly</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -962,6 +983,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a402a342387064eda5f5de461225d26b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a402a342387064eda5f5de461225d26b7">&#9670;&nbsp;</a></span>getSyncPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>&gt; tracktion::engine::EditPlaybackContext::getSyncPoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the last reference sample position and the edit time and beat that it corresponded to. </p>
+
+</div>
+</div>
 <a id="ad51466a2a661345dfb2fc041aba5af0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad51466a2a661345dfb2fc041aba5af0e">&#9670;&nbsp;</a></span>globalStreamTimeToEditTime()</h2>
 
@@ -1041,6 +1081,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>. Will be removed in a future release. </p>
+
+</div>
+</div>
+<a id="a3d5c46f23637cba5ece214e9b2650ffc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d5c46f23637cba5ece214e9b2650ffc">&#9670;&nbsp;</a></span>blockUntilSyncPointChange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::EditPlaybackContext::blockUntilSyncPointChange </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1125,6 +1182,119 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa4e7a3e67e3b8bba6558bf41a1e65d78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e7a3e67e3b8bba6558bf41a1e65d78">&#9670;&nbsp;</a></span>enableNodeMemorySharing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tracktion::engine::EditPlaybackContext::enableNodeMemorySharing </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables reusing of audio buffers during graph processing which may reduce the memory use at the cost of some additional overhead. </p>
+<p>N.B. This is different from enablePooledMemory. </p>
+
+</div>
+</div>
+<a id="ae7f9a29d167292b7cbe5a655f911194e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7f9a29d167292b7cbe5a655f911194e">&#9670;&nbsp;</a></span>enableAudioWorkgroup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tracktion::engine::EditPlaybackContext::enableAudioWorkgroup </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enables using AudioWorkgroups. </p>
+<p>Currently experimental and only on macOS. </p>
+
+</div>
+</div>
+<a id="a74fe035681ac1d9c23c5f2c5d4a93ca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74fe035681ac1d9c23c5f2c5d4a93ca3">&#9670;&nbsp;</a></span>getNumActivelyRecordingDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::EditPlaybackContext::getNumActivelyRecordingDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a03aab2a6b55fd42453ebe0e26c9f8267"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03aab2a6b55fd42453ebe0e26c9f8267">&#9670;&nbsp;</a></span>incrementNumActivelyRecordingDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::EditPlaybackContext::incrementNumActivelyRecordingDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html#a5446a9ae90497c051ed45f153fd522a6">tracktion::engine::detail::ScopedActiveRecordingDevice::ScopedActiveRecordingDevice()</a>.</p>
+
+</div>
+</div>
+<a id="a69df7a669014802e96afb994ae53e77f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69df7a669014802e96afb994ae53e77f">&#9670;&nbsp;</a></span>decrementNumActivelyRecordingDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::EditPlaybackContext::decrementNumActivelyRecordingDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html#ad2cd89681e1d84215bc3b0a29df4a01d">tracktion::engine::detail::ScopedActiveRecordingDevice::~ScopedActiveRecordingDevice()</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ab16bc1c851489c4454f9b8b81b627af0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab16bc1c851489c4454f9b8b81b627af0">&#9670;&nbsp;</a></span>edit</h2>
@@ -1188,7 +1358,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

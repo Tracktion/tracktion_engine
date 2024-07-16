@@ -219,6 +219,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa631bf883609fee9f3f7a23410c81212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46cb5a54d5f0a1856089945d82ea40d0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a46cb5a54d5f0a1856089945d82ea40d0">shouldAddMetadata</a> () const</td></tr>
 <tr class="separator:a46cb5a54d5f0a1856089945d82ea40d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34f18e0d96dc6bded844e335ebd7accf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a34f18e0d96dc6bded844e335ebd7accf">shouldAddAcidMetadata</a> () const</td></tr>
+<tr class="separator:a34f18e0d96dc6bded844e335ebd7accf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf6abb20fe5e7361071453dfe2dfac7d"><td class="memItemLeft" align="right" valign="top">juce::BigInteger&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#adf6abb20fe5e7361071453dfe2dfac7d">getTrackIndexes</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;) const</td></tr>
 <tr class="separator:adf6abb20fe5e7361071453dfe2dfac7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef8762baded4e8b8073fcd20d5c2d5b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#aef8762baded4e8b8073fcd20d5c2d5b5">getRemoveSilence</a> () const noexcept</td></tr>
@@ -314,6 +316,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:abb57c2912761ef2f4be5161afcbabfa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1acacfbb79a92d6484769bf8f3b1e85f"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a1acacfbb79a92d6484769bf8f3b1e85f">addMetadata</a></td></tr>
 <tr class="separator:a1acacfbb79a92d6484769bf8f3b1e85f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6abf2242e2120b862e289c5c5f315e96"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a6abf2242e2120b862e289c5c5f315e96">addAcidMetadata</a></td></tr>
+<tr class="separator:a6abf2242e2120b862e289c5c5f315e96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabc7564a9bcfb3b674930d9132dc5de3"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html">AudioClipBase</a> &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#aabc7564a9bcfb3b674930d9132dc5de3">offerToAddClipToLibrary</a></td></tr>
 <tr class="separator:aabc7564a9bcfb3b674930d9132dc5de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a912a5794fafe6363ccfd4041eb2a7947"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(const juce::File &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a912a5794fafe6363ccfd4041eb2a7947">offerToAddFileToLibrary</a></td></tr>
@@ -1529,6 +1533,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a34f18e0d96dc6bded844e335ebd7accf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34f18e0d96dc6bded844e335ebd7accf">&#9670;&nbsp;</a></span>shouldAddAcidMetadata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::RenderOptions::shouldAddAcidMetadata </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a6abf2242e2120b862e289c5c5f315e96">addAcidMetadata</a>.</p>
+
+</div>
+</div>
 <a id="adf6abb20fe5e7361071453dfe2dfac7d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adf6abb20fe5e7361071453dfe2dfac7d">&#9670;&nbsp;</a></span>getTrackIndexes()</h2>
 
@@ -2242,6 +2265,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6abf2242e2120b862e289c5c5f315e96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6abf2242e2120b862e289c5c5f315e96">&#9670;&nbsp;</a></span>addAcidMetadata</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;bool&gt; tracktion::engine::RenderOptions::addAcidMetadata</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a34f18e0d96dc6bded844e335ebd7accf">shouldAddAcidMetadata()</a>.</p>
+
+</div>
+</div>
 <a id="aabc7564a9bcfb3b674930d9132dc5de3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aabc7564a9bcfb3b674930d9132dc5de3">&#9670;&nbsp;</a></span>offerToAddClipToLibrary</h2>
 
@@ -2276,7 +2315,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -1,0 +1,6 @@
+<map id="tracktion::engine::ArrangerLauncherSwitchingNode" name="tracktion::engine::ArrangerLauncherSwitchingNode">
+<area shape="rect" id="node1" title="A Node that switches between two of its inputs based on a flag." alt="" coords="220,57,455,98"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,5,172,32"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="9,57,168,98"/>
+<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1SharedTimer_1_1Listener.html" title=" " alt="" coords="6,122,171,163"/>
+</map>

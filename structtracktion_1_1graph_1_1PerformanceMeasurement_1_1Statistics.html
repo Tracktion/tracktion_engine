@@ -87,15 +87,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac781adc5d06b1a274de28d8e75812431"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a936587d2aed775f42b3c45a1fc1644fb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a936587d2aed775f42b3c45a1fc1644fb">getVarianceCycles</a> () const</td></tr>
 <tr class="separator:a936587d2aed775f42b3c45a1fc1644fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0baa10a54b75704b983fc593c416d243"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a0baa10a54b75704b983fc593c416d243">toString</a> () const</td></tr>
-<tr class="separator:a0baa10a54b75704b983fc593c416d243"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9bb9517fb596f0d402c1e1a2bc1ffd7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa9bb9517fb596f0d402c1e1a2bc1ffd7">toString</a> (const std::string &amp;name) const</td></tr>
+<tr class="separator:aa9bb9517fb596f0d402c1e1a2bc1ffd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c263057b69a7baa7ece4a0f1e88b467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a6c263057b69a7baa7ece4a0f1e88b467">addResult</a> (double secondsElapsed, uint64_t cyclesElapsed) noexcept</td></tr>
 <tr class="separator:a6c263057b69a7baa7ece4a0f1e88b467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aa70449e2ac88278c1b672a4cf34a77f9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa70449e2ac88278c1b672a4cf34a77f9">name</a></td></tr>
-<tr class="separator:aa70449e2ac88278c1b672a4cf34a77f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f8fcfa4fa644fa9144b80fc782ae381"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a7f8fcfa4fa644fa9144b80fc782ae381">meanSeconds</a> = 0.0</td></tr>
 <tr class="separator:a7f8fcfa4fa644fa9144b80fc782ae381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4eb7918e235dd1656f2e3cb706107950"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a4eb7918e235dd1656f2e3cb706107950">m2Seconds</a> = 0.0</td></tr>
@@ -211,8 +209,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0baa10a54b75704b983fc593c416d243"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0baa10a54b75704b983fc593c416d243">&#9670;&nbsp;</a></span>toString()</h2>
+<a id="aa9bb9517fb596f0d402c1e1a2bc1ffd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9bb9517fb596f0d402c1e1a2bc1ffd7">&#9670;&nbsp;</a></span>toString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -220,7 +218,8 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">std::string tracktion::graph::PerformanceMeasurement::Statistics::toString </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -269,22 +268,6 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aa70449e2ac88278c1b672a4cf34a77f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa70449e2ac88278c1b672a4cf34a77f9">&#9670;&nbsp;</a></span>name</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tracktion::graph::PerformanceMeasurement::Statistics::name</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PerformanceMeasurement.html#a06c4649d10a47b7bf7ac2a65f80e60a0">tracktion::graph::PerformanceMeasurement::PerformanceMeasurement()</a>.</p>
-
-</div>
-</div>
 <a id="a7f8fcfa4fa644fa9144b80fc782ae381"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f8fcfa4fa644fa9144b80fc782ae381">&#9670;&nbsp;</a></span>meanSeconds</h2>
 
@@ -467,7 +450,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

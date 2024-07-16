@@ -76,13 +76,12 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Inherits juce::ChangeBroadcaster, juce::ChangeListener, and juce::AudioIODeviceCallback.</p>
+<p>Inherits juce::ChangeBroadcaster, juce::ChangeListener, juce::AudioIODeviceCallback, juce::AsyncUpdater, and juce::Timer.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html">ContextDeviceListRebuilder</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html">CPUUsageListener</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclass of an AudioDeviceManager which can be used to avoid adding the system audio devices in plugin builds.  <a href="structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -95,6 +94,48 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ade3dcb3bf57ab766da9b869643f4eb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae69778993003f31d6014ca2fea77a784"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ae69778993003f31d6014ca2fea77a784">saveSettings</a> ()</td></tr>
 <tr class="separator:ae69778993003f31d6014ca2fea77a784"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9a54a9bb4d65a0f8b2ecd2e0a069a3bf">resetToDefaults</a> (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)</td></tr>
+<tr class="separator:a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0c2e8cac3ddbe11e2f4ff7ee2b7921"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1c0c2e8cac3ddbe11e2f4ff7ee2b7921">rescanMidiDeviceList</a> ()</td></tr>
+<tr class="separator:a1c0c2e8cac3ddbe11e2f4ff7ee2b7921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a306d06a400f0b4f2e2abd30dd470e886"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a306d06a400f0b4f2e2abd30dd470e886">rescanWaveDeviceList</a> ()</td></tr>
+<tr class="separator:a306d06a400f0b4f2e2abd30dd470e886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59b80f43ba23380f17f5c9f097f85380"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a59b80f43ba23380f17f5c9f097f85380">getMidiDeviceScanIntervalSeconds</a> () const</td></tr>
+<tr class="separator:a59b80f43ba23380f17f5c9f097f85380"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ce71330e53bb3bf1ffe8f5099ac64bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1ce71330e53bb3bf1ffe8f5099ac64bd">setMidiDeviceScanIntervalSeconds</a> (int intervalSeconds)</td></tr>
+<tr class="separator:a1ce71330e53bb3bf1ffe8f5099ac64bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9411c2b6885eedb15fe7e4474f9f8f8c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9411c2b6885eedb15fe7e4474f9f8f8c">getSampleRate</a> () const</td></tr>
+<tr class="separator:a9411c2b6885eedb15fe7e4474f9f8f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea875703da2ebfcdfe9243c61b4f7001"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aea875703da2ebfcdfe9243c61b4f7001">getBitDepth</a> () const</td></tr>
+<tr class="separator:aea875703da2ebfcdfe9243c61b4f7001"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59f4df05d67c1318a549d8d8fc901668"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a59f4df05d67c1318a549d8d8fc901668">getBlockSize</a> () const</td></tr>
+<tr class="separator:a59f4df05d67c1318a549d8d8fc901668"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4323b9cb865edf8faa242708331b468"><td class="memItemLeft" align="right" valign="top">TimeDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa4323b9cb865edf8faa242708331b468">getBlockLength</a> () const</td></tr>
+<tr class="separator:aa4323b9cb865edf8faa242708331b468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af945a9b500822b871fd6ea48066dd926"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af945a9b500822b871fd6ea48066dd926">getBlockSizeMs</a> () const</td></tr>
+<tr class="separator:af945a9b500822b871fd6ea48066dd926"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb55538738b6c87abe11c635334cc7a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8eb55538738b6c87abe11c635334cc7a">getOutputLatencySeconds</a> () const</td></tr>
+<tr class="separator:a8eb55538738b6c87abe11c635334cc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ed27f417fef90f8cd563cd592629b3f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4ed27f417fef90f8cd563cd592629b3f">getRecordAdjustmentMs</a> ()</td></tr>
+<tr class="separator:a4ed27f417fef90f8cd563cd592629b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f22ae59a3658fe038f0ecd3c61d0055"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8f22ae59a3658fe038f0ecd3c61d0055">getRecordAdjustmentSamples</a> ()</td></tr>
+<tr class="separator:a8f22ae59a3658fe038f0ecd3c61d0055"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1384ce8fe9033a65cd5ff0ee332cdd24"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1384ce8fe9033a65cd5ff0ee332cdd24">getCpuUsage</a> () const noexcept</td></tr>
+<tr class="separator:a1384ce8fe9033a65cd5ff0ee332cdd24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6d7c1825f08979ffd5f719a6e07ccc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ae6d7c1825f08979ffd5f719a6e07ccc5">setCpuLimitBeforeMuting</a> (double newLimit)</td></tr>
+<tr class="separator:ae6d7c1825f08979ffd5f719a6e07ccc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f788d0c1b2e951fec7fe328c52deca7"><td class="memItemLeft" align="right" valign="top">PerformanceMeasurement::Statistics&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a0f788d0c1b2e951fec7fe328c52deca7">getCPUStatistics</a> () const</td></tr>
+<tr class="separator:a0f788d0c1b2e951fec7fe328c52deca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08c79f7e3f31fa4aae6a04e25b3efba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a08c79f7e3f31fa4aae6a04e25b3efba9">restCPUStatistics</a> ()</td></tr>
+<tr class="separator:a08c79f7e3f31fa4aae6a04e25b3efba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b88f0ba695286e75685673e606ca6ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8b88f0ba695286e75685673e606ca6ea">updateNumCPUs</a> ()</td></tr>
+<tr class="separator:a8b88f0ba695286e75685673e606ca6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05a4490fcf1c19f27608b38cec37d028"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a05a4490fcf1c19f27608b38cec37d028">enableOutputClipping</a> (bool clipOutput)</td></tr>
+<tr class="memdesc:a05a4490fcf1c19f27608b38cec37d028"><td class="mdescLeft">&#160;</td><td class="mdescRight">If set to true, clips the output at 0.0.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a05a4490fcf1c19f27608b38cec37d028">More...</a><br /></td></tr>
+<tr class="separator:a05a4490fcf1c19f27608b38cec37d028"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dcce1358a36d9d17accd5daddddfeec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a3dcce1358a36d9d17accd5daddddfeec">hasOutputClipped</a> (bool reset)</td></tr>
+<tr class="memdesc:a3dcce1358a36d9d17accd5daddddfeec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the output has clipped.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a3dcce1358a36d9d17accd5daddddfeec">More...</a><br /></td></tr>
+<tr class="separator:a3dcce1358a36d9d17accd5daddddfeec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11b91846ccd80bf71ff62b074218527f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html">HostedAudioDeviceInterface</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a11b91846ccd80bf71ff62b074218527f">getHostedAudioDeviceInterface</a> ()</td></tr>
 <tr class="memdesc:a11b91846ccd80bf71ff62b074218527f"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you are using the engine in a plugin or an application that accesses the audio device directly, use this interface to pass audio and midi to the <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html">DeviceManager</a>.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a11b91846ccd80bf71ff62b074218527f">More...</a><br /></td></tr>
 <tr class="separator:a11b91846ccd80bf71ff62b074218527f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,78 +145,86 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a47083b3c0cedc829d65c84bc46e9e1d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a47083b3c0cedc829d65c84bc46e9e1d3">removeHostedAudioDeviceInterface</a> ()</td></tr>
 <tr class="memdesc:a47083b3c0cedc829d65c84bc46e9e1d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the hosted audio device.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a47083b3c0cedc829d65c84bc46e9e1d3">More...</a><br /></td></tr>
 <tr class="separator:a47083b3c0cedc829d65c84bc46e9e1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1384ce8fe9033a65cd5ff0ee332cdd24"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1384ce8fe9033a65cd5ff0ee332cdd24">getCpuUsage</a> () const noexcept</td></tr>
-<tr class="separator:a1384ce8fe9033a65cd5ff0ee332cdd24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6d7c1825f08979ffd5f719a6e07ccc5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ae6d7c1825f08979ffd5f719a6e07ccc5">setCpuLimitBeforeMuting</a> (double newLimit)</td></tr>
-<tr class="separator:ae6d7c1825f08979ffd5f719a6e07ccc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b88f0ba695286e75685673e606ca6ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8b88f0ba695286e75685673e606ca6ea">updateNumCPUs</a> ()</td></tr>
-<tr class="separator:a8b88f0ba695286e75685673e606ca6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2988dc096442d3f5563198e7c13900b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af2988dc096442d3f5563198e7c13900b">addCPUUsageListener</a> (<a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html">CPUUsageListener</a> *listener)</td></tr>
-<tr class="separator:af2988dc096442d3f5563198e7c13900b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1158f839952458e141a78ca95a2cadc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af1158f839952458e141a78ca95a2cadc">removeCPUUsageListener</a> (<a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html">CPUUsageListener</a> *listener)</td></tr>
-<tr class="separator:af1158f839952458e141a78ca95a2cadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9411c2b6885eedb15fe7e4474f9f8f8c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9411c2b6885eedb15fe7e4474f9f8f8c">getSampleRate</a> () const</td></tr>
-<tr class="separator:a9411c2b6885eedb15fe7e4474f9f8f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea875703da2ebfcdfe9243c61b4f7001"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aea875703da2ebfcdfe9243c61b4f7001">getBitDepth</a> () const</td></tr>
-<tr class="separator:aea875703da2ebfcdfe9243c61b4f7001"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59f4df05d67c1318a549d8d8fc901668"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a59f4df05d67c1318a549d8d8fc901668">getBlockSize</a> () const</td></tr>
-<tr class="separator:a59f4df05d67c1318a549d8d8fc901668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af945a9b500822b871fd6ea48066dd926"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af945a9b500822b871fd6ea48066dd926">getBlockSizeMs</a> () const</td></tr>
-<tr class="separator:af945a9b500822b871fd6ea48066dd926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4323b9cb865edf8faa242708331b468"><td class="memItemLeft" align="right" valign="top">TimeDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa4323b9cb865edf8faa242708331b468">getBlockLength</a> () const</td></tr>
-<tr class="separator:aa4323b9cb865edf8faa242708331b468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f2dc75ee9d09f4b54779590f924133c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7f2dc75ee9d09f4b54779590f924133c">getNumInputDevices</a> () const</td></tr>
+<tr class="separator:a7f2dc75ee9d09f4b54779590f924133c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa691b901c734f38cec7f31fefe64fed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aaa691b901c734f38cec7f31fefe64fed">getInputDevice</a> (int index) const</td></tr>
+<tr class="separator:aaa691b901c734f38cec7f31fefe64fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade38bd01413b94b571ccdf37cf8db7c2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ade38bd01413b94b571ccdf37cf8db7c2">getNumOutputDevices</a> () const</td></tr>
+<tr class="separator:ade38bd01413b94b571ccdf37cf8db7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09e7b664a70532dd0b753da67aa93e95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a09e7b664a70532dd0b753da67aa93e95">getOutputDeviceAt</a> (int index) const</td></tr>
+<tr class="separator:a09e7b664a70532dd0b753da67aa93e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab87b4577e63eec74d5bd8f7eb9995b6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab87b4577e63eec74d5bd8f7eb9995b6d">findInputDeviceForID</a> (const juce::String &amp;id) const</td></tr>
+<tr class="separator:ab87b4577e63eec74d5bd8f7eb9995b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d1c99d903d4b8e492a406de53430051"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a0d1c99d903d4b8e492a406de53430051">findInputDeviceWithName</a> (const juce::String &amp;name) const</td></tr>
+<tr class="separator:a0d1c99d903d4b8e492a406de53430051"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee714948b37df56beaad74197d4ab1f5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aee714948b37df56beaad74197d4ab1f5">findMidiInputDeviceForID</a> (const juce::String &amp;id) const</td></tr>
+<tr class="separator:aee714948b37df56beaad74197d4ab1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1498a0c46ecc046b15e23e2a041bd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abc1498a0c46ecc046b15e23e2a041bd4">findOutputDeviceForID</a> (const juce::String &amp;id) const</td></tr>
+<tr class="separator:abc1498a0c46ecc046b15e23e2a041bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0561aa16b3704512b4f50aeabeafa5ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a0561aa16b3704512b4f50aeabeafa5ea">findOutputDeviceWithName</a> (const juce::String &amp;name) const</td></tr>
+<tr class="separator:a0561aa16b3704512b4f50aeabeafa5ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5805cc5e633b59d86cac7c606fb357f3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a5805cc5e633b59d86cac7c606fb357f3">getNumWaveOutDevices</a> () const</td></tr>
 <tr class="separator:a5805cc5e633b59d86cac7c606fb357f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67d9b0ffbd8a781f7dfa5c19987a33be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a67d9b0ffbd8a781f7dfa5c19987a33be">getWaveOutDevice</a> (int index) const</td></tr>
 <tr class="separator:a67d9b0ffbd8a781f7dfa5c19987a33be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56a0f19258c8961aa88472d28ffe576"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab56a0f19258c8961aa88472d28ffe576">setDefaultWaveOutDevice</a> (juce::String deviceID)</td></tr>
+<tr class="separator:ab56a0f19258c8961aa88472d28ffe576"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cd0c33f418a51741dbac2908d96fa36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7cd0c33f418a51741dbac2908d96fa36">getDefaultWaveOutDevice</a> () const</td></tr>
 <tr class="separator:a7cd0c33f418a51741dbac2908d96fa36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a782402c170f9f3fd17e3ecdc3810197f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a782402c170f9f3fd17e3ecdc3810197f">setDefaultWaveOutDevice</a> (int index)</td></tr>
-<tr class="separator:a782402c170f9f3fd17e3ecdc3810197f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b4e21ac11888c5cc1866c2359ad3db8"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1b4e21ac11888c5cc1866c2359ad3db8">getDefaultWaveOutDeviceID</a> () const</td></tr>
+<tr class="separator:a1b4e21ac11888c5cc1866c2359ad3db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca098071d94ee79bb77f6a80e0e79f22"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aca098071d94ee79bb77f6a80e0e79f22">getNumWaveInDevices</a> () const</td></tr>
 <tr class="separator:aca098071d94ee79bb77f6a80e0e79f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af437bd6eed7b65649446e533b2eae4cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af437bd6eed7b65649446e533b2eae4cc">getWaveInDevice</a> (int index) const</td></tr>
 <tr class="separator:af437bd6eed7b65649446e533b2eae4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3b264189b9d186a23d2f5736de4fc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8b3b264189b9d186a23d2f5736de4fc1">setDefaultWaveInDevice</a> (juce::String deviceID)</td></tr>
+<tr class="separator:a8b3b264189b9d186a23d2f5736de4fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a502366520b33bd824b1deca7b7c0af9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a502366520b33bd824b1deca7b7c0af9f">getDefaultWaveInDevice</a> () const</td></tr>
 <tr class="separator:a502366520b33bd824b1deca7b7c0af9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c6dfebd8e1ad172e5274807e28306a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1c6dfebd8e1ad172e5274807e28306a0">setDefaultWaveInDevice</a> (int index)</td></tr>
-<tr class="separator:a1c6dfebd8e1ad172e5274807e28306a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9ccbfbc3c782eada0d305107ee8ebd"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6a9ccbfbc3c782eada0d305107ee8ebd">getDefaultWaveInDeviceID</a> () const</td></tr>
+<tr class="separator:a6a9ccbfbc3c782eada0d305107ee8ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0d030552f42eb4923be9c1496128af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af0d030552f42eb4923be9c1496128af0">setWaveOutChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
+<tr class="separator:af0d030552f42eb4923be9c1496128af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6f19c469e63276e83f3e82cec9c3c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1e6f19c469e63276e83f3e82cec9c3c8">setDeviceOutChannelStereo</a> (int channelNum, bool isStereoPair)</td></tr>
 <tr class="separator:a1e6f19c469e63276e83f3e82cec9c3c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac47d8038b6bce0f63120d5786e955403"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ac47d8038b6bce0f63120d5786e955403">isDeviceOutChannelStereo</a> (int chan) const</td></tr>
 <tr class="separator:ac47d8038b6bce0f63120d5786e955403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85dae6add1c6f573ef39e2e61a236ef1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a85dae6add1c6f573ef39e2e61a236ef1">isDeviceOutEnabled</a> (int chanNum)</td></tr>
 <tr class="separator:a85dae6add1c6f573ef39e2e61a236ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add7e1a2dd9c98adcbf59e358864371c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#add7e1a2dd9c98adcbf59e358864371c9">setWaveInChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
+<tr class="separator:add7e1a2dd9c98adcbf59e358864371c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3ea9fed94a65f3ecd7944557373479d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af3ea9fed94a65f3ecd7944557373479d">setDeviceInChannelStereo</a> (int channelNum, bool isStereoPair)</td></tr>
 <tr class="separator:af3ea9fed94a65f3ecd7944557373479d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30f326a9d873775d23574db371ce0a53"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a30f326a9d873775d23574db371ce0a53">isDeviceInChannelStereo</a> (int chan) const</td></tr>
 <tr class="separator:a30f326a9d873775d23574db371ce0a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2c683491c89cc8100486387bb261976"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af2c683491c89cc8100486387bb261976">isDeviceInEnabled</a> (int chanNum)</td></tr>
 <tr class="separator:af2c683491c89cc8100486387bb261976"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0d030552f42eb4923be9c1496128af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af0d030552f42eb4923be9c1496128af0">setWaveOutChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
-<tr class="separator:af0d030552f42eb4923be9c1496128af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add7e1a2dd9c98adcbf59e358864371c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#add7e1a2dd9c98adcbf59e358864371c9">setWaveInChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
-<tr class="separator:add7e1a2dd9c98adcbf59e358864371c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7dffd058e2482445d3c3fdc70263dcd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa7dffd058e2482445d3c3fdc70263dcd">rebuildWaveDeviceListIfNeeded</a> ()</td></tr>
-<tr class="separator:aa7dffd058e2482445d3c3fdc70263dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf29815f12f421df9c63dcd1e60aecac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#acf29815f12f421df9c63dcd1e60aecac">rescanMidiDeviceList</a> (bool forceRescan)</td></tr>
-<tr class="separator:acf29815f12f421df9c63dcd1e60aecac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a129f0bfd0b3e90581755284c9c700b50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a129f0bfd0b3e90581755284c9c700b50">getNumMidiOutDevices</a> () const</td></tr>
 <tr class="separator:a129f0bfd0b3e90581755284c9c700b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c2739f5edd7504db2256b97205c5ac9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a5c2739f5edd7504db2256b97205c5ac9">getMidiOutDevice</a> (int index) const</td></tr>
 <tr class="separator:a5c2739f5edd7504db2256b97205c5ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157609cfc2f89b425890ccf661935b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a157609cfc2f89b425890ccf661935b77">setDefaultMidiOutDevice</a> (juce::String deviceID)</td></tr>
+<tr class="separator:a157609cfc2f89b425890ccf661935b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af29743aabe9600e0b4c850a3014a8fb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af29743aabe9600e0b4c850a3014a8fb1">getDefaultMidiOutDevice</a> () const</td></tr>
 <tr class="separator:af29743aabe9600e0b4c850a3014a8fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad36a05df579bf9e41bf76a65749b2ed2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad36a05df579bf9e41bf76a65749b2ed2">setDefaultMidiOutDevice</a> (int index)</td></tr>
-<tr class="separator:ad36a05df579bf9e41bf76a65749b2ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1f1196c082e00e6aeaec294c33e52a4"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af1f1196c082e00e6aeaec294c33e52a4">getDefaultMidiOutDeviceID</a> () const</td></tr>
+<tr class="separator:af1f1196c082e00e6aeaec294c33e52a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b70aef080c2e662ddd74d97f0dbd05f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1b70aef080c2e662ddd74d97f0dbd05f">getNumMidiInDevices</a> () const</td></tr>
 <tr class="separator:a1b70aef080c2e662ddd74d97f0dbd05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21c893322c13d1eef1d5a7456708b686"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a21c893322c13d1eef1d5a7456708b686">getMidiInDevice</a> (int index) const</td></tr>
-<tr class="separator:a21c893322c13d1eef1d5a7456708b686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe409aec057c8bccac8181134de0aec4"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#afe409aec057c8bccac8181134de0aec4">getMidiInDevice</a> (int index) const</td></tr>
+<tr class="separator:afe409aec057c8bccac8181134de0aec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7005ca5e3564d0c704481d26d4bbd50e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7005ca5e3564d0c704481d26d4bbd50e">getMidiInDevices</a> () const</td></tr>
+<tr class="separator:a7005ca5e3564d0c704481d26d4bbd50e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2dba918350112c6fc6212db8a8d2baf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad2dba918350112c6fc6212db8a8d2baf">setDefaultMidiInDevice</a> (juce::String deviceID)</td></tr>
+<tr class="separator:ad2dba918350112c6fc6212db8a8d2baf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa2faa7b64574eff30d453c5bd56c3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6aa2faa7b64574eff30d453c5bd56c3d">getDefaultMidiInDevice</a> () const</td></tr>
 <tr class="separator:a6aa2faa7b64574eff30d453c5bd56c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa98dba750fe067a884f741d252beb72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#afa98dba750fe067a884f741d252beb72">setDefaultMidiInDevice</a> (int index)</td></tr>
-<tr class="separator:afa98dba750fe067a884f741d252beb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a830841032e35ba6061c32f327e189882"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a830841032e35ba6061c32f327e189882">getDefaultMidiInDeviceID</a> () const</td></tr>
+<tr class="separator:a830841032e35ba6061c32f327e189882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab84d746d0377c8c000907e878d95adfa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab84d746d0377c8c000907e878d95adfa">injectMIDIMessageToDefaultDevice</a> (const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:ab84d746d0377c8c000907e878d95adfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a739ea789b6f41d5d684aeec3a6c1bb14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a739ea789b6f41d5d684aeec3a6c1bb14">broadcastMessageToAllVirtualDevices</a> (<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &amp;, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a739ea789b6f41d5d684aeec3a6c1bb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a321e4a76090c2a5e8b03203cb1371ad7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a321e4a76090c2a5e8b03203cb1371ad7">broadcastStreamTimeToMidiDevices</a> (double streamTime)</td></tr>
 <tr class="separator:a321e4a76090c2a5e8b03203cb1371ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33cdfc85b34060cec2a57a8d80128e18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a33cdfc85b34060cec2a57a8d80128e18">shouldSendMidiTimecode</a> () const noexcept</td></tr>
@@ -185,43 +234,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9649ae8c3e6c11bcacc592bc99b387c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a924aaf3aa12e938551d8e07876989e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7a924aaf3aa12e938551d8e07876989e">isMSWavetableSynthPresent</a> () const</td></tr>
 <tr class="separator:a7a924aaf3aa12e938551d8e07876989e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9a54a9bb4d65a0f8b2ecd2e0a069a3bf">resetToDefaults</a> (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)</td></tr>
-<tr class="separator:a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f2dc75ee9d09f4b54779590f924133c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7f2dc75ee9d09f4b54779590f924133c">getNumInputDevices</a> () const</td></tr>
-<tr class="separator:a7f2dc75ee9d09f4b54779590f924133c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa691b901c734f38cec7f31fefe64fed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aaa691b901c734f38cec7f31fefe64fed">getInputDevice</a> (int index) const</td></tr>
-<tr class="separator:aaa691b901c734f38cec7f31fefe64fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade38bd01413b94b571ccdf37cf8db7c2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ade38bd01413b94b571ccdf37cf8db7c2">getNumOutputDevices</a> () const</td></tr>
-<tr class="separator:ade38bd01413b94b571ccdf37cf8db7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09e7b664a70532dd0b753da67aa93e95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a09e7b664a70532dd0b753da67aa93e95">getOutputDeviceAt</a> (int index) const</td></tr>
-<tr class="separator:a09e7b664a70532dd0b753da67aa93e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc1498a0c46ecc046b15e23e2a041bd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abc1498a0c46ecc046b15e23e2a041bd4">findOutputDeviceForID</a> (const juce::String &amp;id) const</td></tr>
-<tr class="separator:abc1498a0c46ecc046b15e23e2a041bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0561aa16b3704512b4f50aeabeafa5ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a0561aa16b3704512b4f50aeabeafa5ea">findOutputDeviceWithName</a> (const juce::String &amp;name) const</td></tr>
-<tr class="separator:a0561aa16b3704512b4f50aeabeafa5ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51b62fb8fcdb2c7917ac2ea8184d7a94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a51b62fb8fcdb2c7917ac2ea8184d7a94">dispatchPendingUpdates</a> ()</td></tr>
+<tr class="memdesc:a51b62fb8fcdb2c7917ac2ea8184d7a94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes to the devices get applied asyncronously so this function can be called to trigger any pending updates to be flushed.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a51b62fb8fcdb2c7917ac2ea8184d7a94">More...</a><br /></td></tr>
+<tr class="separator:a51b62fb8fcdb2c7917ac2ea8184d7a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b8187848826ac12d98c14d6bcf7e1c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7b8187848826ac12d98c14d6bcf7e1c0">checkDefaultDevicesAreValid</a> ()</td></tr>
 <tr class="separator:a7b8187848826ac12d98c14d6bcf7e1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28642f2d741286052646c084209c75be"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a28642f2d741286052646c084209c75be">createVirtualMidiDevice</a> (const juce::String &amp;name)</td></tr>
 <tr class="separator:a28642f2d741286052646c084209c75be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f960d0684f97ccad65f773dad890862"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6f960d0684f97ccad65f773dad890862">deleteVirtualMidiDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html">VirtualMidiInputDevice</a> *)</td></tr>
-<tr class="separator:a6f960d0684f97ccad65f773dad890862"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ed27f417fef90f8cd563cd592629b3f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4ed27f417fef90f8cd563cd592629b3f">getRecordAdjustmentMs</a> ()</td></tr>
-<tr class="separator:a4ed27f417fef90f8cd563cd592629b3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f22ae59a3658fe038f0ecd3c61d0055"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8f22ae59a3658fe038f0ecd3c61d0055">getRecordAdjustmentSamples</a> ()</td></tr>
-<tr class="separator:a8f22ae59a3658fe038f0ecd3c61d0055"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb55538738b6c87abe11c635334cc7a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8eb55538738b6c87abe11c635334cc7a">getOutputLatencySeconds</a> () const</td></tr>
-<tr class="separator:a8eb55538738b6c87abe11c635334cc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d79caf8fbf7d12fd57a3359b1f6aa2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9d79caf8fbf7d12fd57a3359b1f6aa2a">deleteVirtualMidiDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html">VirtualMidiInputDevice</a> &amp;)</td></tr>
+<tr class="separator:a9d79caf8fbf7d12fd57a3359b1f6aa2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ad54c2a49de9671d15cf54828a46aa0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6ad54c2a49de9671d15cf54828a46aa0">addContext</a> (<a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> *)</td></tr>
 <tr class="separator:a6ad54c2a49de9671d15cf54828a46aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af58c41860f61450a1ae7bc304c91449b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af58c41860f61450a1ae7bc304c91449b">removeContext</a> (<a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> *)</td></tr>
 <tr class="separator:af58c41860f61450a1ae7bc304c91449b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52f5ffb5ea14486f10b5afc0e1903d96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a52f5ffb5ea14486f10b5afc0e1903d96">clearAllContextDevices</a> ()</td></tr>
-<tr class="separator:a52f5ffb5ea14486f10b5afc0e1903d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36b47f2a4163af149ba36f6ecf284f43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a36b47f2a4163af149ba36f6ecf284f43">reloadAllContextDevices</a> ()</td></tr>
-<tr class="separator:a36b47f2a4163af149ba36f6ecf284f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af6b87ec7ece6ecaa44b6f61bd90e2424">setGlobalOutputAudioProcessor</a> (juce::AudioProcessor *)</td></tr>
-<tr class="memdesc:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a global processor to be applied to the output.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#af6b87ec7ece6ecaa44b6f61bd90e2424">More...</a><br /></td></tr>
-<tr class="separator:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e20197d449d19aae5cdcb329e3cc87b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9e20197d449d19aae5cdcb329e3cc87b">setGlobalOutputAudioProcessor</a> (std::unique_ptr&lt; juce::AudioProcessor &gt;)</td></tr>
+<tr class="memdesc:a9e20197d449d19aae5cdcb329e3cc87b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a global processor to be applied to the output.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a9e20197d449d19aae5cdcb329e3cc87b">More...</a><br /></td></tr>
+<tr class="separator:a9e20197d449d19aae5cdcb329e3cc87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="memItemLeft" align="right" valign="top">juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ac04ddb52b0f3cee4dbd8f88023456d26">getGlobalOutputAudioProcessor</a> () const</td></tr>
 <tr class="memdesc:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a previously set globalOutputAudioProcessor.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#ac04ddb52b0f3cee4dbd8f88023456d26">More...</a><br /></td></tr>
 <tr class="separator:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -241,21 +269,21 @@ Static Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a></td></tr>
 <tr class="separator:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4cbd2ecb27149e3ac4fe90752f5561d2">deviceManager</a> { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td></tr>
+<tr class="separator:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab67d28f80a498f38ef38580ab6a0601d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html">HostedAudioDeviceInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab67d28f80a498f38ef38580ab6a0601d">hostedAudioDeviceInterface</a></td></tr>
 <tr class="separator:ab67d28f80a498f38ef38580ab6a0601d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4cbd2ecb27149e3ac4fe90752f5561d2">deviceManager</a> { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td></tr>
-<tr class="separator:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2540ee332880d6f8294e29cd7cc1de15"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>, juce::CriticalSection &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a2540ee332880d6f8294e29cd7cc1de15">midiInputs</a></td></tr>
-<tr class="separator:a2540ee332880d6f8294e29cd7cc1de15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ea74ac643600dc31adbc96dfe79b667"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1ea74ac643600dc31adbc96dfe79b667">midiOutputs</a></td></tr>
-<tr class="separator:a1ea74ac643600dc31adbc96dfe79b667"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad181434b2068c4c66af73a6120e1a527"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad181434b2068c4c66af73a6120e1a527">midiInputs</a></td></tr>
+<tr class="separator:ad181434b2068c4c66af73a6120e1a527"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab44228f6d93a2faf1071638642629081"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab44228f6d93a2faf1071638642629081">midiOutputs</a></td></tr>
+<tr class="separator:ab44228f6d93a2faf1071638642629081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9dcd0cd3c7cfd39fcf4936fe5277dd7"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af9dcd0cd3c7cfd39fcf4936fe5277dd7">waveInputs</a></td></tr>
 <tr class="separator:af9dcd0cd3c7cfd39fcf4936fe5277dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3e2e5007c3888004474ca6177589c84"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad3e2e5007c3888004474ca6177589c84">waveOutputs</a></td></tr>
 <tr class="separator:ad3e2e5007c3888004474ca6177589c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e27cf1e633b2993729a27a9fc4d5062"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8e27cf1e633b2993729a27a9fc4d5062">warnOfWastedMidiMessagesFunction</a></td></tr>
-<tr class="memdesc:a8e27cf1e633b2993729a27a9fc4d5062"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is set, it will get called (possibly on the midi thread) when incoming messages seem to be unused.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a8e27cf1e633b2993729a27a9fc4d5062">More...</a><br /></td></tr>
-<tr class="separator:a8e27cf1e633b2993729a27a9fc4d5062"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa27e24f0ea12a0a69db6b881cdb2e2b1">warnOfWastedMidiMessagesFunction</a></td></tr>
+<tr class="memdesc:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is set, it will get called (possibly on the midi thread) when incoming messages seem to be unused.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#aa27e24f0ea12a0a69db6b881cdb2e2b1">More...</a><br /></td></tr>
+<tr class="separator:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a955f510910509fa35db0d63607c9f6ff"></a>
@@ -346,14 +374,60 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a11b91846ccd80bf71ff62b074218527f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11b91846ccd80bf71ff62b074218527f">&#9670;&nbsp;</a></span>getHostedAudioDeviceInterface()</h2>
+<a id="a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a54a9bb4d65a0f8b2ecd2e0a069a3bf">&#9670;&nbsp;</a></span>resetToDefaults()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html">HostedAudioDeviceInterface</a>&amp; tracktion::engine::DeviceManager::getHostedAudioDeviceInterface </td>
+          <td class="memname">void tracktion::engine::DeviceManager::resetToDefaults </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>deviceSettings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resetInputDevices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resetOutputDevices</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>latencySettings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>mixSettings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c0c2e8cac3ddbe11e2f4ff7ee2b7921"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c0c2e8cac3ddbe11e2f4ff7ee2b7921">&#9670;&nbsp;</a></span>rescanMidiDeviceList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::rescanMidiDeviceList </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -361,18 +435,33 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>If you are using the engine in a plugin or an application that accesses the audio device directly, use this interface to pass audio and midi to the <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html">DeviceManager</a>. </p>
-
 </div>
 </div>
-<a id="a60460f10126436bf2057139c09ebc822"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60460f10126436bf2057139c09ebc822">&#9670;&nbsp;</a></span>isHostedAudioDeviceInterfaceInUse()</h2>
+<a id="a306d06a400f0b4f2e2abd30dd470e886"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a306d06a400f0b4f2e2abd30dd470e886">&#9670;&nbsp;</a></span>rescanWaveDeviceList()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool tracktion::engine::DeviceManager::isHostedAudioDeviceInterfaceInUse </td>
+          <td class="memname">void tracktion::engine::DeviceManager::rescanWaveDeviceList </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a59b80f43ba23380f17f5c9f097f85380"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59b80f43ba23380f17f5c9f097f85380">&#9670;&nbsp;</a></span>getMidiDeviceScanIntervalSeconds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::DeviceManager::getMidiDeviceScanIntervalSeconds </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -380,119 +469,19 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns true if the hosted interface is available and in use. </p>
-
 </div>
 </div>
-<a id="a47083b3c0cedc829d65c84bc46e9e1d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47083b3c0cedc829d65c84bc46e9e1d3">&#9670;&nbsp;</a></span>removeHostedAudioDeviceInterface()</h2>
+<a id="a1ce71330e53bb3bf1ffe8f5099ac64bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ce71330e53bb3bf1ffe8f5099ac64bd">&#9670;&nbsp;</a></span>setMidiDeviceScanIntervalSeconds()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::removeHostedAudioDeviceInterface </td>
+          <td class="memname">void tracktion::engine::DeviceManager::setMidiDeviceScanIntervalSeconds </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Removes the hosted audio device. </p>
-<p>You shouldn't normally need to call this but can be useful for running tests. Afterwards, you'll need to call initialise again. </p>
-
-</div>
-</div>
-<a id="a1384ce8fe9033a65cd5ff0ee332cdd24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1384ce8fe9033a65cd5ff0ee332cdd24">&#9670;&nbsp;</a></span>getCpuUsage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float tracktion::engine::DeviceManager::getCpuUsage </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae6d7c1825f08979ffd5f719a6e07ccc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6d7c1825f08979ffd5f719a6e07ccc5">&#9670;&nbsp;</a></span>setCpuLimitBeforeMuting()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setCpuLimitBeforeMuting </td>
-          <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>newLimit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8b88f0ba695286e75685673e606ca6ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b88f0ba695286e75685673e606ca6ea">&#9670;&nbsp;</a></span>updateNumCPUs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::updateNumCPUs </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af2988dc096442d3f5563198e7c13900b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2988dc096442d3f5563198e7c13900b">&#9670;&nbsp;</a></span>addCPUUsageListener()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::addCPUUsageListener </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html">CPUUsageListener</a> *&#160;</td>
-          <td class="paramname"><em>listener</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af1158f839952458e141a78ca95a2cadc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1158f839952458e141a78ca95a2cadc">&#9670;&nbsp;</a></span>removeCPUUsageListener()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::removeCPUUsageListener </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html">CPUUsageListener</a> *&#160;</td>
-          <td class="paramname"><em>listener</em></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>intervalSeconds</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -551,6 +540,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa4323b9cb865edf8faa242708331b468"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4323b9cb865edf8faa242708331b468">&#9670;&nbsp;</a></span>getBlockLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TimeDuration tracktion::engine::DeviceManager::getBlockLength </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af945a9b500822b871fd6ea48066dd926"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af945a9b500822b871fd6ea48066dd926">&#9670;&nbsp;</a></span>getBlockSizeMs()</h2>
 
@@ -568,16 +574,408 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4323b9cb865edf8faa242708331b468"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4323b9cb865edf8faa242708331b468">&#9670;&nbsp;</a></span>getBlockLength()</h2>
+<a id="a8eb55538738b6c87abe11c635334cc7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb55538738b6c87abe11c635334cc7a">&#9670;&nbsp;</a></span>getOutputLatencySeconds()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TimeDuration tracktion::engine::DeviceManager::getBlockLength </td>
+          <td class="memname">double tracktion::engine::DeviceManager::getOutputLatencySeconds </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4ed27f417fef90f8cd563cd592629b3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ed27f417fef90f8cd563cd592629b3f">&#9670;&nbsp;</a></span>getRecordAdjustmentMs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion::engine::DeviceManager::getRecordAdjustmentMs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8f22ae59a3658fe038f0ecd3c61d0055"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f22ae59a3658fe038f0ecd3c61d0055">&#9670;&nbsp;</a></span>getRecordAdjustmentSamples()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::DeviceManager::getRecordAdjustmentSamples </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1384ce8fe9033a65cd5ff0ee332cdd24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1384ce8fe9033a65cd5ff0ee332cdd24">&#9670;&nbsp;</a></span>getCpuUsage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tracktion::engine::DeviceManager::getCpuUsage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae6d7c1825f08979ffd5f719a6e07ccc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6d7c1825f08979ffd5f719a6e07ccc5">&#9670;&nbsp;</a></span>setCpuLimitBeforeMuting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setCpuLimitBeforeMuting </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>newLimit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0f788d0c1b2e951fec7fe328c52deca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f788d0c1b2e951fec7fe328c52deca7">&#9670;&nbsp;</a></span>getCPUStatistics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PerformanceMeasurement::Statistics tracktion::engine::DeviceManager::getCPUStatistics </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a08c79f7e3f31fa4aae6a04e25b3efba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08c79f7e3f31fa4aae6a04e25b3efba9">&#9670;&nbsp;</a></span>restCPUStatistics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::restCPUStatistics </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b88f0ba695286e75685673e606ca6ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b88f0ba695286e75685673e606ca6ea">&#9670;&nbsp;</a></span>updateNumCPUs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::updateNumCPUs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a05a4490fcf1c19f27608b38cec37d028"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05a4490fcf1c19f27608b38cec37d028">&#9670;&nbsp;</a></span>enableOutputClipping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::enableOutputClipping </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>clipOutput</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If set to true, clips the output at 0.0. </p>
+
+</div>
+</div>
+<a id="a3dcce1358a36d9d17accd5daddddfeec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dcce1358a36d9d17accd5daddddfeec">&#9670;&nbsp;</a></span>hasOutputClipped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::DeviceManager::hasOutputClipped </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>reset</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if the output has clipped. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reset</td><td>Resets the clipped flag </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a11b91846ccd80bf71ff62b074218527f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11b91846ccd80bf71ff62b074218527f">&#9670;&nbsp;</a></span>getHostedAudioDeviceInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html">HostedAudioDeviceInterface</a>&amp; tracktion::engine::DeviceManager::getHostedAudioDeviceInterface </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If you are using the engine in a plugin or an application that accesses the audio device directly, use this interface to pass audio and midi to the <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html">DeviceManager</a>. </p>
+
+</div>
+</div>
+<a id="a60460f10126436bf2057139c09ebc822"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60460f10126436bf2057139c09ebc822">&#9670;&nbsp;</a></span>isHostedAudioDeviceInterfaceInUse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::DeviceManager::isHostedAudioDeviceInterfaceInUse </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the hosted interface is available and in use. </p>
+
+</div>
+</div>
+<a id="a47083b3c0cedc829d65c84bc46e9e1d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47083b3c0cedc829d65c84bc46e9e1d3">&#9670;&nbsp;</a></span>removeHostedAudioDeviceInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::removeHostedAudioDeviceInterface </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes the hosted audio device. </p>
+<p>You shouldn't normally need to call this but can be useful for running tests. Afterwards, you'll need to call initialise again. </p>
+
+</div>
+</div>
+<a id="a7f2dc75ee9d09f4b54779590f924133c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f2dc75ee9d09f4b54779590f924133c">&#9670;&nbsp;</a></span>getNumInputDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::DeviceManager::getNumInputDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa691b901c734f38cec7f31fefe64fed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa691b901c734f38cec7f31fefe64fed">&#9670;&nbsp;</a></span>getInputDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>* tracktion::engine::DeviceManager::getInputDevice </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade38bd01413b94b571ccdf37cf8db7c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade38bd01413b94b571ccdf37cf8db7c2">&#9670;&nbsp;</a></span>getNumOutputDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::DeviceManager::getNumOutputDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a09e7b664a70532dd0b753da67aa93e95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09e7b664a70532dd0b753da67aa93e95">&#9670;&nbsp;</a></span>getOutputDeviceAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::getOutputDeviceAt </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab87b4577e63eec74d5bd8f7eb9995b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab87b4577e63eec74d5bd8f7eb9995b6d">&#9670;&nbsp;</a></span>findInputDeviceForID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>* tracktion::engine::DeviceManager::findInputDeviceForID </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0d1c99d903d4b8e492a406de53430051"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d1c99d903d4b8e492a406de53430051">&#9670;&nbsp;</a></span>findInputDeviceWithName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>* tracktion::engine::DeviceManager::findInputDeviceWithName </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee714948b37df56beaad74197d4ab1f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee714948b37df56beaad74197d4ab1f5">&#9670;&nbsp;</a></span>findMidiInputDeviceForID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>&gt; tracktion::engine::DeviceManager::findMidiInputDeviceForID </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abc1498a0c46ecc046b15e23e2a041bd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc1498a0c46ecc046b15e23e2a041bd4">&#9670;&nbsp;</a></span>findOutputDeviceForID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::findOutputDeviceForID </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0561aa16b3704512b4f50aeabeafa5ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0561aa16b3704512b4f50aeabeafa5ea">&#9670;&nbsp;</a></span>findOutputDeviceWithName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::findOutputDeviceWithName </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -622,7 +1020,23 @@ Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad3e2e5007c3888004474ca6177589c84">waveOutputs</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7cd0c33f418a51741dbac2908d96fa36">getDefaultWaveOutDevice()</a>.</p>
+</div>
+</div>
+<a id="ab56a0f19258c8961aa88472d28ffe576"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56a0f19258c8961aa88472d28ffe576">&#9670;&nbsp;</a></span>setDefaultWaveOutDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setDefaultWaveOutDevice </td>
+          <td>(</td>
+          <td class="paramtype">juce::String&#160;</td>
+          <td class="paramname"><em>deviceID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -641,22 +1055,19 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a67d9b0ffbd8a781f7dfa5c19987a33be">getWaveOutDevice()</a>.</p>
-
 </div>
 </div>
-<a id="a782402c170f9f3fd17e3ecdc3810197f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a782402c170f9f3fd17e3ecdc3810197f">&#9670;&nbsp;</a></span>setDefaultWaveOutDevice()</h2>
+<a id="a1b4e21ac11888c5cc1866c2359ad3db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b4e21ac11888c5cc1866c2359ad3db8">&#9670;&nbsp;</a></span>getDefaultWaveOutDeviceID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setDefaultWaveOutDevice </td>
+          <td class="memname">juce::String tracktion::engine::DeviceManager::getDefaultWaveOutDeviceID </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -700,7 +1111,23 @@ Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af9dcd0cd3c7cfd39fcf4936fe5277dd7">waveInputs</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a502366520b33bd824b1deca7b7c0af9f">getDefaultWaveInDevice()</a>.</p>
+</div>
+</div>
+<a id="a8b3b264189b9d186a23d2f5736de4fc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b3b264189b9d186a23d2f5736de4fc1">&#9670;&nbsp;</a></span>setDefaultWaveInDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setDefaultWaveInDevice </td>
+          <td>(</td>
+          <td class="paramtype">juce::String&#160;</td>
+          <td class="paramname"><em>deviceID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -719,22 +1146,47 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af437bd6eed7b65649446e533b2eae4cc">getWaveInDevice()</a>.</p>
-
 </div>
 </div>
-<a id="a1c6dfebd8e1ad172e5274807e28306a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c6dfebd8e1ad172e5274807e28306a0">&#9670;&nbsp;</a></span>setDefaultWaveInDevice()</h2>
+<a id="a6a9ccbfbc3c782eada0d305107ee8ebd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a9ccbfbc3c782eada0d305107ee8ebd">&#9670;&nbsp;</a></span>getDefaultWaveInDeviceID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setDefaultWaveInDevice </td>
+          <td class="memname">juce::String tracktion::engine::DeviceManager::getDefaultWaveInDeviceID </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af0d030552f42eb4923be9c1496128af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0d030552f42eb4923be9c1496128af0">&#9670;&nbsp;</a></span>setWaveOutChannelsEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setWaveOutChannelsEnabled </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -805,6 +1257,34 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="add7e1a2dd9c98adcbf59e358864371c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add7e1a2dd9c98adcbf59e358864371c9">&#9670;&nbsp;</a></span>setWaveInChannelsEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setWaveInChannelsEnabled </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af3ea9fed94a65f3ecd7944557373479d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af3ea9fed94a65f3ecd7944557373479d">&#9670;&nbsp;</a></span>setDeviceInChannelStereo()</h2>
 
@@ -869,97 +1349,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af0d030552f42eb4923be9c1496128af0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0d030552f42eb4923be9c1496128af0">&#9670;&nbsp;</a></span>setWaveOutChannelsEnabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setWaveOutChannelsEnabled </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="add7e1a2dd9c98adcbf59e358864371c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add7e1a2dd9c98adcbf59e358864371c9">&#9670;&nbsp;</a></span>setWaveInChannelsEnabled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setWaveInChannelsEnabled </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa7dffd058e2482445d3c3fdc70263dcd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7dffd058e2482445d3c3fdc70263dcd">&#9670;&nbsp;</a></span>rebuildWaveDeviceListIfNeeded()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::DeviceManager::rebuildWaveDeviceListIfNeeded </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="acf29815f12f421df9c63dcd1e60aecac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf29815f12f421df9c63dcd1e60aecac">&#9670;&nbsp;</a></span>rescanMidiDeviceList()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::rescanMidiDeviceList </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>forceRescan</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a129f0bfd0b3e90581755284c9c700b50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a129f0bfd0b3e90581755284c9c700b50">&#9670;&nbsp;</a></span>getNumMidiOutDevices()</h2>
 
@@ -975,7 +1364,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1ea74ac643600dc31adbc96dfe79b667">midiOutputs</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab44228f6d93a2faf1071638642629081">midiOutputs</a>.</p>
 
 </div>
 </div>
@@ -995,9 +1384,25 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1ea74ac643600dc31adbc96dfe79b667">midiOutputs</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab44228f6d93a2faf1071638642629081">midiOutputs</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af29743aabe9600e0b4c850a3014a8fb1">getDefaultMidiOutDevice()</a>.</p>
+</div>
+</div>
+<a id="a157609cfc2f89b425890ccf661935b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a157609cfc2f89b425890ccf661935b77">&#9670;&nbsp;</a></span>setDefaultMidiOutDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setDefaultMidiOutDevice </td>
+          <td>(</td>
+          <td class="paramtype">juce::String&#160;</td>
+          <td class="paramname"><em>deviceID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1016,22 +1421,19 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a5c2739f5edd7504db2256b97205c5ac9">getMidiOutDevice()</a>.</p>
-
 </div>
 </div>
-<a id="ad36a05df579bf9e41bf76a65749b2ed2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad36a05df579bf9e41bf76a65749b2ed2">&#9670;&nbsp;</a></span>setDefaultMidiOutDevice()</h2>
+<a id="af1f1196c082e00e6aeaec294c33e52a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1f1196c082e00e6aeaec294c33e52a4">&#9670;&nbsp;</a></span>getDefaultMidiOutDeviceID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setDefaultMidiOutDevice </td>
+          <td class="memname">juce::String tracktion::engine::DeviceManager::getDefaultMidiOutDeviceID </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1055,14 +1457,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a21c893322c13d1eef1d5a7456708b686"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21c893322c13d1eef1d5a7456708b686">&#9670;&nbsp;</a></span>getMidiInDevice()</h2>
+<a id="afe409aec057c8bccac8181134de0aec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe409aec057c8bccac8181134de0aec4">&#9670;&nbsp;</a></span>getMidiInDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>* tracktion::engine::DeviceManager::getMidiInDevice </td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>&gt; tracktion::engine::DeviceManager::getMidiInDevice </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
@@ -1071,7 +1473,40 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6aa2faa7b64574eff30d453c5bd56c3d">getDefaultMidiInDevice()</a>.</p>
+</div>
+</div>
+<a id="a7005ca5e3564d0c704481d26d4bbd50e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7005ca5e3564d0c704481d26d4bbd50e">&#9670;&nbsp;</a></span>getMidiInDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>&gt; &gt; tracktion::engine::DeviceManager::getMidiInDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2dba918350112c6fc6212db8a8d2baf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2dba918350112c6fc6212db8a8d2baf">&#9670;&nbsp;</a></span>setDefaultMidiInDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::setDefaultMidiInDevice </td>
+          <td>(</td>
+          <td class="paramtype">juce::String&#160;</td>
+          <td class="paramname"><em>deviceID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1090,22 +1525,65 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a21c893322c13d1eef1d5a7456708b686">getMidiInDevice()</a>.</p>
-
 </div>
 </div>
-<a id="afa98dba750fe067a884f741d252beb72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa98dba750fe067a884f741d252beb72">&#9670;&nbsp;</a></span>setDefaultMidiInDevice()</h2>
+<a id="a830841032e35ba6061c32f327e189882"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a830841032e35ba6061c32f327e189882">&#9670;&nbsp;</a></span>getDefaultMidiInDeviceID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::setDefaultMidiInDevice </td>
+          <td class="memname">juce::String tracktion::engine::DeviceManager::getDefaultMidiInDeviceID </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab84d746d0377c8c000907e878d95adfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab84d746d0377c8c000907e878d95adfa">&#9670;&nbsp;</a></span>injectMIDIMessageToDefaultDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::injectMIDIMessageToDefaultDevice </td>
+          <td>(</td>
+          <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a739ea789b6f41d5d684aeec3a6c1bb14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a739ea789b6f41d5d684aeec3a6c1bb14">&#9670;&nbsp;</a></span>broadcastMessageToAllVirtualDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::DeviceManager::broadcastMessageToAllVirtualDevices </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1200,155 +1678,22 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9a54a9bb4d65a0f8b2ecd2e0a069a3bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a54a9bb4d65a0f8b2ecd2e0a069a3bf">&#9670;&nbsp;</a></span>resetToDefaults()</h2>
+<a id="a51b62fb8fcdb2c7917ac2ea8184d7a94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b62fb8fcdb2c7917ac2ea8184d7a94">&#9670;&nbsp;</a></span>dispatchPendingUpdates()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::resetToDefaults </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>deviceSettings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>resetInputDevices</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>resetOutputDevices</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>latencySettings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>mixSettings</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7f2dc75ee9d09f4b54779590f924133c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f2dc75ee9d09f4b54779590f924133c">&#9670;&nbsp;</a></span>getNumInputDevices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tracktion::engine::DeviceManager::getNumInputDevices </td>
+          <td class="memname">void tracktion::engine::DeviceManager::dispatchPendingUpdates </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="aaa691b901c734f38cec7f31fefe64fed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa691b901c734f38cec7f31fefe64fed">&#9670;&nbsp;</a></span>getInputDevice()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>* tracktion::engine::DeviceManager::getInputDevice </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ade38bd01413b94b571ccdf37cf8db7c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade38bd01413b94b571ccdf37cf8db7c2">&#9670;&nbsp;</a></span>getNumOutputDevices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tracktion::engine::DeviceManager::getNumOutputDevices </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a09e7b664a70532dd0b753da67aa93e95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09e7b664a70532dd0b753da67aa93e95">&#9670;&nbsp;</a></span>getOutputDeviceAt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::getOutputDeviceAt </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abc1498a0c46ecc046b15e23e2a041bd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc1498a0c46ecc046b15e23e2a041bd4">&#9670;&nbsp;</a></span>findOutputDeviceForID()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::findOutputDeviceForID </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0561aa16b3704512b4f50aeabeafa5ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0561aa16b3704512b4f50aeabeafa5ea">&#9670;&nbsp;</a></span>findOutputDeviceWithName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a>* tracktion::engine::DeviceManager::findOutputDeviceWithName </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Changes to the devices get applied asyncronously so this function can be called to trigger any pending updates to be flushed. </p>
 
 </div>
 </div>
@@ -1491,8 +1836,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6f960d0684f97ccad65f773dad890862"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f960d0684f97ccad65f773dad890862">&#9670;&nbsp;</a></span>deleteVirtualMidiDevice()</h2>
+<a id="a9d79caf8fbf7d12fd57a3359b1f6aa2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d79caf8fbf7d12fd57a3359b1f6aa2a">&#9670;&nbsp;</a></span>deleteVirtualMidiDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1500,60 +1845,9 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void tracktion::engine::DeviceManager::deleteVirtualMidiDevice </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html">VirtualMidiInputDevice</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html">VirtualMidiInputDevice</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4ed27f417fef90f8cd563cd592629b3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ed27f417fef90f8cd563cd592629b3f">&#9670;&nbsp;</a></span>getRecordAdjustmentMs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double tracktion::engine::DeviceManager::getRecordAdjustmentMs </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8f22ae59a3658fe038f0ecd3c61d0055"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f22ae59a3658fe038f0ecd3c61d0055">&#9670;&nbsp;</a></span>getRecordAdjustmentSamples()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tracktion::engine::DeviceManager::getRecordAdjustmentSamples </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8eb55538738b6c87abe11c635334cc7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8eb55538738b6c87abe11c635334cc7a">&#9670;&nbsp;</a></span>getOutputLatencySeconds()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double tracktion::engine::DeviceManager::getOutputLatencySeconds </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1596,42 +1890,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a52f5ffb5ea14486f10b5afc0e1903d96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52f5ffb5ea14486f10b5afc0e1903d96">&#9670;&nbsp;</a></span>clearAllContextDevices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::clearAllContextDevices </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a36b47f2a4163af149ba36f6ecf284f43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36b47f2a4163af149ba36f6ecf284f43">&#9670;&nbsp;</a></span>reloadAllContextDevices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::DeviceManager::reloadAllContextDevices </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af6b87ec7ece6ecaa44b6f61bd90e2424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6b87ec7ece6ecaa44b6f61bd90e2424">&#9670;&nbsp;</a></span>setGlobalOutputAudioProcessor()</h2>
+<a id="a9e20197d449d19aae5cdcb329e3cc87b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e20197d449d19aae5cdcb329e3cc87b">&#9670;&nbsp;</a></span>setGlobalOutputAudioProcessor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1639,7 +1899,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void tracktion::engine::DeviceManager::setGlobalOutputAudioProcessor </td>
           <td>(</td>
-          <td class="paramtype">juce::AudioProcessor *&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; juce::AudioProcessor &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1685,6 +1945,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4cbd2ecb27149e3ac4fe90752f5561d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cbd2ecb27149e3ac4fe90752f5561d2">&#9670;&nbsp;</a></span>deviceManager</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a> tracktion::engine::DeviceManager::deviceManager { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab67d28f80a498f38ef38580ab6a0601d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab67d28f80a498f38ef38580ab6a0601d">&#9670;&nbsp;</a></span>hostedAudioDeviceInterface</h2>
 
@@ -1699,42 +1973,28 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4cbd2ecb27149e3ac4fe90752f5561d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4cbd2ecb27149e3ac4fe90752f5561d2">&#9670;&nbsp;</a></span>deviceManager</h2>
+<a id="ad181434b2068c4c66af73a6120e1a527"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad181434b2068c4c66af73a6120e1a527">&#9670;&nbsp;</a></span>midiInputs</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a> tracktion::engine::DeviceManager::deviceManager { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>&gt; &gt; tracktion::engine::DeviceManager::midiInputs</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2540ee332880d6f8294e29cd7cc1de15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2540ee332880d6f8294e29cd7cc1de15">&#9670;&nbsp;</a></span>midiInputs</h2>
+<a id="ab44228f6d93a2faf1071638642629081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab44228f6d93a2faf1071638642629081">&#9670;&nbsp;</a></span>midiOutputs</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::OwnedArray&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>, juce::CriticalSection&gt; tracktion::engine::DeviceManager::midiInputs</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1ea74ac643600dc31adbc96dfe79b667"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ea74ac643600dc31adbc96dfe79b667">&#9670;&nbsp;</a></span>midiOutputs</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::OwnedArray&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a>&gt; tracktion::engine::DeviceManager::midiOutputs</td>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a>&gt; &gt; tracktion::engine::DeviceManager::midiOutputs</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1775,14 +2035,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8e27cf1e633b2993729a27a9fc4d5062"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e27cf1e633b2993729a27a9fc4d5062">&#9670;&nbsp;</a></span>warnOfWastedMidiMessagesFunction</h2>
+<a id="aa27e24f0ea12a0a69db6b881cdb2e2b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa27e24f0ea12a0a69db6b881cdb2e2b1">&#9670;&nbsp;</a></span>warnOfWastedMidiMessagesFunction</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;void (<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>*)&gt; tracktion::engine::DeviceManager::warnOfWastedMidiMessagesFunction</td>
+          <td class="memname">std::function&lt;void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>*)&gt; tracktion::engine::DeviceManager::warnOfWastedMidiMessagesFunction</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1798,7 +2058,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

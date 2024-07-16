@@ -113,14 +113,12 @@ $(function() {
 <li>defaultInitialTimbreValue
 : <a class="el" href="classtracktion_1_1engine_1_1MidiList.html#a4832bde51da98ce8e6e80dd5f194669c">tracktion::engine::MidiList</a>
 </li>
-<li>defaultMidiDevice
-: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#a5bd4acdc3c50019e5e5366e30b0a950f">tracktion::engine::MidiOutputDevice</a>
-</li>
-<li>defaultTrackHeight
-: <a class="el" href="classtracktion_1_1engine_1_1Track.html#a485bc7665956d853fd4bef58460384fc">tracktion::engine::Track</a>
+<li>defaultMonitorMode
+: <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#a48f98da159b537518881c94402f1aea5">tracktion::engine::InputDevice</a>
 </li>
 <li>defaultValue
-: <a class="el" href="classtracktion_1_1engine_1_1MacroParameter.html#ab2558f22e2d4d980d5e735b61482383f">tracktion::engine::MacroParameter</a>
+: <a class="el" href="classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html#a0d8a9403ba1a1311cc4c7eb876a9a66d">tracktion::engine::AirWindowsAutomatableParameter</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MacroParameter.html#ab2558f22e2d4d980d5e735b61482383f">tracktion::engine::MacroParameter</a>
 , <a class="el" href="structtracktion_1_1engine_1_1VSTXML_1_1Param.html#a467d6559b58cf9d4b0691eef4cf42203">tracktion::engine::VSTXML::Param</a>
 </li>
 <li>delayCrossfeed
@@ -203,11 +201,11 @@ $(function() {
 <li>destID
 : <a class="el" href="structtracktion_1_1engine_1_1RackConnection.html#a3fa4b83ca5e722195e9474210b1eec38">tracktion::engine::RackConnection</a>
 </li>
+<li>destinations
+: <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a828d9bd27571a5013af1206716ef507b">tracktion::engine::InputDeviceInstance</a>
+</li>
 <li>destPin
 : <a class="el" href="structtracktion_1_1engine_1_1RackConnection.html#a0d612dfcd85725fff73f4fdb2f2292e7">tracktion::engine::RackConnection</a>
-</li>
-<li>destTracks
-: <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#acf6b89c71adfcf5bc90378fed032e02a">tracktion::engine::InputDeviceInstance</a>
 </li>
 <li>detune
 : <a class="el" href="structtracktion_1_1engine_1_1FourOscPlugin_1_1OscParams.html#aeebed56c8cee41ed7cf70b0e16109baf">tracktion::engine::FourOscPlugin::OscParams</a>
@@ -221,14 +219,20 @@ $(function() {
 <li>deviceIdx
 : <a class="el" href="classtracktion_1_1engine_1_1MackieMCU.html#a1a61a7cc26150ae5ba6d6caf0186787c">tracktion::engine::MackieMCU</a>
 </li>
-<li>deviceIndex
-: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#aafbc0189c60a937bcc38642e9cab15fc">tracktion::engine::MidiOutputDevice</a>
+<li>deviceInfo
+: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#affaca618c6713eca8b9e355c33c87e65">tracktion::engine::MidiOutputDevice</a>
 </li>
 <li>deviceManager
 : <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4cbd2ecb27149e3ac4fe90752f5561d2">tracktion::engine::DeviceManager</a>
 </li>
+<li>disabled
+: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9e4b68742fa76d0ca335a27c06359ea6">tracktion::engine::Clip</a>
+</li>
 <li>disallowedChannels
 : <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#af211971d84f0fa82157a329fd15f4263">tracktion::engine::MidiInputDevice</a>
+</li>
+<li>discardRecordings
+: <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html#a187af087d03dc31896be225f04d4d88a">tracktion::engine::InputDeviceInstance::StopRecordingParameters</a>
 </li>
 <li>distortion
 : <a class="el" href="classtracktion_1_1engine_1_1FourOscPlugin.html#a7921392c948328702ee82a4f53a0954a">tracktion::engine::FourOscPlugin</a>
@@ -247,9 +251,6 @@ $(function() {
 </li>
 <li>ditheringEnabled
 : <a class="el" href="structtracktion_1_1engine_1_1Renderer_1_1Parameters.html#a1b4d33938ff65b3498cd7cd594ec400d">tracktion::engine::Renderer::Parameters</a>
-</li>
-<li>dm
-: <a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html#a07c5c938753f923e248af416a01dcd73">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</a>
 </li>
 <li>doc
 : <a class="el" href="classAudioModificationWrapper.html#acb800caadecef6dc03ef28391b154325">AudioModificationWrapper</a>
@@ -284,7 +285,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

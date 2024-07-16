@@ -160,6 +160,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa9e40a947dbbeccd7aea2e00131b01c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html">ProjectManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Engine.html#aa9e40a947dbbeccd7aea2e00131b01c8">getProjectManager</a> () const</td></tr>
 <tr class="memdesc:aa9e40a947dbbeccd7aea2e00131b01c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html">ProjectManager</a> instance.  <a href="classtracktion_1_1engine_1_1Engine.html#aa9e40a947dbbeccd7aea2e00131b01c8">More...</a><br /></td></tr>
 <tr class="separator:aa9e40a947dbbeccd7aea2e00131b01c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a70b70c4d307f178f7f3999f25c371e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1SharedTimer.html">SharedTimer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Engine.html#a2a70b70c4d307f178f7f3999f25c371e">getBackToArrangerUpdateTimer</a> () const</td></tr>
+<tr class="memdesc:a2a70b70c4d307f178f7f3999f25c371e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1SharedTimer.html">SharedTimer</a> instance.  <a href="classtracktion_1_1engine_1_1Engine.html#a2a70b70c4d307f178f7f3999f25c371e">More...</a><br /></td></tr>
+<tr class="separator:a2a70b70c4d307f178f7f3999f25c371e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9628a93ba0e4b53f60b46490c3156436"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1BufferedAudioFileManager.html">BufferedAudioFileManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Engine.html#a9628a93ba0e4b53f60b46490c3156436">getBufferedAudioFileManager</a> ()</td></tr>
+<tr class="memdesc:a9628a93ba0e4b53f60b46490c3156436"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1BufferedAudioFileManager.html">BufferedAudioFileManager</a> instance.  <a href="classtracktion_1_1engine_1_1Engine.html#a9628a93ba0e4b53f60b46490c3156436">More...</a><br /></td></tr>
+<tr class="separator:a9628a93ba0e4b53f60b46490c3156436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -174,9 +180,10 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>The <a class="el" href="classtracktion_1_1engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> is the central class for all tracktion sessions. </p>
 <p>Create a <a class="el" href="classtracktion_1_1engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> before creating any edits. Pass in subclasses of behaviours to customise how the engine behaves or pass nullptr to use the defaults. To get going quickly, just use the constructor that takes an application name, which uses default settings.</p>
 <p>Typical declaration in your main component: </p><div class="fragment"><div class="line"><span class="keyword">private</span>:</div>
-<div class="line">    tracktion_engine::Engine engine { ProjectInfo::projectName}</div>
+<div class="line">    tracktion_engine::Engine <a class="code" href="namespaceengine.html">engine</a> { ProjectInfo::projectName}</div>
+<div class="ttc" id="anamespaceengine_html"><div class="ttname"><a href="namespaceengine.html">engine</a></div><div class="ttdef"><b>Definition:</b> tracktion_FollowActions.h:20</div></div>
 </div><!-- fragment --><p>For Extended UI use: </p><div class="fragment"><div class="line"><span class="keyword">private</span>:</div>
-<div class="line">    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique&lt;ExtendedUIBehaviour&gt;(), <span class="keyword">nullptr</span> };</div>
+<div class="line">    tracktion_engine::Engine <a class="code" href="namespaceengine.html">engine</a> { ProjectInfo::projectName, std::make_unique&lt;ExtendedUIBehaviour&gt;(), <span class="keyword">nullptr</span> };</div>
 </div><!-- fragment --> </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="adbb75db4a93dd93cd8e0b20dd818343e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbb75db4a93dd93cd8e0b20dd818343e">&#9670;&nbsp;</a></span>WeakRef</h2>
@@ -395,8 +402,6 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Returns the <a class="el" href="classtracktion_1_1engine_1_1AudioFileFormatManager.html" title="Keeps a list of available wave formats and can create a format object for a file.">AudioFileFormatManager</a> that maintains a list of available audio file formats. </p>
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1AudioFileUtils.html#a748ab45aa53a92eb8d6883b3b74d5b37">tracktion::engine::AudioFileUtils::readFromFormat()</a>, and <a class="el" href="classtracktion_1_1engine_1_1WarpTimeRenderJob.html#ae71c379f9c94246721c0492c6316542e">tracktion::engine::WarpTimeRenderJob::renderNextBlock()</a>.</p>
-
 </div>
 </div>
 <a id="a6f3f6b2f4a2861de392c9cd9681d6947"></a>
@@ -454,7 +459,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Returns the <a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html" title="Provides custom handlers to control various aspects of the engine&#39;s behaviour.">EngineBehaviour</a> instance. </p>
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1Pitch.html#ab95a4e6ae9630c8c5b1790a4a581c0ca">tracktion::engine::Pitch::getPitchAsString()</a>, <a class="el" href="structtracktion_1_1engine_1_1Pitch.html#ab42a10bf232f0f58c443a11a84052c7f">tracktion::engine::Pitch::getPitchAsStrings()</a>, and <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a28e0de2c583d5f6bdc37849912dc1f58">tracktion::engine::AudioTrack::processAudioNodesWhileMuted()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a28e0de2c583d5f6bdc37849912dc1f58">tracktion::engine::AudioTrack::processAudioNodesWhileMuted()</a>.</p>
 
 </div>
 </div>
@@ -493,8 +498,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the <a class="el" href="classtracktion_1_1engine_1_1MidiProgramManager.html">MidiProgramManager</a> instance that handles MIDI banks, programs, sets or presets. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#aa8f8226f254b923bde44df45c368b609">tracktion::engine::MidiOutputDevice::getMidiProgramManager()</a>.</p>
 
 </div>
 </div>
@@ -574,8 +577,6 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Returns the <a class="el" href="classtracktion_1_1engine_1_1AudioFileManager.html">AudioFileManager</a> instance. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html#a268926cdbe3c0b15503599ac327fe275">tracktion::engine::SubSampleWaveAudioNode::isReadyToRender()</a>, <a class="el" href="classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html#a9ccdc3e559a72b1b5aa917cb22489243">tracktion::engine::SubSampleWaveAudioNode::prepareAudioNodeToPlay()</a>, and <a class="el" href="classtracktion_1_1engine_1_1ReverseRenderJob.html#a44cbd7a3388b11f9d42ed8a683f1f3db">tracktion::engine::ReverseRenderJob::renderNextBlock()</a>.</p>
-
 </div>
 </div>
 <a id="ab46a00e9215f16053d1b7f951dab5816"></a>
@@ -651,8 +652,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the <a class="el" href="classtracktion_1_1engine_1_1RecordingThumbnailManager.html" title="Holds a pool of Thumbnails that are populated whilst recording.">RecordingThumbnailManager</a> instance. </p>
-
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html#a49b76172585cbbe476f4e5f4ebe80071">tracktion::engine::RecordingThumbnailManager::Thumbnail::~Thumbnail()</a>.</p>
 
 </div>
 </div>
@@ -778,13 +777,51 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2a70b70c4d307f178f7f3999f25c371e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a70b70c4d307f178f7f3999f25c371e">&#9670;&nbsp;</a></span>getBackToArrangerUpdateTimer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1SharedTimer.html">SharedTimer</a>&amp; tracktion::engine::Engine::getBackToArrangerUpdateTimer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="classtracktion_1_1engine_1_1SharedTimer.html">SharedTimer</a> instance. </p>
+
+</div>
+</div>
+<a id="a9628a93ba0e4b53f60b46490c3156436"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9628a93ba0e4b53f60b46490c3156436">&#9670;&nbsp;</a></span>getBufferedAudioFileManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1BufferedAudioFileManager.html">BufferedAudioFileManager</a>&amp; tracktion::engine::Engine::getBufferedAudioFileManager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="classtracktion_1_1engine_1_1BufferedAudioFileManager.html">BufferedAudioFileManager</a> instance. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__Engine_8h.html">tracktion_Engine.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -87,12 +87,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6609c37507f34791a969f878d7d9d9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cf52b7128b4caf0a73ad132ec5443dd"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#a0cf52b7128b4caf0a73ad132ec5443dd">hasAnAutomatableParameter</a> ()=0</td></tr>
 <tr class="separator:a0cf52b7128b4caf0a73ad132ec5443dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1af36e696887e8c973eb51a75afbac1b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#a1af36e696887e8c973eb51a75afbac1b">getAssociatedAutomatableParameter</a> ()=0</td></tr>
-<tr class="separator:a1af36e696887e8c973eb51a75afbac1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae12ad33b0bd5bcef3dd5ea8804b366da"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#ae12ad33b0bd5bcef3dd5ea8804b366da">getAssociatedAutomatableParameter</a> (bool *learn)</td></tr>
-<tr class="separator:ae12ad33b0bd5bcef3dd5ea8804b366da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcaa1df65d9712d0d798c23a80683609"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#afcaa1df65d9712d0d798c23a80683609">startParameterLearn</a> (<a class="el" href="classtracktion_1_1engine_1_1ParameterisableDragDropSource.html">ParameterisableDragDropSource</a> *)</td></tr>
-<tr class="separator:afcaa1df65d9712d0d798c23a80683609"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0e3feae7bf293a58d628c007a548e10"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#aa0e3feae7bf293a58d628c007a548e10">chooseAutomatableParameter</a> (std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>)&gt; handleChosenParam, std::function&lt; void()&gt; startLearnMode)=0</td></tr>
+<tr class="separator:aa0e3feae7bf293a58d628c007a548e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed963ec08dbc0775d3845fdac8198566"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#aed963ec08dbc0775d3845fdac8198566">startParameterLearn</a> (std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>)&gt;)</td></tr>
+<tr class="separator:aed963ec08dbc0775d3845fdac8198566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e41e6b9a96d8141fb577e9b71a46c62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#a3e41e6b9a96d8141fb577e9b71a46c62">isAutomatableParameterBeingDraggedOver</a> () const</td></tr>
 <tr class="separator:a3e41e6b9a96d8141fb577e9b71a46c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae904b5ba233cb8b518a82346cbd11c80"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationDragDropTarget.html#ae904b5ba233cb8b518a82346cbd11c80">isInterestedInDragSource</a> (const SourceDetails &amp;details) override</td></tr>
@@ -180,8 +178,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1af36e696887e8c973eb51a75afbac1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1af36e696887e8c973eb51a75afbac1b">&#9670;&nbsp;</a></span>getAssociatedAutomatableParameter() <span class="overload">[1/2]</span></h2>
+<a id="aa0e3feae7bf293a58d628c007a548e10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0e3feae7bf293a58d628c007a548e10">&#9670;&nbsp;</a></span>chooseAutomatableParameter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,10 +188,21 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a> tracktion::engine::AutomationDragDropTarget::getAssociatedAutomatableParameter </td>
+          <td class="memname">virtual void tracktion::engine::AutomationDragDropTarget::chooseAutomatableParameter </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>)&gt;&#160;</td>
+          <td class="paramname"><em>handleChosenParam</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::function&lt; void()&gt;&#160;</td>
+          <td class="paramname"><em>startLearnMode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -205,34 +214,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae12ad33b0bd5bcef3dd5ea8804b366da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae12ad33b0bd5bcef3dd5ea8804b366da">&#9670;&nbsp;</a></span>getAssociatedAutomatableParameter() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a> tracktion::engine::AutomationDragDropTarget::getAssociatedAutomatableParameter </td>
-          <td>(</td>
-          <td class="paramtype">bool *&#160;</td>
-          <td class="paramname"><em>learn</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afcaa1df65d9712d0d798c23a80683609"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcaa1df65d9712d0d798c23a80683609">&#9670;&nbsp;</a></span>startParameterLearn()</h2>
+<a id="aed963ec08dbc0775d3845fdac8198566"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed963ec08dbc0775d3845fdac8198566">&#9670;&nbsp;</a></span>startParameterLearn()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,7 +226,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion::engine::AutomationDragDropTarget::startParameterLearn </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ParameterisableDragDropSource.html">ParameterisableDragDropSource</a> *&#160;</td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>)&gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -407,7 +390,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

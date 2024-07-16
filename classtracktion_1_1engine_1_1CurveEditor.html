@@ -92,6 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adf269d7e9274d2877c037aa1457ae371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d1f5aef8b43251ef18ec030021a741b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a3d1f5aef8b43251ef18ec030021a741b">hitTest</a> (int x, int y) override</td></tr>
 <tr class="separator:a3d1f5aef8b43251ef18ec030021a741b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcfe92d79e301a6c3a22cd9e0f07e71a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#adcfe92d79e301a6c3a22cd9e0f07e71a">visibilityChanged</a> () override</td></tr>
+<tr class="separator:adcfe92d79e301a6c3a22cd9e0f07e71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b9876b3236778d484f156f717ee43b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a6b9876b3236778d484f156f717ee43b8">mouseDown</a> (const juce::MouseEvent &amp;) override</td></tr>
 <tr class="separator:a6b9876b3236778d484f156f717ee43b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa67c369cc1c811b5b9c9b502eed2ed35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#aa67c369cc1c811b5b9c9b502eed2ed35">mouseUp</a> (const juce::MouseEvent &amp;) override</td></tr>
@@ -180,8 +182,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae32e0162cc9fdcd8f5e57ee0a8b0fa28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08c1648dafebb36f85b62212399a6341"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a08c1648dafebb36f85b62212399a6341">updateFromTrack</a> ()=0</td></tr>
 <tr class="separator:a08c1648dafebb36f85b62212399a6341"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81b5130432e5fd9c9f5a2bb292c1ce7"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#af81b5130432e5fd9c9f5a2bb292c1ce7">getCurrentLineColour</a> () const =0</td></tr>
-<tr class="separator:af81b5130432e5fd9c9f5a2bb292c1ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8933277347ce232ad8a6e140dc64f6e"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#ad8933277347ce232ad8a6e140dc64f6e">getCurrentLineColour</a> ()=0</td></tr>
+<tr class="separator:ad8933277347ce232ad8a6e140dc64f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60b48c0ad3b5ac181f59bf22d7ed43be"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a60b48c0ad3b5ac181f59bf22d7ed43be">getCurrentFillColour</a> ()</td></tr>
+<tr class="separator:a60b48c0ad3b5ac181f59bf22d7ed43be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac47806ba825d7a21a3b882d13e2e9ca0"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#ac47806ba825d7a21a3b882d13e2e9ca0">getDefaultLineColour</a> () const =0</td></tr>
 <tr class="separator:ac47806ba825d7a21a3b882d13e2e9ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17c4f216f20597d7a84ca4807073bc1d"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a17c4f216f20597d7a84ca4807073bc1d">getSelectedLineColour</a> () const =0</td></tr>
@@ -390,6 +394,31 @@ Static Protected Attributes</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adcfe92d79e301a6c3a22cd9e0f07e71a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcfe92d79e301a6c3a22cd9e0f07e71a">&#9670;&nbsp;</a></span>visibilityChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::CurveEditor::visibilityChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -1576,8 +1605,8 @@ Static Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af81b5130432e5fd9c9f5a2bb292c1ce7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af81b5130432e5fd9c9f5a2bb292c1ce7">&#9670;&nbsp;</a></span>getCurrentLineColour()</h2>
+<a id="ad8933277347ce232ad8a6e140dc64f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8933277347ce232ad8a6e140dc64f6e">&#9670;&nbsp;</a></span>getCurrentLineColour()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1589,12 +1618,37 @@ Static Protected Attributes</h2></td></tr>
           <td class="memname">virtual juce::Colour tracktion::engine::CurveEditor::getCurrentLineColour </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60b48c0ad3b5ac181f59bf22d7ed43be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60b48c0ad3b5ac181f59bf22d7ed43be">&#9670;&nbsp;</a></span>getCurrentFillColour()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::Colour tracktion::engine::CurveEditor::getCurrentFillColour </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2492,7 +2546,7 @@ Static Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

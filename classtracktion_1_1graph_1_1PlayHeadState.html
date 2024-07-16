@@ -101,6 +101,14 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a10c3a29652520bb70fbb280ee1339ecc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHead.html">PlayHead</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a10c3a29652520bb70fbb280ee1339ecc">playHead</a></td></tr>
 <tr class="separator:a10c3a29652520bb70fbb280ee1339ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aa35af8534614f3bef2acb72ae84809"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a0aa35af8534614f3bef2acb72ae84809">isPlayHeadRunning</a> = false</td></tr>
+<tr class="separator:a0aa35af8534614f3bef2acb72ae84809"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1f79bdf96141b0feb3ef50bd9c6ddef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ae1f79bdf96141b0feb3ef50bd9c6ddef">playheadJumped</a> = false</td></tr>
+<tr class="separator:ae1f79bdf96141b0feb3ef50bd9c6ddef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fc419344f8345c17b90978aacc4e2ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a4fc419344f8345c17b90978aacc4e2ef">lastBlockOfLoop</a> = false</td></tr>
+<tr class="separator:a4fc419344f8345c17b90978aacc4e2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9bbc363c47aa3efbee90d29c553760d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ac9bbc363c47aa3efbee90d29c553760d">firstBlockOfLoop</a> = false</td></tr>
+<tr class="separator:ac9bbc363c47aa3efbee90d29c553760d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Determines how this block releates to other previous render blocks and if the play head has jumped in time. </p>
@@ -143,7 +151,7 @@ Public Attributes</h2></td></tr>
 <p>Call once per block to update the jumped state. </p>
 <p>Usually called at the same time as the PlayHead::incrementReferenceSampleCount method. </p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a031563c2aa5aa3f4e7737129378181eb">tracktion::graph::PlayHead::getLastUserInteractionTime()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa98b2f414ff43a7e98d35b7cde952611">tracktion::graph::PlayHead::getLoopRange()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#ac6024be3d53ada7466b54a4fc33b6376">tracktion::graph::PlayHead::isLooping()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#ac3356b0b0004b6fc340b67b2dd943f92">tracktion::graph::PlayHead::isPlaying()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a514a80687a332fc66de170c128d20606">tracktion::graph::PlayHead::isRollingIntoLoop()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a10c3a29652520bb70fbb280ee1339ecc">playHead</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a9d45fe1c79837ff11ef0c339ea024557">tracktion::graph::PlayHead::referenceSamplePositionToTimelinePosition()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ac9bbc363c47aa3efbee90d29c553760d">firstBlockOfLoop</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a031563c2aa5aa3f4e7737129378181eb">tracktion::graph::PlayHead::getLastUserInteractionTime()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#aa98b2f414ff43a7e98d35b7cde952611">tracktion::graph::PlayHead::getLoopRange()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#ac6024be3d53ada7466b54a4fc33b6376">tracktion::graph::PlayHead::isLooping()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a0aa35af8534614f3bef2acb72ae84809">isPlayHeadRunning</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#ac3356b0b0004b6fc340b67b2dd943f92">tracktion::graph::PlayHead::isPlaying()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a514a80687a332fc66de170c128d20606">tracktion::graph::PlayHead::isRollingIntoLoop()</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a4fc419344f8345c17b90978aacc4e2ef">lastBlockOfLoop</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a10c3a29652520bb70fbb280ee1339ecc">playHead</a>, <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ae1f79bdf96141b0feb3ef50bd9c6ddef">playheadJumped</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a9d45fe1c79837ff11ef0c339ea024557">tracktion::graph::PlayHead::referenceSamplePositionToTimelinePosition()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1NodePlayer.html#a3918701803825590bdbf9659a3b8cec4">tracktion::graph::NodePlayer::processWithPlayHeadState()</a>.</p>
 
@@ -203,6 +211,8 @@ Public Attributes</h2></td></tr>
 
 <p>Returns true if the play head jumped. </p>
 
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ae1f79bdf96141b0feb3ef50bd9c6ddef">playheadJumped</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a6474335d78f5494c21b0fe04aa1b5269">isContiguousWithPreviousBlock()</a>.</p>
 
 </div>
@@ -231,6 +241,8 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns true if this is the first block of a loop. </p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ac9bbc363c47aa3efbee90d29c553760d">firstBlockOfLoop</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a6474335d78f5494c21b0fe04aa1b5269">isContiguousWithPreviousBlock()</a>.</p>
 
@@ -261,6 +273,8 @@ Public Attributes</h2></td></tr>
 
 <p>Returns true if this is the last block of a loop. </p>
 
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a4fc419344f8345c17b90978aacc4e2ef">lastBlockOfLoop</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -280,13 +294,77 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a0aa35af8534614f3bef2acb72ae84809"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0aa35af8534614f3bef2acb72ae84809">&#9670;&nbsp;</a></span>isPlayHeadRunning</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::PlayHeadState::isPlayHeadRunning = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">update()</a>.</p>
+
+</div>
+</div>
+<a id="ae1f79bdf96141b0feb3ef50bd9c6ddef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1f79bdf96141b0feb3ef50bd9c6ddef">&#9670;&nbsp;</a></span>playheadJumped</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::PlayHeadState::playheadJumped = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ae8ff21bb34dda95c4aef27dd5cd5bf8b">didPlayheadJump()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">update()</a>.</p>
+
+</div>
+</div>
+<a id="a4fc419344f8345c17b90978aacc4e2ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fc419344f8345c17b90978aacc4e2ef">&#9670;&nbsp;</a></span>lastBlockOfLoop</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::PlayHeadState::lastBlockOfLoop = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a5a303b276115861b670c5c456fa3330d">isLastBlockOfLoop()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">update()</a>.</p>
+
+</div>
+</div>
+<a id="ac9bbc363c47aa3efbee90d29c553760d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9bbc363c47aa3efbee90d29c553760d">&#9670;&nbsp;</a></span>firstBlockOfLoop</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::PlayHeadState::firstBlockOfLoop = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a74f5de9bad37da18ca50f51ddaf26686">isFirstBlockOfLoop()</a>, and <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#abbab551bc62145cf902b86e015b8d337">update()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__PlayHeadState_8h.html">tracktion_PlayHeadState.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -81,11 +81,16 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html">tracktion::engine::Selectable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for things that can be selected, and whose properties can appear in the properties panel.  <a href="classtracktion_1_1engine_1_1Selectable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable_1_1Listener.html">tracktion::engine::Selectable::Listener</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">tracktion::engine::SelectableList</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of Selectables, similar to a juce::Array but contains a cached list of the SelectableClasses for each entry.  <a href="structtracktion_1_1engine_1_1SelectableList.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html">tracktion::engine::SafeSelectable&lt; SelectableType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a pointer to some type of <a class="el" href="classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel.">Selectable</a>, which automatically becomes null if the selectable is deleted.  <a href="classtracktion_1_1engine_1_1SafeSelectable.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LambdaSelectableListener.html">tracktion::engine::LambdaSelectableListener</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> that safely handles listener to a <a class="el" href="classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel.">Selectable</a> and uses a lambda for its callback.  <a href="classtracktion_1_1engine_1_1LambdaSelectableListener.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -99,13 +104,17 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
 <tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplItemLeft" align="right" valign="top">SafeSelectable&lt; SelectableType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">tracktion::engine::makeSafeRef</a> (SelectableType &amp;selectable)</td></tr>
-<tr class="memdesc:a9a916ab6aa43f5cd75071dc3910e537e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html" title="Holds a pointer to some type of Selectable, which automatically becomes null if the selectable is del...">SafeSelectable</a> for a given selectable insatnce.  <a href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">More...</a><br /></td></tr>
+<tr class="memdesc:a9a916ab6aa43f5cd75071dc3910e537e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html" title="Holds a pointer to some type of Selectable, which automatically becomes null if the selectable is del...">SafeSelectable</a> for a given selectable object.  <a href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">More...</a><br /></td></tr>
 <tr class="separator:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad816a0b77df0e6473b704191ada77091"><td class="memTemplParams" colspan="2">template&lt;typename Iterable &gt; </td></tr>
+<tr class="memitem:ad816a0b77df0e6473b704191ada77091"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ad816a0b77df0e6473b704191ada77091">tracktion::engine::makeSafeVector</a> (const Iterable &amp;selectables) -&gt; std::vector&lt; SafeSelectable&lt; typename std::remove_reference&lt; decltype(*selectables[0])&gt;::type &gt;&gt;</td></tr>
+<tr class="memdesc:ad816a0b77df0e6473b704191ada77091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a std::vector&lt;SafeSelectable&lt;Something&gt;&gt; for a given juce::Array of selectable objects.  <a href="namespacetracktion_1_1engine.html#ad816a0b77df0e6473b704191ada77091">More...</a><br /></td></tr>
+<tr class="separator:ad816a0b77df0e6473b704191ada77091"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

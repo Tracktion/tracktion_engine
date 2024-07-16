@@ -94,6 +94,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a14ca22063cb3a24c7a5036808d00fc39"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
 <tr class="memitem:a14ca22063cb3a24c7a5036808d00fc39"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a14ca22063cb3a24c7a5036808d00fc39">SelectableList</a> (const juce::ReferenceCountedArray&lt; SelectableType &gt; &amp;initialItems)</td></tr>
 <tr class="separator:a14ca22063cb3a24c7a5036808d00fc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc4887ce2a102ddf87cc0245b92aaba7"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
+<tr class="memitem:adc4887ce2a102ddf87cc0245b92aaba7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#adc4887ce2a102ddf87cc0245b92aaba7">SelectableList</a> (const std::vector&lt; SelectableType * &gt; &amp;initialItems)</td></tr>
+<tr class="separator:adc4887ce2a102ddf87cc0245b92aaba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54b7a3e0d87fd291f0a40b0dcb1bd74d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a54b7a3e0d87fd291f0a40b0dcb1bd74d">getSelectableClass</a> (int index) const</td></tr>
 <tr class="memdesc:a54b7a3e0d87fd291f0a40b0dcb1bd74d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the selectable class for a given <a class="el" href="classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel.">Selectable</a> in the list.  <a href="structtracktion_1_1engine_1_1SelectableList.html#a54b7a3e0d87fd291f0a40b0dcb1bd74d">More...</a><br /></td></tr>
 <tr class="separator:a54b7a3e0d87fd291f0a40b0dcb1bd74d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,8 +160,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1e8b41da3c8fed2314e8d7701f3d84b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bb2cbb819f038a1c90dfed351da694c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a3bb2cbb819f038a1c90dfed351da694c">indexOf</a> (<a class="el" href="classtracktion_1_1engine_1_1Selectable.html">Selectable</a> *elementToLookFor) const</td></tr>
 <tr class="separator:a3bb2cbb819f038a1c90dfed351da694c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8c1f9e16d3b0cdd393bf94b97e9d914"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a8e3066afe6d51968a989e0bf802cc3e5">Selectable::WeakRef</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#ae8c1f9e16d3b0cdd393bf94b97e9d914">getAsWeakRefList</a> () const</td></tr>
-<tr class="separator:ae8c1f9e16d3b0cdd393bf94b97e9d914"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25e9354cb6d867600087f7a9d61f810c"><td class="memTemplParams" colspan="2">template&lt;class OtherArrayType &gt; </td></tr>
 <tr class="memitem:a25e9354cb6d867600087f7a9d61f810c"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a25e9354cb6d867600087f7a9d61f810c">operator==</a> (const OtherArrayType &amp;other) const</td></tr>
 <tr class="separator:a25e9354cb6d867600087f7a9d61f810c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,7 +192,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adf686add09047ec2cf28ffc5f0123524"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf686add09047ec2cf28ffc5f0123524">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adf686add09047ec2cf28ffc5f0123524">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -216,7 +217,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="adef26967cebee430a854251d35b96622"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adef26967cebee430a854251d35b96622">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adef26967cebee430a854251d35b96622">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -234,7 +235,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a08a010e9a22961ae214de5d2b4a18979"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08a010e9a22961ae214de5d2b4a18979">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a08a010e9a22961ae214de5d2b4a18979">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,7 +255,7 @@ template&lt;typename SelectableType &gt; </div>
 </div>
 </div>
 <a id="a14ca22063cb3a24c7a5036808d00fc39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14ca22063cb3a24c7a5036808d00fc39">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a14ca22063cb3a24c7a5036808d00fc39">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,6 +266,26 @@ template&lt;typename SelectableType &gt; </div>
           <td class="memname">tracktion::engine::SelectableList::SelectableList </td>
           <td>(</td>
           <td class="paramtype">const juce::ReferenceCountedArray&lt; SelectableType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>initialItems</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc4887ce2a102ddf87cc0245b92aaba7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc4887ce2a102ddf87cc0245b92aaba7">&#9670;&nbsp;</a></span>SelectableList() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SelectableType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">tracktion::engine::SelectableList::SelectableList </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; SelectableType * &gt; &amp;&#160;</td>
           <td class="paramname"><em>initialItems</em></td><td>)</td>
           <td></td>
         </tr>
@@ -810,23 +831,6 @@ template&lt;class OtherArrayType &gt; </div>
 
 </div>
 </div>
-<a id="ae8c1f9e16d3b0cdd393bf94b97e9d914"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8c1f9e16d3b0cdd393bf94b97e9d914">&#9670;&nbsp;</a></span>getAsWeakRefList()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a8e3066afe6d51968a989e0bf802cc3e5">Selectable::WeakRef</a>&gt; tracktion::engine::SelectableList::getAsWeakRefList </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a25e9354cb6d867600087f7a9d61f810c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25e9354cb6d867600087f7a9d61f810c">&#9670;&nbsp;</a></span>operator==() <span class="overload">[1/2]</span></h2>
 
@@ -934,7 +938,7 @@ template&lt;class OtherArrayType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

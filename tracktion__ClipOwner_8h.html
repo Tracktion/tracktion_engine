@@ -110,12 +110,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a40faa74c310138e5161006df65ea3bb0"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a40faa74c310138e5161006df65ea3bb0">tracktion::engine::insertClipWithState</a> (ClipOwner &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, TrackItem::Type, ClipPosition, DeleteExistingClips, bool allowSpottingAdjustment)</td></tr>
 <tr class="memdesc:a40faa74c310138e5161006df65ea3bb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a clip with the given state in to the <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <a href="namespacetracktion_1_1engine.html#a40faa74c310138e5161006df65ea3bb0">More...</a><br /></td></tr>
 <tr class="separator:a40faa74c310138e5161006df65ea3bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41f7674013fea15f931a7b981225329d"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a41f7674013fea15f931a7b981225329d">tracktion::engine::insertNewClip</a> (ClipOwner &amp;, TrackItem::Type, TimeRange)</td></tr>
-<tr class="memdesc:a41f7674013fea15f931a7b981225329d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and a default name.  <a href="namespacetracktion_1_1engine.html#a41f7674013fea15f931a7b981225329d">More...</a><br /></td></tr>
-<tr class="separator:a41f7674013fea15f931a7b981225329d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f64e6bb1a9000391570325b688983f7"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a5f64e6bb1a9000391570325b688983f7">tracktion::engine::insertNewClip</a> (ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, TimeRange)</td></tr>
-<tr class="memdesc:a5f64e6bb1a9000391570325b688983f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and name.  <a href="namespacetracktion_1_1engine.html#a5f64e6bb1a9000391570325b688983f7">More...</a><br /></td></tr>
-<tr class="separator:a5f64e6bb1a9000391570325b688983f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9183c8dc31634b574a600f302f235e4c"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9183c8dc31634b574a600f302f235e4c">tracktion::engine::insertNewClip</a> (ClipOwner &amp;, TrackItem::Type, EditTimeRange)</td></tr>
+<tr class="memdesc:a9183c8dc31634b574a600f302f235e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and a default name.  <a href="namespacetracktion_1_1engine.html#a9183c8dc31634b574a600f302f235e4c">More...</a><br /></td></tr>
+<tr class="separator:a9183c8dc31634b574a600f302f235e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b511de0d9b08a840c2e962e3dfca076"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a8b511de0d9b08a840c2e962e3dfca076">tracktion::engine::insertNewClip</a> (ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, EditTimeRange)</td></tr>
+<tr class="memdesc:a8b511de0d9b08a840c2e962e3dfca076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and name.  <a href="namespacetracktion_1_1engine.html#a8b511de0d9b08a840c2e962e3dfca076">More...</a><br /></td></tr>
+<tr class="separator:a8b511de0d9b08a840c2e962e3dfca076"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18fb32af4e33560e0a9cc73a14736235"><td class="memItemLeft" align="right" valign="top">Clip *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a18fb32af4e33560e0a9cc73a14736235">tracktion::engine::insertNewClip</a> (ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, ClipPosition)</td></tr>
 <tr class="memdesc:a18fb32af4e33560e0a9cc73a14736235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and name.  <a href="namespacetracktion_1_1engine.html#a18fb32af4e33560e0a9cc73a14736235">More...</a><br /></td></tr>
 <tr class="separator:a18fb32af4e33560e0a9cc73a14736235"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,7 +212,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

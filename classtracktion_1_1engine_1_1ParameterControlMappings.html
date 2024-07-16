@@ -91,10 +91,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7a21f55d259f8fb2c83e305a839a12be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47c1caf7a407337c7edd50bd1470dc7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#a47c1caf7a407337c7edd50bd1470dc7d">~ParameterControlMappings</a> () override</td></tr>
 <tr class="separator:a47c1caf7a407337c7edd50bd1470dc7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3826e25260216942b2fbb21d67da6a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#ad3826e25260216942b2fbb21d67da6a4">loadFrom</a> (const juce::ValueTree &amp;)</td></tr>
-<tr class="separator:ad3826e25260216942b2fbb21d67da6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9191a8a7329b435467b7637204d26263"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#a9191a8a7329b435467b7637204d26263">saveTo</a> (juce::ValueTree &amp;)</td></tr>
-<tr class="separator:a9191a8a7329b435467b7637204d26263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78939ca8a6c015c29e8256545bd9d5c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#a78939ca8a6c015c29e8256545bd9d5c1">loadFromEdit</a> ()</td></tr>
+<tr class="separator:a78939ca8a6c015c29e8256545bd9d5c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5453fe676cb04fc0ffb38fcfd25c0d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#ab5453fe676cb04fc0ffb38fcfd25c0d6">saveToEdit</a> ()</td></tr>
+<tr class="separator:ab5453fe676cb04fc0ffb38fcfd25c0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a677323748205b2f093b9d61c4bc20eac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#a677323748205b2f093b9d61c4bc20eac">checkForDeletedParams</a> ()</td></tr>
 <tr class="separator:a677323748205b2f093b9d61c4bc20eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92f3be5621ad22bf356eca072b59036a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html#a92f3be5621ad22bf356eca072b59036a">sendChange</a> (int controllerID, float newValue, int channel)</td></tr>
@@ -178,16 +178,15 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad3826e25260216942b2fbb21d67da6a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3826e25260216942b2fbb21d67da6a4">&#9670;&nbsp;</a></span>loadFrom()</h2>
+<a id="a78939ca8a6c015c29e8256545bd9d5c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78939ca8a6c015c29e8256545bd9d5c1">&#9670;&nbsp;</a></span>loadFromEdit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::ParameterControlMappings::loadFrom </td>
+          <td class="memname">void tracktion::engine::ParameterControlMappings::loadFromEdit </td>
           <td>(</td>
-          <td class="paramtype">const juce::ValueTree &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -196,16 +195,15 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9191a8a7329b435467b7637204d26263"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9191a8a7329b435467b7637204d26263">&#9670;&nbsp;</a></span>saveTo()</h2>
+<a id="ab5453fe676cb04fc0ffb38fcfd25c0d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5453fe676cb04fc0ffb38fcfd25c0d6">&#9670;&nbsp;</a></span>saveToEdit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::ParameterControlMappings::saveTo </td>
+          <td class="memname">void tracktion::engine::ParameterControlMappings::saveToEdit </td>
           <td>(</td>
-          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -532,7 +530,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

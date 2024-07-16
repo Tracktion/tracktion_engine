@@ -88,8 +88,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a139cf804b307ab96a2eb09ae1ec99287"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad9753eb9723339a1d702f721f63a47c5">Reader::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a139cf804b307ab96a2eb09ae1ec99287">createReader</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;)</td></tr>
 <tr class="memdesc:a139cf804b307ab96a2eb09ae1ec99287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html">Reader</a> to read an <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a>.  <a href="classtracktion_1_1engine_1_1AudioFileCache.html#a139cf804b307ab96a2eb09ae1ec99287">More...</a><br /></td></tr>
 <tr class="separator:a139cf804b307ab96a2eb09ae1ec99287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94dd65def675401e6981423cbbda8f85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad9753eb9723339a1d702f721f63a47c5">Reader::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a94dd65def675401e6981423cbbda8f85">createReader</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, const std::function&lt; std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1FallbackReader.html">FallbackReader</a> &gt;(juce::AudioFormatReader *sourceReader, juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;createFallbackReader)</td></tr>
+<tr class="memitem:a94dd65def675401e6981423cbbda8f85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad9753eb9723339a1d702f721f63a47c5">Reader::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a94dd65def675401e6981423cbbda8f85">createReader</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, const std::function&lt; std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1FallbackReader.html">FallbackReader</a> &gt;(juce::AudioFormatReader *sourceReader, juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;<a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a58caea862210a8201d986c05b1e5315d">createFallbackReader</a>)</td></tr>
 <tr class="separator:a94dd65def675401e6981423cbbda8f85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58caea862210a8201d986c05b1e5315d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad9753eb9723339a1d702f721f63a47c5">Reader::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a58caea862210a8201d986c05b1e5315d">createFallbackReader</a> (const std::function&lt; std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1FallbackReader.html">FallbackReader</a> &gt;(juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;createFallbackReader)</td></tr>
+<tr class="separator:a58caea862210a8201d986c05b1e5315d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa958e45806f62ff76eace0b31b8a0ab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#aa958e45806f62ff76eace0b31b8a0ab9">setCacheSizeSamples</a> (<a class="el" href="namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4">SampleCount</a> samplesPerFile)</td></tr>
 <tr class="separator:aa958e45806f62ff76eace0b31b8a0ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeec84edea2d01948ba15d8b46b63b742"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#aeec84edea2d01948ba15d8b46b63b742">getCacheSizeSamples</a> () const</td></tr>
@@ -98,9 +100,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af9d0c761508b20a2dce77a256a32f9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8922e04a71fa20704fd00cfe06390244"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a8922e04a71fa20704fd00cfe06390244">hasCacheMissed</a> (bool clearMissedFlag)</td></tr>
 <tr class="separator:a8922e04a71fa20704fd00cfe06390244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac344c9ca1e586cb7147dfb198edfc56e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#ac344c9ca1e586cb7147dfb198edfc56e">getCpuUsage</a> ()</td></tr>
-<tr class="memdesc:ac344c9ca1e586cb7147dfb198edfc56e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of time spent reading files.  <a href="classtracktion_1_1engine_1_1AudioFileCache.html#ac344c9ca1e586cb7147dfb198edfc56e">More...</a><br /></td></tr>
-<tr class="separator:ac344c9ca1e586cb7147dfb198edfc56e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f4fc40f93623851b37cd307930fd486"><td class="memItemLeft" align="right" valign="top">TimeDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a2f4fc40f93623851b37cd307930fd486">getCpuUsage</a> () const</td></tr>
+<tr class="memdesc:a2f4fc40f93623851b37cd307930fd486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of time spent reading files in the last block.  <a href="classtracktion_1_1engine_1_1AudioFileCache.html#a2f4fc40f93623851b37cd307930fd486">More...</a><br /></td></tr>
+<tr class="separator:a2f4fc40f93623851b37cd307930fd486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8011222b99cbf5a2f1b3b1cf108d9a79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#a8011222b99cbf5a2f1b3b1cf108d9a79">nextBlockStarted</a> ()</td></tr>
+<tr class="separator:a8011222b99cbf5a2f1b3b1cf108d9a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf4e726d8ecbfe2a5c74ada00ef4f488"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache.html#abf4e726d8ecbfe2a5c74ada00ef4f488">hasMappedReader</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, <a class="el" href="namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4">SampleCount</a>) const</td></tr>
+<tr class="separator:abf4e726d8ecbfe2a5c74ada00ef4f488"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3d7ebdc795594b2ac8647c8c9fd67bc0"></a>
@@ -158,8 +164,6 @@ Public Member Functions</h2></td></tr>
 <p>Creates a <a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html">Reader</a> to read an <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a>. </p>
 <p>This will use a memoery mapped reader for uncompressed formats. </p>
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html#a268926cdbe3c0b15503599ac327fe275">tracktion::engine::SubSampleWaveAudioNode::isReadyToRender()</a>, and <a class="el" href="classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html#a9ccdc3e559a72b1b5aa917cb22489243">tracktion::engine::SubSampleWaveAudioNode::prepareAudioNodeToPlay()</a>.</p>
-
 </div>
 </div>
 <a id="a94dd65def675401e6981423cbbda8f85"></a>
@@ -184,6 +188,24 @@ Public Member Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a58caea862210a8201d986c05b1e5315d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58caea862210a8201d986c05b1e5315d">&#9670;&nbsp;</a></span>createFallbackReader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad9753eb9723339a1d702f721f63a47c5">Reader::Ptr</a> tracktion::engine::AudioFileCache::createFallbackReader </td>
+          <td>(</td>
+          <td class="paramtype">const std::function&lt; std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1FallbackReader.html">FallbackReader</a> &gt;(juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>createFallbackReader</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -260,14 +282,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac344c9ca1e586cb7147dfb198edfc56e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac344c9ca1e586cb7147dfb198edfc56e">&#9670;&nbsp;</a></span>getCpuUsage()</h2>
+<a id="a2f4fc40f93623851b37cd307930fd486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f4fc40f93623851b37cd307930fd486">&#9670;&nbsp;</a></span>getCpuUsage()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double tracktion::engine::AudioFileCache::getCpuUsage </td>
+          <td class="memname">TimeDuration tracktion::engine::AudioFileCache::getCpuUsage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the amount of time spent reading files in the last block. </p>
+
+</div>
+</div>
+<a id="a8011222b99cbf5a2f1b3b1cf108d9a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8011222b99cbf5a2f1b3b1cf108d9a79">&#9670;&nbsp;</a></span>nextBlockStarted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::AudioFileCache::nextBlockStarted </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -275,7 +316,33 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the amount of time spent reading files. </p>
+</div>
+</div>
+<a id="abf4e726d8ecbfe2a5c74ada00ef4f488"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf4e726d8ecbfe2a5c74ada00ef4f488">&#9670;&nbsp;</a></span>hasMappedReader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::AudioFileCache::hasMappedReader </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4">SampleCount</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -285,7 +352,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

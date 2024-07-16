@@ -113,6 +113,11 @@ Public Types</h2></td></tr>
 <tr class="memitem:aee1d0ecf15b1b75338a16266ba4d79b6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#aee1d0ecf15b1b75338a16266ba4d79b6">PatternArray</a> = juce::ReferenceCountedArray&lt; <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a> &gt;</td></tr>
 <tr class="separator:aee1d0ecf15b1b75338a16266ba4d79b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classtracktion_1_1engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classtracktion_1_1engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classtracktion_1_1engine_1_1Clip.html">tracktion::engine::Clip</a></td></tr>
+<tr class="memitem:adc95ebd7f90eac7a6972790064cb6b86 inherit pub_types_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86">FollowActionDurationType</a> { <a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86a1e4cb5f584d055a0992385c1b2155786">beats</a>
+, <a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86a9ac74365ff1a2e3a744fca94f62c3784">loops</a>
+ }</td></tr>
+<tr class="memdesc:adc95ebd7f90eac7a6972790064cb6b86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the types of duration follow actions can use.  <a href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86">More...</a><br /></td></tr>
+<tr class="separator:adc95ebd7f90eac7a6972790064cb6b86 inherit pub_types_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0cfff3f282a7f6b1b92dc5ae61c97b7 inherit pub_types_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7">SyncType</a> { <a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7a4cddcc775a3a9d5b21492f9e9b80cfc5">syncBarsBeats</a> = 0
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7a8b060ca5f53689e0dfd4eedf107a329b">syncAbsolute</a>
  }</td></tr>
@@ -205,6 +210,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2b6e4faa75f98e237d86f7370e56c503"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a2b6e4faa75f98e237d86f7370e56c503">generateMidiSequence</a> (juce::MidiMessageSequence &amp;result, bool convertToSeconds=true, <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a> *instance=nullptr)</td></tr>
 <tr class="memdesc:a2b6e4faa75f98e237d86f7370e56c503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a MidiMessageSequence from either the entire clip or one of its pattern instances.  <a href="classtracktion_1_1engine_1_1StepClip.html#a2b6e4faa75f98e237d86f7370e56c503">More...</a><br /></td></tr>
 <tr class="separator:a2b6e4faa75f98e237d86f7370e56c503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae43cc509491c0ddaebb8447a01c288d0"><td class="memItemLeft" align="right" valign="top">juce::MidiMessageSequence&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ae43cc509491c0ddaebb8447a01c288d0">generateMidiSequence</a> (<a class="el" href="classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394">MidiList::TimeBase</a>, <a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a> *instance=nullptr)</td></tr>
+<tr class="memdesc:ae43cc509491c0ddaebb8447a01c288d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a MidiMessageSequence from either the entire clip or one of its pattern instances.  <a href="classtracktion_1_1engine_1_1StepClip.html#ae43cc509491c0ddaebb8447a01c288d0">More...</a><br /></td></tr>
+<tr class="separator:ae43cc509491c0ddaebb8447a01c288d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a670d51663df40422a544d69476b4f43c"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; BeatPosition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a670d51663df40422a544d69476b4f43c">getBeatTimesOfPatternStarts</a> () const</td></tr>
 <tr class="separator:a670d51663df40422a544d69476b4f43c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1038e7e5e6f5fa02198ce5393deb803a"><td class="memItemLeft" align="right" valign="top">BeatPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a1038e7e5e6f5fa02198ce5393deb803a">getStartBeatOf</a> (<a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a> *)</td></tr>
@@ -238,6 +246,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a43f0363490471f3807645aba1461e50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95d96bca948c7323e0dc6b7625d54a11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a95d96bca948c7323e0dc6b7625d54a11">getLiveClipLevel</a> ()</td></tr>
 <tr class="separator:a95d96bca948c7323e0dc6b7625d54a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2136e162c3a3a496d593883f77ace0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ac2136e162c3a3a496d593883f77ace0e">canLoop</a> () const override</td></tr>
+<tr class="memdesc:ac2136e162c3a3a496d593883f77ace0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">StepClips can only loop if they're being used as launcher clips.  <a href="classtracktion_1_1engine_1_1StepClip.html#ac2136e162c3a3a496d593883f77ace0e">More...</a><br /></td></tr>
+<tr class="separator:ac2136e162c3a3a496d593883f77ace0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5615cbb42a109e1bc88c2564916d1fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#af5615cbb42a109e1bc88c2564916d1fb">getPosition</a> () const override</td></tr>
+<tr class="separator:af5615cbb42a109e1bc88c2564916d1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a700f8b78ba730a677d953b45dc379551"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a700f8b78ba730a677d953b45dc379551">isLooping</a> () const override</td></tr>
+<tr class="separator:a700f8b78ba730a677d953b45dc379551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e74fa6e89517ff8b6b80d88f07ae257"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a8e74fa6e89517ff8b6b80d88f07ae257">setNumberOfLoops</a> (int) override</td></tr>
+<tr class="separator:a8e74fa6e89517ff8b6b80d88f07ae257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78609f64b40e765b9f40febde46bac4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a78609f64b40e765b9f40febde46bac4f">disableLooping</a> () override</td></tr>
+<tr class="separator:a78609f64b40e765b9f40febde46bac4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a261b4dbfcadd47b9aaf74542a41f2bd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a261b4dbfcadd47b9aaf74542a41f2bd4">setLoopRange</a> (TimeRange) override</td></tr>
+<tr class="separator:a261b4dbfcadd47b9aaf74542a41f2bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6469bd3797870dea7e559dc1f7d206c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ad6469bd3797870dea7e559dc1f7d206c">setLoopRangeBeats</a> (BeatRange) override</td></tr>
+<tr class="separator:ad6469bd3797870dea7e559dc1f7d206c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aead6aad6bb52d04583fd525cbe1c67"><td class="memItemLeft" align="right" valign="top">BeatPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a3aead6aad6bb52d04583fd525cbe1c67">getLoopStartBeats</a> () const override</td></tr>
+<tr class="separator:a3aead6aad6bb52d04583fd525cbe1c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f8d48a0acd70ec6be433fe2ce8b1320"><td class="memItemLeft" align="right" valign="top">BeatDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a5f8d48a0acd70ec6be433fe2ce8b1320">getLoopLengthBeats</a> () const override</td></tr>
+<tr class="separator:a5f8d48a0acd70ec6be433fe2ce8b1320"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a37eab9a3a841fed579be8e2e8a6650"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a7a37eab9a3a841fed579be8e2e8a6650">getLoopStart</a> () const override</td></tr>
+<tr class="separator:a7a37eab9a3a841fed579be8e2e8a6650"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae38af44804ddbe9ece318d76d6b04938"><td class="memItemLeft" align="right" valign="top">TimeDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ae38af44804ddbe9ece318d76d6b04938">getLoopLength</a> () const override</td></tr>
+<tr class="separator:ae38af44804ddbe9ece318d76d6b04938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af44e71932a0f506b1a47a3fcd8026101"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1LaunchHandle.html">LaunchHandle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#af44e71932a0f506b1a47a3fcd8026101">getLaunchHandle</a> () override</td></tr>
+<tr class="separator:af44e71932a0f506b1a47a3fcd8026101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ee6f9db0e87706fb0aac5fe5733d787"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a1ee6f9db0e87706fb0aac5fe5733d787">setUsesGlobalLaunchQuatisation</a> (bool useGlobal) override</td></tr>
+<tr class="separator:a1ee6f9db0e87706fb0aac5fe5733d787"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae95f1d10c55f18e39ac18acf8534ecdf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ae95f1d10c55f18e39ac18acf8534ecdf">usesGlobalLaunchQuatisation</a> () override</td></tr>
+<tr class="separator:ae95f1d10c55f18e39ac18acf8534ecdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86e6102199e4b5a112bc37e6d5b61b3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1LaunchQuantisation.html">LaunchQuantisation</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a86e6102199e4b5a112bc37e6d5b61b3c">getLaunchQuantisation</a> () override</td></tr>
+<tr class="separator:a86e6102199e4b5a112bc37e6d5b61b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3865b615228e78df5bf036050a2f321"><td class="memItemLeft" align="right" valign="top">FollowActions *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ae3865b615228e78df5bf036050a2f321">getFollowActions</a> () override</td></tr>
+<tr class="separator:ae3865b615228e78df5bf036050a2f321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1Clip.html">tracktion::engine::Clip</a></td></tr>
 <tr class="memitem:a8591bc44e7cac883131297d3d80989a4 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a8591bc44e7cac883131297d3d80989a4">Clip</a> (const juce::ValueTree &amp;, <a class="el" href="classtracktion_1_1engine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">Type</a>)</td></tr>
 <tr class="memdesc:a8591bc44e7cac883131297d3d80989a4 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a clip of a given type from a ValueTree state.  <a href="classtracktion_1_1engine_1_1Clip.html#a8591bc44e7cac883131297d3d80989a4">More...</a><br /></td></tr>
@@ -278,9 +319,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a659a8741edb82ed25be123052c96cdb5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a659a8741edb82ed25be123052c96cdb5">reassignReferencedItem</a> (const <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">ReferencedItem</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>, double) override</td></tr>
 <tr class="memdesc:a659a8741edb82ed25be123052c96cdb5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should be implemented to change the underlying source to a new <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a>.  <a href="classtracktion_1_1engine_1_1Clip.html#a659a8741edb82ed25be123052c96cdb5">More...</a><br /></td></tr>
 <tr class="separator:a659a8741edb82ed25be123052c96cdb5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5d23bd5e81685800213ed0d19c23a00 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#ad5d23bd5e81685800213ed0d19c23a00">getPosition</a> () const override</td></tr>
-<tr class="memdesc:ad5d23bd5e81685800213ed0d19c23a00 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> on the parent <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion_1_1engine_1_1Clip.html#ad5d23bd5e81685800213ed0d19c23a00">More...</a><br /></td></tr>
-<tr class="separator:ad5d23bd5e81685800213ed0d19c23a00 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6afc18ac1efa6fed4f20162a165b37dd inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">BeatPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a6afc18ac1efa6fed4f20162a165b37dd">getContentBeatAtTime</a> (TimePosition) const</td></tr>
 <tr class="memdesc:a6afc18ac1efa6fed4f20162a165b37dd inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat number (with offset) at the given time.  <a href="classtracktion_1_1engine_1_1Clip.html#a6afc18ac1efa6fed4f20162a165b37dd">More...</a><br /></td></tr>
 <tr class="separator:a6afc18ac1efa6fed4f20162a165b37dd inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -296,42 +334,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a31a5e8ad79e968e308b8a55942263daa inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a31a5e8ad79e968e308b8a55942263daa">getSpottingPoint</a> () const</td></tr>
 <tr class="memdesc:a31a5e8ad79e968e308b8a55942263daa inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first marked time in the source file which can be used for syncronising newly added clips.  <a href="classtracktion_1_1engine_1_1Clip.html#a31a5e8ad79e968e308b8a55942263daa">More...</a><br /></td></tr>
 <tr class="separator:a31a5e8ad79e968e308b8a55942263daa inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a724791bbc8f9bfe6cc3383135ebbe908 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a724791bbc8f9bfe6cc3383135ebbe908">canLoop</a> () const</td></tr>
-<tr class="memdesc:a724791bbc8f9bfe6cc3383135ebbe908 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is capable of looping.  <a href="classtracktion_1_1engine_1_1Clip.html#a724791bbc8f9bfe6cc3383135ebbe908">More...</a><br /></td></tr>
-<tr class="separator:a724791bbc8f9bfe6cc3383135ebbe908 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44632e4c216b2bf58406f793f25c7543 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a44632e4c216b2bf58406f793f25c7543">isLooping</a> () const</td></tr>
-<tr class="memdesc:a44632e4c216b2bf58406f793f25c7543 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this clip is currently looping.  <a href="classtracktion_1_1engine_1_1Clip.html#a44632e4c216b2bf58406f793f25c7543">More...</a><br /></td></tr>
-<tr class="separator:a44632e4c216b2bf58406f793f25c7543 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98d3ef7229cfcd6db8b8c8b78f243b4a inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a98d3ef7229cfcd6db8b8c8b78f243b4a">setNumberOfLoops</a> (int)</td></tr>
-<tr class="memdesc:a98d3ef7229cfcd6db8b8c8b78f243b4a inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clip looping a number of times.  <a href="classtracktion_1_1engine_1_1Clip.html#a98d3ef7229cfcd6db8b8c8b78f243b4a">More...</a><br /></td></tr>
-<tr class="separator:a98d3ef7229cfcd6db8b8c8b78f243b4a inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a011bc807f5f8b78378550555e42fec95 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a011bc807f5f8b78378550555e42fec95">disableLooping</a> ()</td></tr>
-<tr class="memdesc:a011bc807f5f8b78378550555e42fec95 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables all looping.  <a href="classtracktion_1_1engine_1_1Clip.html#a011bc807f5f8b78378550555e42fec95">More...</a><br /></td></tr>
-<tr class="separator:a011bc807f5f8b78378550555e42fec95 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9200748a2c2c411affc5a50feefb816c inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual BeatPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9200748a2c2c411affc5a50feefb816c">getLoopStartBeats</a> () const</td></tr>
-<tr class="memdesc:a9200748a2c2c411affc5a50feefb816c inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the beat position of the loop start point.  <a href="classtracktion_1_1engine_1_1Clip.html#a9200748a2c2c411affc5a50feefb816c">More...</a><br /></td></tr>
-<tr class="separator:a9200748a2c2c411affc5a50feefb816c inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a041df66176ac85bd0cc466f3aa3fc913 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a041df66176ac85bd0cc466f3aa3fc913">getLoopStart</a> () const</td></tr>
-<tr class="memdesc:a041df66176ac85bd0cc466f3aa3fc913 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start time of the loop start point.  <a href="classtracktion_1_1engine_1_1Clip.html#a041df66176ac85bd0cc466f3aa3fc913">More...</a><br /></td></tr>
-<tr class="separator:a041df66176ac85bd0cc466f3aa3fc913 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1ff2cd20bb5c893f61e2e8b9d3498ea inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual BeatDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#af1ff2cd20bb5c893f61e2e8b9d3498ea">getLoopLengthBeats</a> () const</td></tr>
-<tr class="memdesc:af1ff2cd20bb5c893f61e2e8b9d3498ea inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in beats.  <a href="classtracktion_1_1engine_1_1Clip.html#af1ff2cd20bb5c893f61e2e8b9d3498ea">More...</a><br /></td></tr>
-<tr class="separator:af1ff2cd20bb5c893f61e2e8b9d3498ea inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9aa3fc4e165770123b8f8fdd79eac3a5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual TimeDuration&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9aa3fc4e165770123b8f8fdd79eac3a5">getLoopLength</a> () const</td></tr>
-<tr class="memdesc:a9aa3fc4e165770123b8f8fdd79eac3a5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of loop in seconds.  <a href="classtracktion_1_1engine_1_1Clip.html#a9aa3fc4e165770123b8f8fdd79eac3a5">More...</a><br /></td></tr>
-<tr class="separator:a9aa3fc4e165770123b8f8fdd79eac3a5 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc6a40b9749c5038180a718d662c61d8 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">TimeRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#abc6a40b9749c5038180a718d662c61d8">getLoopRange</a> () const</td></tr>
 <tr class="memdesc:abc6a40b9749c5038180a718d662c61d8 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the loop range in seconds.  <a href="classtracktion_1_1engine_1_1Clip.html#abc6a40b9749c5038180a718d662c61d8">More...</a><br /></td></tr>
 <tr class="separator:abc6a40b9749c5038180a718d662c61d8 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac07c6dd9c3d2540b413ee0e58ad77110 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">BeatRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#ac07c6dd9c3d2540b413ee0e58ad77110">getLoopRangeBeats</a> () const</td></tr>
 <tr class="memdesc:ac07c6dd9c3d2540b413ee0e58ad77110 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the loop range in beats.  <a href="classtracktion_1_1engine_1_1Clip.html#ac07c6dd9c3d2540b413ee0e58ad77110">More...</a><br /></td></tr>
 <tr class="separator:ac07c6dd9c3d2540b413ee0e58ad77110 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ebc0220809a7ccf5ca56ab6d33494ad inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a6ebc0220809a7ccf5ca56ab6d33494ad">setLoopRange</a> (TimeRange)</td></tr>
-<tr class="memdesc:a6ebc0220809a7ccf5ca56ab6d33494ad inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in seconds.  <a href="classtracktion_1_1engine_1_1Clip.html#a6ebc0220809a7ccf5ca56ab6d33494ad">More...</a><br /></td></tr>
-<tr class="separator:a6ebc0220809a7ccf5ca56ab6d33494ad inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab61ff87220c03dfdbe2612d5a4a42b55 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#ab61ff87220c03dfdbe2612d5a4a42b55">setLoopRangeBeats</a> (BeatRange)</td></tr>
-<tr class="memdesc:ab61ff87220c03dfdbe2612d5a4a42b55 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the loop range the clip should use in beats.  <a href="classtracktion_1_1engine_1_1Clip.html#ab61ff87220c03dfdbe2612d5a4a42b55">More...</a><br /></td></tr>
-<tr class="separator:ab61ff87220c03dfdbe2612d5a4a42b55 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af61d8838219d1c803a2b739fa0af46a1 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#af61d8838219d1c803a2b739fa0af46a1">setSyncType</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7">SyncType</a> sync)</td></tr>
 <tr class="memdesc:af61d8838219d1c803a2b739fa0af46a1 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the sync type for the clip.  <a href="classtracktion_1_1engine_1_1Clip.html#af61d8838219d1c803a2b739fa0af46a1">More...</a><br /></td></tr>
 <tr class="separator:af61d8838219d1c803a2b739fa0af46a1 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -404,6 +412,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acb283afe1992b98b5c7d50d807c8f168 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#acb283afe1992b98b5c7d50d807c8f168">getTrack</a> () const override</td></tr>
 <tr class="memdesc:acb283afe1992b98b5c7d50d807c8f168 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> this clip is on (if any).  <a href="classtracktion_1_1engine_1_1Clip.html#acb283afe1992b98b5c7d50d807c8f168">More...</a><br /></td></tr>
 <tr class="separator:acb283afe1992b98b5c7d50d807c8f168 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b5c3911c9cf8c64fadf58de79e6fe2 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html">ClipSlot</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a52b5c3911c9cf8c64fadf58de79e6fe2">getClipSlot</a> () const</td></tr>
+<tr class="memdesc:a52b5c3911c9cf8c64fadf58de79e6fe2 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parent <a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a> this clip is on (if any).  <a href="classtracktion_1_1engine_1_1Clip.html#a52b5c3911c9cf8c64fadf58de79e6fe2">More...</a><br /></td></tr>
+<tr class="separator:a52b5c3911c9cf8c64fadf58de79e6fe2 inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a777c76d5c393e98394fb23b02d5d4e3e inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a777c76d5c393e98394fb23b02d5d4e3e">getColour</a> () const</td></tr>
 <tr class="memdesc:a777c76d5c393e98394fb23b02d5d4e3e inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the colour property of this clip.  <a href="classtracktion_1_1engine_1_1Clip.html#a777c76d5c393e98394fb23b02d5d4e3e">More...</a><br /></td></tr>
 <tr class="separator:a777c76d5c393e98394fb23b02d5d4e3e inherit pub_methods_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -530,6 +541,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a3181dd86e8a8ab1916b7f14aeb4dacf8">selectableAboutToBeDeleted</a> ()</td></tr>
 <tr class="memdesc:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just before the selectable is about to be deleted so any subclasses should still be valid at this point.  <a href="classtracktion_1_1engine_1_1Selectable.html#a3181dd86e8a8ab1916b7f14aeb4dacf8">More...</a><br /></td></tr>
 <tr class="separator:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2f32a79ef1047f187e8de7f698edc98 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#aa2f32a79ef1047f187e8de7f698edc98">addListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
+<tr class="separator:aa2f32a79ef1047f187e8de7f698edc98 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b48e1edceb420aad5092b2456762b5a inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a6b48e1edceb420aad5092b2456762b5a">removeListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
+<tr class="separator:a6b48e1edceb420aad5092b2456762b5a inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85c66869547a4c296dbbaf6235da3868 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a85c66869547a4c296dbbaf6235da3868">addSelectableListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
 <tr class="separator:a85c66869547a4c296dbbaf6235da3868 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3864216a42878add1d89b7c6238a13 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#add3864216a42878add1d89b7c6238a13">removeSelectableListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
@@ -554,12 +569,24 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3bbf6decb0570b5466c0c15570505830"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a3bbf6decb0570b5466c0c15570505830">repeatSequence</a></td></tr>
 <tr class="separator:a3bbf6decb0570b5466c0c15570505830"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion_1_1engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion_1_1engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion_1_1engine_1_1Clip.html">tracktion::engine::Clip</a></td></tr>
+<tr class="memitem:aa64b21d54848f335b588b98584be43a6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86">FollowActionDurationType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#aa64b21d54848f335b588b98584be43a6">followActionDurationType</a></td></tr>
+<tr class="memdesc:aa64b21d54848f335b588b98584be43a6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of duration to use for when to trigger the follow action.  <a href="classtracktion_1_1engine_1_1Clip.html#aa64b21d54848f335b588b98584be43a6">More...</a><br /></td></tr>
+<tr class="separator:aa64b21d54848f335b588b98584be43a6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ba12fb801a83e32935b466e56f69ea inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; BeatDuration &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a12ba12fb801a83e32935b466e56f69ea">followActionBeats</a></td></tr>
+<tr class="memdesc:a12ba12fb801a83e32935b466e56f69ea inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the time for which a launched clip will play before a follow action is taken.  <a href="classtracktion_1_1engine_1_1Clip.html#a12ba12fb801a83e32935b466e56f69ea">More...</a><br /></td></tr>
+<tr class="separator:a12ba12fb801a83e32935b466e56f69ea inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a04a44ef7f379f0181e6577bbdcd9d inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#ab1a04a44ef7f379f0181e6577bbdcd9d">followActionNumLoops</a></td></tr>
+<tr class="memdesc:ab1a04a44ef7f379f0181e6577bbdcd9d inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the number of loops for which a launched clip will play before a follow action is taken.  <a href="classtracktion_1_1engine_1_1Clip.html#ab1a04a44ef7f379f0181e6577bbdcd9d">More...</a><br /></td></tr>
+<tr class="separator:ab1a04a44ef7f379f0181e6577bbdcd9d inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a501ff706397e129cf2fea5a27db03579 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a501ff706397e129cf2fea5a27db03579">state</a></td></tr>
 <tr class="memdesc:a501ff706397e129cf2fea5a27db03579 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ValueTree of the <a class="el" href="classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit.">Clip</a> state.  <a href="classtracktion_1_1engine_1_1Clip.html#a501ff706397e129cf2fea5a27db03579">More...</a><br /></td></tr>
 <tr class="separator:a501ff706397e129cf2fea5a27db03579 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3c30e5b4b73748631fee2ec7e502886 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; juce::Colour &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#ac3c30e5b4b73748631fee2ec7e502886">colour</a></td></tr>
 <tr class="memdesc:ac3c30e5b4b73748631fee2ec7e502886 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">The colour property.  <a href="classtracktion_1_1engine_1_1Clip.html#ac3c30e5b4b73748631fee2ec7e502886">More...</a><br /></td></tr>
 <tr class="separator:ac3c30e5b4b73748631fee2ec7e502886 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e4b68742fa76d0ca335a27c06359ea6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9e4b68742fa76d0ca335a27c06359ea6">disabled</a></td></tr>
+<tr class="memdesc:a9e4b68742fa76d0ca335a27c06359ea6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the <a class="el" href="classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit.">Clip</a> is disabled or not.  <a href="classtracktion_1_1engine_1_1Clip.html#a9e4b68742fa76d0ca335a27c06359ea6">More...</a><br /></td></tr>
+<tr class="separator:a9e4b68742fa76d0ca335a27c06359ea6 inherit pub_attribs_classtracktion_1_1engine_1_1Clip"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion_1_1engine_1_1TrackItem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion_1_1engine_1_1TrackItem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html">tracktion::engine::TrackItem</a></td></tr>
 <tr class="memitem:a0529e945112cfe0d4f0ffb5de4e280c0 inherit pub_attribs_classtracktion_1_1engine_1_1TrackItem"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackItem.html#a0529e945112cfe0d4f0ffb5de4e280c0">type</a></td></tr>
 <tr class="memdesc:a0529e945112cfe0d4f0ffb5de4e280c0 inherit pub_attribs_classtracktion_1_1engine_1_1TrackItem"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of this item.  <a href="classtracktion_1_1engine_1_1TrackItem.html#a0529e945112cfe0d4f0ffb5de4e280c0">More...</a><br /></td></tr>
@@ -1277,7 +1304,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="a2b6e4faa75f98e237d86f7370e56c503"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b6e4faa75f98e237d86f7370e56c503">&#9670;&nbsp;</a></span>generateMidiSequence()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b6e4faa75f98e237d86f7370e56c503">&#9670;&nbsp;</a></span>generateMidiSequence() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1317,6 +1344,44 @@ Additional Inherited Members</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ae43cc509491c0ddaebb8447a01c288d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae43cc509491c0ddaebb8447a01c288d0">&#9670;&nbsp;</a></span>generateMidiSequence() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::MidiMessageSequence tracktion::engine::StepClip::generateMidiSequence </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394">MidiList::TimeBase</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a> *&#160;</td>
+          <td class="paramname"><em>instance</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generate a MidiMessageSequence from either the entire clip or one of its pattern instances. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname"><a class="el" href="structtracktion_1_1engine_1_1StepClip_1_1PatternInstance.html">PatternInstance</a></td><td>Specific pattern to generate, nullptr for the whole clip </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">TimeBase</td><td>The time base for the sequence </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>result Result sequence </dd></dl>
 
 </div>
 </div>
@@ -1629,6 +1694,453 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ac2136e162c3a3a496d593883f77ace0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2136e162c3a3a496d593883f77ace0e">&#9670;&nbsp;</a></span>canLoop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::StepClip::canLoop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>StepClips can only loop if they're being used as launcher clips. </p>
+<p>Arranger clips will automatically loop until their end time. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a724791bbc8f9bfe6cc3383135ebbe908">tracktion::engine::Clip</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a5f8d48a0acd70ec6be433fe2ce8b1320">getLoopLengthBeats()</a>, <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a3aead6aad6bb52d04583fd525cbe1c67">getLoopStartBeats()</a>, and <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a700f8b78ba730a677d953b45dc379551">isLooping()</a>.</p>
+
+</div>
+</div>
+<a id="af5615cbb42a109e1bc88c2564916d1fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5615cbb42a109e1bc88c2564916d1fb">&#9670;&nbsp;</a></span>getPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a> tracktion::engine::StepClip::getPosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ad5d23bd5e81685800213ed0d19c23a00">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a700f8b78ba730a677d953b45dc379551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a700f8b78ba730a677d953b45dc379551">&#9670;&nbsp;</a></span>isLooping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::StepClip::isLooping </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a44632e4c216b2bf58406f793f25c7543">tracktion::engine::Clip</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ac2136e162c3a3a496d593883f77ace0e">canLoop()</a>.</p>
+
+</div>
+</div>
+<a id="a8e74fa6e89517ff8b6b80d88f07ae257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e74fa6e89517ff8b6b80d88f07ae257">&#9670;&nbsp;</a></span>setNumberOfLoops()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::StepClip::setNumberOfLoops </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a98d3ef7229cfcd6db8b8c8b78f243b4a">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a78609f64b40e765b9f40febde46bac4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78609f64b40e765b9f40febde46bac4f">&#9670;&nbsp;</a></span>disableLooping()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::StepClip::disableLooping </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a011bc807f5f8b78378550555e42fec95">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a261b4dbfcadd47b9aaf74542a41f2bd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a261b4dbfcadd47b9aaf74542a41f2bd4">&#9670;&nbsp;</a></span>setLoopRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::StepClip::setLoopRange </td>
+          <td>(</td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a6ebc0220809a7ccf5ca56ab6d33494ad">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="ad6469bd3797870dea7e559dc1f7d206c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6469bd3797870dea7e559dc1f7d206c">&#9670;&nbsp;</a></span>setLoopRangeBeats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::StepClip::setLoopRangeBeats </td>
+          <td>(</td>
+          <td class="paramtype">BeatRange&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ab61ff87220c03dfdbe2612d5a4a42b55">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a3aead6aad6bb52d04583fd525cbe1c67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aead6aad6bb52d04583fd525cbe1c67">&#9670;&nbsp;</a></span>getLoopStartBeats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BeatPosition tracktion::engine::StepClip::getLoopStartBeats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9200748a2c2c411affc5a50feefb816c">tracktion::engine::Clip</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ac2136e162c3a3a496d593883f77ace0e">canLoop()</a>.</p>
+
+</div>
+</div>
+<a id="a5f8d48a0acd70ec6be433fe2ce8b1320"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f8d48a0acd70ec6be433fe2ce8b1320">&#9670;&nbsp;</a></span>getLoopLengthBeats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BeatDuration tracktion::engine::StepClip::getLoopLengthBeats </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#af1ff2cd20bb5c893f61e2e8b9d3498ea">tracktion::engine::Clip</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#ac2136e162c3a3a496d593883f77ace0e">canLoop()</a>.</p>
+
+</div>
+</div>
+<a id="a7a37eab9a3a841fed579be8e2e8a6650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a37eab9a3a841fed579be8e2e8a6650">&#9670;&nbsp;</a></span>getLoopStart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TimePosition tracktion::engine::StepClip::getLoopStart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a041df66176ac85bd0cc466f3aa3fc913">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="ae38af44804ddbe9ece318d76d6b04938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae38af44804ddbe9ece318d76d6b04938">&#9670;&nbsp;</a></span>getLoopLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TimeDuration tracktion::engine::StepClip::getLoopLength </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9aa3fc4e165770123b8f8fdd79eac3a5">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="af44e71932a0f506b1a47a3fcd8026101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af44e71932a0f506b1a47a3fcd8026101">&#9670;&nbsp;</a></span>getLaunchHandle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1LaunchHandle.html">LaunchHandle</a>&gt; tracktion::engine::StepClip::getLaunchHandle </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#afa53f80c70e84170110c562c90c04fba">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a1ee6f9db0e87706fb0aac5fe5733d787"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ee6f9db0e87706fb0aac5fe5733d787">&#9670;&nbsp;</a></span>setUsesGlobalLaunchQuatisation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::StepClip::setUsesGlobalLaunchQuatisation </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>useGlobal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a4238a8e7babf45eaba899d50aa9aa969">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="ae95f1d10c55f18e39ac18acf8534ecdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae95f1d10c55f18e39ac18acf8534ecdf">&#9670;&nbsp;</a></span>usesGlobalLaunchQuatisation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::StepClip::usesGlobalLaunchQuatisation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ab7e1f2526b3564f9b79076dc38c09703">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="a86e6102199e4b5a112bc37e6d5b61b3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86e6102199e4b5a112bc37e6d5b61b3c">&#9670;&nbsp;</a></span>getLaunchQuantisation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1LaunchQuantisation.html">LaunchQuantisation</a>* tracktion::engine::StepClip::getLaunchQuantisation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a597e192e496c54d0ddf4850756fc8446">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
+<a id="ae3865b615228e78df5bf036050a2f321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3865b615228e78df5bf036050a2f321">&#9670;&nbsp;</a></span>getFollowActions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">FollowActions* tracktion::engine::StepClip::getFollowActions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ac24a238ea4f7e2ad9a246f18b1e4044f">tracktion::engine::Clip</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a3bbf6decb0570b5466c0c15570505830"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3bbf6decb0570b5466c0c15570505830">&#9670;&nbsp;</a></span>repeatSequence</h2>
@@ -1650,7 +2162,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

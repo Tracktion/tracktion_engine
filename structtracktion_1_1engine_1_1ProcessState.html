@@ -112,9 +112,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="memItemLeft" align="right" valign="top">const tempo::Sequence::Position *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#aa0a56eaa788ad5f20e40cd35cf8beeb1">getTempoSequencePosition</a> () const</td></tr>
 <tr class="memdesc:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the tempo::Sequence::Position this state uses.  <a href="structtracktion_1_1engine_1_1ProcessState.html#aa0a56eaa788ad5f20e40cd35cf8beeb1">More...</a><br /></td></tr>
 <tr class="separator:aa0a56eaa788ad5f20e40cd35cf8beeb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9119c6a1e97354a80084a0de098dbdca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a9119c6a1e97354a80084a0de098dbdca">getSyncRange</a> () const</td></tr>
+<tr class="memdesc:a9119c6a1e97354a80084a0de098dbdca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a> for the current audio block.  <a href="structtracktion_1_1engine_1_1ProcessState.html#a9119c6a1e97354a80084a0de098dbdca">More...</a><br /></td></tr>
+<tr class="separator:a9119c6a1e97354a80084a0de098dbdca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a616943925f701690e98184791edbcbf2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a616943925f701690e98184791edbcbf2">getSyncPoint</a> () const</td></tr>
+<tr class="memdesc:a616943925f701690e98184791edbcbf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the end of the <a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a>.  <a href="structtracktion_1_1engine_1_1ProcessState.html#a616943925f701690e98184791edbcbf2">More...</a><br /></td></tr>
+<tr class="separator:a616943925f701690e98184791edbcbf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650ffcea0a18e17928e6b93ca143d390"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a650ffcea0a18e17928e6b93ca143d390">setSyncRange</a> (<a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a>)</td></tr>
+<tr class="separator:a650ffcea0a18e17928e6b93ca143d390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a353b1a536b22de5a3a263465658b44d7"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a353b1a536b22de5a3a263465658b44d7">onContinuityUpdated</a></td></tr>
+<tr class="memdesc:a353b1a536b22de5a3a263465658b44d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback which can be set to be called when the continuity changes.  <a href="structtracktion_1_1engine_1_1ProcessState.html#a353b1a536b22de5a3a263465658b44d7">More...</a><br /></td></tr>
+<tr class="separator:a353b1a536b22de5a3a263465658b44d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3210d4b41b525fe52f0ef7099163922"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ac3210d4b41b525fe52f0ef7099163922">playHeadState</a></td></tr>
 <tr class="separator:ac3210d4b41b525fe52f0ef7099163922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a813d9b82623e15748d1510ab07c51bae"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a813d9b82623e15748d1510ab07c51bae">sampleRate</a> = 44100.0</td></tr>
@@ -368,7 +379,84 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9119c6a1e97354a80084a0de098dbdca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9119c6a1e97354a80084a0de098dbdca">&#9670;&nbsp;</a></span>getSyncRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a> tracktion::engine::ProcessState::getSyncRange </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a> for the current audio block. </p>
+<p>Technically, this is only valid during processing but the end of the range can be used to schedule future events assuming the tempo doesn't change between now and the sceduled time.</p>
+<p>If the tempo does change, the time will be incorrect but the <a class="el" href="structtracktion_1_1engine_1_1MonotonicBeat.html">MonotonicBeat</a> will still be in sync. </p>
+
+</div>
+</div>
+<a id="a616943925f701690e98184791edbcbf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a616943925f701690e98184791edbcbf2">&#9670;&nbsp;</a></span>getSyncPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a> tracktion::engine::ProcessState::getSyncPoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the end of the <a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a>. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a9119c6a1e97354a80084a0de098dbdca" title="Returns the SyncRange for the current audio block.">getSyncRange</a> </dd></dl>
+
+</div>
+</div>
+<a id="a650ffcea0a18e17928e6b93ca143d390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650ffcea0a18e17928e6b93ca143d390">&#9670;&nbsp;</a></span>setSyncRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ProcessState::setSyncRange </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1SyncRange.html">SyncRange</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a353b1a536b22de5a3a263465658b44d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a353b1a536b22de5a3a263465658b44d7">&#9670;&nbsp;</a></span>onContinuityUpdated</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void()&gt; tracktion::engine::ProcessState::onContinuityUpdated</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Callback which can be set to be called when the continuity changes. </p>
+<p>This will be made on the audio thread so shouldn't block. </p>
+
+</div>
+</div>
 <a id="ac3210d4b41b525fe52f0ef7099163922"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac3210d4b41b525fe52f0ef7099163922">&#9670;&nbsp;</a></span>playHeadState</h2>
 
@@ -501,7 +589,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

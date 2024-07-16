@@ -101,6 +101,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abb2221424a341dbaa0f49f9130125113"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackMutingNode.html#abb2221424a341dbaa0f49f9130125113">prefetchBlock</a> (juce::Range&lt; int64_t &gt;) override</td></tr>
 <tr class="memdesc:abb2221424a341dbaa0f49f9130125113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before once on all Nodes before they are processed.  <a href="classtracktion_1_1engine_1_1TrackMutingNode.html#abb2221424a341dbaa0f49f9130125113">More...</a><br /></td></tr>
 <tr class="separator:abb2221424a341dbaa0f49f9130125113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0c794c9e05a4a8ccadae31289b63d0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackMutingNode.html#ac0c794c9e05a4a8ccadae31289b63d0c">preProcess</a> (choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</td></tr>
+<tr class="memdesc:ac0c794c9e05a4a8ccadae31289b63d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed, just before process.  <a href="classtracktion_1_1engine_1_1TrackMutingNode.html#ac0c794c9e05a4a8ccadae31289b63d0c">More...</a><br /></td></tr>
+<tr class="separator:ac0c794c9e05a4a8ccadae31289b63d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d76cae20255d1a3dfdad72f0ba6b3a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackMutingNode.html#a1d76cae20255d1a3dfdad72f0ba6b3a1">process</a> (<a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">ProcessContext</a> &amp;) override</td></tr>
 <tr class="memdesc:a1d76cae20255d1a3dfdad72f0ba6b3a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed.  <a href="classtracktion_1_1engine_1_1TrackMutingNode.html#a1d76cae20255d1a3dfdad72f0ba6b3a1">More...</a><br /></td></tr>
 <tr class="separator:a1d76cae20255d1a3dfdad72f0ba6b3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +141,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab869d44b0677148fa6530dd33a7cfeef inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a088bbdd559a5154e64844297afe127ec">getAllocatedBytes</a> () const</td></tr>
 <tr class="separator:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#ada8998edbc18fa6788957b1917b0a7c7">enablePreProcess</a> (bool)</td></tr>
+<tr class="separator:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -150,6 +155,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">setOptimisations</a> (<a class="el" href="structtracktion_1_1graph_1_1NodeOptimisations.html">NodeOptimisations</a>)</td></tr>
 <tr class="memdesc:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called to provide some hints about allocating or playing back a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">More...</a><br /></td></tr>
 <tr class="separator:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">setBufferViewToUse</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
+<tr class="memdesc:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">More...</a><br /></td></tr>
+<tr class="separator:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">setAudioOutput</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
 <tr class="memdesc:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during your process function to set a view to the output.  <a href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">More...</a><br /></td></tr>
 <tr class="separator:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -343,6 +351,47 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="ac0c794c9e05a4a8ccadae31289b63d0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0c794c9e05a4a8ccadae31289b63d0c">&#9670;&nbsp;</a></span>preProcess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::TrackMutingNode::preProcess </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::Range&lt; int64_t &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the node is to be processed, just before process. </p>
+<p>You shouldn't normally have to use this but it gives Nodes an opportunity to perform optimisations like steal input buffers from source if appropriate. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#afb9d61e25eb8323fd9055fdcc729758a">tracktion::graph::Node</a>.</p>
+
+</div>
+</div>
 <a id="a1d76cae20255d1a3dfdad72f0ba6b3a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d76cae20255d1a3dfdad72f0ba6b3a1">&#9670;&nbsp;</a></span>process()</h2>
 
@@ -380,7 +429,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

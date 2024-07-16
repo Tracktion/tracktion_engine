@@ -1,0 +1,4 @@
+<map id="tracktion::engine::LambdaSelectableListener" name="tracktion::engine::LambdaSelectableListener">
+<area shape="rect" id="node1" title="A SelectableListener that safely handles listener to a Selectable and uses a lambda for its callback." alt="" coords="5,95,200,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1SelectableListener.html" title=" " alt="" coords="31,5,174,47"/>
+</map>

@@ -89,6 +89,9 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameterTree_1_1TreeNode.html#a4ddc2782ec43e28465a10e14d08eb917">tracktion::engine::AutomatableParameterTree::TreeNode</a>
 , <a class="el" href="structtracktion_1_1engine_1_1ParameterControlMappings_1_1Mapping.html#afd362148c27085aa3741b964571dd27c">tracktion::engine::ParameterControlMappings::Mapping</a>
 </li>
+<li>parameterChangedCaller
+: <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#acd231e0c4710cc935dace59367fc9151">tracktion::engine::AutomatableParameter</a>
+</li>
 <li>parameterMinValue
 : <a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#aaafcf1d05c765c7809f698dd9d7eebd8">tracktion::engine::CurveEditor</a>
 </li>
@@ -124,8 +127,14 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#afa834c236480cc69c6f8733fde7987ea">tracktion::engine::AutomatableParameter</a>
 , <a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html#a4045fd7b250f8724b2aa87618e8e416d">tracktion::engine::AutomationCurve</a>
 </li>
+<li>parentStateForList
+: <a class="el" href="classtracktion_1_1engine_1_1MacroParameterElement.html#aee86b39be76877e3c7c382c8cc6beba9">tracktion::engine::MacroParameterElement</a>
+</li>
 <li>parentTrackID
 : <a class="el" href="structtracktion_1_1engine_1_1TrackInsertPoint.html#aaa972e096a2e002b9534937809c4b10a">tracktion::engine::TrackInsertPoint</a>
+</li>
+<li>partOfCutOperation
+: <a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html#aa286ff47f14f3e427739f951e41ca102">tracktion::engine::SelectableClass::DeleteSelectedParams</a>
 </li>
 <li>pattern
 : <a class="el" href="structtracktion_1_1engine_1_1StepVolumeEffect.html#afe0744fa82d12aa34d282a30737bf5e0">tracktion::engine::StepVolumeEffect</a>
@@ -192,12 +201,18 @@ $(function() {
 <li>playbackSpeedRatio
 : <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#a26a81aa60a0fa6d461f0ee89e4d2c79b">tracktion::engine::ProcessState</a>
 </li>
+<li>player
+: <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a152916427161a28af7b766ee9faf9f24">tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPool</a>
+</li>
 <li>playhead
 : <a class="el" href="structtracktion_1_1engine_1_1AudioRenderContext.html#a7645886316a69163fbfb1b5a2f57b6f7">tracktion::engine::AudioRenderContext</a>
 , <a class="el" href="structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html#aae3c538c5cb5e8a2e953afceb6495f0f">tracktion::engine::PlaybackInitialisationInfo</a>
 </li>
 <li>playHead
 : <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#a10c3a29652520bb70fbb280ee1339ecc">tracktion::graph::PlayHeadState</a>
+</li>
+<li>playheadJumped
+: <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html#ae1f79bdf96141b0feb3ef50bd9c6ddef">tracktion::graph::PlayHeadState</a>
 </li>
 <li>playHeadState
 : <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html#ac3210d4b41b525fe52f0ef7099163922">tracktion::engine::ProcessState</a>
@@ -206,8 +221,26 @@ $(function() {
 <li>playing
 : <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#a6baeca73ffe70f0fe33d0c00b5d9a851">tracktion::engine::MidiOutputDevice</a>
 </li>
+<li>playing1
+: <a class="el" href="structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html#ace14b69356664a47eb8900f79cbba94f">tracktion::engine::LauncherClipPlaybackHandle::SplitBeatRange</a>
+, <a class="el" href="structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html#a299d456a397b279589028ec947c66152">tracktion::engine::LaunchHandle::SplitStatus</a>
+</li>
+<li>playing2
+: <a class="el" href="structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html#af0fb96af6814bbbd58e124b16d24b51d">tracktion::engine::LauncherClipPlaybackHandle::SplitBeatRange</a>
+, <a class="el" href="structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html#a1f8496e176fa7feee4b8eb6e3be7a700">tracktion::engine::LaunchHandle::SplitStatus</a>
+</li>
 <li>playInStopEnabled
 : <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a64d68d8fe54a32b993d8dc5cd1dd3106">tracktion::engine::Edit</a>
+</li>
+<li>playSlotClips
+: <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a1be8af23bc6090f5a841604b6069218a">tracktion::engine::AudioTrack</a>
+, <a class="el" href="structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html#a33835ed525d50767ddada6167cc163bb">tracktion::engine::Renderer::ScopedClipSlotDisabler</a>
+</li>
+<li>playStartTime1
+: <a class="el" href="structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html#a7478fe05b9cb77a84cce156a70f0d8e6">tracktion::engine::LaunchHandle::SplitStatus</a>
+</li>
+<li>playStartTime2
+: <a class="el" href="structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html#a99f676e508bc0cc729b101fd8ae24172">tracktion::engine::LaunchHandle::SplitStatus</a>
 </li>
 <li>plugin
 : <a class="el" href="structMelodyneInstance.html#a0fecdc73dc76550cbc8dda6e05ae1a82">MelodyneInstance</a>
@@ -351,7 +384,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

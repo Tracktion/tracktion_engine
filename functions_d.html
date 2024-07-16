@@ -111,6 +111,9 @@ $(function() {
 <li>decReferenceCountWithoutDeleting()
 : <a class="el" href="classtracktion_1_1engine_1_1RenderManager_1_1Job.html#a0512a8eb4075066537c1297e3fe45c68">tracktion::engine::RenderManager::Job</a>
 </li>
+<li>decrementNumActivelyRecordingDevices()
+: <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a69df7a669014802e96afb994ae53e77f">tracktion::engine::EditPlaybackContext</a>
+</li>
 <li>defaultCurve
 : <a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a16712a17421b8edefff98823325957bd">tracktion::engine::CurveEditor</a>
 </li>
@@ -126,11 +129,11 @@ $(function() {
 <li>defaultMidiChannel
 : <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1aab19909ab9fe7f3f016e27e262a2e0919">tracktion::engine::StepClip</a>
 </li>
-<li>defaultMidiDevice
-: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#a5bd4acdc3c50019e5e5366e30b0a950f">tracktion::engine::MidiOutputDevice</a>
-</li>
 <li>defaultMode
 : <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79ea595e4aaf11d095318410438363dc328e">tracktion::engine::TimeStretcher</a>
+</li>
+<li>defaultMonitorMode
+: <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#a48f98da159b537518881c94402f1aea5">tracktion::engine::InputDevice</a>
 </li>
 <li>defaultNoteNumber
 : <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1aabb6e7a8120b1e2c94f001c6d1e9dc28a">tracktion::engine::StepClip</a>
@@ -147,11 +150,9 @@ $(function() {
 <li>Defaults
 : <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1a">tracktion::engine::StepClip</a>
 </li>
-<li>defaultTrackHeight
-: <a class="el" href="classtracktion_1_1engine_1_1Track.html#a485bc7665956d853fd4bef58460384fc">tracktion::engine::Track</a>
-</li>
 <li>defaultValue
-: <a class="el" href="classtracktion_1_1engine_1_1MacroParameter.html#ab2558f22e2d4d980d5e735b61482383f">tracktion::engine::MacroParameter</a>
+: <a class="el" href="classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html#a0d8a9403ba1a1311cc4c7eb876a9a66d">tracktion::engine::AirWindowsAutomatableParameter</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MacroParameter.html#ab2558f22e2d4d980d5e735b61482383f">tracktion::engine::MacroParameter</a>
 , <a class="el" href="structtracktion_1_1engine_1_1VSTXML_1_1Param.html#a467d6559b58cf9d4b0691eef4cf42203">tracktion::engine::VSTXML::Param</a>
 </li>
 <li>deinitialise()
@@ -262,7 +263,7 @@ $(function() {
 </li>
 <li>deleteObject()
 : <a class="el" href="classtracktion_1_1engine_1_1ClipEffects.html#ab47a217659f25aed1d59b7fe09fa5567">tracktion::engine::ClipEffects</a>
-, <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html#aca7a3b8ddc708e2906010fe8de8c759b">tracktion::engine::InputDeviceInstance::InputDeviceDestinationList</a>
+, <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html#a212ae0f66b3c61bafe827a6e5ef283a0">tracktion::engine::InputDeviceInstance::DestinationList</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ModifierList.html#aab48e13821492126f861089da67e8285">tracktion::engine::ModifierList</a>
 , <a class="el" href="structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#a4bf85169ff45da9c3eb95738f18a1f3a">tracktion::engine::TrackCompManager::TrackComp</a>
 , <a class="el" href="structtracktion_1_1engine_1_1TrackList.html#af41341a1535526d87aa1c24650c84db6">tracktion::engine::TrackList</a>
@@ -284,12 +285,18 @@ $(function() {
 <li>deleteRegionOfClip()
 : <a class="el" href="classtracktion_1_1engine_1_1ClipTrack.html#ae26418573c7e8ff4ac462cd9cd923473">tracktion::engine::ClipTrack</a>
 </li>
+<li>deleteScene()
+: <a class="el" href="classtracktion_1_1engine_1_1SceneList.html#a0b0c0caabfc772b5e0d1f632419981f4">tracktion::engine::SceneList</a>
+</li>
 <li>deleteSelected()
-: <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a8c74cf826d4751874de70444a2aed611">tracktion::engine::SelectableClass</a>
+: <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a905a0cbadabe2ee1f70ca297f0abe098">tracktion::engine::SelectableClass</a>
 , <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html#a5c008f170f4f3b6ef5f2da07f7930ba7">tracktion::engine::SelectionManager</a>
 </li>
 <li>deleteSet()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiProgramManager.html#a6b16914653e422935752104fa17aae32">tracktion::engine::MidiProgramManager</a>
+</li>
+<li>deleteSlot()
+: <a class="el" href="classtracktion_1_1engine_1_1ClipSlotList.html#aa910fafda20135068ad7c06c5d3596af">tracktion::engine::ClipSlotList</a>
 </li>
 <li>deleteSourceFile()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a52a3e90bbdfcb55ee7bc8cc754350463">tracktion::engine::ProjectItem</a>
@@ -304,7 +311,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a4ceea1ca3761e024a37b1c5c01e1fc81">tracktion::engine::Edit</a>
 </li>
 <li>deleteVirtualMidiDevice()
-: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6f960d0684f97ccad65f773dad890862">tracktion::engine::DeviceManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a9d79caf8fbf7d12fd57a3359b1f6aa2a">tracktion::engine::DeviceManager</a>
 </li>
 <li>denominator
 : <a class="el" href="classtracktion_1_1engine_1_1TimeSigSetting.html#ae395b4d688f3c285cbf5245874347985">tracktion::engine::TimeSigSetting</a>
@@ -375,6 +382,15 @@ $(function() {
 <li>destID
 : <a class="el" href="structtracktion_1_1engine_1_1RackConnection.html#a3fa4b83ca5e722195e9474210b1eec38">tracktion::engine::RackConnection</a>
 </li>
+<li>Destination()
+: <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html#ae20bb27286ca10bbd059eb863e85b6fe">tracktion::engine::InputDeviceInstance::Destination</a>
+</li>
+<li>DestinationList()
+: <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html#a655814cbcd077342c33d514b66d5a314">tracktion::engine::InputDeviceInstance::DestinationList</a>
+</li>
+<li>destinations
+: <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a828d9bd27571a5013af1206716ef507b">tracktion::engine::InputDeviceInstance</a>
+</li>
 <li>destPin
 : <a class="el" href="structtracktion_1_1engine_1_1RackConnection.html#a0d612dfcd85725fff73f4fdb2f2292e7">tracktion::engine::RackConnection</a>
 </li>
@@ -383,9 +399,6 @@ $(function() {
 </li>
 <li>destroyContentReader()
 : <a class="el" href="classMusicalContextWrapper.html#a62270bbb11b2766ad39a139572cf4373">MusicalContextWrapper</a>
-</li>
-<li>destTracks
-: <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#acf6b89c71adfcf5bc90378fed032e02a">tracktion::engine::InputDeviceInstance</a>
 </li>
 <li>detach()
 : <a class="el" href="structtracktion_1_1engine_1_1FourOscPlugin_1_1LFOParams.html#ae4ed5f71ccc52f7d4002a1d95bb74d1f">tracktion::engine::FourOscPlugin::LFOParams</a>
@@ -413,8 +426,8 @@ $(function() {
 <li>deviceIdx
 : <a class="el" href="classtracktion_1_1engine_1_1MackieMCU.html#a1a61a7cc26150ae5ba6d6caf0186787c">tracktion::engine::MackieMCU</a>
 </li>
-<li>deviceIndex
-: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#aafbc0189c60a937bcc38642e9cab15fc">tracktion::engine::MidiOutputDevice</a>
+<li>deviceInfo
+: <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#affaca618c6713eca8b9e355c33c87e65">tracktion::engine::MidiOutputDevice</a>
 </li>
 <li>deviceManager
 : <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4cbd2ecb27149e3ac4fe90752f5561d2">tracktion::engine::DeviceManager</a>
@@ -446,12 +459,14 @@ $(function() {
 : <a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">PlaybackRegionAndSource</a>
 </li>
 <li>disabled
-: <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79ea8fda89dcd82ed632a2ec59a280d75509">tracktion::engine::TimeStretcher</a>
+: <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a9e4b68742fa76d0ca335a27c06359ea6">tracktion::engine::Clip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79ea8fda89dcd82ed632a2ec59a280d75509">tracktion::engine::TimeStretcher</a>
 </li>
 <li>disableLooping()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a62f3a389aac162b8ac4653dffef341de">tracktion::engine::AudioClipBase</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#a011bc807f5f8b78378550555e42fec95">tracktion::engine::Clip</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html#a89d99b4c20b189b3276a85da751a90c0">tracktion::engine::MidiClip</a>
+, <a class="el" href="classtracktion_1_1engine_1_1StepClip.html#a78609f64b40e765b9f40febde46bac4f">tracktion::engine::StepClip</a>
 </li>
 <li>Disabler()
 : <a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Disabler.html#aa99f501fdd041b478d00478a7675b2b5">tracktion::engine::ParameterChangeHandler::Disabler</a>
@@ -464,14 +479,18 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1MidiCompManager.html#a4b0bdc3f9f15a9058eadf0818b3a1e39">tracktion::engine::MidiCompManager</a>
 </li>
 <li>discardRecordings()
-: <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#ad666a22a178aa49c2a31cd888abaf9b2">tracktion::engine::InputDeviceInstance::Consumer</a>
-, <a class="el" href="classtracktion_1_1engine_1_1MidiInputDeviceNode.html#afaf9d0b1f0335093ab257bed0ac86964">tracktion::engine::MidiInputDeviceNode</a>
+: <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#aa91b163d7381932288af70a2def43fe8">tracktion::engine::InputDeviceInstance::Consumer</a>
+, <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html#a187af087d03dc31896be225f04d4d88a">tracktion::engine::InputDeviceInstance::StopRecordingParameters</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiInputDeviceNode.html#ac416d540f441560954fed9eddbd1ddda">tracktion::engine::MidiInputDeviceNode</a>
 </li>
 <li>DiscreteLabelledParameter()
 : <a class="el" href="structtracktion_1_1engine_1_1DiscreteLabelledParameter.html#a26412f8ededfbb00ef9eb8cae8678940">tracktion::engine::DiscreteLabelledParameter</a>
 </li>
 <li>dispatchPendingMessagesForDevices()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiNoteDispatcher.html#a59bea3c7905ce0afc23544209a31ace4">tracktion::engine::MidiNoteDispatcher</a>
+</li>
+<li>dispatchPendingUpdates()
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a51b62fb8fcdb2c7917ac2ea8184d7a94">tracktion::engine::DeviceManager</a>
 </li>
 <li>dispatchPendingUpdatesSynchronously()
 : <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a8be45be2b2e5f42e91efe2af8dcec82c">tracktion::engine::Edit</a>
@@ -495,9 +514,6 @@ $(function() {
 </li>
 <li>ditheringEnabled
 : <a class="el" href="structtracktion_1_1engine_1_1Renderer_1_1Parameters.html#a1b4d33938ff65b3498cd7cd594ec400d">tracktion::engine::Renderer::Parameters</a>
-</li>
-<li>dm
-: <a class="el" href="structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html#a07c5c938753f923e248af416a01dcd73">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</a>
 </li>
 <li>doAdditionalInitialisation()
 : <a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afc20b68795215ef15fc02d9a655a1542">tracktion::engine::EngineBehaviour</a>
@@ -580,7 +596,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

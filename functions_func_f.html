@@ -124,12 +124,6 @@ $(function() {
 <li>fileHasTempoChanges()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiList.html#adc2a24e6ee18148cc9d5ccc26ab3cc2e">tracktion::engine::MidiList</a>
 </li>
-<li>fillReturnBuffer()
-: <a class="el" href="classtracktion_1_1engine_1_1InsertPlugin.html#a62b84cec8155b473ab6def2a3d95b04e">tracktion::engine::InsertPlugin</a>
-</li>
-<li>fillSendBuffer()
-: <a class="el" href="classtracktion_1_1engine_1_1InsertPlugin.html#a8d745d6d76a8e1af3286fe14ffd6e15b">tracktion::engine::InsertPlugin</a>
-</li>
 <li>findAllIDs()
 : <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html#a7927248bd57adcf951685bd5199ce09a">tracktion::engine::EditItemID</a>
 </li>
@@ -162,13 +156,22 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1PluginList.html#af6df2efa8cac6a92675cd388c91fc3b4">tracktion::engine::PluginList</a>
 </li>
 <li>findFolderContaining()
-: <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#add113a1bb29fc7fc273bff083b8f4885">tracktion::engine::ProjectManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#af5d93d5d94e11cb998787f25014ebfce">tracktion::engine::ProjectManager</a>
+</li>
+<li>findInputDeviceForID()
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab87b4577e63eec74d5bd8f7eb9995b6d">tracktion::engine::DeviceManager</a>
+</li>
+<li>findInputDeviceWithName()
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a0d1c99d903d4b8e492a406de53430051">tracktion::engine::DeviceManager</a>
 </li>
 <li>findItem()
 : <a class="el" href="structtracktion_1_1engine_1_1EditItemCache.html#a10f8d74da3a797521a86e9304a4c90a9">tracktion::engine::EditItemCache&lt; EditItemType &gt;</a>
 </li>
 <li>findMatches()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectSearchIndex.html#a1ac48b7ec51fe3eabf1a7e392a2d8274">tracktion::engine::ProjectSearchIndex</a>
+</li>
+<li>findMidiInputDeviceForID()
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aee714948b37df56beaad74197d4ab1f5">tracktion::engine::DeviceManager</a>
 </li>
 <li>findOrphanItems()
 : <a class="el" href="classtracktion_1_1engine_1_1Project.html#ae1db615060fd0216b730630019265e07">tracktion::engine::Project</a>
@@ -214,10 +217,10 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1CompManager.html#a12c3019c8dd7f3a83d16449399bfcc52">tracktion::engine::CompManager</a>
 </li>
 <li>findSelectionManager()
-: <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html#a58e8116409818174f92bea1e2731580a">tracktion::engine::SelectionManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html#a20824bf3d64632efb74e07f4c578ef8b">tracktion::engine::SelectionManager</a>
 </li>
 <li>findSelectionManagerContaining()
-: <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html#a9471a86459d1ef6b4ee118c58710ee55">tracktion::engine::SelectionManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html#afd068c8b11a13ccf6249c73b05ff6d50">tracktion::engine::SelectionManager</a>
 </li>
 <li>findSidechainSourceTracks()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a96e0ea6eded4d36ab11bdf0e8f7067d2">tracktion::engine::AudioTrack</a>
@@ -245,11 +248,6 @@ $(function() {
 <li>flipAllPluginsEnablement()
 : <a class="el" href="classtracktion_1_1engine_1_1Track.html#adc3474101474547d5cf3fbef5311d094">tracktion::engine::Track</a>
 </li>
-<li>flipEndToEnd()
-: <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#a2675b155c2029430f86a2aacaff6838e">tracktion::engine::InputDevice</a>
-, <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a59b7aa544838f44d93db02f0143a4b9b">tracktion::engine::MidiInputDevice</a>
-, <a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html#a818f0d68f2f9e30c3f193161f6f74bca">tracktion::engine::WaveInputDevice</a>
-</li>
 <li>flipSendingTimecode()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html#a922ab97a0d5f133b4ff282bb4eae65b6">tracktion::engine::MidiOutputDevice</a>
 </li>
@@ -257,7 +255,8 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#ab2d3aaafdab786c5493c747ca2875434">tracktion::engine::FloatAudioFormat</a>
 </li>
 <li>flush()
-: <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#a9e405dca804c129a819de864f7660a3a">tracktion::engine::TimeStretcher</a>
+: <a class="el" href="classengine_1_1ReadAheadTimeStretcher.html#ad47fc84f20d249c7e0984d24db47fd43">engine::ReadAheadTimeStretcher</a>
+, <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#a9e405dca804c129a819de864f7660a3a">tracktion::engine::TimeStretcher</a>
 , <a class="el" href="classtracktion_1_1engine_1_1TracktionArchiveFile.html#a1679d3762f442fa3f4672f48e05578d0">tracktion::engine::TracktionArchiveFile</a>
 </li>
 <li>flushAllPlugins()
@@ -297,6 +296,9 @@ $(function() {
 <li>FolderTrack()
 : <a class="el" href="classtracktion_1_1engine_1_1FolderTrack.html#ace754b0bd8b36913aa207fa4e7ff2009">tracktion::engine::FolderTrack</a>
 </li>
+<li>FollowActions()
+: <a class="el" href="classengine_1_1FollowActions.html#a974ceab27d0149101566f40eb0a0cd97">engine::FollowActions</a>
+</li>
 <li>forceFileUpdate()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioFileManager.html#aeba444c4782526cf347619f17534a153">tracktion::engine::AudioFileManager</a>
 </li>
@@ -318,8 +320,14 @@ $(function() {
 <li>forGeneralExporter()
 : <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a5565f0b37df220fece710bd64b11cef5">tracktion::engine::RenderOptions</a>
 </li>
+<li>forLooping()
+: <a class="el" href="classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html#a10e3ef7dd5b2bc0fa42f4fbb74db3e6f">tracktion::engine::LauncherClipPlaybackHandle</a>
+</li>
 <li>formatChordName()
 : <a class="el" href="classtracktion_1_1engine_1_1PatternGenerator.html#ae73fb47e187d9f57d3e7497bf4ba5c5a">tracktion::engine::PatternGenerator</a>
+</li>
+<li>forOneShot()
+: <a class="el" href="classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html#ad06fbe7292a730a29ce472e4a6cbe0fc">tracktion::engine::LauncherClipPlaybackHandle</a>
 </li>
 <li>forTrackRender()
 : <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a14a1342b5d392893ee4fb372c95555e7">tracktion::engine::RenderOptions</a>
@@ -358,6 +366,9 @@ $(function() {
 <li>fromChannelOrZero()
 : <a class="el" href="structtracktion_1_1engine_1_1MidiChannel.html#a6b53a5b25e7b13119ba6df35db5ec968">tracktion::engine::MidiChannel</a>
 </li>
+<li>fromFrequency()
+: <a class="el" href="classtracktion_1_1engine_1_1SharedTimer.html#afe6ea9bdcb6d4e52b1f3ad36c197213a">tracktion::engine::SharedTimer</a>
+</li>
 <li>fromID()
 : <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html#a752458f2efc32a4d850af03fe6f2b06d">tracktion::engine::EditItemID</a>
 </li>
@@ -388,8 +399,11 @@ $(function() {
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1FadeBehaviour_01_4.html#ac366c761f794eee29da7ef71ea6cc6eb">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioFadeCurve_1_1Type_01_4.html#a5870dc26b9b2777c439db61505de2e04">juce::VariantConverter&lt; tracktion::engine::AudioFadeCurve::Type &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Chord_1_1ChordType_01_4.html#a6213d18d5556a7f384cdb9a21057f0ad">juce::VariantConverter&lt; tracktion::engine::Chord::ChordType &gt;</a>
+, <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1FollowActionDurationType_01_4.html#ab927934efcc681ebb4c859ca73677131">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1SyncType_01_4.html#ad0e24103cc46415298bc62a92f7662ec">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1EditItemID_01_4.html#a3901dd24cbdca45a16e65c107b4e83d6">juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</a>
+, <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1FollowAction_01_4.html#af9fd10169b8f960eae1762476ede26e4">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</a>
+, <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1LaunchQType_01_4.html#a596a12ce05274841be2cc290f8275151">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1MidiClip_1_1LoopedSequenceType_01_4.html#a1dbf1d6cce152efe68e9da21d415ed4a">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1PatternGenerator_1_1Mode_01_4.html#aee6f87fc5454b21b4249912188bd87bb">juce::VariantConverter&lt; tracktion::engine::PatternGenerator::Mode &gt;</a>
 , <a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemID_01_4.html#a00611a72daa79fc0a34676e70da6ff6b">juce::VariantConverter&lt; tracktion::engine::ProjectItemID &gt;</a>
@@ -414,7 +428,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

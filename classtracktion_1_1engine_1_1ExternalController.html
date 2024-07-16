@@ -92,6 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a81fb9df0d4839012e3cd253a671d34c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab457224f5381be7593f60d2761cdf5cf"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#ab457224f5381be7593f60d2761cdf5cf">getName</a> () const</td></tr>
 <tr class="separator:ab457224f5381be7593f60d2761cdf5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea6babe7555fa8865ebaa50df4b0e636"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#aea6babe7555fa8865ebaa50df4b0e636">wantsDevice</a> (const <a class="el" href="structtracktion_1_1engine_1_1MidiID.html">MidiID</a> &amp;m)</td></tr>
+<tr class="separator:aea6babe7555fa8865ebaa50df4b0e636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa745c8d8de048f117b8c65eb721c9f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#aaa745c8d8de048f117b8c65eb721c9f1">needsMidiChannel</a> () const</td></tr>
 <tr class="separator:aaa745c8d8de048f117b8c65eb721c9f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a505dd5ac113bd385dc6201a3ae31faa5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a505dd5ac113bd385dc6201a3ae31faa5">needsMidiBackChannel</a> () const</td></tr>
@@ -144,19 +146,23 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af73f483e3bf58da3bbb26e8b1c791f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a633a2b25c9a64d6e873a9c54a49031c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a633a2b25c9a64d6e873a9c54a49031c1">currentEditChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> *)</td></tr>
 <tr class="separator:a633a2b25c9a64d6e873a9c54a49031c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3890583d69dacf9ca5cd12087cf33fdf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a3890583d69dacf9ca5cd12087cf33fdf">currentSelectionManagerChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *)</td></tr>
+<tr class="separator:a3890583d69dacf9ca5cd12087cf33fdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b2806207138e0303b7aaf755fe4ffb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a4b2806207138e0303b7aaf755fe4ffb9">moveFader</a> (int channelNum, float newSliderPos)</td></tr>
 <tr class="separator:a4b2806207138e0303b7aaf755fe4ffb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a214f0b802faf7b44f38c8c11bb493317"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a214f0b802faf7b44f38c8c11bb493317">moveMasterFaders</a> (float newLeftPos, float newRightPos)</td></tr>
-<tr class="separator:a214f0b802faf7b44f38c8c11bb493317"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af873eee20c7d2a242e7fd41308d4036a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#af873eee20c7d2a242e7fd41308d4036a">moveMasterFader</a> (float newPos)</td></tr>
+<tr class="separator:af873eee20c7d2a242e7fd41308d4036a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad484ceb528359b398925ae7322d21e5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#ad484ceb528359b398925ae7322d21e5a">movePanPot</a> (int channelNum, float newPan)</td></tr>
 <tr class="separator:ad484ceb528359b398925ae7322d21e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d597b1d12998c390b42cf4f6c237167"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a2d597b1d12998c390b42cf4f6c237167">moveMasterPanPot</a> (float newPos)</td></tr>
+<tr class="separator:a2d597b1d12998c390b42cf4f6c237167"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae68ef15e25c87d715a09939aafe6415c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#ae68ef15e25c87d715a09939aafe6415c">updateSoloAndMute</a> (int channelNum, <a class="el" href="classtracktion_1_1engine_1_1Track.html#af2bbaf1bca5f5d7f9102746c0e1dd686">Track::MuteAndSoloLightState</a>, bool isBright)</td></tr>
 <tr class="separator:ae68ef15e25c87d715a09939aafe6415c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a077232633e2aea709b4bd38fc63fddeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a077232633e2aea709b4bd38fc63fddeb">soloCountChanged</a> (bool)</td></tr>
 <tr class="separator:a077232633e2aea709b4bd38fc63fddeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a135d126fcb83f26d1edccaf96d0b5789"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a135d126fcb83f26d1edccaf96d0b5789">playStateChanged</a> (bool isPlaying)</td></tr>
 <tr class="separator:a135d126fcb83f26d1edccaf96d0b5789"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8126038f04d44881308ba2dd1dedd934"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a8126038f04d44881308ba2dd1dedd934">recordStateChanged</a> (bool isRecording)</td></tr>
+<tr class="memitem:a8126038f04d44881308ba2dd1dedd934"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a8126038f04d44881308ba2dd1dedd934">recordStateChanged</a> (bool <a class="el" href="namespacetracktion_1_1engine.html#ab909bad277a9242846beb493f99bd48d">isRecording</a>)</td></tr>
 <tr class="separator:a8126038f04d44881308ba2dd1dedd934"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a985dee90aba8a405da9aaad54ad72b06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a985dee90aba8a405da9aaad54ad72b06">automationModeChanged</a> (bool isReading, bool isWriting)</td></tr>
 <tr class="separator:a985dee90aba8a405da9aaad54ad72b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,9 +207,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae90bd263e5e290b224f4cb6286ce4bbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#ae90bd263e5e290b224f4cb6286ce4bbb">curveHasChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;) override</td></tr>
 <tr class="memdesc:ae90bd263e5e290b224f4cb6286ce4bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the automation curve has changed, point time, value or curve.  <a href="classtracktion_1_1engine_1_1ExternalController.html#ae90bd263e5e290b224f4cb6286ce4bbb">More...</a><br /></td></tr>
 <tr class="separator:ae90bd263e5e290b224f4cb6286ce4bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60fa41e90a550a43f858ce792a2527f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a60fa41e90a550a43f858ce792a2527f1">currentValueChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;, float) override</td></tr>
-<tr class="memdesc:a60fa41e90a550a43f858ce792a2527f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier.  <a href="classtracktion_1_1engine_1_1ExternalController.html#a60fa41e90a550a43f858ce792a2527f1">More...</a><br /></td></tr>
-<tr class="separator:a60fa41e90a550a43f858ce792a2527f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a793c19244e0ce3bab41fab1a56350e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a8a793c19244e0ce3bab41fab1a56350e">currentValueChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;) override</td></tr>
+<tr class="memdesc:a8a793c19244e0ce3bab41fab1a56350e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier.  <a href="classtracktion_1_1engine_1_1ExternalController.html#a8a793c19244e0ce3bab41fab1a56350e">More...</a><br /></td></tr>
+<tr class="separator:a8a793c19244e0ce3bab41fab1a56350e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fa6beb0c45a39bfb32730875195c718"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a9fa6beb0c45a39bfb32730875195c718">updateTrackSelectLights</a> ()</td></tr>
 <tr class="separator:a9fa6beb0c45a39bfb32730875195c718"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fa806f804285f0102153539878532b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a5fa806f804285f0102153539878532b6">updateTrackRecordLights</a> ()</td></tr>
@@ -214,6 +220,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2753aab23d9a89cf8a5cf6c9a2feab77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef6e49a2497f917905ef22140fe6c8b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#aef6e49a2497f917905ef22140fe6c8b8">updateUndoLights</a> ()</td></tr>
 <tr class="separator:aef6e49a2497f917905ef22140fe6c8b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a1a96e26ef78222a5271b3acb099aab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a2a1a96e26ef78222a5271b3acb099aab">updatePadColours</a> ()</td></tr>
+<tr class="separator:a2a1a96e26ef78222a5271b3acb099aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c5074d9cfc8f960fa7a5a9f4b78348"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a44c5074d9cfc8f960fa7a5a9f4b78348">clearPadColours</a> ()</td></tr>
+<tr class="separator:a44c5074d9cfc8f960fa7a5a9f4b78348"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90d85392631c03c23f41830e0d6300f0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a90d85392631c03c23f41830e0d6300f0">getNumFaderChannels</a> () const noexcept</td></tr>
 <tr class="separator:a90d85392631c03c23f41830e0d6300f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2813788c08dac15a45c2f3487978dc40"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a2813788c08dac15a45c2f3487978dc40">getFaderIndexInActiveRegion</a> (int num) const noexcept</td></tr>
@@ -242,16 +252,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aebe1037008e2d19d8f2d6694c720bbf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0686e379e88f9e4bd5a0f53668aa16c0"><td class="memItemLeft" align="right" valign="top">juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a0686e379e88f9e4bd5a0f53668aa16c0">getSelectionColour</a> () const</td></tr>
 <tr class="separator:a0686e379e88f9e4bd5a0f53668aa16c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a973e8508639eeb687ed7d5ddaddc5869"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a973e8508639eeb687ed7d5ddaddc5869">getShowSelectionColour</a> () const</td></tr>
-<tr class="separator:a973e8508639eeb687ed7d5ddaddc5869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6840e2c71a189d48cb2b1ed40f6c1be4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a6840e2c71a189d48cb2b1ed40f6c1be4">getShowTrackSelectionColour</a> () const</td></tr>
+<tr class="separator:a6840e2c71a189d48cb2b1ed40f6c1be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acad77999d49e8482318ea7d04df4dc31"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#acad77999d49e8482318ea7d04df4dc31">getShowClipSlotSelectionColour</a> () const</td></tr>
+<tr class="separator:acad77999d49e8482318ea7d04df4dc31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad86489289f9ca292fed0ddfd75dd692d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#ad86489289f9ca292fed0ddfd75dd692d">setSelectionColour</a> (juce::Colour)</td></tr>
 <tr class="separator:ad86489289f9ca292fed0ddfd75dd692d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f06ec59de1a2299111a1f23466e40c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a3f06ec59de1a2299111a1f23466e40c1">setShowSelectionColour</a> (bool)</td></tr>
-<tr class="separator:a3f06ec59de1a2299111a1f23466e40c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a873c4b08b1eca8f3e4e748d14aa72583"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a873c4b08b1eca8f3e4e748d14aa72583">setShowTrackSelectionColour</a> (bool)</td></tr>
+<tr class="separator:a873c4b08b1eca8f3e4e748d14aa72583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e980db052dacbb0ebf14601dcffac4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a9e980db052dacbb0ebf14601dcffac4e">setShowClipSlotSelectionColour</a> (bool)</td></tr>
+<tr class="separator:a9e980db052dacbb0ebf14601dcffac4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2315b10193ca945b18473c1f37d540a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a2315b10193ca945b18473c1f37d540a2">shouldTrackBeColoured</a> (int channelNum)</td></tr>
 <tr class="separator:a2315b10193ca945b18473c1f37d540a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a772bc7b8754360cc75391808184f83b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a772bc7b8754360cc75391808184f83b9">getTrackColour</a> (int channelNum, juce::Colour &amp;)</td></tr>
 <tr class="separator:a772bc7b8754360cc75391808184f83b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd2b93223919dce66616ee83f0cb199e"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structtracktion_1_1engine_1_1ColourArea.html">ColourArea</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#afd2b93223919dce66616ee83f0cb199e">getColouredArea</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
+<tr class="separator:afd2b93223919dce66616ee83f0cb199e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a917a2188c73db84440950634ed7f6063"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a917a2188c73db84440950634ed7f6063">shouldPluginBeColoured</a> (<a class="el" href="classtracktion_1_1engine_1_1Plugin.html">Plugin</a> *)</td></tr>
 <tr class="separator:a917a2188c73db84440950634ed7f6063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaecf24bb4723725cf696e909b30275d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#aaaecf24bb4723725cf696e909b30275d">getPluginColour</a> (<a class="el" href="classtracktion_1_1engine_1_1Plugin.html">Plugin</a> *, juce::Colour &amp;)</td></tr>
@@ -360,6 +376,24 @@ Public Attributes</h2></td></tr>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea6babe7555fa8865ebaa50df4b0e636"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea6babe7555fa8865ebaa50df4b0e636">&#9670;&nbsp;</a></span>wantsDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::ExternalController::wantsDevice </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1MidiID.html">MidiID</a> &amp;&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -848,6 +882,24 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a3890583d69dacf9ca5cd12087cf33fdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3890583d69dacf9ca5cd12087cf33fdf">&#9670;&nbsp;</a></span>currentSelectionManagerChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalController::currentSelectionManagerChanged </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4b2806207138e0303b7aaf755fe4ffb9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b2806207138e0303b7aaf755fe4ffb9">&#9670;&nbsp;</a></span>moveFader()</h2>
 
@@ -876,28 +928,18 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a214f0b802faf7b44f38c8c11bb493317"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a214f0b802faf7b44f38c8c11bb493317">&#9670;&nbsp;</a></span>moveMasterFaders()</h2>
+<a id="af873eee20c7d2a242e7fd41308d4036a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af873eee20c7d2a242e7fd41308d4036a">&#9670;&nbsp;</a></span>moveMasterFader()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::ExternalController::moveMasterFaders </td>
+          <td class="memname">void tracktion::engine::ExternalController::moveMasterFader </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newLeftPos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>newPos</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newRightPos</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -926,6 +968,24 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2d597b1d12998c390b42cf4f6c237167"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d597b1d12998c390b42cf4f6c237167">&#9670;&nbsp;</a></span>moveMasterPanPot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalController::moveMasterPanPot </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>newPos</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1512,8 +1572,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a60fa41e90a550a43f858ce792a2527f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60fa41e90a550a43f858ce792a2527f1">&#9670;&nbsp;</a></span>currentValueChanged()</h2>
+<a id="a8a793c19244e0ce3bab41fab1a56350e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a793c19244e0ce3bab41fab1a56350e">&#9670;&nbsp;</a></span>currentValueChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1525,18 +1585,8 @@ Public Attributes</h2></td></tr>
           <td class="memname">void tracktion::engine::ExternalController::currentValueChanged </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1547,9 +1597,9 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier. </p>
-<p>This will be called on the audio thread so make sure you don't do anything time consuming or block etc. </p>
+<p>This is async so you won't get a callback for every parameter change. </p>
 
-<p>Reimplemented from <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#aeff5bd9349b1306c8db3c77a0841e888">tracktion::engine::AutomatableParameter::Listener</a>.</p>
+<p>Reimplemented from <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#a03f33eb0c796ed4947f60b7c5155cabb">tracktion::engine::AutomatableParameter::Listener</a>.</p>
 
 </div>
 </div>
@@ -1629,6 +1679,40 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void tracktion::engine::ExternalController::updateUndoLights </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a1a96e26ef78222a5271b3acb099aab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a1a96e26ef78222a5271b3acb099aab">&#9670;&nbsp;</a></span>updatePadColours()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalController::updatePadColours </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a44c5074d9cfc8f960fa7a5a9f4b78348"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c5074d9cfc8f960fa7a5a9f4b78348">&#9670;&nbsp;</a></span>clearPadColours()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalController::clearPadColours </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1948,14 +2032,31 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a973e8508639eeb687ed7d5ddaddc5869"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a973e8508639eeb687ed7d5ddaddc5869">&#9670;&nbsp;</a></span>getShowSelectionColour()</h2>
+<a id="a6840e2c71a189d48cb2b1ed40f6c1be4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6840e2c71a189d48cb2b1ed40f6c1be4">&#9670;&nbsp;</a></span>getShowTrackSelectionColour()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool tracktion::engine::ExternalController::getShowSelectionColour </td>
+          <td class="memname">bool tracktion::engine::ExternalController::getShowTrackSelectionColour </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acad77999d49e8482318ea7d04df4dc31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acad77999d49e8482318ea7d04df4dc31">&#9670;&nbsp;</a></span>getShowClipSlotSelectionColour()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::ExternalController::getShowClipSlotSelectionColour </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1983,14 +2084,32 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3f06ec59de1a2299111a1f23466e40c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f06ec59de1a2299111a1f23466e40c1">&#9670;&nbsp;</a></span>setShowSelectionColour()</h2>
+<a id="a873c4b08b1eca8f3e4e748d14aa72583"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a873c4b08b1eca8f3e4e748d14aa72583">&#9670;&nbsp;</a></span>setShowTrackSelectionColour()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::ExternalController::setShowSelectionColour </td>
+          <td class="memname">void tracktion::engine::ExternalController::setShowTrackSelectionColour </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9e980db052dacbb0ebf14601dcffac4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e980db052dacbb0ebf14601dcffac4e">&#9670;&nbsp;</a></span>setShowClipSlotSelectionColour()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalController::setShowClipSlotSelectionColour </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -2041,6 +2160,24 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd2b93223919dce66616ee83f0cb199e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd2b93223919dce66616ee83f0cb199e">&#9670;&nbsp;</a></span>getColouredArea()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;<a class="el" href="structtracktion_1_1engine_1_1ColourArea.html">ColourArea</a>&gt; tracktion::engine::ExternalController::getColouredArea </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2404,7 +2541,7 @@ template&lt;typename Type &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

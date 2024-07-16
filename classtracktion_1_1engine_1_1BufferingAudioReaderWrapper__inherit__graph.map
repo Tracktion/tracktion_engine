@@ -1,0 +1,4 @@
+<map id="tracktion::engine::BufferingAudioReaderWrapper" name="tracktion::engine::BufferingAudioReaderWrapper">
+<area shape="rect" id="node1" title="FallbackReader that wraps a BufferingAudioReader to avoid reading on the audio thread." alt="" coords="5,95,224,136"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1FallbackReader.html" title=" " alt="" coords="45,5,185,47"/>
+</map>

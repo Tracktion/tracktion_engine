@@ -32,1307 +32,119 @@
       <anchor>a4eb7742fcf649047c78ea5229fe97e4e</anchor>
       <arglist>(className, pluginName)</arglist>
     </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a449ec2ee98016ec7e17c2a4d20e55315</anchor>
-      <arglist>(AirWindowsADClip7, &quot;ADClip 7&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa51ccc69e6bca01ab8cbbdd1ec1bb0bc</anchor>
-      <arglist>(AirWindowsADT, &quot;ADT&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a863ac267014e09f0b3a48c538d521be2</anchor>
-      <arglist>(AirWindowsAQuickVoiceClip, &quot;A Quick Voice Clip&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>adddb2948de9cac8d010479138ff03624</anchor>
-      <arglist>(AirWindowsAcceleration, &quot;Acceleration&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae7149cccd981cd3ac2d9031fb6c13cbd</anchor>
-      <arglist>(AirWindowsAir, &quot;Air&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2d9b9c2b46b0c2dd480716bf2ad41e62</anchor>
-      <arglist>(AirWindowsAtmosphereBuss, &quot;Atmosphere Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a61fddda4363d1bd6c57ae6bfaee24103</anchor>
-      <arglist>(AirWindowsAtmosphereChannel, &quot;Atmosphere Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5be2ad3747b7c60b4bfe40bf283e8e12</anchor>
-      <arglist>(AirWindowsAura, &quot;Aura&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a85d552dc3ba2c7700ea66ca3fc789b7a</anchor>
-      <arglist>(AirWindowsAverage, &quot;Average&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa33ba482a4ffa26f83e719461becdab7</anchor>
-      <arglist>(AirWindowsBassDrive, &quot;Bass Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac83d138a1933368c190ef1bcc42f591e</anchor>
-      <arglist>(AirWindowsBassKit, &quot;Bass Kit&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acdacf3de67ec8663531917e891941a61</anchor>
-      <arglist>(AirWindowsBiquad, &quot;Biquad&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a48b2d1935a425ab383ae675711d80c77</anchor>
-      <arglist>(AirWindowsBiquad2, &quot;Biquad 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a27e1771a4041acbfd60da5aeba682221</anchor>
-      <arglist>(AirWindowsBitGlitter, &quot;Bit Glitter&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac5bdb78ac8f862e02e322cd8b07ca19d</anchor>
-      <arglist>(AirWindowsBitShiftGain, &quot;Bit Shift Gain&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac86d5370021cfaee79e0ee18799de066</anchor>
-      <arglist>(AirWindowsBite, &quot;Bite&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62d64538be7e78201f1e4b9be6dc3f41</anchor>
-      <arglist>(AirWindowsBlockParty, &quot;Block Party&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaab34f020458775723be77912e4f4918</anchor>
-      <arglist>(AirWindowsBrassRider, &quot;Brass Rider&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a262d78115be109ca256de201a35dd106</anchor>
-      <arglist>(AirWindowsBuildATPDF, &quot;Build ATPDF&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7d539121c82395fcdd3b8063058fb9ad</anchor>
-      <arglist>(AirWindowsBussColors4, &quot;Buss Colors 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0bfc65cc293517999f59f3dff4f4a21d</anchor>
-      <arglist>(AirWindowsButterComp, &quot;Butter Comp&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a001b97aa0731e247e2f126acb1546caf</anchor>
-      <arglist>(AirWindowsButterComp2, &quot;Butter Comp 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1205dc52aa1489409519d8752d9b7bce</anchor>
-      <arglist>(AirWindowsC5RawBuss, &quot;C5 Raw Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a747bd34bdeeabeb1d91e171fa3c09e84</anchor>
-      <arglist>(AirWindowsC5RawChannel, &quot;C5 Raw Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7f7c685e11eaf0632d9c7115ea2d31e8</anchor>
-      <arglist>(AirWindowsCStrip, &quot;C Strip&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7aa69ef6b953f22765449000ce5d9eb9</anchor>
-      <arglist>(AirWindowsCapacitor, &quot;Capacitor&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0366c3b90c91534a43edca44b10afaa0</anchor>
-      <arglist>(AirWindowsChannel4, &quot;Channel 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2d9af82ffa2fac12d30c39bd5da60ce1</anchor>
-      <arglist>(AirWindowsChannel5, &quot;Channel 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae48e7846fe225c03ed5533152fe3b7f1</anchor>
-      <arglist>(AirWindowsChannel6, &quot;Channel 6&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8005ea53ff7395ef7f3648ddc55cd4b6</anchor>
-      <arglist>(AirWindowsChannel7, &quot;Channel 7&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8babc153e09bfcac6c1cb5f0a84859b</anchor>
-      <arglist>(AirWindowsChorus, &quot;Chorus&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaaef700b59954f39846781eba5675e9a</anchor>
-      <arglist>(AirWindowsChorusEnsemble, &quot;Chorus Ensemble&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8c3c2d0bd7173813dd845a9d9d65d566</anchor>
-      <arglist>(AirWindowsClipOnly, &quot;Clip Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1de456501dd21dc8adbe3c03a7a8503b</anchor>
-      <arglist>(AirWindowsCoils, &quot;Coils&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad1dc6ca5154ebcc3bd8c671eff4c3801</anchor>
-      <arglist>(AirWindowsCojones, &quot;Cojones&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9a15dc9cf0575f6611ab0fce99434f91</anchor>
-      <arglist>(AirWindowsCompresaturator, &quot;Compresaturator&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9774b877edaff4eace2cebfdf11f6d57</anchor>
-      <arglist>(AirWindowsConsole4Buss, &quot;Console 4 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac59ed1367fc915ab0ada59498fc1bc94</anchor>
-      <arglist>(AirWindowsConsole4Channel, &quot;Console 4 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1400ac32cafd834101e622d17873e4db</anchor>
-      <arglist>(AirWindowsConsole5Buss, &quot;Console 5 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab9bf7559beadce4357d40e46592ed0a5</anchor>
-      <arglist>(AirWindowsConsole5Channel, &quot;Console 5 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afa9e6fabec9af38829ff893d89fabf6a</anchor>
-      <arglist>(AirWindowsConsole5DarkCh, &quot;Console 5 Dark Ch&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0740fe47f670f173954477e6a282624c</anchor>
-      <arglist>(AirWindowsConsole6Buss, &quot;Console 6 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a95027efb4b0b183a84e951a0d1a9fc57</anchor>
-      <arglist>(AirWindowsConsole6Channel, &quot;Console 6 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3c838bb534c62468b9698dc52d776266</anchor>
-      <arglist>(AirWindowsCrunchyGrooveWear, &quot;Crunchy Groove Wear&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a03296020f92bd686d68c25477965984a</anchor>
-      <arglist>(AirWindowsCrystal, &quot;Crystal&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a19f3c29764bbc318aaa8448fc626c5af</anchor>
-      <arglist>(AirWindowsDCVoltage, &quot;DC Voltage&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a51bee7f5e1c2a7dffa1065a1bfdf417d</anchor>
-      <arglist>(AirWindowsDeBess, &quot;De Bess&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0b93192f10533e78a1dcf9b698f16468</anchor>
-      <arglist>(AirWindowsDeEss, &quot;De Ess&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1c5269bdc06db056e48c1a4b2005d71b</anchor>
-      <arglist>(AirWindowsDeHiss, &quot;De Hiss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a90f596770fd69961f1a78dd76cfa2b38</anchor>
-      <arglist>(AirWindowsDeRez, &quot;De Rez&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2daf81ca93b5d05b98b15a65053116e1</anchor>
-      <arglist>(AirWindowsDeRez2, &quot;De Rez 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7a2fd111877777e65669191a4036346b</anchor>
-      <arglist>(AirWindowsDeckwrecka, &quot;Deckwrecka&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a868513ea4074f68e51cb6b28074fe1c9</anchor>
-      <arglist>(AirWindowsDensity, &quot;Density&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa94aa9d0cd6ee8b8bcf3ab4114ab1e2f</anchor>
-      <arglist>(AirWindowsDesk, &quot;Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a16541926f566420d1d06baff8a64c7b7</anchor>
-      <arglist>(AirWindowsDesk4, &quot;Desk 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aee995cb0c65a3558b66008c7120557bd</anchor>
-      <arglist>(AirWindowsDistance, &quot;Distance&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a687208b70e72bc785dd4e431bea5dfc5</anchor>
-      <arglist>(AirWindowsDistance2, &quot;Distance 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a537c4c296649556515e7e3c003290cb4</anchor>
-      <arglist>(AirWindowsDitherFloat, &quot;Dither Float&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7eb3e6ff26ba050fcb3379e49a413878</anchor>
-      <arglist>(AirWindowsDitherMeDiskers, &quot;Dither Me Diskers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a03b876b8e19737add5bcde12439600d6</anchor>
-      <arglist>(AirWindowsDitherMeTimbers, &quot;Dither Me Timbers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64af681d90c3a6d7ebd89c07a2ec0237</anchor>
-      <arglist>(AirWindowsDitherbox, &quot;Ditherbox&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aff2848c0dfcc9f0d1a6414f22d64b63b</anchor>
-      <arglist>(AirWindowsDoublePaul, &quot;Double Paul&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acecfc13cf743cb2a16d563326e17996f</anchor>
-      <arglist>(AirWindowsDrive, &quot;Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b9613209a3811933ebe272f3f0a272a</anchor>
-      <arglist>(AirWindowsDrumSlam, &quot;Drum Slam&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62ba5c33c167b8ba887ff18ac2b427c9</anchor>
-      <arglist>(AirWindowsDubCenter, &quot;Dub Center&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a09c0f83975cd0979820f3b6db83d52fb</anchor>
-      <arglist>(AirWindowsDubSub, &quot;Dub Sub&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a72e03af9891a948fbc8cb7446f048dc7</anchor>
-      <arglist>(AirWindowsDustBunny, &quot;Dust Bunny&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8304529243fe32d2ccc87d7df334457</anchor>
-      <arglist>(AirWindowsDyno, &quot;Dyno&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a36b30edf5784d18de0aac777a6dd268e</anchor>
-      <arglist>(AirWindowsEQ, &quot;EQ&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4f3a4baf487187765678488ab12ea703</anchor>
-      <arglist>(AirWindowsEdIsDim, &quot;Ed Is Dim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa994dcb26a5a4c4db41196bf89973434</anchor>
-      <arglist>(AirWindowsElectroHat, &quot;Electro Hat&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b8d84e7a4c432fe62af640d8d4ac6b9</anchor>
-      <arglist>(AirWindowsEnergy, &quot;Energy&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae3fea115f6a1bc403d87160ab103c580</anchor>
-      <arglist>(AirWindowsEnsemble, &quot;Ensemble&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a42f004173b0cdc6872fb3c5cbaa546d8</anchor>
-      <arglist>(AirWindowsEveryTrim, &quot;Every Trim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a995584552646e1202c404cd9cc1d7cd0</anchor>
-      <arglist>(AirWindowsFacet, &quot;Facet&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aeaf122b0300efa0fe872e6165edc4aa5</anchor>
-      <arglist>(AirWindowsFathomFive, &quot;Fathom Five&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9c8a9728dc240450e02d60622d613933</anchor>
-      <arglist>(AirWindowsFloor, &quot;Floor&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aadd8b5746867ee65335313e25c6f1c00</anchor>
-      <arglist>(AirWindowsFocus, &quot;Focus&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0ab2873999fb3f0fe39b1eef79c16ed6</anchor>
-      <arglist>(AirWindowsFracture, &quot;Fracture&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64a4771363c276d21f1e99f56fb68a35</anchor>
-      <arglist>(AirWindowsFromTape, &quot;From Tape&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1bf91345176fea1e97b39cab04b85b2a</anchor>
-      <arglist>(AirWindowsGatelope, &quot;Gatelope&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a31c993577ff76318595f8272498538ed</anchor>
-      <arglist>(AirWindowsGolem, &quot;Golem&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af16d7b4131c46b2ff30f4bbf23889c2f</anchor>
-      <arglist>(AirWindowsGringer, &quot;Gringer&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae91b6fb3fd8a7f6c19a0bfe773f1dd70</anchor>
-      <arglist>(AirWindowsGrooveWear, &quot;Groove Wear&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aad83f6f23dc553baa17c5edc2542946d</anchor>
-      <arglist>(AirWindowsGuitarConditioner, &quot;Guitar Conditioner&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5fb36f59562d11592403766237e8c68</anchor>
-      <arglist>(AirWindowsHardVacuum, &quot;Hard Vacuum&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af36d5f115fdc76335556c1737e07d7fd</anchor>
-      <arglist>(AirWindowsHermeTrim, &quot;Herme Trim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7785dc222c9e960f75f43206de23ff1a</anchor>
-      <arglist>(AirWindowsHermepass, &quot;Hermepass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac2d51c7bdf35455c6ec4062a1f6f0024</anchor>
-      <arglist>(AirWindowsHighGlossDither, &quot;High Gloss Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a29b86d1844e7b939bccde9ca59918cd6</anchor>
-      <arglist>(AirWindowsHighImpact, &quot;High Impact&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae863bdd44919afb59851bfdc967e789e</anchor>
-      <arglist>(AirWindowsHighpass, &quot;Highpass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a85c2d44643413403b284afc39822a7a3</anchor>
-      <arglist>(AirWindowsHighpass2, &quot;Highpass 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8bced8b1a79f56320b34c5352e4dda9e</anchor>
-      <arglist>(AirWindowsHolt, &quot;Holt&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a40fcb4b639e7a17aadc11d6e5d368665</anchor>
-      <arglist>(AirWindowsHombre, &quot;Hombre&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a976d7f5a27550eb2df80ecfe6c04d6f3</anchor>
-      <arglist>(AirWindowsInterstage, &quot;Interstage&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a94e99a6e521502751d34e0c45d38e55d</anchor>
-      <arglist>(AirWindowsIronOxide5, &quot;Iron Oxide 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a906ec222fd8eb9aaa04e734bcbebd049</anchor>
-      <arglist>(AirWindowsIronOxideClassic, &quot;Iron Oxide Classic&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a365475c1d5f77445b7c4517fec82c0a5</anchor>
-      <arglist>(AirWindowsLeftoMono, &quot;Lefto Mono&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a49c1c76bd88fe8c9b1064ac2a2560c58</anchor>
-      <arglist>(AirWindowsLogical4, &quot;Logical 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0bfc4b561c5b4360287ebff7c9e7d72a</anchor>
-      <arglist>(AirWindowsLoud, &quot;Loud&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a37d549c53bc5431941e0a44f23a0fe16</anchor>
-      <arglist>(AirWindowsLowpass, &quot;Lowpass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a783e3b6286b8a9b184b996572bfb72bd</anchor>
-      <arglist>(AirWindowsLowpass2, &quot;Lowpass 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae60fa670d52302898834ea25c8dd1071</anchor>
-      <arglist>(AirWindowsMV, &quot;MV&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afd62db53712dc99dc5d9f3ed990e718b</anchor>
-      <arglist>(AirWindowsMelt, &quot;Melt&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6183978c214ff5be8fe771f976426b71</anchor>
-      <arglist>(AirWindowsMidSide, &quot;Mid Side&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0ef486917b2eca4bd0cf31db6dd4bc48</anchor>
-      <arglist>(AirWindowsMoNoam, &quot;Mo Noam&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aead06cb63969c2a2142394d69d0944b0</anchor>
-      <arglist>(AirWindowsMojo, &quot;Mojo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a004fd69ff5e1a81ced3b854701d44819</anchor>
-      <arglist>(AirWindowsMonitoring, &quot;Monitoring&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6932f29174e16c3204f6cebb796d44f5</anchor>
-      <arglist>(AirWindowsNCSeventeen, &quot;NC-17&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9bb6eaa36d540e5a042377905946905c</anchor>
-      <arglist>(AirWindowsNaturalizeDither, &quot;Naturalize Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac0a038c828786877390233f39bb2617a</anchor>
-      <arglist>(AirWindowsNodeDither, &quot;Node Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5d873bc4a9e5e850b56af893809b5e4</anchor>
-      <arglist>(AirWindowsNoise, &quot;Noise&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad0bed6bfdf771046aa232d0cfbe87809</anchor>
-      <arglist>(AirWindowsNonlinearSpace, &quot;Nonlinear Space&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7b443c2466b7eaab0554056d900b2bac</anchor>
-      <arglist>(AirWindowsNotJustAnotherCD, &quot;Not Just Another CD&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a57a97e5098842be82fa60375a522c7b8</anchor>
-      <arglist>(AirWindowsNotJustAnotherDither, &quot;Not Just Another Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a32ca3f157052333c44d7760eff29294c</anchor>
-      <arglist>(AirWindowsOneCornerClip, &quot;One Corner Clip&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8be4476a2ac91d2311be83fed4bea1c9</anchor>
-      <arglist>(AirWindowsPDBuss, &quot;PD Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af557dabb3a26cdb4d74b1f6531266ca8</anchor>
-      <arglist>(AirWindowsPDChannel, &quot;PD Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6b71980daea22ccff77f2c12305c5e1e</anchor>
-      <arglist>(AirWindowsPafnuty, &quot;Pafnuty&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2bcad2c78c8525d44adcc5d26b4198ea</anchor>
-      <arglist>(AirWindowsPaulDither, &quot;Paul Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3dae76c6a922421e9849a63a157970cb</anchor>
-      <arglist>(AirWindowsPeaksOnly, &quot;Peaks Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af61ab6a13ca71dcaf5c37eaf77ee7bf0</anchor>
-      <arglist>(AirWindowsPhaseNudge, &quot;Phase Nudge&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad6230086dd45ba00cecf0ff641b9290e</anchor>
-      <arglist>(AirWindowsPocketVerbs, &quot;Pocket Verbs&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aafd548323a7c4cb96a8e10186519bdff</anchor>
-      <arglist>(AirWindowsPodcast, &quot;Podcast&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa8d3ac8bb52639dcd04426c11c1a2f8e</anchor>
-      <arglist>(AirWindowsPodcastDeluxe, &quot;Podcast Deluxe&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b41ff67a10d1c0e8b2c9db149f02344</anchor>
-      <arglist>(AirWindowsPoint, &quot;Point&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abef7611a8943210684269dc9dea0893f</anchor>
-      <arglist>(AirWindowsPop, &quot;Pop&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac3c8d589d9131abacc9b890b913be7b6</anchor>
-      <arglist>(AirWindowsPowerSag, &quot;Power Sag&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abdf8b0a4b3b4502863aaec142425ed0b</anchor>
-      <arglist>(AirWindowsPowerSag2, &quot;Power Sag 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af8f3591876096e3d63032ab3f9cc7e1e</anchor>
-      <arglist>(AirWindowsPressure4, &quot;Pressure 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaba96854b170eb395580b5a7fa101fae</anchor>
-      <arglist>(AirWindowsPurestAir, &quot;Purest Air&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afbd5c9f724b6d277004aa50af85eced2</anchor>
-      <arglist>(AirWindowsPurestConsoleBuss, &quot;Purest Console Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5a31f7985a8c8183a519d70f1533cc5e</anchor>
-      <arglist>(AirWindowsPurestConsoleChannel, &quot;Purest Console Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a65f7c74760bdd09df2d8b4992226f583</anchor>
-      <arglist>(AirWindowsPurestDrive, &quot;Purest Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad14fa18e15d6375b2d7a2f85e39798b9</anchor>
-      <arglist>(AirWindowsPurestEcho, &quot;Purest Echo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a000d8148646c62db00b9956533837be6</anchor>
-      <arglist>(AirWindowsPurestGain, &quot;Purest Gain&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abe6286d44379d03e7c82ed0c9187bb7c</anchor>
-      <arglist>(AirWindowsPurestSquish, &quot;Purest Squish&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acf1e98d2bfe2fe2465aa9a6937d26096</anchor>
-      <arglist>(AirWindowsPurestWarm, &quot;Purest Warm&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a91944d63aeb0eb872a6e73ba3eb3fa58</anchor>
-      <arglist>(AirWindowsPyewacket, &quot;Pyewacket&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa75493bcdeae8e129c36568c0774cc30</anchor>
-      <arglist>(AirWindowsRawGlitters, &quot;Raw Glitters&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a434bc4a24cbaf442fb396c38998acbd1</anchor>
-      <arglist>(AirWindowsRawTimbers, &quot;Raw Timbers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab98455e22a23099ca58c6bee5149c011</anchor>
-      <arglist>(AirWindowsRecurve, &quot;Recurve&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a05fb1c840f23f697817a6975293716b6</anchor>
-      <arglist>(AirWindowsRemap, &quot;Remap&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>adfa447e9296ac136c62ec90129ec20d0</anchor>
-      <arglist>(AirWindowsResEQ, &quot;ResEQ&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a175ebb8f88c9b604c4baef2d18d08a85</anchor>
-      <arglist>(AirWindowsRighteous4, &quot;Righteous 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8e8f86dbc7f0c635e6ce08eb785ea13</anchor>
-      <arglist>(AirWindowsRightoMono, &quot;Righto Mono&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a317a72902fe3d23c1865dbb6d96aae24</anchor>
-      <arglist>(AirWindowsSideDull, &quot;Side Dull&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af3b2ae40fccb5d88e6e12875c9c314f1</anchor>
-      <arglist>(AirWindowsSidepass, &quot;Sidepass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a841a5238118ee045109993f6e484364f</anchor>
-      <arglist>(AirWindowsSingleEndedTriode, &quot;Single Ended Triode&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7d6e87342f6323b632302a7ba4c21df0</anchor>
-      <arglist>(AirWindowsSlew, &quot;Slew&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abb9552b64331cba24753315785662078</anchor>
-      <arglist>(AirWindowsSlew2, &quot;Slew 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a09e719502cd0603548438eae54287b12</anchor>
-      <arglist>(AirWindowsSlewOnly, &quot;Slew Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a175936992719ebb865a20488eff273f6</anchor>
-      <arglist>(AirWindowsSmooth, &quot;Smooth&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a18bc92b99992efa432effc5d540145cc</anchor>
-      <arglist>(AirWindowsSoftGate, &quot;Soft Gate&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abaf9f8ce66d9c1fed54719d64d035a1f</anchor>
-      <arglist>(AirWindowsSpatializeDither, &quot;Spatialize Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a13609fda38fcf1d9cd6b92d11c366b4e</anchor>
-      <arglist>(AirWindowsSpiral, &quot;Spiral&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa8d2bdfcf2bea62c06f7840b30175831</anchor>
-      <arglist>(AirWindowsSpiral2, &quot;Spiral 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abfd83c9b7b5902f14c6d13ba07df4e28</anchor>
-      <arglist>(AirWindowsStarChild, &quot;Star Child&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5e09e206e33f964e6f4168803a5039b5</anchor>
-      <arglist>(AirWindowsStereoFX, &quot;Stereo FX&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62938745a3dd3a4f84f98202b471c7d5</anchor>
-      <arglist>(AirWindowsStudioTan, &quot;Studio Tan&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac3efca7398bc2cee27b3df9cce956c07</anchor>
-      <arglist>(AirWindowsSubsOnly, &quot;Subs Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a97eb223a01ae854fbb356f0320e02fb6</anchor>
-      <arglist>(AirWindowsSurge, &quot;Surge&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aedf44999ca597048a6e6576d7928b1fb</anchor>
-      <arglist>(AirWindowsSurgeTide, &quot;Surge Tide&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a791f67cd3125ecb49a6d67ee9c0ddd55</anchor>
-      <arglist>(AirWindowsSwell, &quot;Swell&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaaa07f2432212c06055bab3bcb73f1d9</anchor>
-      <arglist>(AirWindowsTPDFDither, &quot;TPDF Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a952e9d71106b3890284febdc6972d0dd</anchor>
-      <arglist>(AirWindowsTapeDelay, &quot;Tape Delay&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aae6aee9674d1b65713a36bda36ac316b</anchor>
-      <arglist>(AirWindowsTapeDither, &quot;Tape Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa180ce0826cb5ff86933fd5bbe37717f</anchor>
-      <arglist>(AirWindowsTapeDust, &quot;Tape Dust&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9a6c0f375e24c5a43ddb1c808b01e5b1</anchor>
-      <arglist>(AirWindowsTapeFat, &quot;Tape Fat&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae16a33ebbbbe07431714917b797173d5</anchor>
-      <arglist>(AirWindowsThunder, &quot;Thunder&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a12a231285558977e7ea6b145ae4da0b3</anchor>
-      <arglist>(AirWindowsToTape5, &quot;To Tape 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3e83fb1d086a31c2f5ecb807456a8568</anchor>
-      <arglist>(AirWindowsToVinyl4, &quot;To Vinyl 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5977482aaf089b6ce12b36ad0b89d0a</anchor>
-      <arglist>(AirWindowsToneSlant, &quot;Tone Slant&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>add2bab0c9acab66c257dd2de5fc66dd3</anchor>
-      <arglist>(AirWindowsTransDesk, &quot;Trans Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab7eb84ec95739ae279b4bdbee46339c9</anchor>
-      <arglist>(AirWindowsTremolo, &quot;Tremolo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7f600dc87f8051a460c8e156d9d03d56</anchor>
-      <arglist>(AirWindowsTubeDesk, &quot;Tube Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aacedf1e5310db8f3d91a553eee3239b8</anchor>
-      <arglist>(AirWindowsUnBox, &quot;Un Box&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4fa8809b60bd90599642a8a9d4a0038d</anchor>
-      <arglist>(AirWindowsVariMu, &quot;Vari Mu&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a96cc484800606053708803d25a336eba</anchor>
-      <arglist>(AirWindowsVibrato, &quot;Vibrato&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aad7e6581a5d165a3e49665d221af6d0c</anchor>
-      <arglist>(AirWindowsVinylDither, &quot;Vinyl Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acfd9b9c2b5b3886d3231ce9c6c0b1fb1</anchor>
-      <arglist>(AirWindowsVoiceOfTheStarship, &quot;Voice Of The Starship&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1057ab21d9a2df9518e78b33e4cf8f5c</anchor>
-      <arglist>(AirWindowsVoiceTrick, &quot;Voice Trick&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64ec483a327bc97296008a66f9c6d02d</anchor>
-      <arglist>(AirWindowsWider, &quot;Wider&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4eb8a844127e5e7330fe7e3bd25e5177</anchor>
-      <arglist>(AirWindowscurve, &quot;curve&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_AirWindowsBase.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/airwindows/</path>
+    <filename>tracktion__AirWindowsBase_8h.html</filename>
+    <class kind="class">tracktion::engine::AirWindowsBase</class>
+    <class kind="class">tracktion::engine::AirWindowsAutomatableParameter</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>__audioeffect__</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a6c4ffedfdccbcd0c5eca9f33ef9cb0e9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>VstInt32</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a5f77bb76f49c387e79ff210e6cb95c2c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>AudioEffect</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a667410c83334b100a996ab5b08dddb60</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>AudioEffectX</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a2f1d5f61255a8408d89029b74fc956c5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>audioMasterCallback</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a66dc8d02795f1ee8d3c7046780101ac2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>VstPlugCategory</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a519cbcbd6e9bfba49d862592d2321db1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>kPlugCategEffect</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a849814460b7c69b1000997b447452218</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>kVstMaxProgNameLen</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>af7387827e73aee3f0927d1028e14cf67</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>kVstMaxParamStrLen</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a0fcf8249f76c93dc010fd854db752d41</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>kVstMaxProductStrLen</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>ac0cddcda3652b392fe162218e2627ef0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>kVstMaxVendorStrLen</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>a3c9121de0bc67b9b9f440c23c7e5479d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>vst_strncpy</name>
+      <anchorfile>tracktion__AirWindowsBase_8h.html</anchorfile>
+      <anchor>ad2237e40a2487b7032283254afde42f6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>float2string</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a638e70e2ab56fe6577ba34b38e5b9fc2</anchor>
+      <arglist>(float f, char *text, int len)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>int2string</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa51858b69fa3de167d727e1ec5ae174d</anchor>
-      <arglist>(AirWindowsuLawDecode, &quot;u Law Decode&quot;)</arglist>
+      <anchor>a0f50efa6bb6c0a2811ebe90c93c9be75</anchor>
+      <arglist>(float i, char *text, int len)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>void</type>
+      <name>dB2string</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abfaf5fdb7034db6f693a4aae8d2a4446</anchor>
-      <arglist>(AirWindowsuLawEncode, &quot;u Law Encode&quot;)</arglist>
+      <anchor>ae1bfebc47422a24cc0e7aee07d90b962</anchor>
+      <arglist>(float value, char *text, int maxLen)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -1460,6 +272,13 @@
       <name>startStopPlay</name>
       <anchorfile>namespacetracktion_1_1engine_1_1AppFunctions.html</anchorfile>
       <anchor>a51d62237577de6d43b2997a76bf6fee0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>continueStopPlay</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a747d9ab5dd2c737229968889f1fdd31c</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -1941,6 +760,15 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
     <filename>tracktion__ArrangerClip_8h.html</filename>
     <class kind="class">tracktion::engine::ArrangerClip</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ArrangerLauncherSwitchingNode.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__ArrangerLauncherSwitchingNode_8h.html</filename>
+    <class kind="class">tracktion::engine::SampleFader</class>
+    <class kind="class">tracktion::engine::ArrangerLauncherSwitchingNode</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -2463,18 +1291,11 @@
       <arglist>(const AutomatableParameter &amp;ap)</arglist>
     </member>
     <member kind="function">
-      <type>juce::Array&lt; AutomatableParameter * &gt;</type>
-      <name>getAllAutomatableParameter</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3fc1766e496fd9e7357c326328ea3f88</anchor>
-      <arglist>(Edit &amp;)</arglist>
-    </member>
-    <member kind="function">
       <type>juce::ReferenceCountedArray&lt; AssignmentType &gt;</type>
       <name>getAssignmentsForSource</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5e6c59ec542e711a1a94e4da851b88d0</anchor>
-      <arglist>(Edit &amp;edit, const ModifierSourceType &amp;source)</arglist>
+      <anchor>a4f6ca88eb1cf03a815592c13840bb74d</anchor>
+      <arglist>(EditType &amp;edit, const ModifierSourceType &amp;source)</arglist>
     </member>
     <member kind="function">
       <type>AutomatableParameter::ModifierSource *</type>
@@ -2643,6 +1464,15 @@
       <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="af922dd3f8b06e0e8071049c5aeedbdbba7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="af922dd3f8b06e0e8071049c5aeedbdbbaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
     </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>ShareNodeMemory</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1benchmark__utilities.html</anchorfile>
+      <anchor>a1dc131828611e7721cdc0a42d0037477</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="a1dc131828611e7721cdc0a42d0037477a7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="a1dc131828611e7721cdc0a42d0037477aa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+    </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getDescription</name>
@@ -2810,6 +1640,16 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_BufferedAudioReader.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__BufferedAudioReader_8h.html</filename>
+    <class kind="class">tracktion::engine::BufferedAudioReader</class>
+    <class kind="class">tracktion::engine::BufferedFileReaderWrapper</class>
+    <class kind="class">tracktion::engine::BufferedAudioFileManager</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_BufferedFileReader.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
     <filename>tracktion__BufferedFileReader_8h.html</filename>
@@ -2888,10 +1728,26 @@
     <class kind="class">tracktion::engine::Clip</class>
     <class kind="struct">tracktion::engine::Clip::Listener</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <namespace>tracktion::engine::ClipConstants</namespace>
+    <namespace>tracktion::engine::details</namespace>
     <namespace>juce</namespace>
+    <member kind="function">
+      <type>Clip::FollowActionDurationType</type>
+      <name>followActionDurationTypeFromString</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1details.html</anchorfile>
+      <anchor>ad1624d70e4c73563cc086784fa67c9e9</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1details.html</anchorfile>
+      <anchor>a5598d0f0ef3396a982384182e4b95672</anchor>
+      <arglist>(Clip::FollowActionDurationType)</arglist>
+    </member>
     <member kind="variable">
       <type>const double</type>
       <name>speedRatioMin</name>
@@ -2919,6 +1775,8 @@
     <class kind="struct">tracktion::engine::Clipboard::Clips</class>
     <class kind="struct">tracktion::engine::Clipboard::Clips::ClipInfo</class>
     <class kind="struct">tracktion::engine::Clipboard::Clips::AutomationCurveSection</class>
+    <class kind="struct">tracktion::engine::Clipboard::Scenes</class>
+    <class kind="struct">tracktion::engine::Clipboard::Scenes::SceneInfo</class>
     <class kind="struct">tracktion::engine::Clipboard::Tracks</class>
     <class kind="struct">tracktion::engine::Clipboard::TempoChanges</class>
     <class kind="struct">tracktion::engine::Clipboard::TempoChanges::TempoChange</class>
@@ -2931,6 +1789,13 @@
     <class kind="struct">tracktion::engine::Clipboard::Modifiers</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>AudioTrack *</type>
+      <name>getOrInsertAudioTrackNearestIndex</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2c2fc20eca6d70248deda9a9b8da4164</anchor>
+      <arglist>(Edit &amp;edit, int trackIndex)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_ClipEffects.h</name>
@@ -3003,15 +1868,15 @@
       <type>Clip *</type>
       <name>insertNewClip</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a41f7674013fea15f931a7b981225329d</anchor>
-      <arglist>(ClipOwner &amp;, TrackItem::Type, TimeRange)</arglist>
+      <anchor>a9183c8dc31634b574a600f302f235e4c</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, EditTimeRange)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
       <name>insertNewClip</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5f64e6bb1a9000391570325b688983f7</anchor>
-      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, TimeRange)</arglist>
+      <anchor>a8b511de0d9b08a840c2e962e3dfca076</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, EditTimeRange)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -3225,12 +2090,70 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>tracktion_ClipSlot.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
+    <filename>tracktion__ClipSlot_8h.html</filename>
+    <class kind="class">tracktion::engine::ClipSlot</class>
+    <class kind="class">tracktion::engine::ClipSlotList</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_ClipTrack.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/tracks/</path>
     <filename>tracktion__ClipTrack_8h.html</filename>
     <class kind="class">tracktion::engine::ClipTrack</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_CmajorPluginFormat.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/cmajor/</path>
+    <filename>tracktion__CmajorPluginFormat_8h.html</filename>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>std::string</type>
+      <name>getCmajorVersion</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a42453812204c457c55e8b236454830e8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::AudioPluginFormat &gt;</type>
+      <name>createCmajorPatchPluginFormat</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2cd1396b493761f883570b33eac59653</anchor>
+      <arglist>(Engine &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isCmajorPatchPluginFormat</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af6edb5eef7031809593f6169f1568109</anchor>
+      <arglist>(const juce::PluginDescription &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isCmajorPatchPluginFormat</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a4feb875d4a7298314f3ec8929af84ae1</anchor>
+      <arglist>(const juce::String &amp;formatName)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getCmajorPatchPluginFormatName</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad6b7ea2657f84ff48290beffd5fd829f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getCmajorPatchCompileError</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abd4073f3c724245e29625644452d76eb</anchor>
+      <arglist>(Plugin &amp;)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_CollectionClip.h</name>
@@ -3316,6 +2239,7 @@
     <filename>tracktion__ControlSurface_8h.html</filename>
     <class kind="struct">tracktion::engine::ParameterSetting</class>
     <class kind="struct">tracktion::engine::MarkerSetting</class>
+    <class kind="struct">tracktion::engine::MidiID</class>
     <class kind="class">tracktion::engine::ControlSurface</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -3400,10 +2324,8 @@
     <name>tracktion_DeviceManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
     <filename>tracktion__DeviceManager_8h.html</filename>
-    <class kind="class">tracktion::engine::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::engine::DeviceManager</class>
-    <class kind="struct">tracktion::engine::DeviceManager::CPUUsageListener</class>
-    <class kind="struct">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</class>
+    <class kind="struct">tracktion::engine::DeviceManager::TracktionEngineAudioDeviceManager</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -3468,8 +2390,8 @@
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditFromFile</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a95b6b590757519cdeff59b32bb32a71a</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::forEditing)</arglist>
+      <anchor>ac0fcf69eb1498ff4218e53686dc7dd3a</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::EditRole::forEditing)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
@@ -3484,6 +2406,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a4aa541258aaf959e9f971c99838bb16b</anchor>
       <arglist>(ProjectManager &amp;, ProjectItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>loadEditForExamining</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae31a86857c0dd8ae6d531ee4712dbb53</anchor>
+      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining)</arglist>
     </member>
     <member kind="function">
       <type>juce::ValueTree</type>
@@ -3527,6 +2456,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
     <filename>tracktion__EditInsertPoint_8h.html</filename>
     <class kind="class">tracktion::engine::EditInsertPoint</class>
+    <class kind="struct">tracktion::engine::EditInsertPoint::Placement</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -3572,8 +2502,10 @@
     <class kind="class">tracktion::engine::EditPlaybackContext</class>
     <class kind="struct">tracktion::engine::EditPlaybackContext::ScopedDeviceListReleaser</class>
     <class kind="struct">tracktion::engine::EditPlaybackContext::RealtimePriorityDisabler</class>
+    <class kind="struct">tracktion::engine::detail::ScopedActiveRecordingDevice</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <namespace>tracktion::engine::detail</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_EditSnapshot.h</name>
@@ -3720,6 +2652,20 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="addf8245ddf875ad562228c1b4911c5eea76fc3972a4183c47e5f8cebdc5371526">moveEndToCursor</enumvalue>
     </member>
     <member kind="function">
+      <type>Project::Ptr</type>
+      <name>getProjectForEdit</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aae466a389e8e35257870b2d94a63cf04</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>ProjectItem::Ptr</type>
+      <name>getProjectItemForEdit</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a7f2114ad4120a4a61a2181770dd462f7</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::File</type>
       <name>getEditFileFromProjectManager</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -3797,6 +2743,13 @@
       <arglist>(const Edit &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
+      <type>AudioTrack *</type>
+      <name>findAudioTrackForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a19e1f7f399ecf97415c004c0a4f5b06d</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; Track * &gt;</type>
       <name>findTracksForIDs</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -3865,6 +2818,27 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>aeed6b8603d1bc17e7d90397ecd9234ac</anchor>
       <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipOwner *</type>
+      <name>findClipOwnerForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a65a7870026df98adea8a75be92c300dd</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>findClipSlotForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aee1fceecfddb41842be4cc798a5d7002</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>findClipSlotIndex</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a44d90c0517f23accae22a8c9106086dd</anchor>
+      <arglist>(ClipSlot &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -3968,8 +2942,22 @@
       <type>juce::Result</type>
       <name>mergeMidiClips</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af452f95dec5b4c4d61a2cf433bdb08a3</anchor>
-      <arglist>(juce::Array&lt; MidiClip * &gt;)</arglist>
+      <anchor>a2823efb0387ec814c20b6e909981ceda</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt;, SelectionManager *sm=nullptr)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::OwnedArray&lt; MidiList &gt;</type>
+      <name>readFileToMidiList</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a46ce0ca0a1577de863b7b33aa56c8f0c</anchor>
+      <arglist>(juce::File midiFile, bool importAsNoteExpression)</arglist>
+    </member>
+    <member kind="function">
+      <type>MidiClip::Ptr</type>
+      <name>createClipFromFile</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae1026d32121b7f187f3b5056874913c3</anchor>
+      <arglist>(juce::File midiFile, ClipOwner &amp;, bool importAsNoteExpression)</arglist>
     </member>
     <member kind="function">
       <type>Plugin::Array</type>
@@ -4017,8 +3005,29 @@
       <type>void</type>
       <name>muteOrUnmuteAllPlugins</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5059442d7183cad90f95d07dc3e827d</anchor>
-      <arglist>(Edit &amp;)</arglist>
+      <anchor>aac0bf73a3ae386875f6df57b46881b14</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>injectMIDIToAllPlugins</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa6c6e5c970c0ed8ad9f1f676eb88ccc1</anchor>
+      <arglist>(const Edit &amp;, const std::span&lt; juce::MidiMessage &gt; &amp;messagesToSend)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>midiPanic</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abec75e330b13aa6aa67643a4d5d14be3</anchor>
+      <arglist>(Edit &amp;, bool resetPlugins)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; PluginType &gt;</type>
+      <name>insertNewPlugin</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab06103f2b654c81b0f74d2f567d8e7f9</anchor>
+      <arglist>(Track &amp;, int index=0)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; AutomatableEditItem * &gt;</type>
@@ -4097,6 +3106,27 @@
       <anchor>ac03348f3bb8498dad4e90b3ec3ef0546</anchor>
       <arglist>(const EditPlaybackContext &amp;, TimePosition playStart, TimePosition punchIn)</arglist>
     </member>
+    <member kind="function">
+      <type>juce::Result</type>
+      <name>prepareAndPunchRecord</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa12a1f79f693581dc59030621679ca79</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>tl::expected&lt; Clip::Array, juce::String &gt;</type>
+      <name>punchOutRecording</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2e5dbe7fc65c310e91306ecc8f6af588</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isRecording</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab909bad277a9242846beb493f99bd48d</anchor>
+      <arglist>(EditPlaybackContext &amp;)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_Engine.h</name>
@@ -4105,13 +3135,6 @@
     <class kind="class">tracktion::engine::Engine</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
-    <member kind="function">
-      <type>juce::PropertiesFile *</type>
-      <name>getApplicationSettings</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0d436fce8e1573e0cc5fbded7bed1296</anchor>
-      <arglist>()</arglist>
-    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_EngineBehaviour.h</name>
@@ -4124,6 +3147,11 @@
     <class kind="struct">tracktion::engine::EngineBehaviour::ControlSurfaces</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_EnginePlayer.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/testing/</path>
+    <filename>tracktion__EnginePlayer_8h.html</filename>
   </compound>
   <compound kind="file">
     <name>tracktion_Envelope.h</name>
@@ -4190,6 +3218,7 @@
     <name>tracktion_ExternalControllerManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/</path>
     <filename>tracktion__ExternalControllerManager_8h.html</filename>
+    <class kind="struct">tracktion::engine::ColourArea</class>
     <class kind="class">tracktion::engine::ExternalControllerManager</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -4252,6 +3281,13 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__FadeInOutNode_8h.html</filename>
     <class kind="class">tracktion::engine::FadeInOutNode</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_FFmpegEncoderAudioFormat.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/formats/</path>
+    <filename>tracktion__FFmpegEncoderAudioFormat_8h.html</filename>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -4356,6 +3392,27 @@
     </member>
     <member kind="variable">
       <type>const char *const</type>
+      <name>soundFileExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a649c510bb473e9cc542992a4d3b77b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
+      <name>soundFileAndMidiExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a41b18766cfb995284cab2f45378c3e19</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
+      <name>midiFileExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af95cea2db8943a48c156f92057694b17</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
       <name>keyMapWildCard</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ac099f7fa922c71a9e5025d30bf4844bb</anchor>
@@ -4442,6 +3499,78 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_FollowActions.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
+    <filename>tracktion__FollowActions_8h.html</filename>
+    <class kind="class">engine::FollowActions</class>
+    <class kind="struct">engine::FollowActions::Action</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</class>
+    <namespace>engine</namespace>
+    <namespace>juce</namespace>
+    <member kind="enumeration">
+      <type></type>
+      <name>FollowAction</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a8adf9568644e9fd569d34ea8751bfdde</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeac456cb28eeacbc581b046d213222b66f">globalStop</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea4c8570a6cb79b980dfeae85b23f75c7a">globalReturnToArrangement</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea47f0147f51842988f934e149e7e8caaa">globalPlayAgain</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaef3d2841cf4246e8b9f731941fdcd5ab">trackPrevious</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea36acab6e718fdbe3cad86bbd4c66b9a5">trackNext</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaa0423cb783ee63a100fd8ee8ecf10cf7">trackFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea3e65b5ade6cd882ec1fea127d91cde89">trackLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea8c43284b6586cfeb4400f88ef70eb2f4">trackAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaa5e6e7ec14f7cfc9d318c9e39439b3be">trackOther</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddead19212628735bf203ef61085a310ba73">trackRoundRobin</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea9b671acea9d6903ceaedb125ff9ec0dc">currentGroupPrevious</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea051833ed22a7462c628356f0e3c68c61">currentGroupNext</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0ec01b92ff0fd15ab7000fc00cc358a0">currentGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaadbe34fd022dd8a0f27064f1e134cab3">currentGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea53284b089ec091e764e4c61382f686df">currentGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0fcb2c7f9aee87f3faac9ca6bb4156dc">currentGroupOther</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeae785f60552a59533d8a01daa4eb764f8">currentGroupRoundRobin</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea052043fefd6705d4534070da78d5e1c6">previousGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0456776f695d81268b58cda00ea241e4">previousGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeacc942fea2a26dae8b174d6aa4bbd8711">previousGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea9816290541861b2d4cf0becf68f17764">nextGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddead937543b1c75fedc3dd8c868168941d2">nextGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeadfdd5f882185f9b50f24fe45509914c4">nextGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea78949abcd4a4661279003b1afc897489">otherGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeae9d9a48525e3046f3f5e6efcf13f5133">otherGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea07e4a5758b30294d27a92b0b096a5aaa">otherGroupAny</enumvalue>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; FollowAction &gt;</type>
+      <name>followActionFromChoice</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aa07b83a67660d947ac6bd868d6a8d970</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; FollowAction &gt;</type>
+      <name>followActionFromString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a529f143817fffbadfe408f74e3a46ad2</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a9dd1960b5f512aec90454c3e72bb60a9</anchor>
+      <arglist>(FollowAction)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::function&lt; void(MonotonicBeat)&gt;</type>
+      <name>createFollowAction</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a943f764db7a45607709ffcdb098ef23a</anchor>
+      <arglist>(Clip &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_FourOscPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
     <filename>tracktion__FourOscPlugin_8h.html</filename>
@@ -4489,6 +3618,13 @@
       <arglist>(juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</arglist>
     </member>
     <member kind="function">
+      <type>choc::buffer::FrameRange</type>
+      <name>createFrameRange</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a0bf4a996c7e326b2ccc25872ad558b83</anchor>
+      <arglist>(std::integral auto start, std::integral auto end)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::MidiMessage</type>
       <name>toMidiMessage</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -4503,6 +3639,13 @@
       <arglist>(BufferViewType &amp;view, juce::SmoothedValue&lt; SampleType, SmoothingType &gt; &amp;value) noexcept</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>applyGainRamp</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>aa89f848b24ce52d37f797b335458178b</anchor>
+      <arglist>(BufferType &amp;&amp;buffer, GainType startGain, GainType endGain) noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>choc::buffer::FrameRange</type>
       <name>frameRangeWithStartAndLength</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -4515,6 +3658,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a4497898df2d88e7ec62c528015f994b1</anchor>
       <arglist>(choc::buffer::ChannelCount start, choc::buffer::ChannelCount length)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>sanitise</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a0db582faaeca8844b714175eb0fa458d</anchor>
+      <arglist>(Buffer &amp;buffer)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -4588,14 +3738,93 @@
     <class kind="class">tracktion::engine::InputDevice</class>
     <class kind="class">tracktion::engine::InputDeviceInstance</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::RecordingParameters</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestinationList</class>
+    <class kind="class">tracktion::engine::InputDeviceInstance::RecordingContext</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::StopRecordingParameters</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::Destination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::VirtualMidiInputDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::DestinationList</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::Consumer</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>juce::Array&lt; std::pair&lt; AudioTrack *, int &gt; &gt;</type>
+      <name>getTargetTracksAndIndexes</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa07b81b67faf6bfdcd599ce7a09de387</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; AudioTrack * &gt;</type>
+      <name>getTargetTracks</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae51b18b7d4da819a2ca23ca636d72fd2</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isOnTargetTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a76ef6c74bbdae7ebf1518ab31fec952e</anchor>
+      <arglist>(InputDeviceInstance &amp;, const Track &amp;, int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAttached</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a32c58952e58529d27bac31c7d29dd8b0</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Result</type>
+      <name>clearFromTargets</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a4ffb1db47ff5013cf386ef9bdd61a7b5</anchor>
+      <arglist>(InputDeviceInstance &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a7efd9a3159373fd2135fca298c4f6e</anchor>
+      <arglist>(InputDeviceInstance &amp;, const Track &amp;track, int index)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a172660cb030d260e7e153441b4ab9c63</anchor>
+      <arglist>(InputDeviceInstance &amp;, const ClipSlot &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac57c3124fc8b729515ca60ca054bdc9f</anchor>
+      <arglist>(InputDeviceInstance &amp;, const juce::ValueTree &amp;destinationState)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasErrors</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a72a847da65b887222836b9349292eedd</anchor>
+      <arglist>(const InputDeviceInstance::PreparedContext &amp;pc)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::PreparedContext &amp;</type>
+      <name>append</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae274e8faf731a5250d52c65e2a14c26f</anchor>
+      <arglist>(InputDeviceInstance::PreparedContext &amp;dest, InputDeviceInstance::PreparedContext &amp;&amp;src)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::pair&lt; std::vector&lt; std::unique_ptr&lt; InputDeviceInstance::RecordingContext &gt; &gt;, juce::StringArray &gt;</type>
+      <name>extract</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a36bd6c662b8613ecbcaf3d0fce1df1ed</anchor>
+      <arglist>(InputDeviceInstance::PreparedContext &amp;&amp;pc)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_InsertPlugin.h</name>
@@ -4606,18 +3835,10 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_InsertReturnNode.h</name>
-    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
-    <filename>tracktion__InsertReturnNode_8h.html</filename>
-    <class kind="class">tracktion::engine::InsertReturnNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_InsertSendNode.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__InsertSendNode_8h.html</filename>
-    <class kind="class">tracktion::engine::InsertSendReturnDependencyNode</class>
+    <class kind="class">tracktion::engine::InsertNode</class>
     <class kind="class">tracktion::engine::InsertSendNode</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -4653,6 +3874,113 @@
     <class kind="struct">tracktion::graph::LatencyProcessor</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_LauncherClipPlaybackHandle.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
+    <filename>tracktion__LauncherClipPlaybackHandle_8h.html</filename>
+    <class kind="class">tracktion::engine::LauncherClipPlaybackHandle</class>
+    <class kind="struct">tracktion::engine::LauncherClipPlaybackHandle::SplitBeatRange</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_LaunchHandle.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
+    <filename>tracktion__LaunchHandle_8h.html</filename>
+    <class kind="class">tracktion::engine::LaunchHandle</class>
+    <class kind="struct">tracktion::engine::LaunchHandle::SplitStatus</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_LaunchQuantisation.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
+    <filename>tracktion__LaunchQuantisation_8h.html</filename>
+    <class kind="class">tracktion::engine::LaunchQuantisation</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <namespace>juce</namespace>
+    <member kind="enumeration">
+      <type></type>
+      <name>LaunchQType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae39e83d3d91167656e40c7d65b801e95</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95af2deebc8413aae20409eeb10bbd9431c">eightBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aec08c8fecba7f3dea2d1bf3e8f2c51b4">fourBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a4e9b8cd9865ad579301facd6c315d948">twoBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a37b51d194a7513e45b56f6524f2d51f2">bar</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a998829c3bd4bd924a6ab5161eec428fd">halfT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a7afe399f1415b137d0962f82662fa9d4">half</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95ac7c1d479f14e54e7784205a88f161e02">halfD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aac2527e879843b55ad31b5d983a30c50">quarterT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aac9e2504b3cf2cadf8ca121523b110b4">quarter</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a6009cd25211d9cb7c07ddc0ea48caaf1">quarterD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a73910ed0856fbae6996c1fe8cdccc131">eighthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aa76a3a8b8cba2cbe41bd4310b12ad2db">eighth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a5aa4b6df735b84a7a115dd747ca9d8a2">eighthD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95afaf9595af501765ae04c046a952bb19c">sixteenthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a80e1ed18749046947dd9aba3166b0f08">sixteenth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a43412f87525e6a16c023d94359bba55e">sixteenthD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a167e1e44dbf4b61a7137624d40b16971">thirtySecondT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a442d0097548e01242ae77d3cc91c6585">thirtySecond</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a9beb6e597257c8ea614e19311ad2171c">thirtySecondD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95ad03f20763bedd7c66fc4aed0ad26bdb0">sixtyFourthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a1cd670520c232df91f57d060f59b7c92">sixtyFourth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a14430c1fe99d2a12c779c638628cc373">sixtyFourthD</enumvalue>
+    </member>
+    <member kind="function">
+      <type>juce::StringArray</type>
+      <name>getLaunchQTypeChoices</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae80ed07c6e97b66ae96f72b6f501e252</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; LaunchQType &gt;</type>
+      <name>launchQTypeFromName</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a22dad481cfb530163435ae114fdea618</anchor>
+      <arglist>(const juce::String &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getName</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1391e7da8a21eb9a58d872aea23fbf7a</anchor>
+      <arglist>(LaunchQType)</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>toBarFraction</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a152ce69edd7a1fa4f268fd2ce95d4124</anchor>
+      <arglist>(LaunchQType) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQType</type>
+      <name>fromBarFraction</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab49d21c2223bd6644f185d3b874f90d2</anchor>
+      <arglist>(double) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getNext</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a38d6efbf9bca006f913c9cc016c6f41a</anchor>
+      <arglist>(LaunchQType, const TempoSequence &amp;, BeatPosition) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getNext</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a633b812c19677c2239936bfc5570a886</anchor>
+      <arglist>(LaunchQType, const tempo::Sequence &amp;, BeatPosition) noexcept</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_LevelMeasurer.h</name>
@@ -4865,6 +4193,15 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_MemoryMappedFileReader.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/formats/</path>
+    <filename>tracktion__MemoryMappedFileReader_8h.html</filename>
+    <class kind="struct">tracktion::engine::MemoryMappedFileReader</class>
+    <class kind="class">tracktion::engine::BufferingAudioReaderWrapper</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_MidiChannel.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
     <filename>tracktion__MidiChannel_8h.html</filename>
@@ -4882,6 +4219,13 @@
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <namespace>juce</namespace>
+    <member kind="function">
+      <type>void</type>
+      <name>mergeInMidiSequence</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab8f56799a4714693459f833ae271131b</anchor>
+      <arglist>(MidiClip &amp;, juce::MidiMessageSequence, TimeDuration offsetToApply, MidiList::NoteAutomationType)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiControllerEvent.h</name>
@@ -4904,6 +4248,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
     <filename>tracktion__MidiInputDevice_8h.html</filename>
     <class kind="class">tracktion::engine::MidiInputDevice</class>
+    <class kind="struct">tracktion::engine::MidiInputDevice::NoteFilterRange</class>
     <class kind="struct">tracktion::engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
     <class kind="struct">tracktion::engine::MidiInputDevice::MidiKeyChangeDispatcher::Listener</class>
     <namespace>tracktion</namespace>
@@ -4990,6 +4335,13 @@
       <anchor>afe685681eef1653d3a025b7570268b6f</anchor>
       <arglist>(const MidiMessageArray &amp;midi, double maxTimeStamp)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>createNoteOffs</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
+      <anchor>ac79f8b18a1b0457b3a6ce2dae8ebaaf9</anchor>
+      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MidiMessageArray::MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiNote.h</name>
@@ -5074,6 +4426,15 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a134d0029d7c5db278db98865a49c1b84</anchor>
       <arglist></arglist>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>AuxPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a9e8ea43658d2da6652d441bb65cdca4d</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a9e8ea43658d2da6652d441bb65cdca4da4f64bbe2baee5b3a2dca4855df1d0c63">byBus</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a9e8ea43658d2da6652d441bb65cdca4da85a22b5fd75556bce2a556429fb64823">byPosition</enumvalue>
     </member>
     <member kind="function">
       <type>void</type>
@@ -5695,6 +5056,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/devices/</path>
     <filename>tracktion__PhysicalMidiInputDevice_8h.html</filename>
     <class kind="class">tracktion::engine::PhysicalMidiInputDevice</class>
+    <class kind="class">tracktion::engine::PhysicalMidiInputDevice::Listener</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -5781,6 +5143,7 @@
     <class kind="struct">tracktion::engine::PluginRenderContext</class>
     <class kind="class">tracktion::engine::Plugin</class>
     <class kind="struct">tracktion::engine::Plugin::Wire</class>
+    <class kind="struct">tracktion::engine::Plugin::EditorComponent</class>
     <class kind="struct">tracktion::engine::Plugin::WindowState</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -5966,6 +5329,13 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_ReadAheadTimeStretcher.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/timestretch/</path>
+    <filename>tracktion__ReadAheadTimeStretcher_8h.html</filename>
+    <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_RealTimeSpinLock.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
     <filename>tracktion__RealTimeSpinLock_8h.html</filename>
@@ -6008,6 +5378,7 @@
     <class kind="class">tracktion::engine::Renderer::RenderTask</class>
     <class kind="struct">tracktion::engine::Renderer::Statistics</class>
     <class kind="struct">tracktion::engine::Renderer::RenderResult</class>
+    <class kind="struct">tracktion::engine::Renderer::ScopedClipSlotDisabler</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::engine</namespace>
@@ -6069,11 +5440,45 @@
     <filename>tracktion__RexFileFormat_8h.html</filename>
   </compound>
   <compound kind="file">
+    <name>tracktion_SafeScopedListener.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__SafeScopedListener_8h.html</filename>
+    <class kind="class">tracktion::engine::SafeScopedListener</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="variable">
+      <type>concept</type>
+      <name>WeakReferenceable</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abf177de2e03ea68a9c3c4da1dffd47da</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_SamplerPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/effects/</path>
     <filename>tracktion__SamplerPlugin_8h.html</filename>
     <class kind="class">tracktion::engine::SamplerPlugin</class>
     <class kind="struct">tracktion::engine::SamplerPlugin::SamplerSound</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_Scene.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
+    <filename>tracktion__Scene_8h.html</filename>
+    <class kind="class">tracktion::engine::Scene</class>
+    <class kind="class">tracktion::engine::SceneWatcher</class>
+    <class kind="struct">tracktion::engine::SceneWatcher::Listener</class>
+    <class kind="class">tracktion::engine::SceneList</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ScopedListener.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__ScopedListener_8h.html</filename>
+    <class kind="class">tracktion::engine::ScopedListener</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -6092,8 +5497,10 @@
     <filename>tracktion__Selectable_8h.html</filename>
     <class kind="class">tracktion::engine::SelectableListener</class>
     <class kind="class">tracktion::engine::Selectable</class>
+    <class kind="class">tracktion::engine::Selectable::Listener</class>
     <class kind="struct">tracktion::engine::SelectableList</class>
     <class kind="class">tracktion::engine::SafeSelectable</class>
+    <class kind="class">tracktion::engine::LambdaSelectableListener</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <member kind="function">
@@ -6103,6 +5510,13 @@
       <anchor>a9a916ab6aa43f5cd75071dc3910e537e</anchor>
       <arglist>(SelectableType &amp;selectable)</arglist>
     </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>makeSafeVector</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad816a0b77df0e6473b704191ada77091</anchor>
+      <arglist>(const Iterable &amp;selectables) -&gt; std::vector&lt; SafeSelectable&lt; typename std::remove_reference&lt; decltype(*selectables[0])&gt;::type &gt;&gt;</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_SelectableClass.h</name>
@@ -6110,6 +5524,7 @@
     <filename>tracktion__SelectableClass_8h.html</filename>
     <class kind="class">tracktion::engine::SelectableClass</class>
     <class kind="struct">tracktion::engine::SelectableClass::AddClipboardEntryParams</class>
+    <class kind="struct">tracktion::engine::SelectableClass::DeleteSelectedParams</class>
     <class kind="struct">tracktion::engine::SelectableClass::SelectOtherObjectsParams</class>
     <class kind="struct">tracktion::engine::SelectableClass::ClassInstanceBase</class>
     <class kind="struct">tracktion::engine::SelectableClass::ClassInstance</class>
@@ -6239,7 +5654,7 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eaff8ed4f53819dcf20438b964fec10fa2">renameClipRenamesSource</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea2cdbd15b771628de0256bab7909a8046">renameMode</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea4f0f5be4892f3fd7fe272df168c73857">renderRecentFilesList</enumvalue>
-      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eacd1c9a0f8b4bc4d561b5be14b040a19e">resetCursorOnStop</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea35bb7b2bdacc8c03899179261a1ce7cf">resetCursorOnPlay</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea6118d3bbbb834510d5533f4d2b721cf0">retrospectiveRecord</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea51c42b14b1831fc29eec3a15c27b5f41">reWireEnabled</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea0cc34e5dab44f5677beb8606ddbd364e">safeRecord</enumvalue>
@@ -6254,6 +5669,7 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea49b2d1e2befcd40dfea67e1daf091dc4">xtIndices</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eadc17b81e0fcc4244d653e30e5552af7f">virtualmididevices</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea30c1138f8420913e5253a0fd215212f4">virtualmidiin</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eafe6b599e61fd47db5ec49770211a8873">midiScanIntervalSeconds</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eae09c5665396629f42adc7c8fd637137b">useSeparateProcessForScanning</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea060c0316a269e325c58b3984fec89e7a">useRealtime</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eac733e4221d487351d76843e7d172fa06">wavein</enumvalue>
@@ -6290,6 +5706,8 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eaebf43e996821d24d05eda0d2450c1b0c">addId3Info</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea37e2a166d3ab28426a1d1a481d356d33">realtime</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea01372905495e6c5db01a5baa92da0d98">passThroughFilters</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea3de70b17fc38e2631a7c5ce85f1c4ed8">externControlShowClipSlotSelection</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eae9f0ae9d4723099d46d0fcdba664fd62">addAcidMetadata</enumvalue>
     </member>
   </compound>
   <compound kind="file">
@@ -6301,12 +5719,37 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_SharedTimer.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__SharedTimer_8h.html</filename>
+    <class kind="struct">tracktion::engine::HertzTag</class>
+    <class kind="class">tracktion::engine::SharedTimer</class>
+    <class kind="struct">tracktion::engine::SharedTimer::Listener</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="variable">
+      <type>constexpr HertzTag</type>
+      <name>HertzTag_t</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a96a975d8e8f2a0ca68dbad80e28c153e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_SimpleNodePlayer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/players/</path>
     <filename>tracktion__SimpleNodePlayer_8h.html</filename>
     <class kind="class">tracktion::graph::SimpleNodePlayer</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_SlotControlNode.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__SlotControlNode_8h.html</filename>
+    <class kind="class">tracktion::engine::SlotControlNode</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_SmartThumbnail.h</name>
@@ -6526,6 +5969,34 @@
       <anchor>a42cdc3d75afd1583451e0f49626fa4c8</anchor>
       <arglist>(double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</arglist>
     </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getTransientFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a2868bf5289237c91c88844aa1f84dc30</anchor>
+      <arglist>(double sampleRate, TimeDuration duration, TimePosition transientPos, float transientVal, int numChannels=1, int qualityOptionIndex=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>buffersAreEqual</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>acd5fa4003dbc2bd842bf311aceee0100</anchor>
+      <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;a, const juce::AudioBuffer&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>buffersAreEqual</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>aae86a05d5249a8634ce4b26b5402596e</anchor>
+      <arglist>(const choc::buffer::ChannelArrayView&lt; float &gt; &amp;a, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; std::pair&lt; choc::buffer::FrameCount, float &gt; &gt;</type>
+      <name>findFirstNonZeroSample</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>afc31d033b00391d0566cb9fa5bf3f4e6</anchor>
+      <arglist>(choc::buffer::MonoView&lt; float &gt; buffer)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_TextPlugin.h</name>
@@ -6547,6 +6018,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>af3c29a82f756ecd6d9d36c1f77e049f4</anchor>
       <arglist>(std::thread &amp;, int priority)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>tryToUpgradeCurrentThreadToRealtime</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a6f8debef577496d588684166661b8ce0</anchor>
+      <arglist>(const juce::Thread::RealtimeOptions &amp;)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -6847,6 +6325,38 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_Types.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__Types_8h.html</filename>
+    <class kind="struct">tracktion::engine::MonotonicBeat</class>
+    <class kind="struct">tracktion::engine::MonotonicBeatRange</class>
+    <class kind="struct">tracktion::engine::SyncPoint</class>
+    <class kind="struct">tracktion::engine::SyncRange</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>MonotonicBeatRange</type>
+      <name>getMonotonicBeatRange</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af597851a9154530afddc3ddbd28cfb96</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatRange</type>
+      <name>getBeatRange</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab4f7df059bcfb9e4e9e7870c6d65e534</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>int64_t</type>
+      <name>getNumSamples</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae85f2d84aff184bf9c6d40e3bd3bcdb7</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_UIBehaviour.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__UIBehaviour_8h.html</filename>
@@ -6930,6 +6440,13 @@
     <namespace>juce</namespace>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>void</type>
+      <name>convertPropertyToType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a47184c19d1ade74fc5e926a1d147ffe5</anchor>
+      <arglist>(juce::ValueTree &amp;v, const juce::Identifier &amp;id)</arglist>
+    </member>
     <member kind="function">
       <type>bool</type>
       <name>matchesAnyOf</name>
@@ -7296,6 +6813,31 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::FollowActions::Action</name>
+    <filename>structengine_1_1FollowActions_1_1Action.html</filename>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structengine_1_1FollowActions_1_1Action.html</anchorfile>
+      <anchor>a6626f974422906ba9f02ef873b0ebb45</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; FollowAction &gt;</type>
+      <name>action</name>
+      <anchorfile>structengine_1_1FollowActions_1_1Action.html</anchorfile>
+      <anchor>a37a08796405fd1619939fcf3f3ec92c5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; double &gt;</type>
+      <name>weight</name>
+      <anchorfile>structengine_1_1FollowActions_1_1Action.html</anchorfile>
+      <anchor>a5f0cd7e7fe67120e7eaeb4d433c6e5ba</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::ActiveEdits</name>
     <filename>structtracktion_1_1engine_1_1ActiveEdits.html</filename>
     <member kind="function">
@@ -7441,6 +6983,358 @@
       <name>clipboard</name>
       <anchorfile>structtracktion_1_1engine_1_1SelectableClass_1_1AddClipboardEntryParams.html</anchorfile>
       <anchor>ac997a6181a76f8ceb9ba51fb7b2c78f7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::AirWindowsAutomatableParameter</name>
+    <filename>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</filename>
+    <base>tracktion::engine::AutomatableParameter</base>
+    <member kind="function">
+      <type></type>
+      <name>AirWindowsAutomatableParameter</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>ae1a5b5fa127a6e7ea4643eece025401b</anchor>
+      <arglist>(AirWindowsPlugin &amp;p, int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~AirWindowsAutomatableParameter</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a672e45790d58ef535f665282ca249430</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resetToDefault</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>af78476a8ffb0f6b9670252503c6d3319</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>autodetectRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a6b057402e9df86ca51f94705d0fb0cf8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>refresh</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a9d461d8f56404e9368c8fb8522eb4c4d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setConversionRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>abfee0e75786ea8926f5a249d6561c16b</anchor>
+      <arglist>(juce::NormalisableRange&lt; float &gt; range)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>parameterChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>ac17c341b6f894e3ae5dbb2f079baa157</anchor>
+      <arglist>(float newValue, bool byAutomation) override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getCurrentValueAsString</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a062a1deb130642c7e05466de262cb87e</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>markAsChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a3e16b6ac6eea794f0791d326fb5e0e47</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::String</type>
+      <name>getParamId</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a2c04eb9159338017c2cb892f736e3d4d</anchor>
+      <arglist>(AirWindowsPlugin &amp;p, int idx)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::String</type>
+      <name>getParamName</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a633042793f8a19fdee2c7a5f5245708b</anchor>
+      <arglist>(AirWindowsPlugin &amp;p, int idx)</arglist>
+    </member>
+    <member kind="variable">
+      <type>AirWindowsPlugin &amp;</type>
+      <name>awPlugin</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a9176cdfabf3e700117faad4ced643943</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>index</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>ac296376b05f70eeafb129e605ba086fd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>defaultValue</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>a0d8a9403ba1a1311cc4c7eb876a9a66d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::NormalisableRange&lt; float &gt;</type>
+      <name>conversionRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html</anchorfile>
+      <anchor>afcf302f2f00f5e04ffe001f98ae708c1</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::AirWindowsBase</name>
+    <filename>classtracktion_1_1engine_1_1AirWindowsBase.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>AirWindowsBase</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a172552da8fcbfdeaad5116f4d66077df</anchor>
+      <arglist>(AirWindowsCallback *c, int prog, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~AirWindowsBase</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>af633d1415c5bb0a7bc3c9fa3017acc02</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a1bf5e7c09c00d0dd449223eb73b82b8d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumOutputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a8a66d44a927e1326dc18eeea2ddedf76</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumParameters</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a0545548b344dd82b019dcd0034476489</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>getEffectName</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>aa4bbb0479c0fd11a6268c3397518c81b</anchor>
+      <arglist>(char *name)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual VstPlugCategory</type>
+      <name>getPlugCategory</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a8d9c74a94c83dde47232eb9f95417d83</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>getProductString</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>af270571c626c7b55951a1b6c42948c76</anchor>
+      <arglist>(char *text)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>getVendorString</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a83cca6e6d7f1d846a577a3b41de15ec3</anchor>
+      <arglist>(char *text)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual VstInt32</type>
+      <name>getVendorVersion</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a2ea40a972c411ceab6310dd74676d3b9</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>processReplacing</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>ac46c449e6c8f37b8b3095a827901f2a7</anchor>
+      <arglist>(float **inputs, float **outputs, VstInt32 sampleFrames)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>processDoubleReplacing</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a8a867956c4a9aad3b85225cd8763022c</anchor>
+      <arglist>(double **inputs, double **outputs, VstInt32 sampleFrames)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>getProgramName</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>af58915571b2905e91596a47836f1b8b5</anchor>
+      <arglist>(char *name)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setProgramName</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a80b38ca81c63a5fff572c27405a57ce6</anchor>
+      <arglist>(char *name)=0</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual VstInt32</type>
+      <name>getChunk</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a63cedffced0808512d27e9c3774bf703</anchor>
+      <arglist>(void **data, bool isPreset)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual VstInt32</type>
+      <name>setChunk</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>ad365b8d0886ab474236857f2ad043834</anchor>
+      <arglist>(void *data, VstInt32 byteSize, bool isPreset)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual float</type>
+      <name>getParameter</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a41647e85f654d50c6e6b867c2b33fc0d</anchor>
+      <arglist>(VstInt32 index)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setParameter</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a03e627d18e3fcd8173bcd099d641d289</anchor>
+      <arglist>(VstInt32 index, float value)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>getParameterLabel</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a018784ae648fdfb5d246571f9079f27e</anchor>
+      <arglist>(VstInt32 index, char *text)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>getParameterName</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>ac1233793a186653f356acc66945fddef</anchor>
+      <arglist>(VstInt32 index, char *text)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>getParameterDisplay</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a3d2a5d4623c5f7f09e194eb9395c8983</anchor>
+      <arglist>(VstInt32 index, char *text)</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual VstInt32</type>
+      <name>canDo</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a3184f93451b0f2a0519884140dc85898</anchor>
+      <arglist>(char *text)=0</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setNumInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a6f743e047c6aa98ea2f7e85bdc0c5683</anchor>
+      <arglist>(int numIn)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setNumOutputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>ace8c19315ccc089a8da384680ef9e729</anchor>
+      <arglist>(int numOut)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setUniqueID</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a7310ea159a1b8ca547a6730e7c806c86</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>canProcessReplacing</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>aef21c2c7a3cde1f5d98df7cda88cec23</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>canDoubleReplacing</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a3e3fdd446233c786725ed50fd9dc152e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>programsAreChunks</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a6dedf0077c9ad771512e4fe2e63568e5</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>double</type>
+      <name>getSampleRate</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a2686466893a8be8db12a6a2e9b1e8598</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>numInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a4bda9add56e1c482debed0fb012884e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>numOutputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a7ee62c4686c0b7ac8e302bb448824b3f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>numPrograms</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>ad2bd90787b3a8dd80f690f7e2cee1b08</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>numParams</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a6847cf76c5fdf3dca3fef9ba807f2b25</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>AirWindowsCallback *</type>
+      <name>callback</name>
+      <anchorfile>classtracktion_1_1engine_1_1AirWindowsBase.html</anchorfile>
+      <anchor>a1355efb433b5ffb660283d8afff5f463</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -7630,8 +7524,8 @@
       <type></type>
       <name>~AirWindowsPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1AirWindowsPlugin.html</anchorfile>
-      <anchor>a8f7f0db78b7539d5af3502cc6a7de84a</anchor>
-      <arglist>()</arglist>
+      <anchor>ab141ce9938536517ceb04d41ea2f6668</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual Type</type>
@@ -7820,13 +7714,6 @@
       <name>impl</name>
       <anchorfile>classtracktion_1_1engine_1_1AirWindowsPlugin.html</anchorfile>
       <anchor>a1400d7e93df29f424d24f68a3b42bf19</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>classtracktion_1_1engine_1_1AirWindowsPlugin.html</anchorfile>
-      <anchor>a246fe7ceccbd5b8f20c3167d199701d5</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -8396,6 +8283,69 @@
       <anchorfile>classtracktion_1_1engine_1_1ArrangerClip.html</anchorfile>
       <anchor>a59efa4646f27339e51e6b9be289f63db</anchor>
       <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ArrangerLauncherSwitchingNode</name>
+    <filename>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
+    <base>tracktion::engine::SharedTimer::Listener</base>
+    <member kind="function">
+      <type></type>
+      <name>ArrangerLauncherSwitchingNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a42aa367c14759e81f42d85a92795aca3</anchor>
+      <arglist>(ProcessState &amp;, AudioTrack &amp;, std::unique_ptr&lt; Node &gt; arrangerNode, std::vector&lt; std::unique_ptr&lt; SlotControlNode &gt;&gt; launcherNodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a5a2eabb8953d14abf1f4eda47e8d7cc0</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getInternalNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a586e7e4739d4df27062519561ef65748</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a945c499406176abd09f69739ea2e299a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a8b7d993a19ca370c97080984a2a1ac42</anchor>
+      <arglist>(const PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>aa49c4505b5bb3472081a8e39561efb53</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prefetchBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a9c69b3097bd59be0d33129da877407f8</anchor>
+      <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html</anchorfile>
+      <anchor>a22154b903b5dd48002e33f7efa8ed34e</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -10089,6 +10039,41 @@
       <arglist>(const ReferencedItem &amp;, ProjectItemID newID, double newStartTime) override</arglist>
     </member>
     <member kind="function">
+      <type>std::shared_ptr&lt; LaunchHandle &gt;</type>
+      <name>getLaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a0e9e7f15da5b8cadc385b20f33230bda</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setUsesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>ad56bf48c0464aedb158807ae1d2f66c5</anchor>
+      <arglist>(bool useGlobal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>usesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a0bd3f9584238b26d74321a70780b82ae</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQuantisation *</type>
+      <name>getLaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a7b50a10d601dbe6f84f2aa3e139ac61a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>FollowActions *</type>
+      <name>getFollowActions</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a49fbeae229f85b05aac16b78ca96c918</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>addClipPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
@@ -11038,6 +11023,13 @@
       <arglist>(const AudioFile &amp;, const std::function&lt; std::unique_ptr&lt; FallbackReader &gt;(juce::AudioFormatReader *sourceReader, juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;createFallbackReader)</arglist>
     </member>
     <member kind="function">
+      <type>Reader::Ptr</type>
+      <name>createFallbackReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
+      <anchor>a58caea862210a8201d986c05b1e5315d</anchor>
+      <arglist>(const std::function&lt; std::unique_ptr&lt; FallbackReader &gt;(juce::TimeSliceThread &amp;timeSliceThread, int samplesToBuffer)&gt; &amp;createFallbackReader)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>setCacheSizeSamples</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
@@ -11066,11 +11058,25 @@
       <arglist>(bool clearMissedFlag)</arglist>
     </member>
     <member kind="function">
-      <type>double</type>
+      <type>TimeDuration</type>
       <name>getCpuUsage</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
-      <anchor>ac344c9ca1e586cb7147dfb198edfc56e</anchor>
+      <anchor>a2f4fc40f93623851b37cd307930fd486</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>nextBlockStarted</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
+      <anchor>a8011222b99cbf5a2f1b3b1cf108d9a79</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasMappedReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioFileCache.html</anchorfile>
+      <anchor>abf4e726d8ecbfe2a5c74ada00ef4f488</anchor>
+      <arglist>(const AudioFile &amp;, SampleCount) const</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend class</type>
@@ -12417,6 +12423,7 @@
     <name>tracktion::engine::AudioTrack</name>
     <filename>classtracktion_1_1engine_1_1AudioTrack.html</filename>
     <base>tracktion::engine::ClipTrack</base>
+    <base>tracktion::engine::MacroParameterElement</base>
     <class kind="struct">tracktion::engine::AudioTrack::FreezePointRemovalInhibitor</class>
     <class kind="struct">tracktion::engine::AudioTrack::Listener</class>
     <member kind="typedef">
@@ -12483,6 +12490,20 @@
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
+      <type>juce::String</type>
+      <name>getNameAsTrackNumber</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>af48c818c6eb39c35530dab9625b89a5c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getNameAsTrackNumberWithDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>ad334543e01a20718b7e7d451de6be465</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>canContainPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
@@ -12501,6 +12522,13 @@
       <name>getTrackPlayabilityWarning</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
       <anchor>a5ec63b1ecaa5dd645f5bdbb04a3f7896</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getLauncherPlayabilityWarning</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>a9539bd3d47b395745e992bfab3b5670c</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -12528,8 +12556,8 @@
       <type>AuxSendPlugin *</type>
       <name>getAuxSendPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>a20aae5297e5fac1b8b8dc8fbc98917ef</anchor>
-      <arglist>(int bus=-1) const</arglist>
+      <anchor>a2018dd515b0a36b1894706dd8b238100</anchor>
+      <arglist>(int bus=-1, AuxPosition ap=AuxPosition::byBus) const</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -12614,6 +12642,13 @@
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
       <anchor>abd31a07803c72828fa028529b4def70b</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlotList &amp;</type>
+      <name>getClipSlotList</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>a9ab14c683022b44d7133b81041beb140</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -12829,8 +12864,8 @@
       <type>bool</type>
       <name>mergeInMidiSequence</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>acb5aae7e1048ad51b6994889106ce8fe</anchor>
-      <arglist>(const juce::MidiMessageSequence &amp;, TimePosition startTime, MidiClip *, MidiList::NoteAutomationType)</arglist>
+      <anchor>a158980cd171edd515ed4ef1b451e517c</anchor>
+      <arglist>(juce::MidiMessageSequence, TimePosition startTime, MidiClip *, MidiList::NoteAutomationType)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -12881,12 +12916,26 @@
       <anchor>ad48749bd088e8e1818ae293ba4e6699c</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; bool &gt; &gt;</type>
+      <name>playSlotClips</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>a1be8af23bc6090f5a841604b6069218a</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>valueTreePropertyChanged</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
       <anchor>a0e9bee837139daaf8e36a58fe8e2c244</anchor>
       <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
+      <anchor>a8b535171a8231ad33fc60a6bd88a8e8a</anchor>
+      <arglist>(juce::ValueTree &amp;v) override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>bool</type>
@@ -12936,12 +12985,12 @@
       <anchor>af91d93e444e7a61f353e7f662ef2369e</anchor>
       <arglist>(Edit &amp;, const juce::ValueTree &amp;)</arglist>
     </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
+    <member kind="function">
+      <type></type>
       <name>~AutomatableEditItem</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableEditItem.html</anchorfile>
-      <anchor>a1e057662f7dee3ab06763c88072303b2</anchor>
-      <arglist>()</arglist>
+      <anchor>a3f608afa44811968133b7ffdb894a507</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -12984,6 +13033,13 @@
       <anchorfile>classtracktion_1_1engine_1_1AutomatableEditItem.html</anchorfile>
       <anchor>a414d73213241a4b66d1ab8383f4d01ac</anchor>
       <arglist>(const juce::String &amp;paramID) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>visitAllAutomatableParams</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableEditItem.html</anchorfile>
+      <anchor>a52316c3a3a92a7bafe60d47c56a978ef</anchor>
+      <arglist>(const std::function&lt; void(AutomatableParameter &amp;)&gt; &amp;visit) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -13743,10 +13799,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>juce::WeakReference&lt; Selectable &gt;</type>
+      <type>SafeSelectable&lt; Edit &gt;</type>
       <name>editRef</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
-      <anchor>a4de93d0a09268083bb6b4c5654a72356</anchor>
+      <anchor>ab46bdf19746c361c98e3081f74f62031</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -13817,6 +13873,13 @@
       <name>updateParametersRecursionCheck</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
       <anchor>a5a2a44f883b8320b13fbf844b98608ee</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>AsyncCaller</type>
+      <name>parameterChangedCaller</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>acd231e0c4710cc935dace59367fc9151</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -14282,25 +14345,18 @@
       <arglist>()=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual AutomatableParameter::Ptr</type>
-      <name>getAssociatedAutomatableParameter</name>
+      <type>virtual void</type>
+      <name>chooseAutomatableParameter</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomationDragDropTarget.html</anchorfile>
-      <anchor>a1af36e696887e8c973eb51a75afbac1b</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual AutomatableParameter::Ptr</type>
-      <name>getAssociatedAutomatableParameter</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationDragDropTarget.html</anchorfile>
-      <anchor>ae12ad33b0bd5bcef3dd5ea8804b366da</anchor>
-      <arglist>(bool *learn)</arglist>
+      <anchor>aa0e3feae7bf293a58d628c007a548e10</anchor>
+      <arglist>(std::function&lt; void(AutomatableParameter::Ptr)&gt; handleChosenParam, std::function&lt; void()&gt; startLearnMode)=0</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>startParameterLearn</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomationDragDropTarget.html</anchorfile>
-      <anchor>afcaa1df65d9712d0d798c23a80683609</anchor>
-      <arglist>(ParameterisableDragDropSource *)</arglist>
+      <anchor>aed963ec08dbc0775d3845fdac8198566</anchor>
+      <arglist>(std::function&lt; void(AutomatableParameter::Ptr)&gt;)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -15399,6 +15455,13 @@
       <anchor>afb3f70824c1693612e1e70030b46c0df</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>ShareNodeMemory</type>
+      <name>shareNodeMemory</name>
+      <anchorfile>structtracktion_1_1engine_1_1benchmark__utilities_1_1BenchmarkOptions.html</anchorfile>
+      <anchor>af90c9d0e2e49f32b3c64026c40dc1c6a</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::BlockingFunction</name>
@@ -15806,6 +15869,63 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::BufferedAudioFileManager</name>
+    <filename>classtracktion_1_1engine_1_1BufferedAudioFileManager.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>BufferedAudioFileManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioFileManager.html</anchorfile>
+      <anchor>a66198c9fe3cc70404d709293fd5757ed</anchor>
+      <arglist>(Engine &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::shared_ptr&lt; BufferedAudioReader &gt;</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioFileManager.html</anchorfile>
+      <anchor>a5dcbc91f6fadc6e863d74b21fa56bd84</anchor>
+      <arglist>(juce::File)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::BufferedAudioReader</name>
+    <filename>classtracktion_1_1engine_1_1BufferedAudioReader.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>BufferedAudioReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioReader.html</anchorfile>
+      <anchor>adc13848bcc95f000bc8dd6b1ff172e67</anchor>
+      <arglist>(std::unique_ptr&lt; juce::AudioFormatReader &gt;, juce::TimeSliceThread &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~BufferedAudioReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioReader.html</anchorfile>
+      <anchor>a51335fc43606e19f8080bd257ee1ea8e</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProportionComplete</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioReader.html</anchorfile>
+      <anchor>a7d4a5cecd3f081d273689b22e72c0f73</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readSamples</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioReader.html</anchorfile>
+      <anchor>aa4cbe99e2bd126436a55936db266c2e2</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>useTimeSlice</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedAudioReader.html</anchorfile>
+      <anchor>a64c0f720c18c46382a9221ce0f3b56d6</anchor>
+      <arglist>() override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::BufferedFileReader</name>
     <filename>classtracktion_1_1engine_1_1BufferedFileReader.html</filename>
     <member kind="function">
@@ -15841,6 +15961,58 @@
       <name>readSamples</name>
       <anchorfile>classtracktion_1_1engine_1_1BufferedFileReader.html</anchorfile>
       <anchor>a8cb94bae57ac65e6d9aa6f500db38fd2</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::BufferedFileReaderWrapper</name>
+    <filename>classtracktion_1_1engine_1_1BufferedFileReaderWrapper.html</filename>
+    <base>tracktion::engine::FallbackReader</base>
+    <member kind="function">
+      <type></type>
+      <name>BufferedFileReaderWrapper</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReaderWrapper.html</anchorfile>
+      <anchor>a9c57dfce697ab8f7e67eb7763f9a4ed2</anchor>
+      <arglist>(std::shared_ptr&lt; BufferedAudioReader &gt; s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setReadTimeout</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReaderWrapper.html</anchorfile>
+      <anchor>adcdbc5d347661646701adb2bd17a7510</anchor>
+      <arglist>(int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readSamples</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferedFileReaderWrapper.html</anchorfile>
+      <anchor>a083dd7fa7c36e13295ac1f194a55bf9a</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::BufferingAudioReaderWrapper</name>
+    <filename>classtracktion_1_1engine_1_1BufferingAudioReaderWrapper.html</filename>
+    <base>tracktion::engine::FallbackReader</base>
+    <member kind="function">
+      <type></type>
+      <name>BufferingAudioReaderWrapper</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferingAudioReaderWrapper.html</anchorfile>
+      <anchor>a1df118eb4990ae81afb50716fea7c812</anchor>
+      <arglist>(std::unique_ptr&lt; juce::BufferingAudioReader &gt; sourceReader)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setReadTimeout</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferingAudioReaderWrapper.html</anchorfile>
+      <anchor>afc3ac92774fd45d622d587a39c5bb2ec</anchor>
+      <arglist>(int timeoutMilliseconds) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readSamples</name>
+      <anchorfile>classtracktion_1_1engine_1_1BufferingAudioReaderWrapper.html</anchorfile>
+      <anchor>a1b5bd9c8f6a0dc76d5586252dd04374b</anchor>
       <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
     </member>
   </compound>
@@ -17188,6 +17360,15 @@
     <class kind="struct">tracktion::engine::Clip::Listener</class>
     <member kind="enumeration">
       <type></type>
+      <name>FollowActionDurationType</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>adc95ebd7f90eac7a6972790064cb6b86</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1Clip.html" anchor="adc95ebd7f90eac7a6972790064cb6b86a1e4cb5f584d055a0992385c1b2155786">beats</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1Clip.html" anchor="adc95ebd7f90eac7a6972790064cb6b86a9ac74365ff1a2e3a744fca94f62c3784">loops</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
       <name>SyncType</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
       <anchor>af0cfff3f282a7f6b1b92dc5ae61c97b7</anchor>
@@ -17335,6 +17516,41 @@
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
       <anchor>a659a8741edb82ed25be123052c96cdb5</anchor>
       <arglist>(const ReferencedItem &amp;, ProjectItemID, double) override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual std::shared_ptr&lt; LaunchHandle &gt;</type>
+      <name>getLaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>afa53f80c70e84170110c562c90c04fba</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setUsesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a4238a8e7babf45eaba899d50aa9aa969</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>usesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>ab7e1f2526b3564f9b79076dc38c09703</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual LaunchQuantisation *</type>
+      <name>getLaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a597e192e496c54d0ddf4850756fc8446</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual FollowActions *</type>
+      <name>getFollowActions</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>ac24a238ea4f7e2ad9a246f18b1e4044f</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>ClipPosition</type>
@@ -17651,6 +17867,13 @@
       <anchor>acb283afe1992b98b5c7d50d807c8f168</anchor>
       <arglist>() const override</arglist>
     </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>getClipSlot</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a52b5c3911c9cf8c64fadf58de79e6fe2</anchor>
+      <arglist>() const</arglist>
+    </member>
     <member kind="function" virtualness="virtual">
       <type>virtual juce::Colour</type>
       <name>getColour</name>
@@ -17862,6 +18085,27 @@
       <arglist>(const juce::ValueTree &amp;, ClipOwner &amp;targetParent)</arglist>
     </member>
     <member kind="variable">
+      <type>juce::CachedValue&lt; FollowActionDurationType &gt;</type>
+      <name>followActionDurationType</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>aa64b21d54848f335b588b98584be43a6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; BeatDuration &gt;</type>
+      <name>followActionBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a12ba12fb801a83e32935b466e56f69ea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; double &gt;</type>
+      <name>followActionNumLoops</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>ab1a04a44ef7f379f0181e6577bbdcd9d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>juce::ValueTree</type>
       <name>state</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
@@ -17873,6 +18117,13 @@
       <name>colour</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
       <anchor>ac3c30e5b4b73748631fee2ec7e502886</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; bool &gt;</type>
+      <name>disabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
+      <anchor>a9e4b68742fa76d0ca335a27c06359ea6</anchor>
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected">
@@ -18055,6 +18306,7 @@
     <class kind="struct">tracktion::engine::Clipboard::Pitches</class>
     <class kind="struct">tracktion::engine::Clipboard::Plugins</class>
     <class kind="struct">tracktion::engine::Clipboard::ProjectItems</class>
+    <class kind="struct">tracktion::engine::Clipboard::Scenes</class>
     <class kind="struct">tracktion::engine::Clipboard::Takes</class>
     <class kind="struct">tracktion::engine::Clipboard::TempoChanges</class>
     <class kind="struct">tracktion::engine::Clipboard::TimeSigs</class>
@@ -18549,6 +18801,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>std::optional&lt; int &gt;</type>
+      <name>slotOffset</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Clips_1_1ClipInfo.html</anchorfile>
+      <anchor>a675fcb7879ed96939ef9cc6aa2cd6fcd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>bool</type>
       <name>hasBeatTimes</name>
       <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Clips_1_1ClipInfo.html</anchorfile>
@@ -18574,6 +18833,13 @@
       <name>offsetBeats</name>
       <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Clips_1_1ClipInfo.html</anchorfile>
       <anchor>a4d346b51f92fa0b5d11838055c60de14</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>grouped</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Clips_1_1ClipInfo.html</anchorfile>
+      <anchor>a40b78f8c37b3de8465d192f28695e779</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -18624,6 +18890,13 @@
       <name>getClipOwnerState</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
       <anchor>a3167704ae6d91d7663ca4f8ef79e587f</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual EditItemID</type>
+      <name>getClipOwnerID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipOwner.html</anchorfile>
+      <anchor>aec14f488dc35290a2fae88d03bf283a7</anchor>
       <arglist>()=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
@@ -18851,6 +19124,179 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::ClipSlot</name>
+    <filename>classtracktion_1_1engine_1_1ClipSlot.html</filename>
+    <base>tracktion::engine::EditItem</base>
+    <base>tracktion::engine::Selectable</base>
+    <base>tracktion::engine::ClipOwner</base>
+    <member kind="function">
+      <type></type>
+      <name>ClipSlot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a3a2b3e37455ba5bc2044c98dc82d2a19</anchor>
+      <arglist>(const juce::ValueTree &amp;, Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ClipSlot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>ac1a794aabee173bae2beb7ed30edc95c</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>ac1a461953ac72343e2d9508c25c5a03a</anchor>
+      <arglist>(Clip *)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>getClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a62986f929f5ce81d2c8158f3517fffbf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getIndex</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a90d1b9610d63291e8e0565fcc6d579f3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getInputDestination</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a9f12aa50a855d5dea7f3be0c7df85b0b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getName</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>accb4f678198bff768f568a26d90306e3</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getSelectableDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a11fdcab9be8cae326ce053dacb1bd30d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ValueTree &amp;</type>
+      <name>getClipOwnerState</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>ac0a6568b5da72e6cc38714a1debbb534</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>EditItemID</type>
+      <name>getClipOwnerID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a349ba7a91b6776cc1c14ae0794c1f65f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Selectable *</type>
+      <name>getClipOwnerSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>ab31edc9bb617a720e843aebd95ec1707</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Edit &amp;</type>
+      <name>getClipOwnerEdit</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>aa8b8f235ae44cd5304901a2c2ea07eb9</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>af2d9584053181e4cd9b39899e5e4a3f1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Track &amp;</type>
+      <name>track</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlot.html</anchorfile>
+      <anchor>a6a36ab5c240e6ffb88ec5a41ef6d2aac</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ClipSlotList</name>
+    <filename>classtracktion_1_1engine_1_1ClipSlotList.html</filename>
+    <base protection="private">ValueTreeObjectList&lt; ClipSlot &gt;</base>
+    <member kind="function">
+      <type></type>
+      <name>ClipSlotList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>a74893c0733cf10038addb46b8e3e0af1</anchor>
+      <arglist>(const juce::ValueTree &amp;, Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ClipSlotList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>a56ca7ef1c9aab39b78544d62b48acaf3</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; ClipSlot * &gt;</type>
+      <name>getClipSlots</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>a1b7b5ef50c235f85247bc86e5ec2255b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>ensureNumberOfSlots</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>ae1efc548c1ece11984868c61c1feb5f1</anchor>
+      <arglist>(int numSlots)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setNumberOfSlots</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>ab61ecd90d40ff9edc5958111cc59a526</anchor>
+      <arglist>(int numSlots)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>insertSlot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>a6d30948db40c2e80d2970870900bc5aa</anchor>
+      <arglist>(int index)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>deleteSlot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>aa910fafda20135068ad7c06c5d3596af</anchor>
+      <arglist>(ClipSlot &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>aab4d7673bee9f42149f4d1d09ddbf40b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Track &amp;</type>
+      <name>track</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipSlotList.html</anchorfile>
+      <anchor>aa1bfefe11f744ea837c2660cf1411f7e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::ClipTrack</name>
     <filename>classtracktion_1_1engine_1_1ClipTrack.html</filename>
     <base>tracktion::engine::Track</base>
@@ -18866,8 +19312,8 @@
       <type></type>
       <name>ClipTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
-      <anchor>aec6224ef4da1ccc650c7b16247ea5dfa</anchor>
-      <arglist>(Edit &amp;, const juce::ValueTree &amp;, double defaultHeight, double minHeight, double maxHeight)</arglist>
+      <anchor>ab3e3c048279804fe84597672138330ed</anchor>
+      <arglist>(Edit &amp;, const juce::ValueTree &amp;, bool hasModifierList)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -19185,6 +19631,13 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>EditItemID</type>
+      <name>getClipOwnerID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
+      <anchor>a0df577afd2d7601b2d0b96d16cea1fcc</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>Selectable *</type>
       <name>getClipOwnerSelectable</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipTrack.html</anchorfile>
@@ -19285,6 +19738,13 @@
       <name>Ptr</name>
       <anchorfile>classtracktion_1_1engine_1_1CollectionClip.html</anchorfile>
       <anchor>a00144f4eb88701e82a1bfcde8bde4e13</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedArray&lt; CollectionClip &gt;</type>
+      <name>Array</name>
+      <anchorfile>classtracktion_1_1engine_1_1CollectionClip.html</anchorfile>
+      <anchor>a0689edb15403a732d107aa6ee2a04336</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -19439,6 +19899,80 @@
       <name>range</name>
       <anchorfile>classtracktion_1_1engine_1_1CollectionClip.html</anchorfile>
       <anchor>aaf8f828999c941fe4e90c0359d9e8d3d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::ColourArea</name>
+    <filename>structtracktion_1_1engine_1_1ColourArea.html</filename>
+    <member kind="function">
+      <type>bool</type>
+      <name>contains</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a12bfa891e5dd7b5b332b15fc3919f424</anchor>
+      <arglist>(ClipSlot &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isLeft</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>adb86c0a2576857784bfb8e6f84d624bd</anchor>
+      <arglist>(ClipSlot &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isRight</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a1b538e12592af3993aaf419a29a9e000</anchor>
+      <arglist>(ClipSlot &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isTop</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a145a36e7cb10613548caf005a665e749</anchor>
+      <arglist>(ClipSlot &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isBottom</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>aaf044a6a357d6505f97218bf8a75d259</anchor>
+      <arglist>(ClipSlot &amp;) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Colour</type>
+      <name>colour</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a0f7c0e33892f5a5d39e916873f3c3af7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Track &amp;</type>
+      <name>firstTrack</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a404a3655ea46a046fa19f261c3ed8813</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Track &amp;</type>
+      <name>lastTrack</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a2755078e16249bc8d3a5fec6f1a4d557</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>firstScene</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>a8c1ad8a00f6863a27fafd11eeda73b13</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>lastScene</name>
+      <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
+      <anchor>af0460d4a9dac72cf3e63d4236aab092b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -21032,8 +21566,8 @@
       <type>virtual void</type>
       <name>discardRecordings</name>
       <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html</anchorfile>
-      <anchor>ad666a22a178aa49c2a31cd888abaf9b2</anchor>
-      <arglist>()</arglist>
+      <anchor>aa91b163d7381932288af70a2def43fe8</anchor>
+      <arglist>(EditItemID)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -21067,6 +21601,13 @@
       <name>getClipOwnerState</name>
       <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
       <anchor>a741f1f7ac6a50a3c5fb1b8c0de31fae6</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>EditItemID</type>
+      <name>getClipOwnerID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ContainerClip.html</anchorfile>
+      <anchor>a4214712611849f29401d5fcd89031b28</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -21302,31 +21843,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::DeviceManager::ContextDeviceListRebuilder</name>
-    <filename>structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>ContextDeviceListRebuilder</name>
-      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html</anchorfile>
-      <anchor>a96fb555ac8de9b369857c51f82f52d19</anchor>
-      <arglist>(DeviceManager &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~ContextDeviceListRebuilder</name>
-      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html</anchorfile>
-      <anchor>a5bb71b74f87dc56edb14447f5bddcc30</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="variable">
-      <type>DeviceManager &amp;</type>
-      <name>dm</name>
-      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1ContextDeviceListRebuilder.html</anchorfile>
-      <anchor>a07c5c938753f923e248af416a01dcd73</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion::engine::ControlSurface</name>
     <filename>classtracktion_1_1engine_1_1ControlSurface.html</filename>
@@ -21358,6 +21874,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>af82b805e672a490355ead0da86ac39b7</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>wantsDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a4471dcc884f6eedef41e82ba433ff3fa</anchor>
+      <arglist>(const MidiID &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -21398,8 +21921,8 @@
       <type>virtual void</type>
       <name>moveMasterLevelFader</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a82596073af41b365227acc888b3818cf</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos)</arglist>
+      <anchor>a7a9bbf8d1e8282e2d43651224d10717c</anchor>
+      <arglist>(float newPos)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -21410,17 +21933,24 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>moveMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a46c4612911dc67b688968e2119f22458</anchor>
+      <arglist>(float newPan)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>moveAux</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>ac61fcbf95efb9f16453436fe32675d3e</anchor>
-      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] const char *bus, [[maybe_unused]] float newPos)</arglist>
+      <anchor>af98f956248b5a80b52014e2d60b7b8ab</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] int auxNum, [[maybe_unused]] const char *bus, [[maybe_unused]] float newPos)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>clearAux</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a26cdd71adcedd47fc01430d02457470f</anchor>
-      <arglist>(int)</arglist>
+      <anchor>a1924c5c9b129e2aa8d1a1dc0d0eafc26</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] int auxNum)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -21470,6 +22000,20 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>a6fc57e700d41b10a6c69b986f162f45d</anchor>
       <arglist>([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray &amp;trackNames)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>padStateChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a239548692f8f4272f88ae5c91a48c81f</anchor>
+      <arglist>([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] int state)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipsPlayingStateChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aebc36085ed292abe80adf1903b0c9fe9</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] bool isPlaying)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -21661,6 +22205,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>showingClipSlots</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ad8cbd3aa6b059ba137d851be012c93e1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>deleteController</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
@@ -21702,6 +22253,20 @@
       <anchor>a750d2748b15f365fed1bc3bbf6351481</anchor>
       <arglist>() const noexcept</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>currentSelectionManagerChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aa791a8ff3b854ff598c9e6cc56b4a3cb</anchor>
+      <arglist>(SelectionManager *sm)</arglist>
+    </member>
+    <member kind="function">
+      <type>SelectionManager *</type>
+      <name>getSelectionManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>add1a5c7e9d9bd8379653bc6f48b81d10</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function">
       <type>bool</type>
       <name>isSafeRecording</name>
@@ -21735,6 +22300,13 @@
       <name>getParamBankOffset</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>aa21625a85d11830b5deef64fa11c4b4a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getClipSlotOffset</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ae576e7d776cfdb5ca3e1bcc62546598d</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -21783,22 +22355,22 @@
       <type>void</type>
       <name>userMovedMasterPanPot</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a660901e8d1e6e052c65a79ef70594e62</anchor>
-      <arglist>(float newLevel)</arglist>
+      <anchor>a1890174812c4d0270c68334c2e3a4bd6</anchor>
+      <arglist>(float newLevel, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userMovedAux</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aa9e5068c2023b989cac71f5127bc8e21</anchor>
-      <arglist>(int channelNum, float newPosition)</arglist>
+      <anchor>a9acdc9cdaeec098d976b16a7bf781f97</anchor>
+      <arglist>(int channelNum, int auxNum, float newPosition, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userPressedAux</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a369d99aa8623654643ba89d3b2eae0ae</anchor>
-      <arglist>(int channelNum)</arglist>
+      <anchor>a0c68b2430951ec75849445d272995372</anchor>
+      <arglist>(int channelNum, int auxNum)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -21837,6 +22409,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userSelectedOneTrack</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a7fbb1302c1841cfe16040a372fcea6a9</anchor>
+      <arglist>(int channelNum)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>userSelectedClipInTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>ae05d61e261a91bf197bf0abbb8a02c42</anchor>
@@ -21855,6 +22434,27 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>a902caee4078aa60b711a6967dbda6b77</anchor>
       <arglist>(int channelNum, bool enableEtoE)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userLaunchedClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aedbf42b1369dd075f58c0cd28919156a</anchor>
+      <arglist>(int channelNum, int sceneNum)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userStoppedClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ae16951b5fb08d9a4fbed50759bc22c66</anchor>
+      <arglist>(int channelNum)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userLaunchedScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a378b28db55c104620e6bdc2aba506670</anchor>
+      <arglist>(int sceneNum)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -22313,6 +22913,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userChangedPadBanks</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a621f5bdd52115cc02ebdead2ee47529f</anchor>
+      <arglist>(int padDelta)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>userMovedJogWheel</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>ad38ad99710cfe3db070dd5cfe0b7f2fc</anchor>
@@ -22336,8 +22943,8 @@
       <type>void</type>
       <name>userMovedParameterControl</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a032002a51db92bdd2ded5a40ad15faf1</anchor>
-      <arglist>(int parameter, float newValue)</arglist>
+      <anchor>a9a18aef4898de75cc8391cfe517bc527</anchor>
+      <arglist>(int parameter, float newValue, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -22376,6 +22983,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userSetAuxBank</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a04d68527533eb20ebc69ab580363370f</anchor>
+      <arglist>(int num)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>updateDeviceState</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>af0673b23cb12ba797696c4eecdb620be</anchor>
@@ -22401,6 +23015,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>aafef08de3ca580663363b85368f268bf</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setFollowsTrackSelection</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aa724ed125ddda5d3786fb11fb232b149</anchor>
+      <arglist>(bool f)</arglist>
     </member>
     <member kind="variable">
       <type>juce::String</type>
@@ -22480,10 +23101,24 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>int</type>
+      <name>numberOfTrackPads</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a71ec443070a65f734e8719a3a5866c99</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>bool</type>
       <name>allowBankingOffEnd</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>aa55a829b0294f8dd92c1991c1bcd6aed</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>wantsDummyParams</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>af758666a8075e40a9f457b7e2302cdcd</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -22522,6 +23157,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>limitedPadColours</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a143cce2c853a08ae87fc50d3604a388f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>int</type>
       <name>numAuxes</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
@@ -22550,6 +23192,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>AuxPosition</type>
+      <name>auxMode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ac586d8eb40411004cc66b444ea8c0a99</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>Engine &amp;</type>
       <name>engine</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
@@ -22568,6 +23217,13 @@
       <name>owner</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>ac318778d4c61911acdf63e8242b3fb5c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::set&lt; std::pair&lt; int, int &gt; &gt;</type>
+      <name>recentlyPressedPads</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a402acd4ba58cd023344a23878df22b99</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -22672,24 +23328,6 @@
       <anchorfile>structtracktion_1_1engine_1_1MackieMCU_1_1CpuMeterTimer.html</anchorfile>
       <anchor>aa393157b83a73635124e951067e27e45</anchor>
       <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::DeviceManager::CPUUsageListener</name>
-    <filename>structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~CPUUsageListener</name>
-      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html</anchorfile>
-      <anchor>ad30318256ddf5d59fb4fff21aee2d1df</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>reportCPUUsage</name>
-      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1CPUUsageListener.html</anchorfile>
-      <anchor>a134a6e0ac973e3acd074973f81c5e0be</anchor>
-      <arglist>(float cpuAvg, float cpuMin, float cpuMax, int numGlitches)=0</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -22878,6 +23516,20 @@
       <anchor>acb2244afdf62f4b0997df40232b80f8c</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>allowClipSlots</name>
+      <anchorfile>structtracktion_1_1engine_1_1CreateNodeParams.html</anchorfile>
+      <anchor>af8a47231e0f855bb39f1c456f652abbe</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>readAheadTimeStretchNodes</name>
+      <anchorfile>structtracktion_1_1engine_1_1CreateNodeParams.html</anchorfile>
+      <anchor>ac979424270c1b384f3be6a040c83fcde</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::AudioFadeCurve::CrossfadeLevels</name>
@@ -22937,6 +23589,13 @@
       <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
       <anchor>a3d1f5aef8b43251ef18ec030021a741b</anchor>
       <arglist>(int x, int y) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>visibilityChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
+      <anchor>adcfe92d79e301a6c3a22cd9e0f07e71a</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -23250,8 +23909,15 @@
       <type>virtual juce::Colour</type>
       <name>getCurrentLineColour</name>
       <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
-      <anchor>af81b5130432e5fd9c9f5a2bb292c1ce7</anchor>
-      <arglist>() const =0</arglist>
+      <anchor>ad8933277347ce232ad8a6e140dc64f6e</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::Colour</type>
+      <name>getCurrentFillColour</name>
+      <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
+      <anchor>a60b48c0ad3b5ac181f59bf22d7ed43be</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual juce::Colour</type>
@@ -23766,6 +24432,54 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>marker1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda5591062b4a398d0a42eefee1bc7e25cc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker2Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdade240aa258f79fc8e8f7004b33020a49</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker3Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda391145600482c09e600e2309779e13ba</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda7c5e8f190cca55beb82420a88d32869f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker5Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda1ccb596e2bcd63e3d75f303d2788bd7d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker6Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda48acd8209ac7ef1ea0c2f14e7b770d6c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker7Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda6860bfecd8490d02fb6d974339780fcf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda1e58ad3f76fec309e543e31072f23448</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>toggleBeatsSecondsModeId</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a616409a4913a2ad7dd074e25b022a5cda4ec3028856193c968277c606c41443e3</anchor>
@@ -23937,6 +24651,102 @@
       <name>auxTextTrackId</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a616409a4913a2ad7dd074e25b022a5cda47300f43c721504b91cefb1c76ea28b8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip1TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdab3d5f78f8832930b617945017c569e9e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip2TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdaa3dbd2c8c71359eb5a90ff605a4a8a87</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip3TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda6017d5d745dd5a230cf8164abe55eef2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip4TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdad9207cfc1817d58126345ddfa2d735d2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip5TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdac21b80ad6110fdc3de34e0a6c201dee2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip6TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda3fc143990070ea62cd29ea6414eb02ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip7TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda5975d2665f128d407912127d5ef534fe</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip8TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdada033831eb612566b796682acaf4a63e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>stopClipsTrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda55d746956d882bd4544dfb25b64c0da3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>sceneId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda908affc9da9528ea9cb8eac891cc319e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda539c0115727f22bf5e82140b2f0c6879</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdaa019f1f4b60350f1d45916d758cd7535</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdafc85e541737752a1d9fb7806c2d9aa83</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda0c72c17cffef315e24a0b19aa8caef35</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda2e4765014093362a8be3fc5faf76e15b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda162a781ac1cf63b5b6f7d9f682ff7341</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -24432,6 +25242,54 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>marker1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda5591062b4a398d0a42eefee1bc7e25cc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker2Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdade240aa258f79fc8e8f7004b33020a49</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker3Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda391145600482c09e600e2309779e13ba</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda7c5e8f190cca55beb82420a88d32869f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker5Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda1ccb596e2bcd63e3d75f303d2788bd7d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker6Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda48acd8209ac7ef1ea0c2f14e7b770d6c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker7Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda6860bfecd8490d02fb6d974339780fcf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>marker8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda1e58ad3f76fec309e543e31072f23448</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>toggleBeatsSecondsModeId</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a616409a4913a2ad7dd074e25b022a5cda4ec3028856193c968277c606c41443e3</anchor>
@@ -24603,6 +25461,102 @@
       <name>auxTextTrackId</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a616409a4913a2ad7dd074e25b022a5cda47300f43c721504b91cefb1c76ea28b8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip1TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdab3d5f78f8832930b617945017c569e9e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip2TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdaa3dbd2c8c71359eb5a90ff605a4a8a87</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip3TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda6017d5d745dd5a230cf8164abe55eef2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip4TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdad9207cfc1817d58126345ddfa2d735d2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip5TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdac21b80ad6110fdc3de34e0a6c201dee2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip6TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda3fc143990070ea62cd29ea6414eb02ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip7TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda5975d2665f128d407912127d5ef534fe</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clip8TrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdada033831eb612566b796682acaf4a63e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>stopClipsTrackId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda55d746956d882bd4544dfb25b64c0da3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>sceneId</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda908affc9da9528ea9cb8eac891cc319e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda539c0115727f22bf5e82140b2f0c6879</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdaa019f1f4b60350f1d45916d758cd7535</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankUp8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cdafc85e541737752a1d9fb7806c2d9aa83</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown1Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda0c72c17cffef315e24a0b19aa8caef35</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown4Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda2e4765014093362a8be3fc5faf76e15b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>clipBankDown8Id</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a616409a4913a2ad7dd074e25b022a5cda162a781ac1cf63b5b6f7d9f682ff7341</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -25060,8 +26014,15 @@
       <type>void</type>
       <name>moveMasterLevelFader</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ad6caa2840b89047288c81e219e5d5697</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
+      <anchor>ae4ebd9794102ba15ba9e5af3fe49a50f</anchor>
+      <arglist>(float newSliderPos) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>moveMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a4a24dd948d6ac0609646aad0f8d5a706</anchor>
+      <arglist>(float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -25074,8 +26035,8 @@
       <type>void</type>
       <name>moveAux</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a95d2b36eeeb6311b9cdc5800521c218b</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
+      <anchor>a8988beeda8368ef96a9e6017bcf54210</anchor>
+      <arglist>(int channel, int auxNum, const char *bus, float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -25429,6 +26390,62 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>marker1</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ad3306e6cef056046b69b386f115fdcde</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker2</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a8ee339c01ff8150bc119cfa020bfccd0</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker3</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a08eca8782fb53473b5490ed7be998b83</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker4</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a8b8350b7df4a89bd9d40fa173a12f296</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker5</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a48686c3d7c336866e0c200667a38b418</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker6</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>adb9fcff780912fa2537c8716c4377433</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker7</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a9dde872940fbfc29ab4d3ae355e0e6e7</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>marker8</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a1ce27ba3376bf271769c8b48054dc691</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>nudgeLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a42d729134bbf8e419010a37408feb792</anchor>
@@ -25621,6 +26638,118 @@
       <name>auxTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a23a2549e919e50cba5ef4128489a64a4</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip1</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a8dc5805ca2e2a599e246f185ec40962c</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip2</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a2a474ac6aba1d5009573f4b43dac27af</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip3</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>aaef83cdaf005feea1ee81c9c553f2075</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip4</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>aa3020b0d8e147401f9165f4e372bb980</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip5</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>aae8ce189e2a424608935f4c701d5f8bf</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip6</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>addb1c3a64d229924998d2cfb652c50ce</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip7</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a60f1c8bcb4c8830faada297ef20672af</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchClip8</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ac301116ae0b83731749db335e0748d05</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>stopClips</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a10a352de8e66fde50b4c3769c18ae9f6</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>launchScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a6311fd6fb38d4f4b9bc3852b90c4ec7c</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankUp1</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a5dc9c06ead16460de83a648ca48d6998</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankUp4</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>acad17ecb6c86d68447b7018c8fb478e5</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankUp8</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>accf2af8721a27dcfc4814190a161bd78</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankDown1</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a34d4a3406bb4e76335623e96ab7bb009</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankDown4</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a7dc89b2f6edee39e79c9f40c58a949c7</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clipBankDown8</name>
+      <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ade04a24e29acf1260c7e0c1767540394</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -26355,11 +27484,164 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::SelectableClass::DeleteSelectedParams</name>
+    <filename>structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html</filename>
+    <member kind="variable">
+      <type>SelectionManager *</type>
+      <name>selectionManager</name>
+      <anchorfile>structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html</anchorfile>
+      <anchor>adb29deae0f0de3197de75164f46744b4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SelectableList</type>
+      <name>items</name>
+      <anchorfile>structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html</anchorfile>
+      <anchor>a239d52bd2ca86fccc99e6ee98abd9aaf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>partOfCutOperation</name>
+      <anchorfile>structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html</anchorfile>
+      <anchor>aa286ff47f14f3e427739f951e41ca102</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::Destination</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</filename>
+    <base>tracktion::engine::Selectable</base>
+    <member kind="function">
+      <type></type>
+      <name>~Destination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>aa9c6e96033519e53b3c58902ee98fb5a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Destination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>ae20bb27286ca10bbd059eb863e85b6fe</anchor>
+      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getSelectableDescription</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>ae31f6b144982e98e4e577e948d0ea751</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>InputDeviceInstance &amp;</type>
+      <name>input</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>ae9bb3d51711bbe71e7a74bb4a1c0638c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>a2882a22075628d30c5e470e3eba75857</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const EditItemID</type>
+      <name>targetID</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>a8da841d42133416922a3d16afba72252</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const int</type>
+      <name>targetIndex</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>aa81ab03b8e78699fe8cde8ec9d3c3e6e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; bool &gt;</type>
+      <name>recordEnabled</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html</anchorfile>
+      <anchor>a63397ee48b760459423154787996db7a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::DestinationList</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</filename>
+    <base>ValueTreeObjectList&lt; Destination &gt;</base>
+    <member kind="function">
+      <type></type>
+      <name>DestinationList</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a655814cbcd077342c33d514b66d5a314</anchor>
+      <arglist>(InputDeviceInstance &amp;i, const juce::ValueTree &amp;v)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~DestinationList</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a63375f56ca9bd8033c1512b31d0effac</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a04ac9ec4e2fe019b5664703b4fa64de8</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const override</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *</type>
+      <name>createNewObject</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>ae3f3a1192c2db6f7b4a202bab1e8805c</anchor>
+      <arglist>(const juce::ValueTree &amp;v) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>deleteObject</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a212ae0f66b3c61bafe827a6e5ef283a0</anchor>
+      <arglist>(Destination *c) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>af7ec400b68941155eab7a61310aa9354</anchor>
+      <arglist>(Destination *) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>objectRemoved</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a2fd8f927efa1a2af55e8cb2b3ec09d61</anchor>
+      <arglist>(Destination *) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>a7fee9766d54091d39b98339f30411bfe</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>InputDeviceInstance &amp;</type>
+      <name>input</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html</anchorfile>
+      <anchor>aef309a4082575d340fec2af5d87a4bd7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::DeviceManager</name>
     <filename>classtracktion_1_1engine_1_1DeviceManager.html</filename>
-    <class kind="struct">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</class>
-    <class kind="struct">tracktion::engine::DeviceManager::CPUUsageListener</class>
+    <class kind="struct">tracktion::engine::DeviceManager::TracktionEngineAudioDeviceManager</class>
     <member kind="function">
       <type></type>
       <name>~DeviceManager</name>
@@ -26389,60 +27671,39 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>HostedAudioDeviceInterface &amp;</type>
-      <name>getHostedAudioDeviceInterface</name>
+      <type>void</type>
+      <name>resetToDefaults</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a11b91846ccd80bf71ff62b074218527f</anchor>
+      <anchor>a9a54a9bb4d65a0f8b2ecd2e0a069a3bf</anchor>
+      <arglist>(bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rescanMidiDeviceList</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a1c0c2e8cac3ddbe11e2f4ff7ee2b7921</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>isHostedAudioDeviceInterfaceInUse</name>
+      <type>void</type>
+      <name>rescanWaveDeviceList</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a60460f10126436bf2057139c09ebc822</anchor>
+      <anchor>a306d06a400f0b4f2e2abd30dd470e886</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getMidiDeviceScanIntervalSeconds</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a59b80f43ba23380f17f5c9f097f85380</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
-      <name>removeHostedAudioDeviceInterface</name>
+      <name>setMidiDeviceScanIntervalSeconds</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a47083b3c0cedc829d65c84bc46e9e1d3</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>float</type>
-      <name>getCpuUsage</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a1384ce8fe9033a65cd5ff0ee332cdd24</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setCpuLimitBeforeMuting</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>ae6d7c1825f08979ffd5f719a6e07ccc5</anchor>
-      <arglist>(double newLimit)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>updateNumCPUs</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a8b88f0ba695286e75685673e606ca6ea</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>addCPUUsageListener</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>af2988dc096442d3f5563198e7c13900b</anchor>
-      <arglist>(CPUUsageListener *listener)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>removeCPUUsageListener</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>af1158f839952458e141a78ca95a2cadc</anchor>
-      <arglist>(CPUUsageListener *listener)</arglist>
+      <anchor>a1ce71330e53bb3bf1ffe8f5099ac64bd</anchor>
+      <arglist>(int intervalSeconds)</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -26466,6 +27727,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>TimeDuration</type>
+      <name>getBlockLength</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>aa4323b9cb865edf8faa242708331b468</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>double</type>
       <name>getBlockSizeMs</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26473,11 +27741,158 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>TimeDuration</type>
-      <name>getBlockLength</name>
+      <type>double</type>
+      <name>getOutputLatencySeconds</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>aa4323b9cb865edf8faa242708331b468</anchor>
+      <anchor>a8eb55538738b6c87abe11c635334cc7a</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getRecordAdjustmentMs</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a4ed27f417fef90f8cd563cd592629b3f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getRecordAdjustmentSamples</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a8f22ae59a3658fe038f0ecd3c61d0055</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getCpuUsage</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a1384ce8fe9033a65cd5ff0ee332cdd24</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setCpuLimitBeforeMuting</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ae6d7c1825f08979ffd5f719a6e07ccc5</anchor>
+      <arglist>(double newLimit)</arglist>
+    </member>
+    <member kind="function">
+      <type>PerformanceMeasurement::Statistics</type>
+      <name>getCPUStatistics</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a0f788d0c1b2e951fec7fe328c52deca7</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>restCPUStatistics</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a08c79f7e3f31fa4aae6a04e25b3efba9</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateNumCPUs</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a8b88f0ba695286e75685673e606ca6ea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>enableOutputClipping</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a05a4490fcf1c19f27608b38cec37d028</anchor>
+      <arglist>(bool clipOutput)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasOutputClipped</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a3dcce1358a36d9d17accd5daddddfeec</anchor>
+      <arglist>(bool reset)</arglist>
+    </member>
+    <member kind="function">
+      <type>HostedAudioDeviceInterface &amp;</type>
+      <name>getHostedAudioDeviceInterface</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a11b91846ccd80bf71ff62b074218527f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isHostedAudioDeviceInterfaceInUse</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a60460f10126436bf2057139c09ebc822</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeHostedAudioDeviceInterface</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a47083b3c0cedc829d65c84bc46e9e1d3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumInputDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a7f2dc75ee9d09f4b54779590f924133c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDevice *</type>
+      <name>getInputDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>aaa691b901c734f38cec7f31fefe64fed</anchor>
+      <arglist>(int index) const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumOutputDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ade38bd01413b94b571ccdf37cf8db7c2</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>OutputDevice *</type>
+      <name>getOutputDeviceAt</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a09e7b664a70532dd0b753da67aa93e95</anchor>
+      <arglist>(int index) const</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDevice *</type>
+      <name>findInputDeviceForID</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ab87b4577e63eec74d5bd8f7eb9995b6d</anchor>
+      <arglist>(const juce::String &amp;id) const</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDevice *</type>
+      <name>findInputDeviceWithName</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a0d1c99d903d4b8e492a406de53430051</anchor>
+      <arglist>(const juce::String &amp;name) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::shared_ptr&lt; MidiInputDevice &gt;</type>
+      <name>findMidiInputDeviceForID</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>aee714948b37df56beaad74197d4ab1f5</anchor>
+      <arglist>(const juce::String &amp;id) const</arglist>
+    </member>
+    <member kind="function">
+      <type>OutputDevice *</type>
+      <name>findOutputDeviceForID</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>abc1498a0c46ecc046b15e23e2a041bd4</anchor>
+      <arglist>(const juce::String &amp;id) const</arglist>
+    </member>
+    <member kind="function">
+      <type>OutputDevice *</type>
+      <name>findOutputDeviceWithName</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a0561aa16b3704512b4f50aeabeafa5ea</anchor>
+      <arglist>(const juce::String &amp;name) const</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -26494,6 +27909,13 @@
       <arglist>(int index) const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setDefaultWaveOutDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ab56a0f19258c8961aa88472d28ffe576</anchor>
+      <arglist>(juce::String deviceID)</arglist>
+    </member>
+    <member kind="function">
       <type>WaveOutputDevice *</type>
       <name>getDefaultWaveOutDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26501,11 +27923,11 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setDefaultWaveOutDevice</name>
+      <type>juce::String</type>
+      <name>getDefaultWaveOutDeviceID</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a782402c170f9f3fd17e3ecdc3810197f</anchor>
-      <arglist>(int index)</arglist>
+      <anchor>a1b4e21ac11888c5cc1866c2359ad3db8</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -26522,6 +27944,13 @@
       <arglist>(int index) const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setDefaultWaveInDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a8b3b264189b9d186a23d2f5736de4fc1</anchor>
+      <arglist>(juce::String deviceID)</arglist>
+    </member>
+    <member kind="function">
       <type>WaveInputDevice *</type>
       <name>getDefaultWaveInDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26529,11 +27958,18 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setDefaultWaveInDevice</name>
+      <type>juce::String</type>
+      <name>getDefaultWaveInDeviceID</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a1c6dfebd8e1ad172e5274807e28306a0</anchor>
-      <arglist>(int index)</arglist>
+      <anchor>a6a9ccbfbc3c782eada0d305107ee8ebd</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setWaveOutChannelsEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>af0d030552f42eb4923be9c1496128af0</anchor>
+      <arglist>(const std::vector&lt; ChannelIndex &gt; &amp;, bool)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -26558,6 +27994,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>setWaveInChannelsEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>add7e1a2dd9c98adcbf59e358864371c9</anchor>
+      <arglist>(const std::vector&lt; ChannelIndex &gt; &amp;, bool)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>setDeviceInChannelStereo</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
       <anchor>af3ea9fed94a65f3ecd7944557373479d</anchor>
@@ -26578,34 +28021,6 @@
       <arglist>(int chanNum)</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setWaveOutChannelsEnabled</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>af0d030552f42eb4923be9c1496128af0</anchor>
-      <arglist>(const std::vector&lt; ChannelIndex &gt; &amp;, bool)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setWaveInChannelsEnabled</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>add7e1a2dd9c98adcbf59e358864371c9</anchor>
-      <arglist>(const std::vector&lt; ChannelIndex &gt; &amp;, bool)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>rebuildWaveDeviceListIfNeeded</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>aa7dffd058e2482445d3c3fdc70263dcd</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>rescanMidiDeviceList</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>acf29815f12f421df9c63dcd1e60aecac</anchor>
-      <arglist>(bool forceRescan)</arglist>
-    </member>
-    <member kind="function">
       <type>int</type>
       <name>getNumMidiOutDevices</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26620,6 +28035,13 @@
       <arglist>(int index) const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setDefaultMidiOutDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a157609cfc2f89b425890ccf661935b77</anchor>
+      <arglist>(juce::String deviceID)</arglist>
+    </member>
+    <member kind="function">
       <type>MidiOutputDevice *</type>
       <name>getDefaultMidiOutDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26627,11 +28049,11 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setDefaultMidiOutDevice</name>
+      <type>juce::String</type>
+      <name>getDefaultMidiOutDeviceID</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>ad36a05df579bf9e41bf76a65749b2ed2</anchor>
-      <arglist>(int index)</arglist>
+      <anchor>af1f1196c082e00e6aeaec294c33e52a4</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -26641,11 +28063,25 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>MidiInputDevice *</type>
+      <type>std::shared_ptr&lt; MidiInputDevice &gt;</type>
       <name>getMidiInDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a21c893322c13d1eef1d5a7456708b686</anchor>
+      <anchor>afe409aec057c8bccac8181134de0aec4</anchor>
       <arglist>(int index) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; std::shared_ptr&lt; MidiInputDevice &gt; &gt;</type>
+      <name>getMidiInDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a7005ca5e3564d0c704481d26d4bbd50e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setDefaultMidiInDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ad2dba918350112c6fc6212db8a8d2baf</anchor>
+      <arglist>(juce::String deviceID)</arglist>
     </member>
     <member kind="function">
       <type>MidiInputDevice *</type>
@@ -26655,11 +28091,25 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setDefaultMidiInDevice</name>
+      <type>juce::String</type>
+      <name>getDefaultMidiInDeviceID</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>afa98dba750fe067a884f741d252beb72</anchor>
-      <arglist>(int index)</arglist>
+      <anchor>a830841032e35ba6061c32f327e189882</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>injectMIDIMessageToDefaultDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ab84d746d0377c8c000907e878d95adfa</anchor>
+      <arglist>(const juce::MidiMessage &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>broadcastMessageToAllVirtualDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a739ea789b6f41d5d684aeec3a6c1bb14</anchor>
+      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -26691,52 +28141,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>resetToDefaults</name>
+      <name>dispatchPendingUpdates</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a9a54a9bb4d65a0f8b2ecd2e0a069a3bf</anchor>
-      <arglist>(bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumInputDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a7f2dc75ee9d09f4b54779590f924133c</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDevice *</type>
-      <name>getInputDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>aaa691b901c734f38cec7f31fefe64fed</anchor>
-      <arglist>(int index) const</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumOutputDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>ade38bd01413b94b571ccdf37cf8db7c2</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>OutputDevice *</type>
-      <name>getOutputDeviceAt</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a09e7b664a70532dd0b753da67aa93e95</anchor>
-      <arglist>(int index) const</arglist>
-    </member>
-    <member kind="function">
-      <type>OutputDevice *</type>
-      <name>findOutputDeviceForID</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>abc1498a0c46ecc046b15e23e2a041bd4</anchor>
-      <arglist>(const juce::String &amp;id) const</arglist>
-    </member>
-    <member kind="function">
-      <type>OutputDevice *</type>
-      <name>findOutputDeviceWithName</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a0561aa16b3704512b4f50aeabeafa5ea</anchor>
-      <arglist>(const juce::String &amp;name) const</arglist>
+      <anchor>a51b62fb8fcdb2c7917ac2ea8184d7a94</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -26756,29 +28164,8 @@
       <type>void</type>
       <name>deleteVirtualMidiDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a6f960d0684f97ccad65f773dad890862</anchor>
-      <arglist>(VirtualMidiInputDevice *)</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getRecordAdjustmentMs</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a4ed27f417fef90f8cd563cd592629b3f</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getRecordAdjustmentSamples</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a8f22ae59a3658fe038f0ecd3c61d0055</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getOutputLatencySeconds</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a8eb55538738b6c87abe11c635334cc7a</anchor>
-      <arglist>() const</arglist>
+      <anchor>a9d79caf8fbf7d12fd57a3359b1f6aa2a</anchor>
+      <arglist>(VirtualMidiInputDevice &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -26796,24 +28183,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>clearAllContextDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a52f5ffb5ea14486f10b5afc0e1903d96</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>reloadAllContextDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a36b47f2a4163af149ba36f6ecf284f43</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>setGlobalOutputAudioProcessor</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>af6b87ec7ece6ecaa44b6f61bd90e2424</anchor>
-      <arglist>(juce::AudioProcessor *)</arglist>
+      <anchor>a9e20197d449d19aae5cdcb329e3cc87b</anchor>
+      <arglist>(std::unique_ptr&lt; juce::AudioProcessor &gt;)</arglist>
     </member>
     <member kind="function">
       <type>juce::AudioProcessor *</type>
@@ -26858,13 +28231,6 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::unique_ptr&lt; HostedAudioDeviceInterface &gt;</type>
-      <name>hostedAudioDeviceInterface</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>ab67d28f80a498f38ef38580ab6a0601d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>TracktionEngineAudioDeviceManager</type>
       <name>deviceManager</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -26872,17 +28238,24 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::OwnedArray&lt; MidiInputDevice, juce::CriticalSection &gt;</type>
-      <name>midiInputs</name>
+      <type>std::unique_ptr&lt; HostedAudioDeviceInterface &gt;</type>
+      <name>hostedAudioDeviceInterface</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a2540ee332880d6f8294e29cd7cc1de15</anchor>
+      <anchor>ab67d28f80a498f38ef38580ab6a0601d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::OwnedArray&lt; MidiOutputDevice &gt;</type>
+      <type>std::vector&lt; std::shared_ptr&lt; MidiInputDevice &gt; &gt;</type>
+      <name>midiInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ad181434b2068c4c66af73a6120e1a527</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; std::shared_ptr&lt; MidiOutputDevice &gt; &gt;</type>
       <name>midiOutputs</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a1ea74ac643600dc31adbc96dfe79b667</anchor>
+      <anchor>ab44228f6d93a2faf1071638642629081</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -26903,7 +28276,7 @@
       <type>std::function&lt; void(InputDevice *)&gt;</type>
       <name>warnOfWastedMidiMessagesFunction</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a8e27cf1e633b2993729a27a9fc4d5062</anchor>
+      <anchor>aa27e24f0ea12a0a69db6b881cdb2e2b1</anchor>
       <arglist></arglist>
     </member>
     <member kind="friend" protection="private">
@@ -27123,12 +28496,20 @@
     <filename>classtracktion_1_1engine_1_1DynamicOffsetNode.html</filename>
     <base>tracktion::graph::Node</base>
     <base>tracktion::engine::TracktionEngineNode</base>
+    <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
     <member kind="function">
       <type></type>
       <name>DynamicOffsetNode</name>
       <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
       <anchor>a3efed90cab74fb134cbabb0e6088474b</anchor>
       <arglist>(ProcessState &amp;editProcessState, EditItemID clipID, BeatRange clipPosition, BeatDuration clipOffset, BeatRange clipLoopRange, std::vector&lt; std::unique_ptr&lt; Node &gt;&gt; inputs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setDynamicOffsetBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1DynamicOffsetNode.html</anchorfile>
+      <anchor>ad402845f64cedba393d3314d76aa54cf</anchor>
+      <arglist>(BeatDuration) override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -27306,8 +28687,8 @@
       <type></type>
       <name>Edit</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a40b7f547defcc016aed865dd85ac4382</anchor>
-      <arglist>(Engine &amp;, juce::ValueTree, EditRole, LoadContext *, int numUndoLevelsToStore)</arglist>
+      <anchor>ac1dee057073b3679d4c746348ec58a11</anchor>
+      <arglist>(Engine &amp;, EditRole)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -27605,6 +28986,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>copyTrack</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>ac652c05bd8570e73d63a468a2fb40412</anchor>
+      <arglist>(Track::Ptr, TrackInsertPoint)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>deleteTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>a4ceea1ca3761e024a37b1c5c01e1fc81</anchor>
@@ -27713,6 +29101,20 @@
       <name>updateMuteSoloStatuses</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>a7de9ee69d257ebd1b4b0d6456c8a8855</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQuantisation &amp;</type>
+      <name>getLaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a9cf5db54c73b8105549121af5e63c919</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>SceneList &amp;</type>
+      <name>getSceneList</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a4d89b5385b900725a1d04ca601d734b9</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -27856,6 +29258,13 @@
       <arglist>(bool includeTrackParams) const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>visitAllAutomatableParams</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a476acac5c24a889a919e977fc4675fb2</anchor>
+      <arglist>(bool includeTrackParams, const std::function&lt; void(AutomatableParameter &amp;)&gt; &amp;) const</arglist>
+    </member>
+    <member kind="function">
       <type>juce::File</type>
       <name>getVideoFile</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
@@ -27975,18 +29384,18 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>MidiInputDevice *</type>
+      <type>std::shared_ptr&lt; MidiInputDevice &gt;</type>
       <name>getCurrentMidiTimecodeSource</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>add146f503b2d513224ae1f50ab1ea2c0</anchor>
+      <anchor>a42b2122f9325cb6d6cbc8b421c132960</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setCurrentMidiTimecodeSource</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a756bf1d364d6c0ba9e6212ffa7141156</anchor>
-      <arglist>(MidiInputDevice *newDevice)</arglist>
+      <anchor>ab5ae3bfaf4b3a7016c448fee87ba7931</anchor>
+      <arglist>(std::shared_ptr&lt; MidiInputDevice &gt;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -28031,18 +29440,18 @@
       <arglist>(bool shouldIgnore)</arglist>
     </member>
     <member kind="function">
-      <type>MidiInputDevice *</type>
+      <type>std::shared_ptr&lt; MidiInputDevice &gt;</type>
       <name>getCurrentMidiMachineControlSource</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a6b5ea287b1c16cd096a2c89ea4feda37</anchor>
+      <anchor>ac48db70942ab31e020a54c6214fddd96</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setCurrentMidiMachineControlSource</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>ad4b263bfa010f4eefc03fd9b7c1ab027</anchor>
-      <arglist>(MidiInputDevice *)</arglist>
+      <anchor>a6334aae49f625168b43f53b736e62c93</anchor>
+      <arglist>(std::shared_ptr&lt; MidiInputDevice &gt;)</arglist>
     </member>
     <member kind="function">
       <type>MidiOutputDevice *</type>
@@ -28209,8 +29618,8 @@
       <type>juce::ValueTree</type>
       <name>getAutomapState</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>aed0dbe7d1bded2b7c3b3b2d12e0082f0</anchor>
-      <arglist>() const</arglist>
+      <anchor>a18381def846a38f97a9380ea653d3340</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>MarkerManager &amp;</type>
@@ -28218,6 +29627,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>a968baa4cd83c8af90ced318d06868a77</anchor>
       <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>ARADocumentHolder &amp;</type>
+      <name>getARADocument</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>acea8e46223d148c65d72cc88f8c3de7e</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -28277,17 +29693,24 @@
     </member>
     <member kind="function" static="yes">
       <type>static std::unique_ptr&lt; Edit &gt;</type>
+      <name>createEdit</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a62c634c7780347ead948ec524a7d9b3f</anchor>
+      <arglist>(Options)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::unique_ptr&lt; Edit &gt;</type>
       <name>createEditForPreviewingFile</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a123665db7540d1be026ecf7e883fc463</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;, const Edit *editToMatch, bool tryToMatchTempo, bool tryToMatchPitch, bool *couldMatchTempo, juce::ValueTree midiPreviewPlugin, juce::ValueTree midiDrumPreviewPlugin={}, bool forceMidiToDrums=false, Edit *editToUpdate={})</arglist>
+      <anchor>ac73c0383fb5509a82854344ca815ef6b</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, const Edit *editToMatch, bool tryToMatchTempo, bool tryToMatchPitch, bool *couldMatchTempo, juce::ValueTree midiPreviewPlugin, juce::ValueTree midiDrumPreviewPlugin={}, bool forceMidiToDrums=false, std::unique_ptr&lt; Edit &gt; editToUpdate={})</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static std::unique_ptr&lt; Edit &gt;</type>
       <name>createEditForPreviewingPreset</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a78e4d94503181eac865fa8a9c634ca21</anchor>
-      <arglist>(Engine &amp;engine, juce::ValueTree, const Edit *editToMatch, bool tryToMatchTempo, bool *couldMatchTempo, juce::ValueTree midiPreviewPlugin, juce::ValueTree midiDrumPreviewPlugin={}, bool forceMidiToDrums=false, Edit *editToUpdate={})</arglist>
+      <anchor>a3d1710bf07ea76a50e9d0dcf76705181</anchor>
+      <arglist>(Engine &amp;engine, juce::ValueTree, const Edit *editToMatch, bool tryToMatchTempo, bool *couldMatchTempo, juce::ValueTree midiPreviewPlugin, juce::ValueTree midiDrumPreviewPlugin={}, bool forceMidiToDrums=false, std::unique_ptr&lt; Edit &gt; editToUpdate={})</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static std::unique_ptr&lt; Edit &gt;</type>
@@ -28300,8 +29723,15 @@
       <type>static std::unique_ptr&lt; Edit &gt;</type>
       <name>createSingleTrackEdit</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>ac3b31d5a5da6839c0c2257c12910e113</anchor>
-      <arglist>(Engine &amp;)</arglist>
+      <anchor>abd8f136c109579ccf80a8e74e37b977a</anchor>
+      <arglist>(Engine &amp;, EditRole role=EditRole::forEditing)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::unique_ptr&lt; Edit &gt;</type>
+      <name>createEditForExamining</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>af540bbb41eda737d3c19e185d15bb5aa</anchor>
+      <arglist>(Engine &amp;, juce::ValueTree, EditRole role=EditRole::forExamining)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static int</type>
@@ -28336,6 +29766,13 @@
       <name>trackCache</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>ad9653730c72e3abae1b6a673a8ded260</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>EditItemCache&lt; ClipSlot &gt;</type>
+      <name>clipSlotCache</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>ade18dd0bf4fe43056f88d751c7ab90b8</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -28490,13 +29927,6 @@
       <name>inputDeviceState</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>a03af004c3c76e2b67d0531890b8c50f2</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>std::unique_ptr&lt; ARADocumentHolder &gt;</type>
-      <name>araDocument</name>
-      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>ad0dbfb4d6eecec4a1c6fdbe918c6ae18</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" static="yes">
@@ -28948,6 +30378,7 @@
   <compound kind="class">
     <name>tracktion::engine::EditInsertPoint</name>
     <filename>classtracktion_1_1engine_1_1EditInsertPoint.html</filename>
+    <class kind="struct">tracktion::engine::EditInsertPoint::Placement</class>
     <member kind="function">
       <type></type>
       <name>EditInsertPoint</name>
@@ -28961,6 +30392,13 @@
       <anchorfile>classtracktion_1_1engine_1_1EditInsertPoint.html</anchorfile>
       <anchor>a02a2ba6dcc948ca2cc01bb08e4de90bb</anchor>
       <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>setNextInsertPoint</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditInsertPoint.html</anchorfile>
+      <anchor>a23a3ea26145cd36e0b0a015ec522240d</anchor>
+      <arglist>(ClipOwner *, std::optional&lt; TimePosition &gt;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -29004,6 +30442,13 @@
       <anchor>a48d630fdd6bff0da7ee398bbbfcb3cbd</anchor>
       <arglist>(juce::ReferenceCountedObjectPtr&lt; Track &gt; &amp;, TimePosition &amp;start, bool pasteAfterSelection, SelectionManager *, std::function&lt; bool(Track &amp;)&gt; allowedTrackPredicate)</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual Placement</type>
+      <name>chooseInsertPoint</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditInsertPoint.html</anchorfile>
+      <anchor>a7c26e77f7286b7178b8149ce1ff089ce</anchor>
+      <arglist>(bool pasteAfterSelection, SelectionManager *, std::function&lt; bool(Track &amp;)&gt; allowedTrackPredicate)</arglist>
+    </member>
     <member kind="variable" protection="protected">
       <type>Edit &amp;</type>
       <name>edit</name>
@@ -29023,6 +30468,13 @@
       <name>nextInsertPointTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1EditInsertPoint.html</anchorfile>
       <anchor>a6c2bdc114e831bd9cd8a5f896463b8fa</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>EditItemID</type>
+      <name>nextInsertPointClipOwner</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditInsertPoint.html</anchorfile>
+      <anchor>a793c37f405ea9e0b0f17c6e256cc1a9e</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -29212,6 +30664,94 @@
       <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
       <anchor>a46bf913eecb1e693e5bd96d3d0a4b303</anchor>
       <arglist>(tracktion::engine::Clip &amp;item)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>EditItemCache&lt; tracktion::engine::ClipSlot &gt;</name>
+    <filename>structtracktion_1_1engine_1_1EditItemCache.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>EditItemCache</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a523f8e281ae887103c5d2792494d6728</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~EditItemCache</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a87e9a3d0f39942505c9a4c669de75141</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::ClipSlot *</type>
+      <name>findItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a10f8d74da3a797521a86e9304a4c90a9</anchor>
+      <arglist>(EditItemID id) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>visitItems</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>ae028a99242687c7ad05be6ae9bc3a4f8</anchor>
+      <arglist>(Visitor &amp;&amp;visitor) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a227ce0cee66b2cccec88430d34fd2f87</anchor>
+      <arglist>(tracktion::engine::ClipSlot &amp;item)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a46bf913eecb1e693e5bd96d3d0a4b303</anchor>
+      <arglist>(tracktion::engine::ClipSlot &amp;item)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditItemCache</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a523f8e281ae887103c5d2792494d6728</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~EditItemCache</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a87e9a3d0f39942505c9a4c669de75141</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::ClipSlot *</type>
+      <name>findItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a10f8d74da3a797521a86e9304a4c90a9</anchor>
+      <arglist>(EditItemID id) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>visitItems</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>ae028a99242687c7ad05be6ae9bc3a4f8</anchor>
+      <arglist>(Visitor &amp;&amp;visitor) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a227ce0cee66b2cccec88430d34fd2f87</anchor>
+      <arglist>(tracktion::engine::ClipSlot &amp;item)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeItem</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditItemCache.html</anchorfile>
+      <anchor>a46bf913eecb1e693e5bd96d3d0a4b303</anchor>
+      <arglist>(tracktion::engine::ClipSlot &amp;item)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -29609,6 +31149,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::Plugin::EditorComponent</name>
+    <filename>structtracktion_1_1engine_1_1Plugin_1_1EditorComponent.html</filename>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>allowWindowResizing</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1EditorComponent.html</anchorfile>
+      <anchor>a7270731097ba25f4de95eaa598017021</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual juce::ComponentBoundsConstrainer *</type>
+      <name>getBoundsConstrainer</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1EditorComponent.html</anchorfile>
+      <anchor>a2e9ac1fc0f185ee92d75088086f7eeb6</anchor>
+      <arglist>()=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::Clipboard::ContentType::EditPastingOptions</name>
     <filename>structtracktion_1_1engine_1_1Clipboard_1_1ContentType_1_1EditPastingOptions.html</filename>
     <member kind="function">
@@ -29651,6 +31209,13 @@
       <name>startTime</name>
       <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1ContentType_1_1EditPastingOptions.html</anchorfile>
       <anchor>abd95bf8a3e93b9602c46bc3d2d89a115</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>EditItemID</type>
+      <name>targetClipOwnerID</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1ContentType_1_1EditPastingOptions.html</anchorfile>
+      <anchor>a1e2f23a963ade1c1f58456ea13c9c081</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -29779,25 +31344,25 @@
       <arglist>(EditPlaybackContext *contextToSyncTo, TimePosition previousBarTime, TimeDuration syncInterval)</arglist>
     </member>
     <member kind="function">
-      <type>Clip::Array</type>
+      <type>tl::expected&lt; Clip::Array, juce::String &gt;</type>
       <name>stopRecording</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>a03bd5361400471c2b4a6c3cb6369011b</anchor>
-      <arglist>(InputDeviceInstance &amp;, TimeRange recordedRange, bool discardRecordings)</arglist>
+      <anchor>a04988e26d62d3f7112273ce8e4fbf7b0</anchor>
+      <arglist>(InputDeviceInstance &amp;, bool discardRecordings)</arglist>
     </member>
     <member kind="function">
-      <type>Clip::Array</type>
-      <name>recordingFinished</name>
+      <type>tl::expected&lt; Clip::Array, juce::String &gt;</type>
+      <name>stopRecording</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>a5a48e49c9cbf543f61df2f1ecd0bd69b</anchor>
-      <arglist>(TimeRange recordedRange, bool discardRecordings)</arglist>
+      <anchor>a6968630c8cf2bbf1ae910ac89b12a9a3</anchor>
+      <arglist>(TimePosition unloopedEnd, bool discardRecordings)</arglist>
     </member>
     <member kind="function">
       <type>juce::Result</type>
       <name>applyRetrospectiveRecord</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>adbb1a195268898210c6fae3316d11b0c</anchor>
-      <arglist>(juce::Array&lt; Clip * &gt; *clipsCreated=nullptr)</arglist>
+      <anchor>ad84f7eca6234de43834fa7d82447ee0f</anchor>
+      <arglist>(juce::Array&lt; Clip * &gt; *clipsCreated=nullptr, bool armedOnly=false)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; InputDeviceInstance * &gt;</type>
@@ -29933,6 +31498,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>std::optional&lt; SyncPoint &gt;</type>
+      <name>getSyncPoint</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a402a342387064eda5f5de461225d26b7</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>TimePosition</type>
       <name>globalStreamTimeToEditTime</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
@@ -29959,6 +31531,34 @@
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
       <anchor>a675b8525dbf2256135a69c9f310b9f33</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>blockUntilSyncPointChange</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a3d5c46f23637cba5ece214e9b2650ffc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumActivelyRecordingDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a74fe035681ac1d9c23c5f2c5d4a93ca3</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>incrementNumActivelyRecordingDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a03aab2a6b55fd42453ebe0e26c9f8267</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>decrementNumActivelyRecordingDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a69df7a669014802e96afb994ae53e77f</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -29993,6 +31593,20 @@
       <name>enablePooledMemory</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
       <anchor>aebd8d59e161d18c4951f3a9323dd9ba4</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>enableNodeMemorySharing</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>aa4e7a3e67e3b8bba6558bf41a1e65d78</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>enableAudioWorkgroup</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>ae7f9a29d167292b7cbe5a655f911194e</anchor>
       <arglist>(bool)</arglist>
     </member>
     <member kind="variable">
@@ -30509,8 +32123,36 @@
       <type></type>
       <name>EditTimeRange</name>
       <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
+      <anchor>ac9315423ca9285cbc6ae2f8f93b9be57</anchor>
+      <arglist>(TimePosition, TimePosition)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditTimeRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
+      <anchor>abf132b070f5d49e2bed49954e74b5383</anchor>
+      <arglist>(TimePosition, TimeDuration)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditTimeRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
       <anchor>a303df43374d0b5edc827037fceffba8b</anchor>
       <arglist>(BeatRange)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditTimeRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
+      <anchor>a353b6dbedaa634cd6fb6ff8c3dde3c04</anchor>
+      <arglist>(BeatPosition, BeatPosition)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditTimeRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditTimeRange.html</anchorfile>
+      <anchor>a06c3dfb92ffee7976b9fb10515fda8c3</anchor>
+      <arglist>(BeatPosition, BeatDuration)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -31074,6 +32716,20 @@
       <anchor>aa9e40a947dbbeccd7aea2e00131b01c8</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function">
+      <type>SharedTimer &amp;</type>
+      <name>getBackToArrangerUpdateTimer</name>
+      <anchorfile>classtracktion_1_1engine_1_1Engine.html</anchorfile>
+      <anchor>a2a70b70c4d307f178f7f3999f25c371e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>BufferedAudioFileManager &amp;</type>
+      <name>getBufferedAudioFileManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1Engine.html</anchorfile>
+      <anchor>a9628a93ba0e4b53f60b46490c3156436</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" static="yes">
       <type>static juce::String</type>
       <name>getVersion</name>
@@ -31169,6 +32825,20 @@
       <type>virtual void</type>
       <name>reassignReferencedItem</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a0d8fd0947befe38f9d3584dbc99402dc</anchor>
+      <arglist>(Clip &amp;, const Exportable::ReferencedItem &amp;, ProjectItemID, double)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::Array&lt; Exportable::ReferencedItem &gt;</type>
+      <name>getReferencedItems</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a59fe29e606c9d96c2fb66a0fe55d34c0</anchor>
+      <arglist>(Clip &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>reassignReferencedItem</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>abceff86ac26fc465a24da48921e6ebcc</anchor>
       <arglist>(ExternalPlugin &amp;, const Exportable::ReferencedItem &amp;, ProjectItemID, double)</arglist>
     </member>
@@ -31185,6 +32855,20 @@
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a4d8cd2b6b227cfa74104b096891418ba</anchor>
       <arglist>(AuxSendPlugin &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>areClipSlotsEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a172ed3ca1a2fd676297aa0a96de543b0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>enableReadAheadForTimeStretchNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a78646d63156e5bab0683f521b36ea775</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -31264,6 +32948,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>ignoreBWavTimestamps</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a2d7d362c66d34cf364ace7b39eb35f04</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual int</type>
       <name>getNumberOfCPUsToUseForAudio</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
@@ -31279,9 +32970,9 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
-      <name>monitorAudioInputsWithoutRecordEnable</name>
+      <name>muteTrackContentsWhilstRecording</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a1f59572037f8768c65dcf43cb9789c00</anchor>
+      <anchor>ab01ae468c0669b8949015b4453f6ceae</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -31408,6 +33099,13 @@
       <name>autoAddClipEdgeFades</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>afbc7c115034593c0915d100f071ded40</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>interpolateAutomation</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a7605666b7f1e84e8d7c8166bb5823533</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -32520,6 +34218,13 @@
     </member>
     <member kind="function">
       <type>bool</type>
+      <name>wantsDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>aea6babe7555fa8865ebaa50df4b0e636</anchor>
+      <arglist>(const MidiID &amp;m)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
       <name>needsMidiChannel</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
       <anchor>aaa745c8d8de048f117b8c65eb721c9f1</anchor>
@@ -32702,6 +34407,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>currentSelectionManagerChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>a3890583d69dacf9ca5cd12087cf33fdf</anchor>
+      <arglist>(SelectionManager *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>moveFader</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
       <anchor>a4b2806207138e0303b7aaf755fe4ffb9</anchor>
@@ -32709,10 +34421,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>moveMasterFaders</name>
+      <name>moveMasterFader</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
-      <anchor>a214f0b802faf7b44f38c8c11bb493317</anchor>
-      <arglist>(float newLeftPos, float newRightPos)</arglist>
+      <anchor>af873eee20c7d2a242e7fd41308d4036a</anchor>
+      <arglist>(float newPos)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -32720,6 +34432,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
       <anchor>ad484ceb528359b398925ae7322d21e5a</anchor>
       <arglist>(int channelNum, float newPan)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>moveMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>a2d597b1d12998c390b42cf4f6c237167</anchor>
+      <arglist>(float newPos)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -32900,8 +34619,8 @@
       <type>void</type>
       <name>currentValueChanged</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
-      <anchor>a60fa41e90a550a43f858ce792a2527f1</anchor>
-      <arglist>(AutomatableParameter &amp;, float) override</arglist>
+      <anchor>a8a793c19244e0ce3bab41fab1a56350e</anchor>
+      <arglist>(AutomatableParameter &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -32936,6 +34655,20 @@
       <name>updateUndoLights</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
       <anchor>aef6e49a2497f917905ef22140fe6c8b8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updatePadColours</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>a2a1a96e26ef78222a5271b3acb099aab</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clearPadColours</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>a44c5074d9cfc8f960fa7a5a9f4b78348</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -33038,9 +34771,16 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>getShowSelectionColour</name>
+      <name>getShowTrackSelectionColour</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
-      <anchor>a973e8508639eeb687ed7d5ddaddc5869</anchor>
+      <anchor>a6840e2c71a189d48cb2b1ed40f6c1be4</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>getShowClipSlotSelectionColour</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>acad77999d49e8482318ea7d04df4dc31</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -33052,9 +34792,16 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>setShowSelectionColour</name>
+      <name>setShowTrackSelectionColour</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
-      <anchor>a3f06ec59de1a2299111a1f23466e40c1</anchor>
+      <anchor>a873c4b08b1eca8f3e4e748d14aa72583</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setShowClipSlotSelectionColour</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>a9e980db052dacbb0ebf14601dcffac4e</anchor>
       <arglist>(bool)</arglist>
     </member>
     <member kind="function">
@@ -33070,6 +34817,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
       <anchor>a772bc7b8754360cc75391808184f83b9</anchor>
       <arglist>(int channelNum, juce::Colour &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; ColourArea &gt;</type>
+      <name>getColouredArea</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalController.html</anchorfile>
+      <anchor>afd2b93223919dce66616ee83f0cb199e</anchor>
+      <arglist>(const Edit &amp;)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -33367,10 +35121,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>moveMasterFaders</name>
+      <name>moveMasterFader</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>acaec7241ecf699b9e81f695e1c8694ba</anchor>
-      <arglist>(float newLeftPos, float newRightPos)</arglist>
+      <anchor>ae44b0d782f88f8450499209877505857</anchor>
+      <arglist>(float newPos)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -33378,6 +35132,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>a917fbdeea1b839c3e81e112092e45696</anchor>
       <arglist>(int channelNum, float newPan)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>moveMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a465f01db8b4f94c6cc06104a4814e07b</anchor>
+      <arglist>(float newPan)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -33506,6 +35267,13 @@
       <arglist>(int channelNum)</arglist>
     </member>
     <member kind="function">
+      <type>std::vector&lt; ColourArea &gt;</type>
+      <name>getColouredArea</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a20342f4c523c125550134b109ff4692b</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>shouldPluginBeColoured</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
@@ -33569,6 +35337,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>updatePadColours</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>aef361287494c8d76fc90ce69cc1c7659</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>int</type>
       <name>getNumChannelTracks</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
@@ -33628,8 +35403,8 @@
       <type>void</type>
       <name>userMovedMasterPanPot</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a9f14aab87787978f92b918a93f0756f6</anchor>
-      <arglist>(Edit *, float newLevel)</arglist>
+      <anchor>a12a6a71e7fe7153338deb70505240831</anchor>
+      <arglist>(Edit *, float newLevel, bool delta)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -33668,6 +35443,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userSelectedOneTrack</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a96e45fe45f12298f2996fd232c670ddc</anchor>
+      <arglist>(int channelNum)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>userSelectedClipInTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>a54f47f805172a04c8f17cd900843e1b4</anchor>
@@ -33684,8 +35466,8 @@
       <type>void</type>
       <name>userMovedAux</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a4d756c5f36e5bf46c2bb16a40824e82c</anchor>
-      <arglist>(int channelNum, int auxNum, float newPosition)</arglist>
+      <anchor>a3647ddc29db1a4c0a76b3096c7f59db2</anchor>
+      <arglist>(int channelNum, int auxNum, AuxPosition ap, float newPosition, bool delta)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -33700,6 +35482,27 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>ad7fe5fb2c6b134485aa423127da47c39</anchor>
       <arglist>(float newLevel)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userLaunchedClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>abd3dc29f3640bf136c1ee1cc75fa965e</anchor>
+      <arglist>(int channelNum, int clip)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userStoppedClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>aed177573cd000a77c60ce40a583b5944</anchor>
+      <arglist>(int channelNum)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userLaunchedScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a8e5b3ffb31b26521deeadbeb6655c18f</anchor>
+      <arglist>(int scene)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -33722,11 +35525,25 @@
       <anchor>ad99e4ce453482323ce0a5718b9e62d96</anchor>
       <arglist>(Plugin &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>repaintSlots</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a796396c79cc7082dd4eeb936a6c530ee</anchor>
+      <arglist>(int channelNum)</arglist>
+    </member>
     <member kind="variable">
       <type>std::function&lt; bool(const Track &amp;)&gt;</type>
       <name>isVisibleOnControlSurface</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>aba607c3bf23d82e8792ef188d187a766</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; int(Edit &amp;, int)&gt;</type>
+      <name>mapEditTrackNumToControlSurfaceChannelNum</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a9c63f5c100797b20cd6708862e6201e6</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -33755,6 +35572,27 @@
       <name>isScrollingEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>a201d1055108bbcb80e2c71bb47e509bc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void(Edit &amp;, Track &amp;, int)&gt;</type>
+      <name>launchClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a8ddcbdf48dfcb8b1ce01306ec027f966</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void(Edit &amp;, Track *)&gt;</type>
+      <name>stopClip</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>aa5090e9921c70e286d23706d9592494a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void(Edit &amp;, int)&gt;</type>
+      <name>launchScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a7d456a87c0d4ba5ce4de31b6d4d67b70</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -34249,6 +36087,13 @@
       <anchor>a80de29f86b26a377cbe2aa747b621cce</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; EditorComponent &gt;</type>
+      <name>createEditor</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
+      <anchor>ae8b62f1fb04aaaa41263178c3eb414b2</anchor>
+      <arglist>() override</arglist>
+    </member>
     <member kind="function" static="yes">
       <type>static juce::ValueTree</type>
       <name>create</name>
@@ -34491,15 +36336,15 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>horizontal</name>
+      <name>sameTrack</name>
       <anchorfile>structtracktion_1_1engine_1_1FileDragList.html</anchorfile>
-      <anchor>aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f</anchor>
+      <anchor>aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>vertical</name>
+      <name>consecutiveTracks</name>
       <anchorfile>structtracktion_1_1engine_1_1FileDragList.html</anchorfile>
-      <anchor>aeb4e4dcd988d065049230592ae9830b7ad1af1777ab5284ffed99fbdb99d29042</anchor>
+      <anchor>aeb4e4dcd988d065049230592ae9830b7adc7207f50ba3ea4f96794a7205dc6736</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
@@ -34510,15 +36355,15 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>horizontal</name>
+      <name>sameTrack</name>
       <anchorfile>structtracktion_1_1engine_1_1FileDragList.html</anchorfile>
-      <anchor>aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f</anchor>
+      <anchor>aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>vertical</name>
+      <name>consecutiveTracks</name>
       <anchorfile>structtracktion_1_1engine_1_1FileDragList.html</anchorfile>
-      <anchor>aeb4e4dcd988d065049230592ae9830b7ad1af1777ab5284ffed99fbdb99d29042</anchor>
+      <anchor>aeb4e4dcd988d065049230592ae9830b7adc7207f50ba3ea4f96794a7205dc6736</anchor>
       <arglist></arglist>
     </member>
     <member kind="function" static="yes">
@@ -34900,6 +36745,46 @@
       <anchorfile>classtracktion_1_1engine_1_1FolderTrack.html</anchorfile>
       <anchor>a29ce00a70feb24568c516f4510436aae</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::FollowActions</name>
+    <filename>classengine_1_1FollowActions.html</filename>
+    <class kind="struct">engine::FollowActions::Action</class>
+    <member kind="function">
+      <type></type>
+      <name>FollowActions</name>
+      <anchorfile>classengine_1_1FollowActions.html</anchorfile>
+      <anchor>a974ceab27d0149101566f40eb0a0cd97</anchor>
+      <arglist>(juce::ValueTree, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~FollowActions</name>
+      <anchorfile>classengine_1_1FollowActions.html</anchorfile>
+      <anchor>a407b54c638e27a442fdf82a73de4a0ba</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>Action &amp;</type>
+      <name>addAction</name>
+      <anchorfile>classengine_1_1FollowActions.html</anchorfile>
+      <anchor>af1860a631e6ff97acea315b5b516cdc3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeAction</name>
+      <anchorfile>classengine_1_1FollowActions.html</anchorfile>
+      <anchor>a504557aee1315db783ad6704748e4d0e</anchor>
+      <arglist>(Action &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::span&lt; Action * &gt;</type>
+      <name>getActions</name>
+      <anchorfile>classengine_1_1FollowActions.html</anchorfile>
+      <anchor>a8d45ce1b3c6163da7789a12f7eb41955</anchor>
+      <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -36481,6 +38366,13 @@
       <anchor>a71b140392f9b6721003dcfcc57ec3f59</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="variable">
+      <type>Engine &amp;</type>
+      <name>engine</name>
+      <anchorfile>classtracktion_1_1engine_1_1GrooveTemplateManager.html</anchorfile>
+      <anchor>a72b6fd7d722cb91a49fead61129ce0e1</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::VSTXML::Group</name>
@@ -36499,6 +38391,17 @@
       <anchorfile>structtracktion_1_1engine_1_1VSTXML_1_1Group.html</anchorfile>
       <anchor>aa64690a94ce746af9ca835bb7965a86b</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::HertzTag</name>
+    <filename>structtracktion_1_1engine_1_1HertzTag.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>HertzTag</name>
+      <anchorfile>structtracktion_1_1engine_1_1HertzTag.html</anchorfile>
+      <anchor>ad2382ef837c7b71259e80dd01895c47a</anchor>
+      <arglist>()=default</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -37023,6 +38926,16 @@
       <anchor>ac142baad652904d37630d4e5c1142d8faeea22982bbf98a5cf39f99a9f2bef6bf</anchor>
       <arglist></arglist>
     </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>MonitorMode</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
+      <anchor>a30f8eb911d24e19420958698626371b2</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1InputDevice.html" anchor="a30f8eb911d24e19420958698626371b2a3262d48df5d75e3452f0f16b313b7808">off</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1InputDevice.html" anchor="a30f8eb911d24e19420958698626371b2a2bd9c0ed00116be1258e0cc66617d7c8">automatic</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1InputDevice.html" anchor="a30f8eb911d24e19420958698626371b2aed2b5c0139cec8ad2873829dc1117d50">on</enumvalue>
+    </member>
     <member kind="enumvalue">
       <name>waveDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
@@ -37057,8 +38970,8 @@
       <type></type>
       <name>InputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>ab87eb92a58d4edb211c405a2fdfb3c32</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;type, const juce::String &amp;name)</arglist>
+      <anchor>a879e56f43859e9cd5e272e8c2334e19a</anchor>
+      <arglist>(Engine &amp;, juce::String type, juce::String name, juce::String deviceID)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -37079,6 +38992,13 @@
       <name>getType</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
       <anchor>a2ffef7eb31a0ace8485ae7c705af78a4</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getDeviceID</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
+      <anchor>a25b98f39696222188913ae3f0b97e68a</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function" virtualness="pure">
@@ -37109,13 +39029,6 @@
       <anchor>aec188036bbe0c81bf4d0803cabd479e7</anchor>
       <arglist>(const juce::String &amp;newAlias)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
-      <name>initialiseDefaultAlias</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>aa1e6c4600fcb2835e2a1e23eed0003b4</anchor>
-      <arglist>()</arglist>
-    </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>isAvailableToEdit</name>
@@ -37145,18 +39058,18 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>isEndToEndEnabled</name>
+      <type>MonitorMode</type>
+      <name>getMonitorMode</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>a6ecd36d3cb76586eff51c4b521e66940</anchor>
+      <anchor>a2b062b4a8dea25b2565a13060839c384</anchor>
       <arglist>() const</arglist>
     </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>flipEndToEnd</name>
+    <member kind="function">
+      <type>void</type>
+      <name>setMonitorMode</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>a2675b155c2029430f86a2aacaff6838e</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a2a69bd460bee79ce6b25c2647c954c58</anchor>
+      <arglist>(MonitorMode)</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual InputDeviceInstance *</type>
@@ -37186,19 +39099,19 @@
       <anchor>adc15d5c4e912ac6227ddd54daa412969</anchor>
       <arglist>() override</arglist>
     </member>
-    <member kind="function">
-      <type>juce::String</type>
-      <name>getGlobalPropertyName</name>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>saveProps</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>af1b5a94121c764174858068924f2eba1</anchor>
-      <arglist>() const</arglist>
+      <anchor>a044d9e005e377ea05abc4d19b94e9657</anchor>
+      <arglist>()=0</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>setRetrospectiveLock</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>aa9ba22e64002b782e56c41d60fad38b5</anchor>
-      <arglist>(Engine &amp;engine, const juce::Array&lt; InputDeviceInstance * &gt; &amp;devices, bool lock)</arglist>
+      <anchor>a1c5b2d0c023bd57362432401ee1a1f58</anchor>
+      <arglist>(Engine &amp;, const juce::Array&lt; InputDeviceInstance * &gt; &amp;, bool lock)</arglist>
     </member>
     <member kind="variable">
       <type>Engine &amp;</type>
@@ -37222,10 +39135,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>endToEndEnabled</name>
+      <type>MonitorMode</type>
+      <name>monitorMode</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
-      <anchor>a0e03120d3dc6a43dd9a0a39d81f69f67</anchor>
+      <anchor>ae51a8debdd440c56bd58da7a1bd2e8a2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>MonitorMode</type>
+      <name>defaultMonitorMode</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDevice.html</anchorfile>
+      <anchor>a48f98da159b537518881c94402f1aea5</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -37236,145 +39156,25 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::InputDeviceInstance::InputDeviceDestination</name>
-    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</filename>
-    <base>tracktion::engine::Selectable</base>
-    <member kind="function">
-      <type></type>
-      <name>InputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>a07bf637d395ffb312e1169aa35e7f3bd</anchor>
-      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~InputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>afbf1b044a134244038bfcc574aa7b991</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::String</type>
-      <name>getSelectableDescription</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>a7a06cbfca3324c7acc3b08b9552a653e</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="variable">
-      <type>InputDeviceInstance &amp;</type>
-      <name>input</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>a20889ae09d768eaf11dae3053ab7bce9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>afd8f52cbccacc7c7f838e34c6e6e6ce5</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; bool &gt;</type>
-      <name>recordEnabled</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>ab385911cd014ade80fc99efe70600c4d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; EditItemID &gt;</type>
-      <name>targetTrack</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>ac03a8b77768ae5c3a3d1069ed96a7c04</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>targetIndex</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html</anchorfile>
-      <anchor>a632f90bae103595644f249c707e20cfc</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::InputDeviceInstance::InputDeviceDestinationList</name>
-    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</filename>
-    <base>ValueTreeObjectList&lt; InputDeviceDestination &gt;</base>
-    <member kind="function">
-      <type></type>
-      <name>InputDeviceDestinationList</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>a37704c202f296234b83f43d368cf8af4</anchor>
-      <arglist>(InputDeviceInstance &amp;i, const juce::ValueTree &amp;v)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~InputDeviceDestinationList</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>ad954316a9cea609a0ce0b5128e297548</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isSuitableType</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>ab8762b82fb15994a7ce9fd1fec34e782</anchor>
-      <arglist>(const juce::ValueTree &amp;v) const override</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>createNewObject</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>ae3f8772518cb1d8964caa79e80d6027e</anchor>
-      <arglist>(const juce::ValueTree &amp;v) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>deleteObject</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>aca7a3b8ddc708e2906010fe8de8c759b</anchor>
-      <arglist>(InputDeviceDestination *c) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>newObjectAdded</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>ac7c652bb4a2b120e4387a56e3e782758</anchor>
-      <arglist>(InputDeviceDestination *) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>objectRemoved</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>a31c163497c05c1a3b84e522ed90226b4</anchor>
-      <arglist>(InputDeviceDestination *) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>objectOrderChanged</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>a457e579b6907760d453571c95a139720</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="variable">
-      <type>InputDeviceInstance &amp;</type>
-      <name>input</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html</anchorfile>
-      <anchor>ab4027fe2cc2f2b015de5d8f122d72ea2</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion::engine::InputDeviceInstance</name>
     <filename>classtracktion_1_1engine_1_1InputDeviceInstance.html</filename>
     <class kind="struct">tracktion::engine::InputDeviceInstance::Consumer</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestinationList</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDeviceDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::Destination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::DestinationList</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDestination</class>
+    <class kind="class">tracktion::engine::InputDeviceInstance::RecordingContext</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::RecordingParameters</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination</class>
-    <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::StopRecordingParameters</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::VirtualMidiInputDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDestination</class>
+    <member kind="typedef">
+      <type>std::vector&lt; tl::expected&lt; std::unique_ptr&lt; RecordingContext &gt;, juce::String &gt; &gt;</type>
+      <name>PreparedContext</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>a06bfb2e264fbafe33e844eca296ce6b0</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type></type>
       <name>InputDeviceInstance</name>
@@ -37397,81 +39197,32 @@
       <arglist>() noexcept</arglist>
     </member>
     <member kind="function">
-      <type>juce::Array&lt; AudioTrack * &gt;</type>
-      <name>getTargetTracks</name>
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>getTargets</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>adc1713b1e7870e4e0ab5b46b989cec77</anchor>
+      <anchor>a0d176543cf56e8eeeed851250e97d7dc</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::Array&lt; int &gt;</type>
-      <name>getTargetIndexes</name>
+      <type>tl::expected&lt; Destination *, juce::String &gt;</type>
+      <name>setTarget</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a29d36d6dc6e137d34c5451b0b572747b</anchor>
-      <arglist>() const</arglist>
+      <anchor>a3d8e6e848697e1791afc21eb7c3df077</anchor>
+      <arglist>(EditItemID targetID, bool moveToTrack, juce::UndoManager *, std::optional&lt; int &gt; index=std::nullopt)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>isOnTargetTrack</name>
+      <type>juce::Result</type>
+      <name>removeTarget</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a851f33e0f13e0b18abab295bb76507c3</anchor>
-      <arglist>(const Track &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isOnTargetTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a6f97b6574968a877b4dc0e7e57104f2f</anchor>
-      <arglist>(const Track &amp;, int idx)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setTargetTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ad98b269758c1a32b8677edfc6c42b748</anchor>
-      <arglist>(AudioTrack &amp;, int index, bool moveToTrack, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>removeTargetTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a4d2fa7f9ce3a56f0e0ae26c899a27a04</anchor>
-      <arglist>(AudioTrack &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>removeTargetTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ac07c0108ead7df9ceee869b77ee63b12</anchor>
-      <arglist>(AudioTrack &amp;, int index, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>removeTargetTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ab52a20667700f8095503f9a79b8fa163</anchor>
-      <arglist>(EditItemID, int index, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearFromTracks</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a4be181dc0d513ba7172df5a3e5a706b3</anchor>
-      <arglist>(juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isAttachedToTrack</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a426a3542da529f751deab88bb3d3ec4a</anchor>
-      <arglist>() const</arglist>
+      <anchor>ab00706427f7c1ad2809c41291ac71d99</anchor>
+      <arglist>(EditItemID targetID, juce::UndoManager *)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>isLivePlayEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a55c8eeacee462ffa22b7354ba7f364d7</anchor>
-      <arglist>(const Track &amp;t) const</arglist>
+      <anchor>a93ef8e380281f5891157b14781fc25c6</anchor>
+      <arglist>(const Track &amp;) const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -37484,43 +39235,71 @@
       <type>virtual bool</type>
       <name>isRecordingActive</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a85977eb10c9e8f1fecd4531e3d18234b</anchor>
-      <arglist>(const Track &amp;) const</arglist>
+      <anchor>ab6d93ea3b782d22d4a6b6bf9cad9dd11</anchor>
+      <arglist>(EditItemID) const</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isRecordingQueuedToStop</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>ae2fda44177eb23b0e067c4be35457dbf</anchor>
+      <arglist>(EditItemID)=0</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isRecordingEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>aa8ea8d523d16f7e7f7815436b255b9a6</anchor>
-      <arglist>(const Track &amp;) const</arglist>
+      <anchor>a1d5e0130c4c9aa1a6d9e6756453dd694</anchor>
+      <arglist>(EditItemID) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setRecordingEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ac41f15568c1eac3168bb7780c0a9a629</anchor>
-      <arglist>(const Track &amp;, bool b)</arglist>
+      <anchor>a7027d79f95de05e021c794a8e669ef33</anchor>
+      <arglist>(EditItemID, bool)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>shouldTrackContentsBeMuted</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a4dee1d21cbbf1ddc6dde3ac3f6471d90</anchor>
-      <arglist>()</arglist>
+      <anchor>a5502b2f853be266be0d5baee4c40a0e1</anchor>
+      <arglist>(const Track &amp;)</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual juce::String</type>
+      <type>virtual PreparedContext</type>
       <name>prepareToRecord</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>aa1605232ab90b347dcc683a0b5044861</anchor>
+      <anchor>a6a3e7a5ce2062816add1bfabf299d695</anchor>
       <arglist>(RecordingParameters)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual bool</type>
+      <type>virtual std::vector&lt; std::unique_ptr&lt; RecordingContext &gt; &gt;</type>
       <name>startRecording</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>aec5cfcfc1b89963db7b83231a97da922</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a1bc1b092e68d30260b3d5b5361f60325</anchor>
+      <arglist>(std::vector&lt; std::unique_ptr&lt; RecordingContext &gt;&gt;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual tl::expected&lt; Clip::Array, juce::String &gt;</type>
+      <name>stopRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>a8eb5add2ee5d1c35a4daa84750b6ad66</anchor>
+      <arglist>(StopRecordingParameters)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>stopRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>a1894f0135064bb5e4a4ae89765e6a77d</anchor>
+      <arglist>(StopRecordingParameters, std::function&lt; void(tl::expected&lt; Clip::Array, juce::String &gt;)&gt;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>a65d9b6c297b3d9e04edeac1b29c367c1</anchor>
+      <arglist>(EditItemID)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual bool</type>
@@ -37529,68 +39308,33 @@
       <anchor>a6f4357f2c884cae68ecc5c1f8b8d6a79</anchor>
       <arglist>()=0</arglist>
     </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>stop</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a9650916b154312da195583d8b52e9ca6</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>recordWasCancelled</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>aa2009fecf8d4f614a94a438ba81c616d</anchor>
-      <arglist>()=0</arglist>
-    </member>
     <member kind="function" virtualness="virtual">
       <type>virtual juce::File</type>
       <name>getRecordingFile</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a6eb10c901d835033f6862bc369779705</anchor>
-      <arglist>() const</arglist>
+      <anchor>a21927b5ac70e648e29f1112e8ad1d42e</anchor>
+      <arglist>(EditItemID) const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>prepareAndPunchRecord</name>
+      <type>virtual std::shared_ptr&lt; choc::fifo::SingleReaderSingleWriterFIFO&lt; juce::MidiMessage &gt; &gt;</type>
+      <name>getRecordingNotes</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a9ebd974ec96e9bb16c0d8fde165f8367</anchor>
-      <arglist>()</arglist>
+      <anchor>ab36c7bf4ab1af1bb38e06ba19d933285</anchor>
+      <arglist>(EditItemID) const</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual TimePosition</type>
       <name>getPunchInTime</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ad8f6cf77fe3e41d1cf7f0dc46c782be9</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual Clip::Array</type>
-      <name>stopRecording</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ae0b14243d14e7fdc7bc395a4ce892a0f</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual Clip::Array</type>
-      <name>applyLastRecordingToEdit</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a5b29cc0d05f1967cfa09b624c1cca3a0</anchor>
-      <arglist>(TimeRange recordedRange, bool isLooping, TimeRange loopRange, bool discardRecordings, SelectionManager *)=0</arglist>
+      <anchor>af5b8971cf6fb810fa5ec0f37d95f2457</anchor>
+      <arglist>(EditItemID)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual juce::Array&lt; Clip * &gt;</type>
       <name>applyRetrospectiveRecord</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ab36edcc717baf8bce2af92fbd196a735</anchor>
-      <arglist>(SelectionManager *)=0</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>getDestination</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a7616d8b008e8bce28d35ac3936baf247</anchor>
-      <arglist>(const Track &amp;track, int index)</arglist>
+      <anchor>ac8ca00c8213ac668cc528daa064432fa</anchor>
+      <arglist>(bool armedOnly)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
@@ -37635,10 +39379,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>InputDeviceDestinationList</type>
-      <name>destTracks</name>
+      <type>DestinationList</type>
+      <name>destinations</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>acf6b89c71adfcf5bc90378fed032e02a</anchor>
+      <anchor>a828d9bd27571a5013af1206716ef507b</anchor>
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected">
@@ -37663,25 +39407,11 @@
       <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;, int) override</arglist>
     </member>
     <member kind="function" protection="protected">
-      <type>void</type>
-      <name>valueTreeChildOrderChanged</name>
+      <type>ClipSlot *</type>
+      <name>getFreeSlot</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a8567f325dbe0acf396731e83be27e640</anchor>
-      <arglist>(juce::ValueTree &amp;, int, int) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>valueTreeParentChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>af76de78efca39a87c97d724ed588316d</anchor>
-      <arglist>(juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>juce::Array&lt; AudioTrack * &gt;</type>
-      <name>activeTracks</name>
-      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>a61f3ea8d60618034f1d1a1dd3dfafea0</anchor>
-      <arglist></arglist>
+      <anchor>a1e7720d896162d3619c94553221ad13d</anchor>
+      <arglist>(AudioTrack &amp;)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -37756,6 +39486,81 @@
       <anchorfile>structtracktion_1_1engine_1_1InputProvider.html</anchorfile>
       <anchor>a79d44e649510fe9fe12abac8ab46f352</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::InsertNode</name>
+    <filename>classtracktion_1_1engine_1_1InsertNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <member kind="function">
+      <type></type>
+      <name>InsertNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>ada5984cf082cf2ee3d7c8f492c51d8db</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; input, InsertPlugin &amp;, std::unique_ptr&lt; Node &gt; returnNode, SampleRateAndBlockSize)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~InsertNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>aa5a81d36115b169587135d3cf9fd572d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>InsertPlugin &amp;</type>
+      <name>getInsert</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>a881068cac6fb1df3f2d9d9017de75227</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Node &amp;</type>
+      <name>getInputNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>ad6f09ae99c610a16cf99a8f10a6abacf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>TransformResult</type>
+      <name>transform</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>a3e913f2d84e3919566837fb8551c70c9</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>a3ed16a22b10b6be62af7f73d445431aa</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>a4cf86b832e4ee7acc05bcacbac85c374</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>afcb5ce5efc77901bbf4101b221553530</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>a9daf19b1eacc3194ba7cf470736a167f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
+      <anchor>ab79e7fceb7bcf798b9bca4e3e82bd478</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -37967,18 +39772,11 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>fillSendBuffer</name>
+      <type>int</type>
+      <name>getLatencyNumSamples</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
-      <anchor>a8d745d6d76a8e1af3286fe14ffd6e15b</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; *, MidiMessageArray *)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>fillReturnBuffer</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
-      <anchor>a62b84cec8155b473ab6def2a3d95b04e</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; *, MidiMessageArray *)</arglist>
+      <anchor>a8ea40f51de4ac7ed9a3a0b517d57310c</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static const char *</type>
@@ -38031,60 +39829,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::InsertReturnNode</name>
-    <filename>classtracktion_1_1engine_1_1InsertReturnNode.html</filename>
-    <base>tracktion::graph::Node</base>
-    <member kind="function">
-      <type></type>
-      <name>InsertReturnNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>a04887d03aa0476ec5a738d7736189ab3</anchor>
-      <arglist>(InsertPlugin &amp;, std::unique_ptr&lt; tracktion::graph::Node &gt;)</arglist>
-    </member>
-    <member kind="function">
-      <type>InsertPlugin &amp;</type>
-      <name>getInsert</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>a811af3f30f600f54486d18155b854d21</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>tracktion::graph::NodeProperties</type>
-      <name>getNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>aa655116a864aeb94ba88b2ae46d5f9eb</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; Node * &gt;</type>
-      <name>getDirectInputNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>ae32ea5760e1aee2fe3311d912eecd0dd</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>a0a0228194bee90bd5f9a3562f2888634</anchor>
-      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToProcess</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>a6aa06d52f853c1c70cfdecca0551638c</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>process</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertReturnNode.html</anchorfile>
-      <anchor>acdfe7b0590deca125f957ca8a5a6c9ab</anchor>
-      <arglist>(ProcessContext &amp;) override</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::engine::InsertSendNode</name>
     <filename>classtracktion_1_1engine_1_1InsertSendNode.html</filename>
     <base>tracktion::graph::Node</base>
@@ -38099,8 +39843,22 @@
       <type>InsertPlugin &amp;</type>
       <name>getInsert</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendNode.html</anchorfile>
-      <anchor>a5df175cc7731598fb264d1fd2dbb7427</anchor>
-      <arglist>() const</arglist>
+      <anchor>af7e129245149743adb5575ca1062546c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getLatencyAtInput</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertSendNode.html</anchorfile>
+      <anchor>a960c34d9cfcbd959d6233945909c45bd</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>TransformResult</type>
+      <name>transform</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertSendNode.html</anchorfile>
+      <anchor>a3384b4f2852d9466bc0c2f27df4c6db8</anchor>
+      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -38135,60 +39893,6 @@
       <name>process</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendNode.html</anchorfile>
       <anchor>a1ad8d85a9e18a6ca4863b7c5bf943bc7</anchor>
-      <arglist>(ProcessContext &amp;) override</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::InsertSendReturnDependencyNode</name>
-    <filename>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</filename>
-    <base>tracktion::graph::Node</base>
-    <member kind="function">
-      <type></type>
-      <name>InsertSendReturnDependencyNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a7724eec224e2bc0eea501d6b869bf044</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt;, InsertPlugin &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>tracktion::graph::NodeProperties</type>
-      <name>getNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a8e32af592f2357b4d7b472b8e10cc8b4</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; Node * &gt;</type>
-      <name>getDirectInputNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>af08aa8e71b9a9641dce2ca669234174e</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>TransformResult</type>
-      <name>transform</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a45439e879852513609c74d869363ab3d</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a6f19724fa5acaea404b56df445b397af</anchor>
-      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToProcess</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a36c93ae0c1ce9a5352e7f14e2e0466fa</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>process</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html</anchorfile>
-      <anchor>a646aa7176f8016e85f78a5c1fcd1b6d0</anchor>
       <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
@@ -38553,6 +40257,53 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::LambdaSelectableListener</name>
+    <filename>classtracktion_1_1engine_1_1LambdaSelectableListener.html</filename>
+    <base>tracktion::engine::SelectableListener</base>
+    <member kind="function">
+      <type></type>
+      <name>LambdaSelectableListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>a188f08665db8f232eba71e06237c65c3</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~LambdaSelectableListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>a8666352c21497f245cf8585d9ebe4275</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>LambdaSelectableListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>ad5ac4f57e9174dec4c7962ab9eb92240</anchor>
+      <arglist>(Selectable &amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>adcb1ee52bfeaa66b9a527e84eeca6819</anchor>
+      <arglist>(Selectable *s=nullptr)</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void()&gt;</type>
+      <name>onSelectableChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>a74d5700995bb26c64b501e2284ec4c57</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void()&gt;</type>
+      <name>onSelectableAboutToBeDeleted</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaSelectableListener.html</anchorfile>
+      <anchor>ac4dc093de33a8a4da2928998c2302473</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::LambdaTimer</name>
     <filename>classtracktion_1_1engine_1_1LambdaTimer.html</filename>
     <member kind="function">
@@ -38578,6 +40329,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>startTimer</name>
+      <anchorfile>classtracktion_1_1engine_1_1LambdaTimer.html</anchorfile>
+      <anchor>ad4b53f252125c4d2067d94887a294cd7</anchor>
+      <arglist>(std::chrono::duration&lt; DurationType &gt; interval)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>timerCallback</name>
       <anchorfile>classtracktion_1_1engine_1_1LambdaTimer.html</anchorfile>
       <anchor>ab4503d599d41195f5dc4e9f845297f7b</anchor>
@@ -38592,6 +40350,13 @@
       <name>getLameEncoderExe</name>
       <anchorfile>classtracktion_1_1engine_1_1LAMEManager.html</anchorfile>
       <anchor>ac32c43de7effcc09a87b3a7ca382bb56</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::File</type>
+      <name>getFFmpegExe</name>
+      <anchorfile>classtracktion_1_1engine_1_1LAMEManager.html</anchorfile>
+      <anchor>a47117c0942eaf4cc461cc2f50ea81f6a</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -38758,6 +40523,13 @@
       <anchor>a14720398b0f9507ecf200d22dbdc7fcc</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static juce::ValueTree</type>
+      <name>create</name>
+      <anchorfile>classtracktion_1_1engine_1_1LatencyPlugin.html</anchorfile>
+      <anchor>ae39a560c2335919ca9507ca061658655</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="variable">
       <type>ConstrainedCachedValue&lt; float &gt;</type>
       <name>latencyTimeSeconds</name>
@@ -38873,6 +40645,185 @@
       <anchorfile>structtracktion_1_1graph_1_1LatencyProcessor.html</anchorfile>
       <anchor>a3e16fa86c292ad8afca360767b14aa9a</anchor>
       <arglist>(int numSamples)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::LauncherClipPlaybackHandle</name>
+    <filename>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</filename>
+    <class kind="struct">tracktion::engine::LauncherClipPlaybackHandle::SplitBeatRange</class>
+    <member kind="function">
+      <type>void</type>
+      <name>start</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>a61648dfc6f8c133bc00f69d29aa946ac</anchor>
+      <arglist>(BeatPosition)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>stop</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>a918a9253a217cd0bc0b77da97e7f1be6</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; BeatPosition &gt;</type>
+      <name>getStart</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>a8ea1776861ee4595553a9587aaabc533</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SplitBeatRange</type>
+      <name>timelineRangeToClipSourceRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>ae7561e690fa55fadf5cd46995f61aa2b</anchor>
+      <arglist>(BeatRange) const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; float &gt;</type>
+      <name>getProgress</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>a6ef1dfc87fc337be6b06dfacbe721557</anchor>
+      <arglist>(BeatPosition) const</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static LauncherClipPlaybackHandle</type>
+      <name>forLooping</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>a10e3ef7dd5b2bc0fa42f4fbb74db3e6f</anchor>
+      <arglist>(BeatRange loopRange, BeatDuration offset)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static LauncherClipPlaybackHandle</type>
+      <name>forOneShot</name>
+      <anchorfile>classtracktion_1_1engine_1_1LauncherClipPlaybackHandle.html</anchorfile>
+      <anchor>ad06fbe7292a730a29ce472e4a6cbe0fc</anchor>
+      <arglist>(BeatRange clipRange)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::LaunchHandle</name>
+    <filename>classtracktion_1_1engine_1_1LaunchHandle.html</filename>
+    <class kind="struct">tracktion::engine::LaunchHandle::SplitStatus</class>
+    <member kind="enumeration">
+      <type></type>
+      <name>PlayState</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>acd287adcf0ac95fc4453236731e898b0</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="acd287adcf0ac95fc4453236731e898b0af0a0bfe6bc7d2c58d2989034f83183e0">stopped</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="acd287adcf0ac95fc4453236731e898b0a7ed501a93c1205e3a23f7f0313ea65dc">playing</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>QueueState</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a10db53ee33384fbfa108f8538c8235c7</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a10db53ee33384fbfa108f8538c8235c7a41886f27e15eb3f30bfc386a18bb41b0">stopQueued</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a10db53ee33384fbfa108f8538c8235c7a66416093d869af1489e779b53fff6b7f">playQueued</enumvalue>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>LaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a654dbc617d884c5a01d8de8bb62b0da4</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>PlayState</type>
+      <name>getPlayingStatus</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a8ccfe28e0bf96b1dbf408134f504f4f5</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; QueueState &gt;</type>
+      <name>getQueuedStatus</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a55ac3b0925d272e609268017875a350e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; MonotonicBeat &gt;</type>
+      <name>getQueuedEventPosition</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a9be26eece3054c7cf3330749eac57da7</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>play</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>aa0bb92f8fe8b224e167b2f7c9274ac5f</anchor>
+      <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>stop</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a74c2852d97f37dfd6cc60816457da114</anchor>
+      <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>SplitStatus</type>
+      <name>advance</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ae1e2eae7188d64e78f0983cc1e3b15f2</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; BeatRange &gt;</type>
+      <name>getPlayedRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a2e7746f95b519db8e64b313c03a32f2b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; MonotonicBeatRange &gt;</type>
+      <name>getPlayedMonotonicRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ab3f12787e9c8f7174fcd59399084118f</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; BeatRange &gt;</type>
+      <name>getLastPlayedRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a2c442687da7debadcd6063139fee872e</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::LaunchQuantisation</name>
+    <filename>classtracktion_1_1engine_1_1LaunchQuantisation.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>LaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchQuantisation.html</anchorfile>
+      <anchor>a20d17c4dd18124b53ace382ac3c4e46a</anchor>
+      <arglist>(juce::ValueTree &amp;, Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getNext</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchQuantisation.html</anchorfile>
+      <anchor>a28d815c820cb112da98a5f7bff354c02</anchor>
+      <arglist>(BeatPosition) const noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit &amp;</type>
+      <name>edit</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchQuantisation.html</anchorfile>
+      <anchor>a799044617568cd08a4d2df785c93dcc5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; LaunchQType &gt;</type>
+      <name>type</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchQuantisation.html</anchorfile>
+      <anchor>a5f18bf6baeb8cbf1e313270d00498b49</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -39083,6 +41034,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html</anchorfile>
+      <anchor>a60b5feb6d84623e9c47edc0fb85572db</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>process</name>
       <anchorfile>classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html</anchorfile>
       <anchor>a0eba6ed50cc6b54739c895bd8b87e0a5</anchor>
@@ -39188,6 +41146,13 @@
       <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
       <anchor>aff0eb8e6520f7b2d574d52db7260cb48</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shoulMeasureCpuUsage</name>
+      <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
+      <anchor>acef89560becedeab518dec48c4b11b4b</anchor>
+      <arglist>() const noexcept final</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -40035,8 +42000,8 @@
       <type>virtual void</type>
       <name>currentValueChanged</name>
       <anchorfile>structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
-      <anchor>aeff5bd9349b1306c8db3c77a0841e888</anchor>
-      <arglist>(AutomatableParameter &amp;, float)</arglist>
+      <anchor>a03f33eb0c796ed4947f60b7c5155cabb</anchor>
+      <arglist>(AutomatableParameter &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -40217,6 +42182,24 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tracktion::engine::PhysicalMidiInputDevice::Listener</name>
+    <filename>classtracktion_1_1engine_1_1PhysicalMidiInputDevice_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice_1_1Listener.html</anchorfile>
+      <anchor>ac0b0276a4d18b850b9f96f4dd766634f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>handleIncomingMidiMessage</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice_1_1Listener.html</anchorfile>
+      <anchor>aa61b1446186d54bcf266f0ce30976aba</anchor>
+      <arglist>(const juce::MidiMessage &amp;)</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::RenderManager::Job::Listener</name>
     <filename>structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html</filename>
@@ -40243,6 +42226,75 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::SceneWatcher::Listener</name>
+    <filename>structtracktion_1_1engine_1_1SceneWatcher_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion_1_1engine_1_1SceneWatcher_1_1Listener.html</anchorfile>
+      <anchor>ac79fbb9703e45f40d6f6aaa1707e3df4</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>slotUpdated</name>
+      <anchorfile>structtracktion_1_1engine_1_1SceneWatcher_1_1Listener.html</anchorfile>
+      <anchor>a1a25aef02acb4ca640b07d84445c09e2</anchor>
+      <arglist>(int audioTrackIndex, int slotIndex)=0</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::Selectable::Listener</name>
+    <filename>classtracktion_1_1engine_1_1Selectable_1_1Listener.html</filename>
+    <base>tracktion::engine::SelectableListener</base>
+    <member kind="function">
+      <type></type>
+      <name>Listener</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable_1_1Listener.html</anchorfile>
+      <anchor>a311a88a9679f2a3d379cbdeac6134492</anchor>
+      <arglist>(Selectable &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~Listener</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable_1_1Listener.html</anchorfile>
+      <anchor>a38379dd20c7dd06188807bc01eb084af</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>selectableObjectChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable_1_1Listener.html</anchorfile>
+      <anchor>a04f9e463a328db2ecf6b2cdac3595a50</anchor>
+      <arglist>(Selectable *) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>selectableObjectAboutToBeDeleted</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable_1_1Listener.html</anchorfile>
+      <anchor>a0612edc3f583a2f90bf544344f413b17</anchor>
+      <arglist>(Selectable *) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::SharedTimer::Listener</name>
+    <filename>structtracktion_1_1engine_1_1SharedTimer_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion_1_1engine_1_1SharedTimer_1_1Listener.html</anchorfile>
+      <anchor>afe63ab9201828c60cd3265277c1461c7</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>sharedTimerCallback</name>
+      <anchorfile>structtracktion_1_1engine_1_1SharedTimer_1_1Listener.html</anchorfile>
+      <anchor>a2be78b095710275d10053e81e2e2093f</anchor>
+      <arglist>()=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::TransportControl::Listener</name>
     <filename>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</filename>
     <member kind="function" virtualness="virtual">
@@ -40252,61 +42304,82 @@
       <anchor>a3c30285b96a6cb2c43fe78524a5fc028</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>playbackContextChanged</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a7e22b5f1db09b8d947e3d9ce4e67572e</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a9b7b00e9822cb470afba9f133176b033</anchor>
+      <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>autoSaveNow</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a1facda6b652778b64fd6b06a38a26f69</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a1f087a3b06c39726b9c51959ed4fecf1</anchor>
+      <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>setAllLevelMetersActive</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>aa03ad528679a9c4c48a913f70e3338d2</anchor>
-      <arglist>(bool metersBecameInactive)=0</arglist>
+      <anchor>ab6ffd25e60275080dcaefed296515310</anchor>
+      <arglist>(bool)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>setVideoPosition</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>ab38b9580f4bf64074c7ab7305d7ae539</anchor>
-      <arglist>(TimePosition, bool forceJump)=0</arglist>
+      <anchor>aad860b5582d652dbcf6467169a680fbf</anchor>
+      <arglist>(TimePosition, bool)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>startVideo</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a997ac358c90f726b9d480b90486500d8</anchor>
-      <arglist>()=0</arglist>
+      <anchor>af6e4b97caf4c9bcc0f930080672a78b0</anchor>
+      <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>stopVideo</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>af61af4bbbc5b42b7c0b1ef925ecf817c</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a341c60b7dbd26d7934a3e99043edfcfe</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>recordingStarted</name>
+      <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>aa2a3dbb6438738ccf46f5606f4e66d58</anchor>
+      <arglist>(SyncPoint, std::optional&lt; TimeRange &gt;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>recordingStopped</name>
+      <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>aa5d68c47c3e0fb30ee63c7ffb2d4ab7f</anchor>
+      <arglist>(SyncPoint, bool)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>recordingAboutToStart</name>
+      <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a48e0e17e5841cafb676dc84ef3c77ae8</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>recordingAboutToStop</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>ab4a9df1a28f4557bf3ec40e8b4e6e0d1</anchor>
-      <arglist>(InputDeviceInstance &amp;)</arglist>
+      <anchor>a7bd7ba78f138cbd5d8ad62a004c64a89</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>recordingFinished</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>abb3af1938d9fe4ae8c8d707d41b3e6cc</anchor>
-      <arglist>(InputDeviceInstance &amp;, const juce::ReferenceCountedArray&lt; Clip &gt; &amp;)</arglist>
+      <anchor>a69d2b8ae2b5f1cfe4de3b554cd4d1ecc</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID, const juce::ReferenceCountedArray&lt; Clip &gt; &amp;)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -40551,8 +42624,8 @@
       <type></type>
       <name>LockFreeMultiThreadedNodePlayer</name>
       <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
-      <anchor>a0814071ca00bd5395ee7775b6bb1686a</anchor>
-      <arglist>(ThreadPoolCreator)</arglist>
+      <anchor>a10ca96022475b0fd09b298880362119e</anchor>
+      <arglist>(ThreadPoolCreator, juce::AudioWorkgroup={})</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -40618,11 +42691,25 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>int</type>
+      <name>getBlockSize</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
+      <anchor>a2d11599123ee4012c88a8e94a53db3d1</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>enablePooledMemoryAllocations</name>
       <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
       <anchor>a25839f0e5ea8e12f7e69dfb9a72bc97c</anchor>
       <arglist>(bool)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>enableNodeMemorySharing</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
+      <anchor>a9606f852703182111c508bcbbfb67374</anchor>
+      <arglist>(bool shouldBeEnabled)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -40806,8 +42893,8 @@
       <type></type>
       <name>LoopInfo</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopInfo.html</anchorfile>
-      <anchor>a59393767f7502f7bf0e7cc52a1b1896e</anchor>
-      <arglist>(Engine &amp;, const juce::AudioFormatReader *, const juce::AudioFormat *)</arglist>
+      <anchor>a0b4c1cc8069175f928a564d449e40f63</anchor>
+      <arglist>(Engine &amp;, const juce::AudioFormatReader *, const juce::AudioFormat *, const juce::File &amp;f)</arglist>
     </member>
     <member kind="function">
       <type>LoopInfo &amp;</type>
@@ -41039,6 +43126,7 @@
     <filename>classtracktion_1_1engine_1_1LoopingMidiNode.html</filename>
     <base>tracktion::graph::Node</base>
     <base>tracktion::engine::TracktionEngineNode</base>
+    <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
     <member kind="function">
       <type></type>
       <name>LoopingMidiNode</name>
@@ -41066,6 +43154,20 @@
       <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
       <anchor>a86eea3be0c823cfac6e0976bf09fb81b</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setDynamicOffsetBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
+      <anchor>afe13c88632cc3fedf7aa5af18d8ffd86</anchor>
+      <arglist>(BeatDuration) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>killActiveNotes</name>
+      <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
+      <anchor>ae4abd283f244cc9e43908d25bad8409e</anchor>
+      <arglist>(MidiMessageArray &amp;, double timestampForNoteOffs)</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -41337,15 +43439,15 @@
       <type>void</type>
       <name>moveAux</name>
       <anchorfile>classtracktion_1_1engine_1_1MackieC4.html</anchorfile>
-      <anchor>af2d661047635df2d9eea0e0c4389930d</anchor>
-      <arglist>(int channelNum, const char *bus, float newPos) override</arglist>
+      <anchor>af4a8d40be3b8e8b3b7861ae45aefd5ce</anchor>
+      <arglist>(int channelNum, int auxNum, const char *bus, float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>clearAux</name>
       <anchorfile>classtracktion_1_1engine_1_1MackieC4.html</anchorfile>
-      <anchor>a8f3e43f04d85f1439a13e800fe15477f</anchor>
-      <arglist>(int channel) override</arglist>
+      <anchor>ada1f7ac2a5741b46b72d4e45e0257271</anchor>
+      <arglist>(int channel, int auxNum) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -41760,8 +43862,8 @@
       <type>void</type>
       <name>moveMasterLevelFader</name>
       <anchorfile>classtracktion_1_1engine_1_1MackieMCU.html</anchorfile>
-      <anchor>a87967aae0a87170885062d85d4e9391a</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
+      <anchor>acb743b13538d9b2c7fc7f97623548b39</anchor>
+      <arglist>(float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -41781,8 +43883,8 @@
       <type>void</type>
       <name>moveAux</name>
       <anchorfile>classtracktion_1_1engine_1_1MackieMCU.html</anchorfile>
-      <anchor>aca9621e09f143f0877be1c5f53c593a7</anchor>
-      <arglist>(int channelNum, const char *bus, float newPos) override</arglist>
+      <anchor>a2a41a6d22b7ed5cb686e9bb097ccce4c</anchor>
+      <arglist>(int channelNum, int auxNum, const char *bus, float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -41984,8 +44086,8 @@
       <type>void</type>
       <name>clearAux</name>
       <anchorfile>classtracktion_1_1engine_1_1MackieMCU.html</anchorfile>
-      <anchor>a5b71aa9e3266d9554f02020e3df92d24</anchor>
-      <arglist>(int channel) override</arglist>
+      <anchor>a54c13e21e58437b2f15a6e4aa07a3954</anchor>
+      <arglist>(int channel, int auxNum) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -42452,17 +44554,38 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
-      <type>int</type>
-      <name>getNumMacroParameters</name>
+      <type>MacroParameterList *</type>
+      <name>getMacroParameterList</name>
       <anchorfile>classtracktion_1_1engine_1_1MacroParameterElement.html</anchorfile>
-      <anchor>aaab636930d1b22707924c8ed0697ac87</anchor>
+      <anchor>a5fdf49ae2a402b89a562a2f702a0945e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>MacroParameterList &amp;</type>
+      <name>getMacroParameterListForWriting</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameterElement.html</anchorfile>
+      <anchor>a4eecad5f77def7795312f622764e6209</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedArray&lt; MacroParameter &gt;</type>
+      <name>getMacroParameters</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameterElement.html</anchorfile>
+      <anchor>af96a5e2813176fa40fa61e9f4f561cc9</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="variable">
-      <type>MacroParameterList</type>
-      <name>macroParameterList</name>
+      <type>Edit &amp;</type>
+      <name>ownerEdit</name>
       <anchorfile>classtracktion_1_1engine_1_1MacroParameterElement.html</anchorfile>
-      <anchor>a1f4ac1af36c7d9fef11ca8b80b8d9ed3</anchor>
+      <anchor>af69d5a6f8735c3fcc47c42db9be959c9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>parentStateForList</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameterElement.html</anchorfile>
+      <anchor>aee86b39be76877e3c7c382c8cc6beba9</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -42511,6 +44634,13 @@
       <anchorfile>classtracktion_1_1engine_1_1MacroParameterList.html</anchorfile>
       <anchor>a7eea1b3eb176c89f5b9a912840b79904</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>visitMacroParameters</name>
+      <anchorfile>classtracktion_1_1engine_1_1MacroParameterList.html</anchorfile>
+      <anchor>a08943c687376f9851ce5661bac782732</anchor>
+      <arglist>(const std::function&lt; void(AutomatableParameter &amp;)&gt; &amp;visit) const</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -42660,6 +44790,13 @@
   <compound kind="struct">
     <name>tracktion::engine::CustomControlSurface::Mapping</name>
     <filename>structtracktion_1_1engine_1_1CustomControlSurface_1_1Mapping.html</filename>
+    <member kind="function">
+      <type>bool</type>
+      <name>isControllerAssigned</name>
+      <anchorfile>structtracktion_1_1engine_1_1CustomControlSurface_1_1Mapping.html</anchorfile>
+      <anchor>a0b66ec357cc3608295ee797262db322c</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="variable">
       <type>int</type>
       <name>id</name>
@@ -43375,6 +45512,32 @@
       <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::MemoryMappedFileReader</name>
+    <filename>structtracktion_1_1engine_1_1MemoryMappedFileReader.html</filename>
+    <base>tracktion::engine::FallbackReader</base>
+    <member kind="function">
+      <type></type>
+      <name>MemoryMappedFileReader</name>
+      <anchorfile>structtracktion_1_1engine_1_1MemoryMappedFileReader.html</anchorfile>
+      <anchor>a6552010f98d8345752496100fb158aa6</anchor>
+      <arglist>(std::unique_ptr&lt; AudioFileUtils::MappedFileAndReader &gt; mappedFileAndReader)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setReadTimeout</name>
+      <anchorfile>structtracktion_1_1engine_1_1MemoryMappedFileReader.html</anchorfile>
+      <anchor>a67b4e5651fc8326410525c8853f32696</anchor>
+      <arglist>(int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readSamples</name>
+      <anchorfile>structtracktion_1_1engine_1_1MemoryMappedFileReader.html</anchorfile>
+      <anchor>aae9aea5665d35d4439653ca4ec9e66dc</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, juce::int64 startSampleInFile, int numSamples) override</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::MessageThreadCallback</name>
     <filename>classtracktion_1_1engine_1_1MessageThreadCallback.html</filename>
@@ -43773,6 +45936,41 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
       <anchor>ab2ffa7b17e76c93ce5d3603c2c0ad780</anchor>
       <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>std::shared_ptr&lt; LaunchHandle &gt;</type>
+      <name>getLaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
+      <anchor>a934fd5135647a71f513361d12655818f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setUsesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
+      <anchor>a97629fef3683b9bec2fb82a7a88d2044</anchor>
+      <arglist>(bool useGlobal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>usesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
+      <anchor>a037cea0952f10a0f83d6979d7e07c652</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQuantisation *</type>
+      <name>getLaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
+      <anchor>ad03a600b9b5514d228da5272b5368f36</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>FollowActions *</type>
+      <name>getFollowActions</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
+      <anchor>a5b208ecb4879029c922698875efc69be</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -44717,11 +46915,63 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::MidiID</name>
+    <filename>structtracktion_1_1engine_1_1MidiID.html</filename>
+    <member kind="variable">
+      <type>uint16_t</type>
+      <name>manufacturer</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiID.html</anchorfile>
+      <anchor>a25dc8bd0c6c127d951caf0fb76da7785</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint16_t</type>
+      <name>family</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiID.html</anchorfile>
+      <anchor>a96961e9c71c5e7129df18d5eab07eb65</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint16_t</type>
+      <name>model</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiID.html</anchorfile>
+      <anchor>a494c3b5f8b0544d4c08999d30855c795</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint32_t</type>
+      <name>version</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiID.html</anchorfile>
+      <anchor>a5538b297079084be3ec1970c14795e13</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::MidiInputDestination</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDestination.html</filename>
+    <base>tracktion::engine::InputDeviceInstance::Destination</base>
+    <member kind="function">
+      <type></type>
+      <name>MidiInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDestination.html</anchorfile>
+      <anchor>a45a3476455b69d8cbebe5d7c422b14d8</anchor>
+      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~MidiInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDestination.html</anchorfile>
+      <anchor>a989c54f6bd7d8e92168215d4982d16cb</anchor>
+      <arglist>() override</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::MidiInputDevice</name>
     <filename>classtracktion_1_1engine_1_1MidiInputDevice.html</filename>
     <base>tracktion::engine::InputDevice</base>
     <class kind="struct">tracktion::engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
+    <class kind="struct">tracktion::engine::MidiInputDevice::NoteFilterRange</class>
     <member kind="enumeration">
       <type></type>
       <name>MergeMode</name>
@@ -44736,8 +46986,8 @@
       <type></type>
       <name>MidiInputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a28d5a04ce52e5200da30edf9356827e9</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;type, const juce::String &amp;name)</arglist>
+      <anchor>a8806396a17e99f821ec492a0a29abb3d</anchor>
+      <arglist>(Engine &amp;, juce::String type, juce::String name, juce::String deviceID)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -44745,6 +46995,20 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>a4effc1aad9c81088dd37001a9abca084</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual juce::String</type>
+      <name>openDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a570485b98ca1b9b45ff29cc9b172905b</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>closeDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>ae9e47473d1c3b00327c44bf359bd38e5</anchor>
+      <arglist>()=0</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -44818,16 +47082,16 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>setEndToEndEnabled</name>
+      <name>setNoteFilterRange</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a7bcf5da3f108b24c6777abb1d57425f4</anchor>
-      <arglist>(bool)</arglist>
+      <anchor>ac20f7e9aece996a7d751270afd7e8eca</anchor>
+      <arglist>(NoteFilterRange)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>isEndToEndEnabled</name>
+      <type>NoteFilterRange</type>
+      <name>getNoteFilterRange</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a385dd20cfb7f9781410b332cd7673b45</anchor>
+      <anchor>a2288e467a5a56c346a6364c082d3f7b8</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -44859,18 +47123,25 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setMinimumLengthMs</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a7fd55f69194ac2f38639e332cf4baaf1</anchor>
+      <arglist>(double)</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getMinimumLengthMs</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a909e212317391cb7a89d159b1596c51d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>isMPEDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>ac64e0e77fb863a2a1667522d4ff9f83c</anchor>
       <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>flipEndToEnd</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a59b7aa544838f44d93db02f0143a4b9b</anchor>
-      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -44885,6 +47156,13 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>ac3e2c2055df510bb1d7b5845c12c946c</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>handleIncomingMessage</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a2fed10c348883266a3b35d989d0ac37d</anchor>
+      <arglist>(juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -44907,19 +47185,12 @@
       <anchor>a78ac21a98852abd7f592ad4e30b7916c</anchor>
       <arglist>()=0</arglist>
     </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>saveProps</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a6d282391529d0d5d89e5ee78151288c1</anchor>
-      <arglist>()=0</arglist>
-    </member>
     <member kind="function">
       <type>Clip *</type>
-      <name>addMidiToTrackAsTransaction</name>
+      <name>addMidiAsTransaction</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a9dc21d599d8274a6a0454c118d674f91</anchor>
-      <arglist>(Clip *takeClip, AudioTrack &amp;, juce::MidiMessageSequence &amp;, TimeRange position, MergeMode, MidiChannel, SelectionManager *)</arglist>
+      <anchor>ab6c11142016e0ddb0f5da06a1670f73a</anchor>
+      <arglist>(Edit &amp;, EditItemID targetID, Clip *takeClip, juce::MidiMessageSequence, TimeRange markedRange, MergeMode, MidiChannel)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -45000,13 +47271,6 @@
     </member>
     <member kind="variable">
       <type>bool</type>
-      <name>livePlayOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a85cbe343cc32c24ac85d14842d53879e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
       <name>recordToNoteAutomation</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>ad71ca838e49a3b0e2cbeff5c7aa1661f</anchor>
@@ -45056,16 +47320,16 @@
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
-      <name>loadProps</name>
+      <name>loadMidiProps</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a9298f0fd98faf05849ee593c6200e79c</anchor>
+      <anchor>af2daccc5a74e987394e8ccdd65886a31</anchor>
       <arglist>(const juce::XmlElement *)</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
-      <name>saveProps</name>
+      <name>saveMidiProps</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>af0163c397f44bbad860f1075d36ddc1e</anchor>
+      <anchor>af55f702d44d334214c8843732d45b9a3</anchor>
       <arglist>(juce::XmlElement &amp;)</arglist>
     </member>
     <member kind="function" protection="protected">
@@ -45074,20 +47338,6 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>aa4b531b6665d8d031093cee0bdc7d554</anchor>
       <arglist>(const juce::MidiMessage &amp;)</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="pure">
-      <type>virtual juce::String</type>
-      <name>openDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a570485b98ca1b9b45ff29cc9b172905b</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="pure">
-      <type>virtual void</type>
-      <name>closeDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>ae9e47473d1c3b00327c44bf359bd38e5</anchor>
-      <arglist>()=0</arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>std::atomic&lt; double &gt;</type>
@@ -45101,6 +47351,13 @@
       <name>manualAdjustMs</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>a9140713165922507a91050866b0b57ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>double</type>
+      <name>minimumLengthMs</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>acc634ddd87bd978fa3af740f704f32af</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -45139,13 +47396,6 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>firstSetEnabledCall</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a77eb410891c5f96e8ce624081be75567</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
       <type>int</type>
       <name>bankToUse</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
@@ -45153,10 +47403,31 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
+      <type>NoteFilterRange</type>
+      <name>noteFilterRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a3050599c68f831cf29206e7fd4b4a6f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
       <type>MidiMessageArray::MPESourceID</type>
       <name>midiSourceID</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
       <anchor>aa33438e95ce74eca4d78f0bc6fd87408</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>std::unique_ptr&lt; NoteDispatcher &gt;</type>
+      <name>noteDispatcher</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>ab5af409ec1e2680dd7c85ea79efe35b1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>std::vector&lt; double &gt;</type>
+      <name>lastNoteOns</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
+      <anchor>a03aaee72ea3e46f9c0584d80959c6788</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -45216,25 +47487,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::InputDeviceInstance::MidiInputDeviceDestination</name>
-    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html</filename>
-    <base>tracktion::engine::InputDeviceInstance::InputDeviceDestination</base>
-    <member kind="function">
-      <type></type>
-      <name>MidiInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html</anchorfile>
-      <anchor>aa36985547663408dcaef3cb207be4217</anchor>
-      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~MidiInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html</anchorfile>
-      <anchor>ae934985b1395f157dc1bd6cee455a399</anchor>
-      <arglist>() override</arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion::engine::MidiInputDeviceNode</name>
     <filename>classtracktion_1_1engine_1_1MidiInputDeviceNode.html</filename>
@@ -45244,8 +47496,8 @@
       <type></type>
       <name>MidiInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDeviceNode.html</anchorfile>
-      <anchor>ace4536a9a2fe57266c9b7775f1396788</anchor>
-      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;)</arglist>
+      <anchor>a3be087d12dd38a4c7c1f4bf2174dfecd</anchor>
+      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;, EditItemID targetID)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -45293,8 +47545,8 @@
       <type>void</type>
       <name>discardRecordings</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDeviceNode.html</anchorfile>
-      <anchor>afaf9d0b1f0335093ab257bed0ac86964</anchor>
-      <arglist>() override</arglist>
+      <anchor>ac416d540f441560954fed9eddbd1ddda</anchor>
+      <arglist>(EditItemID) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -46750,14 +49002,28 @@
       <type></type>
       <name>MidiOutputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>a87bf56fb2bac4652e2d589a7fb3f7f3a</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;name, int deviceIndex)</arglist>
+      <anchor>ac471077e123342c4e837737106277778</anchor>
+      <arglist>(Engine &amp;, juce::MidiDeviceInfo)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~MidiOutputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
       <anchor>ab7eb82041ca9df5fa18d318356e74333</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>openDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>aea4fa748339de2530e89c5eda943e3fb</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>closeDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>aef3b55fbd91bded40cf08d76500a2765</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -46815,6 +49081,20 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
       <anchor>a0d87ebf7a087fd8b3a02f71dff35c9c9</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setExternalController</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>aa4d9c5c23d70a707cb26e3c23b6cc311</anchor>
+      <arglist>(ExternalController *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeExternalController</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>a515a4fa21a9d34ea8163f0065326d806</anchor>
+      <arglist>(ExternalController *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -47026,25 +49306,11 @@
       <anchor>a120b889b53a7e9d0738dbed88d6120a6</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function" protection="protected">
-      <type>juce::String</type>
-      <name>openDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>aea4fa748339de2530e89c5eda943e3fb</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>closeDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>aef3b55fbd91bded40cf08d76500a2765</anchor>
-      <arglist>() override</arglist>
-    </member>
     <member kind="variable" protection="protected">
-      <type>int</type>
-      <name>deviceIndex</name>
+      <type>juce::MidiDeviceInfo</type>
+      <name>deviceInfo</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>aafbc0189c60a937bcc38642e9cab15fc</anchor>
+      <anchor>affaca618c6713eca8b9e355c33c87e65</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -47097,13 +49363,6 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>firstSetEnabledCall</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>a25b50774dec1f91bb09cc49d087f2b6e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
       <type>juce::String</type>
       <name>programNameSet</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
@@ -47140,16 +49399,16 @@
     </member>
     <member kind="variable" protection="protected">
       <type>bool</type>
-      <name>defaultMidiDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
-      <anchor>a5bd4acdc3c50019e5e5366e30b0a950f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
       <name>softDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
       <anchor>a762a4e00656ad3c1196df2f5a83d1d15</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>ExternalController *</type>
+      <name>externalController</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiOutputDevice.html</anchorfile>
+      <anchor>a96d3b9ce3b1c9930de4b8ce9ea53ff5a</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -48292,8 +50551,8 @@
       <type></type>
       <name>~Modifier</name>
       <anchorfile>structtracktion_1_1engine_1_1Modifier.html</anchorfile>
-      <anchor>a831265ec72dad69caafda8fc30891d3d</anchor>
-      <arglist>()</arglist>
+      <anchor>a52ca68e9ef678f4753f81d938ed798db</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -48420,6 +50679,13 @@
       <anchorfile>structtracktion_1_1engine_1_1Modifier.html</anchorfile>
       <anchor>af74d4d05d5ffc187acaeb49ec93aa42e</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>selectableAboutToBeDeleted</name>
+      <anchorfile>structtracktion_1_1engine_1_1Modifier.html</anchorfile>
+      <anchor>a256feea004d8bfa506d3d36bd1ff6e70</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="variable">
       <type>juce::ValueTree</type>
@@ -48790,6 +51056,28 @@
       <anchorfile>structtracktion_1_1engine_1_1ModifierTimer.html</anchorfile>
       <anchor>ae443ee12ae8f3dd67caf329a22f9699d</anchor>
       <arglist>(TimePosition editTime, int numSamples)=0</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::MonotonicBeat</name>
+    <filename>structtracktion_1_1engine_1_1MonotonicBeat.html</filename>
+    <member kind="variable">
+      <type>BeatPosition</type>
+      <name>v</name>
+      <anchorfile>structtracktion_1_1engine_1_1MonotonicBeat.html</anchorfile>
+      <anchor>a577ba1e9139d4b5fa988ca0dc8f9f261</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::MonotonicBeatRange</name>
+    <filename>structtracktion_1_1engine_1_1MonotonicBeatRange.html</filename>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>v</name>
+      <anchorfile>structtracktion_1_1engine_1_1MonotonicBeatRange.html</anchorfile>
+      <anchor>a9c31ea287fa9640b8ce426139dbca1c0</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -49369,6 +51657,13 @@
       <anchor>a088bbdd559a5154e64844297afe127ec</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>enablePreProcess</name>
+      <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
+      <anchor>ada8998edbc18fa6788957b1917b0a7c7</anchor>
+      <arglist>(bool)</arglist>
+    </member>
     <member kind="variable">
       <type>void *</type>
       <name>internal</name>
@@ -49404,12 +51699,26 @@
       <anchor>a60ae77583768afb8a381ce174bd2e8de</anchor>
       <arglist>(ProcessContext &amp;)=0</arglist>
     </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
+      <anchor>afb9d61e25eb8323fd9055fdcc729758a</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;)</arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>setOptimisations</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
       <anchor>abc14ebc574707335389982cf4dbd9285</anchor>
       <arglist>(NodeOptimisations)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setBufferViewToUse</name>
+      <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
+      <anchor>a44b730e717db388216125d0528da28f4</anchor>
+      <arglist>(Node *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
@@ -49793,6 +52102,38 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::MidiInputDevice::NoteFilterRange</name>
+    <filename>structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html</filename>
+    <member kind="function">
+      <type>void</type>
+      <name>set</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html</anchorfile>
+      <anchor>af0b41cddc5809c9adbf8b6a565a73648</anchor>
+      <arglist>(int start, int end)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAllNotes</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html</anchorfile>
+      <anchor>a95db55fea205bd628b0e33e16c065180</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>startNote</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html</anchorfile>
+      <anchor>a346e98d843a6e8aaa0ac66713331410e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>endNote</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html</anchorfile>
+      <anchor>a2fbd865082c965da496e93138d2897fa</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::NovationRemoteSl</name>
     <filename>classtracktion_1_1engine_1_1NovationRemoteSl.html</filename>
@@ -50034,6 +52375,13 @@
       <name>filePathResolver</name>
       <anchorfile>structtracktion_1_1engine_1_1Edit_1_1Options.html</anchorfile>
       <anchor>aba963059fdf366f6bae655acd0e6f1fc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint32_t</type>
+      <name>numAudioTracks</name>
+      <anchorfile>structtracktion_1_1engine_1_1Edit_1_1Options.html</anchorfile>
+      <anchor>abf180cf9fef0648df9d52f36094e25b5</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -50335,8 +52683,8 @@
       <type></type>
       <name>OutputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1OutputDevice.html</anchorfile>
-      <anchor>a73d291ff473b3f298ec023d172efc37f</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;type, const juce::String &amp;name)</arglist>
+      <anchor>a1fdecaf045acdc55656c149d920766db</anchor>
+      <arglist>(Engine &amp;, juce::String type, juce::String name, juce::String deviceID)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -50365,13 +52713,6 @@
       <anchorfile>classtracktion_1_1engine_1_1OutputDevice.html</anchorfile>
       <anchor>a0b0f3a301e20bb5a18db4abc3c7561e0</anchor>
       <arglist>(const juce::String &amp;alias)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>initialiseDefaultAlias</name>
-      <anchorfile>classtracktion_1_1engine_1_1OutputDevice.html</anchorfile>
-      <anchor>a5d6b549c3b6ba47334a9632c579a27c9</anchor>
-      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -50625,17 +52966,17 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>loadFrom</name>
+      <name>loadFromEdit</name>
       <anchorfile>classtracktion_1_1engine_1_1ParameterControlMappings.html</anchorfile>
-      <anchor>ad3826e25260216942b2fbb21d67da6a4</anchor>
-      <arglist>(const juce::ValueTree &amp;)</arglist>
+      <anchor>a78939ca8a6c015c29e8256545bd9d5c1</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
-      <name>saveTo</name>
+      <name>saveToEdit</name>
       <anchorfile>classtracktion_1_1engine_1_1ParameterControlMappings.html</anchorfile>
-      <anchor>a9191a8a7329b435467b7637204d26263</anchor>
-      <arglist>(juce::ValueTree &amp;)</arglist>
+      <anchor>ab5453fe676cb04fc0ffb38fcfd25c0d6</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -51135,6 +53476,13 @@
       <name>checkNodesForAudio</name>
       <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>aa4d0132b0be08cea591d47eb36f29883</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>addAcidMetadata</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ad63593609596f5d92b1c5e53846504ee</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -52304,8 +54652,8 @@
       <type></type>
       <name>PerformanceMeasurement</name>
       <anchorfile>classtracktion_1_1graph_1_1PerformanceMeasurement.html</anchorfile>
-      <anchor>a06c4649d10a47b7bf7ac2a65f80e60a0</anchor>
-      <arglist>(const std::string &amp;counterName, int runsPerPrintout=100, bool printOnDestruction=true)</arglist>
+      <anchor>a7dd033ee195b7d9eeac28565327ede45</anchor>
+      <arglist>(std::string counterName, int runsPerPrintout=100, bool printOnDestruction=true)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -52334,6 +54682,13 @@
       <anchorfile>classtracktion_1_1graph_1_1PerformanceMeasurement.html</anchorfile>
       <anchor>a9096c62df232c32aa0c8352cbf29c81f</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::string</type>
+      <name>getName</name>
+      <anchorfile>classtracktion_1_1graph_1_1PerformanceMeasurement.html</anchorfile>
+      <anchor>ae95939661fd8c19456695e67a5738e3b</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>Statistics</type>
@@ -52471,12 +54826,13 @@
     <name>tracktion::engine::PhysicalMidiInputDevice</name>
     <filename>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</filename>
     <base>tracktion::engine::MidiInputDevice</base>
+    <class kind="class">tracktion::engine::PhysicalMidiInputDevice::Listener</class>
     <member kind="function">
       <type></type>
       <name>PhysicalMidiInputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>a74925b54c753ab482a41b0c5b8abb74e</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;name, int deviceIndex)</arglist>
+      <anchor>a1a7ef8f6d3389ba21c5baac2958b7382</anchor>
+      <arglist>(Engine &amp;, juce::MidiDeviceInfo)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -52585,6 +54941,34 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
+      <anchor>ae62f88c8f62af2f21d165530cd42b697</anchor>
+      <arglist>(Listener *l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
+      <anchor>ad44477a688380a92f93e4e0497d728ff</anchor>
+      <arglist>(Listener *l)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>openDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
+      <anchor>abb98323cffa853a21272ba232ef45383</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>closeDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
+      <anchor>a192ef4b9f5a6a08acdaec5b7722cac62</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
       <anchor>a671c3aaae21a9aaa96cb75bed408cc2f</anchor>
@@ -52603,20 +54987,6 @@
       <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
       <anchor>a5336c563b9b13f0f9f08f1ed16736f0f</anchor>
       <arglist></arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>juce::String</type>
-      <name>openDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>abb98323cffa853a21272ba232ef45383</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>closeDevice</name>
-      <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>a192ef4b9f5a6a08acdaec5b7722cac62</anchor>
-      <arglist>() override</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend struct</type>
@@ -53237,6 +55607,31 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::EditInsertPoint::Placement</name>
+    <filename>structtracktion_1_1engine_1_1EditInsertPoint_1_1Placement.html</filename>
+    <member kind="variable">
+      <type>juce::ReferenceCountedObjectPtr&lt; Track &gt;</type>
+      <name>track</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditInsertPoint_1_1Placement.html</anchorfile>
+      <anchor>abc56cb8bcb281ab07c793fe471eac371</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>ClipOwner *</type>
+      <name>clipOwner</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditInsertPoint_1_1Placement.html</anchorfile>
+      <anchor>ab5b21dac9591cae3e5288c75e9d6fcac</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; TimePosition &gt;</type>
+      <name>time</name>
+      <anchorfile>structtracktion_1_1engine_1_1EditInsertPoint_1_1Placement.html</anchorfile>
+      <anchor>ab8e025f9e879513ebd448f602a15ae60</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::PlaybackInitialisationInfo</name>
     <filename>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</filename>
     <member kind="variable">
@@ -53318,6 +55713,13 @@
       <name>deallocateAudioBuffer</name>
       <anchorfile>structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html</anchorfile>
       <anchor>a439945f040ab06a8da6aba3839243c9f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>enableNodeMemorySharing</name>
+      <anchorfile>structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html</anchorfile>
+      <anchor>aa8b2daa473377cc84289a1fd244a08cf</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -53907,6 +56309,34 @@
       <anchor>a10c3a29652520bb70fbb280ee1339ecc</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>isPlayHeadRunning</name>
+      <anchorfile>classtracktion_1_1graph_1_1PlayHeadState.html</anchorfile>
+      <anchor>a0aa35af8534614f3bef2acb72ae84809</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>playheadJumped</name>
+      <anchorfile>classtracktion_1_1graph_1_1PlayHeadState.html</anchorfile>
+      <anchor>ae1f79bdf96141b0feb3ef50bd9c6ddef</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>lastBlockOfLoop</name>
+      <anchorfile>classtracktion_1_1graph_1_1PlayHeadState.html</anchorfile>
+      <anchor>a4fc419344f8345c17b90978aacc4e2ef</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>firstBlockOfLoop</name>
+      <anchorfile>classtracktion_1_1graph_1_1PlayHeadState.html</anchorfile>
+      <anchor>ac9bbc363c47aa3efbee90d29c553760d</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::Plugin</name>
@@ -53916,6 +56346,7 @@
     <base>tracktion::engine::AutomatableEditItem</base>
     <base>tracktion::engine::MacroParameterElement</base>
     <base protection="protected">tracktion::engine::ValueTreeAllEventListener</base>
+    <class kind="struct">tracktion::engine::Plugin::EditorComponent</class>
     <class kind="struct">tracktion::engine::Plugin::WindowState</class>
     <class kind="struct">tracktion::engine::Plugin::Wire</class>
     <member kind="enumeration">
@@ -54082,6 +56513,13 @@
       <anchor>a66a312b5427eea68590258148b3a5448</anchor>
       <arglist>(const PluginInitialisationInfo &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isInitialising</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>af33005d1295549668e60fd84cc884b6f</anchor>
+      <arglist>() const</arglist>
+    </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
       <name>deinitialise</name>
@@ -54123,6 +56561,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
       <anchor>acc74b4d20dcfe3b369da6767f0b37c7f</anchor>
       <arglist>(const PluginRenderContext &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shoulMeasureCpuUsage</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>a699ee54da7050eeca762b34bed02baa7</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>double</type>
@@ -54522,6 +56967,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
       <anchor>af455dfc0ea899d55ddd3b4b70fc1439d</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual std::unique_ptr&lt; EditorComponent &gt;</type>
+      <name>createEditor</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>a7795e34ebb6c9de237a06e483c53b944</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -55533,6 +57985,20 @@
       <anchor>a931641ede751b881243aefb8048eed2d</anchor>
       <arglist>(const juce::String &amp;commandLine)</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>isBuiltInPlugin</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
+      <anchor>a4c9bcd3504c8aed8e6c79569b9ec1fc0</anchor>
+      <arglist>(const juce::PluginDescription &amp;d)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::PluginDescription</type>
+      <name>createBuiltInPluginDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
+      <anchor>a3860854f5502df6b8da27d9a39d00e5f</anchor>
+      <arglist>(bool synth=false)</arglist>
+    </member>
     <member kind="variable">
       <type>juce::AudioPluginFormatManager</type>
       <name>pluginFormatManager</name>
@@ -55566,6 +58032,13 @@
       <name>scanCompletedCallback</name>
       <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
       <anchor>a3685510ba1337fea167791acde0a379b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr const char *</type>
+      <name>builtInPluginFormatName</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
+      <anchor>a04fb9fb8314465442fe4dd68d7bc1feb</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -55629,6 +58102,13 @@
       <anchorfile>classtracktion_1_1engine_1_1PluginNode.html</anchorfile>
       <anchor>a9a851a8950b380faa2019eb8dd082e2c</anchor>
       <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginNode.html</anchorfile>
+      <anchor>a5647cdb6005b97efa120c1d0df2b4f7f</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -55801,10 +58281,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::vector&lt; std::pair&lt; Selectable::WeakRef, juce::ValueTree &gt; &gt;</type>
+      <type>std::vector&lt; std::pair&lt; SafeSelectable&lt; Edit &gt;, juce::ValueTree &gt; &gt;</type>
       <name>rackTypes</name>
       <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Plugins.html</anchorfile>
-      <anchor>a3f18c00a830c9b5d2eb827a960052911</anchor>
+      <anchor>aa9b16d07ad4b8251932f5bd262e9f91e</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -56077,6 +58557,34 @@
       <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
       <anchor>aa0a56eaa788ad5f20e40cd35cf8beeb1</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SyncRange</type>
+      <name>getSyncRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a9119c6a1e97354a80084a0de098dbdca</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SyncPoint</type>
+      <name>getSyncPoint</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a616943925f701690e98184791edbcbf2</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setSyncRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a650ffcea0a18e17928e6b93ca143d390</anchor>
+      <arglist>(SyncRange)</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void()&gt;</type>
+      <name>onContinuityUpdated</name>
+      <anchorfile>structtracktion_1_1engine_1_1ProcessState.html</anchorfile>
+      <anchor>a353b1a536b22de5a3a263465658b44d7</anchor>
+      <arglist></arglist>
     </member>
     <member kind="variable">
       <type>tracktion::graph::PlayHeadState &amp;</type>
@@ -56794,6 +59302,16 @@
       <enumvalue file="classtracktion_1_1engine_1_1ProjectItem.html" anchor="adc684adf3e111a2244fb8c0f0a9f38f5a7877fad09ef66b74c765698abb43fe7a">forceRename</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1ProjectItem.html" anchor="adc684adf3e111a2244fb8c0f0a9f38f5a609fbd8c824fad7642def79d079a52fa">forceNoRename</enumvalue>
     </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>FileMode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
+      <anchor>a7896eb170142f9da0a5eb9c79fe2a488</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1ProjectItem.html" anchor="a7896eb170142f9da0a5eb9c79fe2a488adc4d53aa0d117d8b189b36d161af4e96">absolute</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1ProjectItem.html" anchor="a7896eb170142f9da0a5eb9c79fe2a488a99c483e1d11b1a279a2a1a3960528487">relative</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1ProjectItem.html" anchor="a7896eb170142f9da0a5eb9c79fe2a488a709eb756b756e64928d3cb90511149e5">relativeIfWithinProject</enumvalue>
+    </member>
     <member kind="typedef">
       <type>juce::ReferenceCountedObjectPtr&lt; ProjectItem &gt;</type>
       <name>Ptr</name>
@@ -57043,8 +59561,8 @@
       <type>void</type>
       <name>setSourceFile</name>
       <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
-      <anchor>a39e2eb1a335204f60c7f1170b95c8638</anchor>
-      <arglist>(const juce::File &amp;)</arglist>
+      <anchor>a990d4f1c42f863f52df469465f04b46a</anchor>
+      <arglist>(const juce::File &amp;, FileMode mode=FileMode::relativeIfWithinProject)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -57052,6 +59570,27 @@
       <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
       <anchor>ad8e88c388f06592441fc5dd005e6869b</anchor>
       <arglist>(const juce::File &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAbsolutePath</name>
+      <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
+      <anchor>aae032f05bd98dfa37bfe2a92bce38292</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>convertToRelativePath</name>
+      <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
+      <anchor>a207e36b888a4b8121b19a2046e899eaa</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>convertToAbsolutePath</name>
+      <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
+      <anchor>aac8709eec99995f226d370240b5b183b</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -57846,11 +60385,18 @@
       <anchor>ac86a2334d9985e7167ce9a40f9be0a2f</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::PropertiesFile &amp;</type>
+      <name>getPropertiesFile</name>
+      <anchorfile>classtracktion_1_1engine_1_1PropertyStorage.html</anchorfile>
+      <anchor>aafec1a02509fd01a4646abcd6ab12241</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" static="yes">
-      <type>static juce::String</type>
+      <type>static juce::StringRef</type>
       <name>settingToString</name>
       <anchorfile>classtracktion_1_1engine_1_1PropertyStorage.html</anchorfile>
-      <anchor>af049d6643d560af7c877779002792b6e</anchor>
+      <anchor>a44deeb74191f55838a9518be650d7ea2</anchor>
       <arglist>(SettingID)</arglist>
     </member>
   </compound>
@@ -58601,6 +61147,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackInstanceNode.html</anchorfile>
+      <anchor>abc86cf58df3a09d174bc27454879a44a</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>process</name>
       <anchorfile>classtracktion_1_1engine_1_1RackInstanceNode.html</anchorfile>
       <anchor>a24b182e18932275be19d7c2f46582356</anchor>
@@ -58699,6 +61252,13 @@
       <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
       <anchor>a5c144bdf183dbe27e90bc169b292bd05</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
+      <anchor>a590eeabf1630a2f4f82d7ec675434885</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -59051,10 +61611,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>const EditItemID</type>
+      <type>EditItemID</type>
       <name>rackID</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>a8e2ad77ae2f2dea9ea9f0fc45c5d767f</anchor>
+      <anchor>aabd9e06b87bd2f0fa9b6cf1e8f98efe0</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -59529,6 +62089,115 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>engine::ReadAheadTimeStretcher</name>
+    <filename>classengine_1_1ReadAheadTimeStretcher.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ReadAheadTimeStretcher</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a545ff57c9f5de9fe8f3f383738623fdc</anchor>
+      <arglist>(int numBlocksToReadAhead)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ReadAheadTimeStretcher</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>aa691c0f424e37fdd3e9e44257cb23301</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a9e8d9215d83f322c5bdf4533f35af136</anchor>
+      <arglist>(double sourceSampleRate, int samplesPerBlock, int numChannels, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, bool realtime)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isInitialised</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a86b35f944f760e8cbd2e6022d7e02c19</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a48416824a860392d8cc8fea750262a90</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>setSpeedAndPitch</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>adbb84f0ebfc88abe4e19bc6572755f72</anchor>
+      <arglist>(float speedRatio, float semitones)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getMaxFramesNeeded</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a0bd87ac6f9548b96d9192845d4ca9738</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFramesNeeded</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>a939427c9dd4895cb15bbbd04fabd9802</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFramesRecomended</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>afedc5e92cafa9fe1db4e316563ecd823</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>requiresMoreFrames</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>af2c791ed882870e38caa1dccdc13e672</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFreeSpace</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>aa038c24be120f1bf67e436e0daf648a8</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>pushData</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>af09d09c238c87db99a02f6765ce26be5</anchor>
+      <arglist>(const float *const *inChannels, int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumReady</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>af0856c827268047933e3aafa92c93ad7</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>popData</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>aad91a9f61555e895a83747118b832337</anchor>
+      <arglist>(float *const *outChannels, int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>flush</name>
+      <anchorfile>classengine_1_1ReadAheadTimeStretcher.html</anchorfile>
+      <anchor>ad47fc84f20d249c7e0984d24db47fd43</anchor>
+      <arglist>(float *const *outChannels)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::AudioFileCache::Reader</name>
     <filename>classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html</filename>
     <member kind="typedef">
@@ -59677,6 +62346,31 @@
       <arglist>() noexcept</arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tracktion::engine::InputDeviceInstance::RecordingContext</name>
+    <filename>classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~RecordingContext</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html</anchorfile>
+      <anchor>a8c80c27b1cea5c4c88fce18afd8e8cdd</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="variable">
+      <type>const EditItemID</type>
+      <name>targetID</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html</anchorfile>
+      <anchor>ae830e4ef934b130974e86a5b09f37d06</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type></type>
+      <name>RecordingContext</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html</anchorfile>
+      <anchor>ac4d5eb25694447287c5d1f95f5ec7231</anchor>
+      <arglist>(EditItemID targetID_)</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::InputDeviceInstance::RecordingParameters</name>
     <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html</filename>
@@ -59687,24 +62381,31 @@
       <anchor>aa98d7194fe2f1ae97db537e12d610305</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>std::vector&lt; EditItemID &gt;</type>
+      <name>targets</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html</anchorfile>
+      <anchor>a637bb79c282c4c3bf25c449087ecb0f4</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::RecordingThumbnailManager</name>
     <filename>classtracktion_1_1engine_1_1RecordingThumbnailManager.html</filename>
     <class kind="struct">tracktion::engine::RecordingThumbnailManager::Thumbnail</class>
     <member kind="function">
+      <type></type>
+      <name>RecordingThumbnailManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1RecordingThumbnailManager.html</anchorfile>
+      <anchor>a857a6802c0e67433774f9ca6e8502f2d</anchor>
+      <arglist>(Engine &amp;e)</arglist>
+    </member>
+    <member kind="function">
       <type>Thumbnail::Ptr</type>
       <name>getThumbnailFor</name>
       <anchorfile>classtracktion_1_1engine_1_1RecordingThumbnailManager.html</anchorfile>
       <anchor>a471b53c1cb92b6421c19d1509427342e</anchor>
       <arglist>(const juce::File &amp;f)</arglist>
-    </member>
-    <member kind="friend" protection="private">
-      <type>friend class</type>
-      <name>Engine</name>
-      <anchorfile>classtracktion_1_1engine_1_1RecordingThumbnailManager.html</anchorfile>
-      <anchor>a3e1914489e4bed4f9f23cdeab34a43dc</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -59987,6 +62688,7 @@
     <class kind="struct">tracktion::engine::Renderer::Parameters</class>
     <class kind="struct">tracktion::engine::Renderer::RenderResult</class>
     <class kind="class">tracktion::engine::Renderer::RenderTask</class>
+    <class kind="struct">tracktion::engine::Renderer::ScopedClipSlotDisabler</class>
     <class kind="struct">tracktion::engine::Renderer::Statistics</class>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -60020,8 +62722,8 @@
       <type>static bool</type>
       <name>renderToFile</name>
       <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>aacc30526af85e088125e76c5fb89da80</anchor>
-      <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, juce::Array&lt; Clip * &gt; clips={}, bool useThread=true)</arglist>
+      <anchor>aae384b87abfb9cc49054fae1bbb08bf8</anchor>
+      <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, bool useACID=true, juce::Array&lt; Clip * &gt; clips={}, bool useThread=true)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -60646,6 +63348,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>shouldAddAcidMetadata</name>
+      <anchorfile>classtracktion_1_1engine_1_1RenderOptions.html</anchorfile>
+      <anchor>a34f18e0d96dc6bded844e335ebd7accf</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>juce::BigInteger</type>
       <name>getTrackIndexes</name>
       <anchorfile>classtracktion_1_1engine_1_1RenderOptions.html</anchorfile>
@@ -60954,6 +63663,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>juce::CachedValue&lt; bool &gt;</type>
+      <name>addAcidMetadata</name>
+      <anchorfile>classtracktion_1_1engine_1_1RenderOptions.html</anchorfile>
+      <anchor>a6abf2242e2120b862e289c5c5f315e96</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>std::function&lt; void(AudioClipBase &amp;)&gt;</type>
       <name>offerToAddClipToLibrary</name>
       <anchorfile>classtracktion_1_1engine_1_1RenderOptions.html</anchorfile>
@@ -61136,11 +63852,25 @@
       <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes, TransformCache &amp;cache) override</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
+      <anchor>af3dc0f890463048ae00760586c110d5d</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;info) override</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>isReadyToProcess</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
       <anchor>a7a805bd8cd1e8e3c9e670f395fced7f8</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
+      <anchor>a9e7d0958b82c49ed096061be1c8a9af8</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -61474,6 +64204,66 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::SafeScopedListener</name>
+    <filename>classtracktion_1_1engine_1_1SafeScopedListener.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>a36a6bf4a95697003ef685f9ddfdc5bae</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>a124f66e5470963b4ae04e06bbe94ec80</anchor>
+      <arglist>(SafeScopedListener &amp;&amp;o)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeScopedListener &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>ad200cd7cdaa8fa733db2473dc0fa0cf9</anchor>
+      <arglist>(SafeScopedListener &amp;&amp;o)</arglist>
+    </member>
+    <member kind="function">
+      <type>requires WeakReferenceable&lt; BroadcasterType &gt;</type>
+      <name>SafeScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>a53e661493ffc4d997485f6f70e168f1b</anchor>
+      <arglist>(BroadcasterType b, ListenerType &amp;l)</arglist>
+    </member>
+    <member kind="function">
+      <type>requires WeakReferenceable&lt; BroadcasterType &gt; void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>ab000eedddd78073ef779e866cedda02b</anchor>
+      <arglist>(BroadcasterType b, ListenerType &amp;l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>a030451e1585c239e9e6014c907b6e687</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>aad0cad5f445c54afafdc202bb8999e6b</anchor>
+      <arglist>(const SafeScopedListener &amp;)=delete</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeScopedListener &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeScopedListener.html</anchorfile>
+      <anchor>abb19719b9f6f5b2ef0ea549d044c30be</anchor>
+      <arglist>(const SafeScopedListener &amp;)=delete</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::SafeSelectable</name>
     <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
     <templarg></templarg>
@@ -61490,6 +64280,13 @@
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
       <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
       <arglist>(SelectableType &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(SelectableType *selectable)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -61537,15 +64334,783 @@
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
-      <arglist>(SelectableType *selectable) const noexcept</arglist>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(SelectableType *other) const noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator!=</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
-      <arglist>(SelectableType *selectable) const noexcept</arglist>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(SelectableType *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const SelectableType &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const SelectableType &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::Clip &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Clip &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Clip *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Clip *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Clip *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Clip *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Clip *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Clip *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Clip &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Clip *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Clip &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Clip &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Clip *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Clip *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Clip *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Clip *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Clip *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Clip *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Clip &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Clip *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Clip &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::Edit &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Edit &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Edit *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Edit *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Edit *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Edit *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Edit *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Edit *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Edit &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Edit *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Edit &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Edit &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Edit *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Edit *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Edit *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Edit *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Edit *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Edit *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Edit &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Edit *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Edit &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::FolderTrack &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::FolderTrack &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::FolderTrack *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::FolderTrack *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::FolderTrack *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::FolderTrack *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::FolderTrack *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::FolderTrack *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::FolderTrack &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::FolderTrack *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::FolderTrack &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::FolderTrack &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::FolderTrack *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::FolderTrack *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::FolderTrack *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::FolderTrack *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::FolderTrack *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::FolderTrack *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::FolderTrack &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::FolderTrack *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::FolderTrack &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -61569,6 +65134,13 @@
       <type></type>
       <name>SafeSelectable</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
       <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
       <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
     </member>
@@ -61611,15 +65183,57 @@
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
-      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Plugin *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Plugin &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator!=</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
-      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Plugin *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Plugin &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -61639,6 +65253,13 @@
       <type></type>
       <name>SafeSelectable</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Plugin *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
       <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
       <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
     </member>
@@ -61681,15 +65302,610 @@
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
-      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Plugin *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Plugin &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator!=</name>
       <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
-      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
-      <arglist>(tracktion::engine::Plugin *selectable) const noexcept</arglist>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Plugin *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Plugin &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::Selectable &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Selectable &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Selectable *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Selectable *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Selectable *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Selectable *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Selectable *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Selectable *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Selectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Selectable *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Selectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Selectable &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Selectable *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Selectable *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Selectable *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Selectable *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Selectable *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Selectable *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Selectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Selectable *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Selectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>SafeSelectable&lt; tracktion::engine::Track &gt;</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Track &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Track *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Track *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Track *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Track *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Track *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Track *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Track &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Track *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Track &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(tracktion::engine::Track &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8d8049b1e01fd5259ffd3bb3c1d0fc37</anchor>
+      <arglist>(tracktion::engine::Track *selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(tracktion::engine::Track *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Track *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator tracktion::engine::Track *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::engine::Track *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a8363a45c60a9e82ea0f7b6a53274c21a</anchor>
+      <arglist>(tracktion::engine::Track *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ac9aa01992133d77cc6d628ee4b08f129</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3dcac85aa6b5f04d869e57f373a0d15b</anchor>
+      <arglist>(const tracktion::engine::Track &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a05a80c277f9e43ba9c01214132bc84b2</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a3670f41a1525ab558461b3a924b5f8f8</anchor>
+      <arglist>(tracktion::engine::Track *other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a03f5f4598999be1d3efacba4d6de05df</anchor>
+      <arglist>(const SafeSelectable &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9bde72434054d8f3306fc364de38c289</anchor>
+      <arglist>(const tracktion::engine::Track &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>ab93058b532f5d4088ab7ff330e87d23c</anchor>
+      <arglist>(decltype(nullptr)) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::SampleFader</name>
+    <filename>classtracktion_1_1engine_1_1SampleFader.html</filename>
+    <member kind="enumeration">
+      <type></type>
+      <name>FadeType</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a07d0884570cd7515396db84d411430fa</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1SampleFader.html" anchor="a07d0884570cd7515396db84d411430faaab160174126d98e7f290560def4c13d9">fadeOut</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1SampleFader.html" anchor="a07d0884570cd7515396db84d411430faa3b366da25504f8b1b6a09e13f6df8bbd">crossfade</enumvalue>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SampleFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>addde9a4591e642c9c04e2dac37bf9f56</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SampleFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a6ac0aacd9b365d8c0e2c0e4338f17276</anchor>
+      <arglist>(size_t numChannels)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a3f3e28b063df83733f3e8e157e5dece4</anchor>
+      <arglist>(size_t numChannels)</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>getNumChannels</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>ade53c9d77e284bf158fe46c8ff8d54ff</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>push</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>af3e501d766f1d979143fa23fabd1abf6</anchor>
+      <arglist>(const Buffer &amp;buffer)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>trigger</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a13221b3531ba0d5bfeb5057153e21004</anchor>
+      <arglist>(size_t numFramesToFade_)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>apply</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a8b82087b397e9a5a222bd82ec177d966</anchor>
+      <arglist>(Buffer &amp;&amp;buffer, FadeType fadeType)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyAt</name>
+      <anchorfile>classtracktion_1_1engine_1_1SampleFader.html</anchorfile>
+      <anchor>a40cee42011929a64c1123263b798ae3d</anchor>
+      <arglist>(Buffer &amp;buffer, choc::buffer::FrameCount frameNum, FadeType fadeType)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -62441,6 +66657,266 @@
       <arglist>(juce::String name)</arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tracktion::engine::Scene</name>
+    <filename>classtracktion_1_1engine_1_1Scene.html</filename>
+    <base>tracktion::engine::Selectable</base>
+    <member kind="function">
+      <type></type>
+      <name>Scene</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a848de108b1bcc98fe9d89aef51154da0</anchor>
+      <arglist>(const juce::ValueTree &amp;, SceneList &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~Scene</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a59c4093b0ab97de4e0fc7290a2502c42</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getIndex</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a0a740b7f1cda9cee712ce83e1312cdb7</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getSelectableDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>aa782035b34fadc3c89483d443d55dd5d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a1f6577cdcd6f5fa3126f1fb3fcbe7107</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit &amp;</type>
+      <name>edit</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a073fed9c7aaa098179fff4c438ee5344</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; juce::String &gt;</type>
+      <name>name</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a04c39abd8d5adac1020245b36eaadf62</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; juce::Colour &gt;</type>
+      <name>colour</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a5bbbd367390809f8ad3418b43a62c6b7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SceneList &amp;</type>
+      <name>sceneList</name>
+      <anchorfile>classtracktion_1_1engine_1_1Scene.html</anchorfile>
+      <anchor>a5a598eab85e47a5279b46f5c59834bf0</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Clipboard::Scenes::SceneInfo</name>
+    <filename>structtracktion_1_1engine_1_1Clipboard_1_1Scenes_1_1SceneInfo.html</filename>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes_1_1SceneInfo.html</anchorfile>
+      <anchor>a55e140fa365cb3ca6e8613ffdf4a0e05</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; juce::ValueTree &gt;</type>
+      <name>clips</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes_1_1SceneInfo.html</anchorfile>
+      <anchor>a7045c1bdd532380e63186841cd241c81</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::SceneList</name>
+    <filename>classtracktion_1_1engine_1_1SceneList.html</filename>
+    <base protection="private">ValueTreeObjectList&lt; Scene &gt;</base>
+    <member kind="function">
+      <type></type>
+      <name>SceneList</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>af957213c49d36ef54dae0aab880643b1</anchor>
+      <arglist>(const juce::ValueTree &amp;, Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~SceneList</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>a80f463c81713cacded02011285967fff</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumScenes</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>ae8ee8fb39cd6a81d1705f6e8d851b023</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Scene * &gt;</type>
+      <name>getScenes</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>aaf142d6160bb9089adf70da63032ff45</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>ensureNumberOfScenes</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>a4969f402ced09e748297f04f4537c6b2</anchor>
+      <arglist>(int numScenes)</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *</type>
+      <name>insertScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>ae9969ce662eb8e7174a6859e27b3dfb7</anchor>
+      <arglist>(int index)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>deleteScene</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>a0b0c0caabfc772b5e0d1f632419981f4</anchor>
+      <arglist>(Scene &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>aa2316af68118ef0c623e95d3adb6750d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit &amp;</type>
+      <name>edit</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>a719a90598e9010942abcc122eae84e6e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SceneWatcher</type>
+      <name>sceneWatcher</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneList.html</anchorfile>
+      <anchor>a4d0e38e3f81e01c4c91a71c49a975252</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Clipboard::Scenes</name>
+    <filename>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</filename>
+    <base>tracktion::engine::Clipboard::ContentType</base>
+    <class kind="struct">tracktion::engine::Clipboard::Scenes::SceneInfo</class>
+    <member kind="function">
+      <type></type>
+      <name>Scenes</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>ac93ca229de81c694e3001e7dd046fb0f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~Scenes</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>a8899b1244219a6456d0779279d2ffa4a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>pasteIntoEdit</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>a6a6873bd985f7c46aa95d080211914c6</anchor>
+      <arglist>(const EditPastingOptions &amp;) const override</arglist>
+    </member>
+    <member kind="function">
+      <type>virtual bool</type>
+      <name>pasteIntoEdit</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>ae3179b071e4302d9007657da52f29b5a</anchor>
+      <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
+    </member>
+    <member kind="function">
+      <type>virtual bool</type>
+      <name>pasteIntoEdit</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>a2b8ac2e249e6721e16dd1ca7831b15da</anchor>
+      <arglist>(const EditPastingOptions &amp;) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; SceneInfo &gt;</type>
+      <name>scenes</name>
+      <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Scenes.html</anchorfile>
+      <anchor>a98428c6d802a6cb463dda9e45d4a5b90</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::SceneWatcher</name>
+    <filename>classtracktion_1_1engine_1_1SceneWatcher.html</filename>
+    <class kind="struct">tracktion::engine::SceneWatcher::Listener</class>
+    <member kind="function">
+      <type></type>
+      <name>SceneWatcher</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneWatcher.html</anchorfile>
+      <anchor>aa6053277aa4e99f9cb4ee61431b07994</anchor>
+      <arglist>(const juce::ValueTree &amp;scenesState, Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneWatcher.html</anchorfile>
+      <anchor>aa64e8c26266b299cb6557f39eeefea5a</anchor>
+      <arglist>(Listener *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SceneWatcher.html</anchorfile>
+      <anchor>a94a0045cd5da995ec18dbed82e29a056</anchor>
+      <arglist>(Listener *)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::detail::ScopedActiveRecordingDevice</name>
+    <filename>structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedActiveRecordingDevice</name>
+      <anchorfile>structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html</anchorfile>
+      <anchor>a5446a9ae90497c051ed45f153fd522a6</anchor>
+      <arglist>(EditPlaybackContext &amp;e)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedActiveRecordingDevice</name>
+      <anchorfile>structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html</anchorfile>
+      <anchor>ad2cd89681e1d84215bc3b0a29df4a01d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>EditPlaybackContext &amp;</type>
+      <name>epc</name>
+      <anchorfile>structtracktion_1_1engine_1_1detail_1_1ScopedActiveRecordingDevice.html</anchorfile>
+      <anchor>aec59109ad74b9f6925169515b376cc4c</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::MidiLearnState::ScopedChangeCaller</name>
     <filename>structtracktion_1_1engine_1_1MidiLearnState_1_1ScopedChangeCaller.html</filename>
@@ -62470,6 +66946,45 @@
       <name>type</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiLearnState_1_1ScopedChangeCaller.html</anchorfile>
       <anchor>aa9922c718012ea85430bae5f09530560</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Renderer::ScopedClipSlotDisabler</name>
+    <filename>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedClipSlotDisabler</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>ac243a51213b7cfe9b5e4c64f6c6f69cc</anchor>
+      <arglist>(Edit &amp;e, Track::Array &amp;ta)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedClipSlotDisabler</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>acd3739d4dbdc656cddbd3953b404b56b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit &amp;</type>
+      <name>edit</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>aa219e576ac0dc41d1e6f8b1e8ab9a03f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Track::Array</type>
+      <name>tracks</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>ac9e0ed6323264c63ebd0caac12675634</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; bool &gt;</type>
+      <name>playSlotClips</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>a33835ed525d50767ddada6167cc163bb</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -62621,6 +67136,52 @@
       <anchorfile>structtracktion_1_1engine_1_1WaveInputRecordingThread_1_1ScopedInitialiser.html</anchorfile>
       <anchor>a96f05b135967076b1cf70a98554ebe14</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ScopedListener</name>
+    <filename>classtracktion_1_1engine_1_1ScopedListener.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>a0af514e07dfc6821d228a0fdd0d52e40</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>abf843f3dfa488e5ff2b530a75d855436</anchor>
+      <arglist>(BroadcasterType &amp;b, ListenerType &amp;l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>a41c993d0860d9f9dbabd44b18a5c89fb</anchor>
+      <arglist>(BroadcasterType &amp;b, ListenerType &amp;l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>a77a1d7718f9dbe2569ad443f93aad9e3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ScopedListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>ac406831065435ccc568f8af099b27e0d</anchor>
+      <arglist>(const ScopedListener &amp;)=delete</arglist>
+    </member>
+    <member kind="function">
+      <type>ScopedListener &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1ScopedListener.html</anchorfile>
+      <anchor>ad92f78a6e94b0fd746b8620a2a0d08a2</anchor>
+      <arglist>(const ScopedListener &amp;)=delete</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -63185,6 +67746,7 @@
   <compound kind="class">
     <name>tracktion::engine::Selectable</name>
     <filename>classtracktion_1_1engine_1_1Selectable.html</filename>
+    <class kind="class">tracktion::engine::Selectable::Listener</class>
     <member kind="typedef">
       <type>juce::WeakReference&lt; Selectable &gt;</type>
       <name>WeakRef</name>
@@ -63233,6 +67795,20 @@
       <anchorfile>classtracktion_1_1engine_1_1Selectable.html</anchorfile>
       <anchor>a3181dd86e8a8ab1916b7f14aeb4dacf8</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable.html</anchorfile>
+      <anchor>aa2f32a79ef1047f187e8de7f698edc98</anchor>
+      <arglist>(SelectableListener *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1Selectable.html</anchorfile>
+      <anchor>a6b48e1edceb420aad5092b2456762b5a</anchor>
+      <arglist>(SelectableListener *)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -63318,6 +67894,7 @@
     <class kind="struct">tracktion::engine::SelectableClass::AddClipboardEntryParams</class>
     <class kind="struct">tracktion::engine::SelectableClass::ClassInstance</class>
     <class kind="struct">tracktion::engine::SelectableClass::ClassInstanceBase</class>
+    <class kind="struct">tracktion::engine::SelectableClass::DeleteSelectedParams</class>
     <class kind="struct">tracktion::engine::SelectableClass::SelectOtherObjectsParams</class>
     <member kind="enumeration">
       <type></type>
@@ -63356,6 +67933,13 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
+      <name>canBeSelected</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClass.html</anchorfile>
+      <anchor>a619a375534cf2a15f51be51bd731d18c</anchor>
+      <arglist>(const Selectable &amp;object)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
       <name>canClassesBeSelectedAtTheSameTime</name>
       <anchorfile>classtracktion_1_1engine_1_1SelectableClass.html</anchorfile>
       <anchor>ad255f3b65f61a6f5ae0b821bd9022ee6</anchor>
@@ -63379,8 +67963,8 @@
       <type>virtual void</type>
       <name>deleteSelected</name>
       <anchorfile>classtracktion_1_1engine_1_1SelectableClass.html</anchorfile>
-      <anchor>a8c74cf826d4751874de70444a2aed611</anchor>
-      <arglist>(const SelectableList &amp;, bool partOfCutOperation)</arglist>
+      <anchor>a905a0cbadabe2ee1f70ca297f0abe098</anchor>
+      <arglist>(const DeleteSelectedParams &amp;params)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -63423,6 +68007,13 @@
       <anchorfile>classtracktion_1_1engine_1_1SelectableClass.html</anchorfile>
       <anchor>ae96b4a2a5c68f8a59555ba8bffaf1d73</anchor>
       <arglist>(const Selectable *)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static SelectableClass *</type>
+      <name>findClassFor</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClass.html</anchorfile>
+      <anchor>a76f7d41bf3a392c086dabcb55e752176</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -63533,6 +68124,13 @@
       <anchorfile>structtracktion_1_1engine_1_1SelectableList.html</anchorfile>
       <anchor>a14ca22063cb3a24c7a5036808d00fc39</anchor>
       <arglist>(const juce::ReferenceCountedArray&lt; SelectableType &gt; &amp;initialItems)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SelectableList</name>
+      <anchorfile>structtracktion_1_1engine_1_1SelectableList.html</anchorfile>
+      <anchor>adc4887ce2a102ddf87cc0245b92aaba7</anchor>
+      <arglist>(const std::vector&lt; SelectableType * &gt; &amp;initialItems)</arglist>
     </member>
     <member kind="function">
       <type>SelectableClass *</type>
@@ -63729,13 +68327,6 @@
       <anchorfile>structtracktion_1_1engine_1_1SelectableList.html</anchorfile>
       <anchor>a3bb2cbb819f038a1c90dfed351da694c</anchor>
       <arglist>(Selectable *elementToLookFor) const</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::Array&lt; Selectable::WeakRef &gt;</type>
-      <name>getAsWeakRefList</name>
-      <anchorfile>structtracktion_1_1engine_1_1SelectableList.html</anchorfile>
-      <anchor>ae8c1f9e16d3b0cdd393bf94b97e9d914</anchor>
-      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -64337,10 +68928,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Selectable::WeakRef</type>
+      <type>SafeSelectable&lt; Edit &gt;</type>
       <name>edit</name>
       <anchorfile>classtracktion_1_1engine_1_1SelectionManager.html</anchorfile>
-      <anchor>adf19c60e6df29142d0239190b4c24c47</anchor>
+      <anchor>a8c03b7da432f6a33343e2699931f0210</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -64617,6 +69208,46 @@
       <anchorfile>classtracktion_1_1engine_1_1SharedLevelMeasuringNode.html</anchorfile>
       <anchor>a73590ff893423c5fd3f487573733c32e</anchor>
       <arglist>(ProcessContext &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::SharedTimer</name>
+    <filename>classtracktion_1_1engine_1_1SharedTimer.html</filename>
+    <class kind="struct">tracktion::engine::SharedTimer::Listener</class>
+    <member kind="function">
+      <type></type>
+      <name>SharedTimer</name>
+      <anchorfile>classtracktion_1_1engine_1_1SharedTimer.html</anchorfile>
+      <anchor>ab616751734081eec7b0c1d219cccf174</anchor>
+      <arglist>(std::chrono::duration&lt; Type &gt; interval)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SharedTimer</name>
+      <anchorfile>classtracktion_1_1engine_1_1SharedTimer.html</anchorfile>
+      <anchor>abf761611326432a81fca30dd3cbb1b57</anchor>
+      <arglist>(HertzTag, int frequencyInHz)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SharedTimer.html</anchorfile>
+      <anchor>a05dd2ad98abfa6c824dc31d94bea58d6</anchor>
+      <arglist>(Listener *l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1SharedTimer.html</anchorfile>
+      <anchor>a824fcc3a3eb85415760ce6448b15e227</anchor>
+      <arglist>(Listener *l)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static SharedTimer</type>
+      <name>fromFrequency</name>
+      <anchorfile>classtracktion_1_1engine_1_1SharedTimer.html</anchorfile>
+      <anchor>afe6ea9bdcb6d4e52b1f3ad36c197213a</anchor>
+      <arglist>(int frequencyInHz)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -65007,6 +69638,75 @@
       <anchorfile>classtracktion_1_1graph_1_1SinNode.html</anchorfile>
       <anchor>aa83aaaff6bf2b8a33b8f3b0be0f72cfa</anchor>
       <arglist>(ProcessContext &amp;pc) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::SlotControlNode</name>
+    <filename>classtracktion_1_1engine_1_1SlotControlNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
+    <member kind="function">
+      <type></type>
+      <name>SlotControlNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>ae9ae869070ec57b244ea6ed0d1bd909d</anchor>
+      <arglist>(ProcessState &amp;editProcessState, std::shared_ptr&lt; LaunchHandle &gt;, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(MonotonicBeat)&gt; stopFunction, EditItemID slotID, std::unique_ptr&lt; Node &gt; input)</arglist>
+    </member>
+    <member kind="function">
+      <type>const LaunchHandle &amp;</type>
+      <name>getLaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a87261b997ee1db26dd3a254b1aaca83a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const LaunchHandle *</type>
+      <name>getLaunchHandleIfNotUnique</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a9ae1d5eab4b014ca19cbdad19fe17044</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>add4406aaa51c27144df0fa091fb0777c</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>ab5892582cae8c2ad5eaa2a64f37cbd40</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a017425653411ce8b8219b8d38793e620</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a46a730ecd64679d617339848bc1680e1</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prefetchBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a32404704cb26493a31d851c718d94208</anchor>
+      <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1SlotControlNode.html</anchorfile>
+      <anchor>a48ba212b5bfd1ae96da7fba7ddc9b6e2</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -65559,6 +70259,91 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::LauncherClipPlaybackHandle::SplitBeatRange</name>
+    <filename>structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html</filename>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>range1</name>
+      <anchorfile>structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html</anchorfile>
+      <anchor>aa22958df18ea0d53811d2e7d77648d56</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>range2</name>
+      <anchorfile>structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html</anchorfile>
+      <anchor>a4f765e9eb311542bec561ca61d7e49c3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>playing1</name>
+      <anchorfile>structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html</anchorfile>
+      <anchor>ace14b69356664a47eb8900f79cbba94f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>playing2</name>
+      <anchorfile>structtracktion_1_1engine_1_1LauncherClipPlaybackHandle_1_1SplitBeatRange.html</anchorfile>
+      <anchor>af0fb96af6814bbbd58e124b16d24b51d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::LaunchHandle::SplitStatus</name>
+    <filename>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>playing1</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a299d456a397b279589028ec947c66152</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>playing2</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a1f8496e176fa7feee4b8eb6e3be7a700</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>range1</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a4000a02b4ed2a85a8f117c903e3630dc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>range2</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a43dea8940b0cca44b28e15cbbdebc51a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>isSplit</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>af75e12c3281c588260f880250e06db91</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; BeatPosition &gt;</type>
+      <name>playStartTime1</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a7478fe05b9cb77a84cce156a70f0d8e6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; BeatPosition &gt;</type>
+      <name>playStartTime2</name>
+      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a99f676e508bc0cc729b101fd8ae24172</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::graph::SplitTimelineRange</name>
     <filename>structtracktion_1_1graph_1_1SplitTimelineRange.html</filename>
     <member kind="function">
@@ -65682,8 +70467,8 @@
       <type>std::string</type>
       <name>toString</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a0baa10a54b75704b983fc593c416d243</anchor>
-      <arglist>() const</arglist>
+      <anchor>aa9bb9517fb596f0d402c1e1a2bc1ffd7</anchor>
+      <arglist>(const std::string &amp;name) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -65691,13 +70476,6 @@
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
       <anchor>a6c263057b69a7baa7ece4a0f1e88b467</anchor>
       <arglist>(double secondsElapsed, uint64_t cyclesElapsed) noexcept</arglist>
-    </member>
-    <member kind="variable">
-      <type>std::string</type>
-      <name>name</name>
-      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>aa70449e2ac88278c1b672a4cf34a77f9</anchor>
-      <arglist></arglist>
     </member>
     <member kind="variable">
       <type>double</type>
@@ -66096,6 +70874,13 @@
       <arglist>(juce::MidiMessageSequence &amp;result, bool convertToSeconds=true, PatternInstance *instance=nullptr)</arglist>
     </member>
     <member kind="function">
+      <type>juce::MidiMessageSequence</type>
+      <name>generateMidiSequence</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ae43cc509491c0ddaebb8447a01c288d0</anchor>
+      <arglist>(MidiList::TimeBase, PatternInstance *instance=nullptr)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; BeatPosition &gt;</type>
       <name>getBeatTimesOfPatternStarts</name>
       <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
@@ -66185,6 +70970,118 @@
       <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
       <anchor>a95d96bca948c7323e0dc6b7625d54a11</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>canLoop</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ac2136e162c3a3a496d593883f77ace0e</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipPosition</type>
+      <name>getPosition</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>af5615cbb42a109e1bc88c2564916d1fb</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isLooping</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a700f8b78ba730a677d953b45dc379551</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setNumberOfLoops</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a8e74fa6e89517ff8b6b80d88f07ae257</anchor>
+      <arglist>(int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>disableLooping</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a78609f64b40e765b9f40febde46bac4f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLoopRange</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a261b4dbfcadd47b9aaf74542a41f2bd4</anchor>
+      <arglist>(TimeRange) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLoopRangeBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ad6469bd3797870dea7e559dc1f7d206c</anchor>
+      <arglist>(BeatRange) override</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getLoopStartBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a3aead6aad6bb52d04583fd525cbe1c67</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatDuration</type>
+      <name>getLoopLengthBeats</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a5f8d48a0acd70ec6be433fe2ce8b1320</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>TimePosition</type>
+      <name>getLoopStart</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a7a37eab9a3a841fed579be8e2e8a6650</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>TimeDuration</type>
+      <name>getLoopLength</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ae38af44804ddbe9ece318d76d6b04938</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::shared_ptr&lt; LaunchHandle &gt;</type>
+      <name>getLaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>af44e71932a0f506b1a47a3fcd8026101</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setUsesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a1ee6f9db0e87706fb0aac5fe5733d787</anchor>
+      <arglist>(bool useGlobal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>usesGlobalLaunchQuatisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ae95f1d10c55f18e39ac18acf8534ecdf</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQuantisation *</type>
+      <name>getLaunchQuantisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>a86e6102199e4b5a112bc37e6d5b61b3c</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>FollowActions *</type>
+      <name>getFollowActions</name>
+      <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
+      <anchor>ae3865b615228e78df5bf036050a2f321</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="variable">
       <type>juce::CachedValue&lt; bool &gt;</type>
@@ -66480,6 +71377,45 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::StopRecordingParameters</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</filename>
+    <member kind="variable">
+      <type>std::vector&lt; EditItemID &gt;</type>
+      <name>targetsToStop</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</anchorfile>
+      <anchor>a1a4308281d7134c09c5c357a783f1601</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimePosition</type>
+      <name>unloopedTimeToEndRecording</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</anchorfile>
+      <anchor>ad67495740f19c2ff38032f83a239e25d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>isLooping</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</anchorfile>
+      <anchor>a95bac9850fe8fbea9151f44d887294d7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimeRange</type>
+      <name>markedRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</anchorfile>
+      <anchor>ac19b2804f93c3767b806e44415da41cd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>discardRecordings</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html</anchorfile>
+      <anchor>a187af087d03dc31896be225f04d4d88a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::StopwatchTimer</name>
     <filename>structtracktion_1_1engine_1_1StopwatchTimer.html</filename>
     <member kind="function">
@@ -66727,6 +71663,63 @@
       <anchorfile>classtracktion_1_1graph_1_1SummingNode.html</anchorfile>
       <anchor>a17ceb8ab33a413782df872c01401b011</anchor>
       <arglist>(ProcessContext &amp;pc) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::SyncPoint</name>
+    <filename>structtracktion_1_1engine_1_1SyncPoint.html</filename>
+    <member kind="variable">
+      <type>int64_t</type>
+      <name>referenceSamplePosition</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncPoint.html</anchorfile>
+      <anchor>a6ca6328a05a319385c3c24fbec8a8166</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>MonotonicBeat</type>
+      <name>monotonicBeat</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncPoint.html</anchorfile>
+      <anchor>a2876e8e257dbcb35d6003062ca8f992f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimePosition</type>
+      <name>unloopedTime</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncPoint.html</anchorfile>
+      <anchor>a09eb79c6b6d992af465187e79c73ecec</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimePosition</type>
+      <name>time</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncPoint.html</anchorfile>
+      <anchor>ab7acc9d9f17693badb885a9f382434da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatPosition</type>
+      <name>beat</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncPoint.html</anchorfile>
+      <anchor>a52e438fd373267c53511a9e64fbcdde2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::SyncRange</name>
+    <filename>structtracktion_1_1engine_1_1SyncRange.html</filename>
+    <member kind="variable">
+      <type>SyncPoint</type>
+      <name>start</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncRange.html</anchorfile>
+      <anchor>ae30660020bac5fcd7ee35a30f0c689b0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SyncPoint</type>
+      <name>end</name>
+      <anchorfile>structtracktion_1_1engine_1_1SyncRange.html</anchorfile>
+      <anchor>af188351bc6bedef984a349b28e6eae03</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -67876,6 +72869,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>const PerformanceMeasurement &amp;</type>
+      <name>getPerformanceMeasurement</name>
+      <anchorfile>structtracktion_1_1graph_1_1test__utilities_1_1TestProcess.html</anchorfile>
+      <anchor>a3c8fac7ddc465e08353d50b2c38397bb</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>PerformanceMeasurement::Statistics</type>
       <name>getStatisticsAndReset</name>
       <anchorfile>structtracktion_1_1graph_1_1test__utilities_1_1TestProcess.html</anchorfile>
@@ -68116,8 +73116,8 @@
       <type>virtual void</type>
       <name>createThreads</name>
       <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
-      <anchor>a303fa74466d1dea82792c96a36f320cb</anchor>
-      <arglist>(size_t numThreads)=0</arglist>
+      <anchor>a1ff176d536a641c595ebe5fe5db9c74a</anchor>
+      <arglist>(size_t numThreads, juce::AudioWorkgroup)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
@@ -68202,6 +73202,13 @@
       <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
       <anchor>a52152ca98087999f5fad25900775450d</anchor>
       <arglist>(LockFreeMultiThreadedNodePlayer::PreparedNode *nodeInUse)</arglist>
+    </member>
+    <member kind="variable">
+      <type>LockFreeMultiThreadedNodePlayer &amp;</type>
+      <name>player</name>
+      <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
+      <anchor>a152916427161a28af7b766ee9faf9f24</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -69110,6 +74117,24 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>elastiqueDirectPro</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea27961f1cc634b4720774d66834e6cb85</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>elastiqueDirectEfficient</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea91f4e65141b02cc4c7e03b1e60fad36b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>elastiqueDirectMobile</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea9e2712528443a907fd72d1f1fcaee303</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>defaultMode</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
       <anchor>aef6990d119f230d6c5ffb78f4470c79ea595e4aaf11d095318410438363dc328e</anchor>
@@ -69185,6 +74210,24 @@
       <name>rubberbandPercussive</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
       <anchor>aef6990d119f230d6c5ffb78f4470c79eac12f97ef281ef96a9b44fa6f9449d926</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>elastiqueDirectPro</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea27961f1cc634b4720774d66834e6cb85</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>elastiqueDirectEfficient</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea91f4e65141b02cc4c7e03b1e60fad36b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>elastiqueDirectMobile</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea9e2712528443a907fd72d1f1fcaee303</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -69558,7 +74601,6 @@
     <filename>classtracktion_1_1engine_1_1Track.html</filename>
     <base>tracktion::engine::EditItem</base>
     <base>tracktion::engine::Selectable</base>
-    <base>tracktion::engine::MacroParameterElement</base>
     <member kind="enumeration">
       <type></type>
       <name>FreezeType</name>
@@ -69687,8 +74729,8 @@
       <type></type>
       <name>Track</name>
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>abac6ddf149daf2b74dee4f06eecb4967</anchor>
-      <arglist>(Edit &amp;, const juce::ValueTree &amp;, double defaultTrackHeight, double minTrackHeight, double maxTrackHeight)</arglist>
+      <anchor>a62161e6dabbcaf3704d864813323456e</anchor>
+      <arglist>(Edit &amp;, const juce::ValueTree &amp;, bool hasModifierList)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -70132,6 +75174,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>visitAllAutomatableParams</name>
+      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
+      <anchor>ae08252a9ea8d23115c4fe67db35ff6af</anchor>
+      <arglist>(const std::function&lt; void(AutomatableParameter &amp;)&gt; &amp;) const</arglist>
+    </member>
+    <member kind="function">
       <type>AutomatableParameter *</type>
       <name>getCurrentlyShownAutoParam</name>
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
@@ -70195,10 +75244,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>ModifierList &amp;</type>
+      <type>ModifierList *</type>
       <name>getModifierList</name>
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>aa7e1a2a79f9027ca71b4ec6377c319e0</anchor>
+      <anchor>af06066c98356962e065f6c70ac7bd9ea</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -70263,27 +75312,6 @@
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
       <anchor>a740dda8bc98b1a69185ffcec6aebcd29</anchor>
       <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="variable">
-      <type>const double</type>
-      <name>defaultTrackHeight</name>
-      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>a485bc7665956d853fd4bef58460384fc</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const double</type>
-      <name>minTrackHeight</name>
-      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>a98d56fff73d184b0740951bedfbf2505</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const double</type>
-      <name>maxTrackHeight</name>
-      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>ad2c878bb10dd8445b0ef3892d9389f6d</anchor>
-      <arglist></arglist>
     </member>
     <member kind="variable">
       <type>juce::ValueTree</type>
@@ -71248,8 +76276,8 @@
       <type></type>
       <name>TrackMidiInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html</anchorfile>
-      <anchor>a232fba604aac59b52f4d277162f49331</anchor>
-      <arglist>(MidiInputDevice &amp;, std::unique_ptr&lt; Node &gt;, ProcessState &amp;)</arglist>
+      <anchor>a586f4723146dbfb8483604b93367905a</anchor>
+      <arglist>(MidiInputDevice &amp;, std::unique_ptr&lt; Node &gt;, ProcessState &amp;, bool copyInputsToOutputs)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Node * &gt;</type>
@@ -71399,6 +76427,13 @@
       <anchorfile>classtracktion_1_1engine_1_1TrackMutingNode.html</anchorfile>
       <anchor>abb2221424a341dbaa0f49f9130125113</anchor>
       <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>preProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1TrackMutingNode.html</anchorfile>
+      <anchor>ac0c794c9e05a4a8ccadae31289b63d0c</anchor>
+      <arglist>(choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -71761,22 +76796,29 @@
       <arglist>()</arglist>
     </member>
   </compound>
-  <compound kind="class">
-    <name>tracktion::engine::TracktionEngineAudioDeviceManager</name>
-    <filename>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</filename>
+  <compound kind="struct">
+    <name>tracktion::engine::DeviceManager::TracktionEngineAudioDeviceManager</name>
+    <filename>structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html</filename>
     <member kind="function">
       <type></type>
       <name>TracktionEngineAudioDeviceManager</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
-      <anchor>a2b1857308f13b1472ae52e606af4cf7e</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
+      <anchor>abc30fa145d8cb6f192f6763246430098</anchor>
       <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>createAudioDeviceTypes</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
-      <anchor>a46d0c0e84dd2db3067768793b7508acd</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
+      <anchor>a4410efb484daac34a39495900ed56e9b</anchor>
       <arglist>(juce::OwnedArray&lt; juce::AudioIODeviceType &gt; &amp;) override</arglist>
+    </member>
+    <member kind="variable">
+      <type>Engine &amp;</type>
+      <name>engine</name>
+      <anchorfile>structtracktion_1_1engine_1_1DeviceManager_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
+      <anchor>a55794071b7c994c8b6af57f81900bead</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -71909,8 +76951,8 @@
       <type></type>
       <name>TracktionNodePlayer</name>
       <anchorfile>classtracktion_1_1engine_1_1TracktionNodePlayer.html</anchorfile>
-      <anchor>aa725d3a478835f0debaf6dfca29e70db</anchor>
-      <arglist>(ProcessState &amp;processStateToUse, tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)</arglist>
+      <anchor>a8ba391d41896650362b68d5a47d0e07f</anchor>
+      <arglist>(ProcessState &amp;processStateToUse, tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator, juce::AudioWorkgroup audioWorkgroup={})</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -71982,17 +77024,25 @@
       <anchor>a08c507ab4fdf33f8fb00adb00b3fdc5c</anchor>
       <arglist>(bool enablePooledMemory)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>enableNodeMemorySharing</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionNodePlayer.html</anchorfile>
+      <anchor>a60763ed578adead13da7d1f414f0e9c1</anchor>
+      <arglist>(bool enableNodeMemorySharing)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::TrackWaveInputDeviceNode</name>
     <filename>classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html</filename>
     <base>tracktion::graph::Node</base>
+    <base protection="private">tracktion::engine::TracktionEngineNode</base>
     <member kind="function">
       <type></type>
       <name>TrackWaveInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html</anchorfile>
-      <anchor>a5847465ae3f369898c769757d2203284</anchor>
-      <arglist>(WaveInputDevice &amp;, std::unique_ptr&lt; Node &gt;)</arglist>
+      <anchor>a08a9c0122b1cad97eaf4f04813108f1c</anchor>
+      <arglist>(ProcessState &amp;, WaveInputDevice &amp;, std::unique_ptr&lt; Node &gt;, bool copyInputsToOutputs)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Node * &gt;</type>
@@ -72089,6 +77139,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>playFromStart</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>a691bdf7153346c38567a67999fb57681</anchor>
+      <arglist>(bool justSendMMCIfEnabled)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>playSectionAndReset</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
       <anchor>a05a45f577a13dd698ef1c10d9947089c</anchor>
@@ -72105,8 +77162,8 @@
       <type>void</type>
       <name>stop</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>a737b634abcf8dc4fdd499328b78e4cfc</anchor>
-      <arglist>(bool discardRecordings, bool clearDevices, bool canSendMMCStop=true, bool invertReturnToStartPosSelection=false)</arglist>
+      <anchor>a891ca2dc39a13d23ce17a5b414b3d6f4</anchor>
+      <arglist>(bool discardRecordings, bool clearDevices, bool canSendMMCStop=true)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -72116,11 +77173,18 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>stopRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>a5d053668dc0bd0bbd12a7aad6aa884ad</anchor>
+      <arglist>(bool discardRecordings=false)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Result</type>
       <name>applyRetrospectiveRecord</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>a8676bf766c3439ea706400481664e019</anchor>
-      <arglist>()</arglist>
+      <anchor>a36a39c33b5cad18c0ad5a11cc5674f2c</anchor>
+      <arglist>(bool armedOnly)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; juce::File &gt;</type>
@@ -72165,17 +77229,17 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isRecordingStopping</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>a44c8856b09e17f4577d1210d359e564d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>TimePosition</type>
       <name>getTimeWhenStarted</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
       <anchor>a75701a80bb94cbf6a4a623e81f030e37</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getCurrentPosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>a0da088e378d464d2af5c5c0ff9850e55</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -72187,17 +77251,17 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>setCurrentPosition</name>
+      <name>setPosition</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>add052e669386554343103cf216599a4c</anchor>
-      <arglist>(double time)</arglist>
+      <anchor>aa61a4092e950e83d17460c487e741407</anchor>
+      <arglist>(TimePosition)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setPosition</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>aa61a4092e950e83d17460c487e741407</anchor>
-      <arglist>(TimePosition)</arglist>
+      <anchor>ab2ff73830b50863bbf22fad88c2d93ef</anchor>
+      <arglist>(TimePosition timeToMoveTo, TimePosition timeToPerformJump)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -72376,17 +77440,24 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>callRecordingAboutToStartListeners</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>ad8c0c10503d76d99ea76128fef505318</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>callRecordingAboutToStopListeners</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>a50d2dcef7568a3534716cd7278632152</anchor>
-      <arglist>(InputDeviceInstance &amp;)</arglist>
+      <anchor>a3ee579f14ee2d7f7b78bb0639af28377</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>callRecordingFinishedListeners</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
-      <anchor>a35b2aa50890bc119d3c637cfa603ebda</anchor>
-      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt; recordedClips)</arglist>
+      <anchor>a89b62fabe5d3f80cde074786aad864cf</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID, juce::ReferenceCountedArray&lt; Clip &gt;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::Array&lt; TransportControl * &gt;</type>
@@ -72435,6 +77506,13 @@
       <name>state</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
       <anchor>a28cbdb37abbb2d8e073b4dbc21290aa8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; TimePosition &gt;</type>
+      <name>startPosition</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>afb56c8da586f2b65545de718fdf03099</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -74122,6 +79200,472 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>ValueTreeObjectList&lt; ClipSlot &gt;</name>
+    <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual ClipSlot *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(ClipSlot *first, ClipSlot *second) const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual ClipSlot *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(ClipSlot *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(ClipSlot *first, ClipSlot *second) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; ClipSlot * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; ClipSlot * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>ValueTreeObjectList&lt; CompSection &gt;</name>
     <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
@@ -74504,6 +80048,472 @@
     </member>
     <member kind="variable">
       <type>juce::Array&lt; CompSection * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>ValueTreeObjectList&lt; Destination &gt;</name>
+    <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Destination *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(Destination *first, Destination *second) const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Destination *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Destination *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(Destination *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(Destination *first, Destination *second) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; Destination * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; Destination * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
@@ -75054,472 +81064,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>ValueTreeObjectList&lt; InputDeviceDestination &gt;</name>
-    <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
-    <member kind="typedef">
-      <type>typename CriticalSectionType::ScopedLockType</type>
-      <name>ScopedLockType</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>typename CriticalSectionType::ScopedLockType</type>
-      <name>ScopedLockType</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>ValueTreeObjectList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
-      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~ValueTreeObjectList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>size</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isEmpty</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>operator[]</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
-      <arglist>(int idx) const</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>at</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
-      <arglist>(int idx)</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination **</type>
-      <name>begin</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *const *</type>
-      <name>begin</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination **</type>
-      <name>end</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *const *</type>
-      <name>end</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>rebuildObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>freeObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual bool</type>
-      <name>isSuitableType</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
-      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual InputDeviceDestination *</type>
-      <name>createNewObject</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
-      <arglist>(const juce::ValueTree &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>deleteObject</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>newObjectAdded</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>objectRemoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>objectOrderChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a83c482e365e52a886141225895b18edf</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildAdded</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
-      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildRemoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
-      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildOrderChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
-      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreePropertyChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
-      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeParentChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
-      <arglist>(juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeRedirected</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
-      <arglist>(juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>compareElements</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
-      <arglist>(InputDeviceDestination *first, InputDeviceDestination *second) const</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>ValueTreeObjectList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
-      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~ValueTreeObjectList</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>size</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isEmpty</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>operator[]</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
-      <arglist>(int idx) const</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *</type>
-      <name>at</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
-      <arglist>(int idx)</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination **</type>
-      <name>begin</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *const *</type>
-      <name>begin</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination **</type>
-      <name>end</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>InputDeviceDestination *const *</type>
-      <name>end</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>rebuildObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>freeObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual bool</type>
-      <name>isSuitableType</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
-      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual InputDeviceDestination *</type>
-      <name>createNewObject</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
-      <arglist>(const juce::ValueTree &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>deleteObject</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>newObjectAdded</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>objectRemoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
-      <arglist>(InputDeviceDestination *)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>objectOrderChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a83c482e365e52a886141225895b18edf</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildAdded</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
-      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildRemoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
-      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeChildOrderChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
-      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreePropertyChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
-      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeParentChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
-      <arglist>(juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>valueTreeRedirected</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
-      <arglist>(juce::ValueTree &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>compareElements</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
-      <arglist>(InputDeviceDestination *first, InputDeviceDestination *second) const</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::Array&lt; InputDeviceDestination * &gt;</type>
-      <name>objects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::DummyCriticalSection</type>
-      <name>arrayLock</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::Array&lt; InputDeviceDestination * &gt;</type>
-      <name>objects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::DummyCriticalSection</type>
-      <name>arrayLock</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>deleteAllObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>bool</type>
-      <name>isChildTree</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
-      <arglist>(juce::ValueTree &amp;v) const</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>int</type>
-      <name>indexOf</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
-      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>sortArray</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>deleteAllObjects</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>bool</type>
-      <name>isChildTree</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
-      <arglist>(juce::ValueTree &amp;v) const</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>int</type>
-      <name>indexOf</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
-      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>sortArray</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>juce::ValueTree</type>
-      <name>parent</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>juce::ValueTree</type>
-      <name>parent</name>
-      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>ValueTreeObjectList&lt; Modifier &gt;</name>
     <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
@@ -75902,6 +81446,472 @@
     </member>
     <member kind="variable">
       <type>juce::Array&lt; Modifier * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>deleteAllObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8dc989026c8d80b027a4cb74f2b03610</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isChildTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4d6076ac13cb9f5790b2c274ab2ce05b</anchor>
+      <arglist>(juce::ValueTree &amp;v) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>indexOf</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a66cfda9d82cf98d96517048d5c7cdefa</anchor>
+      <arglist>(const juce::ValueTree &amp;v) const noexcept</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>sortArray</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4e5abf5da66646d343f775f3b909465b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::ValueTree</type>
+      <name>parent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a3106979dcf5fe5e5e1c1ca7bd77f52f8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>ValueTreeObjectList&lt; Scene &gt;</name>
+    <filename>classtracktion_1_1engine_1_1ValueTreeObjectList.html</filename>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>typename CriticalSectionType::ScopedLockType</type>
+      <name>ScopedLockType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8da8a7eeddfc212e9d275380b655c4e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Scene *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(Scene *first, Scene *second) const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a6d13cf7f061d27d433ab3672c458770e</anchor>
+      <arglist>(const juce::ValueTree &amp;parentTree)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ValueTreeObjectList</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a32dfbbc4587a5532217f6cc02a999799</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a03a768abfae3a209c52875bf2971246b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isEmpty</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a10c210fb48d0733c4045a275cbc99182</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *</type>
+      <name>operator[]</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5238b1810d9c5c94b525abff6089d83d</anchor>
+      <arglist>(int idx) const</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *</type>
+      <name>at</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae23e885d2f24ce99772fdc3e23ec949b</anchor>
+      <arglist>(int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene **</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2c705d21d806d17d7ea0a83dd2f09ac2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *const *</type>
+      <name>begin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a070e952f401a2ffbc89be7824b24d639</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene **</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2d951db061670c5dbaf57d85120465a4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Scene *const *</type>
+      <name>end</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a2e40297a3e30be6aa5fc4d0810dab03a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>rebuildObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7f132eb85133ef40c3defce9a1384e11</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>freeObjects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae4cab424e5e76b608d4d1708abb8cb21</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual bool</type>
+      <name>isSuitableType</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ad89d75d7908ee1cf3224c59ffcea0c1b</anchor>
+      <arglist>(const juce::ValueTree &amp;) const=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual Scene *</type>
+      <name>createNewObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ae56ab4e92f57c7ac36e22ef9efd68a6e</anchor>
+      <arglist>(const juce::ValueTree &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>deleteObject</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a02c5a37154b98e3b565745327220fdb4</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>newObjectAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ab3e86978770c87dc4da891702f38b1d2</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a7800d3414bf0df6ad0424f3d52d84455</anchor>
+      <arglist>(Scene *)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>objectOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a83c482e365e52a886141225895b18edf</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a8f1c40420cba3fe6ba0e3d4bdce241d3</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::ValueTree &amp;tree) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildRemoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a08604493f826cb8601a4b5d042f83803</anchor>
+      <arglist>(juce::ValueTree &amp;exParent, juce::ValueTree &amp;tree, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeChildOrderChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a1e7531c78ab9224f2ac6b639588aab74</anchor>
+      <arglist>(juce::ValueTree &amp;tree, int, int) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreePropertyChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a748b96b306521987f2dbb1f38c09119b</anchor>
+      <arglist>(juce::ValueTree &amp;, const juce::Identifier &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeParentChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a4a7db08aa022f1a0d4f508fa44a00584</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>valueTreeRedirected</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a585a7179f5371ed9309d911ef63abaa0</anchor>
+      <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>compareElements</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>ac0b26305c51692f9b47f2b1c980c4264</anchor>
+      <arglist>(Scene *first, Scene *second) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; Scene * &gt;</type>
+      <name>objects</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::DummyCriticalSection</type>
+      <name>arrayLock</name>
+      <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
+      <anchor>a536547ddb1a61687a48fdfa04b535cb9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; Scene * &gt;</type>
       <name>objects</name>
       <anchorfile>classtracktion_1_1engine_1_1ValueTreeObjectList.html</anchorfile>
       <anchor>a5522809224016f2fb1409a4cd48bc1ae</anchor>
@@ -77105,6 +83115,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1FollowActionDurationType_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::Clip::FollowActionDurationType</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1FollowActionDurationType_01_4.html</anchorfile>
+      <anchor>ab927934efcc681ebb4c859ca73677131</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1FollowActionDurationType_01_4.html</anchorfile>
+      <anchor>a1dad1cba7ba72d43148491fbbbd7fe87</anchor>
+      <arglist>(tracktion::engine::Clip::FollowActionDurationType v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1SyncType_01_4.html</filename>
     <member kind="function" static="yes">
@@ -77138,6 +83166,42 @@
       <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1EditItemID_01_4.html</anchorfile>
       <anchor>a5d271dd3021420f68ecdde70f9b4e083</anchor>
       <arglist>(const tracktion::engine::EditItemID &amp;v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1FollowAction_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::FollowAction</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1FollowAction_01_4.html</anchorfile>
+      <anchor>af9fd10169b8f960eae1762476ede26e4</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1FollowAction_01_4.html</anchorfile>
+      <anchor>abab1dfb21a5c8828a1cc73ecd2870175</anchor>
+      <arglist>(tracktion::engine::FollowAction v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1LaunchQType_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::LaunchQType</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1LaunchQType_01_4.html</anchorfile>
+      <anchor>a596a12ce05274841be2cc290f8275151</anchor>
+      <arglist>(const juce::var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1LaunchQType_01_4.html</anchorfile>
+      <anchor>ab0a106ef17288a2a5bb3e26252cb484e</anchor>
+      <arglist>(const tracktion::engine::LaunchQType &amp;v)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -77529,6 +83593,25 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::VirtualMidiInputDestination</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html</filename>
+    <base>tracktion::engine::InputDeviceInstance::Destination</base>
+    <member kind="function">
+      <type></type>
+      <name>VirtualMidiInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html</anchorfile>
+      <anchor>ae9645280c27a406df8b2499c8c2b3040</anchor>
+      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~VirtualMidiInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html</anchorfile>
+      <anchor>a5e5f143edfbe55869f5eee71afc685ec</anchor>
+      <arglist>() override</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::VirtualMidiInputDevice</name>
     <filename>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</filename>
@@ -77537,8 +83620,8 @@
       <type></type>
       <name>VirtualMidiInputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a7414c8c6490a35c6c80172976a98faa4</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;name, DeviceType)</arglist>
+      <anchor>ab3c8f0d6d604a9273da7ac2717a7f246</anchor>
+      <arglist>(Engine &amp;, juce::String name, DeviceType, juce::String deviceID, bool isAllMIDIIns)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -77590,11 +83673,32 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>juce::StringArray</type>
+      <name>getMIDIInputSourceDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
+      <anchor>a0fe355f6dbebdea7546a1fcfc57436b0</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setMIDIInputSourceDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
+      <anchor>a8ae221f837e8d5554bcefc88f082b31f</anchor>
+      <arglist>(const juce::StringArray deviceIDs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>toggleMIDIInputSourceDevice</name>
+      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
+      <anchor>ad8998e63df0e013d4d785e41df31cdc2</anchor>
+      <arglist>(const juce::String &amp;deviceID)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>handleMessageFromPhysicalDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a7af712f4d5113272ad2fbab7980ef8fc</anchor>
-      <arglist>(MidiInputDevice *, const juce::MidiMessage &amp;)</arglist>
+      <anchor>a0b3cebbfd0b4b407febdb2aba885a51a</anchor>
+      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>DeviceType</type>
@@ -77617,52 +83721,12 @@
       <anchor>a8e2e0b2f3fa4b44dd87e7d0a1b6428da</anchor>
       <arglist>(const juce::MidiMessage &amp;)=0</arglist>
     </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>broadcastMessageToAllVirtualDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a8fc1c1d1a8d3f477b6978cc159d727a6</anchor>
-      <arglist>(MidiInputDevice *, const juce::MidiMessage &amp;)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>refreshDeviceNames</name>
-      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a8ea575417bda2699dd7cfdec8fa6e3ee</anchor>
-      <arglist>(Engine &amp;)</arglist>
-    </member>
     <member kind="variable">
       <type>bool</type>
       <name>useAllInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
       <anchor>a51a19877e001402d16d701dff641e9dc</anchor>
       <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a80d71fdf83552b6ef61ea4a0993d952f</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination</name>
-    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html</filename>
-    <base>tracktion::engine::InputDeviceInstance::InputDeviceDestination</base>
-    <member kind="function">
-      <type></type>
-      <name>VirtualMidiInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html</anchorfile>
-      <anchor>a362bdcdf867b6fa0202e164daa3914b0</anchor>
-      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~VirtualMidiInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html</anchorfile>
-      <anchor>ab2444b26319d9465e092cafc202c8bbe</anchor>
-      <arglist>() override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -77809,6 +83873,13 @@
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
       <anchor>ae0ac65a5450cc119a8e5a1e97c134b1c</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shoulMeasureCpuUsage</name>
+      <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
+      <anchor>a90524cd7fd1d0db38a15212d8069d9bf</anchor>
+      <arglist>() const noexcept final</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -79046,6 +85117,25 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::WaveInputDestination</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDestination.html</filename>
+    <base>tracktion::engine::InputDeviceInstance::Destination</base>
+    <member kind="function">
+      <type></type>
+      <name>WaveInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDestination.html</anchorfile>
+      <anchor>a5bb37ab7608a78d9585b568de360df45</anchor>
+      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~WaveInputDestination</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDestination.html</anchorfile>
+      <anchor>aa36189b82bdf83ff32400b377c1ed001</anchor>
+      <arglist>() override</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::WaveInputDevice</name>
     <filename>classtracktion_1_1engine_1_1WaveInputDevice.html</filename>
@@ -79054,8 +85144,8 @@
       <type></type>
       <name>WaveInputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>afce5e944c32212e436616187d63254b3</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;name, const juce::String &amp;type, const std::vector&lt; ChannelIndex &gt; &amp;, DeviceType)</arglist>
+      <anchor>a6c7989d18d8f9e337aad93087a13be4e</anchor>
+      <arglist>(Engine &amp;, const juce::String &amp;type, const WaveDeviceDescription &amp;, DeviceType)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -79098,20 +85188,6 @@
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
       <anchor>afd328e5ba102ed0a2e210407fb80737d</anchor>
       <arglist>(EditPlaybackContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>flipEndToEnd</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>a818f0d68f2f9e30c3f193161f6f74bca</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setEndToEnd</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>af39a5776b8363f1deca9ab9180932a28</anchor>
-      <arglist>(bool)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -79338,25 +85414,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination</name>
-    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html</filename>
-    <base>tracktion::engine::InputDeviceInstance::InputDeviceDestination</base>
-    <member kind="function">
-      <type></type>
-      <name>WaveInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html</anchorfile>
-      <anchor>abfea9c38076d9521c74778c29a57e815</anchor>
-      <arglist>(InputDeviceInstance &amp;i, juce::ValueTree v)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~WaveInputDeviceDestination</name>
-      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html</anchorfile>
-      <anchor>a202e3b8d396b7c0ad4d509ab0fe48c8e</anchor>
-      <arglist>() override</arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion::engine::WaveInputDeviceNode</name>
     <filename>classtracktion_1_1engine_1_1WaveInputDeviceNode.html</filename>
@@ -79529,35 +85586,44 @@
     <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
     <member kind="enumeration">
       <type></type>
+      <name>ReadAhead</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
+      <anchor>ad6fef24de866d868234a6d5624f5eebd</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="ad6fef24de866d868234a6d5624f5eebda7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="ad6fef24de866d868234a6d5624f5eebdaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
       <name>SyncTempo</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>a83ad7c0014cb30ab5b7e76554cdad3c9</anchor>
+      <anchor>a5344568de02983a82feb480f494403ef</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="a83ad7c0014cb30ab5b7e76554cdad3c9a7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="a83ad7c0014cb30ab5b7e76554cdad3c9aa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="a5344568de02983a82feb480f494403efa7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="a5344568de02983a82feb480f494403efaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
       <name>SyncPitch</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>af292642e27cb2347fb2b23363ac68eec</anchor>
+      <anchor>aa6e19053cc6abc23eea7f6d677c09738</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="af292642e27cb2347fb2b23363ac68eeca7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="af292642e27cb2347fb2b23363ac68eecaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="aa6e19053cc6abc23eea7f6d677c09738a7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1WaveNodeRealTime.html" anchor="aa6e19053cc6abc23eea7f6d677c09738aa6105c0a611b41b08f1209506350279e">yes</enumvalue>
     </member>
     <member kind="function">
       <type></type>
       <name>WaveNodeRealTime</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>a9f415d25d3f48af04de517ffa5a677f0</anchor>
-      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::defaultMode, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f)</arglist>
+      <anchor>aa92d7b7639f16f17b0bd2d9ea24883a7</anchor>
+      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::defaultMode, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f, ReadAhead=ReadAhead::no)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>WaveNodeRealTime</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>a4d80cd7e8e10757fa70be24c26bb66bf</anchor>
-      <arglist>(const AudioFile &amp;, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, BeatRange editTime, BeatDuration offset, BeatRange loopSection, LiveClipLevel, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality, SpeedFadeDescription, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; WarpMap &gt;, tempo::Sequence sourceFileTempoMap, SyncTempo, SyncPitch, std::optional&lt; tempo::Sequence &gt; chordPitchSequence)</arglist>
+      <anchor>a2beee4a48ac78fcec1b545d7f1383239</anchor>
+      <arglist>(const AudioFile &amp;, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, BeatRange editTime, BeatDuration offset, BeatRange loopSection, LiveClipLevel, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality, SpeedFadeDescription, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; WarpMap &gt;, tempo::Sequence sourceFileTempoMap, SyncTempo, SyncPitch, std::optional&lt; tempo::Sequence &gt; chordPitchSequence, float pitchChangeSemitones=1.0f, ReadAhead=ReadAhead::no)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -79603,8 +85669,8 @@
       <type></type>
       <name>WaveOutputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveOutputDevice.html</anchorfile>
-      <anchor>afb5f52a2e612b6c1b00ff988fdd2d188</anchor>
-      <arglist>(Engine &amp;, const juce::String &amp;name, const std::vector&lt; ChannelIndex &gt; &amp;channels)</arglist>
+      <anchor>a9f82490290a1faf191f634b588496aaa</anchor>
+      <arglist>(Engine &amp;, const WaveDeviceDescription &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -79897,6 +85963,74 @@
     </member>
   </compound>
   <compound kind="namespace">
+    <name>engine</name>
+    <filename>namespaceengine.html</filename>
+    <class kind="class">engine::FollowActions</class>
+    <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <member kind="enumeration">
+      <type></type>
+      <name>FollowAction</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a8adf9568644e9fd569d34ea8751bfdde</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeac456cb28eeacbc581b046d213222b66f">globalStop</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea4c8570a6cb79b980dfeae85b23f75c7a">globalReturnToArrangement</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea47f0147f51842988f934e149e7e8caaa">globalPlayAgain</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaef3d2841cf4246e8b9f731941fdcd5ab">trackPrevious</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea36acab6e718fdbe3cad86bbd4c66b9a5">trackNext</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaa0423cb783ee63a100fd8ee8ecf10cf7">trackFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea3e65b5ade6cd882ec1fea127d91cde89">trackLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea8c43284b6586cfeb4400f88ef70eb2f4">trackAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaa5e6e7ec14f7cfc9d318c9e39439b3be">trackOther</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddead19212628735bf203ef61085a310ba73">trackRoundRobin</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea9b671acea9d6903ceaedb125ff9ec0dc">currentGroupPrevious</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea051833ed22a7462c628356f0e3c68c61">currentGroupNext</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0ec01b92ff0fd15ab7000fc00cc358a0">currentGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeaadbe34fd022dd8a0f27064f1e134cab3">currentGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea53284b089ec091e764e4c61382f686df">currentGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0fcb2c7f9aee87f3faac9ca6bb4156dc">currentGroupOther</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeae785f60552a59533d8a01daa4eb764f8">currentGroupRoundRobin</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea052043fefd6705d4534070da78d5e1c6">previousGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea0456776f695d81268b58cda00ea241e4">previousGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeacc942fea2a26dae8b174d6aa4bbd8711">previousGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea9816290541861b2d4cf0becf68f17764">nextGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddead937543b1c75fedc3dd8c868168941d2">nextGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeadfdd5f882185f9b50f24fe45509914c4">nextGroupAny</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea78949abcd4a4661279003b1afc897489">otherGroupFirst</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeae9d9a48525e3046f3f5e6efcf13f5133">otherGroupLast</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea07e4a5758b30294d27a92b0b096a5aaa">otherGroupAny</enumvalue>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; FollowAction &gt;</type>
+      <name>followActionFromChoice</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aa07b83a67660d947ac6bd868d6a8d970</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; FollowAction &gt;</type>
+      <name>followActionFromString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a529f143817fffbadfe408f74e3a46ad2</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a9dd1960b5f512aec90454c3e72bb60a9</anchor>
+      <arglist>(FollowAction)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::function&lt; void(MonotonicBeat)&gt;</type>
+      <name>createFollowAction</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a943f764db7a45607709ffcdb098ef23a</anchor>
+      <arglist>(Clip &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
     <name>juce</name>
     <filename>namespacejuce.html</filename>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Chord::ChordType &gt;</class>
@@ -79905,8 +86039,11 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::AutoPitchMode &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::RenderType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::TargetFileFormat &gt;</class>
@@ -79940,6 +86077,7 @@
     <namespace>tracktion::Click</namespace>
     <namespace>tracktion::ClipConstants</namespace>
     <namespace>tracktion::detail</namespace>
+    <namespace>tracktion::details</namespace>
     <namespace>tracktion::engine</namespace>
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::IDs</namespace>
@@ -79955,6 +86093,8 @@
     <namespace>tracktion::TracktionBinaryData</namespace>
     <class kind="class">tracktion::FloatAudioFormat</class>
     <class kind="class">tracktion::LAMEManager</class>
+    <class kind="struct">tracktion::MemoryMappedFileReader</class>
+    <class kind="class">tracktion::BufferingAudioReaderWrapper</class>
     <class kind="class">tracktion::AudioFifo</class>
     <class kind="struct">tracktion::AudioFileInfo</class>
     <class kind="class">tracktion::AudioFile</class>
@@ -79965,15 +86105,20 @@
     <class kind="class">tracktion::AudioFileWriter</class>
     <class kind="class">tracktion::AudioFileFormatManager</class>
     <class kind="class">tracktion::AudioProxyGenerator</class>
+    <class kind="class">tracktion::BufferedAudioReader</class>
+    <class kind="class">tracktion::BufferedFileReaderWrapper</class>
+    <class kind="class">tracktion::BufferedAudioFileManager</class>
     <class kind="class">tracktion::BufferedFileReader</class>
     <class kind="class">tracktion::LoopInfo</class>
     <class kind="class">tracktion::RecordingThumbnailManager</class>
     <class kind="class">tracktion::SmartThumbnail</class>
     <class kind="struct">tracktion::ParameterSetting</class>
     <class kind="struct">tracktion::MarkerSetting</class>
+    <class kind="struct">tracktion::MidiID</class>
     <class kind="class">tracktion::ControlSurface</class>
     <class kind="class">tracktion::CustomControlSurface</class>
     <class kind="class">tracktion::ExternalController</class>
+    <class kind="struct">tracktion::ColourArea</class>
     <class kind="class">tracktion::ExternalControllerManager</class>
     <class kind="class">tracktion::AlphaTrackControlSurface</class>
     <class kind="class">tracktion::IconProG2</class>
@@ -80052,6 +86197,8 @@
     <class kind="class">tracktion::ContainerClip</class>
     <class kind="class">tracktion::EditClip</class>
     <class kind="class">tracktion::EditRenderJob</class>
+    <class kind="class">tracktion::LauncherClipPlaybackHandle</class>
+    <class kind="class">tracktion::LaunchHandle</class>
     <class kind="class">tracktion::MarkerClip</class>
     <class kind="class">tracktion::MidiClip</class>
     <class kind="class">tracktion::ReverseRenderJob</class>
@@ -80072,11 +86219,15 @@
     <class kind="class">tracktion::EditSnapshot</class>
     <class kind="class">tracktion::GrooveTemplate</class>
     <class kind="class">tracktion::GrooveTemplateManager</class>
+    <class kind="class">tracktion::LaunchQuantisation</class>
     <class kind="class">tracktion::MarkerManager</class>
     <class kind="struct">tracktion::OldEditConversion</class>
     <class kind="class">tracktion::PitchSequence</class>
     <class kind="class">tracktion::PitchSetting</class>
     <class kind="class">tracktion::QuantisationType</class>
+    <class kind="class">tracktion::Scene</class>
+    <class kind="class">tracktion::SceneWatcher</class>
+    <class kind="class">tracktion::SceneList</class>
     <class kind="class">tracktion::SourceFileReference</class>
     <class kind="class">tracktion::TempoSequence</class>
     <class kind="struct">tracktion::EditTimecodeRemapperSnapshot</class>
@@ -80097,6 +86248,8 @@
     <class kind="class">tracktion::AudioTrack</class>
     <class kind="class">tracktion::AutomationTrack</class>
     <class kind="class">tracktion::ChordTrack</class>
+    <class kind="class">tracktion::ClipSlot</class>
+    <class kind="class">tracktion::ClipSlotList</class>
     <class kind="class">tracktion::ClipTrack</class>
     <class kind="struct">tracktion::EditTime</class>
     <class kind="struct">tracktion::EditTimeRange</class>
@@ -80144,6 +86297,8 @@
     <class kind="class">tracktion::WaveInputRecordingThread</class>
     <class kind="class">tracktion::WaveOutputDevice</class>
     <class kind="class">tracktion::WaveOutputDeviceInstance</class>
+    <class kind="class">tracktion::SampleFader</class>
+    <class kind="class">tracktion::ArrangerLauncherSwitchingNode</class>
     <class kind="class">tracktion::AuxSendNode</class>
     <class kind="class">tracktion::ClickGenerator</class>
     <class kind="class">tracktion::ClickNode</class>
@@ -80154,8 +86309,7 @@
     <class kind="struct">tracktion::EditNodeBuilder</class>
     <class kind="class">tracktion::FadeInOutNode</class>
     <class kind="class">tracktion::HostedMidiInputDeviceNode</class>
-    <class kind="class">tracktion::InsertReturnNode</class>
-    <class kind="class">tracktion::InsertSendReturnDependencyNode</class>
+    <class kind="class">tracktion::InsertNode</class>
     <class kind="class">tracktion::InsertSendNode</class>
     <class kind="class">tracktion::LevelMeasurerProcessingNode</class>
     <class kind="class">tracktion::LevelMeasuringNode</class>
@@ -80176,6 +86330,7 @@
     <class kind="class">tracktion::RackNodePlayer</class>
     <class kind="class">tracktion::RackReturnNode</class>
     <class kind="class">tracktion::SharedLevelMeasuringNode</class>
+    <class kind="class">tracktion::SlotControlNode</class>
     <class kind="struct">tracktion::SpeedFadeDescription</class>
     <class kind="class">tracktion::SpeedRampWaveNode</class>
     <class kind="class">tracktion::TimedMutingNode</class>
@@ -80193,7 +86348,6 @@
     <class kind="class">tracktion::WaveNode</class>
     <class kind="class">tracktion::WaveNodeRealTime</class>
     <class kind="class">tracktion::AbletonLink</class>
-    <class kind="class">tracktion::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::DeviceManager</class>
     <class kind="class">tracktion::EditInputDevices</class>
     <class kind="class">tracktion::EditPlaybackContext</class>
@@ -80207,6 +86361,8 @@
     <class kind="class">tracktion::TransportControl</class>
     <class kind="class">tracktion::AirWindowsCallback</class>
     <class kind="class">tracktion::AirWindowsPlugin</class>
+    <class kind="class">tracktion::AirWindowsBase</class>
+    <class kind="class">tracktion::AirWindowsAutomatableParameter</class>
     <class kind="class">tracktion::MelodyneFileReader</class>
     <class kind="struct">tracktion::ARADocumentHolder</class>
     <class kind="class">tracktion::ChorusPlugin</class>
@@ -80263,6 +86419,7 @@
     <class kind="class">tracktion::Selectable</class>
     <class kind="struct">tracktion::SelectableList</class>
     <class kind="class">tracktion::SafeSelectable</class>
+    <class kind="class">tracktion::LambdaSelectableListener</class>
     <class kind="class">tracktion::SelectableClass</class>
     <class kind="class">tracktion::SelectableClassWithVolume</class>
     <class kind="class">tracktion::SelectableClassWithPan</class>
@@ -80309,8 +86466,16 @@
     <class kind="struct">tracktion::Pitch</class>
     <class kind="struct">tracktion::PluginComponent</class>
     <class kind="class">tracktion::PropertyStorage</class>
+    <class kind="class">tracktion::SafeScopedListener</class>
+    <class kind="class">tracktion::ScopedListener</class>
+    <class kind="struct">tracktion::HertzTag</class>
+    <class kind="class">tracktion::SharedTimer</class>
     <class kind="struct">tracktion::Spline</class>
     <class kind="class">tracktion::TemporaryFileManager</class>
+    <class kind="struct">tracktion::MonotonicBeat</class>
+    <class kind="struct">tracktion::MonotonicBeatRange</class>
+    <class kind="struct">tracktion::SyncPoint</class>
+    <class kind="struct">tracktion::SyncRange</class>
     <class kind="class">tracktion::UIBehaviour</class>
     <class kind="class">tracktion::ValueTreeObjectList</class>
     <class kind="struct">tracktion::SortedValueTreeObjectList</class>
@@ -80362,6 +86527,8 @@
     <namespace>tracktion::engine::benchmark_utilities</namespace>
     <namespace>tracktion::engine::Click</namespace>
     <namespace>tracktion::engine::ClipConstants</namespace>
+    <namespace>tracktion::engine::detail</namespace>
+    <namespace>tracktion::engine::details</namespace>
     <namespace>tracktion::engine::IDs</namespace>
     <namespace>tracktion::engine::legacy</namespace>
     <namespace>tracktion::engine::MidiNodeHelpers</namespace>
@@ -80373,6 +86540,8 @@
     <namespace>tracktion::engine::TracktionBinaryData</namespace>
     <class kind="class">tracktion::engine::FloatAudioFormat</class>
     <class kind="class">tracktion::engine::LAMEManager</class>
+    <class kind="struct">tracktion::engine::MemoryMappedFileReader</class>
+    <class kind="class">tracktion::engine::BufferingAudioReaderWrapper</class>
     <class kind="class">tracktion::engine::AudioFifo</class>
     <class kind="struct">tracktion::engine::AudioFileInfo</class>
     <class kind="class">tracktion::engine::AudioFile</class>
@@ -80383,15 +86552,20 @@
     <class kind="class">tracktion::engine::AudioFileWriter</class>
     <class kind="class">tracktion::engine::AudioFileFormatManager</class>
     <class kind="class">tracktion::engine::AudioProxyGenerator</class>
+    <class kind="class">tracktion::engine::BufferedAudioReader</class>
+    <class kind="class">tracktion::engine::BufferedFileReaderWrapper</class>
+    <class kind="class">tracktion::engine::BufferedAudioFileManager</class>
     <class kind="class">tracktion::engine::BufferedFileReader</class>
     <class kind="class">tracktion::engine::LoopInfo</class>
     <class kind="class">tracktion::engine::RecordingThumbnailManager</class>
     <class kind="class">tracktion::engine::SmartThumbnail</class>
     <class kind="struct">tracktion::engine::ParameterSetting</class>
     <class kind="struct">tracktion::engine::MarkerSetting</class>
+    <class kind="struct">tracktion::engine::MidiID</class>
     <class kind="class">tracktion::engine::ControlSurface</class>
     <class kind="class">tracktion::engine::CustomControlSurface</class>
     <class kind="class">tracktion::engine::ExternalController</class>
+    <class kind="struct">tracktion::engine::ColourArea</class>
     <class kind="class">tracktion::engine::ExternalControllerManager</class>
     <class kind="class">tracktion::engine::AlphaTrackControlSurface</class>
     <class kind="class">tracktion::engine::IconProG2</class>
@@ -80470,6 +86644,8 @@
     <class kind="class">tracktion::engine::ContainerClip</class>
     <class kind="class">tracktion::engine::EditClip</class>
     <class kind="class">tracktion::engine::EditRenderJob</class>
+    <class kind="class">tracktion::engine::LauncherClipPlaybackHandle</class>
+    <class kind="class">tracktion::engine::LaunchHandle</class>
     <class kind="class">tracktion::engine::MarkerClip</class>
     <class kind="class">tracktion::engine::MidiClip</class>
     <class kind="class">tracktion::engine::ReverseRenderJob</class>
@@ -80490,11 +86666,15 @@
     <class kind="class">tracktion::engine::EditSnapshot</class>
     <class kind="class">tracktion::engine::GrooveTemplate</class>
     <class kind="class">tracktion::engine::GrooveTemplateManager</class>
+    <class kind="class">tracktion::engine::LaunchQuantisation</class>
     <class kind="class">tracktion::engine::MarkerManager</class>
     <class kind="struct">tracktion::engine::OldEditConversion</class>
     <class kind="class">tracktion::engine::PitchSequence</class>
     <class kind="class">tracktion::engine::PitchSetting</class>
     <class kind="class">tracktion::engine::QuantisationType</class>
+    <class kind="class">tracktion::engine::Scene</class>
+    <class kind="class">tracktion::engine::SceneWatcher</class>
+    <class kind="class">tracktion::engine::SceneList</class>
     <class kind="class">tracktion::engine::SourceFileReference</class>
     <class kind="class">tracktion::engine::TempoSequence</class>
     <class kind="struct">tracktion::engine::EditTimecodeRemapperSnapshot</class>
@@ -80515,6 +86695,8 @@
     <class kind="class">tracktion::engine::AudioTrack</class>
     <class kind="class">tracktion::engine::AutomationTrack</class>
     <class kind="class">tracktion::engine::ChordTrack</class>
+    <class kind="class">tracktion::engine::ClipSlot</class>
+    <class kind="class">tracktion::engine::ClipSlotList</class>
     <class kind="class">tracktion::engine::ClipTrack</class>
     <class kind="struct">tracktion::engine::EditTime</class>
     <class kind="struct">tracktion::engine::EditTimeRange</class>
@@ -80562,6 +86744,8 @@
     <class kind="class">tracktion::engine::WaveInputRecordingThread</class>
     <class kind="class">tracktion::engine::WaveOutputDevice</class>
     <class kind="class">tracktion::engine::WaveOutputDeviceInstance</class>
+    <class kind="class">tracktion::engine::SampleFader</class>
+    <class kind="class">tracktion::engine::ArrangerLauncherSwitchingNode</class>
     <class kind="class">tracktion::engine::AuxSendNode</class>
     <class kind="class">tracktion::engine::ClickGenerator</class>
     <class kind="class">tracktion::engine::ClickNode</class>
@@ -80572,8 +86756,7 @@
     <class kind="struct">tracktion::engine::EditNodeBuilder</class>
     <class kind="class">tracktion::engine::FadeInOutNode</class>
     <class kind="class">tracktion::engine::HostedMidiInputDeviceNode</class>
-    <class kind="class">tracktion::engine::InsertReturnNode</class>
-    <class kind="class">tracktion::engine::InsertSendReturnDependencyNode</class>
+    <class kind="class">tracktion::engine::InsertNode</class>
     <class kind="class">tracktion::engine::InsertSendNode</class>
     <class kind="class">tracktion::engine::LevelMeasurerProcessingNode</class>
     <class kind="class">tracktion::engine::LevelMeasuringNode</class>
@@ -80594,6 +86777,7 @@
     <class kind="class">tracktion::engine::RackNodePlayer</class>
     <class kind="class">tracktion::engine::RackReturnNode</class>
     <class kind="class">tracktion::engine::SharedLevelMeasuringNode</class>
+    <class kind="class">tracktion::engine::SlotControlNode</class>
     <class kind="struct">tracktion::engine::SpeedFadeDescription</class>
     <class kind="class">tracktion::engine::SpeedRampWaveNode</class>
     <class kind="class">tracktion::engine::TimedMutingNode</class>
@@ -80611,7 +86795,6 @@
     <class kind="class">tracktion::engine::WaveNode</class>
     <class kind="class">tracktion::engine::WaveNodeRealTime</class>
     <class kind="class">tracktion::engine::AbletonLink</class>
-    <class kind="class">tracktion::engine::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::engine::DeviceManager</class>
     <class kind="class">tracktion::engine::EditInputDevices</class>
     <class kind="class">tracktion::engine::EditPlaybackContext</class>
@@ -80625,6 +86808,8 @@
     <class kind="class">tracktion::engine::TransportControl</class>
     <class kind="class">tracktion::engine::AirWindowsCallback</class>
     <class kind="class">tracktion::engine::AirWindowsPlugin</class>
+    <class kind="class">tracktion::engine::AirWindowsBase</class>
+    <class kind="class">tracktion::engine::AirWindowsAutomatableParameter</class>
     <class kind="class">tracktion::engine::MelodyneFileReader</class>
     <class kind="struct">tracktion::engine::ARADocumentHolder</class>
     <class kind="class">tracktion::engine::ChorusPlugin</class>
@@ -80681,6 +86866,7 @@
     <class kind="class">tracktion::engine::Selectable</class>
     <class kind="struct">tracktion::engine::SelectableList</class>
     <class kind="class">tracktion::engine::SafeSelectable</class>
+    <class kind="class">tracktion::engine::LambdaSelectableListener</class>
     <class kind="class">tracktion::engine::SelectableClass</class>
     <class kind="class">tracktion::engine::SelectableClassWithVolume</class>
     <class kind="class">tracktion::engine::SelectableClassWithPan</class>
@@ -80727,8 +86913,16 @@
     <class kind="struct">tracktion::engine::Pitch</class>
     <class kind="struct">tracktion::engine::PluginComponent</class>
     <class kind="class">tracktion::engine::PropertyStorage</class>
+    <class kind="class">tracktion::engine::SafeScopedListener</class>
+    <class kind="class">tracktion::engine::ScopedListener</class>
+    <class kind="struct">tracktion::engine::HertzTag</class>
+    <class kind="class">tracktion::engine::SharedTimer</class>
     <class kind="struct">tracktion::engine::Spline</class>
     <class kind="class">tracktion::engine::TemporaryFileManager</class>
+    <class kind="struct">tracktion::engine::MonotonicBeat</class>
+    <class kind="struct">tracktion::engine::MonotonicBeatRange</class>
+    <class kind="struct">tracktion::engine::SyncPoint</class>
+    <class kind="struct">tracktion::engine::SyncRange</class>
     <class kind="class">tracktion::engine::UIBehaviour</class>
     <class kind="class">tracktion::engine::ValueTreeObjectList</class>
     <class kind="struct">tracktion::engine::SortedValueTreeObjectList</class>
@@ -80795,6 +86989,36 @@
     </member>
     <member kind="enumeration">
       <type></type>
+      <name>LaunchQType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae39e83d3d91167656e40c7d65b801e95</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95af2deebc8413aae20409eeb10bbd9431c">eightBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aec08c8fecba7f3dea2d1bf3e8f2c51b4">fourBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a4e9b8cd9865ad579301facd6c315d948">twoBars</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a37b51d194a7513e45b56f6524f2d51f2">bar</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a998829c3bd4bd924a6ab5161eec428fd">halfT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a7afe399f1415b137d0962f82662fa9d4">half</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95ac7c1d479f14e54e7784205a88f161e02">halfD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aac2527e879843b55ad31b5d983a30c50">quarterT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aac9e2504b3cf2cadf8ca121523b110b4">quarter</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a6009cd25211d9cb7c07ddc0ea48caaf1">quarterD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a73910ed0856fbae6996c1fe8cdccc131">eighthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95aa76a3a8b8cba2cbe41bd4310b12ad2db">eighth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a5aa4b6df735b84a7a115dd747ca9d8a2">eighthD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95afaf9595af501765ae04c046a952bb19c">sixteenthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a80e1ed18749046947dd9aba3166b0f08">sixteenth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a43412f87525e6a16c023d94359bba55e">sixteenthD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a167e1e44dbf4b61a7137624d40b16971">thirtySecondT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a442d0097548e01242ae77d3cc91c6585">thirtySecond</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a9beb6e597257c8ea614e19311ad2171c">thirtySecondD</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95ad03f20763bedd7c66fc4aed0ad26bdb0">sixtyFourthT</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a1cd670520c232df91f57d060f59b7c92">sixtyFourth</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="ae39e83d3d91167656e40c7d65b801e95a14430c1fe99d2a12c779c638628cc373">sixtyFourthD</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
       <name>TimecodeType</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a106acf13adac6f34b462a0c4de6e4fe3</anchor>
@@ -80858,6 +87082,15 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a40238495220f5d933844bcfe2397d810a13930b9129878e3d54a8362be5586cf9</anchor>
       <arglist></arglist>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>AuxPosition</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a9e8ea43658d2da6652d441bb65cdca4d</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a9e8ea43658d2da6652d441bb65cdca4da4f64bbe2baee5b3a2dca4855df1d0c63">byBus</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a9e8ea43658d2da6652d441bb65cdca4da85a22b5fd75556bce2a556429fb64823">byPosition</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
@@ -80929,7 +87162,7 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eaff8ed4f53819dcf20438b964fec10fa2">renameClipRenamesSource</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea2cdbd15b771628de0256bab7909a8046">renameMode</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea4f0f5be4892f3fd7fe272df168c73857">renderRecentFilesList</enumvalue>
-      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eacd1c9a0f8b4bc4d561b5be14b040a19e">resetCursorOnStop</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea35bb7b2bdacc8c03899179261a1ce7cf">resetCursorOnPlay</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea6118d3bbbb834510d5533f4d2b721cf0">retrospectiveRecord</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea51c42b14b1831fc29eec3a15c27b5f41">reWireEnabled</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea0cc34e5dab44f5677beb8606ddbd364e">safeRecord</enumvalue>
@@ -80944,6 +87177,7 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea49b2d1e2befcd40dfea67e1daf091dc4">xtIndices</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eadc17b81e0fcc4244d653e30e5552af7f">virtualmididevices</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea30c1138f8420913e5253a0fd215212f4">virtualmidiin</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eafe6b599e61fd47db5ec49770211a8873">midiScanIntervalSeconds</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eae09c5665396629f42adc7c8fd637137b">useSeparateProcessForScanning</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea060c0316a269e325c58b3984fec89e7a">useRealtime</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eac733e4221d487351d76843e7d172fa06">wavein</enumvalue>
@@ -80980,6 +87214,8 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eaebf43e996821d24d05eda0d2450c1b0c">addId3Info</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea37e2a166d3ab28426a1d1a481d356d33">realtime</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea01372905495e6c5db01a5baa92da0d98">passThroughFilters</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815ea3de70b17fc38e2631a7c5ce85f1c4ed8">externControlShowClipSlotSelection</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="aef0092bdbd8a28c3968f7f81912f815eae9f0ae9d4723099d46d0fcdba664fd62">addAcidMetadata</enumvalue>
     </member>
     <member kind="function">
       <type>juce::Array&lt; KeyResult &gt;</type>
@@ -81003,18 +87239,11 @@
       <arglist>(const AutomatableParameter &amp;ap)</arglist>
     </member>
     <member kind="function">
-      <type>juce::Array&lt; AutomatableParameter * &gt;</type>
-      <name>getAllAutomatableParameter</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3fc1766e496fd9e7357c326328ea3f88</anchor>
-      <arglist>(Edit &amp;)</arglist>
-    </member>
-    <member kind="function">
       <type>juce::ReferenceCountedArray&lt; AssignmentType &gt;</type>
       <name>getAssignmentsForSource</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5e6c59ec542e711a1a94e4da851b88d0</anchor>
-      <arglist>(Edit &amp;edit, const ModifierSourceType &amp;source)</arglist>
+      <anchor>a4f6ca88eb1cf03a815592c13840bb74d</anchor>
+      <arglist>(EditType &amp;edit, const ModifierSourceType &amp;source)</arglist>
     </member>
     <member kind="function">
       <type>AutomatableParameter::ModifierSource *</type>
@@ -81125,15 +87354,15 @@
       <type>Clip *</type>
       <name>insertNewClip</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a41f7674013fea15f931a7b981225329d</anchor>
-      <arglist>(ClipOwner &amp;, TrackItem::Type, TimeRange)</arglist>
+      <anchor>a9183c8dc31634b574a600f302f235e4c</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, EditTimeRange)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
       <name>insertNewClip</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5f64e6bb1a9000391570325b688983f7</anchor>
-      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, TimeRange)</arglist>
+      <anchor>a8b511de0d9b08a840c2e962e3dfca076</anchor>
+      <arglist>(ClipOwner &amp;, TrackItem::Type, const juce::String &amp;name, EditTimeRange)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -81346,11 +87575,18 @@
       <arglist>(const Track &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>mergeInMidiSequence</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab8f56799a4714693459f833ae271131b</anchor>
+      <arglist>(MidiClip &amp;, juce::MidiMessageSequence, TimeDuration offsetToApply, MidiList::NoteAutomationType)</arglist>
+    </member>
+    <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditFromFile</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a95b6b590757519cdeff59b32bb32a71a</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::forEditing)</arglist>
+      <anchor>ac0fcf69eb1498ff4218e53686dc7dd3a</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::EditRole::forEditing)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
@@ -81365,6 +87601,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a4aa541258aaf959e9f971c99838bb16b</anchor>
       <arglist>(ProjectManager &amp;, ProjectItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>loadEditForExamining</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae31a86857c0dd8ae6d531ee4712dbb53</anchor>
+      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining)</arglist>
     </member>
     <member kind="function">
       <type>juce::ValueTree</type>
@@ -81393,6 +87636,20 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a36a997dc7770cea7e15e52017f2bf15c</anchor>
       <arglist>(juce::XmlElement &amp;editXML)</arglist>
+    </member>
+    <member kind="function">
+      <type>Project::Ptr</type>
+      <name>getProjectForEdit</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aae466a389e8e35257870b2d94a63cf04</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>ProjectItem::Ptr</type>
+      <name>getProjectItemForEdit</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a7f2114ad4120a4a61a2181770dd462f7</anchor>
+      <arglist>(const Edit &amp;)</arglist>
     </member>
     <member kind="function">
       <type>juce::File</type>
@@ -81472,6 +87729,13 @@
       <arglist>(const Edit &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
+      <type>AudioTrack *</type>
+      <name>findAudioTrackForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a19e1f7f399ecf97415c004c0a4f5b06d</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; Track * &gt;</type>
       <name>findTracksForIDs</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -81540,6 +87804,27 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>aeed6b8603d1bc17e7d90397ecd9234ac</anchor>
       <arglist>(const Track &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipOwner *</type>
+      <name>findClipOwnerForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a65a7870026df98adea8a75be92c300dd</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>ClipSlot *</type>
+      <name>findClipSlotForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aee1fceecfddb41842be4cc798a5d7002</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>findClipSlotIndex</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a44d90c0517f23accae22a8c9106086dd</anchor>
+      <arglist>(ClipSlot &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -81643,8 +87928,22 @@
       <type>juce::Result</type>
       <name>mergeMidiClips</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af452f95dec5b4c4d61a2cf433bdb08a3</anchor>
-      <arglist>(juce::Array&lt; MidiClip * &gt;)</arglist>
+      <anchor>a2823efb0387ec814c20b6e909981ceda</anchor>
+      <arglist>(juce::Array&lt; MidiClip * &gt;, SelectionManager *sm=nullptr)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::OwnedArray&lt; MidiList &gt;</type>
+      <name>readFileToMidiList</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a46ce0ca0a1577de863b7b33aa56c8f0c</anchor>
+      <arglist>(juce::File midiFile, bool importAsNoteExpression)</arglist>
+    </member>
+    <member kind="function">
+      <type>MidiClip::Ptr</type>
+      <name>createClipFromFile</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae1026d32121b7f187f3b5056874913c3</anchor>
+      <arglist>(juce::File midiFile, ClipOwner &amp;, bool importAsNoteExpression)</arglist>
     </member>
     <member kind="function">
       <type>Plugin::Array</type>
@@ -81692,8 +87991,29 @@
       <type>void</type>
       <name>muteOrUnmuteAllPlugins</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5059442d7183cad90f95d07dc3e827d</anchor>
-      <arglist>(Edit &amp;)</arglist>
+      <anchor>aac0bf73a3ae386875f6df57b46881b14</anchor>
+      <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>injectMIDIToAllPlugins</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa6c6e5c970c0ed8ad9f1f676eb88ccc1</anchor>
+      <arglist>(const Edit &amp;, const std::span&lt; juce::MidiMessage &gt; &amp;messagesToSend)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>midiPanic</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abec75e330b13aa6aa67643a4d5d14be3</anchor>
+      <arglist>(Edit &amp;, bool resetPlugins)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; PluginType &gt;</type>
+      <name>insertNewPlugin</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab06103f2b654c81b0f74d2f567d8e7f9</anchor>
+      <arglist>(Track &amp;, int index=0)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; AutomatableEditItem * &gt;</type>
@@ -81771,6 +88091,76 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ac03348f3bb8498dad4e90b3ec3ef0546</anchor>
       <arglist>(const EditPlaybackContext &amp;, TimePosition playStart, TimePosition punchIn)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Result</type>
+      <name>prepareAndPunchRecord</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa12a1f79f693581dc59030621679ca79</anchor>
+      <arglist>(InputDeviceInstance &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>tl::expected&lt; Clip::Array, juce::String &gt;</type>
+      <name>punchOutRecording</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2e5dbe7fc65c310e91306ecc8f6af588</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isRecording</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab909bad277a9242846beb493f99bd48d</anchor>
+      <arglist>(EditPlaybackContext &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::StringArray</type>
+      <name>getLaunchQTypeChoices</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae80ed07c6e97b66ae96f72b6f501e252</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; LaunchQType &gt;</type>
+      <name>launchQTypeFromName</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a22dad481cfb530163435ae114fdea618</anchor>
+      <arglist>(const juce::String &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getName</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1391e7da8a21eb9a58d872aea23fbf7a</anchor>
+      <arglist>(LaunchQType)</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>toBarFraction</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a152ce69edd7a1fa4f268fd2ce95d4124</anchor>
+      <arglist>(LaunchQType) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>LaunchQType</type>
+      <name>fromBarFraction</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab49d21c2223bd6644f185d3b874f90d2</anchor>
+      <arglist>(double) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getNext</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a38d6efbf9bca006f913c9cc016c6f41a</anchor>
+      <arglist>(LaunchQType, const TempoSequence &amp;, BeatPosition) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatPosition</type>
+      <name>getNext</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a633b812c19677c2239936bfc5570a886</anchor>
+      <arglist>(LaunchQType, const tempo::Sequence &amp;, BeatPosition) noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -81913,6 +88303,83 @@
       <arglist>(TrackCompManager::TrackComp &amp;trackComp, Track &amp;t, AudioNode *input)</arglist>
     </member>
     <member kind="function">
+      <type>juce::Array&lt; std::pair&lt; AudioTrack *, int &gt; &gt;</type>
+      <name>getTargetTracksAndIndexes</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa07b81b67faf6bfdcd599ce7a09de387</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; AudioTrack * &gt;</type>
+      <name>getTargetTracks</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae51b18b7d4da819a2ca23ca636d72fd2</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isOnTargetTrack</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a76ef6c74bbdae7ebf1518ab31fec952e</anchor>
+      <arglist>(InputDeviceInstance &amp;, const Track &amp;, int idx)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAttached</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a32c58952e58529d27bac31c7d29dd8b0</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Result</type>
+      <name>clearFromTargets</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a4ffb1db47ff5013cf386ef9bdd61a7b5</anchor>
+      <arglist>(InputDeviceInstance &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a7efd9a3159373fd2135fca298c4f6e</anchor>
+      <arglist>(InputDeviceInstance &amp;, const Track &amp;track, int index)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a172660cb030d260e7e153441b4ab9c63</anchor>
+      <arglist>(InputDeviceInstance &amp;, const ClipSlot &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>getDestination</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac57c3124fc8b729515ca60ca054bdc9f</anchor>
+      <arglist>(InputDeviceInstance &amp;, const juce::ValueTree &amp;destinationState)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasErrors</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a72a847da65b887222836b9349292eedd</anchor>
+      <arglist>(const InputDeviceInstance::PreparedContext &amp;pc)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::PreparedContext &amp;</type>
+      <name>append</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae274e8faf731a5250d52c65e2a14c26f</anchor>
+      <arglist>(InputDeviceInstance::PreparedContext &amp;dest, InputDeviceInstance::PreparedContext &amp;&amp;src)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::pair&lt; std::vector&lt; std::unique_ptr&lt; InputDeviceInstance::RecordingContext &gt; &gt;, juce::StringArray &gt;</type>
+      <name>extract</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a36bd6c662b8613ecbcaf3d0fce1df1ed</anchor>
+      <arglist>(InputDeviceInstance::PreparedContext &amp;&amp;pc)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>createDescriptionOfChannels</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -82011,1306 +88478,67 @@
       <arglist>(TransportControl &amp;)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>void</type>
+      <name>float2string</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a449ec2ee98016ec7e17c2a4d20e55315</anchor>
-      <arglist>(AirWindowsADClip7, &quot;ADClip 7&quot;)</arglist>
+      <anchor>a638e70e2ab56fe6577ba34b38e5b9fc2</anchor>
+      <arglist>(float f, char *text, int len)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>void</type>
+      <name>int2string</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa51ccc69e6bca01ab8cbbdd1ec1bb0bc</anchor>
-      <arglist>(AirWindowsADT, &quot;ADT&quot;)</arglist>
+      <anchor>a0f50efa6bb6c0a2811ebe90c93c9be75</anchor>
+      <arglist>(float i, char *text, int len)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>void</type>
+      <name>dB2string</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a863ac267014e09f0b3a48c538d521be2</anchor>
-      <arglist>(AirWindowsAQuickVoiceClip, &quot;A Quick Voice Clip&quot;)</arglist>
+      <anchor>ae1bfebc47422a24cc0e7aee07d90b962</anchor>
+      <arglist>(float value, char *text, int maxLen)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>std::string</type>
+      <name>getCmajorVersion</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>adddb2948de9cac8d010479138ff03624</anchor>
-      <arglist>(AirWindowsAcceleration, &quot;Acceleration&quot;)</arglist>
+      <anchor>a42453812204c457c55e8b236454830e8</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>std::unique_ptr&lt; juce::AudioPluginFormat &gt;</type>
+      <name>createCmajorPatchPluginFormat</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae7149cccd981cd3ac2d9031fb6c13cbd</anchor>
-      <arglist>(AirWindowsAir, &quot;Air&quot;)</arglist>
+      <anchor>a2cd1396b493761f883570b33eac59653</anchor>
+      <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>bool</type>
+      <name>isCmajorPatchPluginFormat</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2d9b9c2b46b0c2dd480716bf2ad41e62</anchor>
-      <arglist>(AirWindowsAtmosphereBuss, &quot;Atmosphere Buss&quot;)</arglist>
+      <anchor>af6edb5eef7031809593f6169f1568109</anchor>
+      <arglist>(const juce::PluginDescription &amp;)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>bool</type>
+      <name>isCmajorPatchPluginFormat</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a61fddda4363d1bd6c57ae6bfaee24103</anchor>
-      <arglist>(AirWindowsAtmosphereChannel, &quot;Atmosphere Channel&quot;)</arglist>
+      <anchor>a4feb875d4a7298314f3ec8929af84ae1</anchor>
+      <arglist>(const juce::String &amp;formatName)</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>juce::String</type>
+      <name>getCmajorPatchPluginFormatName</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5be2ad3747b7c60b4bfe40bf283e8e12</anchor>
-      <arglist>(AirWindowsAura, &quot;Aura&quot;)</arglist>
+      <anchor>ad6b7ea2657f84ff48290beffd5fd829f</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
+      <type>juce::String</type>
+      <name>getCmajorPatchCompileError</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a85d552dc3ba2c7700ea66ca3fc789b7a</anchor>
-      <arglist>(AirWindowsAverage, &quot;Average&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa33ba482a4ffa26f83e719461becdab7</anchor>
-      <arglist>(AirWindowsBassDrive, &quot;Bass Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac83d138a1933368c190ef1bcc42f591e</anchor>
-      <arglist>(AirWindowsBassKit, &quot;Bass Kit&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acdacf3de67ec8663531917e891941a61</anchor>
-      <arglist>(AirWindowsBiquad, &quot;Biquad&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a48b2d1935a425ab383ae675711d80c77</anchor>
-      <arglist>(AirWindowsBiquad2, &quot;Biquad 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a27e1771a4041acbfd60da5aeba682221</anchor>
-      <arglist>(AirWindowsBitGlitter, &quot;Bit Glitter&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac5bdb78ac8f862e02e322cd8b07ca19d</anchor>
-      <arglist>(AirWindowsBitShiftGain, &quot;Bit Shift Gain&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac86d5370021cfaee79e0ee18799de066</anchor>
-      <arglist>(AirWindowsBite, &quot;Bite&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62d64538be7e78201f1e4b9be6dc3f41</anchor>
-      <arglist>(AirWindowsBlockParty, &quot;Block Party&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaab34f020458775723be77912e4f4918</anchor>
-      <arglist>(AirWindowsBrassRider, &quot;Brass Rider&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a262d78115be109ca256de201a35dd106</anchor>
-      <arglist>(AirWindowsBuildATPDF, &quot;Build ATPDF&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7d539121c82395fcdd3b8063058fb9ad</anchor>
-      <arglist>(AirWindowsBussColors4, &quot;Buss Colors 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0bfc65cc293517999f59f3dff4f4a21d</anchor>
-      <arglist>(AirWindowsButterComp, &quot;Butter Comp&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a001b97aa0731e247e2f126acb1546caf</anchor>
-      <arglist>(AirWindowsButterComp2, &quot;Butter Comp 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1205dc52aa1489409519d8752d9b7bce</anchor>
-      <arglist>(AirWindowsC5RawBuss, &quot;C5 Raw Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a747bd34bdeeabeb1d91e171fa3c09e84</anchor>
-      <arglist>(AirWindowsC5RawChannel, &quot;C5 Raw Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7f7c685e11eaf0632d9c7115ea2d31e8</anchor>
-      <arglist>(AirWindowsCStrip, &quot;C Strip&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7aa69ef6b953f22765449000ce5d9eb9</anchor>
-      <arglist>(AirWindowsCapacitor, &quot;Capacitor&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0366c3b90c91534a43edca44b10afaa0</anchor>
-      <arglist>(AirWindowsChannel4, &quot;Channel 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2d9af82ffa2fac12d30c39bd5da60ce1</anchor>
-      <arglist>(AirWindowsChannel5, &quot;Channel 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae48e7846fe225c03ed5533152fe3b7f1</anchor>
-      <arglist>(AirWindowsChannel6, &quot;Channel 6&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8005ea53ff7395ef7f3648ddc55cd4b6</anchor>
-      <arglist>(AirWindowsChannel7, &quot;Channel 7&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8babc153e09bfcac6c1cb5f0a84859b</anchor>
-      <arglist>(AirWindowsChorus, &quot;Chorus&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaaef700b59954f39846781eba5675e9a</anchor>
-      <arglist>(AirWindowsChorusEnsemble, &quot;Chorus Ensemble&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8c3c2d0bd7173813dd845a9d9d65d566</anchor>
-      <arglist>(AirWindowsClipOnly, &quot;Clip Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1de456501dd21dc8adbe3c03a7a8503b</anchor>
-      <arglist>(AirWindowsCoils, &quot;Coils&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad1dc6ca5154ebcc3bd8c671eff4c3801</anchor>
-      <arglist>(AirWindowsCojones, &quot;Cojones&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9a15dc9cf0575f6611ab0fce99434f91</anchor>
-      <arglist>(AirWindowsCompresaturator, &quot;Compresaturator&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9774b877edaff4eace2cebfdf11f6d57</anchor>
-      <arglist>(AirWindowsConsole4Buss, &quot;Console 4 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac59ed1367fc915ab0ada59498fc1bc94</anchor>
-      <arglist>(AirWindowsConsole4Channel, &quot;Console 4 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1400ac32cafd834101e622d17873e4db</anchor>
-      <arglist>(AirWindowsConsole5Buss, &quot;Console 5 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab9bf7559beadce4357d40e46592ed0a5</anchor>
-      <arglist>(AirWindowsConsole5Channel, &quot;Console 5 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afa9e6fabec9af38829ff893d89fabf6a</anchor>
-      <arglist>(AirWindowsConsole5DarkCh, &quot;Console 5 Dark Ch&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0740fe47f670f173954477e6a282624c</anchor>
-      <arglist>(AirWindowsConsole6Buss, &quot;Console 6 Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a95027efb4b0b183a84e951a0d1a9fc57</anchor>
-      <arglist>(AirWindowsConsole6Channel, &quot;Console 6 Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3c838bb534c62468b9698dc52d776266</anchor>
-      <arglist>(AirWindowsCrunchyGrooveWear, &quot;Crunchy Groove Wear&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a03296020f92bd686d68c25477965984a</anchor>
-      <arglist>(AirWindowsCrystal, &quot;Crystal&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a19f3c29764bbc318aaa8448fc626c5af</anchor>
-      <arglist>(AirWindowsDCVoltage, &quot;DC Voltage&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a51bee7f5e1c2a7dffa1065a1bfdf417d</anchor>
-      <arglist>(AirWindowsDeBess, &quot;De Bess&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0b93192f10533e78a1dcf9b698f16468</anchor>
-      <arglist>(AirWindowsDeEss, &quot;De Ess&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1c5269bdc06db056e48c1a4b2005d71b</anchor>
-      <arglist>(AirWindowsDeHiss, &quot;De Hiss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a90f596770fd69961f1a78dd76cfa2b38</anchor>
-      <arglist>(AirWindowsDeRez, &quot;De Rez&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2daf81ca93b5d05b98b15a65053116e1</anchor>
-      <arglist>(AirWindowsDeRez2, &quot;De Rez 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7a2fd111877777e65669191a4036346b</anchor>
-      <arglist>(AirWindowsDeckwrecka, &quot;Deckwrecka&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a868513ea4074f68e51cb6b28074fe1c9</anchor>
-      <arglist>(AirWindowsDensity, &quot;Density&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa94aa9d0cd6ee8b8bcf3ab4114ab1e2f</anchor>
-      <arglist>(AirWindowsDesk, &quot;Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a16541926f566420d1d06baff8a64c7b7</anchor>
-      <arglist>(AirWindowsDesk4, &quot;Desk 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aee995cb0c65a3558b66008c7120557bd</anchor>
-      <arglist>(AirWindowsDistance, &quot;Distance&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a687208b70e72bc785dd4e431bea5dfc5</anchor>
-      <arglist>(AirWindowsDistance2, &quot;Distance 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a537c4c296649556515e7e3c003290cb4</anchor>
-      <arglist>(AirWindowsDitherFloat, &quot;Dither Float&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7eb3e6ff26ba050fcb3379e49a413878</anchor>
-      <arglist>(AirWindowsDitherMeDiskers, &quot;Dither Me Diskers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a03b876b8e19737add5bcde12439600d6</anchor>
-      <arglist>(AirWindowsDitherMeTimbers, &quot;Dither Me Timbers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64af681d90c3a6d7ebd89c07a2ec0237</anchor>
-      <arglist>(AirWindowsDitherbox, &quot;Ditherbox&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aff2848c0dfcc9f0d1a6414f22d64b63b</anchor>
-      <arglist>(AirWindowsDoublePaul, &quot;Double Paul&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acecfc13cf743cb2a16d563326e17996f</anchor>
-      <arglist>(AirWindowsDrive, &quot;Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b9613209a3811933ebe272f3f0a272a</anchor>
-      <arglist>(AirWindowsDrumSlam, &quot;Drum Slam&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62ba5c33c167b8ba887ff18ac2b427c9</anchor>
-      <arglist>(AirWindowsDubCenter, &quot;Dub Center&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a09c0f83975cd0979820f3b6db83d52fb</anchor>
-      <arglist>(AirWindowsDubSub, &quot;Dub Sub&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a72e03af9891a948fbc8cb7446f048dc7</anchor>
-      <arglist>(AirWindowsDustBunny, &quot;Dust Bunny&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8304529243fe32d2ccc87d7df334457</anchor>
-      <arglist>(AirWindowsDyno, &quot;Dyno&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a36b30edf5784d18de0aac777a6dd268e</anchor>
-      <arglist>(AirWindowsEQ, &quot;EQ&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4f3a4baf487187765678488ab12ea703</anchor>
-      <arglist>(AirWindowsEdIsDim, &quot;Ed Is Dim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa994dcb26a5a4c4db41196bf89973434</anchor>
-      <arglist>(AirWindowsElectroHat, &quot;Electro Hat&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b8d84e7a4c432fe62af640d8d4ac6b9</anchor>
-      <arglist>(AirWindowsEnergy, &quot;Energy&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae3fea115f6a1bc403d87160ab103c580</anchor>
-      <arglist>(AirWindowsEnsemble, &quot;Ensemble&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a42f004173b0cdc6872fb3c5cbaa546d8</anchor>
-      <arglist>(AirWindowsEveryTrim, &quot;Every Trim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a995584552646e1202c404cd9cc1d7cd0</anchor>
-      <arglist>(AirWindowsFacet, &quot;Facet&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aeaf122b0300efa0fe872e6165edc4aa5</anchor>
-      <arglist>(AirWindowsFathomFive, &quot;Fathom Five&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9c8a9728dc240450e02d60622d613933</anchor>
-      <arglist>(AirWindowsFloor, &quot;Floor&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aadd8b5746867ee65335313e25c6f1c00</anchor>
-      <arglist>(AirWindowsFocus, &quot;Focus&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0ab2873999fb3f0fe39b1eef79c16ed6</anchor>
-      <arglist>(AirWindowsFracture, &quot;Fracture&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64a4771363c276d21f1e99f56fb68a35</anchor>
-      <arglist>(AirWindowsFromTape, &quot;From Tape&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1bf91345176fea1e97b39cab04b85b2a</anchor>
-      <arglist>(AirWindowsGatelope, &quot;Gatelope&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a31c993577ff76318595f8272498538ed</anchor>
-      <arglist>(AirWindowsGolem, &quot;Golem&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af16d7b4131c46b2ff30f4bbf23889c2f</anchor>
-      <arglist>(AirWindowsGringer, &quot;Gringer&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae91b6fb3fd8a7f6c19a0bfe773f1dd70</anchor>
-      <arglist>(AirWindowsGrooveWear, &quot;Groove Wear&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aad83f6f23dc553baa17c5edc2542946d</anchor>
-      <arglist>(AirWindowsGuitarConditioner, &quot;Guitar Conditioner&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5fb36f59562d11592403766237e8c68</anchor>
-      <arglist>(AirWindowsHardVacuum, &quot;Hard Vacuum&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af36d5f115fdc76335556c1737e07d7fd</anchor>
-      <arglist>(AirWindowsHermeTrim, &quot;Herme Trim&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7785dc222c9e960f75f43206de23ff1a</anchor>
-      <arglist>(AirWindowsHermepass, &quot;Hermepass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac2d51c7bdf35455c6ec4062a1f6f0024</anchor>
-      <arglist>(AirWindowsHighGlossDither, &quot;High Gloss Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a29b86d1844e7b939bccde9ca59918cd6</anchor>
-      <arglist>(AirWindowsHighImpact, &quot;High Impact&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae863bdd44919afb59851bfdc967e789e</anchor>
-      <arglist>(AirWindowsHighpass, &quot;Highpass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a85c2d44643413403b284afc39822a7a3</anchor>
-      <arglist>(AirWindowsHighpass2, &quot;Highpass 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8bced8b1a79f56320b34c5352e4dda9e</anchor>
-      <arglist>(AirWindowsHolt, &quot;Holt&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a40fcb4b639e7a17aadc11d6e5d368665</anchor>
-      <arglist>(AirWindowsHombre, &quot;Hombre&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a976d7f5a27550eb2df80ecfe6c04d6f3</anchor>
-      <arglist>(AirWindowsInterstage, &quot;Interstage&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a94e99a6e521502751d34e0c45d38e55d</anchor>
-      <arglist>(AirWindowsIronOxide5, &quot;Iron Oxide 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a906ec222fd8eb9aaa04e734bcbebd049</anchor>
-      <arglist>(AirWindowsIronOxideClassic, &quot;Iron Oxide Classic&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a365475c1d5f77445b7c4517fec82c0a5</anchor>
-      <arglist>(AirWindowsLeftoMono, &quot;Lefto Mono&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a49c1c76bd88fe8c9b1064ac2a2560c58</anchor>
-      <arglist>(AirWindowsLogical4, &quot;Logical 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0bfc4b561c5b4360287ebff7c9e7d72a</anchor>
-      <arglist>(AirWindowsLoud, &quot;Loud&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a37d549c53bc5431941e0a44f23a0fe16</anchor>
-      <arglist>(AirWindowsLowpass, &quot;Lowpass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a783e3b6286b8a9b184b996572bfb72bd</anchor>
-      <arglist>(AirWindowsLowpass2, &quot;Lowpass 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae60fa670d52302898834ea25c8dd1071</anchor>
-      <arglist>(AirWindowsMV, &quot;MV&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afd62db53712dc99dc5d9f3ed990e718b</anchor>
-      <arglist>(AirWindowsMelt, &quot;Melt&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6183978c214ff5be8fe771f976426b71</anchor>
-      <arglist>(AirWindowsMidSide, &quot;Mid Side&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0ef486917b2eca4bd0cf31db6dd4bc48</anchor>
-      <arglist>(AirWindowsMoNoam, &quot;Mo Noam&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aead06cb63969c2a2142394d69d0944b0</anchor>
-      <arglist>(AirWindowsMojo, &quot;Mojo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a004fd69ff5e1a81ced3b854701d44819</anchor>
-      <arglist>(AirWindowsMonitoring, &quot;Monitoring&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6932f29174e16c3204f6cebb796d44f5</anchor>
-      <arglist>(AirWindowsNCSeventeen, &quot;NC-17&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9bb6eaa36d540e5a042377905946905c</anchor>
-      <arglist>(AirWindowsNaturalizeDither, &quot;Naturalize Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac0a038c828786877390233f39bb2617a</anchor>
-      <arglist>(AirWindowsNodeDither, &quot;Node Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5d873bc4a9e5e850b56af893809b5e4</anchor>
-      <arglist>(AirWindowsNoise, &quot;Noise&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad0bed6bfdf771046aa232d0cfbe87809</anchor>
-      <arglist>(AirWindowsNonlinearSpace, &quot;Nonlinear Space&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7b443c2466b7eaab0554056d900b2bac</anchor>
-      <arglist>(AirWindowsNotJustAnotherCD, &quot;Not Just Another CD&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a57a97e5098842be82fa60375a522c7b8</anchor>
-      <arglist>(AirWindowsNotJustAnotherDither, &quot;Not Just Another Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a32ca3f157052333c44d7760eff29294c</anchor>
-      <arglist>(AirWindowsOneCornerClip, &quot;One Corner Clip&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8be4476a2ac91d2311be83fed4bea1c9</anchor>
-      <arglist>(AirWindowsPDBuss, &quot;PD Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af557dabb3a26cdb4d74b1f6531266ca8</anchor>
-      <arglist>(AirWindowsPDChannel, &quot;PD Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a6b71980daea22ccff77f2c12305c5e1e</anchor>
-      <arglist>(AirWindowsPafnuty, &quot;Pafnuty&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a2bcad2c78c8525d44adcc5d26b4198ea</anchor>
-      <arglist>(AirWindowsPaulDither, &quot;Paul Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3dae76c6a922421e9849a63a157970cb</anchor>
-      <arglist>(AirWindowsPeaksOnly, &quot;Peaks Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af61ab6a13ca71dcaf5c37eaf77ee7bf0</anchor>
-      <arglist>(AirWindowsPhaseNudge, &quot;Phase Nudge&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad6230086dd45ba00cecf0ff641b9290e</anchor>
-      <arglist>(AirWindowsPocketVerbs, &quot;Pocket Verbs&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aafd548323a7c4cb96a8e10186519bdff</anchor>
-      <arglist>(AirWindowsPodcast, &quot;Podcast&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa8d3ac8bb52639dcd04426c11c1a2f8e</anchor>
-      <arglist>(AirWindowsPodcastDeluxe, &quot;Podcast Deluxe&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8b41ff67a10d1c0e8b2c9db149f02344</anchor>
-      <arglist>(AirWindowsPoint, &quot;Point&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abef7611a8943210684269dc9dea0893f</anchor>
-      <arglist>(AirWindowsPop, &quot;Pop&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac3c8d589d9131abacc9b890b913be7b6</anchor>
-      <arglist>(AirWindowsPowerSag, &quot;Power Sag&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abdf8b0a4b3b4502863aaec142425ed0b</anchor>
-      <arglist>(AirWindowsPowerSag2, &quot;Power Sag 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af8f3591876096e3d63032ab3f9cc7e1e</anchor>
-      <arglist>(AirWindowsPressure4, &quot;Pressure 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaba96854b170eb395580b5a7fa101fae</anchor>
-      <arglist>(AirWindowsPurestAir, &quot;Purest Air&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>afbd5c9f724b6d277004aa50af85eced2</anchor>
-      <arglist>(AirWindowsPurestConsoleBuss, &quot;Purest Console Buss&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5a31f7985a8c8183a519d70f1533cc5e</anchor>
-      <arglist>(AirWindowsPurestConsoleChannel, &quot;Purest Console Channel&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a65f7c74760bdd09df2d8b4992226f583</anchor>
-      <arglist>(AirWindowsPurestDrive, &quot;Purest Drive&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad14fa18e15d6375b2d7a2f85e39798b9</anchor>
-      <arglist>(AirWindowsPurestEcho, &quot;Purest Echo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a000d8148646c62db00b9956533837be6</anchor>
-      <arglist>(AirWindowsPurestGain, &quot;Purest Gain&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abe6286d44379d03e7c82ed0c9187bb7c</anchor>
-      <arglist>(AirWindowsPurestSquish, &quot;Purest Squish&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acf1e98d2bfe2fe2465aa9a6937d26096</anchor>
-      <arglist>(AirWindowsPurestWarm, &quot;Purest Warm&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a91944d63aeb0eb872a6e73ba3eb3fa58</anchor>
-      <arglist>(AirWindowsPyewacket, &quot;Pyewacket&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa75493bcdeae8e129c36568c0774cc30</anchor>
-      <arglist>(AirWindowsRawGlitters, &quot;Raw Glitters&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a434bc4a24cbaf442fb396c38998acbd1</anchor>
-      <arglist>(AirWindowsRawTimbers, &quot;Raw Timbers&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab98455e22a23099ca58c6bee5149c011</anchor>
-      <arglist>(AirWindowsRecurve, &quot;Recurve&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a05fb1c840f23f697817a6975293716b6</anchor>
-      <arglist>(AirWindowsRemap, &quot;Remap&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>adfa447e9296ac136c62ec90129ec20d0</anchor>
-      <arglist>(AirWindowsResEQ, &quot;ResEQ&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a175ebb8f88c9b604c4baef2d18d08a85</anchor>
-      <arglist>(AirWindowsRighteous4, &quot;Righteous 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab8e8f86dbc7f0c635e6ce08eb785ea13</anchor>
-      <arglist>(AirWindowsRightoMono, &quot;Righto Mono&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a317a72902fe3d23c1865dbb6d96aae24</anchor>
-      <arglist>(AirWindowsSideDull, &quot;Side Dull&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>af3b2ae40fccb5d88e6e12875c9c314f1</anchor>
-      <arglist>(AirWindowsSidepass, &quot;Sidepass&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a841a5238118ee045109993f6e484364f</anchor>
-      <arglist>(AirWindowsSingleEndedTriode, &quot;Single Ended Triode&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7d6e87342f6323b632302a7ba4c21df0</anchor>
-      <arglist>(AirWindowsSlew, &quot;Slew&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abb9552b64331cba24753315785662078</anchor>
-      <arglist>(AirWindowsSlew2, &quot;Slew 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a09e719502cd0603548438eae54287b12</anchor>
-      <arglist>(AirWindowsSlewOnly, &quot;Slew Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a175936992719ebb865a20488eff273f6</anchor>
-      <arglist>(AirWindowsSmooth, &quot;Smooth&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a18bc92b99992efa432effc5d540145cc</anchor>
-      <arglist>(AirWindowsSoftGate, &quot;Soft Gate&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abaf9f8ce66d9c1fed54719d64d035a1f</anchor>
-      <arglist>(AirWindowsSpatializeDither, &quot;Spatialize Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a13609fda38fcf1d9cd6b92d11c366b4e</anchor>
-      <arglist>(AirWindowsSpiral, &quot;Spiral&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa8d2bdfcf2bea62c06f7840b30175831</anchor>
-      <arglist>(AirWindowsSpiral2, &quot;Spiral 2&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abfd83c9b7b5902f14c6d13ba07df4e28</anchor>
-      <arglist>(AirWindowsStarChild, &quot;Star Child&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a5e09e206e33f964e6f4168803a5039b5</anchor>
-      <arglist>(AirWindowsStereoFX, &quot;Stereo FX&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a62938745a3dd3a4f84f98202b471c7d5</anchor>
-      <arglist>(AirWindowsStudioTan, &quot;Studio Tan&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac3efca7398bc2cee27b3df9cce956c07</anchor>
-      <arglist>(AirWindowsSubsOnly, &quot;Subs Only&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a97eb223a01ae854fbb356f0320e02fb6</anchor>
-      <arglist>(AirWindowsSurge, &quot;Surge&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aedf44999ca597048a6e6576d7928b1fb</anchor>
-      <arglist>(AirWindowsSurgeTide, &quot;Surge Tide&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a791f67cd3125ecb49a6d67ee9c0ddd55</anchor>
-      <arglist>(AirWindowsSwell, &quot;Swell&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aaaa07f2432212c06055bab3bcb73f1d9</anchor>
-      <arglist>(AirWindowsTPDFDither, &quot;TPDF Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a952e9d71106b3890284febdc6972d0dd</anchor>
-      <arglist>(AirWindowsTapeDelay, &quot;Tape Delay&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aae6aee9674d1b65713a36bda36ac316b</anchor>
-      <arglist>(AirWindowsTapeDither, &quot;Tape Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa180ce0826cb5ff86933fd5bbe37717f</anchor>
-      <arglist>(AirWindowsTapeDust, &quot;Tape Dust&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9a6c0f375e24c5a43ddb1c808b01e5b1</anchor>
-      <arglist>(AirWindowsTapeFat, &quot;Tape Fat&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae16a33ebbbbe07431714917b797173d5</anchor>
-      <arglist>(AirWindowsThunder, &quot;Thunder&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a12a231285558977e7ea6b145ae4da0b3</anchor>
-      <arglist>(AirWindowsToTape5, &quot;To Tape 5&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a3e83fb1d086a31c2f5ecb807456a8568</anchor>
-      <arglist>(AirWindowsToVinyl4, &quot;To Vinyl 4&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ad5977482aaf089b6ce12b36ad0b89d0a</anchor>
-      <arglist>(AirWindowsToneSlant, &quot;Tone Slant&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>add2bab0c9acab66c257dd2de5fc66dd3</anchor>
-      <arglist>(AirWindowsTransDesk, &quot;Trans Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ab7eb84ec95739ae279b4bdbee46339c9</anchor>
-      <arglist>(AirWindowsTremolo, &quot;Tremolo&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7f600dc87f8051a460c8e156d9d03d56</anchor>
-      <arglist>(AirWindowsTubeDesk, &quot;Tube Desk&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aacedf1e5310db8f3d91a553eee3239b8</anchor>
-      <arglist>(AirWindowsUnBox, &quot;Un Box&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4fa8809b60bd90599642a8a9d4a0038d</anchor>
-      <arglist>(AirWindowsVariMu, &quot;Vari Mu&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a96cc484800606053708803d25a336eba</anchor>
-      <arglist>(AirWindowsVibrato, &quot;Vibrato&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aad7e6581a5d165a3e49665d221af6d0c</anchor>
-      <arglist>(AirWindowsVinylDither, &quot;Vinyl Dither&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>acfd9b9c2b5b3886d3231ce9c6c0b1fb1</anchor>
-      <arglist>(AirWindowsVoiceOfTheStarship, &quot;Voice Of The Starship&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a1057ab21d9a2df9518e78b33e4cf8f5c</anchor>
-      <arglist>(AirWindowsVoiceTrick, &quot;Voice Trick&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a64ec483a327bc97296008a66f9c6d02d</anchor>
-      <arglist>(AirWindowsWider, &quot;Wider&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a4eb8a844127e5e7330fe7e3bd25e5177</anchor>
-      <arglist>(AirWindowscurve, &quot;curve&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa51858b69fa3de167d727e1ec5ae174d</anchor>
-      <arglist>(AirWindowsuLawDecode, &quot;u Law Decode&quot;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AIRWINDOWSPLUGIN</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>abfaf5fdb7034db6f693a4aae8d2a4446</anchor>
-      <arglist>(AirWindowsuLawEncode, &quot;u Law Encode&quot;)</arglist>
+      <anchor>abd4073f3c724245e29625644452d76eb</anchor>
+      <arglist>(Plugin &amp;)</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -83327,11 +88555,25 @@
       <arglist>(const juce::String &amp;keywords)</arglist>
     </member>
     <member kind="function">
+      <type>AudioTrack *</type>
+      <name>getOrInsertAudioTrackNearestIndex</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2c2fc20eca6d70248deda9a9b8da4164</anchor>
+      <arglist>(Edit &amp;edit, int trackIndex)</arglist>
+    </member>
+    <member kind="function">
       <type>SafeSelectable&lt; SelectableType &gt;</type>
       <name>makeSafeRef</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a9a916ab6aa43f5cd75071dc3910e537e</anchor>
       <arglist>(SelectableType &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>auto</type>
+      <name>makeSafeVector</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ad816a0b77df0e6473b704191ada77091</anchor>
+      <arglist>(const Iterable &amp;selectables) -&gt; std::vector&lt; SafeSelectable&lt; typename std::remove_reference&lt; decltype(*selectables[0])&gt;::type &gt;&gt;</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -83544,13 +88786,6 @@
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
     </member>
     <member kind="function">
-      <type>juce::PropertiesFile *</type>
-      <name>getApplicationSettings</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a0d436fce8e1573e0cc5fbded7bed1296</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
       <type>juce::AudioPlayHead::CurrentPositionInfo</type>
       <name>getCurrentPositionInfo</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -83640,6 +88875,34 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a64829bb587e21890e5a821bec24b43a0</anchor>
       <arglist>(FloatingPointType firstValue, FloatingPointType secondValue, FloatingPointType precision=(FloatingPointType) 0.00001)</arglist>
+    </member>
+    <member kind="function">
+      <type>MonotonicBeatRange</type>
+      <name>getMonotonicBeatRange</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af597851a9154530afddc3ddbd28cfb96</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>BeatRange</type>
+      <name>getBeatRange</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ab4f7df059bcfb9e4e9e7870c6d65e534</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>int64_t</type>
+      <name>getNumSamples</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ae85f2d84aff184bf9c6d40e3bd3bcdb7</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>convertPropertyToType</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a47184c19d1ade74fc5e926a1d147ffe5</anchor>
+      <arglist>(juce::ValueTree &amp;v, const juce::Identifier &amp;id)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -83748,6 +89011,27 @@
     </member>
     <member kind="variable">
       <type>const char *const</type>
+      <name>soundFileExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a5a649c510bb473e9cc542992a4d3b77b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
+      <name>soundFileAndMidiExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a41b18766cfb995284cab2f45378c3e19</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
+      <name>midiFileExtensions</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af95cea2db8943a48c156f92057694b17</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const char *const</type>
       <name>keyMapWildCard</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ac099f7fa922c71a9e5025d30bf4844bb</anchor>
@@ -83814,6 +89098,20 @@
       <name>grooveTemplateWildCard</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>aac88c92680ea1928e7f326675a261ac4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>concept</type>
+      <name>WeakReferenceable</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>abf177de2e03ea68a9c3c4da1dffd47da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr HertzTag</type>
+      <name>HertzTag_t</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a96a975d8e8f2a0ca68dbad80e28c153e</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -83930,6 +89228,13 @@
       <name>startStopPlay</name>
       <anchorfile>namespacetracktion_1_1engine_1_1AppFunctions.html</anchorfile>
       <anchor>a51d62237577de6d43b2997a76bf6fee0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>continueStopPlay</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a747d9ab5dd2c737229968889f1fdd31c</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -84405,6 +89710,15 @@
       <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="af922dd3f8b06e0e8071049c5aeedbdbba7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="af922dd3f8b06e0e8071049c5aeedbdbbaa6105c0a611b41b08f1209506350279e">yes</enumvalue>
     </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>ShareNodeMemory</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1benchmark__utilities.html</anchorfile>
+      <anchor>a1dc131828611e7721cdc0a42d0037477</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="a1dc131828611e7721cdc0a42d0037477a7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine_1_1benchmark__utilities.html" anchor="a1dc131828611e7721cdc0a42d0037477aa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+    </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getDescription</name>
@@ -84513,6 +89827,29 @@
     </member>
   </compound>
   <compound kind="namespace">
+    <name>tracktion::engine::detail</name>
+    <filename>namespacetracktion_1_1engine_1_1detail.html</filename>
+    <class kind="struct">tracktion::engine::detail::ScopedActiveRecordingDevice</class>
+  </compound>
+  <compound kind="namespace">
+    <name>tracktion::engine::details</name>
+    <filename>namespacetracktion_1_1engine_1_1details.html</filename>
+    <member kind="function">
+      <type>Clip::FollowActionDurationType</type>
+      <name>followActionDurationTypeFromString</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1details.html</anchorfile>
+      <anchor>ad1624d70e4c73563cc086784fa67c9e9</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1details.html</anchorfile>
+      <anchor>a5598d0f0ef3396a982384182e4b95672</anchor>
+      <arglist>(Clip::FollowActionDurationType)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
     <name>tracktion::engine::IDs</name>
     <filename>namespacetracktion_1_1engine_1_1IDs.html</filename>
   </compound>
@@ -84544,6 +89881,13 @@
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
       <anchor>afe685681eef1653d3a025b7570268b6f</anchor>
       <arglist>(const MidiMessageArray &amp;midi, double maxTimeStamp)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>createNoteOffs</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
+      <anchor>ac79f8b18a1b0457b3a6ce2dae8ebaaf9</anchor>
+      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MidiMessageArray::MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
@@ -85102,6 +90446,13 @@
       <arglist>(juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</arglist>
     </member>
     <member kind="function">
+      <type>choc::buffer::FrameRange</type>
+      <name>createFrameRange</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a0bf4a996c7e326b2ccc25872ad558b83</anchor>
+      <arglist>(std::integral auto start, std::integral auto end)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::MidiMessage</type>
       <name>toMidiMessage</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -85114,6 +90465,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a646eb6e0395196d82b5f3532c5a08d8c</anchor>
       <arglist>(BufferViewType &amp;view, juce::SmoothedValue&lt; SampleType, SmoothingType &gt; &amp;value) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyGainRamp</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>aa89f848b24ce52d37f797b335458178b</anchor>
+      <arglist>(BufferType &amp;&amp;buffer, GainType startGain, GainType endGain) noexcept</arglist>
     </member>
     <member kind="function">
       <type>choc::buffer::FrameRange</type>
@@ -85131,6 +90489,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>sanitise</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a0db582faaeca8844b714175eb0fa458d</anchor>
+      <arglist>(Buffer &amp;buffer)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>sanityCheckView</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a557f634035815360b710a944ea7e0c5b</anchor>
@@ -85142,6 +90507,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>af3c29a82f756ecd6d9d36c1f77e049f4</anchor>
       <arglist>(std::thread &amp;, int priority)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>tryToUpgradeCurrentThreadToRealtime</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a6f8debef577496d588684166661b8ce0</anchor>
+      <arglist>(const juce::Thread::RealtimeOptions &amp;)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
@@ -85231,16 +90603,44 @@
       <anchor>a42cdc3d75afd1583451e0f49626fa4c8</anchor>
       <arglist>(double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</arglist>
     </member>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
+      <name>getTransientFile</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>a2868bf5289237c91c88844aa1f84dc30</anchor>
+      <arglist>(double sampleRate, TimeDuration duration, TimePosition transientPos, float transientVal, int numChannels=1, int qualityOptionIndex=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>buffersAreEqual</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>acd5fa4003dbc2bd842bf311aceee0100</anchor>
+      <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;a, const juce::AudioBuffer&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>buffersAreEqual</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>aae86a05d5249a8634ce4b26b5402596e</anchor>
+      <arglist>(const choc::buffer::ChannelArrayView&lt; float &gt; &amp;a, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; std::pair&lt; choc::buffer::FrameCount, float &gt; &gt;</type>
+      <name>findFirstNonZeroSample</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
+      <anchor>afc31d033b00391d0566cb9fa5bf3f4e6</anchor>
+      <arglist>(choc::buffer::MonoView&lt; float &gt; buffer)</arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -85288,6 +90688,11 @@
     <filename>group__tracktion__engine-selection.html</filename>
   </compound>
   <compound kind="group">
+    <name>tracktion_engine-testing</name>
+    <title>testing</title>
+    <filename>group__tracktion__engine-testing.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_engine-timestretch</name>
     <title>timestretch</title>
     <filename>group__tracktion__engine-timestretch.html</filename>
@@ -85305,13 +90710,9 @@
     <subgroup>tracktion_engine-plugins</subgroup>
     <subgroup>tracktion_engine-project</subgroup>
     <subgroup>tracktion_engine-selection</subgroup>
+    <subgroup>tracktion_engine-testing</subgroup>
     <subgroup>tracktion_engine-timestretch</subgroup>
     <subgroup>tracktion_engine-utilities</subgroup>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph</name>
@@ -85321,6 +90722,11 @@
     <subgroup>tracktion_graph-docs</subgroup>
     <subgroup>tracktion_graph-tracktion_graph</subgroup>
     <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>

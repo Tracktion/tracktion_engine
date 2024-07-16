@@ -69,7 +69,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">tracktion::engine::TransportControl::Listener Struct Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">tracktion::engine::TransportControl::Listener Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -81,30 +81,39 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c30285b96a6cb2c43fe78524a5fc028"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a3c30285b96a6cb2c43fe78524a5fc028">~Listener</a> ()</td></tr>
 <tr class="memdesc:a3c30285b96a6cb2c43fe78524a5fc028"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a3c30285b96a6cb2c43fe78524a5fc028">More...</a><br /></td></tr>
 <tr class="separator:a3c30285b96a6cb2c43fe78524a5fc028"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e22b5f1db09b8d947e3d9ce4e67572e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a7e22b5f1db09b8d947e3d9ce4e67572e">playbackContextChanged</a> ()=0</td></tr>
-<tr class="memdesc:a7e22b5f1db09b8d947e3d9ce4e67572e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when an <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> is created or deleted.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a7e22b5f1db09b8d947e3d9ce4e67572e">More...</a><br /></td></tr>
-<tr class="separator:a7e22b5f1db09b8d947e3d9ce4e67572e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1facda6b652778b64fd6b06a38a26f69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a1facda6b652778b64fd6b06a38a26f69">autoSaveNow</a> ()=0</td></tr>
-<tr class="memdesc:a1facda6b652778b64fd6b06a38a26f69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called periodically to indicate the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> has changed in an audible way and should be auto-saved.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a1facda6b652778b64fd6b06a38a26f69">More...</a><br /></td></tr>
-<tr class="separator:a1facda6b652778b64fd6b06a38a26f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa03ad528679a9c4c48a913f70e3338d2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa03ad528679a9c4c48a913f70e3338d2">setAllLevelMetersActive</a> (bool metersBecameInactive)=0</td></tr>
-<tr class="memdesc:aa03ad528679a9c4c48a913f70e3338d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">If false, levels should be cleared.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa03ad528679a9c4c48a913f70e3338d2">More...</a><br /></td></tr>
-<tr class="separator:aa03ad528679a9c4c48a913f70e3338d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab38b9580f4bf64074c7ab7305d7ae539"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab38b9580f4bf64074c7ab7305d7ae539">setVideoPosition</a> (TimePosition, bool forceJump)=0</td></tr>
-<tr class="memdesc:ab38b9580f4bf64074c7ab7305d7ae539"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should set a new position for any playing video.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab38b9580f4bf64074c7ab7305d7ae539">More...</a><br /></td></tr>
-<tr class="separator:ab38b9580f4bf64074c7ab7305d7ae539"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a997ac358c90f726b9d480b90486500d8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a997ac358c90f726b9d480b90486500d8">startVideo</a> ()=0</td></tr>
-<tr class="memdesc:a997ac358c90f726b9d480b90486500d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should start video playback.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a997ac358c90f726b9d480b90486500d8">More...</a><br /></td></tr>
-<tr class="separator:a997ac358c90f726b9d480b90486500d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af61af4bbbc5b42b7c0b1ef925ecf817c">stopVideo</a> ()=0</td></tr>
-<tr class="memdesc:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should stop video playback.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af61af4bbbc5b42b7c0b1ef925ecf817c">More...</a><br /></td></tr>
-<tr class="separator:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">recordingAboutToStop</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;)</td></tr>
-<tr class="memdesc:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">More...</a><br /></td></tr>
-<tr class="separator:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#abb3af1938d9fe4ae8c8d707d41b3e6cc">recordingFinished</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, const juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt; &amp;)</td></tr>
-<tr class="memdesc:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#abb3af1938d9fe4ae8c8d707d41b3e6cc">More...</a><br /></td></tr>
-<tr class="separator:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b7b00e9822cb470afba9f133176b033"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a9b7b00e9822cb470afba9f133176b033">playbackContextChanged</a> ()</td></tr>
+<tr class="memdesc:a9b7b00e9822cb470afba9f133176b033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when an <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> is created or deleted.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a9b7b00e9822cb470afba9f133176b033">More...</a><br /></td></tr>
+<tr class="separator:a9b7b00e9822cb470afba9f133176b033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f087a3b06c39726b9c51959ed4fecf1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a1f087a3b06c39726b9c51959ed4fecf1">autoSaveNow</a> ()</td></tr>
+<tr class="memdesc:a1f087a3b06c39726b9c51959ed4fecf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called periodically to indicate the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> has changed in an audible way and should be auto-saved.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a1f087a3b06c39726b9c51959ed4fecf1">More...</a><br /></td></tr>
+<tr class="separator:a1f087a3b06c39726b9c51959ed4fecf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6ffd25e60275080dcaefed296515310"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab6ffd25e60275080dcaefed296515310">setAllLevelMetersActive</a> (bool)</td></tr>
+<tr class="memdesc:ab6ffd25e60275080dcaefed296515310"><td class="mdescLeft">&#160;</td><td class="mdescRight">If false, levels should be cleared.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab6ffd25e60275080dcaefed296515310">More...</a><br /></td></tr>
+<tr class="separator:ab6ffd25e60275080dcaefed296515310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad860b5582d652dbcf6467169a680fbf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aad860b5582d652dbcf6467169a680fbf">setVideoPosition</a> (TimePosition, bool)</td></tr>
+<tr class="memdesc:aad860b5582d652dbcf6467169a680fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should set a new position for any playing video.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aad860b5582d652dbcf6467169a680fbf">More...</a><br /></td></tr>
+<tr class="separator:aad860b5582d652dbcf6467169a680fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e4b97caf4c9bcc0f930080672a78b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af6e4b97caf4c9bcc0f930080672a78b0">startVideo</a> ()</td></tr>
+<tr class="memdesc:af6e4b97caf4c9bcc0f930080672a78b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should start video playback.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af6e4b97caf4c9bcc0f930080672a78b0">More...</a><br /></td></tr>
+<tr class="separator:af6e4b97caf4c9bcc0f930080672a78b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a341c60b7dbd26d7934a3e99043edfcfe"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a341c60b7dbd26d7934a3e99043edfcfe">stopVideo</a> ()</td></tr>
+<tr class="memdesc:a341c60b7dbd26d7934a3e99043edfcfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should stop video playback.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a341c60b7dbd26d7934a3e99043edfcfe">More...</a><br /></td></tr>
+<tr class="separator:a341c60b7dbd26d7934a3e99043edfcfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2a3dbb6438738ccf46f5606f4e66d58"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa2a3dbb6438738ccf46f5606f4e66d58">recordingStarted</a> (<a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>, std::optional&lt; TimeRange &gt;)</td></tr>
+<tr class="memdesc:aa2a3dbb6438738ccf46f5606f4e66d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when global recording starts.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa2a3dbb6438738ccf46f5606f4e66d58">More...</a><br /></td></tr>
+<tr class="separator:aa2a3dbb6438738ccf46f5606f4e66d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5d68c47c3e0fb30ee63c7ffb2d4ab7f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa5d68c47c3e0fb30ee63c7ffb2d4ab7f">recordingStopped</a> (<a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>, bool)</td></tr>
+<tr class="memdesc:aa5d68c47c3e0fb30ee63c7ffb2d4ab7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when global recording stops.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#aa5d68c47c3e0fb30ee63c7ffb2d4ab7f">More...</a><br /></td></tr>
+<tr class="separator:aa5d68c47c3e0fb30ee63c7ffb2d4ab7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48e0e17e5841cafb676dc84ef3c77ae8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a48e0e17e5841cafb676dc84ef3c77ae8">recordingAboutToStart</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
+<tr class="memdesc:a48e0e17e5841cafb676dc84ef3c77ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before recording start for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a48e0e17e5841cafb676dc84ef3c77ae8">More...</a><br /></td></tr>
+<tr class="separator:a48e0e17e5841cafb676dc84ef3c77ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bd7ba78f138cbd5d8ad62a004c64a89"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a7bd7ba78f138cbd5d8ad62a004c64a89">recordingAboutToStop</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
+<tr class="memdesc:a7bd7ba78f138cbd5d8ad62a004c64a89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a7bd7ba78f138cbd5d8ad62a004c64a89">More...</a><br /></td></tr>
+<tr class="separator:a7bd7ba78f138cbd5d8ad62a004c64a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69d2b8ae2b5f1cfe4de3b554cd4d1ecc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a69d2b8ae2b5f1cfe4de3b554cd4d1ecc">recordingFinished</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, const juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt; &amp;)</td></tr>
+<tr class="memdesc:a69d2b8ae2b5f1cfe4de3b554cd4d1ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a69d2b8ae2b5f1cfe4de3b554cd4d1ecc">More...</a><br /></td></tr>
+<tr class="separator:a69d2b8ae2b5f1cfe4de3b554cd4d1ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a> interface to be notified of changes to the transport. </p>
@@ -137,8 +146,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7e22b5f1db09b8d947e3d9ce4e67572e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e22b5f1db09b8d947e3d9ce4e67572e">&#9670;&nbsp;</a></span>playbackContextChanged()</h2>
+<a id="a9b7b00e9822cb470afba9f133176b033"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b7b00e9822cb470afba9f133176b033">&#9670;&nbsp;</a></span>playbackContextChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +164,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -164,8 +173,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1facda6b652778b64fd6b06a38a26f69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1facda6b652778b64fd6b06a38a26f69">&#9670;&nbsp;</a></span>autoSaveNow()</h2>
+<a id="a1f087a3b06c39726b9c51959ed4fecf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f087a3b06c39726b9c51959ed4fecf1">&#9670;&nbsp;</a></span>autoSaveNow()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +191,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -191,8 +200,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa03ad528679a9c4c48a913f70e3338d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa03ad528679a9c4c48a913f70e3338d2">&#9670;&nbsp;</a></span>setAllLevelMetersActive()</h2>
+<a id="ab6ffd25e60275080dcaefed296515310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6ffd25e60275080dcaefed296515310">&#9670;&nbsp;</a></span>setAllLevelMetersActive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -204,13 +213,13 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void tracktion::engine::TransportControl::Listener::setAllLevelMetersActive </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>metersBecameInactive</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -219,8 +228,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab38b9580f4bf64074c7ab7305d7ae539"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab38b9580f4bf64074c7ab7305d7ae539">&#9670;&nbsp;</a></span>setVideoPosition()</h2>
+<a id="aad860b5582d652dbcf6467169a680fbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad860b5582d652dbcf6467169a680fbf">&#9670;&nbsp;</a></span>setVideoPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,7 +247,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>forceJump</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -248,7 +257,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -257,8 +266,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a997ac358c90f726b9d480b90486500d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a997ac358c90f726b9d480b90486500d8">&#9670;&nbsp;</a></span>startVideo()</h2>
+<a id="af6e4b97caf4c9bcc0f930080672a78b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6e4b97caf4c9bcc0f930080672a78b0">&#9670;&nbsp;</a></span>startVideo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,7 +284,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -284,8 +293,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af61af4bbbc5b42b7c0b1ef925ecf817c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af61af4bbbc5b42b7c0b1ef925ecf817c">&#9670;&nbsp;</a></span>stopVideo()</h2>
+<a id="a341c60b7dbd26d7934a3e99043edfcfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a341c60b7dbd26d7934a3e99043edfcfe">&#9670;&nbsp;</a></span>stopVideo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,7 +311,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -311,8 +320,122 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab4a9df1a28f4557bf3ec40e8b4e6e0d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">&#9670;&nbsp;</a></span>recordingAboutToStop()</h2>
+<a id="aa2a3dbb6438738ccf46f5606f4e66d58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2a3dbb6438738ccf46f5606f4e66d58">&#9670;&nbsp;</a></span>recordingStarted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingStarted </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; TimeRange &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when global recording starts. </p>
+
+</div>
+</div>
+<a id="aa5d68c47c3e0fb30ee63c7ffb2d4ab7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5d68c47c3e0fb30ee63c7ffb2d4ab7f">&#9670;&nbsp;</a></span>recordingStopped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingStopped </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when global recording stops. </p>
+
+</div>
+</div>
+<a id="a48e0e17e5841cafb676dc84ef3c77ae8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48e0e17e5841cafb676dc84ef3c77ae8">&#9670;&nbsp;</a></span>recordingAboutToStart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingAboutToStart </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called before recording start for a specific input instance. </p>
+
+</div>
+</div>
+<a id="a7bd7ba78f138cbd5d8ad62a004c64a89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bd7ba78f138cbd5d8ad62a004c64a89">&#9670;&nbsp;</a></span>recordingAboutToStop()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,8 +447,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingAboutToStop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -340,8 +473,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abb3af1938d9fe4ae8c8d707d41b3e6cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb3af1938d9fe4ae8c8d707d41b3e6cc">&#9670;&nbsp;</a></span>recordingFinished()</h2>
+<a id="a69d2b8ae2b5f1cfe4de3b554cd4d1ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69d2b8ae2b5f1cfe4de3b554cd4d1ecc">&#9670;&nbsp;</a></span>recordingFinished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -353,6 +486,12 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingFinished </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -377,7 +516,8 @@ Public Member Functions</h2></td></tr>
 <p>Called when recording stops for a specific input instance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a></td><td>The device instance that just stopped. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html" title="An instance of an InputDevice that&#39;s available to an Edit.">InputDeviceInstance</a></td><td>The device instance that just stopped. </td></tr>
+    <tr><td class="paramname">targetID</td><td>The target that has just finished. </td></tr>
     <tr><td class="paramname">recordedClips</td><td>The clips resulting from the recording. </td></tr>
   </table>
   </dd>
@@ -391,7 +531,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

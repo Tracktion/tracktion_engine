@@ -81,11 +81,14 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac32c43de7effcc09a87b3a7ca382bb56"><td class="memItemLeft" align="right" valign="top">static juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LAMEManager.html#ac32c43de7effcc09a87b3a7ca382bb56">getLameEncoderExe</a> ()</td></tr>
 <tr class="memdesc:ac32c43de7effcc09a87b3a7ca382bb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current LAME file.  <a href="classtracktion_1_1engine_1_1LAMEManager.html#ac32c43de7effcc09a87b3a7ca382bb56">More...</a><br /></td></tr>
 <tr class="separator:ac32c43de7effcc09a87b3a7ca382bb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47117c0942eaf4cc461cc2f50ea81f6a"><td class="memItemLeft" align="right" valign="top">static juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LAMEManager.html#a47117c0942eaf4cc461cc2f50ea81f6a">getFFmpegExe</a> ()</td></tr>
+<tr class="memdesc:a47117c0942eaf4cc461cc2f50ea81f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current FFmpeg file.  <a href="classtracktion_1_1engine_1_1LAMEManager.html#a47117c0942eaf4cc461cc2f50ea81f6a">More...</a><br /></td></tr>
+<tr class="separator:a47117c0942eaf4cc461cc2f50ea81f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6ab9ebfd7e086098b015b4adcb63a16"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LAMEManager.html#ab6ab9ebfd7e086098b015b4adcb63a16">registerAudioFormat</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioFileFormatManager.html">AudioFileFormatManager</a> &amp;)</td></tr>
 <tr class="memdesc:ab6ab9ebfd7e086098b015b4adcb63a16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the LAMEAudioFormat to the <a class="el" href="classtracktion_1_1engine_1_1AudioFileFormatManager.html" title="Keeps a list of available wave formats and can create a format object for a file.">AudioFileFormatManager</a>.  <a href="classtracktion_1_1engine_1_1LAMEManager.html#ab6ab9ebfd7e086098b015b4adcb63a16">More...</a><br /></td></tr>
 <tr class="separator:ab6ab9ebfd7e086098b015b4adcb63a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a507962d58d69084507c6bbd22d7bdd84"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LAMEManager.html#a507962d58d69084507c6bbd22d7bdd84">lameIsAvailable</a> ()</td></tr>
-<tr class="memdesc:a507962d58d69084507c6bbd22d7bdd84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a valid LAME file is found.  <a href="classtracktion_1_1engine_1_1LAMEManager.html#a507962d58d69084507c6bbd22d7bdd84">More...</a><br /></td></tr>
+<tr class="memdesc:a507962d58d69084507c6bbd22d7bdd84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a valid LAME/FFmpeg file is found.  <a href="classtracktion_1_1engine_1_1LAMEManager.html#a507962d58d69084507c6bbd22d7bdd84">More...</a><br /></td></tr>
 <tr class="separator:a507962d58d69084507c6bbd22d7bdd84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -115,6 +118,33 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the current LAME file. </p>
+
+</div>
+</div>
+<a id="a47117c0942eaf4cc461cc2f50ea81f6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47117c0942eaf4cc461cc2f50ea81f6a">&#9670;&nbsp;</a></span>getFFmpegExe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static juce::File tracktion::engine::LAMEManager::getFFmpegExe </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current FFmpeg file. </p>
 
 </div>
 </div>
@@ -169,7 +199,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns true if a valid LAME file is found. </p>
+<p>Returns true if a valid LAME/FFmpeg file is found. </p>
 
 </div>
 </div>
@@ -179,7 +209,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

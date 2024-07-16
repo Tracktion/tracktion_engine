@@ -67,15 +67,18 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtracktion_1_1engine_1_1InputDeviceInstance-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion::engine::InputDeviceInstance Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>An instance of an <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> that's available to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  
+ <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#details">More...</a></p>
 
 <p>Inherits juce::ValueTree::Listener.</p>
 <table class="memberdecls">
@@ -84,85 +87,101 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for classes that want to listen to an <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> and get a callback for each block of input.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html">Destination</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html">InputDeviceDestinationList</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html">DestinationList</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html">MidiInputDeviceDestination</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDestination.html">MidiInputDestination</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for RecordingContexts.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parameters used to configure a recording operation.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html">VirtualMidiInputDeviceDestination</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The params passed to stopRecording.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html">WaveInputDeviceDestination</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html">VirtualMidiInputDestination</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDestination.html">WaveInputDestination</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a06bfb2e264fbafe33e844eca296ce6b0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a06bfb2e264fbafe33e844eca296ce6b0">PreparedContext</a> = std::vector&lt; tl::expected&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt;, juce::String &gt; &gt;</td></tr>
+<tr class="memdesc:a06bfb2e264fbafe33e844eca296ce6b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of either valid RecordingContexts or an error message if the recording couldn't be started.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a06bfb2e264fbafe33e844eca296ce6b0">More...</a><br /></td></tr>
+<tr class="separator:a06bfb2e264fbafe33e844eca296ce6b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa8a5a2ff1f3ee6d04e8561bd7ea14490"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa8a5a2ff1f3ee6d04e8561bd7ea14490">InputDeviceInstance</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> &amp;)</td></tr>
 <tr class="separator:aa8a5a2ff1f3ee6d04e8561bd7ea14490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a803f22c3a9c9747b6c6dece6710d57ba"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a803f22c3a9c9747b6c6dece6710d57ba">~InputDeviceInstance</a> () override</td></tr>
+<tr class="memdesc:a803f22c3a9c9747b6c6dece6710d57ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a803f22c3a9c9747b6c6dece6710d57ba">More...</a><br /></td></tr>
 <tr class="separator:a803f22c3a9c9747b6c6dece6710d57ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebf13c99fefb40c1ac1e5fb01c4103f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aebf13c99fefb40c1ac1e5fb01c4103f7">getInputDevice</a> () noexcept</td></tr>
+<tr class="memdesc:aebf13c99fefb40c1ac1e5fb01c4103f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> this instance belongs to.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aebf13c99fefb40c1ac1e5fb01c4103f7">More...</a><br /></td></tr>
 <tr class="separator:aebf13c99fefb40c1ac1e5fb01c4103f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc1713b1e7870e4e0ab5b46b989cec77"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#adc1713b1e7870e4e0ab5b46b989cec77">getTargetTracks</a> () const</td></tr>
-<tr class="separator:adc1713b1e7870e4e0ab5b46b989cec77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29d36d6dc6e137d34c5451b0b572747b"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a29d36d6dc6e137d34c5451b0b572747b">getTargetIndexes</a> () const</td></tr>
-<tr class="separator:a29d36d6dc6e137d34c5451b0b572747b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a851f33e0f13e0b18abab295bb76507c3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a851f33e0f13e0b18abab295bb76507c3">isOnTargetTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
-<tr class="separator:a851f33e0f13e0b18abab295bb76507c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f97b6574968a877b4dc0e7e57104f2f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6f97b6574968a877b4dc0e7e57104f2f">isOnTargetTrack</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;, int idx)</td></tr>
-<tr class="separator:a6f97b6574968a877b4dc0e7e57104f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad98b269758c1a32b8677edfc6c42b748"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ad98b269758c1a32b8677edfc6c42b748">setTargetTrack</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, int index, bool moveToTrack, juce::UndoManager *)</td></tr>
-<tr class="separator:ad98b269758c1a32b8677edfc6c42b748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d2fa7f9ce3a56f0e0ae26c899a27a04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4d2fa7f9ce3a56f0e0ae26c899a27a04">removeTargetTrack</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, juce::UndoManager *)</td></tr>
-<tr class="separator:a4d2fa7f9ce3a56f0e0ae26c899a27a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac07c0108ead7df9ceee869b77ee63b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ac07c0108ead7df9ceee869b77ee63b12">removeTargetTrack</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;, int index, juce::UndoManager *)</td></tr>
-<tr class="separator:ac07c0108ead7df9ceee869b77ee63b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab52a20667700f8095503f9a79b8fa163"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab52a20667700f8095503f9a79b8fa163">removeTargetTrack</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, int index, juce::UndoManager *)</td></tr>
-<tr class="separator:ab52a20667700f8095503f9a79b8fa163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4be181dc0d513ba7172df5a3e5a706b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4be181dc0d513ba7172df5a3e5a706b3">clearFromTracks</a> (juce::UndoManager *)</td></tr>
-<tr class="separator:a4be181dc0d513ba7172df5a3e5a706b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a426a3542da529f751deab88bb3d3ec4a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a426a3542da529f751deab88bb3d3ec4a">isAttachedToTrack</a> () const</td></tr>
-<tr class="separator:a426a3542da529f751deab88bb3d3ec4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55c8eeacee462ffa22b7354ba7f364d7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a55c8eeacee462ffa22b7354ba7f364d7">isLivePlayEnabled</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;t) const</td></tr>
-<tr class="separator:a55c8eeacee462ffa22b7354ba7f364d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d176543cf56e8eeeed851250e97d7dc"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a0d176543cf56e8eeeed851250e97d7dc">getTargets</a> () const</td></tr>
+<tr class="memdesc:a0d176543cf56e8eeeed851250e97d7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the targets this instance is assigned to.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a0d176543cf56e8eeeed851250e97d7dc">More...</a><br /></td></tr>
+<tr class="separator:a0d176543cf56e8eeeed851250e97d7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d8e6e848697e1791afc21eb7c3df077"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html">Destination</a> *, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a3d8e6e848697e1791afc21eb7c3df077">setTarget</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> targetID, bool moveToTrack, juce::UndoManager *, std::optional&lt; int &gt; index=std::nullopt)</td></tr>
+<tr class="memdesc:a3d8e6e848697e1791afc21eb7c3df077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns this input to either an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> or a <a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a>.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a3d8e6e848697e1791afc21eb7c3df077">More...</a><br /></td></tr>
+<tr class="separator:a3d8e6e848697e1791afc21eb7c3df077"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab00706427f7c1ad2809c41291ac71d99"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab00706427f7c1ad2809c41291ac71d99">removeTarget</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> targetID, juce::UndoManager *)</td></tr>
+<tr class="memdesc:ab00706427f7c1ad2809c41291ac71d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the destination with the given targetID.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab00706427f7c1ad2809c41291ac71d99">More...</a><br /></td></tr>
+<tr class="separator:ab00706427f7c1ad2809c41291ac71d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93ef8e380281f5891157b14781fc25c6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a93ef8e380281f5891157b14781fc25c6">isLivePlayEnabled</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;) const</td></tr>
+<tr class="memdesc:a93ef8e380281f5891157b14781fc25c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the track should monitor the input or not.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a93ef8e380281f5891157b14781fc25c6">More...</a><br /></td></tr>
+<tr class="separator:a93ef8e380281f5891157b14781fc25c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a085ae5230c7960b09522a82d50ba39e5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a085ae5230c7960b09522a82d50ba39e5">isRecordingActive</a> () const</td></tr>
+<tr class="memdesc:a085ae5230c7960b09522a82d50ba39e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if recording is enabled and the input is connected to any target.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a085ae5230c7960b09522a82d50ba39e5">More...</a><br /></td></tr>
 <tr class="separator:a085ae5230c7960b09522a82d50ba39e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85977eb10c9e8f1fecd4531e3d18234b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a85977eb10c9e8f1fecd4531e3d18234b">isRecordingActive</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;) const</td></tr>
-<tr class="separator:a85977eb10c9e8f1fecd4531e3d18234b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8ea8d523d16f7e7f7815436b255b9a6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa8ea8d523d16f7e7f7815436b255b9a6">isRecordingEnabled</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;) const</td></tr>
-<tr class="separator:aa8ea8d523d16f7e7f7815436b255b9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac41f15568c1eac3168bb7780c0a9a629"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ac41f15568c1eac3168bb7780c0a9a629">setRecordingEnabled</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;, bool b)</td></tr>
-<tr class="separator:ac41f15568c1eac3168bb7780c0a9a629"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4dee1d21cbbf1ddc6dde3ac3f6471d90">shouldTrackContentsBeMuted</a> ()</td></tr>
-<tr class="memdesc:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="mdescLeft">&#160;</td><td class="mdescRight">should return true if this input is currently actively recording into a track and it wants the existing track contents to be muted.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4dee1d21cbbf1ddc6dde3ac3f6471d90">More...</a><br /></td></tr>
-<tr class="separator:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1605232ab90b347dcc683a0b5044861"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa1605232ab90b347dcc683a0b5044861">prepareToRecord</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a>)=0</td></tr>
-<tr class="separator:aa1605232ab90b347dcc683a0b5044861"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec5cfcfc1b89963db7b83231a97da922"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aec5cfcfc1b89963db7b83231a97da922">startRecording</a> ()=0</td></tr>
-<tr class="separator:aec5cfcfc1b89963db7b83231a97da922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6d93ea3b782d22d4a6b6bf9cad9dd11"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab6d93ea3b782d22d4a6b6bf9cad9dd11">isRecordingActive</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>) const</td></tr>
+<tr class="memdesc:ab6d93ea3b782d22d4a6b6bf9cad9dd11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if recording is enabled and the input is connected the given target.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab6d93ea3b782d22d4a6b6bf9cad9dd11">More...</a><br /></td></tr>
+<tr class="separator:ab6d93ea3b782d22d4a6b6bf9cad9dd11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2fda44177eb23b0e067c4be35457dbf"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ae2fda44177eb23b0e067c4be35457dbf">isRecordingQueuedToStop</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)=0</td></tr>
+<tr class="memdesc:ae2fda44177eb23b0e067c4be35457dbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the async stopRecording function has been used and this target is waiting to stop.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ae2fda44177eb23b0e067c4be35457dbf">More...</a><br /></td></tr>
+<tr class="separator:ae2fda44177eb23b0e067c4be35457dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d5e0130c4c9aa1a6d9e6756453dd694"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1d5e0130c4c9aa1a6d9e6756453dd694">isRecordingEnabled</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>) const</td></tr>
+<tr class="memdesc:a1d5e0130c4c9aa1a6d9e6756453dd694"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if recording is enabled for the given target.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1d5e0130c4c9aa1a6d9e6756453dd694">More...</a><br /></td></tr>
+<tr class="separator:a1d5e0130c4c9aa1a6d9e6756453dd694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7027d79f95de05e021c794a8e669ef33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7027d79f95de05e021c794a8e669ef33">setRecordingEnabled</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, bool)</td></tr>
+<tr class="memdesc:a7027d79f95de05e021c794a8e669ef33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enabled/disables recording for a given target.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7027d79f95de05e021c794a8e669ef33">More...</a><br /></td></tr>
+<tr class="separator:a7027d79f95de05e021c794a8e669ef33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5502b2f853be266be0d5baee4c40a0e1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a5502b2f853be266be0d5baee4c40a0e1">shouldTrackContentsBeMuted</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
+<tr class="memdesc:a5502b2f853be266be0d5baee4c40a0e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true if this input is currently actively recording into a track and it wants the existing track contents to be muted.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a5502b2f853be266be0d5baee4c40a0e1">More...</a><br /></td></tr>
+<tr class="separator:a5502b2f853be266be0d5baee4c40a0e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a3e7a5ce2062816add1bfabf299d695"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a06bfb2e264fbafe33e844eca296ce6b0">PreparedContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6a3e7a5ce2062816add1bfabf299d695">prepareToRecord</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a>)=0</td></tr>
+<tr class="memdesc:a6a3e7a5ce2062816add1bfabf299d695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares a recording operation.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6a3e7a5ce2062816add1bfabf299d695">More...</a><br /></td></tr>
+<tr class="separator:a6a3e7a5ce2062816add1bfabf299d695"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bc1b092e68d30260b3d5b5361f60325"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1bc1b092e68d30260b3d5b5361f60325">startRecording</a> (std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt;&gt;)=0</td></tr>
+<tr class="memdesc:a1bc1b092e68d30260b3d5b5361f60325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a recording.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1bc1b092e68d30260b3d5b5361f60325">More...</a><br /></td></tr>
+<tr class="separator:a1bc1b092e68d30260b3d5b5361f60325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="memItemLeft" align="right" valign="top">virtual tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a8eb5add2ee5d1c35a4daa84750b6ad66">stopRecording</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a>)=0</td></tr>
+<tr class="memdesc:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops a recording.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a8eb5add2ee5d1c35a4daa84750b6ad66">More...</a><br /></td></tr>
+<tr class="separator:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1894f0135064bb5e4a4ae89765e6a77d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1894f0135064bb5e4a4ae89765e6a77d">stopRecording</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a>, std::function&lt; void(tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;)&gt;)=0</td></tr>
+<tr class="memdesc:a1894f0135064bb5e4a4ae89765e6a77d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops a recording asyncronously.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1894f0135064bb5e4a4ae89765e6a77d">More...</a><br /></td></tr>
+<tr class="separator:a1894f0135064bb5e4a4ae89765e6a77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65d9b6c297b3d9e04edeac1b29c367c1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a65d9b6c297b3d9e04edeac1b29c367c1">isRecording</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)=0</td></tr>
+<tr class="memdesc:a65d9b6c297b3d9e04edeac1b29c367c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if there are any active recordings for this device.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a65d9b6c297b3d9e04edeac1b29c367c1">More...</a><br /></td></tr>
+<tr class="separator:a65d9b6c297b3d9e04edeac1b29c367c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f4357f2c884cae68ecc5c1f8b8d6a79"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6f4357f2c884cae68ecc5c1f8b8d6a79">isRecording</a> ()=0</td></tr>
+<tr class="memdesc:a6f4357f2c884cae68ecc5c1f8b8d6a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if there are any active recordings for this device.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6f4357f2c884cae68ecc5c1f8b8d6a79">More...</a><br /></td></tr>
 <tr class="separator:a6f4357f2c884cae68ecc5c1f8b8d6a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9650916b154312da195583d8b52e9ca6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a9650916b154312da195583d8b52e9ca6">stop</a> ()=0</td></tr>
-<tr class="separator:a9650916b154312da195583d8b52e9ca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2009fecf8d4f614a94a438ba81c616d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa2009fecf8d4f614a94a438ba81c616d">recordWasCancelled</a> ()=0</td></tr>
-<tr class="separator:aa2009fecf8d4f614a94a438ba81c616d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eb10c901d835033f6862bc369779705"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6eb10c901d835033f6862bc369779705">getRecordingFile</a> () const</td></tr>
-<tr class="separator:a6eb10c901d835033f6862bc369779705"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebd974ec96e9bb16c0d8fde165f8367"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a9ebd974ec96e9bb16c0d8fde165f8367">prepareAndPunchRecord</a> ()</td></tr>
-<tr class="separator:a9ebd974ec96e9bb16c0d8fde165f8367"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8f6cf77fe3e41d1cf7f0dc46c782be9"><td class="memItemLeft" align="right" valign="top">virtual TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ad8f6cf77fe3e41d1cf7f0dc46c782be9">getPunchInTime</a> ()=0</td></tr>
-<tr class="separator:ad8f6cf77fe3e41d1cf7f0dc46c782be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0b14243d14e7fdc7bc395a4ce892a0f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ae0b14243d14e7fdc7bc395a4ce892a0f">stopRecording</a> ()=0</td></tr>
-<tr class="separator:ae0b14243d14e7fdc7bc395a4ce892a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b29cc0d05f1967cfa09b624c1cca3a0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a5b29cc0d05f1967cfa09b624c1cca3a0">applyLastRecordingToEdit</a> (TimeRange recordedRange, bool isLooping, TimeRange loopRange, bool discardRecordings, <a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *)=0</td></tr>
-<tr class="separator:a5b29cc0d05f1967cfa09b624c1cca3a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab36edcc717baf8bce2af92fbd196a735"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab36edcc717baf8bce2af92fbd196a735">applyRetrospectiveRecord</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *)=0</td></tr>
-<tr class="separator:ab36edcc717baf8bce2af92fbd196a735"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7616d8b008e8bce28d35ac3936baf247"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7616d8b008e8bce28d35ac3936baf247">getDestination</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;track, int index)</td></tr>
-<tr class="separator:a7616d8b008e8bce28d35ac3936baf247"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21927b5ac70e648e29f1112e8ad1d42e"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a21927b5ac70e648e29f1112e8ad1d42e">getRecordingFile</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>) const</td></tr>
+<tr class="memdesc:a21927b5ac70e648e29f1112e8ad1d42e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the File that the given target is currently recording to.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a21927b5ac70e648e29f1112e8ad1d42e">More...</a><br /></td></tr>
+<tr class="separator:a21927b5ac70e648e29f1112e8ad1d42e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab36c7bf4ab1af1bb38e06ba19d933285"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; choc::fifo::SingleReaderSingleWriterFIFO&lt; juce::MidiMessage &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab36c7bf4ab1af1bb38e06ba19d933285">getRecordingNotes</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>) const</td></tr>
+<tr class="memdesc:ab36c7bf4ab1af1bb38e06ba19d933285"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a fifo of recorded MIDInotes that can be used for drawing UI components.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ab36c7bf4ab1af1bb38e06ba19d933285">More...</a><br /></td></tr>
+<tr class="separator:ab36c7bf4ab1af1bb38e06ba19d933285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5b8971cf6fb810fa5ec0f37d95f2457"><td class="memItemLeft" align="right" valign="top">virtual TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#af5b8971cf6fb810fa5ec0f37d95f2457">getPunchInTime</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)=0</td></tr>
+<tr class="memdesc:af5b8971cf6fb810fa5ec0f37d95f2457"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the time that a given target started recording.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#af5b8971cf6fb810fa5ec0f37d95f2457">More...</a><br /></td></tr>
+<tr class="separator:af5b8971cf6fb810fa5ec0f37d95f2457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8ca00c8213ac668cc528daa064432fa"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ac8ca00c8213ac668cc528daa064432fa">applyRetrospectiveRecord</a> (bool armedOnly)=0</td></tr>
+<tr class="memdesc:ac8ca00c8213ac668cc528daa064432fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes the retrospective buffer and creates clips from it, as if recording had been triggered in the past and stopped at the time of calling this function.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ac8ca00c8213ac668cc528daa064432fa">More...</a><br /></td></tr>
+<tr class="separator:ac8ca00c8213ac668cc528daa064432fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa60622b0f764b26d9b173b2f95d610e8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa60622b0f764b26d9b173b2f95d610e8">addConsumer</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html">Consumer</a> *)=0</td></tr>
 <tr class="memdesc:aa60622b0f764b26d9b173b2f95d610e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base classes should override this to add any Consumers internally.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa60622b0f764b26d9b173b2f95d610e8">More...</a><br /></td></tr>
 <tr class="separator:aa60622b0f764b26d9b173b2f95d610e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,13 +194,17 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a4b5c587579837c21f4cb2c6cbbf73ac4"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4b5c587579837c21f4cb2c6cbbf73ac4">state</a></td></tr>
 <tr class="separator:a4b5c587579837c21f4cb2c6cbbf73ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eeaa281f951f66054d1ff6a66b283f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7eeaa281f951f66054d1ff6a66b283f2">owner</a></td></tr>
+<tr class="memdesc:a7eeaa281f951f66054d1ff6a66b283f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state of this instance.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7eeaa281f951f66054d1ff6a66b283f2">More...</a><br /></td></tr>
 <tr class="separator:a7eeaa281f951f66054d1ff6a66b283f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a9fc5d772fde6bd1a96eb80cb2616c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7a9fc5d772fde6bd1a96eb80cb2616c8">context</a></td></tr>
+<tr class="memdesc:a7a9fc5d772fde6bd1a96eb80cb2616c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> this instance belongs to.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7a9fc5d772fde6bd1a96eb80cb2616c8">More...</a><br /></td></tr>
 <tr class="separator:a7a9fc5d772fde6bd1a96eb80cb2616c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b5fe6d416f435e2bbf53f8ed783fb93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1b5fe6d416f435e2bbf53f8ed783fb93">edit</a></td></tr>
+<tr class="memdesc:a1b5fe6d416f435e2bbf53f8ed783fb93"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> this instance belongs to.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1b5fe6d416f435e2bbf53f8ed783fb93">More...</a><br /></td></tr>
 <tr class="separator:a1b5fe6d416f435e2bbf53f8ed783fb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf6b89c71adfcf5bc90378fed032e02a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html">InputDeviceDestinationList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#acf6b89c71adfcf5bc90378fed032e02a">destTracks</a> {*this, <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4b5c587579837c21f4cb2c6cbbf73ac4">state</a>}</td></tr>
-<tr class="separator:acf6b89c71adfcf5bc90378fed032e02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a828d9bd27571a5013af1206716ef507b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html">DestinationList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a828d9bd27571a5013af1206716ef507b">destinations</a> { *this, <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4b5c587579837c21f4cb2c6cbbf73ac4">state</a> }</td></tr>
+<tr class="memdesc:a828d9bd27571a5013af1206716ef507b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of assigned destinations.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a828d9bd27571a5013af1206716ef507b">More...</a><br /></td></tr>
+<tr class="separator:a828d9bd27571a5013af1206716ef507b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -191,16 +214,30 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a2ad417b29495beff0df79d1ca9e53271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2832e40c45daf467a3cfdafbb7a071b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a2832e40c45daf467a3cfdafbb7a071b5">valueTreeChildRemoved</a> (juce::ValueTree &amp;, juce::ValueTree &amp;, int) override</td></tr>
 <tr class="separator:a2832e40c45daf467a3cfdafbb7a071b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8567f325dbe0acf396731e83be27e640"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a8567f325dbe0acf396731e83be27e640">valueTreeChildOrderChanged</a> (juce::ValueTree &amp;, int, int) override</td></tr>
-<tr class="separator:a8567f325dbe0acf396731e83be27e640"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af76de78efca39a87c97d724ed588316d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#af76de78efca39a87c97d724ed588316d">valueTreeParentChanged</a> (juce::ValueTree &amp;) override</td></tr>
-<tr class="separator:af76de78efca39a87c97d724ed588316d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a61f3ea8d60618034f1d1a1dd3dfafea0"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a61f3ea8d60618034f1d1a1dd3dfafea0">activeTracks</a></td></tr>
-<tr class="separator:a61f3ea8d60618034f1d1a1dd3dfafea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7720d896162d3619c94553221ad13d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html">ClipSlot</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1e7720d896162d3619c94553221ad13d">getFreeSlot</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;)</td></tr>
+<tr class="separator:a1e7720d896162d3619c94553221ad13d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>An instance of an <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> that's available to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<p>Whereas <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a>[s] are <a class="el" href="classtracktion_1_1engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> level objects, instances apply to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and can therefore be assigned to slots/tracks etc. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion_1_1engine_1_1EditInputDevices.html">EditInputDevices</a> </dd></dl>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a06bfb2e264fbafe33e844eca296ce6b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06bfb2e264fbafe33e844eca296ce6b0">&#9670;&nbsp;</a></span>PreparedContext</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a06bfb2e264fbafe33e844eca296ce6b0">tracktion::engine::InputDeviceInstance::PreparedContext</a> =  std::vector&lt;tl::expected&lt;std::unique_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a>&gt;, juce::String&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An array of either valid RecordingContexts or an error message if the recording couldn't be started. </p>
+<dl class="section see"><dt>See also</dt><dd></dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa8a5a2ff1f3ee6d04e8561bd7ea14490"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8a5a2ff1f3ee6d04e8561bd7ea14490">&#9670;&nbsp;</a></span>InputDeviceInstance()</h2>
@@ -253,6 +290,8 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Destructor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -279,20 +318,22 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> this instance belongs to. </p>
+
 <p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a7eeaa281f951f66054d1ff6a66b283f2">owner</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html#ae3f8772518cb1d8964caa79e80d6027e">tracktion::engine::InputDeviceInstance::InputDeviceDestinationList::createNewObject()</a>, and <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html#a7a06cbfca3324c7acc3b08b9552a653e">tracktion::engine::InputDeviceInstance::InputDeviceDestination::getSelectableDescription()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html#ae3f3a1192c2db6f7b4a202bab1e8805c">tracktion::engine::InputDeviceInstance::DestinationList::createNewObject()</a>, and <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html#ae31f6b144982e98e4e577e948d0ea751">tracktion::engine::InputDeviceInstance::Destination::getSelectableDescription()</a>.</p>
 
 </div>
 </div>
-<a id="adc1713b1e7870e4e0ab5b46b989cec77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc1713b1e7870e4e0ab5b46b989cec77">&#9670;&nbsp;</a></span>getTargetTracks()</h2>
+<a id="a0d176543cf56e8eeeed851250e97d7dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d176543cf56e8eeeed851250e97d7dc">&#9670;&nbsp;</a></span>getTargets()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>*&gt; tracktion::engine::InputDeviceInstance::getTargetTracks </td>
+          <td class="memname">juce::Array&lt;<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&gt; tracktion::engine::InputDeviceInstance::getTargets </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -300,88 +341,21 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the targets this instance is assigned to. </p>
+
 </div>
 </div>
-<a id="a29d36d6dc6e137d34c5451b0b572747b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29d36d6dc6e137d34c5451b0b572747b">&#9670;&nbsp;</a></span>getTargetIndexes()</h2>
+<a id="a3d8e6e848697e1791afc21eb7c3df077"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d8e6e848697e1791afc21eb7c3df077">&#9670;&nbsp;</a></span>setTarget()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::Array&lt;int&gt; tracktion::engine::InputDeviceInstance::getTargetIndexes </td>
+          <td class="memname">tl::expected&lt;<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html">Destination</a>*, juce::String&gt; tracktion::engine::InputDeviceInstance::setTarget </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a851f33e0f13e0b18abab295bb76507c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a851f33e0f13e0b18abab295bb76507c3">&#9670;&nbsp;</a></span>isOnTargetTrack() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::InputDeviceInstance::isOnTargetTrack </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6f97b6574968a877b4dc0e7e57104f2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f97b6574968a877b4dc0e7e57104f2f">&#9670;&nbsp;</a></span>isOnTargetTrack() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::InputDeviceInstance::isOnTargetTrack </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>idx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad98b269758c1a32b8677edfc6c42b748"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad98b269758c1a32b8677edfc6c42b748">&#9670;&nbsp;</a></span>setTargetTrack()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::setTargetTrack </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname"><em>targetID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -393,35 +367,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">juce::UndoManager *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4d2fa7f9ce3a56f0e0ae26c899a27a04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d2fa7f9ce3a56f0e0ae26c899a27a04">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::removeTargetTrack </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">juce::UndoManager *&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">std::optional&lt; int &gt;&#160;</td>
+          <td class="paramname"><em>index</em> = <code>std::nullopt</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -431,59 +383,21 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Assigns this input to either an <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> or a <a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a>. </p>
+
 </div>
 </div>
-<a id="ac07c0108ead7df9ceee869b77ee63b12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac07c0108ead7df9ceee869b77ee63b12">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[2/3]</span></h2>
+<a id="ab00706427f7c1ad2809c41291ac71d99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab00706427f7c1ad2809c41291ac71d99">&#9670;&nbsp;</a></span>removeTarget()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::removeTargetTrack </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::UndoManager *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab52a20667700f8095503f9a79b8fa163"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab52a20667700f8095503f9a79b8fa163">&#9670;&nbsp;</a></span>removeTargetTrack() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::removeTargetTrack </td>
+          <td class="memname">juce::Result tracktion::engine::InputDeviceInstance::removeTarget </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
+          <td class="paramname"><em>targetID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -499,45 +413,12 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a4be181dc0d513ba7172df5a3e5a706b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4be181dc0d513ba7172df5a3e5a706b3">&#9670;&nbsp;</a></span>clearFromTracks()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::clearFromTracks </td>
-          <td>(</td>
-          <td class="paramtype">juce::UndoManager *&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Removes the destination with the given targetID. </p>
 
 </div>
 </div>
-<a id="a426a3542da529f751deab88bb3d3ec4a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a426a3542da529f751deab88bb3d3ec4a">&#9670;&nbsp;</a></span>isAttachedToTrack()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::InputDeviceInstance::isAttachedToTrack </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a55c8eeacee462ffa22b7354ba7f364d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55c8eeacee462ffa22b7354ba7f364d7">&#9670;&nbsp;</a></span>isLivePlayEnabled()</h2>
+<a id="a93ef8e380281f5891157b14781fc25c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ef8e380281f5891157b14781fc25c6">&#9670;&nbsp;</a></span>isLivePlayEnabled()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -549,7 +430,7 @@ Protected Attributes</h2></td></tr>
           <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::isLivePlayEnabled </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
-          <td class="paramname"><em>t</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -559,6 +440,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Whether the track should monitor the input or not. </p>
 
 </div>
 </div>
@@ -585,10 +468,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if recording is enabled and the input is connected to any target. </p>
+
 </div>
 </div>
-<a id="a85977eb10c9e8f1fecd4531e3d18234b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85977eb10c9e8f1fecd4531e3d18234b">&#9670;&nbsp;</a></span>isRecordingActive() <span class="overload">[2/2]</span></h2>
+<a id="ab6d93ea3b782d22d4a6b6bf9cad9dd11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6d93ea3b782d22d4a6b6bf9cad9dd11">&#9670;&nbsp;</a></span>isRecordingActive() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -599,7 +484,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::isRecordingActive </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
@@ -611,10 +496,40 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns true if recording is enabled and the input is connected the given target. </p>
+
 </div>
 </div>
-<a id="aa8ea8d523d16f7e7f7815436b255b9a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8ea8d523d16f7e7f7815436b255b9a6">&#9670;&nbsp;</a></span>isRecordingEnabled()</h2>
+<a id="ae2fda44177eb23b0e067c4be35457dbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2fda44177eb23b0e067c4be35457dbf">&#9670;&nbsp;</a></span>isRecordingQueuedToStop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::isRecordingQueuedToStop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns true if the async stopRecording function has been used and this target is waiting to stop. </p>
+
+</div>
+</div>
+<a id="a1d5e0130c4c9aa1a6d9e6756453dd694"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d5e0130c4c9aa1a6d9e6756453dd694">&#9670;&nbsp;</a></span>isRecordingEnabled()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -622,17 +537,19 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool tracktion::engine::InputDeviceInstance::isRecordingEnabled </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns true if recording is enabled for the given target. </p>
+
 </div>
 </div>
-<a id="ac41f15568c1eac3168bb7780c0a9a629"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac41f15568c1eac3168bb7780c0a9a629">&#9670;&nbsp;</a></span>setRecordingEnabled()</h2>
+<a id="a7027d79f95de05e021c794a8e669ef33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7027d79f95de05e021c794a8e669ef33">&#9670;&nbsp;</a></span>setRecordingEnabled()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -640,14 +557,14 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">void tracktion::engine::InputDeviceInstance::setRecordingEnabled </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -657,10 +574,13 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Enabled/disables recording for a given target. </p>
+<p>If the transport is currently recording, this will start a punch-in recording. </p>
+
 </div>
 </div>
-<a id="a4dee1d21cbbf1ddc6dde3ac3f6471d90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dee1d21cbbf1ddc6dde3ac3f6471d90">&#9670;&nbsp;</a></span>shouldTrackContentsBeMuted()</h2>
+<a id="a5502b2f853be266be0d5baee4c40a0e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5502b2f853be266be0d5baee4c40a0e1">&#9670;&nbsp;</a></span>shouldTrackContentsBeMuted()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -671,6 +591,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::shouldTrackContentsBeMuted </td>
           <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -682,12 +603,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>should return true if this input is currently actively recording into a track and it wants the existing track contents to be muted. </p>
+<p>Should return true if this input is currently actively recording into a track and it wants the existing track contents to be muted. </p>
 
 </div>
 </div>
-<a id="aa1605232ab90b347dcc683a0b5044861"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1605232ab90b347dcc683a0b5044861">&#9670;&nbsp;</a></span>prepareToRecord()</h2>
+<a id="a6a3e7a5ce2062816add1bfabf299d695"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a3e7a5ce2062816add1bfabf299d695">&#9670;&nbsp;</a></span>prepareToRecord()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -696,7 +617,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual juce::String tracktion::engine::InputDeviceInstance::prepareToRecord </td>
+          <td class="memname">virtual <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a06bfb2e264fbafe33e844eca296ce6b0">PreparedContext</a> tracktion::engine::InputDeviceInstance::prepareToRecord </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -710,10 +631,19 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Prepares a recording operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a></td><td>Determines the destinations and punch ranges </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An array of either valid RecordingContexts or error messages </dd></dl>
+
 </div>
 </div>
-<a id="aec5cfcfc1b89963db7b83231a97da922"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec5cfcfc1b89963db7b83231a97da922">&#9670;&nbsp;</a></span>startRecording()</h2>
+<a id="a1bc1b092e68d30260b3d5b5361f60325"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bc1b092e68d30260b3d5b5361f60325">&#9670;&nbsp;</a></span>startRecording()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -722,8 +652,9 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::startRecording </td>
+          <td class="memname">virtual std::vector&lt;std::unique_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a>&gt; &gt; tracktion::engine::InputDeviceInstance::startRecording </td>
           <td>(</td>
+          <td class="paramtype">std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt;&gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -735,10 +666,126 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Starts a recording. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>prepared recording contexts to start. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Any recording contexts that couldn't be started by this device. E.g. If the contexts are mixed MIDI and audio and this is an audio device, it will returns the MIDI contexts to pass to a MIDI device. </dd></dl>
+
+</div>
+</div>
+<a id="a8eb5add2ee5d1c35a4daa84750b6ad66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb5add2ee5d1c35a4daa84750b6ad66">&#9670;&nbsp;</a></span>stopRecording() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual tl::expected&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String&gt; tracktion::engine::InputDeviceInstance::stopRecording </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stops a recording. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html" title="The params passed to stopRecording.">StopRecordingParameters</a></td><td>determines how stopped recordings are treated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1894f0135064bb5e4a4ae89765e6a77d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1894f0135064bb5e4a4ae89765e6a77d">&#9670;&nbsp;</a></span>stopRecording() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::InputDeviceInstance::stopRecording </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::function&lt; void(tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;)&gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stops a recording asyncronously. </p>
+<p>This can be used to trigger a recording to stop at a time in the future. This function will return immidiately and call the provided callback when the recording actually stops. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html" title="The params passed to stopRecording.">StopRecordingParameters</a></td><td>Determines how stopped recordings are treated. </td></tr>
+    <tr><td class="paramname">recordingStoppedCallback</td><td>A callback to call when the recording stops. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a65d9b6c297b3d9e04edeac1b29c367c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65d9b6c297b3d9e04edeac1b29c367c1">&#9670;&nbsp;</a></span>isRecording() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::InputDeviceInstance::isRecording </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns true if there are any active recordings for this device. </p>
+
 </div>
 </div>
 <a id="a6f4357f2c884cae68ecc5c1f8b8d6a79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f4357f2c884cae68ecc5c1f8b8d6a79">&#9670;&nbsp;</a></span>isRecording()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f4357f2c884cae68ecc5c1f8b8d6a79">&#9670;&nbsp;</a></span>isRecording() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -760,60 +807,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a9650916b154312da195583d8b52e9ca6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9650916b154312da195583d8b52e9ca6">&#9670;&nbsp;</a></span>stop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::InputDeviceInstance::stop </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Returns true if there are any active recordings for this device. </p>
 
 </div>
 </div>
-<a id="aa2009fecf8d4f614a94a438ba81c616d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2009fecf8d4f614a94a438ba81c616d">&#9670;&nbsp;</a></span>recordWasCancelled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::InputDeviceInstance::recordWasCancelled </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6eb10c901d835033f6862bc369779705"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6eb10c901d835033f6862bc369779705">&#9670;&nbsp;</a></span>getRecordingFile()</h2>
+<a id="a21927b5ac70e648e29f1112e8ad1d42e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21927b5ac70e648e29f1112e8ad1d42e">&#9670;&nbsp;</a></span>getRecordingFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -824,6 +823,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual juce::File tracktion::engine::InputDeviceInstance::getRecordingFile </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
@@ -835,10 +835,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns the File that the given target is currently recording to. </p>
+
 </div>
 </div>
-<a id="a9ebd974ec96e9bb16c0d8fde165f8367"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ebd974ec96e9bb16c0d8fde165f8367">&#9670;&nbsp;</a></span>prepareAndPunchRecord()</h2>
+<a id="ab36c7bf4ab1af1bb38e06ba19d933285"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab36c7bf4ab1af1bb38e06ba19d933285">&#9670;&nbsp;</a></span>getRecordingNotes()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -847,10 +849,11 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tracktion::engine::InputDeviceInstance::prepareAndPunchRecord </td>
+          <td class="memname">virtual std::shared_ptr&lt;choc::fifo::SingleReaderSingleWriterFIFO&lt;juce::MidiMessage&gt; &gt; tracktion::engine::InputDeviceInstance::getRecordingNotes </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -860,10 +863,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Returns a fifo of recorded MIDInotes that can be used for drawing UI components. </p>
+
 </div>
 </div>
-<a id="ad8f6cf77fe3e41d1cf7f0dc46c782be9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8f6cf77fe3e41d1cf7f0dc46c782be9">&#9670;&nbsp;</a></span>getPunchInTime()</h2>
+<a id="af5b8971cf6fb810fa5ec0f37d95f2457"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5b8971cf6fb810fa5ec0f37d95f2457">&#9670;&nbsp;</a></span>getPunchInTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -874,6 +879,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual TimePosition tracktion::engine::InputDeviceInstance::getPunchInTime </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -885,89 +891,12 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="ae0b14243d14e7fdc7bc395a4ce892a0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0b14243d14e7fdc7bc395a4ce892a0f">&#9670;&nbsp;</a></span>stopRecording()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a> tracktion::engine::InputDeviceInstance::stopRecording </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Returns the time that a given target started recording. </p>
 
 </div>
 </div>
-<a id="a5b29cc0d05f1967cfa09b624c1cca3a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b29cc0d05f1967cfa09b624c1cca3a0">&#9670;&nbsp;</a></span>applyLastRecordingToEdit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a> tracktion::engine::InputDeviceInstance::applyLastRecordingToEdit </td>
-          <td>(</td>
-          <td class="paramtype">TimeRange&#160;</td>
-          <td class="paramname"><em>recordedRange</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isLooping</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">TimeRange&#160;</td>
-          <td class="paramname"><em>loopRange</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>discardRecordings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab36edcc717baf8bce2af92fbd196a735"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab36edcc717baf8bce2af92fbd196a735">&#9670;&nbsp;</a></span>applyRetrospectiveRecord()</h2>
+<a id="ac8ca00c8213ac668cc528daa064432fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8ca00c8213ac668cc528daa064432fa">&#9670;&nbsp;</a></span>applyRetrospectiveRecord()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -978,8 +907,8 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a>*&gt; tracktion::engine::InputDeviceInstance::applyRetrospectiveRecord </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1SelectionManager.html">SelectionManager</a> *&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>armedOnly</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -990,33 +919,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a7616d8b008e8bce28d35ac3936baf247"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7616d8b008e8bce28d35ac3936baf247">&#9670;&nbsp;</a></span>getDestination()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html">InputDeviceDestination</a>* tracktion::engine::InputDeviceInstance::getDestination </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
-          <td class="paramname"><em>track</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Takes the retrospective buffer and creates clips from it, as if recording had been triggered in the past and stopped at the time of calling this function. </p>
 
 </div>
 </div>
@@ -1190,8 +1093,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8567f325dbe0acf396731e83be27e640"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8567f325dbe0acf396731e83be27e640">&#9670;&nbsp;</a></span>valueTreeChildOrderChanged()</h2>
+<a id="a1e7720d896162d3619c94553221ad13d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e7720d896162d3619c94553221ad13d">&#9670;&nbsp;</a></span>getFreeSlot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1200,58 +1103,16 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::valueTreeChildOrderChanged </td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html">ClipSlot</a>* tracktion::engine::InputDeviceInstance::getFreeSlot </td>
           <td>(</td>
-          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af76de78efca39a87c97d724ed588316d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af76de78efca39a87c97d724ed588316d">&#9670;&nbsp;</a></span>valueTreeParentChanged()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::InputDeviceInstance::valueTreeParentChanged </td>
-          <td>(</td>
-          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1285,6 +1146,9 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The state of this instance. </p>
+<p>The <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device.">InputDevice</a> this is an instance of. </p>
+
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aebf13c99fefb40c1ac1e5fb01c4103f7">getInputDevice()</a>.</p>
 
 </div>
@@ -1301,6 +1165,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> this instance belongs to. </p>
+
 </div>
 </div>
 <a id="a1b5fe6d416f435e2bbf53f8ed783fb93"></a>
@@ -1315,41 +1181,23 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> this instance belongs to. </p>
+
 </div>
 </div>
-<a id="acf6b89c71adfcf5bc90378fed032e02a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf6b89c71adfcf5bc90378fed032e02a">&#9670;&nbsp;</a></span>destTracks</h2>
+<a id="a828d9bd27571a5013af1206716ef507b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a828d9bd27571a5013af1206716ef507b">&#9670;&nbsp;</a></span>destinations</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestinationList.html">InputDeviceDestinationList</a> tracktion::engine::InputDeviceInstance::destTracks {*this, <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4b5c587579837c21f4cb2c6cbbf73ac4">state</a>}</td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html">DestinationList</a> tracktion::engine::InputDeviceInstance::destinations { *this, <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4b5c587579837c21f4cb2c6cbbf73ac4">state</a> }</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="a61f3ea8d60618034f1d1a1dd3dfafea0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61f3ea8d60618034f1d1a1dd3dfafea0">&#9670;&nbsp;</a></span>activeTracks</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a>*&gt; tracktion::engine::InputDeviceInstance::activeTracks</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>The list of assigned destinations. </p>
 
 </div>
 </div>
@@ -1359,7 +1207,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

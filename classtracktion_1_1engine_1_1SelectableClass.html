@@ -87,6 +87,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1ClassInstanceBase.html">ClassInstanceBase</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html">DeleteSelectedParams</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1SelectOtherObjectsParams.html">SelectOtherObjectsParams</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -114,6 +116,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa2d6a1cd2e5014bdd7281212225bedb6"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#aa2d6a1cd2e5014bdd7281212225bedb6">getDescriptionOfSelectedGroup</a> (const <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a> &amp;)</td></tr>
 <tr class="memdesc:aa2d6a1cd2e5014bdd7281212225bedb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return a description of this particular group of objects.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#aa2d6a1cd2e5014bdd7281212225bedb6">More...</a><br /></td></tr>
 <tr class="separator:aa2d6a1cd2e5014bdd7281212225bedb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a619a375534cf2a15f51be51bd731d18c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a619a375534cf2a15f51be51bd731d18c">canBeSelected</a> (const <a class="el" href="classtracktion_1_1engine_1_1Selectable.html">Selectable</a> &amp;object)</td></tr>
+<tr class="memdesc:a619a375534cf2a15f51be51bd731d18c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If it's possible for an object to be selected.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#a619a375534cf2a15f51be51bd731d18c">More...</a><br /></td></tr>
+<tr class="separator:a619a375534cf2a15f51be51bd731d18c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad255f3b65f61a6f5ae0b821bd9022ee6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#ad255f3b65f61a6f5ae0b821bd9022ee6">canClassesBeSelectedAtTheSameTime</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a> *otherClass)</td></tr>
 <tr class="memdesc:ad255f3b65f61a6f5ae0b821bd9022ee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">if it's possible for an object of this class to be selected at the same time as an object of the class passed in, this should return true.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#ad255f3b65f61a6f5ae0b821bd9022ee6">More...</a><br /></td></tr>
 <tr class="separator:ad255f3b65f61a6f5ae0b821bd9022ee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,9 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aebf2df167acdc2700f1faa8d27bd8e23"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#aebf2df167acdc2700f1faa8d27bd8e23">addClipboardEntriesFor</a> (<a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1AddClipboardEntryParams.html">AddClipboardEntryParams</a> &amp;)</td></tr>
 <tr class="memdesc:aebf2df167acdc2700f1faa8d27bd8e23"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class should use this to create XML clipboard entries for the given set of items.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#aebf2df167acdc2700f1faa8d27bd8e23">More...</a><br /></td></tr>
 <tr class="separator:aebf2df167acdc2700f1faa8d27bd8e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c74cf826d4751874de70444a2aed611"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a8c74cf826d4751874de70444a2aed611">deleteSelected</a> (const <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a> &amp;, bool partOfCutOperation)</td></tr>
-<tr class="memdesc:a8c74cf826d4751874de70444a2aed611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes this set of objects.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#a8c74cf826d4751874de70444a2aed611">More...</a><br /></td></tr>
-<tr class="separator:a8c74cf826d4751874de70444a2aed611"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a905a0cbadabe2ee1f70ca297f0abe098"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a905a0cbadabe2ee1f70ca297f0abe098">deleteSelected</a> (const <a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html">DeleteSelectedParams</a> &amp;params)</td></tr>
+<tr class="memdesc:a905a0cbadabe2ee1f70ca297f0abe098"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes this set of objects.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#a905a0cbadabe2ee1f70ca297f0abe098">More...</a><br /></td></tr>
+<tr class="separator:a905a0cbadabe2ee1f70ca297f0abe098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4dd2718387aabbb1bbcfb4700e74657"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#ab4dd2718387aabbb1bbcfb4700e74657">pasteClipboard</a> (const <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a> &amp;currentlySelectedItems, int editViewID)</td></tr>
 <tr class="memdesc:ab4dd2718387aabbb1bbcfb4700e74657"><td class="mdescLeft">&#160;</td><td class="mdescRight">This gives the selected items a first chance to paste the clipboard contents when the user presses ctrl-v.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#ab4dd2718387aabbb1bbcfb4700e74657">More...</a><br /></td></tr>
 <tr class="separator:ab4dd2718387aabbb1bbcfb4700e74657"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,6 +149,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:abb994b0445e75acf04e76ddb548825bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae96b4a2a5c68f8a59555ba8bffaf1d73"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#ae96b4a2a5c68f8a59555ba8bffaf1d73">findClassFor</a> (const <a class="el" href="classtracktion_1_1engine_1_1Selectable.html">Selectable</a> *)</td></tr>
 <tr class="separator:ae96b4a2a5c68f8a59555ba8bffaf1d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f7d41bf3a392c086dabcb55e752176"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
+<tr class="memitem:a76f7d41bf3a392c086dabcb55e752176"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a76f7d41bf3a392c086dabcb55e752176">findClassFor</a> ()</td></tr>
+<tr class="separator:a76f7d41bf3a392c086dabcb55e752176"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b7097fca4cf01114b12dc127c156af7"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html#a7b7097fca4cf01114b12dc127c156af7">areAllObjectsOfUniformType</a> (const <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a> &amp;selectedObjects)</td></tr>
 <tr class="separator:a7b7097fca4cf01114b12dc127c156af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -227,7 +235,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="abb994b0445e75acf04e76ddb548825bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb994b0445e75acf04e76ddb548825bb">&#9670;&nbsp;</a></span>findClassFor() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abb994b0445e75acf04e76ddb548825bb">&#9670;&nbsp;</a></span>findClassFor() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,7 +261,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ae96b4a2a5c68f8a59555ba8bffaf1d73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae96b4a2a5c68f8a59555ba8bffaf1d73">&#9670;&nbsp;</a></span>findClassFor() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae96b4a2a5c68f8a59555ba8bffaf1d73">&#9670;&nbsp;</a></span>findClassFor() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,6 +273,33 @@ Static Public Member Functions</h2></td></tr>
           <td class="memname">static <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a>* tracktion::engine::SelectableClass::findClassFor </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Selectable.html">Selectable</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a76f7d41bf3a392c086dabcb55e752176"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76f7d41bf3a392c086dabcb55e752176">&#9670;&nbsp;</a></span>findClassFor() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SelectableType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a>* tracktion::engine::SelectableClass::findClassFor </td>
+          <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -304,6 +339,35 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Must return a description of this particular group of objects. </p>
 <p>This will be shown on the properties panel. </p>
+
+</div>
+</div>
+<a id="a619a375534cf2a15f51be51bd731d18c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a619a375534cf2a15f51be51bd731d18c">&#9670;&nbsp;</a></span>canBeSelected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::SelectableClass::canBeSelected </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Selectable.html">Selectable</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If it's possible for an object to be selected. </p>
+<p>Things like currently recording clips should not be selectable </p>
 
 </div>
 </div>
@@ -403,8 +467,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8c74cf826d4751874de70444a2aed611"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c74cf826d4751874de70444a2aed611">&#9670;&nbsp;</a></span>deleteSelected()</h2>
+<a id="a905a0cbadabe2ee1f70ca297f0abe098"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a905a0cbadabe2ee1f70ca297f0abe098">&#9670;&nbsp;</a></span>deleteSelected()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -415,19 +479,9 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion::engine::SelectableClass::deleteSelected </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html">DeleteSelectedParams</a> &amp;&#160;</td>
+          <td class="paramname"><em>params</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>partOfCutOperation</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -596,7 +650,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

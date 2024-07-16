@@ -1,5 +1,6 @@
 <map id="tracktion::engine::LoopingMidiNode" name="tracktion::engine::LoopingMidiNode">
-<area shape="rect" id="node1" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="112,95,252,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,39"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,355,47"/>
+<area shape="rect" id="node1" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="296,57,436,98"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="43,5,210,32"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="47,57,206,98"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html" title=" " alt="" coords="5,122,248,163"/>
 </map>

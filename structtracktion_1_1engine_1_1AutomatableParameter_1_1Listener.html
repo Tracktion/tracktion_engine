@@ -86,9 +86,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad8f4a42f3cd220f4b9a718d2af6a6452"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#ad8f4a42f3cd220f4b9a718d2af6a6452">curveHasChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;)=0</td></tr>
 <tr class="memdesc:ad8f4a42f3cd220f4b9a718d2af6a6452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the automation curve has changed, point time, value or curve.  <a href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#ad8f4a42f3cd220f4b9a718d2af6a6452">More...</a><br /></td></tr>
 <tr class="separator:ad8f4a42f3cd220f4b9a718d2af6a6452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeff5bd9349b1306c8db3c77a0841e888"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#aeff5bd9349b1306c8db3c77a0841e888">currentValueChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;, float)</td></tr>
-<tr class="memdesc:aeff5bd9349b1306c8db3c77a0841e888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier.  <a href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#aeff5bd9349b1306c8db3c77a0841e888">More...</a><br /></td></tr>
-<tr class="separator:aeff5bd9349b1306c8db3c77a0841e888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03f33eb0c796ed4947f60b7c5155cabb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#a03f33eb0c796ed4947f60b7c5155cabb">currentValueChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;)</td></tr>
+<tr class="memdesc:a03f33eb0c796ed4947f60b7c5155cabb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier.  <a href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#a03f33eb0c796ed4947f60b7c5155cabb">More...</a><br /></td></tr>
+<tr class="separator:a03f33eb0c796ed4947f60b7c5155cabb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41ddc8e415376110f33dd1481aa6a5df"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#a41ddc8e415376110f33dd1481aa6a5df">parameterChanged</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;, float)</td></tr>
 <tr class="memdesc:a41ddc8e415376110f33dd1481aa6a5df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the parameter is changed by the plugin or host, not from automation.  <a href="structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html#a41ddc8e415376110f33dd1481aa6a5df">More...</a><br /></td></tr>
 <tr class="separator:a41ddc8e415376110f33dd1481aa6a5df"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,8 +154,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aeff5bd9349b1306c8db3c77a0841e888"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeff5bd9349b1306c8db3c77a0841e888">&#9670;&nbsp;</a></span>currentValueChanged()</h2>
+<a id="a03f33eb0c796ed4947f60b7c5155cabb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03f33eb0c796ed4947f60b7c5155cabb">&#9670;&nbsp;</a></span>currentValueChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,18 +167,8 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void tracktion::engine::AutomatableParameter::Listener::currentValueChanged </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html">AutomatableParameter</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -189,9 +179,11 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called when the current value of the parameter changed, either from setting the parameter, automation, a macro or modifier. </p>
-<p>This will be called on the audio thread so make sure you don't do anything time consuming or block etc. </p>
+<p>This is async so you won't get a callback for every parameter change. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a60fa41e90a550a43f858ce792a2527f1">tracktion::engine::ExternalController</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1ExternalController.html#a8a793c19244e0ce3bab41fab1a56350e">tracktion::engine::ExternalController</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html#a9d461d8f56404e9368c8fb8522eb4c4d">tracktion::engine::AirWindowsAutomatableParameter::refresh()</a>.</p>
 
 </div>
 </div>
@@ -291,7 +283,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

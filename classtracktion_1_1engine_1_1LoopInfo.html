@@ -106,9 +106,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4bd8171d5645985220aba2496f3a98d1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html#a4bd8171d5645985220aba2496f3a98d1">LoopInfo</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
 <tr class="memdesc:a4bd8171d5645985220aba2496f3a98d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html" title="Holds tempo/beat information about an audio file.">LoopInfo</a> for an audio file.  <a href="classtracktion_1_1engine_1_1LoopInfo.html#a4bd8171d5645985220aba2496f3a98d1">More...</a><br /></td></tr>
 <tr class="separator:a4bd8171d5645985220aba2496f3a98d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59393767f7502f7bf0e7cc52a1b1896e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html#a59393767f7502f7bf0e7cc52a1b1896e">LoopInfo</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::AudioFormatReader *, const juce::AudioFormat *)</td></tr>
-<tr class="memdesc:a59393767f7502f7bf0e7cc52a1b1896e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html" title="Holds tempo/beat information about an audio file.">LoopInfo</a> for a reader.  <a href="classtracktion_1_1engine_1_1LoopInfo.html#a59393767f7502f7bf0e7cc52a1b1896e">More...</a><br /></td></tr>
-<tr class="separator:a59393767f7502f7bf0e7cc52a1b1896e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b4c1cc8069175f928a564d449e40f63"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html#a0b4c1cc8069175f928a564d449e40f63">LoopInfo</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::AudioFormatReader *, const juce::AudioFormat *, const juce::File &amp;f)</td></tr>
+<tr class="memdesc:a0b4c1cc8069175f928a564d449e40f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html" title="Holds tempo/beat information about an audio file.">LoopInfo</a> for a reader.  <a href="classtracktion_1_1engine_1_1LoopInfo.html#a0b4c1cc8069175f928a564d449e40f63">More...</a><br /></td></tr>
+<tr class="separator:a0b4c1cc8069175f928a564d449e40f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50dc46b81d58a0fb7c1d724f264db54d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html">LoopInfo</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html#a50dc46b81d58a0fb7c1d724f264db54d">operator=</a> (const <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html">LoopInfo</a> &amp;)</td></tr>
 <tr class="memdesc:a50dc46b81d58a0fb7c1d724f264db54d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a copy of another <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html" title="Holds tempo/beat information about an audio file.">LoopInfo</a>.  <a href="classtracktion_1_1engine_1_1LoopInfo.html#a50dc46b81d58a0fb7c1d724f264db54d">More...</a><br /></td></tr>
 <tr class="separator:a50dc46b81d58a0fb7c1d724f264db54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,8 +350,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a59393767f7502f7bf0e7cc52a1b1896e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59393767f7502f7bf0e7cc52a1b1896e">&#9670;&nbsp;</a></span>LoopInfo() <span class="overload">[5/5]</span></h2>
+<a id="a0b4c1cc8069175f928a564d449e40f63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b4c1cc8069175f928a564d449e40f63">&#9670;&nbsp;</a></span>LoopInfo() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,7 +372,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::AudioFormat *&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::File &amp;&#160;</td>
+          <td class="paramname"><em>f</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -383,6 +389,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a <a class="el" href="classtracktion_1_1engine_1_1LoopInfo.html" title="Holds tempo/beat information about an audio file.">LoopInfo</a> for a reader. </p>
+<p>Optionally pass filename to extract metadata from name </p>
 
 </div>
 </div>
@@ -1051,7 +1058,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

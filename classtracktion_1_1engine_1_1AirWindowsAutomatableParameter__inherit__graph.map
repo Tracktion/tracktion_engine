@@ -1,0 +1,5 @@
+<map id="tracktion::engine::AirWindowsAutomatableParameter" name="tracktion::engine::AirWindowsAutomatableParameter">
+<area shape="rect" id="node1" title=" " alt="" coords="5,184,256,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AutomatableParameter.html" title=" " alt="" coords="44,95,217,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="61,5,201,47"/>
+</map>

@@ -109,8 +109,14 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a1ff6a7cc3930a077d5e7dd5b18d83b7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">If false, bypassed plugins will be completely ommited from the graph.  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#a1ff6a7cc3930a077d5e7dd5b18d83b7f">More...</a><br /></td></tr>
 <tr class="separator:a1ff6a7cc3930a077d5e7dd5b18d83b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb2244afdf62f4b0997df40232b80f8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1CreateNodeParams.html#acb2244afdf62f4b0997df40232b80f8c">implicitlyIncludeSubmixChildTracks</a> = true</td></tr>
-<tr class="memdesc:acb2244afdf62f4b0997df40232b80f8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, chid track in submixes will be included regardless of the allowedTracks param.  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#acb2244afdf62f4b0997df40232b80f8c">More...</a><br /></td></tr>
+<tr class="memdesc:acb2244afdf62f4b0997df40232b80f8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, child track in submixes will be included regardless of the allowedTracks param.  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#acb2244afdf62f4b0997df40232b80f8c">More...</a><br /></td></tr>
 <tr class="separator:acb2244afdf62f4b0997df40232b80f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a47231e0f855bb39f1c456f652abbe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1CreateNodeParams.html#af8a47231e0f855bb39f1c456f652abbe">allowClipSlots</a> = true</td></tr>
+<tr class="memdesc:af8a47231e0f855bb39f1c456f652abbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>).  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#af8a47231e0f855bb39f1c456f652abbe">More...</a><br /></td></tr>
+<tr class="separator:af8a47231e0f855bb39f1c456f652abbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac979424270c1b384f3be6a040c83fcde"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1CreateNodeParams.html#ac979424270c1b384f3be6a040c83fcde">readAheadTimeStretchNodes</a> = false</td></tr>
+<tr class="memdesc:ac979424270c1b384f3be6a040c83fcde"><td class="mdescLeft">&#160;</td><td class="mdescRight">TEMPORARY: If true, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use.  <a href="structtracktion_1_1engine_1_1CreateNodeParams.html#ac979424270c1b384f3be6a040c83fcde">More...</a><br /></td></tr>
+<tr class="separator:ac979424270c1b384f3be6a040c83fcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains options for <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> content creation. </p>
@@ -290,8 +296,40 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>If true, chid track in submixes will be included regardless of the allowedTracks param. </p>
+<p>If true, child track in submixes will be included regardless of the allowedTracks param. </p>
 <p>Only relevent when forRendering is also true. </p>
+
+</div>
+</div>
+<a id="af8a47231e0f855bb39f1c456f652abbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a47231e0f855bb39f1c456f652abbe">&#9670;&nbsp;</a></span>allowClipSlots</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::CreateNodeParams::allowClipSlots = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>). </p>
+
+</div>
+</div>
+<a id="ac979424270c1b384f3be6a040c83fcde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac979424270c1b384f3be6a040c83fcde">&#9670;&nbsp;</a></span>readAheadTimeStretchNodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::CreateNodeParams::readAheadTimeStretchNodes = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>TEMPORARY: If true, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. </p>
 
 </div>
 </div>
@@ -301,7 +339,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

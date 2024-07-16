@@ -94,9 +94,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0cbaf65c784d043fbdd84539db9a3dea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a0cbaf65c784d043fbdd84539db9a3dea">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;rootNode, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;postOrderedNodes, <a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;cache) override</td></tr>
 <tr class="memdesc:a0cbaf65c784d043fbdd84539db9a3dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <a href="classtracktion_1_1graph_1_1ReturnNode.html#a0cbaf65c784d043fbdd84539db9a3dea">More...</a><br /></td></tr>
 <tr class="separator:a0cbaf65c784d043fbdd84539db9a3dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3dc0f890463048ae00760586c110d5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#af3dc0f890463048ae00760586c110d5d">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
+<tr class="memdesc:af3dc0f890463048ae00760586c110d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1graph_1_1ReturnNode.html#af3dc0f890463048ae00760586c110d5d">More...</a><br /></td></tr>
+<tr class="separator:af3dc0f890463048ae00760586c110d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a805bd8cd1e8e3c9e670f395fced7f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a7a805bd8cd1e8e3c9e670f395fced7f8">isReadyToProcess</a> () override</td></tr>
 <tr class="memdesc:a7a805bd8cd1e8e3c9e670f395fced7f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true when this node is ready to be processed.  <a href="classtracktion_1_1graph_1_1ReturnNode.html#a7a805bd8cd1e8e3c9e670f395fced7f8">More...</a><br /></td></tr>
 <tr class="separator:a7a805bd8cd1e8e3c9e670f395fced7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e7d0958b82c49ed096061be1c8a9af8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a9e7d0958b82c49ed096061be1c8a9af8">preProcess</a> (choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</td></tr>
+<tr class="memdesc:a9e7d0958b82c49ed096061be1c8a9af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed, just before process.  <a href="classtracktion_1_1graph_1_1ReturnNode.html#a9e7d0958b82c49ed096061be1c8a9af8">More...</a><br /></td></tr>
+<tr class="separator:a9e7d0958b82c49ed096061be1c8a9af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6033ef9134f1d9733aeae8c6254f94f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#ab6033ef9134f1d9733aeae8c6254f94f">process</a> (<a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">ProcessContext</a> &amp;pc) override</td></tr>
 <tr class="memdesc:ab6033ef9134f1d9733aeae8c6254f94f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed.  <a href="classtracktion_1_1graph_1_1ReturnNode.html#ab6033ef9134f1d9733aeae8c6254f94f">More...</a><br /></td></tr>
 <tr class="separator:ab6033ef9134f1d9733aeae8c6254f94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,6 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab869d44b0677148fa6530dd33a7cfeef inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a088bbdd559a5154e64844297afe127ec">getAllocatedBytes</a> () const</td></tr>
 <tr class="separator:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#ada8998edbc18fa6788957b1917b0a7c7">enablePreProcess</a> (bool)</td></tr>
+<tr class="separator:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -140,15 +148,15 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a374c25dae63a229ca307c8ede3ac3b06 inherit pub_attribs_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a374c25dae63a229ca307c8ede3ac3b06">numOutputNodes</a> = -1</td></tr>
 <tr class="separator:a374c25dae63a229ca307c8ede3ac3b06 inherit pub_attribs_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classtracktion_1_1graph_1_1Node"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtracktion_1_1graph_1_1Node')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a></td></tr>
-<tr class="memitem:a1f44053e48b0f14d53639580fb101ce8 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a1f44053e48b0f14d53639580fb101ce8">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">PlaybackInitialisationInfo</a> &amp;)</td></tr>
-<tr class="memdesc:a1f44053e48b0f14d53639580fb101ce8 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1graph_1_1Node.html#a1f44053e48b0f14d53639580fb101ce8">More...</a><br /></td></tr>
-<tr class="separator:a1f44053e48b0f14d53639580fb101ce8 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6734a58168c033e19232b2606718955d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a6734a58168c033e19232b2606718955d">prefetchBlock</a> (juce::Range&lt; int64_t &gt;)</td></tr>
 <tr class="memdesc:a6734a58168c033e19232b2606718955d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before once on all Nodes before they are processed.  <a href="classtracktion_1_1graph_1_1Node.html#a6734a58168c033e19232b2606718955d">More...</a><br /></td></tr>
 <tr class="separator:a6734a58168c033e19232b2606718955d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">setOptimisations</a> (<a class="el" href="structtracktion_1_1graph_1_1NodeOptimisations.html">NodeOptimisations</a>)</td></tr>
 <tr class="memdesc:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called to provide some hints about allocating or playing back a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">More...</a><br /></td></tr>
 <tr class="separator:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">setBufferViewToUse</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
+<tr class="memdesc:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">More...</a><br /></td></tr>
+<tr class="separator:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">setAudioOutput</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
 <tr class="memdesc:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during your process function to set a view to the output.  <a href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">More...</a><br /></td></tr>
 <tr class="separator:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,6 +242,8 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">tracktion::graph::Node</a>.</p>
 
 <p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a6ff6c8a3519a3520d81f54f561e1bd63">getDirectInputNodes()</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#a424a5365b326accfa493595c88c83e99">tracktion::graph::NodeProperties::hasAudio</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#aeb91080b0232d7d45b2a763da9a5393f">tracktion::graph::NodeProperties::hasMidi</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#a4004d596d1ef9f2f7387c127f38c9314">tracktion::graph::NodeProperties::latencyNumSamples</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#a5d4f44d195ca5757f9131e18c89fc0d1">tracktion::graph::NodeProperties::nodeID</a>, and <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#af59904ea90ee1cb608538b22354ce03b">tracktion::graph::NodeProperties::numberOfChannels</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#af3dc0f890463048ae00760586c110d5d">prepareToPlay()</a>.</p>
 
 </div>
 </div>
@@ -325,6 +335,39 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="af3dc0f890463048ae00760586c110d5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3dc0f890463048ae00760586c110d5d">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::graph::ReturnNode::prepareToPlay </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called once before playback begins for each node. </p>
+<p>Use this to allocate buffers etc. This step can be used to modify the topology of the graph (i.e. add/remove nodes). However, if you do this, you must make sure to call initialise on them so they are fully prepared for processing. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a1f44053e48b0f14d53639580fb101ce8">tracktion::graph::Node</a>.</p>
+
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#aa8b2daa473377cc84289a1fd244a08cf">tracktion::graph::PlaybackInitialisationInfo::enableNodeMemorySharing</a>, <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a700f5ac3d1a92b9e3f140860e359c909">getNodeProperties()</a>, <a class="el" href="namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33da7fa3b767c460b54a2be4d49030b349c7">tracktion::graph::no</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#af59904ea90ee1cb608538b22354ce03b">tracktion::graph::NodeProperties::numberOfChannels</a>, and <a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">tracktion::graph::Node::setOptimisations()</a>.</p>
+
+</div>
+</div>
 <a id="a7a805bd8cd1e8e3c9e670f395fced7f8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a805bd8cd1e8e3c9e670f395fced7f8">&#9670;&nbsp;</a></span>isReadyToProcess()</h2>
 
@@ -352,6 +395,49 @@ Additional Inherited Members</h2></td></tr>
 <p>This is usually when its input's output buffers are ready. </p>
 
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a3d69e6a5785ba2ae876b349f4fc7aae3">tracktion::graph::Node</a>.</p>
+
+</div>
+</div>
+<a id="a9e7d0958b82c49ed096061be1c8a9af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e7d0958b82c49ed096061be1c8a9af8">&#9670;&nbsp;</a></span>preProcess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::graph::ReturnNode::preProcess </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::Range&lt; int64_t &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the node is to be processed, just before process. </p>
+<p>You shouldn't normally have to use this but it gives Nodes an opportunity to perform optimisations like steal input buffers from source if appropriate. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#afb9d61e25eb8323fd9055fdcc729758a">tracktion::graph::Node</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">tracktion::graph::Node::setBufferViewToUse()</a>.</p>
 
 </div>
 </div>
@@ -394,7 +480,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

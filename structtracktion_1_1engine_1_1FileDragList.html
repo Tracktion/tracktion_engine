@@ -79,8 +79,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aeb4e4dcd988d065049230592ae9830b7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a> { <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f">horizontal</a>
-, <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ad1af1777ab5284ffed99fbdb99d29042">vertical</a>
+<tr class="memitem:aeb4e4dcd988d065049230592ae9830b7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a> { <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3">sameTrack</a>
+, <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7adc7207f50ba3ea4f96794a7205dc6736">consecutiveTracks</a>
  }</td></tr>
 <tr class="separator:aeb4e4dcd988d065049230592ae9830b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaebc6b2e77ad9e5c28d93286e776b66c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aaebc6b2e77ad9e5c28d93286e776b66c">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html">FileDragList</a> &gt;</td></tr>
@@ -97,7 +97,7 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a403bb550b53dee4eae56855c39288452"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#a403bb550b53dee4eae56855c39288452">preferredLayout</a> = <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f">horizontal</a></td></tr>
+<tr class="memitem:a403bb550b53dee4eae56855c39288452"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#a403bb550b53dee4eae56855c39288452">preferredLayout</a> = <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3">sameTrack</a></td></tr>
 <tr class="separator:a403bb550b53dee4eae56855c39288452"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af36e45b0afd0c3097e1743e49b346704"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; juce::File &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#af36e45b0afd0c3097e1743e49b346704">files</a></td></tr>
 <tr class="separator:af36e45b0afd0c3097e1743e49b346704"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,8 +130,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f"></a>horizontal&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aeb4e4dcd988d065049230592ae9830b7ad1af1777ab5284ffed99fbdb99d29042"></a>vertical&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3"></a>sameTrack&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aeb4e4dcd988d065049230592ae9830b7adc7207f50ba3ea4f96794a7205dc6736"></a>consecutiveTracks&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -243,7 +243,7 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a> tracktion::engine::FileDragList::preferredLayout = <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ae5835c1772533a57f458046f003bd30f">horizontal</a></td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7">PreferredLayout</a> tracktion::engine::FileDragList::preferredLayout = <a class="el" href="structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ad2dc61478ef09b50e30e742d215c99f3">sameTrack</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -270,7 +270,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

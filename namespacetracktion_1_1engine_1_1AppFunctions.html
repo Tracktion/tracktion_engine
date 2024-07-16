@@ -106,6 +106,8 @@ Functions</h2></td></tr>
 <tr class="separator:a63b4a8754aa2e0d3c17c1ed837223c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51d62237577de6d43b2997a76bf6fee0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#a51d62237577de6d43b2997a76bf6fee0">startStopPlay</a> ()</td></tr>
 <tr class="separator:a51d62237577de6d43b2997a76bf6fee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a747d9ab5dd2c737229968889f1fdd31c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#a747d9ab5dd2c737229968889f1fdd31c">continueStopPlay</a> ()</td></tr>
+<tr class="separator:a747d9ab5dd2c737229968889f1fdd31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c46ae9a6660ed9edb210a9c8d2df63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#ac5c46ae9a6660ed9edb210a9c8d2df63">record</a> ()</td></tr>
 <tr class="separator:ac5c46ae9a6660ed9edb210a9c8d2df63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabc5fa9a155947a706c914fb6258f227"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#aabc5fa9a155947a706c914fb6258f227">toggleTimecode</a> ()</td></tr>
@@ -266,7 +268,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a1d55717e5deee51b4dba61cb938553d9">tracktion::engine::MidiMessageArray::mergeFromWithOffset()</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#a0eba6ed50cc6b54739c895bd8b87e0a5">tracktion::engine::LevelMeasurerProcessingNode::process()</a>, <a class="el" href="classtracktion_1_1engine_1_1PlayHeadPositionNode.html#ac88ae10a1b3fca4ee9c01427367f3286">tracktion::engine::PlayHeadPositionNode::process()</a>, <a class="el" href="classtracktion_1_1graph_1_1GainNode.html#ae284b319ee4053587255cf25b4dd29f7">tracktion::graph::GainNode::process()</a>, <a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#a3d080daea7ab2825faf050aced38257b">tracktion::graph::ForwardingNode::process()</a>, <a class="el" href="classNodeReader.html#afe234073b0959b63689a14db86a096c0">NodeReader::readAudioSamples()</a>, and <a class="el" href="classtracktion_1_1graph_1_1AudioFifo.html#a0e28184f89311310cf679d2b865a047a">tracktion::graph::AudioFifo::readOverwriting()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a1d55717e5deee51b4dba61cb938553d9">tracktion::engine::MidiMessageArray::mergeFromWithOffset()</a>, <a class="el" href="classtracktion_1_1graph_1_1GainNode.html#ae284b319ee4053587255cf25b4dd29f7">tracktion::graph::GainNode::process()</a>, <a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#a3d080daea7ab2825faf050aced38257b">tracktion::graph::ForwardingNode::process()</a>, <a class="el" href="classNodeReader.html#afe234073b0959b63689a14db86a096c0">NodeReader::readAudioSamples()</a>, and <a class="el" href="classtracktion_1_1graph_1_1AudioFifo.html#a0e28184f89311310cf679d2b865a047a">tracktion::graph::AudioFifo::readOverwriting()</a>.</p>
 
 </div>
 </div>
@@ -475,7 +477,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1ReferencedMaterialList.html#ac1403616ee84f8abb5029e0062382bbc">tracktion::engine::ReferencedMaterialList::add()</a>, and <a class="el" href="structtracktion_1_1engine_1_1ReferencedMaterialList_1_1IntervalList.html#af013f988f682c8f9a454fe9a672baa2d">tracktion::engine::ReferencedMaterialList::IntervalList::addInterval()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1ReferencedMaterialList.html#ac1403616ee84f8abb5029e0062382bbc">tracktion::engine::ReferencedMaterialList::add()</a>, <a class="el" href="structtracktion_1_1engine_1_1ReferencedMaterialList_1_1IntervalList.html#af013f988f682c8f9a454fe9a672baa2d">tracktion::engine::ReferencedMaterialList::IntervalList::addInterval()</a>, and <a class="el" href="structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html#af0b41cddc5809c9adbf8b6a565a73648">tracktion::engine::MidiInputDevice::NoteFilterRange::set()</a>.</p>
 
 </div>
 </div>
@@ -504,6 +506,23 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void tracktion::engine::AppFunctions::startStopPlay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a747d9ab5dd2c737229968889f1fdd31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a747d9ab5dd2c737229968889f1fdd31c">&#9670;&nbsp;</a></span>continueStopPlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::AppFunctions::continueStopPlay </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1591,7 +1610,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

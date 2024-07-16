@@ -114,6 +114,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
 <tr class="memitem:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a42cdc3d75afd1583451e0f49626fa4c8">getTimeEncodedFile</a> (double sampleRate, TimeDuration duration, TimeDuration stepDuration, int numChannels=1, int qualityOptionIndex=-1)</td></tr>
 <tr class="separator:a42cdc3d75afd1583451e0f49626fa4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2868bf5289237c91c88844aa1f84dc30"><td class="memTemplParams" colspan="2">template&lt;typename AudioFormatType &gt; </td></tr>
+<tr class="memitem:a2868bf5289237c91c88844aa1f84dc30"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::TemporaryFile &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a2868bf5289237c91c88844aa1f84dc30">getTransientFile</a> (double sampleRate, TimeDuration duration, TimePosition transientPos, float transientVal, int numChannels=1, int qualityOptionIndex=-1)</td></tr>
+<tr class="separator:a2868bf5289237c91c88844aa1f84dc30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd5fa4003dbc2bd842bf311aceee0100"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#acd5fa4003dbc2bd842bf311aceee0100">buffersAreEqual</a> (const juce::AudioBuffer&lt; float &gt; &amp;a, const juce::AudioBuffer&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</td></tr>
+<tr class="separator:acd5fa4003dbc2bd842bf311aceee0100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae86a05d5249a8634ce4b26b5402596e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#aae86a05d5249a8634ce4b26b5402596e">buffersAreEqual</a> (const choc::buffer::ChannelArrayView&lt; float &gt; &amp;a, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;b, float absSampleTolerance=0.0f)</td></tr>
+<tr class="separator:aae86a05d5249a8634ce4b26b5402596e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc31d033b00391d0566cb9fa5bf3f4e6"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::pair&lt; choc::buffer::FrameCount, float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#afc31d033b00391d0566cb9fa5bf3f4e6">findFirstNonZeroSample</a> (choc::buffer::MonoView&lt; float &gt; buffer)</td></tr>
+<tr class="separator:afc31d033b00391d0566cb9fa5bf3f4e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5d40f4397abaca6c0c186e0962bc960c"></a>
@@ -430,10 +439,154 @@ template&lt;typename AudioFormatType &gt; </div>
 
 </div>
 </div>
+<a id="a2868bf5289237c91c88844aa1f84dc30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2868bf5289237c91c88844aa1f84dc30">&#9670;&nbsp;</a></span>getTransientFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AudioFormatType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;juce::TemporaryFile&gt; tracktion::graph::test_utilities::getTransientFile </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeDuration&#160;</td>
+          <td class="paramname"><em>duration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname"><em>transientPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>transientVal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numChannels</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qualityOptionIndex</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acd5fa4003dbc2bd842bf311aceee0100"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd5fa4003dbc2bd842bf311aceee0100">&#9670;&nbsp;</a></span>buffersAreEqual() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::test_utilities::buffersAreEqual </td>
+          <td>(</td>
+          <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>absSampleTolerance</em> = <code>0.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#aae86a05d5249a8634ce4b26b5402596e">buffersAreEqual()</a>.</p>
+
+</div>
+</div>
+<a id="aae86a05d5249a8634ce4b26b5402596e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae86a05d5249a8634ce4b26b5402596e">&#9670;&nbsp;</a></span>buffersAreEqual() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::test_utilities::buffersAreEqual </td>
+          <td>(</td>
+          <td class="paramtype">const choc::buffer::ChannelArrayView&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const choc::buffer::ChannelArrayView&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>absSampleTolerance</em> = <code>0.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#acd5fa4003dbc2bd842bf311aceee0100">buffersAreEqual()</a>, and <a class="el" href="namespacetracktion_1_1graph.html#a514ef258c89b58227b3f6ad2d8b3ee1f">tracktion::graph::toAudioBuffer()</a>.</p>
+
+</div>
+</div>
+<a id="afc31d033b00391d0566cb9fa5bf3f4e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc31d033b00391d0566cb9fa5bf3f4e6">&#9670;&nbsp;</a></span>findFirstNonZeroSample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;std::pair&lt;choc::buffer::FrameCount, float&gt; &gt; tracktion::graph::test_utilities::findFirstNonZeroSample </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::MonoView&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

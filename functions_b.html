@@ -114,6 +114,7 @@ $(function() {
 </li>
 <li>beat
 : <a class="el" href="structtracktion_1_1engine_1_1Clipboard_1_1TempoChanges_1_1TempoChange.html#a3b94fb832b601610c3d2af2d9185377c">tracktion::engine::Clipboard::TempoChanges::TempoChange</a>
+, <a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html#a52e438fd373267c53511a9e64fbcdde2">tracktion::engine::SyncPoint</a>
 </li>
 <li>beatBasedLooping()
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#abdd3853de1efdb42ceb54fb3763775ae">tracktion::engine::AudioClipBase</a>
@@ -147,10 +148,10 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1FreezePointPlugin.html#a25ec4cb74b5bfec05a60eae087e47e4ea54f572813afbcbe8c0466c807fbe7800">tracktion::engine::FreezePointPlugin</a>
 </li>
 <li>begin()
-: <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a817660c4a5af7c3e882bab9abb4d2889">tracktion::engine::MidiMessageArray</a>
+: <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ac841f090bc06d82b99fe79957641b2be">tracktion::engine::MidiMessageArray</a>
 , <a class="el" href="classtracktion_1_1engine_1_1PluginList.html#ab55a9324926f2afe883914a5f1bed800">tracktion::engine::PluginList</a>
-, <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a37c4b6948d81acd38ddd79940fa32ed9">tracktion::engine::SelectableList</a>
-, <a class="el" href="classtracktion_1_1engine_1_1ValueTreeObjectList.html#a070e952f401a2ffbc89be7824b24d639">tracktion::engine::ValueTreeObjectList&lt; ObjectType, CriticalSectionType &gt;</a>
+, <a class="el" href="structtracktion_1_1engine_1_1SelectableList.html#a59ea1f47679b3b563031940573eca151">tracktion::engine::SelectableList</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ValueTreeObjectList.html#a2c705d21d806d17d7ea0a83dd2f09ac2">tracktion::engine::ValueTreeObjectList&lt; ObjectType, CriticalSectionType &gt;</a>
 </li>
 <li>beginEditing()
 : <a class="el" href="classARADocument.html#a588bdbfe82f2c60c51bec181c63fc4db">ARADocument</a>
@@ -209,6 +210,9 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#affe7e9abf12ed97080074fae8196c417">tracktion::engine::Plugin</a>
 , <a class="el" href="structtracktion_1_1engine_1_1PluginInitialisationInfo.html#a3e7d804cb0d07784dae68567f9e3436d">tracktion::engine::PluginInitialisationInfo</a>
 </li>
+<li>blockUntilSyncPointChange()
+: <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a3d5c46f23637cba5ece214e9b2650ffc">tracktion::engine::EditPlaybackContext</a>
+</li>
 <li>bpm
 : <a class="el" href="structtracktion_1_1engine_1_1Clipboard_1_1TempoChanges_1_1TempoChange.html#ab06c500479e0c0e4200df7efd7d7a09a">tracktion::engine::Clipboard::TempoChanges::TempoChange</a>
 , <a class="el" href="classtracktion_1_1engine_1_1TempoSetting.html#ab7cc50d5b9740a51ed643990ce35ccba">tracktion::engine::TempoSetting</a>
@@ -224,7 +228,7 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1BreakpointOscillatorModifier_1_1Assignment.html#abda7c514b542bf2e6a396d3062eba6ac">tracktion::engine::BreakpointOscillatorModifier::Assignment</a>
 </li>
 <li>broadcastMessageToAllVirtualDevices()
-: <a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a8fc1c1d1a8d3f477b6978cc159d727a6">tracktion::engine::VirtualMidiInputDevice</a>
+: <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a739ea789b6f41d5d684aeec3a6c1bb14">tracktion::engine::DeviceManager</a>
 </li>
 <li>broadcastStreamTimeToMidiDevices()
 : <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a321e4a76090c2a5e8b03203cb1371ad7">tracktion::engine::DeviceManager</a>
@@ -233,12 +237,24 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1AudioScratchBuffer.html#a41f2fe55fa0fc658d20963ab1e8310bd">tracktion::engine::AudioScratchBuffer</a>
 , <a class="el" href="structtracktion_1_1graph_1_1test__utilities_1_1TestContext.html#a19f532ac7b798e9dc6caba7dbeacf3cc">tracktion::graph::test_utilities::TestContext</a>
 </li>
+<li>BufferedAudioFileManager()
+: <a class="el" href="classtracktion_1_1engine_1_1BufferedAudioFileManager.html#a66198c9fe3cc70404d709293fd5757ed">tracktion::engine::BufferedAudioFileManager</a>
+</li>
+<li>BufferedAudioReader()
+: <a class="el" href="classtracktion_1_1engine_1_1BufferedAudioReader.html#adc13848bcc95f000bc8dd6b1ff172e67">tracktion::engine::BufferedAudioReader</a>
+</li>
 <li>BufferedFileReader()
 : <a class="el" href="classtracktion_1_1engine_1_1BufferedFileReader.html#ae5a149c8d1df85687ea63c11ebb55af8">tracktion::engine::BufferedFileReader</a>
+</li>
+<li>BufferedFileReaderWrapper()
+: <a class="el" href="classtracktion_1_1engine_1_1BufferedFileReaderWrapper.html#a9c57dfce697ab8f7e67eb7763f9a4ed2">tracktion::engine::BufferedFileReaderWrapper</a>
 </li>
 <li>bufferForMidiMessages
 : <a class="el" href="structtracktion_1_1engine_1_1AudioRenderContext.html#a23bb34b74ec1e6b8a6f5c35577b9f8e0">tracktion::engine::AudioRenderContext</a>
 , <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a309d693a97fc0515bb2b708d745c852a">tracktion::engine::PluginRenderContext</a>
+</li>
+<li>BufferingAudioReaderWrapper()
+: <a class="el" href="classtracktion_1_1engine_1_1BufferingAudioReaderWrapper.html#a1df118eb4990ae81afb50716fea7c812">tracktion::engine::BufferingAudioReaderWrapper</a>
 </li>
 <li>bufferNumSamples
 : <a class="el" href="structtracktion_1_1engine_1_1AudioRenderContext.html#a1b4c139fd64b62b5850eaa8f0c2b2e83">tracktion::engine::AudioRenderContext</a>
@@ -264,6 +280,9 @@ $(function() {
 <li>buildParameterTree()
 : <a class="el" href="classtracktion_1_1engine_1_1AutomatableEditItem.html#ac381cf292240937dbf87aecdd9779344">tracktion::engine::AutomatableEditItem</a>
 </li>
+<li>builtInPluginFormatName
+: <a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a04fb9fb8314465442fe4dd68d7bc1feb">tracktion::engine::PluginManager</a>
+</li>
 <li>BuiltInType()
 : <a class="el" href="structtracktion_1_1engine_1_1PluginManager_1_1BuiltInType.html#ad58a518547ca24fdb04ca6720a530e02">tracktion::engine::PluginManager::BuiltInType</a>
 </li>
@@ -278,7 +297,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

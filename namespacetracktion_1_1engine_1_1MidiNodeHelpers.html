@@ -81,6 +81,8 @@ Functions</h2></td></tr>
 <tr class="memitem:afe685681eef1653d3a025b7570268b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">sanityCheckMidiBuffer</a> (const <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;midi, double maxTimeStamp)</td></tr>
 <tr class="memdesc:afe685681eef1653d3a025b7570268b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts if any MIDI messages are timestamped outside the given range.  <a href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">More...</a><br /></td></tr>
 <tr class="separator:afe685681eef1653d3a025b7570268b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac79f8b18a1b0457b3a6ce2dae8ebaaf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#ac79f8b18a1b0457b3a6ce2dae8ebaaf9">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> &amp;activeNoteList, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> midiSourceID, double midiTimeOffset, bool isPlaying)</td></tr>
+<tr class="separator:ac79f8b18a1b0457b3a6ce2dae8ebaaf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5e260e7d2d706c13759a9ff1eb80ed00"></a>
@@ -150,7 +152,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="ac2c6ffe5a4da7c6933f42a0cc83313b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2c6ffe5a4da7c6933f42a0cc83313b2">&#9670;&nbsp;</a></span>createNoteOffs()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2c6ffe5a4da7c6933f42a0cc83313b2">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,10 +235,58 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac79f8b18a1b0457b3a6ce2dae8ebaaf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac79f8b18a1b0457b3a6ce2dae8ebaaf9">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::MidiNodeHelpers::createNoteOffs </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> &amp;&#160;</td>
+          <td class="paramname"><em>activeNoteList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>destination</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td>
+          <td class="paramname"><em>midiSourceID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>midiTimeOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isPlaying</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ad765ea363a7424d9b5607a6307c9c8eb">tracktion::engine::MidiMessageArray::addMidiMessage()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ab9158fc2b8a4f1e8d23de9214292680c">tracktion::engine::ActiveNoteList::iterate()</a>, and <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a73f9423e49714fe3138bd4f9fc0491dd">tracktion::engine::ActiveNoteList::reset()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -112,6 +112,11 @@ Public Types</h2></td></tr>
 , <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#adc684adf3e111a2244fb8c0f0a9f38f5a609fbd8c824fad7642def79d079a52fa">forceNoRename</a>
  }</td></tr>
 <tr class="separator:adc684adf3e111a2244fb8c0f0a9f38f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7896eb170142f9da0a5eb9c79fe2a488"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488">FileMode</a> { <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488adc4d53aa0d117d8b189b36d161af4e96">absolute</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488a99c483e1d11b1a279a2a1a3960528487">relative</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488a709eb756b756e64928d3cb90511149e5">relativeIfWithinProject</a>
+ }</td></tr>
+<tr class="separator:a7896eb170142f9da0a5eb9c79fe2a488"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea9c02edfea08872dc73397c3025d97d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#aea9c02edfea08872dc73397c3025d97d">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html">ProjectItem</a> &gt;</td></tr>
 <tr class="separator:aea9c02edfea08872dc73397c3025d97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1012050488de68f6214c2db4ee06e8b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#ae1012050488de68f6214c2db4ee06e8b">Array</a> = juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html">ProjectItem</a> &gt;</td></tr>
@@ -197,10 +202,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7ddb7f59ddad9fcfaa5454b20780fa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4abf62038d56d198d96f6dc64cf1f4d"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#ab4abf62038d56d198d96f6dc64cf1f4d">getFileName</a> () const</td></tr>
 <tr class="separator:ab4abf62038d56d198d96f6dc64cf1f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39e2eb1a335204f60c7f1170b95c8638"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a39e2eb1a335204f60c7f1170b95c8638">setSourceFile</a> (const juce::File &amp;)</td></tr>
-<tr class="separator:a39e2eb1a335204f60c7f1170b95c8638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a990d4f1c42f863f52df469465f04b46a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a990d4f1c42f863f52df469465f04b46a">setSourceFile</a> (const juce::File &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488">FileMode</a> mode=<a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488a709eb756b756e64928d3cb90511149e5">FileMode::relativeIfWithinProject</a>)</td></tr>
+<tr class="separator:a990d4f1c42f863f52df469465f04b46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8e88c388f06592441fc5dd005e6869b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#ad8e88c388f06592441fc5dd005e6869b">isForFile</a> (const juce::File &amp;)</td></tr>
 <tr class="separator:ad8e88c388f06592441fc5dd005e6869b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae032f05bd98dfa37bfe2a92bce38292"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#aae032f05bd98dfa37bfe2a92bce38292">isAbsolutePath</a> () const</td></tr>
+<tr class="separator:aae032f05bd98dfa37bfe2a92bce38292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a207e36b888a4b8121b19a2046e899eaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a207e36b888a4b8121b19a2046e899eaa">convertToRelativePath</a> ()</td></tr>
+<tr class="separator:a207e36b888a4b8121b19a2046e899eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac8709eec99995f226d370240b5b183b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#aac8709eec99995f226d370240b5b183b">convertToAbsolutePath</a> ()</td></tr>
+<tr class="separator:aac8709eec99995f226d370240b5b183b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a212ed33327515b9ecb0b6784bc3739a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a212ed33327515b9ecb0b6784bc3739a9">renameSourceFile</a> ()</td></tr>
 <tr class="memdesc:a212ed33327515b9ecb0b6784bc3739a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">lets the user rename the file.  <a href="classtracktion_1_1engine_1_1ProjectItem.html#a212ed33327515b9ecb0b6784bc3739a9">More...</a><br /></td></tr>
 <tr class="separator:a212ed33327515b9ecb0b6784bc3739a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,6 +247,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a3181dd86e8a8ab1916b7f14aeb4dacf8">selectableAboutToBeDeleted</a> ()</td></tr>
 <tr class="memdesc:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called just before the selectable is about to be deleted so any subclasses should still be valid at this point.  <a href="classtracktion_1_1engine_1_1Selectable.html#a3181dd86e8a8ab1916b7f14aeb4dacf8">More...</a><br /></td></tr>
 <tr class="separator:a3181dd86e8a8ab1916b7f14aeb4dacf8 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2f32a79ef1047f187e8de7f698edc98 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#aa2f32a79ef1047f187e8de7f698edc98">addListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
+<tr class="separator:aa2f32a79ef1047f187e8de7f698edc98 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b48e1edceb420aad5092b2456762b5a inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a6b48e1edceb420aad5092b2456762b5a">removeListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
+<tr class="separator:a6b48e1edceb420aad5092b2456762b5a inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85c66869547a4c296dbbaf6235da3868 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a85c66869547a4c296dbbaf6235da3868">addSelectableListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
 <tr class="separator:a85c66869547a4c296dbbaf6235da3868 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add3864216a42878add1d89b7c6238a13 inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#add3864216a42878add1d89b7c6238a13">removeSelectableListener</a> (<a class="el" href="classtracktion_1_1engine_1_1SelectableListener.html">SelectableListener</a> *)</td></tr>
@@ -394,6 +409,33 @@ Public Attributes</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="adc684adf3e111a2244fb8c0f0a9f38f5abd7b4b5faac95a9516c23291233e558a"></a>doDefault&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="adc684adf3e111a2244fb8c0f0a9f38f5a7877fad09ef66b74c765698abb43fe7a"></a>forceRename&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="adc684adf3e111a2244fb8c0f0a9f38f5a609fbd8c824fad7642def79d079a52fa"></a>forceNoRename&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a7896eb170142f9da0a5eb9c79fe2a488"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7896eb170142f9da0a5eb9c79fe2a488">&#9670;&nbsp;</a></span>FileMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488">tracktion::engine::ProjectItem::FileMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7896eb170142f9da0a5eb9c79fe2a488adc4d53aa0d117d8b189b36d161af4e96"></a>absolute&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a7896eb170142f9da0a5eb9c79fe2a488a99c483e1d11b1a279a2a1a3960528487"></a>relative&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a7896eb170142f9da0a5eb9c79fe2a488a709eb756b756e64928d3cb90511149e5"></a>relativeIfWithinProject&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -1258,8 +1300,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a39e2eb1a335204f60c7f1170b95c8638"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39e2eb1a335204f60c7f1170b95c8638">&#9670;&nbsp;</a></span>setSourceFile()</h2>
+<a id="a990d4f1c42f863f52df469465f04b46a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a990d4f1c42f863f52df469465f04b46a">&#9670;&nbsp;</a></span>setSourceFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1268,8 +1310,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">void tracktion::engine::ProjectItem::setSourceFile </td>
           <td>(</td>
           <td class="paramtype">const juce::File &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488">FileMode</a>&#160;</td>
+          <td class="paramname"><em>mode</em> = <code><a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7896eb170142f9da0a5eb9c79fe2a488a709eb756b756e64928d3cb90511149e5">FileMode::relativeIfWithinProject</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1286,6 +1338,57 @@ Public Attributes</h2></td></tr>
           <td class="memname">bool tracktion::engine::ProjectItem::isForFile </td>
           <td>(</td>
           <td class="paramtype">const juce::File &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aae032f05bd98dfa37bfe2a92bce38292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae032f05bd98dfa37bfe2a92bce38292">&#9670;&nbsp;</a></span>isAbsolutePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::ProjectItem::isAbsolutePath </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a207e36b888a4b8121b19a2046e899eaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a207e36b888a4b8121b19a2046e899eaa">&#9670;&nbsp;</a></span>convertToRelativePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ProjectItem::convertToRelativePath </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aac8709eec99995f226d370240b5b183b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac8709eec99995f226d370240b5b183b">&#9670;&nbsp;</a></span>convertToAbsolutePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ProjectItem::convertToAbsolutePath </td>
+          <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1518,7 +1621,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:15 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

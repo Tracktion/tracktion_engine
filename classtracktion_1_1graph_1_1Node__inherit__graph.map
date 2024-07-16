@@ -1,13 +1,13 @@
 <map id="tracktion::graph::Node" name="tracktion::graph::Node">
-<area shape="rect" id="node1" title="Main graph Node processor class." alt="" coords="5,1483,172,1510"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ClickNode.html" title="Adds audio and MIDI clicks to the input buffers." alt="" coords="292,5,432,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1CombiningNode.html" title="An Node that mixes a sequence of clips of other nodes." alt="" coords="292,71,432,112"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1ContainerClipNode.html" title=" " alt="" coords="290,136,434,177"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1DynamicOffsetNode.html" title=" " alt="" coords="285,201,439,243"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="258,267,466,308"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1InsertReturnNode.html" title="The return node hooks into the input device and fills the insert&#39;s return buffer with data from the i..." alt="" coords="292,332,432,373"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1InsertSendNode.html" title="The send node picks up audio/MIDI data from the InsertPlugin and then its output will be sent to the ..." alt="" coords="292,397,432,439"/>
-<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html" title="This is a bit confusing but is required to ensure the following set of dependencies in the graph: Ins..." alt="" coords="237,463,487,504"/>
+<area shape="rect" id="node1" title="Main graph Node processor class." alt="" coords="5,1515,172,1542"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html" title="A Node that switches between two of its inputs based on a flag." alt="" coords="245,5,479,47"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ClickNode.html" title="Adds audio and MIDI clicks to the input buffers." alt="" coords="292,71,432,112"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1CombiningNode.html" title="An Node that mixes a sequence of clips of other nodes." alt="" coords="292,136,432,177"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1ContainerClipNode.html" title=" " alt="" coords="290,201,434,243"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1DynamicOffsetNode.html" title=" " alt="" coords="285,267,439,308"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="258,332,466,373"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1InsertNode.html" title=" " alt="" coords="292,397,432,439"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1InsertSendNode.html" title="The send node picks up audio/MIDI data from the InsertPlugin and then its output will be sent to the ..." alt="" coords="292,463,432,504"/>
 <area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html" title="A Node that introduces latency to balance the latency at the root Node and its position in the graph." alt="" coords="251,528,473,569"/>
 <area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1LevelMeasuringNode.html" title="A Node that passes its incomming audio and MIDI through a LevelMeasurer." alt="" coords="283,593,441,635"/>
 <area shape="rect" id="node12" href="$classtracktion_1_1engine_1_1LiveMidiInjectingNode.html" title="A Node that injects MIDI message in to the stream, for keyboard key entry, note previews and MIDI ste..." alt="" coords="279,659,445,700"/>
@@ -23,28 +23,29 @@
 <area shape="rect" id="node22" href="$classtracktion_1_1engine_1_1RackInstanceNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="291,1312,433,1353"/>
 <area shape="rect" id="node23" href="$classtracktion_1_1engine_1_1RackReturnNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="292,1377,432,1419"/>
 <area shape="rect" id="node24" href="$classtracktion_1_1engine_1_1SharedLevelMeasuringNode.html" title="Applies a SharedLevelMeter to the audio passing through this node." alt="" coords="260,1443,464,1484"/>
-<area shape="rect" id="node25" href="$classtracktion_1_1engine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="277,1508,447,1549"/>
-<area shape="rect" id="node26" href="$classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" title="Node that reads from a file node and timestretches its output." alt="" coords="267,1573,457,1615"/>
-<area shape="rect" id="node27" href="$classtracktion_1_1engine_1_1TimedMutingNode.html" title="A Node that mutes its input at specific time ranges." alt="" coords="291,1639,433,1680"/>
-<area shape="rect" id="node28" href="$classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="264,1704,460,1745"/>
-<area shape="rect" id="node29" href="$classtracktion_1_1engine_1_1TrackMutingNode.html" title="A Node that handles muting/soloing of its input node, according to the audibility of a track." alt="" coords="292,1769,432,1811"/>
-<area shape="rect" id="node30" href="$classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="260,1835,464,1876"/>
-<area shape="rect" id="node31" href="$classtracktion_1_1engine_1_1WaveInputDeviceNode.html" title="A Node that intercepts incoming live audio and inserts it in to the playback graph." alt="" coords="277,1900,447,1941"/>
-<area shape="rect" id="node32" href="$classtracktion_1_1engine_1_1WaveNode.html" title="An Node that plays back a wave file." alt="" coords="292,1965,432,2007"/>
-<area shape="rect" id="node33" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="285,2031,439,2072"/>
-<area shape="rect" id="node34" href="$classtracktion_1_1graph_1_1BasicSummingNode.html" title=" " alt="" coords="230,2097,494,2123"/>
-<area shape="rect" id="node35" href="$classtracktion_1_1graph_1_1ChannelRemappingNode.html" title="Maps channels from one to another." alt="" coords="269,2148,455,2189"/>
-<area shape="rect" id="node36" href="$classtracktion_1_1graph_1_1ConnectedNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="244,2214,480,2241"/>
-<area shape="rect" id="node37" href="$classtracktion_1_1graph_1_1ForwardingNode.html" title="Takes a non&#45;owning input node and simply forwards its outputs on." alt="" coords="243,2265,481,2291"/>
-<area shape="rect" id="node38" href="$classtracktion_1_1graph_1_1FunctionNode.html" title=" " alt="" coords="251,2315,473,2342"/>
-<area shape="rect" id="node39" href="$classtracktion_1_1graph_1_1GainNode.html" title=" " alt="" coords="263,2366,461,2393"/>
-<area shape="rect" id="node40" href="$classtracktion_1_1graph_1_1LatencyNode.html" title=" " alt="" coords="253,2417,471,2443"/>
-<area shape="rect" id="node41" href="$classtracktion_1_1graph_1_1MidiNode.html" title="Plays back a MIDI sequence." alt="" coords="265,2467,459,2494"/>
-<area shape="rect" id="node42" href="$classtracktion_1_1graph_1_1ReturnNode.html" title=" " alt="" coords="257,2518,467,2545"/>
-<area shape="rect" id="node43" href="$classtracktion_1_1graph_1_1SendNode.html" title=" " alt="" coords="263,2569,461,2595"/>
-<area shape="rect" id="node45" href="$classtracktion_1_1graph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="260,2619,464,2646"/>
-<area shape="rect" id="node46" href="$classtracktion_1_1graph_1_1SinNode.html" title=" " alt="" coords="269,2670,455,2697"/>
-<area shape="rect" id="node47" href="$classtracktion_1_1graph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="265,2721,459,2747"/>
-<area shape="rect" id="node48" href="$classtracktion_1_1graph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="247,2771,477,2798"/>
-<area shape="rect" id="node44" href="$classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send." alt="" coords="552,2561,692,2603"/>
+<area shape="rect" id="node25" href="$classtracktion_1_1engine_1_1SlotControlNode.html" title=" " alt="" coords="292,1508,432,1549"/>
+<area shape="rect" id="node26" href="$classtracktion_1_1engine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="277,1573,447,1615"/>
+<area shape="rect" id="node27" href="$classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" title="Node that reads from a file node and timestretches its output." alt="" coords="267,1639,457,1680"/>
+<area shape="rect" id="node28" href="$classtracktion_1_1engine_1_1TimedMutingNode.html" title="A Node that mutes its input at specific time ranges." alt="" coords="291,1704,433,1745"/>
+<area shape="rect" id="node29" href="$classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="264,1769,460,1811"/>
+<area shape="rect" id="node30" href="$classtracktion_1_1engine_1_1TrackMutingNode.html" title="A Node that handles muting/soloing of its input node, according to the audibility of a track." alt="" coords="292,1835,432,1876"/>
+<area shape="rect" id="node31" href="$classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="260,1900,464,1941"/>
+<area shape="rect" id="node32" href="$classtracktion_1_1engine_1_1WaveInputDeviceNode.html" title="A Node that intercepts incoming live audio and inserts it in to the playback graph." alt="" coords="277,1965,447,2007"/>
+<area shape="rect" id="node33" href="$classtracktion_1_1engine_1_1WaveNode.html" title="An Node that plays back a wave file." alt="" coords="292,2031,432,2072"/>
+<area shape="rect" id="node34" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="285,2096,439,2137"/>
+<area shape="rect" id="node35" href="$classtracktion_1_1graph_1_1BasicSummingNode.html" title=" " alt="" coords="230,2162,494,2189"/>
+<area shape="rect" id="node36" href="$classtracktion_1_1graph_1_1ChannelRemappingNode.html" title="Maps channels from one to another." alt="" coords="269,2213,455,2255"/>
+<area shape="rect" id="node37" href="$classtracktion_1_1graph_1_1ConnectedNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="244,2279,480,2306"/>
+<area shape="rect" id="node38" href="$classtracktion_1_1graph_1_1ForwardingNode.html" title="Takes a non&#45;owning input node and simply forwards its outputs on." alt="" coords="243,2330,481,2357"/>
+<area shape="rect" id="node39" href="$classtracktion_1_1graph_1_1FunctionNode.html" title=" " alt="" coords="251,2381,473,2407"/>
+<area shape="rect" id="node40" href="$classtracktion_1_1graph_1_1GainNode.html" title=" " alt="" coords="263,2431,461,2458"/>
+<area shape="rect" id="node41" href="$classtracktion_1_1graph_1_1LatencyNode.html" title=" " alt="" coords="253,2482,471,2509"/>
+<area shape="rect" id="node42" href="$classtracktion_1_1graph_1_1MidiNode.html" title="Plays back a MIDI sequence." alt="" coords="265,2533,459,2559"/>
+<area shape="rect" id="node43" href="$classtracktion_1_1graph_1_1ReturnNode.html" title=" " alt="" coords="257,2583,467,2610"/>
+<area shape="rect" id="node44" href="$classtracktion_1_1graph_1_1SendNode.html" title=" " alt="" coords="263,2634,461,2661"/>
+<area shape="rect" id="node46" href="$classtracktion_1_1graph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="260,2685,464,2711"/>
+<area shape="rect" id="node47" href="$classtracktion_1_1graph_1_1SinNode.html" title=" " alt="" coords="269,2735,455,2762"/>
+<area shape="rect" id="node48" href="$classtracktion_1_1graph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="265,2786,459,2813"/>
+<area shape="rect" id="node49" href="$classtracktion_1_1graph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="247,2837,477,2863"/>
+<area shape="rect" id="node45" href="$classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send." alt="" coords="552,2627,692,2668"/>
 </map>

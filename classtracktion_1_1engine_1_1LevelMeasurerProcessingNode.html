@@ -100,6 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab7982abddabbc7319383048018865761"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#ab7982abddabbc7319383048018865761">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
 <tr class="memdesc:ab7982abddabbc7319383048018865761"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <a href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#ab7982abddabbc7319383048018865761">More...</a><br /></td></tr>
 <tr class="separator:ab7982abddabbc7319383048018865761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60b5feb6d84623e9c47edc0fb85572db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#a60b5feb6d84623e9c47edc0fb85572db">preProcess</a> (choc::buffer::FrameCount, juce::Range&lt; int64_t &gt;) override</td></tr>
+<tr class="memdesc:a60b5feb6d84623e9c47edc0fb85572db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed, just before process.  <a href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#a60b5feb6d84623e9c47edc0fb85572db">More...</a><br /></td></tr>
+<tr class="separator:a60b5feb6d84623e9c47edc0fb85572db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eba6ed50cc6b54739c895bd8b87e0a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#a0eba6ed50cc6b54739c895bd8b87e0a5">process</a> (<a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">ProcessContext</a> &amp;pc) override</td></tr>
 <tr class="memdesc:a0eba6ed50cc6b54739c895bd8b87e0a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the node is to be processed.  <a href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#a0eba6ed50cc6b54739c895bd8b87e0a5">More...</a><br /></td></tr>
 <tr class="separator:a0eba6ed50cc6b54739c895bd8b87e0a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +140,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab869d44b0677148fa6530dd33a7cfeef inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a088bbdd559a5154e64844297afe127ec">getAllocatedBytes</a> () const</td></tr>
 <tr class="separator:a088bbdd559a5154e64844297afe127ec inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#ada8998edbc18fa6788957b1917b0a7c7">enablePreProcess</a> (bool)</td></tr>
+<tr class="separator:ada8998edbc18fa6788957b1917b0a7c7 inherit pub_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -152,6 +157,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">setOptimisations</a> (<a class="el" href="structtracktion_1_1graph_1_1NodeOptimisations.html">NodeOptimisations</a>)</td></tr>
 <tr class="memdesc:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called to provide some hints about allocating or playing back a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">More...</a><br /></td></tr>
 <tr class="separator:abc14ebc574707335389982cf4dbd9285 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">setBufferViewToUse</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
+<tr class="memdesc:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during prepareToPlay to set a BufferView to use which can improve efficiency.  <a href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">More...</a><br /></td></tr>
+<tr class="separator:a44b730e717db388216125d0528da28f4 inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">setAudioOutput</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *sourceNode, const choc::buffer::ChannelArrayView&lt; float &gt; &amp;)</td></tr>
 <tr class="memdesc:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="mdescLeft">&#160;</td><td class="mdescRight">This can be called during your process function to set a view to the output.  <a href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">More...</a><br /></td></tr>
 <tr class="separator:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -335,7 +343,50 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a1f44053e48b0f14d53639580fb101ce8">tracktion::graph::Node</a>.</p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#a2b8e82cc228692f44927a0212efaaed5">tracktion::graph::PlaybackInitialisationInfo::blockSize</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#ad7e9b87acd9d4f383bd1b16ef617b931">getNodeProperties()</a>, <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#aa71244b58b1a39c74a71a1d28a524287">tracktion::graph::PlaybackInitialisationInfo::nodeGraph</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html#af59904ea90ee1cb608538b22354ce03b">tracktion::graph::NodeProperties::numberOfChannels</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeGraph.html#add874bfc578e0dfeaf09140c110cc047">tracktion::graph::NodeGraph::rootNode</a>, and <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#a85ac75c13abc055ba7a6deccbbf25709">tracktion::graph::PlaybackInitialisationInfo::sampleRate</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#a2b8e82cc228692f44927a0212efaaed5">tracktion::graph::PlaybackInitialisationInfo::blockSize</a>, <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#aa8b2daa473377cc84289a1fd244a08cf">tracktion::graph::PlaybackInitialisationInfo::enableNodeMemorySharing</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#ad7e9b87acd9d4f383bd1b16ef617b931">getNodeProperties()</a>, <a class="el" href="namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33da7fa3b767c460b54a2be4d49030b349c7">tracktion::graph::no</a>, <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#aa71244b58b1a39c74a71a1d28a524287">tracktion::graph::PlaybackInitialisationInfo::nodeGraph</a>, <a class="el" href="structtracktion_1_1graph_1_1NodeGraph.html#add874bfc578e0dfeaf09140c110cc047">tracktion::graph::NodeGraph::rootNode</a>, <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#a85ac75c13abc055ba7a6deccbbf25709">tracktion::graph::PlaybackInitialisationInfo::sampleRate</a>, and <a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">tracktion::graph::Node::setOptimisations()</a>.</p>
+
+</div>
+</div>
+<a id="a60b5feb6d84623e9c47edc0fb85572db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60b5feb6d84623e9c47edc0fb85572db">&#9670;&nbsp;</a></span>preProcess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::LevelMeasurerProcessingNode::preProcess </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::FrameCount&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::Range&lt; int64_t &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the node is to be processed, just before process. </p>
+<p>You shouldn't normally have to use this but it gives Nodes an opportunity to perform optimisations like steal input buffers from source if appropriate. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#afb9d61e25eb8323fd9055fdcc729758a">tracktion::graph::Node</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1Node.html#a44b730e717db388216125d0528da28f4">tracktion::graph::Node::setBufferViewToUse()</a>.</p>
 
 </div>
 </div>
@@ -368,7 +419,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a60ae77583768afb8a381ce174bd2e8de">tracktion::graph::Node</a>.</p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a91fc332ab1679601b24dbd8c3014ddfb">tracktion::graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a66575a91fe1882b64c737e54a605da72">tracktion::graph::Node::ProcessContext::buffers</a>, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a072d6a0acb03b626b62b5de7b3028c02">tracktion::engine::MidiMessageArray::clear()</a>, <a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#a1a5187c6f2ed5dd86cf91647b8071a0f">tracktion::engine::AppFunctions::copy()</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a7a1227568a0fa8828e1c7adf985f6c96">tracktion::engine::LevelMeterPlugin::measurer</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a647f129f99b88eba23ee946c71e24511">tracktion::graph::Node::AudioAndMidiBuffer::midi</a>, and <a class="el" href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">tracktion::graph::Node::setAudioOutput()</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a91fc332ab1679601b24dbd8c3014ddfb">tracktion::graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a66575a91fe1882b64c737e54a605da72">tracktion::graph::Node::ProcessContext::buffers</a>, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a072d6a0acb03b626b62b5de7b3028c02">tracktion::engine::MidiMessageArray::clear()</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a7a1227568a0fa8828e1c7adf985f6c96">tracktion::engine::LevelMeterPlugin::measurer</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a647f129f99b88eba23ee946c71e24511">tracktion::graph::Node::AudioAndMidiBuffer::midi</a>, and <a class="el" href="classtracktion_1_1graph_1_1Node.html#af2be088d7f4fcc191028c33b29c3c10d">tracktion::graph::Node::setAudioOutput()</a>.</p>
 
 </div>
 </div>
@@ -378,7 +429,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 22 2024 12:46:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 16 2024 15:17:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
