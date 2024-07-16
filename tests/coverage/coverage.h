@@ -52,14 +52,12 @@ int main (int, char**)
     ScopedJuceInitialiser_GUI init;
     return TestRunner::runTests ({},
                                  std::vector<juce::String> {
-//                                   "Tracktion",
-//                                   "Tracktion:Longer",
-//                                   "tracktion_benchmarks",
-        "tracktion_core"
-//        ,
-//        "tracktion_graph",
-//        "tracktion_engine",
-//        "tracktion_graph_performance"
-    })
-        /*ddd&& runDocTest()*/;
+                                    "Tracktion",
+                                    "Tracktion:Longer",
+                                    "tracktion_benchmarks",
+                                    "tracktion_core",
+                                    "tracktion_graph",
+                                    "tracktion_engine",
+                                    "tracktion_graph_performance" })
+        && runDocTest();
 }
