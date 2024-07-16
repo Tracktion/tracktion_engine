@@ -66,7 +66,7 @@ TEST_SUITE ("tracktion_engine")
             }
         };
 
-        auto insertAndTest = [&] (auto mode, bool shouldCheck)
+        [[ maybe_unused ]] auto insertAndTest = [&] (auto mode, bool shouldCheck)
         {
             auto pitchShiftPlugin = insertNewPlugin<PitchShiftPlugin> (*track1);
             pitchShiftPlugin->mode = mode;
