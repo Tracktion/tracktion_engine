@@ -1,2 +1,6 @@
-fixes:
-  - "a/tracktion_engine/tracktion_engine/::"  # move path   e.g., "before/path" => "after/path"
+ignore:
+  - "tests"
+  - "examples"
+  - "modules/3rd_party"
+  - "modules/juce"
+  - "**/3rd_party"
