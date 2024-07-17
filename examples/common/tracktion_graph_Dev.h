@@ -12,6 +12,10 @@
 
 #include <tracktion_core/utilities/tracktion_Benchmark.h>
 
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#undef DOCTEST_CONFIG_IMPLEMENT
+
 using namespace tracktion_engine;
 
 //==============================================================================
@@ -152,7 +156,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    inline int runUnitTests (const File& junitResultsFile, Array<UnitTest*> tests)
+    inline int runUnitTests (const File& junitResultsFile, Array<UnitTest*> tests, std::unique_ptr<doctest::Context> doctestContext = {})
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -183,24 +187,28 @@ namespace TestRunner
                 Logger::writeToLog (res.getErrorMessage());
         }
 
+        const bool doctestPassed = [&] { return ! doctestContext || doctestContext->run() == 0; }();
+        const bool doctestFailed = ! doctestPassed;
+
         Logger::setCurrentLogger (nullptr);
 
+        return (numFailues > 0 || doctestFailed) ? 1 : 0;
         return numFailues > 0 ? 1 : 0;
     }
 
-    inline int runTests (const File& junitResultsFile, std::vector<juce::String> categories)
+    inline int runTests (const File& junitResultsFile, std::vector<juce::String> categories, std::unique_ptr<doctest::Context> doctestContext)
     {
         Array<UnitTest*> tests;
 
         for (auto& category : categories)
             tests.addArray (UnitTest::getTestsInCategory (category));
 
-        return runUnitTests (junitResultsFile, std::move (tests));
+        return runUnitTests (junitResultsFile, std::move (tests), std::move (doctestContext));
     }
 
-    inline int runTests (const File& junitResultsFile, juce::String category)
+    inline int runTests (const File& junitResultsFile, juce::String category, std::unique_ptr<doctest::Context> doctestContext)
     {
-        return runTests (junitResultsFile, std::vector<juce::String> { category });
+        return runTests (junitResultsFile, std::vector<juce::String> { category }, std::move (doctestContext));
     }
 
     inline int runSingleTest (const File& junitResultsFile, juce::String name)
@@ -211,7 +219,7 @@ namespace TestRunner
             if (test->getName() == name)
                 tests.add (test);
 
-        return runUnitTests (junitResultsFile, std::move (tests));
+        return runUnitTests (junitResultsFile, std::move (tests), nullptr);
     }
 }
 

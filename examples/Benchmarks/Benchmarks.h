@@ -95,7 +95,7 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
-    const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks");
+    const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks", nullptr);
     auto results = BenchmarkList::getInstance().getResults();
     
     for (const auto& r : results)
