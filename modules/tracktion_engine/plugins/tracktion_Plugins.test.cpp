@@ -55,14 +55,22 @@ TEST_SUITE ("tracktion_engine")
             if (shouldCheck)
             {
                 CHECK (transient);
-                CHECK_LT (std::abs (transient->first - expectedTransientSample), 5); // 5 sample tolerance
-                CHECK_GT (transient->first, 0.5f);
+
+                if (transient)
+                {
+                    CHECK_LT (std::abs (transient->first - expectedTransientSample), 5); // 5 sample tolerance
+                    CHECK_GT (transient->first, 0.5f);
+                }
             }
             else
             {
                 MESSAGE (std::to_string (transient.has_value()));
-                MESSAGE (std::to_string (std::abs (transient->first - expectedTransientSample) < 5)); // 5 sample tolerance
-                MESSAGE (std::to_string (transient->first > 0.5f));
+
+                if (transient)
+                {
+                    MESSAGE (std::to_string (std::abs (transient->first - expectedTransientSample) < 5)); // 5 sample tolerance
+                    MESSAGE (std::to_string (transient->first > 0.5f));
+                }
             }
         };
 
