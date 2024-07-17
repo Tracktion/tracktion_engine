@@ -382,6 +382,8 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
                                                                           sampleRate, samplesPerBlock,
                                                                           getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
                   });
+    // Ensure the node player gets deleted on the message thread
+    const juce::ErasedScopeGuard scope ([&nodePlayer] { callBlocking ([&] { nodePlayer.reset(); }); });
 
     nodePlayer->setNumThreads ((size_t) r.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
 

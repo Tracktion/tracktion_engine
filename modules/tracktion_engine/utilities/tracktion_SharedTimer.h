@@ -47,6 +47,7 @@ public:
 
     void addListener (Listener* l)
     {
+        TRACKTION_ASSERT_MESSAGE_THREAD
         listeners.add (l);
 
         if (! isTimerRunning())
@@ -55,6 +56,7 @@ public:
 
     void removeListener (Listener* l)
     {
+        TRACKTION_ASSERT_MESSAGE_THREAD
         listeners.remove (l);
 
         if (listeners.isEmpty())
