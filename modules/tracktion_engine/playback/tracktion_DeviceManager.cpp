@@ -737,6 +737,12 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
+void DeviceManager::dispatchPendingUpdates()
+{
+    handleUpdateNowIfNeeded();
+    prepareToStartCaller->handleUpdateNowIfNeeded();
+}
+
 juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
 {
     CRASH_TRACER

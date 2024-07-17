@@ -120,7 +120,7 @@ class PDCTests  : public juce::UnitTest
 {
 public:
     PDCTests()
-        : juce::UnitTest ("PDC", "Tracktion:Longer")
+        : juce::UnitTest ("PDC", "tracktion_engine")
     {
     }
 

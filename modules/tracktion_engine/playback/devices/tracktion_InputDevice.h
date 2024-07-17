@@ -216,6 +216,14 @@ public:
         bool discardRecordings = false;             /**< Whether to discard recordings or keep them. */
     };
 
+    /** Stops a recording from receiving any more input.
+        Because stopRecording is blocking, if you have many inputs recording, some inputs can continue to
+        record whilst others are having their files closed. Calling this first prevents this.
+        @param targetsToStop    The targets to stop, others will continue allowing you to punch out
+                                only specific targets. If this is empty, all active recordings will be stopped.
+    */
+    virtual void prepareToStopRecording (std::vector<EditItemID> targetsToStop) = 0;
+
     /** Stops a recording.
         @param StopRecordingParameters determines how stopped recordings are treated.
     */

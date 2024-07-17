@@ -898,6 +898,14 @@ public:
         return std::move (erase_if_null (newContexts));
     }
 
+    void prepareToStopRecording (std::vector<EditItemID>) override
+    {
+        // We don't really need to do this as MIDI is event based
+        // However, if we do get extra events after recording is
+        // stopped, we might want to handle this the same way as
+        // audio by bypassing input
+    }
+
     tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters params) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD

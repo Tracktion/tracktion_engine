@@ -602,7 +602,13 @@ void EditPlaybackContext::clearNodes()
         params.discardRecordings = true;
 
         for (auto mi : midiInputs)
+            mi->prepareToStopRecording (params.targetsToStop);
+
+        for (auto mi : midiInputs)
             mi->stopRecording (params);
+
+        for (auto wi : waveInputs)
+            wi->prepareToStopRecording (params.targetsToStop);
 
         for (auto wi : waveInputs)
             wi->stopRecording (params);
@@ -797,6 +803,9 @@ tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (Inpu
     params.isLooping = transport.looping;
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = discardRecordings;
+
+    in.prepareToStopRecording (params.targetsToStop);
+
     return in.stopRecording (params);
 }
 
@@ -813,7 +822,13 @@ tl::expected<Clip::Array, juce::String> EditPlaybackContext::stopRecording (Time
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = discardRecordings;
 
-    for (auto in : getAllInputs())
+    auto allInputs = getAllInputs();
+
+    // Prepare all to stop first to avoid extra audio blocks
+    for (auto in : allInputs)
+        in->prepareToStopRecording (params.targetsToStop);
+
+    for (auto in : allInputs)
         in->stopRecording (params)
             .map ([&] (auto c) { clips.addArray (std::move (c)); })
             .map_error ([&] (auto err) { error = err; });
