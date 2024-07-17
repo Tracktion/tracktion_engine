@@ -19,7 +19,7 @@
 
   ID:               tracktion_core
   vendor:           Tracktion Corporation
-  version:          1.0.0
+  version:          3.0.0
   name:             The Tracktion core object types
   description:      Classes for creating and processing time based applications
   website:          http://www.tracktion.com
