@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['gainnode_7360',['GainNode',['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::GainNode'],['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::graph::GainNode']]],
-  ['generatorjob_7361',['GeneratorJob',['../structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html',1,'tracktion::engine::AudioProxyGenerator']]],
-  ['globalmacros_7362',['GlobalMacros',['../structtracktion_1_1engine_1_1Edit_1_1GlobalMacros.html',1,'tracktion::engine::Edit']]],
-  ['groovetemplate_7363',['GrooveTemplate',['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::engine::GrooveTemplate'],['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::GrooveTemplate']]],
-  ['groovetemplatemanager_7364',['GrooveTemplateManager',['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::engine::GrooveTemplateManager'],['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::GrooveTemplateManager']]],
-  ['group_7365',['Group',['../structtracktion_1_1engine_1_1VSTXML_1_1Group.html',1,'tracktion::engine::VSTXML']]]
+  ['gainnode_7363',['GainNode',['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::GainNode'],['../classtracktion_1_1graph_1_1GainNode.html',1,'tracktion::graph::GainNode']]],
+  ['generatorjob_7364',['GeneratorJob',['../structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html',1,'tracktion::engine::AudioProxyGenerator']]],
+  ['globalmacros_7365',['GlobalMacros',['../structtracktion_1_1engine_1_1Edit_1_1GlobalMacros.html',1,'tracktion::engine::Edit']]],
+  ['groovetemplate_7366',['GrooveTemplate',['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::engine::GrooveTemplate'],['../classtracktion_1_1engine_1_1GrooveTemplate.html',1,'tracktion::GrooveTemplate']]],
+  ['groovetemplatemanager_7367',['GrooveTemplateManager',['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::engine::GrooveTemplateManager'],['../classtracktion_1_1engine_1_1GrooveTemplateManager.html',1,'tracktion::GrooveTemplateManager']]],
+  ['group_7368',['Group',['../structtracktion_1_1engine_1_1VSTXML_1_1Group.html',1,'tracktion::engine::VSTXML']]]
 ];

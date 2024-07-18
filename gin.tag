@@ -27993,6 +27993,13 @@
       <arglist>(int chanNum)</arglist>
     </member>
     <member kind="function">
+      <type>std::vector&lt; WaveInputDevice * &gt;</type>
+      <name>getWaveInputDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a14edffe701d46362aec1c50d356f2366</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>setWaveInChannelsEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -39279,6 +39286,13 @@
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
       <anchor>a1bc1b092e68d30260b3d5b5361f60325</anchor>
       <arglist>(std::vector&lt; std::unique_ptr&lt; RecordingContext &gt;&gt;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>prepareToStopRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
+      <anchor>a6653150e5639942ae2a09f700b4563de</anchor>
+      <arglist>(std::vector&lt; EditItemID &gt; targetsToStop)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual tl::expected&lt; Clip::Array, juce::String &gt;</type>

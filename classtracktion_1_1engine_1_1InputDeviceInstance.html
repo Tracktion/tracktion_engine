@@ -158,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1bc1b092e68d30260b3d5b5361f60325"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1bc1b092e68d30260b3d5b5361f60325">startRecording</a> (std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingContext.html">RecordingContext</a> &gt;&gt;)=0</td></tr>
 <tr class="memdesc:a1bc1b092e68d30260b3d5b5361f60325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts a recording.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a1bc1b092e68d30260b3d5b5361f60325">More...</a><br /></td></tr>
 <tr class="separator:a1bc1b092e68d30260b3d5b5361f60325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6653150e5639942ae2a09f700b4563de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6653150e5639942ae2a09f700b4563de">prepareToStopRecording</a> (std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt; targetsToStop)=0</td></tr>
+<tr class="memdesc:a6653150e5639942ae2a09f700b4563de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops a recording from receiving any more input.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6653150e5639942ae2a09f700b4563de">More...</a><br /></td></tr>
+<tr class="separator:a6653150e5639942ae2a09f700b4563de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="memItemLeft" align="right" valign="top">virtual tl::expected&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html#acbbabbcc56d91af35797790f9d103534">Clip::Array</a>, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a8eb5add2ee5d1c35a4daa84750b6ad66">stopRecording</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1StopRecordingParameters.html">StopRecordingParameters</a>)=0</td></tr>
 <tr class="memdesc:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops a recording.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a8eb5add2ee5d1c35a4daa84750b6ad66">More...</a><br /></td></tr>
 <tr class="separator:a8eb5add2ee5d1c35a4daa84750b6ad66"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -674,6 +677,40 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Any recording contexts that couldn't be started by this device. E.g. If the contexts are mixed MIDI and audio and this is an audio device, it will returns the MIDI contexts to pass to a MIDI device. </dd></dl>
+
+</div>
+</div>
+<a id="a6653150e5639942ae2a09f700b4563de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6653150e5639942ae2a09f700b4563de">&#9670;&nbsp;</a></span>prepareToStopRecording()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::InputDeviceInstance::prepareToStopRecording </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td>
+          <td class="paramname"><em>targetsToStop</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stops a recording from receiving any more input. </p>
+<p>Because stopRecording is blocking, if you have many inputs recording, some inputs can continue to record whilst others are having their files closed. Calling this first prevents this. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">targetsToStop</td><td>The targets to stop, others will continue allowing you to punch out only specific targets. If this is empty, all active recordings will be stopped. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1207,7 +1244,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 17 2024 15:55:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Jul 18 2024 11:08:30 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
