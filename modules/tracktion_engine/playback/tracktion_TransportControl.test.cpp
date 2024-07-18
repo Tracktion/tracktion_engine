@@ -92,6 +92,8 @@ public:
         audioIO.initialise (params);
         audioIO.prepareToPlay (params.sampleRate, params.blockSize);
         deviceManager.dispatchPendingUpdates();
+        std::ranges::for_each (deviceManager.getWaveInputDevices(),
+                               [] (auto wi) { wi->setEnabled (true); });
 
         beginTest ("Test device setup");
         {

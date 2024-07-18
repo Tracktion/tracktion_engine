@@ -1161,6 +1161,11 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
     }
 }
 
+std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices() const
+{
+    return { waveInputs.begin(), waveInputs.end() };
+}
+
 void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
 {
     chan &= ~1;
