@@ -121,3 +121,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_options(${TARGET_NAME} PRIVATE "-m64")
   endif()
 endif()
+
+target_precompile_headers(${TARGET_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/pch.h)
+file(GLOB_RECURSE JUCE_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*.mm
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*.r)
+set_source_files_properties(${JUCE_SOURCES} PROPERTIES
+    SKIP_PRECOMPILE_HEADERS TRUE)
+
