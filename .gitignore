@@ -2,6 +2,7 @@
 [Tt]humbs.db
 
 #Visual Studio files
+.vs
 *.[Oo]bj
 *.aps
 *.pch
