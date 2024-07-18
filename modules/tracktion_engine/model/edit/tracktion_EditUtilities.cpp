@@ -1287,6 +1287,8 @@ tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance& 
     params.markedRange = transport.getLoopRange();
     params.discardRecordings = false;
 
+    instance.prepareToStopRecording (params.targetsToStop);
+
     return instance.stopRecording (params);
 }
 

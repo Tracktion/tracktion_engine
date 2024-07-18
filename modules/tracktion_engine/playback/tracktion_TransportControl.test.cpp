@@ -49,11 +49,12 @@ namespace tracktion { inline namespace engine
     }
 #endif
 
+#if ENGINE_UNIT_TESTS_RECORDING
 class RecordingSyncTests    : public juce::UnitTest
 {
 public:
     RecordingSyncTests()
-        : juce::UnitTest ("RecordingSyncTests", "Tracktion:Longer") {}
+        : juce::UnitTest ("RecordingSyncTests", "tracktion_engine") {}
 
     //==============================================================================
     void runTest() override
@@ -90,6 +91,9 @@ public:
 
         audioIO.initialise (params);
         audioIO.prepareToPlay (params.sampleRate, params.blockSize);
+        deviceManager.dispatchPendingUpdates();
+        std::ranges::for_each (deviceManager.getWaveInputDevices(),
+                               [] (auto wi) { wi->setEnabled (true); });
 
         beginTest ("Test device setup");
         {
@@ -350,9 +354,8 @@ public:
     }
 };
 
-#if 0 //TODO: This test is disabled for now as it seems to have a problem on the CI
 static RecordingSyncTests recordingSyncTests;
-#endif
+#endif // ENGINE_UNIT_TESTS_RECORDING
 
 }} // namespace tracktion { inline namespace engine
 

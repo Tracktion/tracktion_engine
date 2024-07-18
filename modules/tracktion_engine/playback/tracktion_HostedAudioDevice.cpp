@@ -362,6 +362,9 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
             wi->setEnabled (true);
         }
     }
+
+    if (deviceType != nullptr)
+        deviceType->settingsChanged();
 }
 
 void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize)

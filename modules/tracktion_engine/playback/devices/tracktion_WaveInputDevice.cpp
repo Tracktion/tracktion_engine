@@ -224,6 +224,7 @@ public:
         params.unloopedTimeToEndRecording = context.getUnloopedPosition();
         params.isLooping = context.transport.looping;
         params.markedRange = context.transport.getLoopRange();
+        prepareToStopRecording (params.targetsToStop);
         stopRecording (params);
 
         auto& wi = getWaveInput();
@@ -491,6 +492,21 @@ public:
         return ! recordingContexts.empty();
     }
 
+    void prepareToStopRecording (std::vector<EditItemID> targetsToStop) override
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        const std::shared_lock sl (contextLock);
+
+        for (auto& recContext : recordingContexts)
+        {
+            if (! targetsToStop.empty())
+                if (! contains_v (targetsToStop, recContext->targetID))
+                    continue;
+
+            recContext->stopRecording();
+        }
+    }
+
     tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters params) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -633,13 +649,15 @@ public:
                                              This might be different to the punch range as it accounts for device and graph latency. */
         TimePosition unloopedStopTime;  /**< When the reecording is stopped, this should be the end time. */
         TimeDuration adjustDurationAtStart;
-        std::atomic<bool> hasHitThreshold { false };
+        std::atomic<bool> hasHitThreshold { false }, isWaitingToClose { false };
         bool firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
         std::atomic<bool> muteTargetNow { false };
         const bool muteTrackContentsWhilstRecording = engine.getEngineBehaviour().muteTrackContentsWhilstRecording();
 
+        std::mutex fileWriterLock;
         std::unique_ptr<AudioFileWriter> fileWriter;
+
         DiskSpaceCheckTask diskSpaceChecker { engine, file };
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
         WaveInputRecordingThread::ScopedInitialiser threadInitialiser { engine.getWaveInputRecordingThread() };
@@ -650,9 +668,20 @@ public:
 
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
+            if (isWaitingToClose.load (std::memory_order_acquire))
+                return;
+
+            std::scoped_lock sl (fileWriterLock);
+
             if (fileWriter != nullptr)
                 engine.getWaveInputRecordingThread().addBlockToRecord (*fileWriter, buffer,
                                                                        start, numSamples, thumbnail);
+        }
+
+        void stopRecording()
+        {
+            assert (! isWaitingToClose.load (std::memory_order_acquire));
+            isWaitingToClose.store (true, std::memory_order_release);
         }
 
         /** Blocks until there are no more pending samples to be written to this context.
@@ -660,10 +689,17 @@ public:
         */
         void closeFileWriter()
         {
-            CRASH_TRACER
+            assert (isWaitingToClose);
 
-            if (auto localCopy = std::move (fileWriter))
-                engine.getWaveInputRecordingThread().waitForWriterToFinish (*localCopy);
+            CRASH_TRACER
+            auto extractedFileWriter = [this]
+            {
+                std::scoped_lock sl (fileWriterLock);
+                return std::move (fileWriter);
+            }();
+
+            if (extractedFileWriter)
+                engine.getWaveInputRecordingThread().waitForWriterToFinish (*extractedFileWriter);
         }
     };
 

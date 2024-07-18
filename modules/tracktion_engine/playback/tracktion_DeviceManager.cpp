@@ -737,6 +737,12 @@ bool DeviceManager::isMSWavetableSynthPresent() const
     return false;
 }
 
+void DeviceManager::dispatchPendingUpdates()
+{
+    handleUpdateNowIfNeeded();
+    prepareToStartCaller->handleUpdateNowIfNeeded();
+}
+
 juce::Result DeviceManager::createVirtualMidiDevice (const juce::String& name)
 {
     CRASH_TRACER
@@ -1153,6 +1159,11 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
 
         rescanWaveDeviceList();
     }
+}
+
+std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices() const
+{
+    return { waveInputs.begin(), waveInputs.end() };
 }
 
 void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)

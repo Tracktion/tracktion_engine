@@ -320,6 +320,7 @@ void InputDeviceInstance::updateRecordingStatus()
         params.isLooping = context.transport.looping;
         params.markedRange = context.transport.getLoopRange();
         params.discardRecordings = false;
+        prepareToStopRecording (params.targetsToStop);
         auto res = stopRecording (params);
         Clip::Array clips = res.value_or (Clip::Array());
 

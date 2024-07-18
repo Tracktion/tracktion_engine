@@ -132,6 +132,7 @@ public:
     bool isDeviceOutChannelStereo (int chan) const              { return ! outMonoChans[chan / 2]; }
     bool isDeviceOutEnabled (int chanNum)                       { return outEnabled[chanNum]; }
 
+    std::vector<WaveInputDevice*> getWaveInputDevices() const;
     void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setDeviceInChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }
@@ -168,7 +169,7 @@ public:
     bool isMSWavetableSynthPresent() const;
 
     /** Changes to the devices get applied asyncronously so this function can be called to trigger any pending updates to be flushed. */
-    void dispatchPendingUpdates()                               { handleUpdateNowIfNeeded(); }
+    void dispatchPendingUpdates();
 
     //==============================================================================
     void checkDefaultDevicesAreValid();

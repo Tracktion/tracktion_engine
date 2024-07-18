@@ -19,7 +19,7 @@ class TrackFreezeTests  : public juce::UnitTest
 {
 public:
     TrackFreezeTests()
-        : juce::UnitTest ("Track Freeze", "Tracktion:Longer")
+        : juce::UnitTest ("Track Freeze", "tracktion_engine")
     {
     }
 
