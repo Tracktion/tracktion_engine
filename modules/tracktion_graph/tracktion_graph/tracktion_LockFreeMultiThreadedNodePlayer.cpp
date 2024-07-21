@@ -83,6 +83,12 @@ void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int
 
 int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 {
+    const std::unique_lock<RealTimeSpinLock> l (processMutex, std::try_to_lock);
+
+    // If this fails, it's because the clearNode function is being called
+    if (! l.owns_lock())
+        return -1;
+
     const auto scopedAccess = preparedNodeObject.getScopedAccess();
     const auto preparedNode = scopedAccess.get();
 
@@ -203,11 +209,13 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
 //==============================================================================
 void LockFreeMultiThreadedNodePlayer::clearThreads()
 {
+    const std::scoped_lock<RealTimeSpinLock> sl (processMutex);
     threadPool->clearThreads();
 }
 
 void LockFreeMultiThreadedNodePlayer::createThreads()
 {
+    const std::scoped_lock<RealTimeSpinLock> sl (processMutex);
     threadPool->createThreads (numThreadsToUse.load(), audioWorkgroup);
 }
 

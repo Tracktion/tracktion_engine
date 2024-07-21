@@ -264,6 +264,7 @@ private:
     choc::buffer::FrameCount numSamplesToProcess = 0;
     std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false };
 
+    RealTimeSpinLock processMutex;
     std::unique_ptr<ThreadPool> threadPool;
     juce::AudioWorkgroup audioWorkgroup;
 
