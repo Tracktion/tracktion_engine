@@ -127,6 +127,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a931641ede751b881243aefb8048eed2d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a931641ede751b881243aefb8048eed2d">startChildProcessPluginScan</a> (const juce::String &amp;commandLine)</td></tr>
+<tr class="memdesc:a931641ede751b881243aefb8048eed2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called by a child process in the app's start-up code, to invoke the actual scan.  <a href="classtracktion_1_1engine_1_1PluginManager.html#a931641ede751b881243aefb8048eed2d">More...</a><br /></td></tr>
 <tr class="separator:a931641ede751b881243aefb8048eed2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c9bcd3504c8aed8e6c79569b9ec1fc0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a4c9bcd3504c8aed8e6c79569b9ec1fc0">isBuiltInPlugin</a> (const juce::PluginDescription &amp;d)</td></tr>
 <tr class="separator:a4c9bcd3504c8aed8e6c79569b9ec1fc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,6 +141,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ae23d7ad0a938415092ee2a5ace486a44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7c4d84d28757381fa8f694a78eb9177"><td class="memItemLeft" align="right" valign="top">juce::KnownPluginList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#aa7c4d84d28757381fa8f694a78eb9177">knownPluginList</a></td></tr>
 <tr class="separator:aa7c4d84d28757381fa8f694a78eb9177"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e7bb9e153df33ad2aaabc554a07ace"><td class="memItemLeft" align="right" valign="top">std::function&lt; void()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#aa4e7bb9e153df33ad2aaabc554a07ace">abortCurrentPluginScan</a></td></tr>
+<tr class="memdesc:aa4e7bb9e153df33ad2aaabc554a07ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">May be called by clients to cancel a scan if one is active.  <a href="classtracktion_1_1engine_1_1PluginManager.html#aa4e7bb9e153df33ad2aaabc554a07ace">More...</a><br /></td></tr>
+<tr class="separator:aa4e7bb9e153df33ad2aaabc554a07ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14694ffe0aef3d646bf3e52e5c094e27"><td class="memItemLeft" align="right" valign="top">std::function&lt; std::unique_ptr&lt; juce::AudioPluginInstance &gt;const juce::PluginDescription &amp;, double rate, int blockSize, juce::String &amp;errorMessage)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a14694ffe0aef3d646bf3e52e5c094e27">createPluginInstance</a></td></tr>
 <tr class="memdesc:a14694ffe0aef3d646bf3e52e5c094e27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback that is used to create plugin instances from a PluginDescription.  <a href="classtracktion_1_1engine_1_1PluginManager.html#a14694ffe0aef3d646bf3e52e5c094e27">More...</a><br /></td></tr>
 <tr class="separator:a14694ffe0aef3d646bf3e52e5c094e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,6 +243,9 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>This is called by a child process in the app's start-up code, to invoke the actual scan. </p>
+<p>Returns true if the command-line params invoke a scan, or false if this is a normal run. </p>
 
 </div>
 </div>
@@ -617,6 +624,22 @@ template&lt;class PluginClass &gt; </div>
 
 </div>
 </div>
+<a id="aa4e7bb9e153df33ad2aaabc554a07ace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e7bb9e153df33ad2aaabc554a07ace">&#9670;&nbsp;</a></span>abortCurrentPluginScan</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::function&lt;void()&gt; tracktion::engine::PluginManager::abortCurrentPluginScan</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>May be called by clients to cancel a scan if one is active. </p>
+
+</div>
+</div>
 <a id="a04fb9fb8314465442fe4dd68d7bc1feb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a04fb9fb8314465442fe4dd68d7bc1feb">&#9670;&nbsp;</a></span>builtInPluginFormatName</h2>
 
@@ -694,7 +717,7 @@ template&lt;class PluginClass &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 22 2024 12:06:37 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 22 2024 12:26:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

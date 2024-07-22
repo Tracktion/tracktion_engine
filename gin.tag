@@ -5193,6 +5193,17 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_PluginScanHelpers.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
+    <filename>tracktion__PluginScanHelpers_8h.html</filename>
+    <class kind="struct">tracktion::engine::PluginScanHelpers</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::PluginScanMasterProcess</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::PluginScanChildProcess</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::CustomScanner</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_PluginWindowState.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/</path>
     <filename>tracktion__PluginWindowState_8h.html</filename>
@@ -27241,6 +27252,73 @@
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>ab3a05dd5743c303eca68c84d586b169c</anchor>
       <arglist>(Engine &amp;engine)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::PluginScanHelpers::CustomScanner</name>
+    <filename>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>CustomScanner</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>aeaf36cbc8ee7eedeec2ce9f18698a436</anchor>
+      <arglist>(Engine &amp;e)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>findPluginTypesFor</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a9df679a03c15f58a49cdf61356fe8ec1</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format, juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result, const juce::String &amp;fileOrIdentifier) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>scanFinished</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a81c939a0408a40ff665577261716efd3</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cancelScan</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>aa2bbaee6eea8338051bb1d58e7ca81f1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shouldAbortScan</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a3051577d175956526c7a3e4996d31b6e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>shouldUseSeparateProcessToScan</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a4fd32a3c004f5704b6dc818f4ed992b7</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format)</arglist>
+    </member>
+    <member kind="variable">
+      <type>Engine &amp;</type>
+      <name>engine</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a7d74ad6b5eb9f96d98908562e8f231ec</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; PluginScanMasterProcess &gt;</type>
+      <name>masterProcess</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a6fc29ae325a01c857284b4310ed2a88d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; bool &gt;</type>
+      <name>abortScan</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a920d4487151a8df340d6fdee83a4894d</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -58028,6 +58106,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>std::function&lt; void()&gt;</type>
+      <name>abortCurrentPluginScan</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
+      <anchor>aa4e7bb9e153df33ad2aaabc554a07ace</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>std::function&lt; std::unique_ptr&lt; juce::AudioPluginInstance &gt;const juce::PluginDescription &amp;, double rate, int blockSize, juce::String &amp;errorMessage)&gt;</type>
       <name>createPluginInstance</name>
       <anchorfile>classtracktion_1_1engine_1_1PluginManager.html</anchorfile>
@@ -58299,6 +58384,126 @@
       <name>rackTypes</name>
       <anchorfile>structtracktion_1_1engine_1_1Clipboard_1_1Plugins.html</anchorfile>
       <anchor>aa9b16d07ad4b8251932f5bd262e9f91e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::PluginScanHelpers::PluginScanChildProcess</name>
+    <filename>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>PluginScanChildProcess</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</anchorfile>
+      <anchor>a4e36a613085c057946cd22e7b452310a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleConnectionMade</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</anchorfile>
+      <anchor>a38a8888158fd6e28a3119458ce31bc24</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleConnectionLost</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</anchorfile>
+      <anchor>ac225b3dc0afa26ecaf52ab73dc184a8f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleScanMessage</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</anchorfile>
+      <anchor>ab99752f70c000a02ef743afeffd54714</anchor>
+      <arglist>(int requestID, const juce::String &amp;formatName, const juce::String &amp;fileOrIdentifier)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleMessage</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanChildProcess.html</anchorfile>
+      <anchor>a759bfa9da3efb0fa459ce31e31c08d4d</anchor>
+      <arglist>(const juce::XmlElement &amp;xml)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::PluginScanHelpers</name>
+    <filename>structtracktion_1_1engine_1_1PluginScanHelpers.html</filename>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::CustomScanner</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::PluginScanChildProcess</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers::PluginScanMasterProcess</class>
+    <member kind="function" static="yes">
+      <type>static juce::MemoryBlock</type>
+      <name>createScanMessage</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers.html</anchorfile>
+      <anchor>ac1b9fc8e72024c74a8ffa28a83dea7f7</anchor>
+      <arglist>(const juce::XmlElement &amp;xml)</arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr const char *</type>
+      <name>commandLineUID</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers.html</anchorfile>
+      <anchor>a458b84bd9648a7979ddfd2d82f381586</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::PluginScanHelpers::PluginScanMasterProcess</name>
+    <filename>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>PluginScanMasterProcess</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>af1408e55fa4b530b87b8c80be07ac3eb</anchor>
+      <arglist>(Engine &amp;e)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>ensureChildProcessLaunched</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a388d5438e85adc81fa2c387d0dd0afd3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>sendScanRequest</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a46bea1646b088f1af114e69e140ce81c</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format, const juce::String &amp;fileOrIdentifier, int requestID)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>waitForReply</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a7072141423ef8e39af8c2c835dce8f7f</anchor>
+      <arglist>(int requestID, const juce::String &amp;fileOrIdentifier, juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result, CustomScanner &amp;scanner)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleMessage</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a906a1333af9e123a4b0d4c77cc9e4b92</anchor>
+      <arglist>(const juce::XmlElement &amp;xml)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>handleConnectionLost</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a5a2ecef3257ea9e67c7919d428e48843</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>volatile bool</type>
+      <name>launched</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>a11e6f0a4c3511c2ad0034a14f559fccf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volatile bool</type>
+      <name>crashed</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1PluginScanMasterProcess.html</anchorfile>
+      <anchor>ab9433d60b9b3757dd584e43c0412ba8d</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86421,6 +86626,7 @@
     <class kind="class">tracktion::PluginList</class>
     <class kind="class">tracktion::PluginManager</class>
     <class kind="class">tracktion::PluginCache</class>
+    <class kind="struct">tracktion::PluginScanHelpers</class>
     <class kind="struct">tracktion::PluginWindowState</class>
     <class kind="class">tracktion::Project</class>
     <class kind="class">tracktion::ProjectItem</class>
@@ -86868,6 +87074,7 @@
     <class kind="class">tracktion::engine::PluginList</class>
     <class kind="class">tracktion::engine::PluginManager</class>
     <class kind="class">tracktion::engine::PluginCache</class>
+    <class kind="struct">tracktion::engine::PluginScanHelpers</class>
     <class kind="struct">tracktion::engine::PluginWindowState</class>
     <class kind="class">tracktion::engine::Project</class>
     <class kind="class">tracktion::engine::ProjectItem</class>
