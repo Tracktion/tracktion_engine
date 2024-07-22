@@ -23,9 +23,12 @@ public:
     void initialiseAirWindows();
    #endif
 
-    //==============================================================================
+    /// This is called by a child process in the app's start-up code, to invoke
+    /// the actual scan. Returns true if the command-line params invoke a scan,
+    /// or false if this is a normal run.
     static bool startChildProcessPluginScan (const juce::String& commandLine);
 
+    //==============================================================================
     bool areGUIsLockedByDefault();
     void setGUIsLockedByDefault (bool);
 
@@ -47,6 +50,9 @@ public:
 
     juce::AudioPluginFormatManager pluginFormatManager;
     juce::KnownPluginList knownPluginList;
+
+    /// May be called by clients to cancel a scan if one is active
+    std::function<void()> abortCurrentPluginScan;
 
     //==============================================================================
     struct BuiltInType
