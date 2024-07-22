@@ -487,7 +487,6 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     // Only do this once as prepare may be called multiple times
     if (retainCount == 0)
     {
-        assert (directInputNodes.size() == getDirectInputNodes().size());
         nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes
 
         retain();
