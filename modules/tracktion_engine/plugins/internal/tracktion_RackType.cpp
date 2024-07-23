@@ -373,9 +373,12 @@ void RackType::saveWindowPosition()
 {
     for (auto* ws : getWindowStates())
     {
-        auto windowState = ws->lastWindowBounds.toString();
-        ws->state.setProperty (IDs::windowPos, windowState.isEmpty() ? juce::var() : juce::var (windowState), nullptr);
-        ws->state.setProperty (IDs::windowLocked, ws->windowLocked, nullptr);
+        if (ws->lastWindowBounds)
+        {
+            auto windowState = ws->lastWindowBounds->toString();
+            ws->state.setProperty (IDs::windowPos, windowState.isEmpty() ? juce::var() : juce::var (windowState), nullptr);
+            ws->state.setProperty (IDs::windowLocked, ws->windowLocked, nullptr);
+        }
     }
 }
 

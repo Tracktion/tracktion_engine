@@ -15,8 +15,6 @@ struct PluginWindowState  : private juce::Timer
 {
     PluginWindowState (Edit&);
 
-    void pickDefaultWindowBounds();
-
     void incRefCount();
     void decRefCount();
 
@@ -27,6 +25,11 @@ struct PluginWindowState  : private juce::Timer
     void recreateWindowIfShowing();
     void hideWindowForShutdown();
 
+    // Attempts to use either the last saved bounds from this state,
+    // or pick a default position for a newly created window that is
+    // going  to hold this plugin's UI
+    juce::Point<int> choosePositionForPluginWindow();
+
     void pluginClicked (const juce::MouseEvent&);
 
     Edit& edit;
@@ -36,7 +39,7 @@ struct PluginWindowState  : private juce::Timer
     bool windowLocked;
     bool temporarilyHidden = false;
     bool wasExplicitlyClosed = false;
-    juce::Rectangle<int> lastWindowBounds;
+    std::optional<juce::Rectangle<int>> lastWindowBounds;
     juce::Time windowOpenTime;
 
 private:
