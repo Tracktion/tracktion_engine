@@ -84,8 +84,6 @@ Inheritance diagram for tracktion::engine::PluginWindowState:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d4537557dee53bfcffe4245d80a5fff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a6d4537557dee53bfcffe4245d80a5fff">PluginWindowState</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="separator:a6d4537557dee53bfcffe4245d80a5fff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e71df193376140a653eec3f7fc5b33d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a7e71df193376140a653eec3f7fc5b33d">pickDefaultWindowBounds</a> ()</td></tr>
-<tr class="separator:a7e71df193376140a653eec3f7fc5b33d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fa6c00249b6c0b5c8d6f86b247dcdb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a2fa6c00249b6c0b5c8d6f86b247dcdb5">incRefCount</a> ()</td></tr>
 <tr class="separator:a2fa6c00249b6c0b5c8d6f86b247dcdb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24658ab2962a13465b3cd66012b7f966"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a24658ab2962a13465b3cd66012b7f966">decRefCount</a> ()</td></tr>
@@ -100,6 +98,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a68b68b969b8f8c7d45393d8c29cb4d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55eeba1dfe5d1ea7557bc131e5b41ed8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a55eeba1dfe5d1ea7557bc131e5b41ed8">hideWindowForShutdown</a> ()</td></tr>
 <tr class="separator:a55eeba1dfe5d1ea7557bc131e5b41ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb2ca26ec09a8029c1987bdba640002"><td class="memItemLeft" align="right" valign="top">juce::Point&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a4eb2ca26ec09a8029c1987bdba640002">choosePositionForPluginWindow</a> ()</td></tr>
+<tr class="separator:a4eb2ca26ec09a8029c1987bdba640002"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa03ee1c4aa9372fd1e9a2e7ea305f793"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#aa03ee1c4aa9372fd1e9a2e7ea305f793">pluginClicked</a> (const juce::MouseEvent &amp;)</td></tr>
 <tr class="separator:aa03ee1c4aa9372fd1e9a2e7ea305f793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -119,8 +119,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3b517fc232104f6792f3d95fb31f3aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb25a80c00c26bed298d9d8148c6ab0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#abb25a80c00c26bed298d9d8148c6ab0f">wasExplicitlyClosed</a> = false</td></tr>
 <tr class="separator:abb25a80c00c26bed298d9d8148c6ab0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f411249bce768f98053ae7a10cc1cbd"><td class="memItemLeft" align="right" valign="top">juce::Rectangle&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a0f411249bce768f98053ae7a10cc1cbd">lastWindowBounds</a></td></tr>
-<tr class="separator:a0f411249bce768f98053ae7a10cc1cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b61ed63d4623b66cf72c6a32c7e3ea3"><td class="memItemLeft" align="right" valign="top">std::optional&lt; juce::Rectangle&lt; int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#a8b61ed63d4623b66cf72c6a32c7e3ea3">lastWindowBounds</a></td></tr>
+<tr class="separator:a8b61ed63d4623b66cf72c6a32c7e3ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae16fa6662992f34f7011cb0c783fc2c2"><td class="memItemLeft" align="right" valign="top">juce::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html#ae16fa6662992f34f7011cb0c783fc2c2">windowOpenTime</a></td></tr>
 <tr class="separator:ae16fa6662992f34f7011cb0c783fc2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -144,23 +144,6 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7e71df193376140a653eec3f7fc5b33d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e71df193376140a653eec3f7fc5b33d">&#9670;&nbsp;</a></span>pickDefaultWindowBounds()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::PluginWindowState::pickDefaultWindowBounds </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a2fa6c00249b6c0b5c8d6f86b247dcdb5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2fa6c00249b6c0b5c8d6f86b247dcdb5">&#9670;&nbsp;</a></span>incRefCount()</h2>
 
@@ -271,6 +254,23 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">void tracktion::engine::PluginWindowState::hideWindowForShutdown </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4eb2ca26ec09a8029c1987bdba640002"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eb2ca26ec09a8029c1987bdba640002">&#9670;&nbsp;</a></span>choosePositionForPluginWindow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Point&lt;int&gt; tracktion::engine::PluginWindowState::choosePositionForPluginWindow </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -397,14 +397,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0f411249bce768f98053ae7a10cc1cbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f411249bce768f98053ae7a10cc1cbd">&#9670;&nbsp;</a></span>lastWindowBounds</h2>
+<a id="a8b61ed63d4623b66cf72c6a32c7e3ea3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b61ed63d4623b66cf72c6a32c7e3ea3">&#9670;&nbsp;</a></span>lastWindowBounds</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::Rectangle&lt;int&gt; tracktion::engine::PluginWindowState::lastWindowBounds</td>
+          <td class="memname">std::optional&lt;juce::Rectangle&lt;int&gt; &gt; tracktion::engine::PluginWindowState::lastWindowBounds</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -431,7 +431,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 23 2024 10:09:37 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Jul 23 2024 13:34:52 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

@@ -58559,13 +58559,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>pickDefaultWindowBounds</name>
-      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
-      <anchor>a7e71df193376140a653eec3f7fc5b33d</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>incRefCount</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
       <anchor>a2fa6c00249b6c0b5c8d6f86b247dcdb5</anchor>
@@ -58611,6 +58604,13 @@
       <name>hideWindowForShutdown</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
       <anchor>a55eeba1dfe5d1ea7557bc131e5b41ed8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Point&lt; int &gt;</type>
+      <name>choosePositionForPluginWindow</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a4eb2ca26ec09a8029c1987bdba640002</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -58670,10 +58670,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::Rectangle&lt; int &gt;</type>
+      <type>std::optional&lt; juce::Rectangle&lt; int &gt; &gt;</type>
       <name>lastWindowBounds</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
-      <anchor>a0f411249bce768f98053ae7a10cc1cbd</anchor>
+      <anchor>a8b61ed63d4623b66cf72c6a32c7e3ea3</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
