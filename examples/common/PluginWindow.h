@@ -67,7 +67,7 @@ struct AudioProcessorEditorContentComp : public te::Plugin::EditorComponent
 };
 
 //=============================================================================
-class PluginWindow : public DocumentWindow
+class PluginWindow : public juce::DocumentWindow
 {
 public:
     PluginWindow (te::Plugin&);
@@ -93,6 +93,7 @@ private:
 
     te::Plugin& plugin;
     te::PluginWindowState& windowState;
+    bool updateStoredBounds = false;
 };
 
 //==============================================================================
@@ -107,23 +108,23 @@ PluginWindow::PluginWindow (te::Plugin& plug)
       plugin (plug), windowState (*plug.windowState)
 {
     getConstrainer()->setMinimumOnscreenAmounts (0x10000, 50, 30, 50);
-
-    auto position = plugin.windowState->lastWindowBounds.getPosition();
-    setBounds (getLocalBounds() + position);
-
     setResizeLimits (100, 50, 4000, 4000);
-    setBoundsConstrained (getLocalBounds() + position);
 
     recreateEditor();
+
+    setBoundsConstrained (getLocalBounds() + plugin.windowState->choosePositionForPluginWindow());
 
     #if JUCE_LINUX
      setAlwaysOnTop (true);
      addToDesktop();
     #endif
+
+     updateStoredBounds = true;
 }
 
 PluginWindow::~PluginWindow()
 {
+    updateStoredBounds = false;
     plugin.edit.flushPluginStateIfNeeded (plugin);
     setEditor (nullptr);
 }
@@ -209,8 +210,11 @@ void PluginWindow::recreateEditorAsync()
 
 void PluginWindow::moved()
 {
-    plugin.windowState->lastWindowBounds = getBounds();
-    plugin.edit.pluginChanged (plugin);
+    if (updateStoredBounds)
+    {
+        plugin.windowState->lastWindowBounds = getBounds();
+        plugin.edit.pluginChanged (plugin);
+    }
 }
 
 //==============================================================================

@@ -923,12 +923,12 @@ void Plugin::flushPluginStateToValueTree()
 {
     AutomatableEditItem::flushPluginStateToValueTree();
 
-    if (! windowState->lastWindowBounds.isEmpty())
+    if (windowState->lastWindowBounds && ! windowState->lastWindowBounds->isEmpty())
     {
         auto um = getUndoManager();
 
-        state.setProperty (IDs::windowX, windowState->lastWindowBounds.getX(), um);
-        state.setProperty (IDs::windowY, windowState->lastWindowBounds.getY(), um);
+        state.setProperty (IDs::windowX, windowState->lastWindowBounds->getX(), um);
+        state.setProperty (IDs::windowY, windowState->lastWindowBounds->getY(), um);
         state.setProperty (IDs::windowLocked, windowState->windowLocked, um);
     }
 }

@@ -88,15 +88,6 @@ void PluginWindowState::hideWindowForShutdown()
     stopTimer();
 }
 
-void PluginWindowState::pickDefaultWindowBounds()
-{
-    lastWindowBounds = { 100, 100, 600, 500 };
-
-    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
-        lastWindowBounds.setPosition (focused->getTopLevelComponent()->getPosition()
-                                        + juce::Point<int> (80, 80));
-}
-
 void PluginWindowState::showWindow()
 {
     if (isDialogOpen())
@@ -114,11 +105,6 @@ void PluginWindowState::showWindow()
 
             return trimmedDisplays;
         }();
-
-        const bool windowBoundsIsOnScreen = displayRects.intersectsRectangle (lastWindowBounds);
-
-        if (lastWindowBounds.isEmpty() || ! windowBoundsIsOnScreen)
-            pickDefaultWindowBounds();
 
         juce::WeakReference<juce::Component> oldFocus (juce::Component::getCurrentlyFocusedComponent());
         pluginWindow = engine.getUIBehaviour().createPluginWindow (*this);
@@ -169,6 +155,23 @@ void PluginWindowState::timerCallback()
     {
         deleteWindow();
     }
+}
+
+juce::Point<int> PluginWindowState::choosePositionForPluginWindow()
+{
+    if (lastWindowBounds)
+        return lastWindowBounds->getPosition();
+
+    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
+        return focused->getTopLevelComponent()->getPosition() + juce::Point<int> (80, 80);
+
+    for (int i = juce::ComponentPeer::getNumPeers(); --i >= 0;)
+        if (auto p = juce::ComponentPeer::getPeer(i))
+            if (p->isFocused())
+                return p->getBounds().getPosition() + juce::Point<int> (80, 80);
+
+    return juce::Desktop::getInstance().getDisplays()
+            .getPrimaryDisplay()->userArea.getRelativePoint (0.2f, 0.2f);
 }
 
 }} // namespace tracktion { inline namespace engine
