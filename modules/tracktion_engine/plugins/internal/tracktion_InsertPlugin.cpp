@@ -101,6 +101,8 @@ bool InsertPlugin::needsConstantBufferSize()                                 { r
 
 void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 {
+    updateDeviceTypes();
+
     initialiseWithoutStopping (info);
 }
 
