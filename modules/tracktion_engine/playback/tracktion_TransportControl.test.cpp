@@ -42,9 +42,8 @@ namespace tracktion { inline namespace engine
 
             CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
 
-            // Skip the first 50 frames as they might have a ramp applied to them to avoid clicks (this should probably be avoided if it's the start of the clip
             // This 0.1f difference comes from the played back file being delayed by 2 samples due to the lagrange resampler latency. This is a bug and when fixed, these two signals shoudl cancel out perfectly
-            CHECK (graph::test_utilities::buffersAreEqual (output.fromFrame (50), toBufferView (sinBuffer).fromFrame (50), 0.1f));
+            CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (sinBuffer), 0.1f));
         }
     }
 #endif

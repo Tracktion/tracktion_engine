@@ -2133,6 +2133,19 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
             || sectionEditBeats.getStart() >= (editPositionBeats.getEnd() + *dynamicOffsetBeats)))
       return;
 
+    const bool sectionContainsStartOfClip = [&]
+    {
+        if (editReader->isTimeBased()
+            && sectionEditTime.contains (editPositionTime.getStart()))
+           return true;
+
+        if (editReader->isBeatBased()
+            && (sectionEditBeats.contains (editPositionBeats.getStart() + *dynamicOffsetBeats)))
+           return true;
+
+        return false;
+    }();
+
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();
     const auto numChannels = destBuffer.getNumChannels();
@@ -2160,12 +2173,12 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
 
     // Read through the audio stack
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
-    uint32_t lastSampleFadeLength = isFirstBlock ? std::min (numFrames, 10u) : 0;
+    uint32_t lastSampleFadeLength = (isFirstBlock && ! sectionContainsStartOfClip) ? std::min (numFrames, 10u) : 0;
     isFirstBlock = false;
 
     if (editReader->read (sectionEditBeats, sectionEditTime, pc.buffers.audio, isContiguous, getPlaybackSpeedRatio()))
     {
-        if (! isContiguous && ! getPlayHeadState().isFirstBlockOfLoop())
+        if (! isContiguous && (! getPlayHeadState().isFirstBlockOfLoop()) && (! sectionContainsStartOfClip))
             lastSampleFadeLength = std::min (numFrames, 40u);
     }
     else
