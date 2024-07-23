@@ -42,7 +42,6 @@ namespace tracktion { inline namespace engine
 
             CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
 
-            auto f = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (output, 44100, 0);
             CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
         }
     }
@@ -101,7 +100,7 @@ public:
                     || (deviceManager.getNumWaveOutDevices() == 2 && ! deviceManager.getWaveOutDevice (0)->isStereoPair()));
         }
 
-        TempCurrentWorkingDirectory tempDir;
+        test_utilities::TempCurrentWorkingDirectory tempDir;
         auto edit = createEditWithTracksForInputs (engine, params);
         auto& transport = edit->getTransport();
 
@@ -279,24 +278,6 @@ public:
         std::atomic<bool> hasStarted { false }, shouldStop { false }, insertImpulse { false };
     };
 
-    //==============================================================================
-    struct TempCurrentWorkingDirectory
-    {
-        TempCurrentWorkingDirectory()
-        {
-            tempDir.createDirectory();
-            tempDir.setAsCurrentWorkingDirectory();
-        }
-
-        ~TempCurrentWorkingDirectory()
-        {
-            tempDir.deleteRecursively (false);
-            originalCwd.setAsCurrentWorkingDirectory();
-        }
-
-        juce::File originalCwd = juce::File::getCurrentWorkingDirectory();
-        juce::File tempDir = juce::File::createTempFile ({});
-    };
 
     //==============================================================================
     template<typename ClipType>

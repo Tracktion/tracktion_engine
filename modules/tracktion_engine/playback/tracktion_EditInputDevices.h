@@ -28,6 +28,7 @@ public:
     InputDeviceInstance* getInputInstance (const AudioTrack&, int index) const;
     juce::Array<InputDeviceInstance*> getDevicesForTargetTrack (const AudioTrack&) const;
 
+    /** @internal */
     juce::ValueTree getInstanceStateForInputDevice (const InputDevice&);
 
 private:

@@ -69,6 +69,25 @@ namespace test_utilities
     }
 
     //==============================================================================
+    struct TempCurrentWorkingDirectory
+    {
+        TempCurrentWorkingDirectory()
+        {
+            tempDir.createDirectory();
+            tempDir.setAsCurrentWorkingDirectory();
+        }
+
+        ~TempCurrentWorkingDirectory()
+        {
+            tempDir.deleteRecursively (false);
+            originalCwd.setAsCurrentWorkingDirectory();
+        }
+
+        juce::File originalCwd = juce::File::getCurrentWorkingDirectory();
+        juce::File tempDir = juce::File::createTempFile ({});
+    };
+
+    //==============================================================================
     inline std::unique_ptr<juce::TemporaryFile> renderToTempFileAndLogPath (Edit& edit)
     {
         auto tf = std::make_unique<juce::TemporaryFile> (".wav");

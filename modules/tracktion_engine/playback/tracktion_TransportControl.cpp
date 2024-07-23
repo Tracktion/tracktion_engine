@@ -1523,8 +1523,8 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
                     // if we're playing from near time = 0, roll back a fraction so we
                     // don't miss the first block - this won't be noticable further along
                     // in the edit.
-                    if (prerollStart < 0.2s)
-                        prerollStart = prerollStart - 0.2s;
+                    //ddd if (prerollStart < 0.2s)
+                    //     prerollStart = prerollStart - 0.2s;
 
                     if (looping)
                     {

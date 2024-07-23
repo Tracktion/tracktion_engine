@@ -303,6 +303,9 @@ tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance&)
 /** Returns true if any inputs are currently recording. */
 bool isRecording (EditPlaybackContext&);
 
+/** Creates an InputDeviceInstance::Destination on the destinationTrack from the sourceTrack if possible. */
+InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destinationTrack, const AudioTrack& sourceTrack, InputDevice::DeviceType);
+
 
 //==============================================================================
 /** @internal */

@@ -296,6 +296,7 @@ using namespace std::literals;
 #include "playback/devices/tracktion_OutputDevice.cpp"
 #include "playback/devices/tracktion_WaveDeviceDescription.cpp"
 #include "playback/devices/tracktion_WaveInputDevice.cpp"
+#include "playback/devices/tracktion_WaveInputDevice.test.cpp"
 #include "playback/devices/tracktion_WaveOutputDevice.cpp"
 
 #include "playback/tracktion_HostedAudioDevice.cpp"
