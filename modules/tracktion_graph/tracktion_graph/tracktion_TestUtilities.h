@@ -107,7 +107,7 @@ namespace test_utilities
                                                        {
                                                            const auto sinValue = std::sin ((float) (frame * phaseIncrement));
 
-                                                           if (sinValue > 0.0f) return 1.0f;
+                                                           if (sinValue >= 0.0f) return 1.0f;
                                                            if (sinValue < 0.0f) return -1.0f;
 
                                                            return 0.0f;
