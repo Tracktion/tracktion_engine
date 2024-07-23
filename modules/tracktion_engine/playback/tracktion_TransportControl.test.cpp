@@ -27,10 +27,10 @@ namespace tracktion { inline namespace engine
 
             auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
             auto& tc = edit->getTransport();
-            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
-            auto sinBuffer = *engine::test_utilities::loadFileInToBuffer (engine, sinFile->getFile());
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
 
-            AudioFile af (engine, sinFile->getFile());
+            AudioFile af (engine, squareFile->getFile());
             auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
             clip->setUsesProxy (false);
             tc.play (false);
@@ -42,8 +42,8 @@ namespace tracktion { inline namespace engine
 
             CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
 
-            // This 0.1f difference comes from the played back file being delayed by 2 samples due to the lagrange resampler latency. This is a bug and when fixed, these two signals shoudl cancel out perfectly
-            CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (sinBuffer), 0.1f));
+            auto f = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (output, 44100, 0);
+            CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
         }
     }
 #endif
