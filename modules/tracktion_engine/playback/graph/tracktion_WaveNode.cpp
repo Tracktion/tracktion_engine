@@ -328,7 +328,7 @@ public:
         {
             constexpr auto baseLatencyNumSamples = static_cast<FrameCount> (juce::LagrangeInterpolator::getBaseLatency());
             timeSourceIsAheadDueToLatency = TimeDuration::fromSamples (baseLatencyNumSamples, destSampleRate);
-            const auto modifiedNumSourceFramesToRead = numSourceFramesToRead + baseLatencyNumSamples;
+            const auto modifiedNumSourceFramesToRead = numSourceFramesToRead + static_cast<int> (baseLatencyNumSamples);
             const auto numFramesToDrop = static_cast<FrameCount> (std::lround (baseLatencyNumSamples / ratio));
             const auto modifiedNumDestFrames = numDestFrames + numFramesToDrop;
 
