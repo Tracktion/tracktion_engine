@@ -38,7 +38,7 @@ public:
         assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
     }
 
-    juce::AudioBuffer<float> process ( std::integral auto numSamples)
+    juce::AudioBuffer<float> process (std::integral auto numSamples)
     {
         juce::AudioBuffer<float> inputAudio (params.inputChannels, static_cast<int> (numSamples));
         inputAudio.clear();

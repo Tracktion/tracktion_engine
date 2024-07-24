@@ -53,7 +53,6 @@ public:
     juce::CachedValue<double> manualAdjustMs;
 
     void updateDeviceTypes();
-    void showLatencyTester();
 
     /** Returns true if either the send or return types are audio. */
     bool hasAudio() const;

@@ -23,7 +23,7 @@ constexpr double sampleToTime (IntType samplePosition, double sampleRate)
 }
 
 /** Converts a time in seconds to a sample number. */
-constexpr int64_t timeToSample (double timeInSeconds, double sampleRate)
+constexpr int64_t timeToSample (std::floating_point auto timeInSeconds, double sampleRate)
 {
     return static_cast<int64_t> ((timeInSeconds * sampleRate) + 0.5);
 }
