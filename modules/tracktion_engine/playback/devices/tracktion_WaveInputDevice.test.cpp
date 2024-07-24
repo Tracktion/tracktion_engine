@@ -21,6 +21,41 @@ namespace tracktion::inline engine
         TEST_CASE ("WaveInputDevice")
         {
             auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 1, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            tc.ensureContextAllocated();
+
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, 1);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+
+            auto& destTrack = *getAudioTracks (*edit)[0];
+            auto destAssignment = edit->getCurrentPlaybackContext()->getAllInputs()[0]->setTarget (destTrack.itemID, true, nullptr);
+            (*destAssignment)->recordEnabled = true;
+            edit->dispatchPendingUpdatesSynchronously();
+
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            player.process (squareBuffer);
+
+            tc.stop (false, true);
+
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK(recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+
+            CHECK_EQ (squareBuffer.getNumSamples(), recordedFileBuffer.getNumSamples());
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, squareBuffer,
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
+
+        TEST_CASE ("WaveInputDevice: Track Device")
+        {
+            auto& engine = *Engine::getEngines()[0];
             test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
                                                            .inputNames = {}, .outputNames = {} });
 
