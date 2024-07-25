@@ -127,12 +127,13 @@ public:
     WaveInputDevice* getDefaultWaveInDevice() const;
     juce::String getDefaultWaveInDeviceID() const               { return defaultWaveInID; }
 
+    std::vector<WaveOutputDevice*> getWaveOutputDevices();
     void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setDeviceOutChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceOutChannelStereo (int chan) const              { return ! outMonoChans[chan / 2]; }
     bool isDeviceOutEnabled (int chanNum)                       { return outEnabled[chanNum]; }
 
-    std::vector<WaveInputDevice*> getWaveInputDevices() const;
+    std::vector<WaveInputDevice*> getWaveInputDevices();
     void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
     void setDeviceInChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }

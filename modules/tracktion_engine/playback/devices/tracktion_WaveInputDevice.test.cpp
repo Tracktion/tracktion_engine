@@ -134,26 +134,7 @@ namespace tracktion::inline engine
             {
                 const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
                                                   + static_cast<FrameCount> (inputLatencyNumSamples + outputLatencyNumSamples);
-                FrameCount startFrame = 0;
-                ChannelArrayBuffer<float> scratchBuffer (choc::buffer::Size::create (1, blockNumFrames));
-                scratchBuffer.clear();
-
-                for (;;)
-                {
-                    const auto numFramesLeft = numFramesToProcess - startFrame;
-
-                    if (numFramesLeft == 0)
-                        break;
-
-                    const auto numFramesThisTime = std::min (scratchBuffer.getNumFrames(), numFramesLeft);
-
-                    auto blockInput = scratchBuffer.getStart (numFramesThisTime);
-                    auto bufferInput = toAudioBuffer (blockInput);
-                    auto bufferOutput = player.process (bufferInput);
-                    copyIntersectionAndClearOutside (scratchBuffer, toBufferView (bufferOutput));
-
-                    startFrame += numFramesThisTime;
-                }
+                processLoopedBack (player, numFramesToProcess);
             }
 
             tc.stop (false, true);
@@ -174,7 +155,7 @@ namespace tracktion::inline engine
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
 
-        TEST_CASE ("WaveInputDevice: Track Device")
+        TEST_CASE ("WaveInputDevice: Track device")
         {
             auto& engine = *Engine::getEngines()[0];
             test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
@@ -215,7 +196,7 @@ namespace tracktion::inline engine
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
 
-        TEST_CASE ("WaveInputDevice: Track Device with latency plugin")
+        TEST_CASE ("WaveInputDevice: Track device with latency plugin")
         {
             constexpr float pluginLatencySeconds = 0.1f;
             auto& engine = *Engine::getEngines()[0];
@@ -257,6 +238,81 @@ namespace tracktion::inline engine
 
             CHECK_EQ (af.getLengthInSamples(), recordedFileBuffer.getNumSamples());
             CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, squareBuffer,
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
+
+        TEST_CASE ("WaveInputDevice: Track device with insert plugin, loop-back")
+        {
+            using namespace choc::buffer;
+            constexpr int inputLatencyNumSamples = 1000;
+            constexpr int outputLatencyNumSamples = 250;
+            constexpr int blockSize = 512;
+            constexpr auto blockNumFrames = static_cast<FrameCount> (blockSize);
+            auto& engine = *Engine::getEngines()[0];
+            engine.getPluginManager().createBuiltInType<InsertPlugin>();
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = blockSize,
+                                                           .inputChannels = 2, .outputChannels = 2,
+                                                           .inputNames = {}, .outputNames = {},
+                                                           .inputLatencyNumSamples = inputLatencyNumSamples,
+                                                           .outputLatencyNumSamples = outputLatencyNumSamples });
+
+            // Create an Edit with 2 tracks
+            auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            tc.ensureContextAllocated();
+
+            // Create a square file to be used as a clip on track 1
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, 1);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+            AudioFile af (engine, squareFile->getFile());
+
+            auto& sourceTrack = *getAudioTracks (*edit)[0];
+            auto clip = insertWaveClip (sourceTrack, {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+
+            // Add an InsertPlugin on track 1 and asign the second set of mono channels to it
+            auto& dm = engine.getDeviceManager();
+            dm.setDeviceInChannelStereo (0, false);
+            dm.setDeviceOutChannelStereo (0, false);
+            auto waveOutput = dm.getWaveOutputDevices();
+            auto waveInputs = dm.getWaveInputDevices();
+            auto insertPlugin = insertNewPlugin<InsertPlugin> (sourceTrack, 0);
+            insertPlugin->outputDevice = waveOutput[1]->getName();
+            insertPlugin->inputDevice = waveInputs[1]->getName();
+
+            // Route the output of track 1 to track 2, disable monitoring and record from it
+            auto& destTrack = *getAudioTracks (*edit)[1];
+            auto destAssignment = assignTrackAsInput (destTrack, sourceTrack, InputDevice::DeviceType::trackWaveDevice);
+            destAssignment->recordEnabled = true;
+            destAssignment->input.owner.setMonitorMode (InputDevice::MonitorMode::off);
+            edit->dispatchPendingUpdatesSynchronously();
+
+            // Start recording and loop back the audio
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            {
+                const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
+                                                  + static_cast<FrameCount> (inputLatencyNumSamples + outputLatencyNumSamples);
+                processLoopedBack (player, numFramesToProcess);
+            }
+
+            tc.stop (false, true);
+
+            // Test the output is in sync
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK(recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+            auto recordedFileView = toBufferView (recordedFileBuffer).getChannelRange ({ .start = 0, .end = 1u });
+
+            CHECK_EQ (squareBuffer.getNumSamples(), recordedFileBuffer.getNumSamples());
+
+            // These will be offset by a block which is unavoidable.
+            // We just need to make sure we account for this when testing
+            // for round-trip latency with the loop-back test
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileView.fromFrame (blockNumFrames),
+                                                           toBufferView (squareBuffer).getStart (recordedFileView.getNumFrames()- blockNumFrames),
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
     }

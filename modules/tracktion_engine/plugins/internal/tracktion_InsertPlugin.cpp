@@ -89,6 +89,12 @@ InsertPlugin::~InsertPlugin()
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
+juce::ValueTree InsertPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
+}
+
 juce::String InsertPlugin::getName() const                                   { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
 juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }
 juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }

@@ -101,6 +101,11 @@ public:
         return destBuffer;
     }
 
+    HostedAudioDeviceInterface::Parameters getParams() const
+    {
+        return params;
+    }
+
 private:
     Engine& engine;
     HostedAudioDeviceInterface::Parameters params;
@@ -108,6 +113,32 @@ private:
     std::vector<std::vector<float>> output;
     int numSamplesProcessed = 0;
 };
+
+inline void processLoopedBack (EnginePlayer& player, choc::buffer::FrameCount numFramesToProcess)
+{
+    using namespace choc::buffer;
+    const auto numInputChannels = static_cast<ChannelCount> (player.getParams().inputChannels);
+    FrameCount startFrame = 0;
+    ChannelArrayBuffer<float> scratchBuffer (choc::buffer::Size::create (numInputChannels, player.getParams().blockSize));
+    scratchBuffer.clear();
+
+    for (;;)
+    {
+        const auto numFramesLeft = numFramesToProcess - startFrame;
+
+        if (numFramesLeft == 0)
+            break;
+
+        const auto numFramesThisTime = std::min (scratchBuffer.getNumFrames(), numFramesLeft);
+
+        auto blockInput = scratchBuffer.getStart (numFramesThisTime);
+        auto bufferInput = toAudioBuffer (blockInput);
+        auto bufferOutput = player.process (bufferInput);
+        copyIntersectionAndClearOutside (scratchBuffer, toBufferView (bufferOutput));
+
+        startFrame += numFramesThisTime;
+    }
+}
 
 ///@internal
 void waitForFileToBeMapped (const AudioFile&);

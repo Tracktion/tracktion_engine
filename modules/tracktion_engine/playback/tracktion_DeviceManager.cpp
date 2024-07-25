@@ -1160,9 +1160,15 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
         rescanWaveDeviceList();
     }
 }
-
-std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices() const
+std::vector<WaveOutputDevice*> DeviceManager::getWaveOutputDevices()
 {
+    dispatchPendingUpdates();
+    return { waveOutputs.begin(), waveOutputs.end() };
+}
+
+std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices()
+{
+    dispatchPendingUpdates();
     return { waveInputs.begin(), waveInputs.end() };
 }
 

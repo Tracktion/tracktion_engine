@@ -27,6 +27,7 @@ public:
     //==============================================================================
     static const char* getPluginName()          { return NEEDS_TRANS("Insert"); }
     static const char* xmlTypeName;
+    static juce::ValueTree create();
 
     juce::String getName() const override;
     juce::String getPluginType() override;
