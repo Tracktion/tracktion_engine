@@ -135,7 +135,7 @@ namespace tracktion::inline engine
                 const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
                                                   + static_cast<FrameCount> (inputLatencyNumSamples + outputLatencyNumSamples);
                 FrameCount startFrame = 0;
-                ChannelArrayBuffer<float> scratchBuffer (Size::create (1, blockSize));
+                ChannelArrayBuffer<float> scratchBuffer (choc::buffer::Size::create (1, blockNumFrames));
                 scratchBuffer.clear();
 
                 for (;;)

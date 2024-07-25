@@ -1338,8 +1338,8 @@ OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String& name)
 
 int DeviceManager::getRecordAdjustmentSamples()
 {
-    if (auto d = deviceManager.getCurrentAudioDevice())
-        return d->getOutputLatencyInSamples() + d->getInputLatencyInSamples();
+     if (auto d = deviceManager.getCurrentAudioDevice())
+         return d->getInputLatencyInSamples() + d->getOutputLatencyInSamples();
 
     return 0;
 }
