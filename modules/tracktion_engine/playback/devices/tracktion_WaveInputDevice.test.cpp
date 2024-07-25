@@ -96,7 +96,7 @@ namespace tracktion::inline engine
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
 
-        TEST_CASE ("WaveInputDevice: Device round-trip latency")
+        TEST_CASE ("WaveInputDevice: Device input & output latency, loop-back")
         {
             using namespace choc::buffer;
             constexpr int inputLatencyNumSamples = 1000;
