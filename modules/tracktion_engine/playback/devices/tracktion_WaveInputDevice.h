@@ -33,6 +33,7 @@ public:
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     //==============================================================================
+    void setRecordAdjustment (TimeDuration);
     void setRecordAdjustmentMs (double ms);
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;

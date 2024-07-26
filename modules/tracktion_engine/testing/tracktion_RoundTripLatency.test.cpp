@@ -37,7 +37,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ(*detectedOffset, diffNumSamples);
     }
 
-    TEST_CASE("LatencyTester")
+    TEST_CASE("LatencyTester: No device latency")
     {
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 1, .outputChannels = 1,
@@ -64,6 +64,46 @@ TEST_SUITE ("tracktion_engine")
 
         // N.B. We're expecting a block size offset here
         CHECK_EQ(*foundOffset, player.getParams().blockSize);
+
+        auto res = test_utilities::getLatencyTesterResult (engine.getDeviceManager(), *foundOffset);
+        CHECK_EQ(res.adjustedNumSamples, player.getParams().blockSize);
+    }
+
+    TEST_CASE("LatencyTester: Device latency")
+    {
+        constexpr int inputLatencyNumSamples = 1000;
+        constexpr int outputLatencyNumSamples = 250;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 1, .outputChannels = 1,
+                                                       .inputNames = {}, .outputNames = {},
+                                                       .inputLatencyNumSamples = inputLatencyNumSamples,
+                                                       .outputLatencyNumSamples = outputLatencyNumSamples });
+
+        std::optional<int> foundOffset;
+        test_utilities::LatencyTester tester (engine.getDeviceManager().deviceManager,
+                                              [&foundOffset] (auto result)
+                                              { foundOffset = result; });
+
+        // N.B. For testing purposes, we need to remove the DeviceManager from the callback as
+        // the HostedAudioDevice has a single buffer that will be cleared by the device manager,
+        // breaking the loop-back
+        engine.getDeviceManager().closeDevices();
+        tester.beginTest();
+
+        {
+            const auto numFramesToProcess = toSamples (3_td, player.getParams().sampleRate);
+            processLoopedBack (player, numFramesToProcess);
+        }
+
+        CHECK(tester.tryToEndTest());
+        CHECK(foundOffset);
+
+        // N.B. We're expecting a block size offset here
+        CHECK_EQ(*foundOffset, player.getParams().blockSize + inputLatencyNumSamples + outputLatencyNumSamples);
+
+        auto res = test_utilities::getLatencyTesterResult (engine.getDeviceManager(), *foundOffset);
+        CHECK_EQ(res.deviceLatency, inputLatencyNumSamples + outputLatencyNumSamples);
+        CHECK_EQ(res.adjustedNumSamples, player.getParams().blockSize);
     }
 }
 

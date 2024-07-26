@@ -1500,6 +1500,11 @@ void WaveInputDevice::setStereoPair (bool stereo)
         dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
 }
 
+void WaveInputDevice::setRecordAdjustment (TimeDuration d)
+{
+    setRecordAdjustmentMs (d.inSeconds() * 1000.0);
+}
+
 void WaveInputDevice::setRecordAdjustmentMs (double ms)
 {
     recordAdjustMs = juce::jlimit (-500.0, 500.0, ms);

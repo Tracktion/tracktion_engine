@@ -143,38 +143,6 @@ inline int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer)
     return -1;
 }
 
-template<typename AudioFormatType>
-void writeToFile (juce::File file, const juce::AudioBuffer<float>& block, double sampleRate, int qualityOptionIndex)
-{
-    AudioFormatType type;
-
-    if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (type.createWriterFor (file.createOutputStream().release(),
-                                                                                      sampleRate,
-                                                                                      block.getNumChannels(),
-                                                                                      16, {}, qualityOptionIndex)))
-    {
-        writer->writeFromAudioSampleBuffer (block, 0, block.getNumSamples());
-    }
-}
-
-/** Writes an audio buffer to a file. */
-template<typename AudioFormatType>
-std::unique_ptr<juce::TemporaryFile> writeToTemporaryFile (const juce::AudioBuffer<float>& block, double sampleRate, int qualityOptionIndex = 0)
-{
-    auto f = std::make_unique<juce::TemporaryFile> (AudioFormatType().getFileExtensions()[0]);
-    writeToFile<AudioFormatType> (f->getFile(), block, sampleRate, qualityOptionIndex);
-
-    return f;
-}
-
-template<typename SampleType>
-inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout> toBufferView (juce::AudioBuffer<SampleType>& buffer)
-{
-    return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),
-                                                 (choc::buffer::ChannelCount) buffer.getNumChannels(),
-                                                 (choc::buffer::FrameCount) buffer.getNumSamples());
-}
-
 inline std::optional<int> findSyncDeltaSamples (const juce::AudioBuffer<float>& testSound,
                                                 juce::AudioBuffer<float>& recorded)
 {
@@ -189,7 +157,27 @@ inline std::optional<int> findSyncDeltaSamples (const juce::AudioBuffer<float>& 
     return recordedStart - referenceStart;
 }
 
+struct LatencyTesterResult
+{
+    double sampleRate;
+    int bufferSize;
+    int deviceLatency;
+    int adjustedNumSamples;
+    TimeDuration adjustedTime;
+};
 
+inline LatencyTesterResult getLatencyTesterResult (DeviceManager& dm, int detectedOffsetNumSamples)
+{
+    LatencyTesterResult res;
+    res.sampleRate = dm.getSampleRate();
+    res.bufferSize = dm.getBlockSize();
+    res.deviceLatency = dm.getRecordAdjustmentSamples();
+
+    res.adjustedNumSamples = detectedOffsetNumSamples - res.deviceLatency;
+    res.adjustedTime = TimeDuration::fromSamples (res.adjustedNumSamples, res.sampleRate);
+
+    return res;
+}
 //==============================================================================
 //==============================================================================
 struct LatencyTester    : public juce::AudioIODeviceCallback,

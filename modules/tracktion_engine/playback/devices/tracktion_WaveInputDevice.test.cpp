@@ -11,6 +11,7 @@
 #if TRACKTION_UNIT_TESTS
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+#include <tracktion_engine/testing/tracktion_RoundTripLatency.h>
 
 namespace tracktion::inline engine
 {
@@ -152,6 +153,93 @@ namespace tracktion::inline engine
             // for round-trip latency with the loop-back test
             CHECK (graph::test_utilities::buffersAreEqual (recordedFileView.fromFrame (blockNumFrames),
                                                            toBufferView (squareBuffer).getStart (recordedFileView.getNumFrames()- blockNumFrames),
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
+
+        TEST_CASE ("WaveInputDevice: Device input & output latency, loop-back corrected")
+        {
+            using namespace choc::buffer;
+            constexpr int inputLatencyNumSamples = 1000;
+            constexpr int outputLatencyNumSamples = 250;
+            constexpr int blockSize = 512;
+            auto& engine = *Engine::getEngines()[0];
+            auto& dm = engine.getDeviceManager();
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = blockSize,
+                                                           .inputChannels = 1, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {},
+                                                           .inputLatencyNumSamples = inputLatencyNumSamples,
+                                                           .outputLatencyNumSamples = outputLatencyNumSamples });
+
+            // Detect latency to apply
+            auto latencyTesterResult = [&]
+            {
+                std::optional<int> foundOffset;
+                test_utilities::LatencyTester tester (dm.deviceManager,
+                                                      [&foundOffset] (auto result)
+                                                      { foundOffset = result; });
+
+                // N.B. For testing purposes, we need to remove the DeviceManager from the callback as
+                // the HostedAudioDevice has a single buffer that will be cleared by the device manager,
+                // breaking the loop-back
+                dm.closeDevices();
+                tester.beginTest();
+
+                {
+                    const auto numFramesToProcess = toSamples (3_td, player.getParams().sampleRate);
+                    processLoopedBack (player, numFramesToProcess);
+                }
+
+                CHECK (tester.tryToEndTest());
+                CHECK (foundOffset);
+                const auto res = test_utilities::getLatencyTesterResult (dm, *foundOffset);
+
+                // Restart the device to add it back to the EnginePlayer's callbacks
+                dm.initialise();
+                dm.dispatchPendingUpdates();
+                dm.getWaveInputDevices()[0]->setRecordAdjustment (res.adjustedTime);
+
+                return res;
+            }();
+
+            // Setup the Edit to record
+            auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            tc.ensureContextAllocated();
+
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, 1);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+            AudioFile af (engine, squareFile->getFile());
+            auto& sourceTrack = *getAudioTracks (*edit)[0];
+
+            auto clip = insertWaveClip (sourceTrack, {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+
+            auto& destTrack = *getAudioTracks (*edit)[1];
+            auto destAssignment = edit->getCurrentPlaybackContext()->getAllInputs()[0]->setTarget (destTrack.itemID, true, nullptr);
+            (*destAssignment)->recordEnabled = true;
+            (*destAssignment)->input.owner.setMonitorMode (InputDevice::MonitorMode::off);
+            edit->dispatchPendingUpdatesSynchronously();
+
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            {
+                const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
+                                                  + static_cast<FrameCount> (latencyTesterResult.deviceLatency + latencyTesterResult.adjustedNumSamples);
+                processLoopedBack (player, numFramesToProcess);
+            }
+
+            tc.stop (false, true);
+
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK(recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+            auto recordedFileView = toBufferView (recordedFileBuffer);
+
+            CHECK_EQ (squareBuffer.getNumSamples(), recordedFileBuffer.getNumSamples());
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileView,
+                                                           toBufferView (squareBuffer),
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
 
