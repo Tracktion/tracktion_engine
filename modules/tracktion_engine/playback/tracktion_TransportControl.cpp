@@ -1520,12 +1520,6 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
                     if (edit.getNumCountInBeats() > 0)
                         playHeadWrapper->setLoopTimes (true, { transportState->startTime.get(), Edit::getMaximumEditEnd() });
 
-                    // if we're playing from near time = 0, roll back a fraction so we
-                    // don't miss the first block - this won't be noticable further along
-                    // in the edit.
-                    //ddd if (prerollStart < 0.2s)
-                    //     prerollStart = prerollStart - 0.2s;
-
                     if (looping)
                     {
                         // The order of this is critical as the audio thread might jump in and reset the
