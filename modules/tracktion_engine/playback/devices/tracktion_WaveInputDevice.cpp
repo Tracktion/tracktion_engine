@@ -1193,6 +1193,11 @@ public:
                                                                             (choc::buffer::FrameCount) numSamples));
         }
 
+        // If we haven't actually started playing yet, don't record the block as we
+        // might get more than one block for the same position
+        if (! context.isPlaying())
+            return;
+
         {
             const auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
             const std::shared_lock sl (contextLock);

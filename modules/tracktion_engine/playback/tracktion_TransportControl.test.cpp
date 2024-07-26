@@ -146,9 +146,7 @@ public:
                                                [] (auto index) { return index != -1; }),
                           audioFiles.size(), "Some files don't have an impulse in them");
 
-            int fileIndex = 0;
-
-            for (auto index : sampleIndicies)
+            for (int fileIndex = 0; auto index : sampleIndicies)
             {
                 expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
 
