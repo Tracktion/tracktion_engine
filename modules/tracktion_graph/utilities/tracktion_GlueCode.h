@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
+#include "../../3rd_party/choc/audio/choc_MIDISequence.h"
+
 namespace tracktion { inline namespace graph
 {
 

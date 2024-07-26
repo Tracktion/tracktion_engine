@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../../3rd_party/nanorange/tracktion_nanorange.hpp"
+#include "../../tracktion_graph/utilities/tracktion_GlueCode.h"
 
 ///@internal
 namespace tracktion::inline engine
@@ -20,6 +21,8 @@ namespace tracktion::inline engine
 namespace test_utilities
 {
 
+//==============================================================================
+//==============================================================================
 class EnginePlayer
 {
 public:
@@ -114,7 +117,10 @@ private:
     int numSamplesProcessed = 0;
 };
 
-inline void processLoopedBack (EnginePlayer& player, choc::buffer::FrameCount numFramesToProcess)
+
+//==============================================================================
+//==============================================================================
+inline void processLoopedBack (EnginePlayer& player, std::integral auto numFramesToProcess)
 {
     using namespace choc::buffer;
     const auto numInputChannels = static_cast<ChannelCount> (player.getParams().inputChannels);
@@ -124,7 +130,7 @@ inline void processLoopedBack (EnginePlayer& player, choc::buffer::FrameCount nu
 
     for (;;)
     {
-        const auto numFramesLeft = numFramesToProcess - startFrame;
+        const auto numFramesLeft = static_cast<choc::buffer::FrameCount> (numFramesToProcess) - startFrame;
 
         if (numFramesLeft == 0)
             break;
@@ -140,9 +146,11 @@ inline void processLoopedBack (EnginePlayer& player, choc::buffer::FrameCount nu
     }
 }
 
+//==============================================================================
 ///@internal
 void waitForFileToBeMapped (const AudioFile&);
 
+//==============================================================================
 inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDeviceInterface::Parameters p,
                                                          std::vector<AudioFile> filesToMap = {})
 {
@@ -160,9 +168,11 @@ inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDev
     return player;
 }
 
+//==============================================================================
 ///@internal
 inline void waitForFileToBeMapped (const AudioFile& af)
 {
+    using namespace std::literals;
     assert (af.engine);
 
     for (;;)
