@@ -2694,6 +2694,13 @@
       <arglist>(Edit &amp;, BeatRange)</arglist>
     </member>
     <member kind="function">
+      <type>EditItem *</type>
+      <name>findEditItemForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac161742cea6307e65faa1c7cae07a9a1</anchor>
+      <arglist>(Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; Track * &gt;</type>
       <name>getAllTracks</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -30586,6 +30593,13 @@
       <anchorfile>classtracktion_1_1engine_1_1EditItem.html</anchorfile>
       <anchor>a6b898d43783e33fdd3974262623a9a4c</anchor>
       <arglist>(EditItemID, Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>EditItem</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditItem.html</anchorfile>
+      <anchor>ab060cc2c9618adc1d46cc5223644be4b</anchor>
+      <arglist>(Edit &amp;, const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual</type>
@@ -61490,6 +61504,7 @@
   <compound kind="class">
     <name>tracktion::engine::RackType</name>
     <filename>classtracktion_1_1engine_1_1RackType.html</filename>
+    <base>tracktion::engine::EditItem</base>
     <base>tracktion::engine::Selectable</base>
     <base>tracktion::engine::MacroParameterElement</base>
     <class kind="struct">tracktion::engine::RackType::WindowState</class>
@@ -61504,8 +61519,8 @@
       <type></type>
       <name>RackType</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>a3a51ed5b0767a959c17c893910a1065c</anchor>
-      <arglist>(const juce::ValueTree &amp;, Edit &amp;)</arglist>
+      <anchor>a4576ca1940392c92b69cf54a7de2fac2</anchor>
+      <arglist>(Edit &amp;, const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -61653,6 +61668,13 @@
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
       <anchor>a336b1c0d59f00c63bd31b50e05ff6aed</anchor>
       <arglist>(Track &amp;, const juce::BigInteger &amp;channelMask, EditItemID pluginID, int pinIndex)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getName</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
+      <anchor>ac9e12f82a0165f6eef41f14934a6a954</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::StringArray</type>
@@ -61816,24 +61838,10 @@
       <arglist>() noexcept</arglist>
     </member>
     <member kind="variable">
-      <type>Edit &amp;</type>
-      <name>edit</name>
-      <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>af998b3aec4878b5458dd65d411712b4e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>juce::ValueTree</type>
       <name>state</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
       <anchor>ac4fd1d9a9170c10472c138778ba76fe4</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>EditItemID</type>
-      <name>rackID</name>
-      <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>aabd9e06b87bd2f0fa9b6cf1e8f98efe0</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -87901,6 +87909,13 @@
       <arglist>(Edit &amp;, BeatRange)</arglist>
     </member>
     <member kind="function">
+      <type>EditItem *</type>
+      <name>findEditItemForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac161742cea6307e65faa1c7cae07a9a1</anchor>
+      <arglist>(Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; Track * &gt;</type>
       <name>getAllTracks</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -90936,6 +90951,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -90945,18 +90965,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>

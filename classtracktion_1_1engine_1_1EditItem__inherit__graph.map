@@ -1,12 +1,13 @@
 <map id="tracktion::engine::EditItem" name="tracktion::engine::EditItem">
-<area shape="rect" id="node1" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,1313,145,1355"/>
+<area shape="rect" id="node1" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,1247,145,1288"/>
 <area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="193,692,355,733"/>
-<area shape="rect" id="node38" href="$classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="204,1280,344,1321"/>
-<area shape="rect" id="node39" href="$classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="204,1345,344,1387"/>
-<area shape="rect" id="node45" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="204,1593,344,1635"/>
+<area shape="rect" id="node37" href="$classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="204,1181,344,1223"/>
+<area shape="rect" id="node38" href="$classtracktion_1_1engine_1_1RackType.html" title=" " alt="" coords="204,1247,344,1288"/>
+<area shape="rect" id="node39" href="$classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="204,1312,344,1353"/>
+<area shape="rect" id="node45" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="204,1560,344,1601"/>
 <area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1MacroParameterList.html" title=" " alt="" coords="409,169,561,211"/>
 <area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="415,235,555,276"/>
-<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="415,1149,555,1191"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="415,1116,555,1157"/>
 <area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="616,5,824,47"/>
 <area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="625,71,815,112"/>
 <area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1LFOModifier.html" title=" " alt="" coords="650,136,790,177"/>
@@ -38,14 +39,13 @@
 <area shape="rect" id="node34" href="$classtracktion_1_1engine_1_1SamplerPlugin.html" title=" " alt="" coords="650,1835,790,1876"/>
 <area shape="rect" id="node35" href="$classtracktion_1_1engine_1_1TextPlugin.html" title=" " alt="" coords="650,1900,790,1941"/>
 <area shape="rect" id="node36" href="$classtracktion_1_1engine_1_1ToneGeneratorPlugin.html" title=" " alt="" coords="641,1965,799,2007"/>
-<area shape="rect" id="node37" href="$classtracktion_1_1engine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i..." alt="" coords="650,2031,790,2072"/>
-<area shape="rect" id="node40" href="$classtracktion_1_1engine_1_1AutomationTrack.html" title=" " alt="" coords="415,1215,555,1256"/>
-<area shape="rect" id="node41" href="$classtracktion_1_1engine_1_1ClipTrack.html" title=" " alt="" coords="415,1280,555,1321"/>
-<area shape="rect" id="node42" href="$classtracktion_1_1engine_1_1FolderTrack.html" title=" " alt="" coords="415,1345,555,1387"/>
-<area shape="rect" id="node43" href="$classtracktion_1_1engine_1_1MasterTrack.html" title="A track to represent the master plugins." alt="" coords="415,1411,555,1452"/>
-<area shape="rect" id="node44" href="$classtracktion_1_1engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc." alt="" coords="415,1476,555,1517"/>
-<area shape="rect" id="node46" href="$classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit." alt="" coords="403,1542,568,1569"/>
-<area shape="rect" id="node47" href="$classtracktion_1_1engine_1_1CollectionClip.html" title=" " alt="" coords="415,1593,555,1635"/>
-<area shape="rect" id="node48" href="$classtracktion_1_1engine_1_1PitchSetting.html" title=" " alt="" coords="415,1659,555,1700"/>
-<area shape="rect" id="node49" href="$classtracktion_1_1engine_1_1TimeSigSetting.html" title=" " alt="" coords="415,1724,555,1765"/>
+<area shape="rect" id="node40" href="$classtracktion_1_1engine_1_1AutomationTrack.html" title=" " alt="" coords="415,1181,555,1223"/>
+<area shape="rect" id="node41" href="$classtracktion_1_1engine_1_1ClipTrack.html" title=" " alt="" coords="415,1247,555,1288"/>
+<area shape="rect" id="node42" href="$classtracktion_1_1engine_1_1FolderTrack.html" title=" " alt="" coords="415,1312,555,1353"/>
+<area shape="rect" id="node43" href="$classtracktion_1_1engine_1_1MasterTrack.html" title="A track to represent the master plugins." alt="" coords="415,1377,555,1419"/>
+<area shape="rect" id="node44" href="$classtracktion_1_1engine_1_1TempoTrack.html" title="A track to represent the &quot;global&quot; items such as tempo, key changes etc." alt="" coords="415,1443,555,1484"/>
+<area shape="rect" id="node46" href="$classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit." alt="" coords="403,1509,568,1535"/>
+<area shape="rect" id="node47" href="$classtracktion_1_1engine_1_1CollectionClip.html" title=" " alt="" coords="415,1560,555,1601"/>
+<area shape="rect" id="node48" href="$classtracktion_1_1engine_1_1PitchSetting.html" title=" " alt="" coords="415,1625,555,1667"/>
+<area shape="rect" id="node49" href="$classtracktion_1_1engine_1_1TimeSigSetting.html" title=" " alt="" coords="415,1691,555,1732"/>
 </map>
