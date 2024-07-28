@@ -12,9 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
-    : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
-      state (v),
-      pluginList (ed)
+    : EditItem (ed, v), state (v), pluginList (ed)
 {
     edit.trackCache.addItem (*this);
     auto um = &edit.getUndoManager();

@@ -32,11 +32,14 @@ bool referencesProjectItem (Edit&, ProjectItemID);
 // Edit
 //==============================================================================
 
-/** Inserts blank space in to an Edit, splitting clips if necessary. */
+/// Inserts blank space in to an Edit, splitting clips if necessary.
 void insertSpaceIntoEdit (Edit&, TimeRange timeRangeToInsert);
 
-/** Inserts a number of blank beats in to the Edit. */
+/// Inserts a number of blank beats in to the Edit.
 void insertSpaceIntoEditFromBeatRange (Edit&, BeatRange);
+
+/// Looks for an item in an edit with a given ID
+EditItem* findEditItemForID (Edit&, EditItemID);
 
 //==============================================================================
 // Tracks

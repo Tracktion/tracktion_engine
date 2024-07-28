@@ -16,6 +16,12 @@ EditItem::EditItem (EditItemID id, Edit& ed)
 {
 }
 
+EditItem::EditItem (Edit& ed, const juce::ValueTree& v)
+    : edit (ed), itemID (EditItemID::readOrCreateNewID (ed, v))
+{
+}
+
+
 //==============================================================================
 EditItemID EditItemID::fromVar (const juce::var& v)
 {

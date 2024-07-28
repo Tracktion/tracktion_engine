@@ -187,10 +187,10 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
 };
 
 //==============================================================================
-RackType::RackType (const juce::ValueTree& v, Edit& owner)
-    : MacroParameterElement (owner, v),
-      edit (owner), state (v),
-      rackID (EditItemID::readOrCreateNewID (edit, state))
+RackType::RackType (Edit& ed, const juce::ValueTree& v)
+    : EditItem (ed, v),
+      MacroParameterElement (ed, v),
+      state (v)
 {
     CRASH_TRACER
 
@@ -300,7 +300,7 @@ juce::Result RackType::restoreStateFromValueTree (const juce::ValueTree& vt)
     if (! v.hasType (IDs::RACK))
         return juce::Result::fail (TRANS("Invalid or corrupted preset"));
 
-    rackID.writeID (v, nullptr);
+    itemID.writeID (v, nullptr);
 
     {
         auto um = getUndoManager();
@@ -1213,7 +1213,7 @@ struct RackTypeList::ValueTreeList  : public ValueTreeObjectList<RackType>
 
     RackType* createNewObject (const juce::ValueTree& v) override
     {
-        auto t = new RackType (v, list.edit);
+        auto t = new RackType (list.edit, v);
         t->incReferenceCount();
         return t;
     }
@@ -1281,7 +1281,7 @@ RackType::Ptr RackTypeList::getRackType (int index) const
 RackType::Ptr RackTypeList::getRackTypeForID (EditItemID rackID) const
 {
     for (auto r : list->objects)
-        if (r->rackID == rackID)
+        if (r->itemID == rackID)
             return *r;
 
     return {};

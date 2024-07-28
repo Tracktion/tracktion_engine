@@ -23,13 +23,14 @@ struct RackConnection
 
 
 //==============================================================================
-class RackType  : public Selectable,
+class RackType  : public EditItem,
+                  public Selectable,
                   public juce::ReferenceCountedObject,
                   public MacroParameterElement,
                   private juce::ValueTree::Listener
 {
 public:
-    RackType (const juce::ValueTree&, Edit&);
+    RackType (Edit&, const juce::ValueTree&);
     ~RackType() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<RackType>;
@@ -91,6 +92,8 @@ public:
                                      EditItemID pluginID, int pinIndex);
 
     //==============================================================================
+    juce::String getName() const override               { return rackName; }
+
     juce::StringArray getInputNames() const;
     juce::StringArray getOutputNames() const;
 
@@ -137,11 +140,7 @@ public:
     void saveWindowPosition();
     void hideWindowForShutdown();
 
-    Edit& edit;
-
-    juce::ValueTree state;    // do not change the order of
-    EditItemID rackID;        // these two members!
-
+    juce::ValueTree state;
     juce::CachedValue<juce::String> rackName;
 
 private:

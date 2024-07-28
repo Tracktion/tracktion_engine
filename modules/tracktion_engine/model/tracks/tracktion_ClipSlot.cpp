@@ -13,8 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 ClipSlot::ClipSlot (const juce::ValueTree& v, Track& t)
-    : EditItem (EditItemID::fromID (v), t.edit),
-      state (v), track (t)
+    : EditItem (t.edit, v), state (v), track (t)
 {
     assert (state.hasType (IDs::CLIPSLOT));
     assert (itemID.isValid());
