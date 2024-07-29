@@ -144,7 +144,7 @@ inline int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer)
 }
 
 inline std::optional<int> findSyncDeltaSamples (const juce::AudioBuffer<float>& testSound,
-                                                juce::AudioBuffer<float>& recorded)
+                                                const juce::AudioBuffer<float>& recorded)
 {
     auto referenceStart = findOffsetOfSpikes (testSound);
     jassert (referenceStart >= 0);
