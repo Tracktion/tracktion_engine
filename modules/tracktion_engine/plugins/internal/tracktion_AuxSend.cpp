@@ -54,6 +54,12 @@ bool AuxSendPlugin::shouldProcess()
 
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
+juce::ValueTree AuxSendPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
+}
+
 juce::String AuxSendPlugin::getName() const
 {
     juce::String nm (edit.getAuxBusName (busNumber));
@@ -170,6 +176,12 @@ void AuxSendPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
+}
+
+bool AuxSendPlugin::isOwnedBy (Track& t)
+{
+    const juce::ScopedLock sl (ownerTrackLock);
+    return &t == ownerTrack;
 }
 
 }} // namespace tracktion { inline namespace engine

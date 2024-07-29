@@ -1271,7 +1271,9 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         else if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
         {
             if (sendPlugin->isEnabled())
-                node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber, *sendPlugin,
+                node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber,
+                                              SampleRateAndBlockSize { params.sampleRate, params.blockSize },
+                                              *sendPlugin,
                                               playHeadState, trackMuteState,
                                               list.getEdit().engine.getEngineBehaviour().shouldProcessAuxSendWhenTrackIsMuted (*sendPlugin));
         }

@@ -33,6 +33,7 @@ public:
     //==============================================================================
     static const char* getPluginName()              { return NEEDS_TRANS("Aux Send"); }
     static const char* xmlTypeName;
+    static juce::ValueTree create();
 
     juce::String getName() const override;
     juce::String getShortName (int suggestedMaxLength) override;
@@ -58,6 +59,9 @@ public:
     juce::CachedValue<bool> invertPhase;
 
     AutomatableParameter::Ptr gain;
+
+    /// @internal N.B. used only for testing
+    bool isOwnedBy (Track&);
 
 private:
     bool shouldProcess();
