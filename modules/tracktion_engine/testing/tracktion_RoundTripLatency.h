@@ -178,6 +178,8 @@ inline LatencyTesterResult getLatencyTesterResult (DeviceManager& dm, int detect
 
     return res;
 }
+
+
 //==============================================================================
 //==============================================================================
 struct LatencyTester    : public juce::AudioIODeviceCallback,

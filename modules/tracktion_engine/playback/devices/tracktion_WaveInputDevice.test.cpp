@@ -29,6 +29,8 @@ namespace tracktion::inline engine
             auto& tc = edit->getTransport();
             tc.ensureContextAllocated();
 
+            CHECK_EQ(engine.getDeviceManager().getWaveInputDevices()[0]->getRecordAdjustment(), 0_td);
+
             auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, 1);
             auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
 
@@ -75,6 +77,7 @@ namespace tracktion::inline engine
             auto destAssignment = edit->getCurrentPlaybackContext()->getAllInputs()[0]->setTarget (destTrack.itemID, true, nullptr);
             (*destAssignment)->recordEnabled = true;
             edit->dispatchPendingUpdatesSynchronously();
+            CHECK_EQ(engine.getDeviceManager().getWaveInputDevices()[0]->getRecordAdjustment(), 0_td);
 
             test_utilities::TempCurrentWorkingDirectory tempDir;
             tc.record (false);

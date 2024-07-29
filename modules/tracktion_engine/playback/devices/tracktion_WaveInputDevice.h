@@ -34,6 +34,7 @@ public:
 
     //==============================================================================
     void setRecordAdjustment (TimeDuration);
+    TimeDuration getRecordAdjustment() const                    { return TimeDuration::fromSeconds (recordAdjustMs / 1000.0); }
     void setRecordAdjustmentMs (double ms);
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;
