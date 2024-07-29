@@ -25,8 +25,10 @@ public:
     //==============================================================================
     /** Creates a AuxSendNode to process an aux send. */
     AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
+                 SampleRateAndBlockSize,
                  AuxSendPlugin&, tracktion::graph::PlayHeadState&, const TrackMuteState*,
                  bool processAuxSendsWhenTrackIsMuted);
+    ~AuxSendNode() override;
 
     //==============================================================================
     NodeProperties getNodeProperties() override;
@@ -45,6 +47,7 @@ private:
 
     std::optional<NodeProperties> cachedNodeProperties;
     bool isPrepared = false;
+    bool isInitialised = false;
 };
 
 }} // namespace tracktion { inline namespace engine

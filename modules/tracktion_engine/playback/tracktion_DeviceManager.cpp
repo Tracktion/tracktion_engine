@@ -943,8 +943,8 @@ void DeviceManager::loadSettings()
     }
 
     auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
-    defaultWaveOutID = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType);
-    defaultWaveInID  = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType);
+    defaultWaveOutID = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, defaultWaveOutID);
+    defaultWaveInID  = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, defaultWaveInID);
 
     TRACKTION_LOG ("Audio block size: " + juce::String (getBlockSize())
                     + "  Rate: " + juce::String ((int) getSampleRate()));
@@ -1160,9 +1160,15 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
         rescanWaveDeviceList();
     }
 }
-
-std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices() const
+std::vector<WaveOutputDevice*> DeviceManager::getWaveOutputDevices()
 {
+    dispatchPendingUpdates();
+    return { waveOutputs.begin(), waveOutputs.end() };
+}
+
+std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices()
+{
+    dispatchPendingUpdates();
     return { waveInputs.begin(), waveInputs.end() };
 }
 
@@ -1338,8 +1344,8 @@ OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String& name)
 
 int DeviceManager::getRecordAdjustmentSamples()
 {
-    if (auto d = deviceManager.getCurrentAudioDevice())
-        return d->getOutputLatencyInSamples() + d->getInputLatencyInSamples();
+     if (auto d = deviceManager.getCurrentAudioDevice())
+         return d->getInputLatencyInSamples() + d->getOutputLatencyInSamples();
 
     return 0;
 }
@@ -1553,8 +1559,8 @@ void DeviceManager::prepareToStart()
         jassert (currentSampleRate > 0.0);
         currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
         outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
-        defaultWaveOutID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName());
-        defaultWaveInID  = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName());
+        defaultWaveOutID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), defaultWaveOutID);
+        defaultWaveInID  = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), defaultWaveInID);
 
         inputChannelsScratch.realloc (device->getInputChannelNames().size());
         outputChannelsScratch.realloc (device->getOutputChannelNames().size());

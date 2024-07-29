@@ -25,11 +25,11 @@ public:
             onDestroy (this);
     }
 
-    juce::StringArray getOutputChannelNames() override      { return audioIf.getOutputChannelNames();   }
-    juce::StringArray getInputChannelNames() override       { return audioIf.getInputChannelNames();    }
-    juce::Array<double> getAvailableSampleRates() override  { return { audioIf.parameters.sampleRate }; }
-    juce::Array<int> getAvailableBufferSizes() override     { return { audioIf.parameters.blockSize };  }
-    int getDefaultBufferSize() override                     { return audioIf.parameters.blockSize;      }
+    juce::StringArray getOutputChannelNames() override      { return audioIf.getOutputChannelNames();               }
+    juce::StringArray getInputChannelNames() override       { return audioIf.getInputChannelNames();                }
+    juce::Array<double> getAvailableSampleRates() override  { return { audioIf.parameters.sampleRate };             }
+    juce::Array<int> getAvailableBufferSizes() override     { return { audioIf.parameters.blockSize };              }
+    int getDefaultBufferSize() override                     { return audioIf.parameters.blockSize;                  }
 
     juce::String open (const juce::BigInteger& inputChannels,
                        const juce::BigInteger& outputChannels,
@@ -56,8 +56,8 @@ public:
     bool isPlaying() override                               { return true;  }
     juce::String getLastError() override                    { return {};    }
     int getCurrentBitDepth() override                       { return 16;    }
-    int getOutputLatencyInSamples() override                { return 0;     }
-    int getInputLatencyInSamples() override                 { return 0;     }
+    int getOutputLatencyInSamples() override                { return audioIf.parameters.outputLatencyNumSamples; }
+    int getInputLatencyInSamples() override                 { return audioIf.parameters.inputLatencyNumSamples; }
     bool hasControlPanel() const override                   { return false; }
     bool showControlPanel() override                        { return false; }
     bool setAudioPreprocessingEnabled (bool) override       { return false; }
@@ -346,17 +346,35 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
     jassert (dm.deviceManager.getCurrentAudioDeviceType() == "Hosted Device");
     jassert (dm.deviceManager.getCurrentDeviceTypeObject() == deviceType);
 
-    for (int i = 0; i < dm.getNumWaveOutDevices(); i++)
-        if (auto wo = dm.getWaveOutDevice (i))
-            wo->setEnabled (true);
+    // Outputs
+    {
+        if (parameters.outputLatencyNumSamples > 0)
+        {
+            outputLatencyProcessor = std::make_unique<LatencyProcessor>();
+            outputLatencyProcessor->setLatencyNumSamples (parameters.outputLatencyNumSamples);
+        }
 
-    for (int i = 0; i < dm.getNumWaveInDevices(); i++)
-        if (auto wi = dm.getWaveInDevice (i))
+        for (int i = 0; i < dm.getNumWaveOutDevices(); i++)
+            if (auto wo = dm.getWaveOutDevice (i))
+                wo->setEnabled (true);
+    }
+
+    // Inputs
+    {
+        if (parameters.inputLatencyNumSamples > 0)
+        {
+            inputLatencyProcessor = std::make_unique<LatencyProcessor>();
+            inputLatencyProcessor->setLatencyNumSamples (parameters.inputLatencyNumSamples);
+        }
+
+        // Set the stereo channels first and then dispatch this syncronously before
+        // changing the properties of the devices as they may have changed
+        for (auto wi : dm.getWaveInputDevices())
             wi->setStereoPair (false);
 
-    for (int i = 0; i < dm.getNumWaveInDevices(); i++)
-    {
-        if (auto wi = dm.getWaveInDevice (i))
+        dm.dispatchPendingUpdates();
+
+        for (auto wi : dm.getWaveInputDevices())
         {
             wi->setMonitorMode (InputDevice::MonitorMode::on);
             wi->setEnabled (true);
@@ -380,6 +398,12 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
         parameters.sampleRate = sampleRate;
         parameters.blockSize  = blockSize;
 
+        if (inputLatencyProcessor)
+            inputLatencyProcessor->prepareToPlay (sampleRate, blockSize, parameters.inputChannels);
+
+        if (outputLatencyProcessor)
+            outputLatencyProcessor->prepareToPlay (sampleRate, blockSize, parameters.outputChannels);
+
         if (deviceType != nullptr)
             deviceType->settingsChanged();
     }
@@ -387,6 +411,12 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
 
 void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
+    if (inputLatencyProcessor)
+    {
+        inputLatencyProcessor->writeAudio (toBufferView (buffer));
+        inputLatencyProcessor->readAudioOverwriting (toBufferView (buffer));
+    }
+
     for (auto input : midiInputs)
         if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
             hostedInput->processBlock (midi);
@@ -395,6 +425,12 @@ void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer,
 
     if (deviceType != nullptr)
         deviceType->processBlock (buffer);
+
+    if (outputLatencyProcessor)
+    {
+        outputLatencyProcessor->writeAudio (toBufferView (buffer));
+        outputLatencyProcessor->readAudioOverwriting (toBufferView (buffer));
+    }
 
     for (auto output : midiOutputs)
         if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))

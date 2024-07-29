@@ -19,6 +19,7 @@
 #define GRAPH_UNIT_TESTS_EDITNODE                       1
 
 #define ENGINE_UNIT_TESTS_AUTOMATION                    1
+#define ENGINE_UNIT_TESTS_AUX_SEND                      1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
@@ -27,6 +28,7 @@
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
 #define ENGINE_UNIT_TESTS_FOLLOW_ACTIONS                1
+#define ENGINE_UNIT_TESTS_LATENCY                       1
 #define ENGINE_UNIT_TESTS_LAUNCH_HANDLE                 1
 #define ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE 1
 #define ENGINE_UNIT_TESTS_LAUNCH_QUANTISATION           1
@@ -47,6 +49,7 @@
 #define ENGINE_UNIT_TESTS_VOLPANPLUGIN                  1
 #define ENGINE_UNIT_TESTS_TEMPO_SEQUENCE                1
 #define ENGINE_UNIT_TESTS_QUANTISATION_TYPE             1
+#define ENGINE_UNIT_TESTS_WAVE_INPUT_DEVICE             1
 
 // Defined in tracktion_graph
 #define GRAPH_UNIT_TESTS_PLAYHEAD                       1

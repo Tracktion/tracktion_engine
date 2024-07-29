@@ -1324,5 +1324,21 @@ bool isRecording (EditPlaybackContext& epc)
     return false;
 }
 
+InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, const AudioTrack& sourceTrack, InputDevice::DeviceType type)
+{
+    assert (&sourceTrack.edit == &destTrack.edit);
+    assert (type == InputDevice::trackMidiDevice || type == InputDevice::trackWaveDevice);
+
+    auto& edit = destTrack.edit;
+    auto sourceDevice = type == InputDevice::trackMidiDevice
+                            ? static_cast<InputDevice*> (&sourceTrack.getMidiInputDevice())
+                            : static_cast<InputDevice*> (&sourceTrack.getWaveInputDevice());
+    edit.getTransport().ensureContextAllocated();
+    edit.getEditInputDevices().getInstanceStateForInputDevice (*sourceDevice);
+    auto res = edit.getCurrentPlaybackContext()->getInputFor (sourceDevice)->setTarget (destTrack.itemID, false, nullptr);
+
+    return res ? *res : nullptr;
+}
+
 
 }} // namespace tracktion { inline namespace engine

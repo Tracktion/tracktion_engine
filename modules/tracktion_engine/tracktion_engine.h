@@ -263,10 +263,11 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
-namespace tracktion { inline namespace graph
+namespace tracktion::inline graph
 {
     class PlayHead;
-}}
+    struct LatencyProcessor;
+}
 
 //==============================================================================
 #include "../tracktion_core/tracktion_core.h"

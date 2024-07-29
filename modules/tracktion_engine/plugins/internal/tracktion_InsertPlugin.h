@@ -27,6 +27,7 @@ public:
     //==============================================================================
     static const char* getPluginName()          { return NEEDS_TRANS("Insert"); }
     static const char* xmlTypeName;
+    static juce::ValueTree create();
 
     juce::String getName() const override;
     juce::String getPluginType() override;
@@ -53,7 +54,6 @@ public:
     juce::CachedValue<double> manualAdjustMs;
 
     void updateDeviceTypes();
-    void showLatencyTester();
 
     /** Returns true if either the send or return types are audio. */
     bool hasAudio() const;

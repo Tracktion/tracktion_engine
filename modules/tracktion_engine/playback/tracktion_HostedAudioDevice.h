@@ -50,6 +50,12 @@ public:
 
         /** Names of your audio channels. If left empty, names will automatically be generated */
         juce::StringArray inputNames, outputNames;
+
+        /** @internal The number of samples to delay the input by. N.B. For testing only. */
+        int inputLatencyNumSamples = 0;
+
+        /** @internal The number of samples to delay the output by. N.B. For testing only. */
+        int outputLatencyNumSamples = 0;
     };
 
     void initialise (const Parameters&);
@@ -84,6 +90,7 @@ private:
     juce::Array<MidiInputDevice*> midiInputs;
 
     int maxChannels = 0;
+    std::unique_ptr<LatencyProcessor> inputLatencyProcessor, outputLatencyProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HostedAudioDeviceInterface)
 };

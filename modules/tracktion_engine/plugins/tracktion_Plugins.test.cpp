@@ -394,6 +394,34 @@ TEST_SUITE ("tracktion_engine")
 }
 #endif
 
+#if ENGINE_UNIT_TESTS_AUX_SEND
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("Aux send initialising")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto& tc = edit->getTransport();
+        auto player = test_utilities::createEnginePlayer (*edit, {});
+
+        auto audioTracks = getTracksOfType<AudioTrack> (*edit, false);
+        auto send = insertNewPlugin<AuxSendPlugin> (*audioTracks[0]);
+        CHECK (send->baseClassNeedsInitialising());
+        edit->dispatchPendingUpdatesSynchronously();
+
+        tc.ensureContextAllocated();
+        CHECK (send->isOwnedBy (*audioTracks[0]));
+        CHECK (! send->baseClassNeedsInitialising());
+
+        send->removeFromParent();
+        audioTracks[1]->pluginList.insertPlugin (send, 0, {});
+        tc.ensureContextAllocated (true);
+        CHECK (send->isOwnedBy (*audioTracks[1]));
+        CHECK (! send->baseClassNeedsInitialising());
+    }
+}
+#endif
+
 } // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS

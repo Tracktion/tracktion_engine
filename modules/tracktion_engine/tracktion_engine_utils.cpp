@@ -67,6 +67,8 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #include "selection/tracktion_SelectionManager.cpp"
 #include "selection/tracktion_SelectionManager.test.cpp"
 
+#include "testing/tracktion_RoundTripLatency.test.cpp"
+
 #include "utilities/tracktion_AppFunctions.cpp"
 #include "utilities/tracktion_AudioUtilities.cpp"
 #include "utilities/tracktion_ConstrainedCachedValue.cpp"

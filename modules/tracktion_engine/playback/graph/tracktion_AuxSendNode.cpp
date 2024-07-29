@@ -14,6 +14,7 @@ namespace tracktion { inline namespace engine
 {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
+                          SampleRateAndBlockSize info,
                           AuxSendPlugin& sourceSendPlugin, tracktion::graph::PlayHeadState& phs,
                           const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)
     : SendNode (std::move (inputNode), busIDToUse,
@@ -45,6 +46,15 @@ AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
       sendPlugin (sourceSendPlugin)
 {
     jassert (pluginPtr != nullptr);
+
+    sendPlugin.baseClassInitialise ({ TimePosition(), info.sampleRate, info.blockSize });
+    isInitialised = true;
+}
+
+AuxSendNode::~AuxSendNode()
+{
+    if (isInitialised && ! sendPlugin.baseClassNeedsInitialising())
+        sendPlugin.baseClassDeinitialise();
 }
 
 //==============================================================================

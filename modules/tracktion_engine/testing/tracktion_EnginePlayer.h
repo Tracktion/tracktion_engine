@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../../3rd_party/nanorange/tracktion_nanorange.hpp"
+#include "../../tracktion_graph/utilities/tracktion_GlueCode.h"
 
 ///@internal
 namespace tracktion::inline engine
@@ -20,6 +21,8 @@ namespace tracktion::inline engine
 namespace test_utilities
 {
 
+//==============================================================================
+//==============================================================================
 class EnginePlayer
 {
 public:
@@ -38,7 +41,7 @@ public:
         assert (! engine.getDeviceManager().isHostedAudioDeviceInterfaceInUse());
     }
 
-    juce::AudioBuffer<float> process ( std::integral auto numSamples)
+    juce::AudioBuffer<float> process (std::integral auto numSamples)
     {
         juce::AudioBuffer<float> inputAudio (params.inputChannels, static_cast<int> (numSamples));
         inputAudio.clear();
@@ -101,6 +104,11 @@ public:
         return destBuffer;
     }
 
+    HostedAudioDeviceInterface::Parameters getParams() const
+    {
+        return params;
+    }
+
 private:
     Engine& engine;
     HostedAudioDeviceInterface::Parameters params;
@@ -109,9 +117,40 @@ private:
     int numSamplesProcessed = 0;
 };
 
+
+//==============================================================================
+//==============================================================================
+inline void processLoopedBack (EnginePlayer& player, std::integral auto numFramesToProcess)
+{
+    using namespace choc::buffer;
+    const auto numInputChannels = static_cast<ChannelCount> (player.getParams().inputChannels);
+    FrameCount startFrame = 0;
+    ChannelArrayBuffer<float> scratchBuffer (choc::buffer::Size::create (numInputChannels, player.getParams().blockSize));
+    scratchBuffer.clear();
+
+    for (;;)
+    {
+        const auto numFramesLeft = static_cast<choc::buffer::FrameCount> (numFramesToProcess) - startFrame;
+
+        if (numFramesLeft == 0)
+            break;
+
+        const auto numFramesThisTime = std::min (scratchBuffer.getNumFrames(), numFramesLeft);
+
+        auto blockInput = scratchBuffer.getStart (numFramesThisTime);
+        auto bufferInput = toAudioBuffer (blockInput);
+        auto bufferOutput = player.process (bufferInput);
+        copyIntersectionAndClearOutside (scratchBuffer, toBufferView (bufferOutput));
+
+        startFrame += numFramesThisTime;
+    }
+}
+
+//==============================================================================
 ///@internal
 void waitForFileToBeMapped (const AudioFile&);
 
+//==============================================================================
 inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDeviceInterface::Parameters p,
                                                          std::vector<AudioFile> filesToMap = {})
 {
@@ -129,9 +168,11 @@ inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDev
     return player;
 }
 
+//==============================================================================
 ///@internal
 inline void waitForFileToBeMapped (const AudioFile& af)
 {
+    using namespace std::literals;
     assert (af.engine);
 
     for (;;)

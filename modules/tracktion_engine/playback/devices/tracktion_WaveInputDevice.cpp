@@ -1193,6 +1193,11 @@ public:
                                                                             (choc::buffer::FrameCount) numSamples));
         }
 
+        // If we haven't actually started playing yet, don't record the block as we
+        // might get more than one block for the same position
+        if (! context.isPlaying())
+            return;
+
         {
             const auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
             const std::shared_lock sl (contextLock);
@@ -1498,6 +1503,11 @@ void WaveInputDevice::setStereoPair (bool stereo)
         dm.setDeviceInChannelStereo (std::max (deviceChannels[0].indexInDevice, deviceChannels[1].indexInDevice), stereo);
     else if (deviceChannels.size() == 1)
         dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
+}
+
+void WaveInputDevice::setRecordAdjustment (TimeDuration d)
+{
+    setRecordAdjustmentMs (d.inSeconds() * 1000.0);
 }
 
 void WaveInputDevice::setRecordAdjustmentMs (double ms)
