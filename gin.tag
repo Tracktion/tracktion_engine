@@ -3134,6 +3134,13 @@
       <anchor>ab909bad277a9242846beb493f99bd48d</anchor>
       <arglist>(EditPlaybackContext &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>assignTrackAsInput</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af2738f3ef9ba3cd1b1b2971226ad5be9</anchor>
+      <arglist>(AudioTrack &amp;destinationTrack, const AudioTrack &amp;sourceTrack, InputDevice::DeviceType)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_Engine.h</name>
@@ -3159,6 +3166,7 @@
     <name>tracktion_EnginePlayer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/testing/</path>
     <filename>tracktion__EnginePlayer_8h.html</filename>
+    <includes id="tracktion__GlueCode_8h" name="tracktion_GlueCode.h" local="yes" imported="no">../../tracktion_graph/utilities/tracktion_GlueCode.h</includes>
   </compound>
   <compound kind="file">
     <name>tracktion_Envelope.h</name>
@@ -5458,6 +5466,12 @@
     <filename>tracktion__RexFileFormat_8h.html</filename>
   </compound>
   <compound kind="file">
+    <name>tracktion_RoundTripLatency.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/testing/</path>
+    <filename>tracktion__RoundTripLatency_8h.html</filename>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_SafeScopedListener.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__SafeScopedListener_8h.html</filename>
@@ -5935,8 +5949,8 @@
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>writeToTemporaryFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>a576c470f30e912d743265fa1a7274fb8</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+      <anchor>aa33c2029ce8b5e1a6ccc174be8310aa5</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex=0)</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -6399,8 +6413,8 @@
       <type>constexpr int64_t</type>
       <name>timeToSample</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
-      <anchor>af29b9102809a7aa4a1419849e2e45312</anchor>
-      <arglist>(double timeInSeconds, double sampleRate)</arglist>
+      <anchor>adb6b4da97d8e333b68b622ef5a030645</anchor>
+      <arglist>(std::floating_point auto timeInSeconds, double sampleRate)</arglist>
     </member>
     <member kind="function">
       <type>constexpr juce::Range&lt; double &gt;</type>
@@ -14881,8 +14895,15 @@
       <type></type>
       <name>AuxSendNode</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendNode.html</anchorfile>
-      <anchor>a99fd63e9ee28577e5372efcc266f9e1d</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, AuxSendPlugin &amp;, tracktion::graph::PlayHeadState &amp;, const TrackMuteState *, bool processAuxSendsWhenTrackIsMuted)</arglist>
+      <anchor>ae6140141f03092616489ee4e4adb1127</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, SampleRateAndBlockSize, AuxSendPlugin &amp;, tracktion::graph::PlayHeadState &amp;, const TrackMuteState *, bool processAuxSendsWhenTrackIsMuted)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~AuxSendNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1AuxSendNode.html</anchorfile>
+      <anchor>ad4dfdfbc3f0b1f5a1ce9ebdde1e87b6b</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>NodeProperties</type>
@@ -15064,6 +15085,13 @@
       <anchor>a01e15a2756917a9753603607a1c254c9</anchor>
       <arglist>(const juce::ValueTree &amp;) override</arglist>
     </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isOwnedBy</name>
+      <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>
+      <anchor>af67ff677d1f04350ad7ee4af4b85bd41</anchor>
+      <arglist>(Track &amp;)</arglist>
+    </member>
     <member kind="function" static="yes">
       <type>static juce::StringArray</type>
       <name>getBusNames</name>
@@ -15083,6 +15111,13 @@
       <name>getPluginName</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>
       <anchor>a0b5ceba1c5fd7ddd15e972c19ad8de85</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::ValueTree</type>
+      <name>create</name>
+      <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>
+      <anchor>ac543a04e73b87f1c073aa5abf9faf9dd</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -28050,6 +28085,13 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>std::vector&lt; WaveOutputDevice * &gt;</type>
+      <name>getWaveOutputDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>ab9bb7cb69a1001ae9d1ca29670fbfc56</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>setWaveOutChannelsEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -28081,8 +28123,8 @@
       <type>std::vector&lt; WaveInputDevice * &gt;</type>
       <name>getWaveInputDevices</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a14edffe701d46362aec1c50d356f2366</anchor>
-      <arglist>() const</arglist>
+      <anchor>a7891b0ba074ab663a0e05f73b54fbe3c</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -39857,13 +39899,6 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>showLatencyTester</name>
-      <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
-      <anchor>a80e1193ed7cb2388c3b3370f9ee97a33</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
       <type>bool</type>
       <name>hasAudio</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
@@ -39889,6 +39924,13 @@
       <name>getPluginName</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
       <anchor>af3d4726f72bb666ea4a6255317cddaca</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::ValueTree</type>
+      <name>create</name>
+      <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
+      <anchor>a80870c89295e06df23431e028339da05</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -53322,6 +53364,20 @@
       <name>outputNames</name>
       <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
       <anchor>a18506932872b517b1be4c078ba689256</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputLatencyNumSamples</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a100b0a71422e17e27ba15acb357294a9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputLatencyNumSamples</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a6cfbf40e36e11c7c78e5af72c30b9c84</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -85418,6 +85474,20 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>setRecordAdjustment</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
+      <anchor>a1c4e6f7ec70cb20a5b48265c02ecd9aa</anchor>
+      <arglist>(TimeDuration)</arglist>
+    </member>
+    <member kind="function">
+      <type>TimeDuration</type>
+      <name>getRecordAdjustment</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
+      <anchor>a3543494806bd7a8b87822800ac917fa3</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>setRecordAdjustmentMs</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
       <anchor>aef8f24124bb66758ffeed27aa67eee74</anchor>
@@ -88350,6 +88420,13 @@
       <arglist>(EditPlaybackContext &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>InputDeviceInstance::Destination *</type>
+      <name>assignTrackAsInput</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af2738f3ef9ba3cd1b1b2971226ad5be9</anchor>
+      <arglist>(AudioTrack &amp;destinationTrack, const AudioTrack &amp;sourceTrack, InputDevice::DeviceType)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::StringArray</type>
       <name>getLaunchQTypeChoices</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -90622,8 +90699,8 @@
       <type>constexpr int64_t</type>
       <name>timeToSample</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
-      <anchor>af29b9102809a7aa4a1419849e2e45312</anchor>
-      <arglist>(double timeInSeconds, double sampleRate)</arglist>
+      <anchor>adb6b4da97d8e333b68b622ef5a030645</anchor>
+      <arglist>(std::floating_point auto timeInSeconds, double sampleRate)</arglist>
     </member>
     <member kind="function">
       <type>constexpr juce::Range&lt; double &gt;</type>
@@ -90787,8 +90864,8 @@
       <type>std::unique_ptr&lt; juce::TemporaryFile &gt;</type>
       <name>writeToTemporaryFile</name>
       <anchorfile>namespacetracktion_1_1graph_1_1test__utilities.html</anchorfile>
-      <anchor>a576c470f30e912d743265fa1a7274fb8</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex)</arglist>
+      <anchor>aa33c2029ce8b5e1a6ccc174be8310aa5</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block, double sampleRate, int qualityOptionIndex=0)</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>

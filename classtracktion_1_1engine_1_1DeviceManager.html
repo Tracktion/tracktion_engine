@@ -183,6 +183,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a502366520b33bd824b1deca7b7c0af9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a9ccbfbc3c782eada0d305107ee8ebd"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a6a9ccbfbc3c782eada0d305107ee8ebd">getDefaultWaveInDeviceID</a> () const</td></tr>
 <tr class="separator:a6a9ccbfbc3c782eada0d305107ee8ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9bb7cb69a1001ae9d1ca29670fbfc56"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab9bb7cb69a1001ae9d1ca29670fbfc56">getWaveOutputDevices</a> ()</td></tr>
+<tr class="separator:ab9bb7cb69a1001ae9d1ca29670fbfc56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0d030552f42eb4923be9c1496128af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af0d030552f42eb4923be9c1496128af0">setWaveOutChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
 <tr class="separator:af0d030552f42eb4923be9c1496128af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6f19c469e63276e83f3e82cec9c3c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1e6f19c469e63276e83f3e82cec9c3c8">setDeviceOutChannelStereo</a> (int channelNum, bool isStereoPair)</td></tr>
@@ -191,8 +193,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac47d8038b6bce0f63120d5786e955403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85dae6add1c6f573ef39e2e61a236ef1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a85dae6add1c6f573ef39e2e61a236ef1">isDeviceOutEnabled</a> (int chanNum)</td></tr>
 <tr class="separator:a85dae6add1c6f573ef39e2e61a236ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14edffe701d46362aec1c50d356f2366"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a14edffe701d46362aec1c50d356f2366">getWaveInputDevices</a> () const</td></tr>
-<tr class="separator:a14edffe701d46362aec1c50d356f2366"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7891b0ba074ab663a0e05f73b54fbe3c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7891b0ba074ab663a0e05f73b54fbe3c">getWaveInputDevices</a> ()</td></tr>
+<tr class="separator:a7891b0ba074ab663a0e05f73b54fbe3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add7e1a2dd9c98adcbf59e358864371c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#add7e1a2dd9c98adcbf59e358864371c9">setWaveInChannelsEnabled</a> (const std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;, bool)</td></tr>
 <tr class="separator:add7e1a2dd9c98adcbf59e358864371c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3ea9fed94a65f3ecd7944557373479d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af3ea9fed94a65f3ecd7944557373479d">setDeviceInChannelStereo</a> (int channelNum, bool isStereoPair)</td></tr>
@@ -1167,6 +1169,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ab9bb7cb69a1001ae9d1ca29670fbfc56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9bb7cb69a1001ae9d1ca29670fbfc56">&#9670;&nbsp;</a></span>getWaveOutputDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a>*&gt; tracktion::engine::DeviceManager::getWaveOutputDevices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af0d030552f42eb4923be9c1496128af0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af0d030552f42eb4923be9c1496128af0">&#9670;&nbsp;</a></span>setWaveOutChannelsEnabled()</h2>
 
@@ -1259,8 +1278,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a14edffe701d46362aec1c50d356f2366"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14edffe701d46362aec1c50d356f2366">&#9670;&nbsp;</a></span>getWaveInputDevices()</h2>
+<a id="a7891b0ba074ab663a0e05f73b54fbe3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7891b0ba074ab663a0e05f73b54fbe3c">&#9670;&nbsp;</a></span>getWaveInputDevices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1269,7 +1288,7 @@ Public Attributes</h2></td></tr>
           <td class="memname">std::vector&lt;<a class="el" href="classtracktion_1_1engine_1_1WaveInputDevice.html">WaveInputDevice</a>*&gt; tracktion::engine::DeviceManager::getWaveInputDevices </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2077,7 +2096,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 28 2024 15:18:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 29 2024 12:59:03 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

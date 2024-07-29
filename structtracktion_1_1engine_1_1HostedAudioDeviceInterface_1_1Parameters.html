@@ -98,6 +98,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab87998d992d56dbb1b2fc7bf3207e82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18506932872b517b1be4c078ba689256"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a18506932872b517b1be4c078ba689256">outputNames</a></td></tr>
 <tr class="separator:a18506932872b517b1be4c078ba689256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a100b0a71422e17e27ba15acb357294a9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a100b0a71422e17e27ba15acb357294a9">inputLatencyNumSamples</a> = 0</td></tr>
+<tr class="separator:a100b0a71422e17e27ba15acb357294a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cfbf40e36e11c7c78e5af72c30b9c84"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a6cfbf40e36e11c7c78e5af72c30b9c84">outputLatencyNumSamples</a> = 0</td></tr>
+<tr class="separator:a6cfbf40e36e11c7c78e5af72c30b9c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Holds the parameters being used by an <a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html" title="The HostedAudioDeviceInterface allows an application or plugin to pass audio and midi buffers to the ...">HostedAudioDeviceInterface</a>. </p>
@@ -215,13 +219,43 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a100b0a71422e17e27ba15acb357294a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a100b0a71422e17e27ba15acb357294a9">&#9670;&nbsp;</a></span>inputLatencyNumSamples</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::HostedAudioDeviceInterface::Parameters::inputLatencyNumSamples = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of samples to delay the input by. N.B. For testing only. </p>
+
+</div>
+</div>
+<a id="a6cfbf40e36e11c7c78e5af72c30b9c84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfbf40e36e11c7c78e5af72c30b9c84">&#9670;&nbsp;</a></span>outputLatencyNumSamples</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::HostedAudioDeviceInterface::Parameters::outputLatencyNumSamples = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The number of samples to delay the output by. N.B. For testing only. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__HostedAudioDevice_8h.html">tracktion_HostedAudioDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jul 28 2024 15:18:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Jul 29 2024 12:59:03 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
