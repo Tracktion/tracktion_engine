@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 AutomatableEditItem::AutomatableEditItem (Edit& ed, const juce::ValueTree& v)
-    : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
+    : EditItem (ed, v),
       elementState (v)
 {
     remapOnTempoChange.referTo (elementState, IDs::remapOnTempoChange, &edit.getUndoManager(), false);

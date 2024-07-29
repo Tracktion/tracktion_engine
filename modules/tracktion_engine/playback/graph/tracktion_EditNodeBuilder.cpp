@@ -1597,8 +1597,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track& track, const 
 //==============================================================================
 std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNodeParams& params)
 {
-    const auto rackInputID = getRackInputBusID (rackType.rackID);
-    const auto rackOutputID = getRackOutputBusID (rackType.rackID);
+    const auto rackInputID = getRackInputBusID (rackType.itemID);
+    const auto rackOutputID = getRackOutputBusID (rackType.itemID);
 
     auto rackInputNode = makeNode<ReturnNode> (rackInputID);
     auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),

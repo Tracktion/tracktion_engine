@@ -87,6 +87,7 @@ class EditItem
 {
 public:
     EditItem (EditItemID, Edit&);
+    EditItem (Edit&, const juce::ValueTree&);
     virtual ~EditItem() = default;
 
     //==============================================================================

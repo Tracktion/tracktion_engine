@@ -70,6 +70,29 @@ void insertSpaceIntoEditFromBeatRange (Edit& edit, BeatRange beatRange)
     insertSpaceIntoEdit (edit, TimeRange (timeToInsertAt, lengthInTimeToInsert));
 }
 
+EditItem* findEditItemForID (Edit& edit, EditItemID itemID)
+{
+    if (auto item = findTrackForID (edit, itemID))
+        return item;
+
+    if (auto item = findClipForID (edit, itemID))
+        return item;
+
+    if (auto item = findPluginForID (edit, itemID))
+        return item.get();
+
+    if (auto item = findModifierForID (edit, itemID))
+        return item.get();
+
+    if (auto item = findClipSlotForID (edit, itemID))
+        return item;
+
+    if (auto item = edit.getRackList().getRackTypeForID (itemID))
+        return item.get();
+
+    return {};
+}
+
 //==============================================================================
 juce::Array<Track*> getAllTracks (const Edit& edit)
 {
