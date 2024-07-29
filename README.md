@@ -93,14 +93,14 @@ For prices, see the [Tracktion Developers Page](https://www.tracktion.com/develo
 
 ___
 Tracktion Engine utilises and contains copies of the following libraries. Please make sure you adhere to the license terms where necessary:
-- [rpmalloc](github.com/mjansson/rpmalloc) - Public domain
-- [moodycamel::ConcurrentQueue](github.com/cameron314/concurrentqueue) - Simplified BSD/BSL
-- [choc](github.com/Tracktion/choc) - ISC
-- [crill](github.com/crill-dev/crill) - BSL-1.0
-- [expected](github.com/TartanLlama/expected) - CC0 1.0
-- [libsamplerate](github.com/libsndfile/libsamplerate) - BSD-2-Clause
-- [nanorange](github.com/tcbrindle/NanoRange) - BSL-1.0
-- [rigtorp/MPMCQueue](github.com/rigtorp/MPMCQueue) - MIT
-- [magic_enum](github.com/Neargye/magic_enum) - MIT
-- [farbot](github.com/hogliux/farbot) - MIT
-- [doctest](github.com/doctest/doctest) - MIT
+- [rpmalloc](https://www.github.com/mjansson/rpmalloc) - Public domain
+- [moodycamel::ConcurrentQueue](https://www.github.com/cameron314/concurrentqueue) - Simplified BSD/BSL
+- [choc](https://www.github.com/Tracktion/choc) - ISC
+- [crill](https://www.github.com/crill-dev/crill) - BSL-1.0
+- [expected](https://www.github.com/TartanLlama/expected) - CC0 1.0
+- [libsamplerate](https://www.github.com/libsndfile/libsamplerate) - BSD-2-Clause
+- [nanorange](https://www.github.com/tcbrindle/NanoRange) - BSL-1.0
+- [rigtorp/MPMCQueue](https://www.github.com/rigtorp/MPMCQueue) - MIT
+- [magic_enum](https://www.github.com/Neargye/magic_enum) - MIT
+- [farbot](https://www.github.com/hogliux/farbot) - MIT
+- [doctest](https://www.github.com/doctest/doctest) - MIT
