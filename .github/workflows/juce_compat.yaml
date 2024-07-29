@@ -45,6 +45,7 @@ jobs:
       - name: Update juce to tip
         run: |
           cd modules/juce
+          git config pull.rebase false # merge changes
           git pull origin develop
 
       # Generate build files
