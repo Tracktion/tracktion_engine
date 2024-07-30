@@ -79,7 +79,7 @@ public:
     bool needsConstantBufferSize() override { return false; }
     void trackPropertiesChanged() override;
 
-    juce::AudioProcessor* getWrappedAudioProcessor() const override     { return pluginInstance.get(); }
+    juce::AudioProcessor* getWrappedAudioProcessor() const override     { return getAudioPluginInstance(); }
     void deleteFromParent() override;
 
     //==============================================================================
@@ -130,12 +130,14 @@ public:
 
 private:
     //==============================================================================
-    juce::CriticalSection lock;
+    juce::CriticalSection processMutex;
     juce::String debugName, identiferString, loadError;
 
-    struct ProcessorChangedManager;
-    std::unique_ptr<juce::AudioPluginInstance> pluginInstance;
-    std::unique_ptr<ProcessorChangedManager> processorChangedManager;
+    class ProcessorChangedManager;
+    class LoadedInstance;
+    std::unique_ptr<LoadedInstance> loadedInstance;
+    std::atomic<bool> hasLoadedInstance { false };
+
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;
     double latencySeconds = 0;
@@ -162,7 +164,7 @@ private:
     juce::Array<ExternalAutomatableParameter*> autoParamForParamNumbers;
 
     //==============================================================================
-    juce::String createPluginInstance (const juce::PluginDescription&);
+    void createPluginInstance (const juce::PluginDescription&);
     void deletePluginInstance();
 
     //==============================================================================
@@ -174,7 +176,7 @@ private:
     void buildParameterList();
     void refreshParameterValues();
     void updateDebugName();
-    void processPluginBlock (const PluginRenderContext&, bool processedBypass);
+    void processPluginBlock (juce::AudioPluginInstance&, const PluginRenderContext&, bool processedBypass);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
     std::unique_ptr<juce::PluginDescription> findDescForUID (int uid, int deprecatedUid) const;
