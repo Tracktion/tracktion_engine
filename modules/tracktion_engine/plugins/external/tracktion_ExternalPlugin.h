@@ -136,12 +136,11 @@ private:
     class ProcessorChangedManager;
     class LoadedInstance;
     std::unique_ptr<LoadedInstance> loadedInstance;
-    std::atomic<bool> hasLoadedInstance { false };
+    std::atomic<bool> hasLoadedInstance { false }, isInstancePrepared { false };
 
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;
     double latencySeconds = 0;
-    bool isInstancePrepared = false;
 
     double lastSampleRate = 0.0;
     int lastBlockSizeSamples = 0;
@@ -164,7 +163,8 @@ private:
     juce::Array<ExternalAutomatableParameter*> autoParamForParamNumbers;
 
     //==============================================================================
-    void createPluginInstance (const juce::PluginDescription&);
+    void startPluginInstanceCreation (const juce::PluginDescription&);
+    void completePluginInstanceCreation (std::unique_ptr<juce::AudioPluginInstance>);
     void deletePluginInstance();
 
     //==============================================================================
@@ -183,6 +183,9 @@ private:
     std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+
+    //==============================================================================
+    static bool requiresAsyncInstantiation (Engine&, const juce::PluginDescription&);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalPlugin)

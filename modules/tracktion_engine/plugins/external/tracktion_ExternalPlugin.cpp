@@ -592,25 +592,18 @@ juce::String ExternalPlugin::getLoadError()
     if (hasLoadedInstance)
         return {};
 
-    if (loadError.isEmpty())
-        return TRANS("ERROR! - This plugin couldn't be loaded!");
-
-    return loadError;
+    return loadError.isEmpty() ? TRANS("ERROR! - This plugin couldn't be loaded!")
+                               : loadError;
 }
 
 const char* ExternalPlugin::xmlTypeName = "vst";
 
 void ExternalPlugin::initialiseFully()
 {
-    if (! fullyInitialised)
+    if (! std::exchange (fullyInitialised, true))
     {
         CRASH_TRACER_PLUGIN (getDebugName());
-        fullyInitialised = true;
-
         doFullInitialisation();
-        restorePluginStateFromValueTree (state);
-        buildParameterList();
-        restoreChannelLayout (*this);
     }
 }
 
@@ -853,7 +846,6 @@ void ExternalPlugin::doFullInitialisation()
         identiferString = createIdentifierString (desc);
         updateDebugName();
 
-
         if (processing && ! hasLoadedInstance
             && engine.getEngineBehaviour().shouldLoadPlugin (*this))
         {
@@ -866,27 +858,8 @@ void ExternalPlugin::doFullInitialisation()
             callBlocking ([this, &foundDesc]
             {
                 CRASH_TRACER_PLUGIN (getDebugName());
-                createPluginInstance (*foundDesc);
+                startPluginInstanceCreation (*foundDesc);
             });
-
-            if (auto pi = getAudioPluginInstance())
-            {
-               #if JUCE_PLUGINHOST_VST
-                if (auto xml = juce::VSTPluginFormat::getVSTXML (pi))
-                    vstXML.reset (VSTXML::createFor (*xml));
-
-                juce::VSTPluginFormat::setExtraFunctions (pi, new ExtraVSTCallbacks (edit));
-               #endif
-
-                pi->setPlayHead (playhead.get());
-                supportsMPE = pi->supportsMPE();
-
-                engine.getEngineBehaviour().doAdditionalInitialisation (*this);
-            }
-            else
-            {
-                TRACKTION_LOG_ERROR (loadError);
-            }
         }
     }
 }
@@ -1331,10 +1304,13 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 
 void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
-    const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
-
     if (! hasLoadedInstance.load (std::memory_order_acquire))
         return;
+
+    if (! isInstancePrepared.load (std::memory_order_acquire))
+        return;
+
+    const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
 
     if (processedBypass || isEnabled())
     {
@@ -1342,7 +1318,6 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
         CRASH_TRACER_PLUGIN (getDebugName());
 
         const juce::ScopedLock sl (processMutex);
-        jassert (isInstancePrepared);
         auto pi = getAudioPluginInstance();
 
         if (playhead != nullptr)
@@ -1778,29 +1753,86 @@ bool ExternalPlugin::setBusLayout (juce::AudioChannelSet set, bool isInput, int 
 }
 
 //==============================================================================
-void ExternalPlugin::createPluginInstance (const juce::PluginDescription& description)
+void ExternalPlugin::startPluginInstanceCreation (const juce::PluginDescription& description)
 {
    #if JUCE_DEBUG
     jassert (! hasLoadedInstance); // This should have already been deleted!
    #endif
 
     auto& dm = engine.getDeviceManager();
-    loadError = {};
 
-    if (auto newInstance = engine.getPluginManager().createPluginInstance (description,
-                                                                           dm.getSampleRate(), dm.getBlockSize(),
-                                                                           loadError))
+    if (requiresAsyncInstantiation (engine, description))
     {
-        newInstance->enableAllBuses();
-        loadedInstance = LoadedInstance::create (*this, std::move (newInstance));
-        hasLoadedInstance = true;
+        // The plugin might be deleted before the instance is created so use a weak-ref
+        engine.getPluginManager().pluginFormatManager
+            .createPluginInstanceAsync (description, dm.getSampleRate(), dm.getBlockSize(),
+                                        [ep = makeSafeRef (*this)]
+                                        (auto instance, auto err)
+                                        {
+                                            if (! ep)
+                                                return;
+
+                                            ep->loadError = err;
+                                            ep->completePluginInstanceCreation (std::move (instance));
+
+                                            // Trigger any status messages to be updated
+                                            ep->changed();
+
+                                            // If we call restartPlayback without clearing the sampleRate and blockSize,
+                                            // the plugin won't get fully initialised which we need in order for
+                                            // prepareToPlay to be called
+                                            ep->sampleRate = {};
+                                            ep->blockSizeSamples = {};
+                                            ep->edit.restartPlayback();
+                                        });
     }
+    else
+    {
+        if (auto newInstance = engine.getPluginManager().createPluginInstance (description,
+                                                                               dm.getSampleRate(), dm.getBlockSize(),
+                                                                               loadError))
+        {
+            completePluginInstanceCreation (std::move (newInstance));
+        }
+    }
+}
+
+void ExternalPlugin::completePluginInstanceCreation (std::unique_ptr<juce::AudioPluginInstance> newInstance)
+{
+    if (! newInstance)
+    {
+        TRACKTION_LOG_ERROR (loadError);
+        return;
+    }
+
+    newInstance->enableAllBuses();
+    loadedInstance = LoadedInstance::create (*this, std::move (newInstance));
+    hasLoadedInstance = true;
+
+    auto pi = getAudioPluginInstance();
+
+   #if JUCE_PLUGINHOST_VST
+    if (auto xml = juce::VSTPluginFormat::getVSTXML (pi))
+        vstXML.reset (VSTXML::createFor (*xml));
+
+    juce::VSTPluginFormat::setExtraFunctions (pi, new ExtraVSTCallbacks (edit));
+   #endif
+
+    pi->setPlayHead (playhead.get());
+    supportsMPE = pi->supportsMPE();
+
+    engine.getEngineBehaviour().doAdditionalInitialisation (*this);
+
+    restorePluginStateFromValueTree (state);
+    buildParameterList();
+    restoreChannelLayout (*this);
 }
 
 void ExternalPlugin::deletePluginInstance()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     hasLoadedInstance = false;
+    loadError = {};
 
     if (auto pi = loadedInstance->releaseInstance())
         AsyncPluginDeleter::getInstance()->deletePlugin (std::move (pi));
@@ -2007,6 +2039,20 @@ std::unique_ptr<Plugin::EditorComponent> ExternalPlugin::createEditor()
         return ed;
 
     return {};
+}
+
+//==============================================================================
+bool ExternalPlugin::requiresAsyncInstantiation (Engine& e, const juce::PluginDescription& d)
+{
+    for (auto format : e.getPluginManager().pluginFormatManager.getFormats())
+    {
+        if (format->getName() == d.pluginFormatName
+            && format->fileMightContainThisPluginType (d.fileOrIdentifier)
+            && format->requiresUnblockedMessageThreadDuringCreation (d))
+           return true;
+    }
+
+    return false;
 }
 
 //==============================================================================
