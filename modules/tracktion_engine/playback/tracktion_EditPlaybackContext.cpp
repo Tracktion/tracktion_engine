@@ -219,6 +219,11 @@ private:
          return latencySamples;
      }
 
+     void postPlay()
+     {
+         playPending.store (true, std::memory_order_release);
+     }
+
      void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
      {
          pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
@@ -357,6 +362,9 @@ private:
              }
          }
 
+         if (playPending.load (std::memory_order_acquire))
+             playHead.play();
+
          scratchMidiBuffer.clear();
 
          if (isUsingInterpolator || destNumSamples != (int) numSamplesToProcess)
@@ -422,7 +430,7 @@ private:
      choc::buffer::FrameCount numSamplesToProcess = 0;
      juce::Range<double> referenceStreamRange;
      std::atomic<double> pendingPosition { 0.0 }, pendingPositionJumpTime { 0.0 };
-     std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false }, pendingPositionJumpTimeValid { false };
+     std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false }, pendingPositionJumpTimeValid { false }, playPending { false };
      double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
      bool isUsingInterpolator = false;
@@ -1139,6 +1147,12 @@ void EditPlaybackContext::play()
 {
     if (nodePlaybackContext)
         nodePlaybackContext->playHead.play();
+}
+
+void EditPlaybackContext::postPlay()
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->postPlay();
 }
 
 void EditPlaybackContext::stop()

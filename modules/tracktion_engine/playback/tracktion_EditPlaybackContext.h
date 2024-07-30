@@ -122,6 +122,9 @@ public:
     void play();
     void stop();
 
+    /** Posts a transport position change so play can be synconrised with the next block. */
+    void postPlay();
+
     /** Returns the last reference sample position and the edit time and beat that it corresponded to. */
     std::optional<SyncPoint> getSyncPoint() const;
 
