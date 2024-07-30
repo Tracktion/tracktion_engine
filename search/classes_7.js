@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['hertztag_7420',['HertzTag',['../structtracktion_1_1engine_1_1HertzTag.html',1,'tracktion::engine::HertzTag'],['../structtracktion_1_1engine_1_1HertzTag.html',1,'tracktion::HertzTag']]],
-  ['hostedaudiodeviceinterface_7421',['HostedAudioDeviceInterface',['../classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html',1,'tracktion::engine::HostedAudioDeviceInterface'],['../classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html',1,'tracktion::HostedAudioDeviceInterface']]],
-  ['hostedmidiinputdevicenode_7422',['HostedMidiInputDeviceNode',['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html',1,'tracktion::engine::HostedMidiInputDeviceNode'],['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html',1,'tracktion::HostedMidiInputDeviceNode']]]
+  ['hertztag_7421',['HertzTag',['../structtracktion_1_1engine_1_1HertzTag.html',1,'tracktion::engine::HertzTag'],['../structtracktion_1_1engine_1_1HertzTag.html',1,'tracktion::HertzTag']]],
+  ['hostedaudiodeviceinterface_7422',['HostedAudioDeviceInterface',['../classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html',1,'tracktion::engine::HostedAudioDeviceInterface'],['../classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html',1,'tracktion::HostedAudioDeviceInterface']]],
+  ['hostedmidiinputdevicenode_7423',['HostedMidiInputDeviceNode',['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html',1,'tracktion::engine::HostedMidiInputDeviceNode'],['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html',1,'tracktion::HostedMidiInputDeviceNode']]]
 ];

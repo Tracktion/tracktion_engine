@@ -31639,6 +31639,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>postPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>a0e00ad34cc073054c9201f4d430edecc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>std::optional&lt; SyncPoint &gt;</type>
       <name>getSyncPoint</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
