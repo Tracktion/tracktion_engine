@@ -5931,6 +5931,7 @@
     <name>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html</filename>
+    <includes id="tracktion__FloatAudioFileFormat_8h" name="tracktion_FloatAudioFileFormat.h" local="yes" imported="no">../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h</includes>
     <class kind="struct">tracktion::graph::test_utilities::SineOscillator</class>
     <class kind="struct">tracktion::graph::test_utilities::TestSetup</class>
     <class kind="struct">tracktion::graph::test_utilities::TestContext</class>
@@ -85940,8 +85941,8 @@
       <type></type>
       <name>WaveNodeRealTime</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>aa92d7b7639f16f17b0bd2d9ea24883a7</anchor>
-      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::defaultMode, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f, ReadAhead=ReadAhead::no)</arglist>
+      <anchor>a9b49cfccaffe66e429b7e313147ff18f</anchor>
+      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::disabled, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f, ReadAhead=ReadAhead::no)</arglist>
     </member>
     <member kind="function">
       <type></type>
