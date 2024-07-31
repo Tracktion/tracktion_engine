@@ -586,6 +586,9 @@ struct TransportControl::PlayHeadWrapper
 
     bool isPlaying() const
     {
+        if (transport.playbackContext && transport.playbackContext->isPlayPending())
+            return true;
+
         if (auto ph = getNodePlayHead())
             return ph->isPlaying();
 
@@ -627,6 +630,12 @@ struct TransportControl::PlayHeadWrapper
     {
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPlay();
+    }
+
+    void isPlayPending()
+    {
+        if (getNodePlayHead() != nullptr)
+            transport.playbackContext->isPlayPending();
     }
 
     bool isLooping() const

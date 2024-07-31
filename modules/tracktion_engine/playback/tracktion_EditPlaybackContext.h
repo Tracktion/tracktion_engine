@@ -124,6 +124,8 @@ public:
 
     /** Posts a transport position change so play can be synconrised with the next block. */
     void postPlay();
+    /** Returns true if a play message has been posted but not dispatched. */
+    bool isPlayPending() const;
 
     /** Returns the last reference sample position and the edit time and beat that it corresponded to. */
     std::optional<SyncPoint> getSyncPoint() const;

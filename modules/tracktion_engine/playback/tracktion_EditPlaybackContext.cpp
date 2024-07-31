@@ -224,6 +224,11 @@ private:
          playPending.store (true, std::memory_order_release);
      }
 
+     bool isPlayPending() const
+     {
+         return playPending.load (std::memory_order_acquire);
+     }
+
      void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
      {
          pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
@@ -282,7 +287,7 @@ private:
      void nextBlockStarted()
      {
          // Dispatch pending play
-         if (playPending.load (std::memory_order_acquire))
+         if (playPending.exchange (false, std::memory_order_acquire))
              playHead.play();
      }
 
@@ -1162,6 +1167,14 @@ void EditPlaybackContext::postPlay()
 {
     if (nodePlaybackContext)
         nodePlaybackContext->postPlay();
+}
+
+bool EditPlaybackContext::isPlayPending() const
+{
+    if (nodePlaybackContext)
+        return nodePlaybackContext->isPlayPending();
+
+    return false;
 }
 
 void EditPlaybackContext::stop()
