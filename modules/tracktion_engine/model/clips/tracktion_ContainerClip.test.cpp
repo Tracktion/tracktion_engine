@@ -87,6 +87,9 @@ private:
         clip1->setAutoTempo (true);
         clip2->setAutoTempo (true);
 
+        clip1->setTimeStretchMode (TimeStretcher::soundtouchBetter);
+        clip2->setTimeStretchMode (TimeStretcher::soundtouchBetter);
+
         beginTest ("Clip properties");
         {
             expectEquals (cc->getSourceLength(), 4_td);

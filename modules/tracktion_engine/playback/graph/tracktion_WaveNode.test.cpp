@@ -254,7 +254,7 @@ private:
         beginTest ("WaveNodeRealTime at time 0s, offset at 1s");
         {
             auto node = std::make_unique<WaveNodeRealTime> (sinAudioFile,
-                                                            TimeStretcher::Mode::defaultMode,
+                                                            TimeStretcher::Mode::disabled,
                                                             TimeStretcher::ElastiqueProOptions(),
                                                             BeatRange (0_bp, fileLengthBeats),
                                                             0_bd,
@@ -286,7 +286,7 @@ private:
         beginTest ("WaveNodeRealTime at time 0s, offset at -0.5s");
         {
             auto node = std::make_unique<WaveNodeRealTime> (sinAudioFile,
-                                                            TimeStretcher::Mode::defaultMode,
+                                                            TimeStretcher::Mode::disabled,
                                                             TimeStretcher::ElastiqueProOptions(),
                                                             BeatRange (0_bp, fileLengthBeats),
                                                             0_bd,
@@ -372,7 +372,7 @@ private:
             beginTest ("WaveNodeRealTime at time 1b, length 1b");
             {
                 auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
-                                                                TimeStretcher::Mode::defaultMode,
+                                                                TimeStretcher::Mode::disabled,
                                                                 TimeStretcher::ElastiqueProOptions(),
                                                                 BeatRange (1_bp, fileLengthBeats),
                                                                 0_bd,

@@ -12,6 +12,7 @@
 
 #include <numeric>
 #include <juce_audio_formats/juce_audio_formats.h>
+#include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
 namespace tracktion { inline namespace graph
 {
@@ -561,8 +562,8 @@ namespace test_utilities
             {
                 if (auto os = std::make_unique<juce::MemoryOutputStream> (audioOutputBlock, false))
                 {
-                    writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (os.release(),
-                                                                                                               ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+                    writer = std::unique_ptr<juce::AudioFormatWriter> (FloatAudioFormat().createWriterFor (os.release(),
+                                                                                                           ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
                 }
                 else
                 {
@@ -682,7 +683,7 @@ namespace test_utilities
                 // Then read it back in to the buffer
                 if (auto is = std::make_unique<juce::MemoryInputStream> (audioOutputBlock, false))
                 {
-                    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (is.release(), true)))
+                    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (FloatAudioFormat().createReaderFor (is.release(), true)))
                     {
                         juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
                         reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);

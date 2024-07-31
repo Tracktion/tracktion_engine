@@ -123,7 +123,7 @@ public:
                       ResamplingQuality = ResamplingQuality::lagrange,
                       SpeedFadeDescription = {},
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
-                      TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
+                      TimeStretcher::Mode = TimeStretcher::Mode::disabled,
                       TimeStretcher::ElastiqueProOptions = {},
                       float pitchChangeSemitones = 0.0f,
                       ReadAhead = ReadAhead::no);

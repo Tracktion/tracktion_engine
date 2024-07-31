@@ -68,7 +68,7 @@ TEST_SUITE ("tracktion_engine")
 
                 if (transient)
                 {
-                    MESSAGE (std::to_string (std::abs (transient->first - expectedTransientSample) < 5)); // 5 sample tolerance
+                    MESSAGE ("Transient diff frames: " << std::to_string (std::abs (transient->first - expectedTransientSample))); // 5 sample tolerance
                     MESSAGE (std::to_string (transient->first > 0.5f));
                 }
             }
