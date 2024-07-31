@@ -58,6 +58,8 @@ inline juce::AudioBuffer<float> createSyncTestSound()
 
     for (auto spikePos : createSpikes())
     {
+        spikePos += 10;
+
         if (spikePos < testLength)
         {
             s[spikePos] = 0.99f;
@@ -68,20 +70,24 @@ inline juce::AudioBuffer<float> createSyncTestSound()
     return testSound;
 }
 
-inline int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer, int spikeDriftAllowed)
+static int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer)
 {
-    const float minSpikeLevel = 5.0f;
-    const double smooth = 0.975;
-    const float* s = buffer.getReadPointer (0);
+    auto minSpikeLevel = 5.0f;
+    auto smooth = 0.975;
+    auto* s = buffer.getReadPointer (0);
+    constexpr int spikeDriftAllowed = 5;
+
+    const auto originalSpikes = createSpikes();
+    const auto failedMatchesAllowed = originalSpikes.size() / 5;
 
     juce::Array<int> spikesFound;
     spikesFound.ensureStorageAllocated (100);
-    double runningAverage = 0.0;
+    auto runningAverage = 0.0;
     int lastSpike = 0;
 
     for (int i = 0; i < buffer.getNumSamples() - 10; ++i)
     {
-        const float samp = std::abs (s[i]);
+        auto samp = std::abs (s[i]);
 
         if (samp > runningAverage * minSpikeLevel && i > lastSpike + 20)
         {
@@ -92,55 +98,71 @@ inline int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer, int spike
         runningAverage = runningAverage * smooth + (1.0 - smooth) * samp;
     }
 
-    auto originalSpikes = createSpikes();
-
-    int bestMatch = -1;
-    int bestNumMatches = originalSpikes.size() / 3; // the minimum number of matches required
-
-    if (spikesFound.size() < bestNumMatches)
+    if (spikesFound.size() < originalSpikes.size() / 3)
         return -1;
+
+    auto findNearestSpike = [&] (int targetOffset)
+    {
+        int nearestOffset = -1;
+        int nearestDistance = spikeDriftAllowed + 1;
+
+        for (auto offset : spikesFound)
+        {
+            auto distance = offset - targetOffset;
+
+            if (distance < -spikeDriftAllowed)
+                continue;
+
+            if (distance > spikeDriftAllowed)
+                break;
+
+            distance = std::abs (distance);
+
+            if (distance < nearestDistance)
+            {
+                nearestOffset = offset;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestOffset;
+    };
+
+    int bestOffset = -1;
+    int64_t bestMatchQuality = 25 * 10;
 
     for (int offsetToTest = 0; offsetToTest < buffer.getNumSamples() - 2048; ++offsetToTest)
     {
-        int numMatchesHere = 0;
-        int foundIndex = 0;
+        int64_t matchQuality = 0;
+        int numFailedMatches = 0;
 
-        for (int refIndex = 0; refIndex < originalSpikes.size(); ++refIndex)
+        for (auto referenceOffset : originalSpikes)
         {
-            auto referenceSpikeFrameIndex = originalSpikes.getUnchecked (refIndex) + offsetToTest;
-            const auto minFrameIndex = referenceSpikeFrameIndex - spikeDriftAllowed;
-            const auto maxFrameIndex = referenceSpikeFrameIndex + spikeDriftAllowed;
-            int spikeFrameIndex = 0;
+            auto nearestSpikeDistance = findNearestSpike (referenceOffset + offsetToTest);
 
-            while ((spikeFrameIndex = spikesFound.getUnchecked (foundIndex)) < minFrameIndex
-                     && foundIndex < spikesFound.size() - 1)
-                ++foundIndex;
+            if (nearestSpikeDistance < 0)
+            {
+                if (++numFailedMatches > failedMatchesAllowed)
+                {
+                    matchQuality = 0;
+                    break;
+                }
 
-            if (spikeFrameIndex >= minFrameIndex && spikeFrameIndex <= maxFrameIndex)
-                ++numMatchesHere;
+                continue;
+            }
+
+            matchQuality += (spikeDriftAllowed - nearestSpikeDistance)
+                                * (spikeDriftAllowed - nearestSpikeDistance);
         }
 
-        if (numMatchesHere > bestNumMatches)
+        if (matchQuality > bestMatchQuality)
         {
-            bestNumMatches = numMatchesHere;
-            bestMatch = offsetToTest;
-
-            if (numMatchesHere == originalSpikes.size())
-                break;
+            bestMatchQuality = matchQuality;
+            bestOffset = offsetToTest;
         }
     }
 
-    return bestMatch;
-}
-
-
-inline int findOffsetOfSpikes (const juce::AudioBuffer<float>& buffer)
-{
-    for (int drift : { 0, 1, 2, 3, 4, 5 })
-        if (auto offset = findOffsetOfSpikes (buffer, drift); offset != -1)
-            return offset;
-
-    return -1;
+    return bestOffset;
 }
 
 inline std::optional<int> findSyncDeltaSamples (const juce::AudioBuffer<float>& testSound,
