@@ -27338,8 +27338,15 @@
       <type>static bool</type>
       <name>shouldUseSeparateProcessToScan</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
-      <anchor>a4fd32a3c004f5704b6dc818f4ed992b7</anchor>
-      <arglist>(juce::AudioPluginFormat &amp;format)</arglist>
+      <anchor>a9b2716776bac28156c8c5a312b9212ec</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format, const juce::String fileOrIdentifier)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>requiresUnblockedMessageThread</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a5b09671164205c81e9914b14dd488837</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format, const juce::String fileOrIdentifier)</arglist>
     </member>
     <member kind="variable">
       <type>Engine &amp;</type>
@@ -35856,6 +35863,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
       <anchor>a400c73590596748a19c33c1f0de07856</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isInitialisingAsync</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
+      <anchor>aadaaf029e74b1f4666213ad2c5ef16fb</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>

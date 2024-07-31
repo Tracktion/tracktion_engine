@@ -121,7 +121,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a541d849d03c951d9f4c2f26312894f16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a541d849d03c951d9f4c2f26312894f16">forceFullReinitialise</a> ()</td></tr>
 <tr class="separator:a541d849d03c951d9f4c2f26312894f16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a400c73590596748a19c33c1f0de07856"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a400c73590596748a19c33c1f0de07856">getLoadError</a> ()</td></tr>
+<tr class="memdesc:a400c73590596748a19c33c1f0de07856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an error message if the plugin failed to load.  <a href="classtracktion_1_1engine_1_1ExternalPlugin.html#a400c73590596748a19c33c1f0de07856">More...</a><br /></td></tr>
 <tr class="separator:a400c73590596748a19c33c1f0de07856"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadaaf029e74b1f4666213ad2c5ef16fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#aadaaf029e74b1f4666213ad2c5ef16fb">isInitialisingAsync</a> () const</td></tr>
+<tr class="memdesc:aadaaf029e74b1f4666213ad2c5ef16fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the plugin has started initialising but not completed yet.  <a href="classtracktion_1_1engine_1_1ExternalPlugin.html#aadaaf029e74b1f4666213ad2c5ef16fb">More...</a><br /></td></tr>
+<tr class="separator:aadaaf029e74b1f4666213ad2c5ef16fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0110ac2e8b0b04008f382a3f5b5917b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#aa0110ac2e8b0b04008f382a3f5b5917b">flushPluginStateToValueTree</a> () override</td></tr>
 <tr class="separator:aa0110ac2e8b0b04008f382a3f5b5917b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb18b75399489a041fdca09d3c329e8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#aeb18b75399489a041fdca09d3c329e8e">flushBusesLayoutToValueTree</a> ()</td></tr>
@@ -858,6 +862,28 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns an error message if the plugin failed to load. </p>
+
+</div>
+</div>
+<a id="aadaaf029e74b1f4666213ad2c5ef16fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadaaf029e74b1f4666213ad2c5ef16fb">&#9670;&nbsp;</a></span>isInitialisingAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::ExternalPlugin::isInitialisingAsync </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the plugin has started initialising but not completed yet. </p>
+<p>This happens in the case of some external formats like AUv3. You can use this to show an indicator in your UI. </p>
 
 </div>
 </div>
@@ -1820,6 +1846,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#aebcb0c3081608e2b73677c3b33dcbc4c">tracktion::engine::Plugin</a>.</p>
 
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a7e7d9f9e5cc48d7500d81c3a2348c48f">getAudioPluginInstance()</a>.</p>
+
 </div>
 </div>
 <a id="a220a02fa5298c73d0cacb60fc3f122af"></a>
@@ -2301,6 +2329,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#ae80976936cc6ab077ef22c114fabc2d7">getWrappedAudioProcessor()</a>.</p>
+
 </div>
 </div>
 <a id="a80de29f86b26a377cbe2aa747b621cce"></a>
@@ -2452,7 +2482,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 31 2024 09:55:51 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jul 31 2024 11:45:47 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
