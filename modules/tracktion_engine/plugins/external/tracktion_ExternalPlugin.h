@@ -36,7 +36,14 @@ public:
     void initialiseFully() override;
     void forceFullReinitialise();
 
+    /// Returns an error message if the plugin failed to load
     juce::String getLoadError();
+
+    /** Returns true if the plugin has started initialising but not completed yet.
+        This happens in the case of some external formats like AUv3. You can use
+        this to show an indicator in your UI.
+    */
+    bool isInitialisingAsync() const;
 
     static const char* xmlTypeName;
 
@@ -136,7 +143,7 @@ private:
     class ProcessorChangedManager;
     class LoadedInstance;
     std::unique_ptr<LoadedInstance> loadedInstance;
-    std::atomic<bool> hasLoadedInstance { false }, isInstancePrepared { false };
+    std::atomic<bool> hasLoadedInstance { false }, isInstancePrepared { false }, isAsyncInitialising { false };
 
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;

@@ -589,11 +589,16 @@ juce::ValueTree ExternalPlugin::create (Engine& e, const juce::PluginDescription
 
 juce::String ExternalPlugin::getLoadError()
 {
-    if (hasLoadedInstance)
+    if (hasLoadedInstance || isAsyncInitialising)
         return {};
 
     return loadError.isEmpty() ? TRANS("ERROR! - This plugin couldn't be loaded!")
                                : loadError;
+}
+
+bool ExternalPlugin::isInitialisingAsync() const
+{
+    return isAsyncInitialising;
 }
 
 const char* ExternalPlugin::xmlTypeName = "vst";
@@ -1659,7 +1664,7 @@ bool ExternalPlugin::takesMidiInput()
 
 bool ExternalPlugin::isMissing()
 {
-    return ! isDisabled() && ! hasLoadedInstance;
+    return ! isDisabled() && ! hasLoadedInstance && ! isAsyncInitialising;
 }
 
 bool ExternalPlugin::isDisabled()
@@ -1763,6 +1768,8 @@ void ExternalPlugin::startPluginInstanceCreation (const juce::PluginDescription&
 
     if (requiresAsyncInstantiation (engine, description))
     {
+        isAsyncInitialising = true;
+
         // The plugin might be deleted before the instance is created so use a weak-ref
         engine.getPluginManager().pluginFormatManager
             .createPluginInstanceAsync (description, dm.getSampleRate(), dm.getBlockSize(),
@@ -1808,6 +1815,7 @@ void ExternalPlugin::completePluginInstanceCreation (std::unique_ptr<juce::Audio
     newInstance->enableAllBuses();
     loadedInstance = LoadedInstance::create (*this, std::move (newInstance));
     hasLoadedInstance = true;
+    isAsyncInitialising = false;
 
     auto pi = getAudioPluginInstance();
 
@@ -1832,6 +1840,7 @@ void ExternalPlugin::deletePluginInstance()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     hasLoadedInstance = false;
+    isAsyncInitialising = false;
     loadError = {};
 
     if (auto pi = loadedInstance->releaseInstance())
