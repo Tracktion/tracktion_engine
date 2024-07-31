@@ -52,7 +52,7 @@ public:
     }
 
     bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples)
+                      juce::int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -113,14 +113,14 @@ public:
         writeHeader();
     }
 
-    ~FloatAudioFormatWriter()
+    ~FloatAudioFormatWriter() override
     {
         output->setPosition (0);
         writeHeader();
     }
 
     //==============================================================================
-    bool write (const int** data, int numSamps)
+    bool write (const int** data, int numSamps) override
     {
         lengthInSamples += numSamps;
 
