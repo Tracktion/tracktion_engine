@@ -109,8 +109,9 @@ public:
         return params;
     }
 
-private:
     Engine& engine;
+
+private:
     HostedAudioDeviceInterface::Parameters params;
     HostedAudioDeviceInterface& audioIO { engine.getDeviceManager().getHostedAudioDeviceInterface() };
     std::vector<std::vector<float>> output;
@@ -120,6 +121,7 @@ private:
 
 //==============================================================================
 //==============================================================================
+///@internal
 inline void processLoopedBack (EnginePlayer& player, std::integral auto numFramesToProcess)
 {
     using namespace choc::buffer;
@@ -151,6 +153,7 @@ inline void processLoopedBack (EnginePlayer& player, std::integral auto numFrame
 void waitForFileToBeMapped (const AudioFile&);
 
 //==============================================================================
+///@internal
 inline std::unique_ptr<EnginePlayer> createEnginePlayer (Edit& e, HostedAudioDeviceInterface::Parameters p,
                                                          std::vector<AudioFile> filesToMap = {})
 {

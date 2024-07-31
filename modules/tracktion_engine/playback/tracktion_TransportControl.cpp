@@ -1586,6 +1586,7 @@ std::optional<std::pair<SyncPoint, std::optional<TimeRange>>> TransportControl::
                         edit.setClickTrackRange ({});
                     }
 
+                    playHeadWrapper->setPosition (prerollStart);
                     playHeadWrapper->postPlay();
                     transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                     screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();

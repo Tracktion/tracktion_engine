@@ -209,6 +209,7 @@ private:
     std::atomic<int> activelyRecordingInputDevices { 0 };
 
     void createNode();
+    void nextBlockStarted();
     void fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples);
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)

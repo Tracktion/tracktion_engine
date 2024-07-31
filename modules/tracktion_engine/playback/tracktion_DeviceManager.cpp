@@ -1455,6 +1455,9 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                 SCOPED_REALTIME_CHECK
                 const std::shared_lock sl (contextLock);
 
+                for (auto c : activeContexts)
+                    c->nextBlockStarted();
+
                 for (auto wi : waveInputs)
                     wi->consumeNextAudioBlock (inputChannelData, numInputChannels, numSamples, streamTime);
 

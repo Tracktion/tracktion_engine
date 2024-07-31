@@ -279,6 +279,13 @@ private:
          playHead.overridePosition (lastSampleRemapped);
      }
 
+     void nextBlockStarted()
+     {
+         // Dispatch pending play
+         if (playPending.load (std::memory_order_acquire))
+             playHead.play();
+     }
+
      void updateReferenceSampleRange (int numSamples)
      {
          if (speedCompensation != 0.0)
@@ -310,11 +317,11 @@ private:
 
      void process (float* const* allChannels, int numChannels, int destNumSamples)
      {
-         const auto referenceSampleRange = getReferenceSampleRange();
-         const double sampleRate = getSampleRate();
+         const auto referenceSampleRange = getReferenceSampleRange();         // Distpatch pending positions
 
          if (positionUpdatePending.load (std::memory_order_acquire))
          {
+             const double sampleRate = getSampleRate();
              bool shouldPerformPositionChange = true;
 
              if (pendingPositionJumpTimeValid)
@@ -361,9 +368,6 @@ private:
                  }
              }
          }
-
-         if (playPending.load (std::memory_order_acquire))
-             playHead.play();
 
          scratchMidiBuffer.clear();
 
@@ -908,7 +912,7 @@ juce::Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 }
 
 //==============================================================================
-void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples)
+void EditPlaybackContext::nextBlockStarted()
 {
     CRASH_TRACER
 
@@ -919,6 +923,11 @@ void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numC
     if (! nodePlaybackContext)
         return;
 
+    nodePlaybackContext->nextBlockStarted();
+}
+
+void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples)
+{
     nodePlaybackContext->updateReferenceSampleRange (numSamples);
 
     // Sync this playback context with a master context
