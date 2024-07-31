@@ -273,7 +273,7 @@ struct CustomScanner  : public juce::KnownPluginList::CustomScanner
         CRASH_TRACER
 
         if (engine.getPluginManager().usesSeparateProcessForScanning()
-             && shouldUseSeparateProcessToScan (format))
+            && shouldUseSeparateProcessToScan (format, fileOrIdentifier))
         {
             if (masterProcess != nullptr && masterProcess->crashed)
                 masterProcess = nullptr;
@@ -319,13 +319,25 @@ struct CustomScanner  : public juce::KnownPluginList::CustomScanner
         return true;
     }
 
-    static bool shouldUseSeparateProcessToScan (juce::AudioPluginFormat& format)
+    static bool shouldUseSeparateProcessToScan (juce::AudioPluginFormat& format, const juce::String fileOrIdentifier)
     {
         auto name = format.getName();
 
+        // AUv3s should be scanned in the same process but on a background thread as the child process scans in the main thread
+        if (name.containsIgnoreCase ("AudioUnit"))
+            return ! requiresUnblockedMessageThread (format, fileOrIdentifier);
+
         return name.containsIgnoreCase ("VST")
-                || name.containsIgnoreCase ("AudioUnit")
                 || name.containsIgnoreCase ("LADSPA");
+    }
+
+    static bool requiresUnblockedMessageThread (juce::AudioPluginFormat& format, const juce::String fileOrIdentifier)
+    {
+        juce::PluginDescription desc;
+        desc.fileOrIdentifier = fileOrIdentifier;
+        desc.uniqueId = desc.deprecatedUid = 0;
+
+        return format.requiresUnblockedMessageThreadDuringCreation (desc);
     }
 
     void scanFinished() override
