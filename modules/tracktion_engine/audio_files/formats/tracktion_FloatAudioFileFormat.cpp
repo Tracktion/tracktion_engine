@@ -144,6 +144,16 @@ public:
         return true;
     }
 
+    bool flush() override
+    {
+        auto pos = output->getPosition();
+        output->setPosition (0);
+        writeHeader();
+        output->setPosition (pos);
+
+        return true;
+    }
+
 private:
     juce::int64 lengthInSamples;
 
