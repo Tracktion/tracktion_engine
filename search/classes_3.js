@@ -1,17 +1,17 @@
 var searchData=
 [
-  ['dbtimepair_7341',['DbTimePair',['../structtracktion_1_1engine_1_1DbTimePair.html',1,'tracktion::DbTimePair'],['../structtracktion_1_1engine_1_1DbTimePair.html',1,'tracktion::engine::DbTimePair']]],
-  ['deadmanspedalmessage_7342',['DeadMansPedalMessage',['../structtracktion_1_1engine_1_1DeadMansPedalMessage.html',1,'tracktion::DeadMansPedalMessage'],['../structtracktion_1_1engine_1_1DeadMansPedalMessage.html',1,'tracktion::engine::DeadMansPedalMessage']]],
-  ['delaybufferbase_7343',['DelayBufferBase',['../structtracktion_1_1engine_1_1DelayBufferBase.html',1,'tracktion::DelayBufferBase'],['../structtracktion_1_1engine_1_1DelayBufferBase.html',1,'tracktion::engine::DelayBufferBase']]],
-  ['delayplugin_7344',['DelayPlugin',['../classtracktion_1_1engine_1_1DelayPlugin.html',1,'tracktion::DelayPlugin'],['../classtracktion_1_1engine_1_1DelayPlugin.html',1,'tracktion::engine::DelayPlugin']]],
-  ['deleteselectedparams_7345',['DeleteSelectedParams',['../structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html',1,'tracktion::engine::SelectableClass']]],
-  ['destination_7346',['Destination',['../structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html',1,'tracktion::engine::InputDeviceInstance']]],
-  ['destinationlist_7347',['DestinationList',['../structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html',1,'tracktion::engine::InputDeviceInstance']]],
-  ['devicemanager_7348',['DeviceManager',['../classtracktion_1_1engine_1_1DeviceManager.html',1,'tracktion::DeviceManager'],['../classtracktion_1_1engine_1_1DeviceManager.html',1,'tracktion::engine::DeviceManager']]],
-  ['disabler_7349',['Disabler',['../structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Disabler.html',1,'tracktion::engine::ParameterChangeHandler']]],
-  ['discretelabelledparameter_7350',['DiscreteLabelledParameter',['../structtracktion_1_1engine_1_1DiscreteLabelledParameter.html',1,'tracktion::DiscreteLabelledParameter'],['../structtracktion_1_1engine_1_1DiscreteLabelledParameter.html',1,'tracktion::engine::DiscreteLabelledParameter']]],
-  ['ditherer_7351',['Ditherer',['../structtracktion_1_1engine_1_1Ditherer.html',1,'tracktion::Ditherer'],['../structtracktion_1_1engine_1_1Ditherer.html',1,'tracktion::engine::Ditherer']]],
-  ['dummyconstrainer_7352',['DummyConstrainer',['../structtracktion_1_1engine_1_1DummyConstrainer.html',1,'tracktion::DummyConstrainer&lt; Type &gt;'],['../structtracktion_1_1engine_1_1DummyConstrainer.html',1,'tracktion::engine::DummyConstrainer&lt; Type &gt;']]],
-  ['dynamicallyoffsettablenodebase_7353',['DynamicallyOffsettableNodeBase',['../classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html',1,'tracktion::DynamicallyOffsettableNodeBase'],['../classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html',1,'tracktion::engine::DynamicallyOffsettableNodeBase']]],
-  ['dynamicoffsetnode_7354',['DynamicOffsetNode',['../classtracktion_1_1engine_1_1DynamicOffsetNode.html',1,'tracktion::DynamicOffsetNode'],['../classtracktion_1_1engine_1_1DynamicOffsetNode.html',1,'tracktion::engine::DynamicOffsetNode']]]
+  ['dbtimepair_7346',['DbTimePair',['../structtracktion_1_1engine_1_1DbTimePair.html',1,'tracktion::DbTimePair'],['../structtracktion_1_1engine_1_1DbTimePair.html',1,'tracktion::engine::DbTimePair']]],
+  ['deadmanspedalmessage_7347',['DeadMansPedalMessage',['../structtracktion_1_1engine_1_1DeadMansPedalMessage.html',1,'tracktion::DeadMansPedalMessage'],['../structtracktion_1_1engine_1_1DeadMansPedalMessage.html',1,'tracktion::engine::DeadMansPedalMessage']]],
+  ['delaybufferbase_7348',['DelayBufferBase',['../structtracktion_1_1engine_1_1DelayBufferBase.html',1,'tracktion::DelayBufferBase'],['../structtracktion_1_1engine_1_1DelayBufferBase.html',1,'tracktion::engine::DelayBufferBase']]],
+  ['delayplugin_7349',['DelayPlugin',['../classtracktion_1_1engine_1_1DelayPlugin.html',1,'tracktion::DelayPlugin'],['../classtracktion_1_1engine_1_1DelayPlugin.html',1,'tracktion::engine::DelayPlugin']]],
+  ['deleteselectedparams_7350',['DeleteSelectedParams',['../structtracktion_1_1engine_1_1SelectableClass_1_1DeleteSelectedParams.html',1,'tracktion::engine::SelectableClass']]],
+  ['destination_7351',['Destination',['../structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html',1,'tracktion::engine::InputDeviceInstance']]],
+  ['destinationlist_7352',['DestinationList',['../structtracktion_1_1engine_1_1InputDeviceInstance_1_1DestinationList.html',1,'tracktion::engine::InputDeviceInstance']]],
+  ['devicemanager_7353',['DeviceManager',['../classtracktion_1_1engine_1_1DeviceManager.html',1,'tracktion::DeviceManager'],['../classtracktion_1_1engine_1_1DeviceManager.html',1,'tracktion::engine::DeviceManager']]],
+  ['disabler_7354',['Disabler',['../structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Disabler.html',1,'tracktion::engine::ParameterChangeHandler']]],
+  ['discretelabelledparameter_7355',['DiscreteLabelledParameter',['../structtracktion_1_1engine_1_1DiscreteLabelledParameter.html',1,'tracktion::DiscreteLabelledParameter'],['../structtracktion_1_1engine_1_1DiscreteLabelledParameter.html',1,'tracktion::engine::DiscreteLabelledParameter']]],
+  ['ditherer_7356',['Ditherer',['../structtracktion_1_1engine_1_1Ditherer.html',1,'tracktion::Ditherer'],['../structtracktion_1_1engine_1_1Ditherer.html',1,'tracktion::engine::Ditherer']]],
+  ['dummyconstrainer_7357',['DummyConstrainer',['../structtracktion_1_1engine_1_1DummyConstrainer.html',1,'tracktion::DummyConstrainer&lt; Type &gt;'],['../structtracktion_1_1engine_1_1DummyConstrainer.html',1,'tracktion::engine::DummyConstrainer&lt; Type &gt;']]],
+  ['dynamicallyoffsettablenodebase_7358',['DynamicallyOffsettableNodeBase',['../classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html',1,'tracktion::DynamicallyOffsettableNodeBase'],['../classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html',1,'tracktion::engine::DynamicallyOffsettableNodeBase']]],
+  ['dynamicoffsetnode_7359',['DynamicOffsetNode',['../classtracktion_1_1engine_1_1DynamicOffsetNode.html',1,'tracktion::DynamicOffsetNode'],['../classtracktion_1_1engine_1_1DynamicOffsetNode.html',1,'tracktion::engine::DynamicOffsetNode']]]
 ];

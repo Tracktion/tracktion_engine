@@ -31653,6 +31653,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isPlayPending</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>ac74d13bdbfa9eaeed39627fa04fccf60</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>std::optional&lt; SyncPoint &gt;</type>
       <name>getSyncPoint</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>

@@ -167,6 +167,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e00ad34cc073054c9201f4d430edecc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a0e00ad34cc073054c9201f4d430edecc">postPlay</a> ()</td></tr>
 <tr class="memdesc:a0e00ad34cc073054c9201f4d430edecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posts a transport position change so play can be synconrised with the next block.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a0e00ad34cc073054c9201f4d430edecc">More...</a><br /></td></tr>
 <tr class="separator:a0e00ad34cc073054c9201f4d430edecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac74d13bdbfa9eaeed39627fa04fccf60"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac74d13bdbfa9eaeed39627fa04fccf60">isPlayPending</a> () const</td></tr>
+<tr class="memdesc:ac74d13bdbfa9eaeed39627fa04fccf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a play message has been posted but not dispatched.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac74d13bdbfa9eaeed39627fa04fccf60">More...</a><br /></td></tr>
+<tr class="separator:ac74d13bdbfa9eaeed39627fa04fccf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a402a342387064eda5f5de461225d26b7"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structtracktion_1_1engine_1_1SyncPoint.html">SyncPoint</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a402a342387064eda5f5de461225d26b7">getSyncPoint</a> () const</td></tr>
 <tr class="memdesc:a402a342387064eda5f5de461225d26b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the last reference sample position and the edit time and beat that it corresponded to.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a402a342387064eda5f5de461225d26b7">More...</a><br /></td></tr>
 <tr class="separator:a402a342387064eda5f5de461225d26b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1005,6 +1008,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac74d13bdbfa9eaeed39627fa04fccf60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac74d13bdbfa9eaeed39627fa04fccf60">&#9670;&nbsp;</a></span>isPlayPending()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::EditPlaybackContext::isPlayPending </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if a play message has been posted but not dispatched. </p>
+
+</div>
+</div>
 <a id="a402a342387064eda5f5de461225d26b7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a402a342387064eda5f5de461225d26b7">&#9670;&nbsp;</a></span>getSyncPoint()</h2>
 
@@ -1380,7 +1402,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 31 2024 11:45:47 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jul 31 2024 12:37:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
