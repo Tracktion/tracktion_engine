@@ -623,7 +623,9 @@ private:
  #pragma GCC diagnostic ignored "-Wshadow"
  #pragma GCC diagnostic ignored "-Wsign-compare"
  #pragma GCC diagnostic ignored "-Wcast-align"
- #if ! __clang__
+ #if __clang__
+  #pragma GCC diagnostic ignored "-Wdeprecated-copy-with-user-provided-dtor"
+ #else
   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
  #endif
  #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -632,7 +634,6 @@ private:
  #pragma GCC diagnostic ignored "-Wpedantic"
  #pragma GCC diagnostic ignored "-Wunknown-pragmas"
  #pragma GCC diagnostic ignored "-Wswitch-enum"
- #pragma GCC diagnostic ignored "-Wdeprecated-copy-with-user-provided-dtor"
  #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
