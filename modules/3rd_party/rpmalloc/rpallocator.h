@@ -76,29 +76,30 @@ namespace details
 
     struct ScopedRPThreadFinaliser
     {
+    private:
+        static auto& getFinaliseMutex()
+        {
+            static std::mutex m;
+            return m;
+        }
+
+    public:
         ScopedRPThreadFinaliser() = default;
-        
+
         ~ScopedRPThreadFinaliser()
         {
            #if LOG_RPALLOCATIONS
             std::cout << std::this_thread::get_id() << " ~ScopedRPThreadFinaliser()\n";
            #endif
-            
+
             // With high thread counts (100+) there seems to be too much contention on the
             // finalize call and it stalls so serialise them here
             const std::lock_guard l (getFinaliseMutex());
             rpmalloc_thread_finalize();
         }
-        
+
         // This is here to ensure rpmalloc isn't deinitialised untill all threads have finished
         ScopedRPMallocInitialiser scopedRPMallocInitialiser;
-    
-    private:
-        static tracktion::graph::RealTimeSpinLock& getFinaliseMutex()
-        {
-            static tracktion::graph::RealTimeSpinLock m;
-            return m;
-        }
     };
 }
 
