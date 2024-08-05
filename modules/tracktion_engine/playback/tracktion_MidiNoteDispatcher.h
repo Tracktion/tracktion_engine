@@ -34,6 +34,7 @@ private:
         DeviceState (MidiOutputDeviceInstance& d) : device (d) {}
 
         MidiOutputDeviceInstance& device;
+        std::mutex bufferMutex;
         MidiMessageArray buffer;
     };
 

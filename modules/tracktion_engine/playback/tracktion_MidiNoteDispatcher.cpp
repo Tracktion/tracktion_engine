@@ -48,13 +48,16 @@ TimePosition MidiNoteDispatcher::getCurrentTime() const
 
 void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, TimePosition editTime)
 {
-    // N.B. This should only be called under a deviceLock
+    // N.B. This should only be called under a deviceLock (which is separate to the bufferMutex)
     auto& pendingBuffer = state.device.getPendingMessages();
     state.device.context.masterLevels.processMidi (pendingBuffer, nullptr);
     const auto delay = state.device.getMidiOutput().getDeviceDelay();
 
     if (! state.device.sendMessages (pendingBuffer, editTime - delay))
+    {
+        const std::scoped_lock sl (state.bufferMutex);
         state.buffer.mergeFromAndClear (pendingBuffer);
+    }
 }
 
 void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>& newList)
@@ -99,6 +102,8 @@ void MidiNoteDispatcher::hiResTimerCallback()
             auto& device = d->device;
             auto& buffer = d->buffer;
             auto& midiOut = device.getMidiOutput();
+
+            const std::scoped_lock bufferLock (d->bufferMutex);
 
             if (buffer.isAllNotesOff)
                 midiOut.sendNoteOffMessages();
