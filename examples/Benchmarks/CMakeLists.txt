@@ -110,3 +110,5 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   endif()
 endif()
 
+add_test(NAME ${TARGET_NAME}
+    COMMAND ${TARGET_NAME})
