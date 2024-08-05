@@ -358,8 +358,18 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
 
         auto tempFile = getTempVersionFile();
 
-        if (! saveTempVersion (true))
-            return editSaveError (edit, tempFile, true);
+        if (tempFile == juce::File())
+        {
+            tempFile = getTempVersionOfEditFile (f);
+
+            if (! writeToFile (tempFile, false))
+                return editSaveError (edit, tempFile, true);
+        }
+        else
+        {
+            if (! saveTempVersion (true))
+                return editSaveError (edit, tempFile, true);
+        }
 
         if (editSnapshot != nullptr)
             editSnapshot->refreshCacheAndNotifyListeners();
