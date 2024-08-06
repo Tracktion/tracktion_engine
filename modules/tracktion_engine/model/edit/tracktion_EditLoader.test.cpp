@@ -58,6 +58,7 @@ TEST_SUITE("tracktion_engine")
             {
                 .engine = engine,
                 .editState = loadValueTree (tempEditFile.getFile(), IDs::EDIT),
+                .editProjectItemID = {},
                 .role = Edit::forExamining
             };
             auto handle = EditLoader::loadEdit (std::move (opts), editLoadedCallback);
