@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME coverage)
 
+set(HAS_RUBBERBAND 0)
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/rubberband/")
+    message(STATUS "Found rubberband, enabling")
+    set(HAS_RUBBERBAND 1)
+endif()
+
 file(READ ../../VERSION.md CURRENT_VERSION)
 project(${TARGET_NAME} VERSION ${CURRENT_VERSION})
 
@@ -55,6 +62,11 @@ if (DEFINED ENV{VST2_SDK_DIR})
         JUCE_PLUGINHOST_VST=1)
 endif()
 
+if (HAS_RUBBERBAND)
+    target_include_directories(${TARGET_NAME} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party")
+endif()
+
 target_compile_definitions(${TARGET_NAME} PRIVATE
     JUCE_PLUGINHOST_AU=1
     JUCE_PLUGINHOST_LADSPA=1
@@ -66,7 +78,9 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
     TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
     TRACKTION_UNIT_TESTS=1
     TRACKTION_BENCHMARKS=1
-    TRACKTION_LOG_DEVICES=0)
+    TRACKTION_LOG_DEVICES=0
+    TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND=${HAS_RUBBERBAND}
+    TRACKTION_BUILD_RUBBERBAND=${HAS_RUBBERBAND})
 
 target_link_libraries(${TARGET_NAME} PRIVATE
     tracktion::tracktion_core

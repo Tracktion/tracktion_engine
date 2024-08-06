@@ -37,6 +37,11 @@ jobs:
           submodules: true
           persist-credentials: false
 
+      - name: Add Rubber Band submodule for testing
+        run: |
+          git submodule add -f https://github.com/breakfastquay/rubberband.git modules/3rd_party/rubberband
+          git submodule update --init
+
       # - name: Generate coverage report
       #   run: |
       #     tests/coverage/generate_coverage_report
