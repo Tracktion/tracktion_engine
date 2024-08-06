@@ -1796,6 +1796,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af998faa7c14d93fa2450d16c0accacc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html">ClipPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#af998faa7c14d93fa2450d16c0accacc0">createClipPosition</a> (const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;, BeatRange, BeatDuration offset={})</td></tr>
 <tr class="memdesc:af998faa7c14d93fa2450d16c0accacc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion_1_1engine_1_1ClipPosition.html" title="Represents the position of a clip on a timeline.">ClipPosition</a> from either a time or beat range.  <a href="namespacetracktion_1_1engine.html#af998faa7c14d93fa2450d16c0accacc0">More...</a><br /></td></tr>
 <tr class="separator:af998faa7c14d93fa2450d16c0accacc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a50aef21e8360a45b96daa81e6b1b96"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a2a50aef21e8360a45b96daa81e6b1b96">countNumTracks</a> (const juce::ValueTree &amp;)</td></tr>
+<tr class="memdesc:a2a50aef21e8360a45b96daa81e6b1b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of tracks from this tree recursively.  <a href="namespacetracktion_1_1engine.html#a2a50aef21e8360a45b96daa81e6b1b96">More...</a><br /></td></tr>
+<tr class="separator:a2a50aef21e8360a45b96daa81e6b1b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9524435c5c2eed1256ff4f22793a54aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9524435c5c2eed1256ff4f22793a54aa">moveAutomation</a> (const juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1TrackAutomationSection.html">TrackAutomationSection</a> &gt; &amp;, TimeDuration offset, bool copy)</td></tr>
 <tr class="memdesc:a9524435c5c2eed1256ff4f22793a54aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves a set of automation optionally applying an offset and copying the automation (rather than moving it).  <a href="namespacetracktion_1_1engine.html#a9524435c5c2eed1256ff4f22793a54aa">More...</a><br /></td></tr>
 <tr class="separator:a9524435c5c2eed1256ff4f22793a54aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -6650,6 +6653,26 @@ template&lt;typename ModifierType &gt; </div>
 
 </div>
 </div>
+<a id="a2a50aef21e8360a45b96daa81e6b1b96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a50aef21e8360a45b96daa81e6b1b96">&#9670;&nbsp;</a></span>countNumTracks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::countNumTracks </td>
+          <td>(</td>
+          <td class="paramtype">const juce::ValueTree &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the number of tracks from this tree recursively. </p>
+
+</div>
+</div>
 <a id="a9524435c5c2eed1256ff4f22793a54aa"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9524435c5c2eed1256ff4f22793a54aa">&#9670;&nbsp;</a></span>moveAutomation()</h2>
 
@@ -9645,7 +9668,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 6 2024 12:20:13 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Aug 6 2024 12:39:42 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

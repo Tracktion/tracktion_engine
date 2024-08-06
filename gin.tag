@@ -6260,6 +6260,13 @@
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <member kind="function">
+      <type>int</type>
+      <name>countNumTracks</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2a50aef21e8360a45b96daa81e6b1b96</anchor>
+      <arglist>(const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>moveAutomation</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -88633,6 +88640,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>af998faa7c14d93fa2450d16c0accacc0</anchor>
       <arglist>(const TempoSequence &amp;, BeatRange, BeatDuration offset={})</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>countNumTracks</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a2a50aef21e8360a45b96daa81e6b1b96</anchor>
+      <arglist>(const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
