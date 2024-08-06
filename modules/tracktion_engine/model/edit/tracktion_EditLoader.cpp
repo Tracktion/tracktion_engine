@@ -50,6 +50,8 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
     Edit::Options options
     {
         .engine = engine,
+        .editState = {},
+        .editProjectItemID = {},
         .role = role,
         .loadContext = &handle->loadContext,
         .numUndoLevelsToStore = numUndoLevelsToStore,
