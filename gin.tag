@@ -91021,14 +91021,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -91103,6 +91103,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -91112,18 +91117,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>

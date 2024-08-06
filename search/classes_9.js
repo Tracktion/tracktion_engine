@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['job_7441',['Job',['../classtracktion_1_1engine_1_1RenderManager_1_1Job.html',1,'tracktion::engine::RenderManager']]],
-  ['jobinfo_7442',['JobInfo',['../structtracktion_1_1engine_1_1BackgroundJobManager_1_1JobInfo.html',1,'tracktion::engine::BackgroundJobManager']]]
+  ['job_7438',['Job',['../classtracktion_1_1engine_1_1RenderManager_1_1Job.html',1,'tracktion::engine::RenderManager']]],
+  ['jobinfo_7439',['JobInfo',['../structtracktion_1_1engine_1_1BackgroundJobManager_1_1JobInfo.html',1,'tracktion::engine::BackgroundJobManager']]]
 ];
