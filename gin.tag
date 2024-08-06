@@ -2473,6 +2473,14 @@
     <namespace>juce</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_EditLoader.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
+    <filename>tracktion__EditLoader_8h.html</filename>
+    <class kind="class">engine::EditLoader</class>
+    <class kind="class">engine::EditLoader::Handle</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_EditNodeBuilder.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__EditNodeBuilder_8h.html</filename>
@@ -31286,6 +31294,25 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>engine::EditLoader</name>
+    <filename>classengine_1_1EditLoader.html</filename>
+    <class kind="class">engine::EditLoader::Handle</class>
+    <member kind="function" static="yes">
+      <type>static std::shared_ptr&lt; Handle &gt;</type>
+      <name>loadEdit</name>
+      <anchorfile>classengine_1_1EditLoader.html</anchorfile>
+      <anchor>a8d4cbbcdf2ac00edf9d7d671854f0702</anchor>
+      <arglist>(Edit::Options, std::function&lt; void(std::unique_ptr&lt; Edit &gt;)&gt; editLoadedCallback)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::shared_ptr&lt; Handle &gt;</type>
+      <name>loadEdit</name>
+      <anchorfile>classengine_1_1EditLoader.html</anchorfile>
+      <anchor>a02ca11346443d46cd40f9787f3749900</anchor>
+      <arglist>(Engine &amp;, juce::File, std::function&lt; void(std::unique_ptr&lt; Edit &gt;)&gt; editLoadedCallback, Edit::EditRole role=Edit::forEditing, int numUndoLevelsToStore=Edit::getDefaultNumUndoLevels())</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::EditNodeBuilder</name>
     <filename>structtracktion_1_1engine_1_1EditNodeBuilder.html</filename>
@@ -38560,6 +38587,24 @@
       <name>paramTree</name>
       <anchorfile>structtracktion_1_1engine_1_1VSTXML_1_1Group.html</anchorfile>
       <anchor>aa64690a94ce746af9ca835bb7965a86b</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::EditLoader::Handle</name>
+    <filename>classengine_1_1EditLoader_1_1Handle.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>~Handle</name>
+      <anchorfile>classengine_1_1EditLoader_1_1Handle.html</anchorfile>
+      <anchor>a14b61be44ce049c110d62f7a54647cb7</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit::LoadContext</type>
+      <name>loadContext</name>
+      <anchorfile>classengine_1_1EditLoader_1_1Handle.html</anchorfile>
+      <anchor>a974ca3a13c08f2565da72458da5a4a4f</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86292,6 +86337,7 @@
     <name>engine</name>
     <filename>namespaceengine.html</filename>
     <class kind="class">engine::FollowActions</class>
+    <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
     <member kind="enumeration">
       <type></type>
