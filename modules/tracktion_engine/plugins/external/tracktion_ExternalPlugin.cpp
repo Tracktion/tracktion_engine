@@ -1843,8 +1843,9 @@ void ExternalPlugin::deletePluginInstance()
     isAsyncInitialising = false;
     loadError = {};
 
-    if (auto pi = loadedInstance->releaseInstance())
-        AsyncPluginDeleter::getInstance()->deletePlugin (std::move (pi));
+    if (loadedInstance)
+        if (auto pi = loadedInstance->releaseInstance())
+            AsyncPluginDeleter::getInstance()->deletePlugin (std::move (pi));
 }
 
 //==============================================================================
