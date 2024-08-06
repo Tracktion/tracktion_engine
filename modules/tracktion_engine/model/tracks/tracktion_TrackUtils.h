@@ -145,6 +145,10 @@ private:
 };
 
 //==============================================================================
+/// Returns the number of tracks from this tree recursively.
+int countNumTracks (const juce::ValueTree&);
+
+//==============================================================================
 /**
     Defines a time raneg sectin of a Track.
 */

@@ -608,6 +608,9 @@ Edit::Edit (Options options)
             return {};
         };
 
+    if (loadContext != nullptr && ! loadContext->shouldExit)
+        loadContext->totalNumTracks = countNumTracks (state);
+
     pluginCache                 = std::make_unique<PluginCache> (*this);
     mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
     transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
@@ -798,7 +801,10 @@ void Edit::initialise (const Options& options)
     loadTracks();
 
     if (loadContext != nullptr)
+    {
+        assert (loadContext->totalNumTracks == loadContext->numTracksLoaded);
         loadContext->progress = 1.0f;
+    }
 
     initialiseTracks (options);
     initialiseARA();
@@ -1336,6 +1342,23 @@ Track::Ptr Edit::loadTrackFrom (juce::ValueTree& v)
     return {};
 }
 
+Track::Ptr Edit::loadedTrack (Track::Ptr t)
+{
+    if (! isLoading())
+        return t;
+
+    assert (t);
+
+    if (! loadContext)
+        return t;
+
+    if (const auto total = loadContext->totalNumTracks.load();
+        total > 0)
+       loadContext->progress = loadContext->numTracksLoaded.fetch_add (1) / static_cast<float> (total);
+
+    return t;
+}
+
 template <typename Type>
 static Track::Ptr createAndInitialiseTrack (Edit& ed, const juce::ValueTree& v)
 {
@@ -1348,14 +1371,14 @@ Track::Ptr Edit::createTrack (const juce::ValueTree& v)
 {
     CRASH_TRACER
 
-    if (v.hasType (IDs::TRACK))            return createAndInitialiseTrack<AudioTrack> (*this, v);
-    if (v.hasType (IDs::MARKERTRACK))      return createAndInitialiseTrack<MarkerTrack> (*this, v);
-    if (v.hasType (IDs::FOLDERTRACK))      return createAndInitialiseTrack<FolderTrack> (*this, v);
-    if (v.hasType (IDs::AUTOMATIONTRACK))  return createAndInitialiseTrack<AutomationTrack> (*this, v);
-    if (v.hasType (IDs::TEMPOTRACK))       return createAndInitialiseTrack<TempoTrack> (*this, v);
-    if (v.hasType (IDs::CHORDTRACK))       return createAndInitialiseTrack<ChordTrack> (*this, v);
-    if (v.hasType (IDs::ARRANGERTRACK))    return createAndInitialiseTrack<ArrangerTrack> (*this, v);
-    if (v.hasType (IDs::MASTERTRACK))      return createAndInitialiseTrack<MasterTrack> (*this, v);
+    if (v.hasType (IDs::TRACK))            return loadedTrack (createAndInitialiseTrack<AudioTrack> (*this, v));
+    if (v.hasType (IDs::MARKERTRACK))      return loadedTrack (createAndInitialiseTrack<MarkerTrack> (*this, v));
+    if (v.hasType (IDs::FOLDERTRACK))      return loadedTrack (createAndInitialiseTrack<FolderTrack> (*this, v));
+    if (v.hasType (IDs::AUTOMATIONTRACK))  return loadedTrack (createAndInitialiseTrack<AutomationTrack> (*this, v));
+    if (v.hasType (IDs::TEMPOTRACK))       return loadedTrack (createAndInitialiseTrack<TempoTrack> (*this, v));
+    if (v.hasType (IDs::CHORDTRACK))       return loadedTrack (createAndInitialiseTrack<ChordTrack> (*this, v));
+    if (v.hasType (IDs::ARRANGERTRACK))    return loadedTrack (createAndInitialiseTrack<ArrangerTrack> (*this, v));
+    if (v.hasType (IDs::MASTERTRACK))      return loadedTrack (createAndInitialiseTrack<MasterTrack> (*this, v));
 
     jassertfalse;
     return {};

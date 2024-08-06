@@ -254,6 +254,22 @@ void TrackList::handleAsyncUpdate()
         sortTracksByType (edit.state, &edit.getUndoManager());
 }
 
+//==============================================================================
+int countNumTracks (const juce::ValueTree& v)
+{
+    int total = 0;
+
+    for (const auto& c : v)
+    {
+        if (! TrackList::isTrack (c.getType()))
+            continue;
+
+        ++total;
+        total += countNumTracks (c);
+    }
+
+    return total;
+}
 
 //==============================================================================
 TrackAutomationSection::TrackAutomationSection (TrackItem& c)

@@ -10,8 +10,7 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_EDIT_LOADER
 
-#include <semaphore>
-#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+#include "../../../3rd_party/doctest/tracktion_doctest.hpp"
 
 namespace tracktion::inline engine
 {

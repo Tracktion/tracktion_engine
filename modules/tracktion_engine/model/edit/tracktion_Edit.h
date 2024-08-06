@@ -87,6 +87,11 @@ public:
         std::atomic<float> progress  { 0.0f };  /**< Progress will be updated as the Edit loads. */
         std::atomic<bool> completed  { false }; /**< Set to true once the Edit has loaded. */
         std::atomic<bool> shouldExit { false }; /**< Can be set to true to cancel loading the Edit. */
+
+    private:
+        friend Edit;
+        std::atomic<int> totalNumTracks { 0 };
+        std::atomic<int> numTracksLoaded { 0 };
     };
 
     //==============================================================================
@@ -911,6 +916,7 @@ private:
 
     Track::Ptr createTrack (const juce::ValueTree&);
     Track::Ptr loadTrackFrom (juce::ValueTree&);
+    Track::Ptr loadedTrack (Track::Ptr);
     void updateTrackStatuses();
     void updateTrackStatusesAsync();
     void moveTrackInternal (Track::Ptr, TrackInsertPoint);
