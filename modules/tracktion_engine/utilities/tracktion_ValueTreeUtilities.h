@@ -465,6 +465,21 @@ static inline juce::ValueTree loadValueTree (const juce::File& file, bool asXml)
     return {};
 }
 
+/** Attempts to load a ValueTree from a file if the outer tag matches a given name.
+    This will first try to read as XML and the fall back to binary.
+*/
+static inline juce::ValueTree loadValueTree (const juce::File& file, const juce::Identifier& requiredTag)
+{
+    if (auto xml = juce::parseXMLIfTagMatches (file, requiredTag))
+        return juce::ValueTree::fromXml (*xml);
+
+    if (juce::FileInputStream is (file); is.openedOk())
+        if (auto vt = juce::ValueTree::readFromStream (is); vt.hasType (requiredTag))
+            return vt;
+
+    return {};
+}
+
 /** Saves a ValueTree to a File. */
 static inline bool saveValueTree (const juce::File& file, const juce::ValueTree& v, bool asXml)
 {

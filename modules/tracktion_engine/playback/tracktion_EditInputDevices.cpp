@@ -15,7 +15,9 @@ EditInputDevices::EditInputDevices (Edit& e, const juce::ValueTree& v)
     : edit (e), state (v), editState (e.state)
 {
     editState.addListener (this);
-    callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });
+
+    if (edit.shouldPlay())
+        callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });
 }
 
 EditInputDevices::~EditInputDevices()

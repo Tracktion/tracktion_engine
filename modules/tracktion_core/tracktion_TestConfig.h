@@ -25,6 +25,7 @@
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
 #define ENGINE_UNIT_TESTS_DELAY_PLUGIN                  1
 #define ENGINE_UNIT_TESTS_EDIT                          1
+#define ENGINE_UNIT_TESTS_EDIT_LOADER                   1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
 #define ENGINE_UNIT_TESTS_FOLLOW_ACTIONS                1

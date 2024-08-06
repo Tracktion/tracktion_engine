@@ -203,9 +203,10 @@ public:
             return;
         }
 
-        TRACKTION_LOG_ERROR ("Rogue call to triggerAndWaitForCallback()");
-        jassertfalse;
-        waiter.wait (50);
+        // If you get a deadlock here, it's probably because your MessageManager isn't
+        // actually running and dispatching messages. This shouldn't be called with a
+        // blocked message manager
+        waiter.wait();
 
         if (! hasFinished())
         {

@@ -65,6 +65,8 @@ using namespace std::literals;
 #include "model/edit/tracktion_EditSnapshot.cpp"
 #include "model/edit/tracktion_EditFileOperations.cpp"
 #include "model/edit/tracktion_EditInsertPoint.cpp"
+#include "model/edit/tracktion_EditLoader.cpp"
+#include "model/edit/tracktion_EditLoader.test.cpp"
 
 #include "model/export/tracktion_Exportable.cpp"
 #include "model/export/tracktion_ExportJob.cpp"
