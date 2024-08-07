@@ -251,20 +251,6 @@ void TrackOutput::setOutputToDefaultDevice (bool isMidi)
                           : DeviceManager::getDefaultAudioOutDeviceName (false);
 }
 
-static bool feedsIntoAnyOf (AudioTrack* t, const juce::Array<AudioTrack*>& tracks)
-{
-    if (tracks.contains (t))
-        return true;
-
-    auto& output = t->getOutput();
-
-    for (auto track : tracks)
-        if (output.feedsInto (track))
-            return true;
-
-    return false;
-}
-
 void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& tracks,
                                                 juce::StringArray& s, juce::StringArray& a,
                                                 juce::BigInteger& hasAudio,
