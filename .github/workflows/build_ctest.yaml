@@ -102,7 +102,7 @@ jobs:
         run: |
           ROOT=$(pwd)
           echo $ROOT
-          ctest --test-dir ${{ env.TEST_DIR }} -C $CONFIG -R ${{ matrix.target }} -V
+          ctest --test-dir ${{ env.TEST_DIR }} -C ${{ env.BUILD_CONFIG }} -R ${{ matrix.target }} -V
 
       # Static analyse
       - name: "Static analyse products"
