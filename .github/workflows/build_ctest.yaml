@@ -11,9 +11,6 @@ env:
 
 jobs:
   test:
-    env:
-      BUILD_CONFIG: Release
-      BUILD_DIR: build
     strategy:
       fail-fast: false
       matrix:
@@ -23,15 +20,15 @@ jobs:
           - name: linux
             os: ubuntu-latest
             config_preset: "ninja-multi"
-            build_preset: "ninja-${{ env.BUILD_CONFIG }}"
+            build_preset: "ninja"
           - name: macOS
             os: macos-latest
             config_preset: "xcode"
-            build_preset: "xcode-${{ env.BUILD_CONFIG }}"
+            build_preset: "xcode"
           - name: windows
             os: windows-latest
             config_preset: "windows"
-            build_preset: "windows-${{ env.BUILD_CONFIG }}"
+            build_preset: "windows"
           - publish_benchmark: true
 
     runs-on: ${{ matrix.os }}
@@ -91,7 +88,7 @@ jobs:
             g++ -v
           fi
 
-          cmake --build --preset ${{ matrix.build_preset }} --target ${{ matrix.target }}
+          cmake --build --preset ${{ matrix.build_preset }}-${{ env.BUILD_CONFIG }} --target ${{ matrix.target }}
 
       # Run products
       - name: "Run products"
