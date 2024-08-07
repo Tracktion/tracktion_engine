@@ -94,7 +94,7 @@ jobs:
 
       # Run products
       - name: "Run products"
-        if: ${{ matrix.run_target && ! matrix.analyse }}
+        if: ${{ ! matrix.analyse }}
         shell: bash
         env:
           BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
