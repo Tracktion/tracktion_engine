@@ -68,7 +68,7 @@ jobs:
           TARGET=${{ matrix.target }}
           CONFIG_PRESET=${{ matrix.config_preset }}
           TEST_DIR=cmake-build/${{ matrix.cmake_host_system_name }}/cmake-$CONFIG_PRESET
-          echo "$TEST_DIR" >> $GITHUB_ENV
+          echo "TEST_DIR=$TEST_DIR" >> $GITHUB_ENV
 
       # Generate build files
       - name: "Generate Build Files"
