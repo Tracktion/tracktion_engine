@@ -76854,6 +76854,13 @@
     </member>
     <member kind="function">
       <type>juce::String</type>
+      <name>getOutputDeviceID</name>
+      <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
+      <anchor>aa4b3bc0879f08147e43709e9af02a28b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
       <name>getOutputName</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
       <anchor>a95a3c0416536222033607e61aba117f7</anchor>
@@ -76888,6 +76895,20 @@
       <arglist>(const Track *possibleDestTrack) const</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>usesDefaultAudioOut</name>
+      <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
+      <anchor>a910810c5246f1de3eea3e31f31fe27bb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>usesDefaultMIDIOut</name>
+      <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
+      <anchor>af145d4fa4fc0c72007a1fd8a5a70e295</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>OutputDevice *</type>
       <name>getOutputDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
@@ -76896,10 +76917,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>setOutputByName</name>
+      <name>setOutputToDeviceID</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
-      <anchor>a6014b564e526a2ea0ce5c17c384b844f</anchor>
-      <arglist>(const juce::String &amp;name)</arglist>
+      <anchor>a890910e1d5832e59dc5da077a6d6ea23</anchor>
+      <arglist>(const juce::String &amp;deviceID)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -76941,13 +76962,6 @@
       <name>getPossibleOutputDeviceNames</name>
       <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
       <anchor>a1885529286f3ab312b4adfafbfab14a3</anchor>
-      <arglist>(const juce::Array&lt; AudioTrack * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>getPossibleOutputNames</name>
-      <anchorfile>classtracktion_1_1engine_1_1TrackOutput.html</anchorfile>
-      <anchor>a29c9bc98ef5b51006c83d70af1b397b5</anchor>
       <arglist>(const juce::Array&lt; AudioTrack * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</arglist>
     </member>
     <member kind="variable">
@@ -91035,14 +91049,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -91117,6 +91131,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -91126,18 +91145,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>

@@ -96,6 +96,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a315f28dd015095c0621fc0677d8aa338"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a315f28dd015095c0621fc0677d8aa338">outputsToDevice</a> (const juce::String &amp;deviceName, bool compareDefaultDevices) const</td></tr>
 <tr class="memdesc:a315f28dd015095c0621fc0677d8aa338"><td class="mdescLeft">&#160;</td><td class="mdescRight">if compareDefaultDevices is true, then this returns true if the device name is 'default ..' and the actual device is named, or vice-versa  <a href="classtracktion_1_1engine_1_1TrackOutput.html#a315f28dd015095c0621fc0677d8aa338">More...</a><br /></td></tr>
 <tr class="separator:a315f28dd015095c0621fc0677d8aa338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4b3bc0879f08147e43709e9af02a28b"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#aa4b3bc0879f08147e43709e9af02a28b">getOutputDeviceID</a> () const</td></tr>
+<tr class="memdesc:aa4b3bc0879f08147e43709e9af02a28b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ID of the track's target device (if one is set).  <a href="classtracktion_1_1engine_1_1TrackOutput.html#aa4b3bc0879f08147e43709e9af02a28b">More...</a><br /></td></tr>
+<tr class="separator:aa4b3bc0879f08147e43709e9af02a28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95a3c0416536222033607e61aba117f7"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a95a3c0416536222033607e61aba117f7">getOutputName</a> () const</td></tr>
 <tr class="memdesc:a95a3c0416536222033607e61aba117f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">description of where it's going.  <a href="classtracktion_1_1engine_1_1TrackOutput.html#a95a3c0416536222033607e61aba117f7">More...</a><br /></td></tr>
 <tr class="separator:a95a3c0416536222033607e61aba117f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,11 +114,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae42fdf4c1d1aae5e2b100635e1d98c88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#ae42fdf4c1d1aae5e2b100635e1d98c88">feedsInto</a> (const <a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> *possibleDestTrack) const</td></tr>
 <tr class="memdesc:ae42fdf4c1d1aae5e2b100635e1d98c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if any downstream tracks match this one  <a href="classtracktion_1_1engine_1_1TrackOutput.html#ae42fdf4c1d1aae5e2b100635e1d98c88">More...</a><br /></td></tr>
 <tr class="separator:ae42fdf4c1d1aae5e2b100635e1d98c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a910810c5246f1de3eea3e31f31fe27bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a910810c5246f1de3eea3e31f31fe27bb">usesDefaultAudioOut</a> () const</td></tr>
+<tr class="memdesc:a910810c5246f1de3eea3e31f31fe27bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if this output is going to the default audio out.  <a href="classtracktion_1_1engine_1_1TrackOutput.html#a910810c5246f1de3eea3e31f31fe27bb">More...</a><br /></td></tr>
+<tr class="separator:a910810c5246f1de3eea3e31f31fe27bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af145d4fa4fc0c72007a1fd8a5a70e295"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#af145d4fa4fc0c72007a1fd8a5a70e295">usesDefaultMIDIOut</a> () const</td></tr>
+<tr class="memdesc:af145d4fa4fc0c72007a1fd8a5a70e295"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if this output is going to the default MIDI out.  <a href="classtracktion_1_1engine_1_1TrackOutput.html#af145d4fa4fc0c72007a1fd8a5a70e295">More...</a><br /></td></tr>
+<tr class="separator:af145d4fa4fc0c72007a1fd8a5a70e295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8358f925445fe3a305aea2c1eb0ba46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1OutputDevice.html">OutputDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#af8358f925445fe3a305aea2c1eb0ba46">getOutputDevice</a> (bool traceThroughDestTracks) const</td></tr>
 <tr class="memdesc:af8358f925445fe3a305aea2c1eb0ba46"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds the output device.  <a href="classtracktion_1_1engine_1_1TrackOutput.html#af8358f925445fe3a305aea2c1eb0ba46">More...</a><br /></td></tr>
 <tr class="separator:af8358f925445fe3a305aea2c1eb0ba46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6014b564e526a2ea0ce5c17c384b844f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a6014b564e526a2ea0ce5c17c384b844f">setOutputByName</a> (const juce::String &amp;name)</td></tr>
-<tr class="separator:a6014b564e526a2ea0ce5c17c384b844f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a890910e1d5832e59dc5da077a6d6ea23"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a890910e1d5832e59dc5da077a6d6ea23">setOutputToDeviceID</a> (const juce::String &amp;deviceID)</td></tr>
+<tr class="separator:a890910e1d5832e59dc5da077a6d6ea23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0392fa67739aa817b76a0181efb36008"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a0392fa67739aa817b76a0181efb36008">setOutputToTrack</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> *)</td></tr>
 <tr class="separator:a0392fa67739aa817b76a0181efb36008"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbbf5c8ed571a483840d8fc150b40593"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#afbbf5c8ed571a483840d8fc150b40593">setOutputToDefaultDevice</a> (bool isMidi)</td></tr>
@@ -133,8 +142,6 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1885529286f3ab312b4adfafbfab14a3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a1885529286f3ab312b4adfafbfab14a3">getPossibleOutputDeviceNames</a> (const juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</td></tr>
 <tr class="separator:a1885529286f3ab312b4adfafbfab14a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29c9bc98ef5b51006c83d70af1b397b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1TrackOutput.html#a29c9bc98ef5b51006c83d70af1b397b5">getPossibleOutputNames</a> (const juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt; &amp;tracks, juce::StringArray &amp;s, juce::StringArray &amp;a, juce::BigInteger &amp;hasAudio, juce::BigInteger &amp;hasMidi)</td></tr>
-<tr class="separator:a29c9bc98ef5b51006c83d70af1b397b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -271,6 +278,25 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa4b3bc0879f08147e43709e9af02a28b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4b3bc0879f08147e43709e9af02a28b">&#9670;&nbsp;</a></span>getOutputDeviceID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String tracktion::engine::TrackOutput::getOutputDeviceID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The ID of the track's target device (if one is set). </p>
+
+</div>
+</div>
 <a id="a95a3c0416536222033607e61aba117f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a95a3c0416536222033607e61aba117f7">&#9670;&nbsp;</a></span>getOutputName()</h2>
 
@@ -368,6 +394,44 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a910810c5246f1de3eea3e31f31fe27bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a910810c5246f1de3eea3e31f31fe27bb">&#9670;&nbsp;</a></span>usesDefaultAudioOut()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::TrackOutput::usesDefaultAudioOut </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True if this output is going to the default audio out. </p>
+
+</div>
+</div>
+<a id="af145d4fa4fc0c72007a1fd8a5a70e295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af145d4fa4fc0c72007a1fd8a5a70e295">&#9670;&nbsp;</a></span>usesDefaultMIDIOut()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::TrackOutput::usesDefaultMIDIOut </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True if this output is going to the default MIDI out. </p>
+
+</div>
+</div>
 <a id="af8358f925445fe3a305aea2c1eb0ba46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af8358f925445fe3a305aea2c1eb0ba46">&#9670;&nbsp;</a></span>getOutputDevice()</h2>
 
@@ -389,17 +453,17 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6014b564e526a2ea0ce5c17c384b844f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6014b564e526a2ea0ce5c17c384b844f">&#9670;&nbsp;</a></span>setOutputByName()</h2>
+<a id="a890910e1d5832e59dc5da077a6d6ea23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a890910e1d5832e59dc5da077a6d6ea23">&#9670;&nbsp;</a></span>setOutputToDeviceID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::TrackOutput::setOutputByName </td>
+          <td class="memname">void tracktion::engine::TrackOutput::setOutputToDeviceID </td>
           <td>(</td>
           <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>deviceID</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -454,60 +518,6 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">static void tracktion::engine::TrackOutput::getPossibleOutputDeviceNames </td>
-          <td>(</td>
-          <td class="paramtype">const juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt; &amp;&#160;</td>
-          <td class="paramname"><em>tracks</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::StringArray &amp;&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::StringArray &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::BigInteger &amp;&#160;</td>
-          <td class="paramname"><em>hasAudio</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::BigInteger &amp;&#160;</td>
-          <td class="paramname"><em>hasMidi</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a29c9bc98ef5b51006c83d70af1b397b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29c9bc98ef5b51006c83d70af1b397b5">&#9670;&nbsp;</a></span>getPossibleOutputNames()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void tracktion::engine::TrackOutput::getPossibleOutputNames </td>
           <td>(</td>
           <td class="paramtype">const juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> * &gt; &amp;&#160;</td>
           <td class="paramname"><em>tracks</em>, </td>
@@ -628,7 +638,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 6 2024 15:14:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Aug 7 2024 15:37:30 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
