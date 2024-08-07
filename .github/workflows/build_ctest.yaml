@@ -64,7 +64,8 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           TARGET=${{ matrix.target }}
           CONFIG_PRESET=${{ matrix.config_preset }}
-          TEST_DIR=cmake-build/${{ matrix.platform }}/cmake-$CONFIG_PRESET
+          PLATFORM=`uname -s`
+          TEST_DIR=cmake-build/$PLATFORM/cmake-$CONFIG_PRESET
           echo "$TEST_DIR" >> $GITHUB_ENV
 
       # Generate build files
