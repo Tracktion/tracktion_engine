@@ -21,14 +21,17 @@ jobs:
             os: ubuntu-latest
             config_preset: "ninja-multi"
             build_preset: "ninja"
+            cmake_host_system_name: "Linux"
           - name: macOS
             os: macos-latest
             config_preset: "xcode"
             build_preset: "xcode"
+            cmake_host_system_name: "Darwin"
           - name: windows
             os: windows-latest
             config_preset: "windows"
             build_preset: "windows"
+            cmake_host_system_name: "Windows"
           - publish_benchmark: true
 
     runs-on: ${{ matrix.os }}
@@ -64,8 +67,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           TARGET=${{ matrix.target }}
           CONFIG_PRESET=${{ matrix.config_preset }}
-          PLATFORM=`uname -s`
-          TEST_DIR=cmake-build/$PLATFORM/cmake-$CONFIG_PRESET
+          TEST_DIR=cmake-build/${{ matrix.cmake_host_system_name }}/cmake-$CONFIG_PRESET
           echo "$TEST_DIR" >> $GITHUB_ENV
 
       # Generate build files
