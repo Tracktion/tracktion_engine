@@ -141,45 +141,45 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_RelWithDebInfo",
+      "name": "xcode-RelWithDebInfo",
       "configuration": "RelWithDebInfo",
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_Release",
+      "name": "xcode-Release",
       "configuration": "Release",
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_DebugAsan",
+      "name": "xcode-DebugAsan",
       "configuration": "Debug",
       "nativeToolOptions": [ "-enableAddressSanitizer YES",  "-enableUndefinedBehaviorSanitizer YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_DebugTsan",
+      "name": "xcode-DebugTsan",
       "configuration": "Debug",
       "nativeToolOptions": [ "-enableThreadSanitizer YES",  "-enableUndefinedBehaviorSanitizer YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "windows_Debug",
+      "name": "windows-Debug",
       "configuration": "Debug",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
-      "name": "windows_RelWithDebInfo",
+      "name": "windows-RelWithDebInfo",
       "configuration": "RelWithDebInfo",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
-      "name": "windows_Release",
+      "name": "windows-Release",
       "configuration": "Release",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
