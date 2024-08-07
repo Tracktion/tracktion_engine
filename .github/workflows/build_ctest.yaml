@@ -23,15 +23,15 @@ jobs:
           - name: linux
             os: ubuntu-latest
             config_preset: "ninja-multi"
-            build_preset: "ninja-"${{ env.BUILD_CONFIG }}
+            build_preset: "ninja-${{ env.BUILD_CONFIG }}"
           - name: macOS
             os: macos-latest
             config_preset: "xcode"
-            build_preset: "xcode-"${{ env.BUILD_CONFIG }}
+            build_preset: "xcode-${{ env.BUILD_CONFIG }}"
           - name: windows
             os: windows-latest
             config_preset: "windows"
-            build_preset: "windows-"${{ env.BUILD_CONFIG }}
+            build_preset: "windows-${{ env.BUILD_CONFIG }}"
           - publish_benchmark: true
 
     runs-on: ${{ matrix.os }}
