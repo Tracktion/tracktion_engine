@@ -11,6 +11,9 @@ env:
 
 jobs:
   test:
+    env:
+      BUILD_CONFIG: Release
+      BUILD_DIR: build
     strategy:
       fail-fast: false
       matrix:
