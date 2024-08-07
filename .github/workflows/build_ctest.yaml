@@ -20,7 +20,6 @@ jobs:
         name: [ linux, macOS, windows ]
         target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
         include:
-          # Main maxtix
           - name: linux
             os: ubuntu-latest
             config_preset: "ninja-multi"
