@@ -244,7 +244,8 @@ namespace TestRunner
         }
 
         doctest::Context doctestContext;
-        // doctestContext.setOption ("success", true);
+        // doctestContext.setOption ("success", true);  // Shows passed tests
+        // doctestContext.setOption ("abort-after", 1); // Aborts after the first fail
         doctestContext.setOption ("duration", true);
         doctestContext.addFilter("test-suite", "tracktion_core");
         doctestContext.addFilter("test-suite", "tracktion_graph");
