@@ -146,15 +146,41 @@ bool TrackOutput::outputsToDestTrack (AudioTrack& t) const
     return t.itemID == destTrackID;
 }
 
+bool TrackOutput::usesDefaultAudioOut() const
+{
+    return outputDevice == DeviceManager::getDefaultAudioOutDeviceName (false);
+}
+
+bool TrackOutput::usesDefaultMIDIOut() const
+{
+    return outputDevice == DeviceManager::getDefaultMidiOutDeviceName (false);
+}
+
 OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
 {
-    auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice);
+    auto& dm = owner.edit.engine.getDeviceManager();
+
+    auto dev = dm.findOutputDeviceForID (outputDevice);
+
+    if (dev == nullptr)
+        dev = dm.findOutputDeviceWithName (outputDevice);
 
     if ((dev == nullptr || ! dev->isEnabled()) && traceThroughDestTracks)
         if (auto t = getDestinationTrack())
             dev = t->getOutput().getOutputDevice (true);
 
     return dev;
+}
+
+juce::String TrackOutput::getOutputDeviceID() const
+{
+    if (destTrackID.isValid())
+        return {};
+
+    if (auto dev = getOutputDevice (false))
+        return dev->getName();
+
+    return outputDevice;
 }
 
 juce::String TrackOutput::getOutputName() const
@@ -178,18 +204,15 @@ juce::String TrackOutput::getDescriptiveOutputName() const
                  .replace ("123", juce::String (t->getAudioTrackNumber()));
     }
 
-    if (auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice))
+    if (auto dev = getOutputDevice (false))
         return dev->getAlias();
 
     return outputDevice;
 }
 
-void TrackOutput::setOutputByName (const juce::String& name)
+void TrackOutput::setOutputToDeviceID (const juce::String& deviceID)
 {
-    if (name.startsWith (TRANS("Track") + " "))
-        outputDevice = juce::String ("track ") + juce::String (name.upToFirstOccurrenceOf ("(", false, false).trim().getTrailingIntValue());
-    else
-        outputDevice = name;
+    outputDevice = deviceID;
 }
 
 bool TrackOutput::canPlayAudio() const
@@ -281,29 +304,6 @@ void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& 
                 s.add (out->getName());
                 a.add (out->getAlias());
             }
-        }
-    }
-}
-
-void TrackOutput::getPossibleOutputNames (const juce::Array<AudioTrack*>& tracks,
-                                          juce::StringArray& s, juce::StringArray& a,
-                                          juce::BigInteger& hasAudio,
-                                          juce::BigInteger& hasMidi)
-{
-    if (tracks.isEmpty())
-        return;
-
-    getPossibleOutputDeviceNames (tracks, s, a, hasAudio, hasMidi);
-
-    auto& edit = tracks[0]->edit;
-
-    for (auto t : getAudioTracks (edit))
-    {
-        if (t->createsOutput() && ! feedsIntoAnyOf (t, tracks))
-        {
-            auto trackName = t->getNameAsTrackNumberWithDescription();
-            s.add (trackName);
-            a.add (trackName);
         }
     }
 }

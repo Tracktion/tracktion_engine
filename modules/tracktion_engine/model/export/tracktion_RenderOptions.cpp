@@ -558,7 +558,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
                 if (auto targetTrack = at->getOutput().getDestinationTrack())
                     trackToUse->getOutput().setOutputToTrack (targetTrack);
                 else
-                    trackToUse->getOutput().setOutputByName (at->getOutput().getOutputName());
+                    trackToUse->getOutput().setOutputToDeviceID (at->getOutput().getOutputDeviceID());
 
                 break;
             }
