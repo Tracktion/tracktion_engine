@@ -62056,6 +62056,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>RackType::Ptr</type>
+      <name>duplicateRack</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackTypeList.html</anchorfile>
+      <anchor>a03ac81cf73cb9126f8ef8417ede1476a</anchor>
+      <arglist>(EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>removeRackType</name>
       <anchorfile>classtracktion_1_1engine_1_1RackTypeList.html</anchorfile>
