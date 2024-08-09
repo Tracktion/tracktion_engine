@@ -365,7 +365,7 @@ public:
 
     //==============================================================================
     /** Inserts a new AudioTrack in the Edit. */
-    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*);
+    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*, bool addDefaultPlugins = true);
 
     /** Inserts a new FolderTrack in the Edit, optionally as a submix. */
     juce::ReferenceCountedObjectPtr<FolderTrack> insertNewFolderTrack (TrackInsertPoint, SelectionManager*, bool asSubmix);

@@ -1824,11 +1824,13 @@ Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
     return newTrack;
 }
 
-AudioTrack::Ptr Edit::insertNewAudioTrack (TrackInsertPoint insertPoint, SelectionManager* sm)
+AudioTrack::Ptr Edit::insertNewAudioTrack (TrackInsertPoint insertPoint, SelectionManager* sm, bool addDefaultPlugins)
 {
     if (auto newTrack = insertNewTrack (insertPoint, IDs::TRACK, sm))
     {
-        newTrack->pluginList.addDefaultTrackPlugins (false);
+        if (addDefaultPlugins)
+            newTrack->pluginList.addDefaultTrackPlugins (false);
+
         return dynamic_cast<AudioTrack*> (newTrack.get());
     }
 
@@ -2183,7 +2185,7 @@ void Edit::ensureNumberOfAudioTracks (int minimumNumTracks)
     {
         getTransport().stopIfRecording();
 
-        insertNewAudioTrack (TrackInsertPoint (nullptr, getTopLevelTracks (*this).getLast()), nullptr);
+        insertNewAudioTrack (TrackInsertPoint::getEndOfTracks (*this), nullptr);
     }
 }
 

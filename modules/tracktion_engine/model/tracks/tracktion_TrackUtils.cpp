@@ -67,6 +67,11 @@ TrackInsertPoint::TrackInsertPoint (const juce::ValueTree& v)
     }
 }
 
+TrackInsertPoint TrackInsertPoint::getEndOfTracks (Edit& e)
+{
+    return TrackInsertPoint (nullptr, getTopLevelTracks (e).getLast());
+}
+
 //==============================================================================
 TrackList::TrackList (Edit& e, const juce::ValueTree& parentTree)
     : ValueTreeObjectList<Track> (parentTree), edit (e)
