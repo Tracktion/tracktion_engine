@@ -29096,8 +29096,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; AudioTrack &gt;</type>
       <name>insertNewAudioTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a54bbc3155e16caa8a967752f2095275b</anchor>
-      <arglist>(TrackInsertPoint, SelectionManager *)</arglist>
+      <anchor>adb573b5a2ae633fd9e623e75617e7bf1</anchor>
+      <arglist>(TrackInsertPoint, SelectionManager *, bool addDefaultPlugins=true)</arglist>
     </member>
     <member kind="function">
       <type>juce::ReferenceCountedObjectPtr&lt; FolderTrack &gt;</type>
@@ -76247,6 +76247,13 @@
       <anchorfile>structtracktion_1_1engine_1_1TrackInsertPoint.html</anchorfile>
       <anchor>ac25295b01d2246c27f8682127bd91256</anchor>
       <arglist>(const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static TrackInsertPoint</type>
+      <name>getEndOfTracks</name>
+      <anchorfile>structtracktion_1_1engine_1_1TrackInsertPoint.html</anchorfile>
+      <anchor>a6148673bf904319bb7a70e15313367c7</anchor>
+      <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="variable">
       <type>EditItemID</type>
