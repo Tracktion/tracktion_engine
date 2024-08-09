@@ -1007,6 +1007,28 @@ void Edit::initialiseTracks (const Options& options)
 
     for (auto t : getAllTracks (*this))
         t->refreshCurrentAutoParam();
+
+    // Garbage-collect any zombie destinations in the input device targets list
+    for (int j = inputDeviceState.getNumChildren(); --j >= 0;)
+    {
+        auto device = inputDeviceState.getChild (j);
+
+        if (device.hasType (IDs::INPUTDEVICE))
+        {
+            for (int i = device.getNumChildren(); --i >= 0;)
+            {
+                auto dest = device.getChild (i);
+
+                if (dest.hasType (IDs::INPUTDEVICEDESTINATION))
+                {
+                    auto targetID = EditItemID::fromVar (dest[IDs::targetID]);
+
+                    if (findTrackForID (*this, targetID) == nullptr)
+                        device.removeChild (dest, nullptr);
+                }
+            }
+        }
+    }
 }
 
 void Edit::initialiseAudioDevices()
