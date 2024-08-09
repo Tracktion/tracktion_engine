@@ -17,6 +17,7 @@ namespace tracktion { inline namespace engine
 namespace test_utilities
 {
     //==============================================================================
+   #if JUCE_MODAL_LOOPS_PERMITTED
     inline bool runDispatchLoopUntilTrue (const std::atomic<bool>& flag)
     {
         for (;;)
@@ -30,6 +31,7 @@ namespace test_utilities
 
         return true;
     }
+   #endif
 
     //==============================================================================
     inline std::optional<juce::AudioBuffer<float>> loadFileInToBuffer (juce::AudioFormatManager& formatManager, const juce::File& f)
