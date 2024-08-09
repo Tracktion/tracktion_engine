@@ -14,19 +14,6 @@
 
 namespace tracktion::inline engine
 {
-inline bool runDispatchLoopUntilTrue (const std::atomic<bool>& flag)
-{
-    for (;;)
-    {
-        if (flag)
-            return false;
-
-        if (! juce::MessageManager::getInstance()->runDispatchLoopUntil (1))
-            return false;
-    }
-
-    return true;
-}
 
 TEST_SUITE("tracktion_engine")
 {
@@ -63,7 +50,7 @@ TEST_SUITE("tracktion_engine")
             auto handle = EditLoader::loadEdit (std::move (opts), editLoadedCallback);
             CHECK (handle);
 
-            runDispatchLoopUntilTrue (callbackFinished);
+            test_utilities::runDispatchLoopUntilTrue (callbackFinished);
             CHECK (loadedEdit != nullptr);
             CHECK_EQ (getAudioTracks (*loadedEdit).size(), 100);
         }
@@ -82,7 +69,7 @@ TEST_SUITE("tracktion_engine")
             auto handle = EditLoader::loadEdit (engine, tempEditFile.getFile(), editLoadedCallback, Edit::forExamining);
             CHECK (handle);
 
-            runDispatchLoopUntilTrue (callbackFinished);
+            test_utilities::runDispatchLoopUntilTrue (callbackFinished);
             CHECK (loadedEdit != nullptr);
             CHECK_EQ (getAudioTracks (*loadedEdit).size(), 100);
         }

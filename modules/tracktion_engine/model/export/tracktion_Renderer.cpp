@@ -156,6 +156,9 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
      sourceToUpdate (source)
 {
+    assert (playHead);
+    assert (playHeadState);
+    assert (processState);
 }
 
 Renderer::RenderTask::~RenderTask()
@@ -260,6 +263,7 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 
     if (! nodeRenderContext)
     {
+        assert (processState);
         callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
                                                                                            std::move (graphNode),
                                                                                            std::move (playHead),

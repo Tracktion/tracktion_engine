@@ -17,6 +17,21 @@ namespace tracktion { inline namespace engine
 namespace test_utilities
 {
     //==============================================================================
+    inline bool runDispatchLoopUntilTrue (const std::atomic<bool>& flag)
+    {
+        for (;;)
+        {
+            if (flag)
+                return false;
+
+            if (! juce::MessageManager::getInstance()->runDispatchLoopUntil (1))
+                return false;
+        }
+
+        return true;
+    }
+
+    //==============================================================================
     inline std::optional<juce::AudioBuffer<float>> loadFileInToBuffer (juce::AudioFormatManager& formatManager, const juce::File& f)
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (formatManager.createReaderFor (f)))
