@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TracktionEngine: tracktion_Threads.h File Reference</title>
+<title>TracktionEngine: engine::details Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,38 +61,63 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_4fef79e7177ba769987a8da36c892c5f.html">build</a></li><li class="navelem"><a class="el" href="dir_667512c1e4bea9d789dc7a76dd4913ef.html">tracktion_graph</a></li><li class="navelem"><a class="el" href="dir_ef5d148294abea9c8a2750fa522f52a4.html">utilities</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespaceengine.html">engine</a></li><li class="navelem"><a class="el" href="namespaceengine_1_1details.html">details</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">tracktion_Threads.h File Reference</div>  </div>
+<div class="title">engine::details Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1graph"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html">tracktion::graph</a></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1details_1_1ExitMapWithMutex.html">ExitMapWithMutex</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af3c29a82f756ecd6d9d36c1f77e049f4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#af3c29a82f756ecd6d9d36c1f77e049f4">tracktion::graph::setThreadPriority</a> (std::thread &amp;, int priority)</td></tr>
-<tr class="memdesc:af3c29a82f756ecd6d9d36c1f77e049f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the thread's priority.  <a href="namespacetracktion_1_1graph.html#af3c29a82f756ecd6d9d36c1f77e049f4">More...</a><br /></td></tr>
-<tr class="separator:af3c29a82f756ecd6d9d36c1f77e049f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f8debef577496d588684166661b8ce0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a6f8debef577496d588684166661b8ce0">tracktion::graph::tryToUpgradeCurrentThreadToRealtime</a> (const juce::Thread::RealtimeOptions &amp;)</td></tr>
-<tr class="memdesc:a6f8debef577496d588684166661b8ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to upgrade the current thread to realtime priority.  <a href="namespacetracktion_1_1graph.html#a6f8debef577496d588684166661b8ce0">More...</a><br /></td></tr>
-<tr class="separator:a6f8debef577496d588684166661b8ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a059d6a70c7d1e8e2d14bfc6193881e"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; bool &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1details.html#a4a059d6a70c7d1e8e2d14bfc6193881e">getShouldExitFlag</a> (std::thread::id id, bool canCreate)</td></tr>
+<tr class="separator:a4a059d6a70c7d1e8e2d14bfc6193881e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a4a059d6a70c7d1e8e2d14bfc6193881e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a059d6a70c7d1e8e2d14bfc6193881e">&#9670;&nbsp;</a></span>getShouldExitFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;bool&gt;&amp; engine::details::getShouldExitFlag </td>
+          <td>(</td>
+          <td class="paramtype">std::thread::id&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>canCreate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="namespaceengine.html#aa4cf8194580318d0f01547ce5996239e">engine::prepareThreadForShouldExit()</a>, <a class="el" href="namespaceengine.html#a3e0b9dd13c3ba3d7fe6c9905e9368e27">engine::shouldCurrentThreadExit()</a>, and <a class="el" href="namespaceengine.html#a792bf2375807d23ca1e6ce5f9516d0b6">engine::signalThreadShouldExit()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 11:20:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 12:30:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

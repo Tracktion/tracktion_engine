@@ -1931,6 +1931,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ad816a0b77df0e6473b704191ada77091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a std::vector&lt;SafeSelectable&lt;Something&gt;&gt; for a given juce::Array of selectable objects.  <a href="namespacetracktion_1_1engine.html#ad816a0b77df0e6473b704191ada77091">More...</a><br /></td></tr>
 <tr class="separator:ad816a0b77df0e6473b704191ada77091"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0292b1e3fc9926303224136c8acba0fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a0292b1e3fc9926303224136c8acba0fc">callBlocking</a> (std::function&lt; void()&gt; f)</td></tr>
+<tr class="memdesc:a0292b1e3fc9926303224136c8acba0fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls a function on the message thread by posting a message and then waiting for it to be delivered.  <a href="namespacetracktion_1_1engine.html#a0292b1e3fc9926303224136c8acba0fc">More...</a><br /></td></tr>
 <tr class="separator:a0292b1e3fc9926303224136c8acba0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9959a561e577cc680f7ccc85145f0a8c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9959a561e577cc680f7ccc85145f0a8c">dbToGain</a> (float db) noexcept</td></tr>
 <tr class="separator:a9959a561e577cc680f7ccc85145f0a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -7887,6 +7888,9 @@ template&lt;typename Iterable &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Calls a function on the message thread by posting a message and then waiting for it to be delivered. </p>
+<p>If this fails for some reason, e.g. the calling thread is trying to exit or is blocking the message thread, this will throw an exception. </p>
+
 </div>
 </div>
 <a id="a9959a561e577cc680f7ccc85145f0a8c"></a>
@@ -9668,7 +9672,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 11:20:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 12:30:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

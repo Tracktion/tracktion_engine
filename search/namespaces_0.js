@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['engine_7863',['engine',['../namespaceengine.html',1,'']]]
+  ['details_7885',['details',['../namespaceengine_1_1details.html',1,'engine']]],
+  ['engine_7886',['engine',['../namespaceengine.html',1,'']]]
 ];

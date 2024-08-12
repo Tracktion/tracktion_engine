@@ -784,6 +784,7 @@
     <name>tracktion_AsyncFunctionUtils.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__AsyncFunctionUtils_8h.html</filename>
+    <includes id="tracktion__engine_2utilities_2tracktion__Threads_8h" name="tracktion_engine/utilities/tracktion_Threads.h" local="yes" imported="no">tracktion_Threads.h</includes>
     <class kind="struct">tracktion::engine::AsyncCaller</class>
     <class kind="struct">tracktion::engine::AsyncFunctionCaller</class>
     <class kind="class">tracktion::engine::LambdaTimer</class>
@@ -6048,9 +6049,60 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_Threads.h</name>
+    <name>tracktion_engine/utilities/tracktion_Threads.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
+    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
+    <class kind="struct">engine::details::ExitMapWithMutex</class>
+    <namespace>engine</namespace>
+    <namespace>engine::details</namespace>
+    <member kind="function">
+      <type>bool</type>
+      <name>isCurrentThreadSupplyingExitStatus</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ac427378780eb22c695cb6ffc6c5af8cf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>signalThreadShouldExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a792bf2375807d23ca1e6ce5f9516d0b6</anchor>
+      <arglist>(std::thread::id)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shouldCurrentThreadExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a3e0b9dd13c3ba3d7fe6c9905e9368e27</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>std::atomic&lt; bool &gt; &amp;</type>
+      <name>getShouldExitFlag</name>
+      <anchorfile>namespaceengine_1_1details.html</anchorfile>
+      <anchor>a4a059d6a70c7d1e8e2d14bfc6193881e</anchor>
+      <arglist>(std::thread::id id, bool canCreate)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareThreadForShouldExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aa4cf8194580318d0f01547ce5996239e</anchor>
+      <arglist>(std::thread::id id)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>threadHasExited</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a5c28b71cf1c193cef6c9893c79c07a49</anchor>
+      <arglist>(std::thread::id id)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/utilities/tracktion_Threads.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
-    <filename>tracktion__Threads_8h.html</filename>
+    <filename>tracktion__graph_2utilities_2tracktion__Threads_8h.html</filename>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
     <member kind="function">
@@ -34054,6 +34106,24 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>engine::details::ExitMapWithMutex</name>
+    <filename>structengine_1_1details_1_1ExitMapWithMutex.html</filename>
+    <member kind="variable">
+      <type>std::mutex</type>
+      <name>idMapMutex</name>
+      <anchorfile>structengine_1_1details_1_1ExitMapWithMutex.html</anchorfile>
+      <anchor>a5baa9f8fe42d54e8a0bf1c8f30d8a654</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::unordered_map&lt; std::thread::id, std::atomic&lt; bool &gt; &gt;</type>
+      <name>map</name>
+      <anchorfile>structengine_1_1details_1_1ExitMapWithMutex.html</anchorfile>
+      <anchor>a07838f6d8864bf283e1a3ee29a5a45c6</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::ExpEnvelope</name>
     <filename>classtracktion_1_1engine_1_1ExpEnvelope.html</filename>
@@ -38607,12 +38677,19 @@
       <anchor>a14b61be44ce049c110d62f7a54647cb7</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="variable">
-      <type>Edit::LoadContext</type>
-      <name>loadContext</name>
+    <member kind="function">
+      <type>void</type>
+      <name>cancel</name>
       <anchorfile>classengine_1_1EditLoader_1_1Handle.html</anchorfile>
-      <anchor>a974ca3a13c08f2565da72458da5a4a4f</anchor>
-      <arglist></arglist>
+      <anchor>a296703ede8597cdf502aa0f0ba2283a8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProgress</name>
+      <anchorfile>classengine_1_1EditLoader_1_1Handle.html</anchorfile>
+      <anchor>a724ecfab8c333683f19153e5a21e7c2f</anchor>
+      <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -67754,6 +67831,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::ScopedThreadExitStatusEnabler</name>
+    <filename>structengine_1_1ScopedThreadExitStatusEnabler.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedThreadExitStatusEnabler</name>
+      <anchorfile>structengine_1_1ScopedThreadExitStatusEnabler.html</anchorfile>
+      <anchor>a53a3401f52b8d3c6719cdfc7bd2823c0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedThreadExitStatusEnabler</name>
+      <anchorfile>structengine_1_1ScopedThreadExitStatusEnabler.html</anchorfile>
+      <anchor>acff547a683cfb1fc38542d6c427af766</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::FreezePointPlugin::ScopedTrackFreezer</name>
     <filename>structtracktion_1_1engine_1_1FreezePointPlugin_1_1ScopedTrackFreezer.html</filename>
     <member kind="function">
@@ -86371,9 +86466,11 @@
   <compound kind="namespace">
     <name>engine</name>
     <filename>namespaceengine.html</filename>
+    <namespace>engine::details</namespace>
     <class kind="class">engine::FollowActions</class>
     <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
     <member kind="enumeration">
       <type></type>
       <name>FollowAction</name>
@@ -86435,6 +86532,53 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a943f764db7a45607709ffcdb098ef23a</anchor>
       <arglist>(Clip &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isCurrentThreadSupplyingExitStatus</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ac427378780eb22c695cb6ffc6c5af8cf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>signalThreadShouldExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a792bf2375807d23ca1e6ce5f9516d0b6</anchor>
+      <arglist>(std::thread::id)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shouldCurrentThreadExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a3e0b9dd13c3ba3d7fe6c9905e9368e27</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareThreadForShouldExit</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aa4cf8194580318d0f01547ce5996239e</anchor>
+      <arglist>(std::thread::id id)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>threadHasExited</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a5c28b71cf1c193cef6c9893c79c07a49</anchor>
+      <arglist>(std::thread::id id)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>engine::details</name>
+    <filename>namespaceengine_1_1details.html</filename>
+    <class kind="struct">engine::details::ExitMapWithMutex</class>
+    <member kind="function">
+      <type>std::atomic&lt; bool &gt; &amp;</type>
+      <name>getShouldExitFlag</name>
+      <anchorfile>namespaceengine_1_1details.html</anchorfile>
+      <anchor>a4a059d6a70c7d1e8e2d14bfc6193881e</anchor>
+      <arglist>(std::thread::id id, bool canCreate)</arglist>
     </member>
   </compound>
   <compound kind="namespace">

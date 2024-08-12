@@ -746,6 +746,7 @@ Static Public Attributes</h2></td></tr>
 <p>It contains all the per-session objects such as tracks, tempo sequences, pitches, input devices, Racks, master plugins etc. and any per-Edit management objects such as UndoManager, <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html">PluginCache</a> etc.</p>
 <p>Most sub-objects such as Tracks, Clips etc. will all know which <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> they belong to by having a reference to this <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.</p>
 <p>To create an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> to you need construct one with an <a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html" title="Determines how the Edit will be created.">Edit::Options</a> instance supplying at least the <a class="el" href="classtracktion_1_1engine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> to use, the ValueTree state and a <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a> to uniquely identify this <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, or use some of the static helper methods that return a <code>std::unique_ptr&lt;<a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>&gt;</code>.</p>
+<p>N.B. Constructing an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> can throw an exception if it can't complete for some reason e.g. if it's being constructed on the message thread which is blocked. It's generally safer to use <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a62c634c7780347ead948ec524a7d9b3f" title="Creates an Edit for the given options.">Edit::createEdit</a> as this will catch the exception and just return a nullptr.</p>
 <p>This is a high level overview of the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> structure and the relevant objects. Note that this isn't an exhaustive list but should help you find the most relevant classes.</p>
 <ul>
 <li><a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a><ul>
@@ -880,6 +881,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> from a set of <a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html" title="Determines how the Edit will be created.">Options</a>. </p>
+<p>It's generally safer to call createEdit rather than construct an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> directly in case it throws an exception during construction. </p>
 
 </div>
 </div>
@@ -5051,7 +5053,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 11:20:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 12:30:24 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
