@@ -632,7 +632,15 @@ Edit::Edit (Options options)
 
     undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
 
-    initialise (options);
+    try
+    {
+        initialise (options);
+    }
+    catch (const std::runtime_error& e)
+    {
+        notifyListenersOfDeletion(); // Avoids an assertion in the base class destructor
+        throw e;
+    }
 
     undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
 
@@ -2858,7 +2866,15 @@ void Edit::setEditMetadata (Metadata metadata)
 //==============================================================================
 std::unique_ptr<Edit> Edit::createEdit (Options options)
 {
-    return std::make_unique<Edit> (std::move (options));
+    try
+    {
+        return std::make_unique<Edit> (std::move (options));
+    }
+    catch (...)
+    {
+    }
+
+    return {};
 }
 
 std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce::ValueTree v, const Edit* editToMatch,
