@@ -35,9 +35,12 @@ struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
                                    private juce::AsyncUpdater
 {
     FreezeUpdater (AudioTrack& at)
-        : owner (at), state (owner.state), triggerFreeze (false), updateFreeze (false)
+        : owner (at)
     {
-        state.addListener (this);
+        if (owner.edit.isLoading())
+            loadFinishedCallback = std::make_unique<Edit::LoadFinishedCallback<FreezeUpdater>> (*this, owner.edit);
+        else
+            state.addListener (this);
     }
 
     ~FreezeUpdater() override
@@ -52,10 +55,17 @@ struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
     }
 
     AudioTrack& owner;
-    juce::ValueTree state;
+    juce::ValueTree state { owner.state };
+
+    /** @internal */
+    void editFinishedLoading()
+    {
+        state.addListener (this);
+    }
 
 private:
-    bool triggerFreeze, updateFreeze;
+    std::unique_ptr<Edit::LoadFinishedCallback<FreezeUpdater>> loadFinishedCallback;
+    bool triggerFreeze = false, updateFreeze = false;
 
     void markAndUpdate (bool& flag)     { flag = true; triggerAsyncUpdate(); }
 
