@@ -766,12 +766,18 @@ void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice& vmi)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
+    auto deviceName = vmi.getName();
     auto deviceID = vmi.getDeviceID();
 
     engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, deviceID);
 
     auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
-    virtualDeviceIDs.removeString (deviceID);
+
+    if (virtualDeviceIDs.contains (deviceName) && ! virtualDeviceIDs.contains (deviceID))
+        virtualDeviceIDs.removeString (deviceName);
+    else
+        virtualDeviceIDs.removeString (deviceID);
+
     setVirtualDeviceIDs (engine, virtualDeviceIDs);
 
     rescanMidiDeviceList();
