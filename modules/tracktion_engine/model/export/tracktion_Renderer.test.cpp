@@ -11,8 +11,8 @@
 #if TRACKTION_UNIT_TESTS
 
 #include "../../../3rd_party/doctest/tracktion_doctest.hpp"
-#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include "../../utilities/tracktion_TestUtilities.h"
+#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine
 {
