@@ -6081,8 +6081,8 @@
       <type>std::atomic&lt; bool &gt; &amp;</type>
       <name>getShouldExitFlag</name>
       <anchorfile>namespaceengine_1_1details.html</anchorfile>
-      <anchor>a4a059d6a70c7d1e8e2d14bfc6193881e</anchor>
-      <arglist>(std::thread::id id, bool canCreate)</arglist>
+      <anchor>ad06015d09c2dc3ab4aae079a5fc65763</anchor>
+      <arglist>(std::thread::id id, [[maybe_unused]] bool canCreate)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -86577,8 +86577,8 @@
       <type>std::atomic&lt; bool &gt; &amp;</type>
       <name>getShouldExitFlag</name>
       <anchorfile>namespaceengine_1_1details.html</anchorfile>
-      <anchor>a4a059d6a70c7d1e8e2d14bfc6193881e</anchor>
-      <arglist>(std::thread::id id, bool canCreate)</arglist>
+      <anchor>ad06015d09c2dc3ab4aae079a5fc65763</anchor>
+      <arglist>(std::thread::id id, [[maybe_unused]] bool canCreate)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
