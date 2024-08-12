@@ -6053,9 +6053,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
     <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
-    <class kind="struct">engine::details::ExitMapWithMutex</class>
     <namespace>engine</namespace>
-    <namespace>engine::details</namespace>
     <member kind="function">
       <type>bool</type>
       <name>isCurrentThreadSupplyingExitStatus</name>
@@ -6076,27 +6074,6 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a3e0b9dd13c3ba3d7fe6c9905e9368e27</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>std::atomic&lt; bool &gt; &amp;</type>
-      <name>getShouldExitFlag</name>
-      <anchorfile>namespaceengine_1_1details.html</anchorfile>
-      <anchor>ad06015d09c2dc3ab4aae079a5fc65763</anchor>
-      <arglist>(std::thread::id id, [[maybe_unused]] bool canCreate)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareThreadForShouldExit</name>
-      <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>aa4cf8194580318d0f01547ce5996239e</anchor>
-      <arglist>(std::thread::id id)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>threadHasExited</name>
-      <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a5c28b71cf1c193cef6c9893c79c07a49</anchor>
-      <arglist>(std::thread::id id)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -34103,24 +34080,6 @@
       <name>maxQ</name>
       <anchorfile>classtracktion_1_1engine_1_1EqualiserPlugin.html</anchorfile>
       <anchor>a05d1fb0680e96c0021b5f28c6f1898f4</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>engine::details::ExitMapWithMutex</name>
-    <filename>structengine_1_1details_1_1ExitMapWithMutex.html</filename>
-    <member kind="variable">
-      <type>std::mutex</type>
-      <name>idMapMutex</name>
-      <anchorfile>structengine_1_1details_1_1ExitMapWithMutex.html</anchorfile>
-      <anchor>a5baa9f8fe42d54e8a0bf1c8f30d8a654</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>std::unordered_map&lt; std::thread::id, std::atomic&lt; bool &gt; &gt;</type>
-      <name>map</name>
-      <anchorfile>structengine_1_1details_1_1ExitMapWithMutex.html</anchorfile>
-      <anchor>a07838f6d8864bf283e1a3ee29a5a45c6</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86466,7 +86425,6 @@
   <compound kind="namespace">
     <name>engine</name>
     <filename>namespaceengine.html</filename>
-    <namespace>engine::details</namespace>
     <class kind="class">engine::FollowActions</class>
     <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
@@ -86553,32 +86511,6 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a3e0b9dd13c3ba3d7fe6c9905e9368e27</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareThreadForShouldExit</name>
-      <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>aa4cf8194580318d0f01547ce5996239e</anchor>
-      <arglist>(std::thread::id id)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>threadHasExited</name>
-      <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a5c28b71cf1c193cef6c9893c79c07a49</anchor>
-      <arglist>(std::thread::id id)</arglist>
-    </member>
-  </compound>
-  <compound kind="namespace">
-    <name>engine::details</name>
-    <filename>namespaceengine_1_1details.html</filename>
-    <class kind="struct">engine::details::ExitMapWithMutex</class>
-    <member kind="function">
-      <type>std::atomic&lt; bool &gt; &amp;</type>
-      <name>getShouldExitFlag</name>
-      <anchorfile>namespaceengine_1_1details.html</anchorfile>
-      <anchor>ad06015d09c2dc3ab4aae079a5fc65763</anchor>
-      <arglist>(std::thread::id id, [[maybe_unused]] bool canCreate)</arglist>
     </member>
   </compound>
   <compound kind="namespace">

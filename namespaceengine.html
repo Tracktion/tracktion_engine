@@ -62,7 +62,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -71,11 +70,6 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceengine_1_1details"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1details.html">details</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1FollowActions.html">FollowActions</a></td></tr>
@@ -154,10 +148,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a3e0b9dd13c3ba3d7fe6c9905e9368e27"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a3e0b9dd13c3ba3d7fe6c9905e9368e27">shouldCurrentThreadExit</a> ()</td></tr>
 <tr class="memdesc:a3e0b9dd13c3ba3d7fe6c9905e9368e27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current thread is waiting to exit.  <a href="namespaceengine.html#a3e0b9dd13c3ba3d7fe6c9905e9368e27">More...</a><br /></td></tr>
 <tr class="separator:a3e0b9dd13c3ba3d7fe6c9905e9368e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4cf8194580318d0f01547ce5996239e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#aa4cf8194580318d0f01547ce5996239e">prepareThreadForShouldExit</a> (std::thread::id id)</td></tr>
-<tr class="separator:aa4cf8194580318d0f01547ce5996239e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c28b71cf1c193cef6c9893c79c07a49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a5c28b71cf1c193cef6c9893c79c07a49">threadHasExited</a> (std::thread::id id)</td></tr>
-<tr class="separator:a5c28b71cf1c193cef6c9893c79c07a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"></div><h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -330,7 +320,7 @@ Functions</h2></td></tr>
           <td class="memname">void engine::signalThreadShouldExit </td>
           <td>(</td>
           <td class="paramtype">std::thread::id&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -338,8 +328,6 @@ Functions</h2></td></tr>
 
 <p>Can be used to signal that the current thread is waiting to exit. </p>
 <p>Only to be used in conjunction with a <a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html" title="Enables the calling thread to be cancelled from another thread and the calling thread to be able to q...">ScopedThreadExitStatusEnabler</a>. </p>
-
-<p class="reference">References <a class="el" href="namespaceengine_1_1details.html#ad06015d09c2dc3ab4aae079a5fc65763">engine::details::getShouldExitFlag()</a>.</p>
 
 </div>
 </div>
@@ -361,58 +349,14 @@ Functions</h2></td></tr>
 <p>Returns true if the current thread is waiting to exit. </p>
 <p>Only to be used in conjunction with a <a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html" title="Enables the calling thread to be cancelled from another thread and the calling thread to be able to q...">ScopedThreadExitStatusEnabler</a>. </p>
 
-<p class="reference">References <a class="el" href="namespaceengine_1_1details.html#ad06015d09c2dc3ab4aae079a5fc65763">engine::details::getShouldExitFlag()</a>.</p>
-
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1MessageThreadCallback.html#a22cfe9b7f0128e8130e7ad5427700634">tracktion::engine::MessageThreadCallback::triggerAndWaitForCallback()</a>.</p>
-
-</div>
-</div>
-<a id="aa4cf8194580318d0f01547ce5996239e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4cf8194580318d0f01547ce5996239e">&#9670;&nbsp;</a></span>prepareThreadForShouldExit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void engine::prepareThreadForShouldExit </td>
-          <td>(</td>
-          <td class="paramtype">std::thread::id&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="namespaceengine_1_1details.html#ad06015d09c2dc3ab4aae079a5fc65763">engine::details::getShouldExitFlag()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html#a53a3401f52b8d3c6719cdfc7bd2823c0">engine::ScopedThreadExitStatusEnabler::ScopedThreadExitStatusEnabler()</a>.</p>
-
-</div>
-</div>
-<a id="a5c28b71cf1c193cef6c9893c79c07a49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c28b71cf1c193cef6c9893c79c07a49">&#9670;&nbsp;</a></span>threadHasExited()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void engine::threadHasExited </td>
-          <td>(</td>
-          <td class="paramtype">std::thread::id&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html#acff547a683cfb1fc38542d6c427af766">engine::ScopedThreadExitStatusEnabler::~ScopedThreadExitStatusEnabler()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 12:41:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Aug 12 2024 14:08:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
