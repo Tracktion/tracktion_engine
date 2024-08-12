@@ -24,6 +24,9 @@ public:
     /**
         A handle to a loading Edit.
         This internally runs a thread that loads the Edit.
+
+        You must keep the Handle alive in order to load the Edit. If it gets deleted
+        it will cancel the load.
     */
     class Handle
     {
@@ -31,12 +34,16 @@ public:
         /// Destructor
         ~Handle();
 
-        /// The LoadContext which can be used to get progress, status or cancel the job.
-        Edit::LoadContext loadContext;
+        /// Cancels loading the Edit
+        void cancel();
+
+        /// Returns the progress of the Edit load
+        float getProgress() const;
 
     private:
         friend EditLoader;
         std::thread loadThread;
+        Edit::LoadContext loadContext;
 
         Handle() = default;
     };

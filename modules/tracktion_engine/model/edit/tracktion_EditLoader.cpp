@@ -13,7 +13,22 @@ namespace tracktion::inline engine
 
 EditLoader::Handle::~Handle()
 {
+    cancel();
+
+    if (! loadContext.completed)
+        signalThreadShouldExit (loadThread.get_id());
+
     loadThread.join();
+}
+
+void EditLoader::Handle::cancel()
+{
+    loadContext.shouldExit = true;
+}
+
+float EditLoader::Handle::getProgress() const
+{
+    return loadContext.progress;
 }
 
 std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options options, std::function<void(std::unique_ptr<Edit>)> editLoadedCallback)
@@ -27,6 +42,8 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options options,
     handle->loadThread = std::thread ([options = std::move (options),
                                        completionCallback = std::move (editLoadedCallback)]
                                       {
+                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+
                                           auto opts = std::move (options);
                                           auto id = ProjectItemID::fromProperty (opts.editState, IDs::projectID);
 
@@ -61,6 +78,8 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
     handle->loadThread = std::thread ([options = std::move (options), file = std::move (file),
                                        completionCallback = std::move (editLoadedCallback)]
                                       {
+                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+
                                           auto opts = std::move (options);
                                           opts.editState = loadValueTree (file, IDs::EDIT);
 
@@ -74,6 +93,7 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
 
                                           opts.editProjectItemID = id;
 
+                                          // Load the Edit
                                           completionCallback (Edit::createEdit (opts));
                                       });
 

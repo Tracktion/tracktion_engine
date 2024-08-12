@@ -73,6 +73,25 @@ TEST_SUITE("tracktion_engine")
             CHECK (loadedEdit != nullptr);
             CHECK_EQ (getAudioTracks (*loadedEdit).size(), 100);
         }
+
+        // Start to load the edit but cancel it
+        {
+            std::unique_ptr<Edit> loadedEdit;
+            std::atomic<bool> callbackFinished { false };
+
+            auto editLoadedCallback = [&callbackFinished, &loadedEdit] (std::unique_ptr<Edit> edit)
+            {
+                loadedEdit = std::move (edit);
+                callbackFinished = true;
+            };
+
+            auto handle = EditLoader::loadEdit (engine, tempEditFile.getFile(), editLoadedCallback, Edit::forExamining);
+            CHECK (handle);
+            handle.reset(); // Stop the loading
+
+            // If we don't run the dispatch loop, Edit loading can't finish and should be cancelled before completion
+            CHECK (loadedEdit == nullptr);
+        }
     }
 }
 
