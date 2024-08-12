@@ -263,7 +263,6 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 
     if (! nodeRenderContext)
     {
-        assert (processState);
         callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
                                                                                            std::move (graphNode),
                                                                                            std::move (playHead),

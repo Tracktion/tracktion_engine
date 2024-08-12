@@ -70,6 +70,11 @@ struct Edit::EditChangeResetterTimer  : private Timer
         startTimer (200);
     }
 
+    ~EditChangeResetterTimer() override
+    {
+        stopTimer();
+    }
+
     void timerCallback() override
     {
         stopTimer();

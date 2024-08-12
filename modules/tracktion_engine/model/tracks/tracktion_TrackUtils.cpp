@@ -82,6 +82,7 @@ TrackList::TrackList (Edit& e, const juce::ValueTree& parentTree)
 
 TrackList::~TrackList()
 {
+    cancelPendingUpdate();
     freeObjects();
 }
 

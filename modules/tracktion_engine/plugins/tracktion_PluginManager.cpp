@@ -520,6 +520,7 @@ PluginCache::PluginCache (Edit& ed) : edit (ed)
 
 PluginCache::~PluginCache()
 {
+    stopTimer();
     activePlugins.clear();
 }
 

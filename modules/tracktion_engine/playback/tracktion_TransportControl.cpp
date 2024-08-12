@@ -396,6 +396,11 @@ struct TransportControl::FileFlushTimer  : private Timer
         startTimer (500);
     }
 
+    ~FileFlushTimer() override
+    {
+        stopTimer();
+    }
+
     void timerCallback() override
     {
         if (owner.edit.isLoading())
@@ -702,6 +707,8 @@ TransportControl::TransportControl (Edit& ed, const juce::ValueTree& v)
 
 TransportControl::~TransportControl()
 {
+    stopTimer();
+
     activeTransportControls.removeAllInstancesOf (this);
     fileFlushTimer = nullptr;
 
