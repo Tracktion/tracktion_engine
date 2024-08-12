@@ -88,7 +88,7 @@ namespace details
         return map;
     }
 
-    inline std::atomic<bool>& getShouldExitFlag (std::thread::id id, bool canCreate)
+    inline std::atomic<bool>& getShouldExitFlag (std::thread::id id, [[ maybe_unused ]] bool canCreate)
     {
         auto& map = getShouldExitMap();
         const std::scoped_lock sl (map.idMapMutex);
