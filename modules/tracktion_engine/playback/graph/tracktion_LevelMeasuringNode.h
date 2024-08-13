@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 /**
-    A Node that passes its incomming audio and MIDI through a LevelMeasurer.
+    A Node that passes its incoming audio and MIDI through a LevelMeasurer.
 */
 class LevelMeasuringNode final  : public tracktion::graph::Node
 {

@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-/** A test plugin that introduces latency to the incomming signal.
+/** A test plugin that introduces latency to the incoming signal.
     This isn't added to the PluginManager by default as its main use is for
     internal testing.
 */
