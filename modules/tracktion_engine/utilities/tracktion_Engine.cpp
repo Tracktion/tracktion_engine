@@ -66,7 +66,11 @@ void Engine::initialise()
     pluginManager              = std::make_unique<PluginManager> (*this);
 
     if (engineBehaviour->autoInitialiseDeviceManager())
-        deviceManager->initialise();
+    {
+        deviceManager->initialise (getEngineBehaviour().shouldOpenAudioInputByDefault()
+                                        ? DeviceManager::defaultNumChannelsToOpen : 0,
+                                   DeviceManager::defaultNumChannelsToOpen);
+    }
 
     pluginManager->initialise();
     getProjectManager().initialise();

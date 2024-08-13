@@ -30,8 +30,10 @@ public:
     //==============================================================================
     ~DeviceManager() override;
 
-    void initialise (int defaultNumInputChannelsToOpen = 512,
-                     int defaultNumOutputChannelsToOpen = 512);
+    static constexpr int defaultNumChannelsToOpen = 512;
+
+    void initialise (int defaultNumInputChannelsToOpen  = defaultNumChannelsToOpen,
+                     int defaultNumOutputChannelsToOpen = defaultNumChannelsToOpen);
     void closeDevices();
     void saveSettings();
 
