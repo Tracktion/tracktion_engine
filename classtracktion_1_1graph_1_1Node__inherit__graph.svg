@@ -164,7 +164,7 @@
 <!-- Node11 -->
 <g id="node11" class="node">
 <title>Node11</title>
-<g id="a_node11"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasuringNode.html" target="_top" xlink:title="A Node that passes its incomming audio and MIDI through a LevelMeasurer.">
+<g id="a_node11"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasuringNode.html" target="_top" xlink:title="A Node that passes its incoming audio and MIDI through a LevelMeasurer.">
 <polygon fill="none" stroke="black" points="208,-1672 208,-1702 327,-1702 327,-1672 208,-1672"/>
 <text text-anchor="start" x="216" y="-1690" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="267.5" y="-1679" font-family="Helvetica,sans-Serif" font-size="10.00">LevelMeasuringNode</text>
@@ -196,7 +196,7 @@
 <!-- Node13 -->
 <g id="node13" class="node">
 <title>Node13</title>
-<g id="a_node13"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html" target="_top" xlink:title="A Node that calls the listeners of an AudioTrack with any incomming MIDI.">
+<g id="a_node13"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html" target="_top" xlink:title="A Node that calls the listeners of an AudioTrack with any incoming MIDI.">
 <polygon fill="none" stroke="black" points="209.5,-1574 209.5,-1604 325.5,-1604 325.5,-1574 209.5,-1574"/>
 <text text-anchor="start" x="217.5" y="-1592" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="267.5" y="-1581" font-family="Helvetica,sans-Serif" font-size="10.00">LiveMidiOutputNode</text>

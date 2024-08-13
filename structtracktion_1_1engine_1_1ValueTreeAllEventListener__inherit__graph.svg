@@ -549,7 +549,7 @@
 <!-- Node32 -->
 <g id="node32" class="node">
 <title>Node32</title>
-<g id="a_node32"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incomming signal.">
+<g id="a_node32"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incoming signal.">
 <polygon fill="none" stroke="black" points="385,-686.5 385,-716.5 490,-716.5 490,-686.5 385,-686.5"/>
 <text text-anchor="start" x="393" y="-704.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="437.5" y="-693.5" font-family="Helvetica,sans-Serif" font-size="10.00">LatencyPlugin</text>

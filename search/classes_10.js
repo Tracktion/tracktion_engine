@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quantisationtype_7631',['QuantisationType',['../classtracktion_1_1engine_1_1QuantisationType.html',1,'tracktion::engine::QuantisationType'],['../classtracktion_1_1engine_1_1QuantisationType.html',1,'tracktion::QuantisationType']]]
+  ['quantisationtype_7628',['QuantisationType',['../classtracktion_1_1engine_1_1QuantisationType.html',1,'tracktion::engine::QuantisationType'],['../classtracktion_1_1engine_1_1QuantisationType.html',1,'tracktion::QuantisationType']]]
 ];

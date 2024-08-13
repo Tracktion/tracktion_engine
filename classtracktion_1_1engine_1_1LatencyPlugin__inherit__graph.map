@@ -1,5 +1,5 @@
 <map id="tracktion::engine::LatencyPlugin" name="tracktion::engine::LatencyPlugin">
-<area shape="rect" id="node1" title="A test plugin that introduces latency to the incomming signal." alt="" coords="620,136,760,177"/>
+<area shape="rect" id="node1" title="A test plugin that introduces latency to the incoming signal." alt="" coords="620,136,760,177"/>
 <area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="432,136,572,177"/>
 <area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,47"/>
 <area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,71,359,112"/>

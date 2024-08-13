@@ -70,6 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classtracktion_1_1engine_1_1DeviceManager-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion::engine::DeviceManager Class Reference</div>  </div>
@@ -88,8 +89,8 @@ Classes</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a955f510910509fa35db0d63607c9f6ff"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a955f510910509fa35db0d63607c9f6ff">~DeviceManager</a> () override</td></tr>
 <tr class="separator:a955f510910509fa35db0d63607c9f6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae355173093af07b650fc442b870e393a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ae355173093af07b650fc442b870e393a">initialise</a> (int defaultNumInputChannelsToOpen=512, int defaultNumOutputChannelsToOpen=512)</td></tr>
-<tr class="separator:ae355173093af07b650fc442b870e393a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa88862c9853a2a78f22826a853dff05d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa88862c9853a2a78f22826a853dff05d">initialise</a> (int defaultNumInputChannelsToOpen=<a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa1dcc7e4aad157d5d98283fffcadf836">defaultNumChannelsToOpen</a>, int defaultNumOutputChannelsToOpen=<a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa1dcc7e4aad157d5d98283fffcadf836">defaultNumChannelsToOpen</a>)</td></tr>
+<tr class="separator:aa88862c9853a2a78f22826a853dff05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade3dcb3bf57ab766da9b869643f4eb4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ade3dcb3bf57ab766da9b869643f4eb4d">closeDevices</a> ()</td></tr>
 <tr class="separator:ade3dcb3bf57ab766da9b869643f4eb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae69778993003f31d6014ca2fea77a784"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ae69778993003f31d6014ca2fea77a784">saveSettings</a> ()</td></tr>
@@ -288,6 +289,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa27e24f0ea12a0a69db6b881cdb2e2b1">warnOfWastedMidiMessagesFunction</a></td></tr>
 <tr class="memdesc:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is set, it will get called (possibly on the midi thread) when incoming messages seem to be unused.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#aa27e24f0ea12a0a69db6b881cdb2e2b1">More...</a><br /></td></tr>
 <tr class="separator:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:aa1dcc7e4aad157d5d98283fffcadf836"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa1dcc7e4aad157d5d98283fffcadf836">defaultNumChannelsToOpen</a> = 512</td></tr>
+<tr class="separator:aa1dcc7e4aad157d5d98283fffcadf836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a955f510910509fa35db0d63607c9f6ff"></a>
@@ -316,8 +322,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae355173093af07b650fc442b870e393a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae355173093af07b650fc442b870e393a">&#9670;&nbsp;</a></span>initialise()</h2>
+<a id="aa88862c9853a2a78f22826a853dff05d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa88862c9853a2a78f22826a853dff05d">&#9670;&nbsp;</a></span>initialise()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -326,13 +332,13 @@ Public Attributes</h2></td></tr>
           <td class="memname">void tracktion::engine::DeviceManager::initialise </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>defaultNumInputChannelsToOpen</em> = <code>512</code>, </td>
+          <td class="paramname"><em>defaultNumInputChannelsToOpen</em> = <code><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa1dcc7e4aad157d5d98283fffcadf836">defaultNumChannelsToOpen</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>defaultNumOutputChannelsToOpen</em> = <code>512</code>&#160;</td>
+          <td class="paramname"><em>defaultNumOutputChannelsToOpen</em> = <code><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa1dcc7e4aad157d5d98283fffcadf836">defaultNumChannelsToOpen</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1969,6 +1975,28 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa1dcc7e4aad157d5d98283fffcadf836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1dcc7e4aad157d5d98283fffcadf836">&#9670;&nbsp;</a></span>defaultNumChannelsToOpen</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int tracktion::engine::DeviceManager::defaultNumChannelsToOpen = 512</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abb186390b8724c5ec565c0d4daa2dcb2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb186390b8724c5ec565c0d4daa2dcb2">&#9670;&nbsp;</a></span>engine</h2>
 
@@ -2096,7 +2124,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:04:08 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Aug 13 2024 09:56:25 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

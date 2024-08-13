@@ -373,7 +373,7 @@
 <!-- Node24 -->
 <g id="node24" class="node">
 <title>Node24</title>
-<g id="a_node24"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incomming signal.">
+<g id="a_node24"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incoming signal.">
 <polygon fill="none" stroke="black" points="473.5,-686.5 473.5,-716.5 578.5,-716.5 578.5,-686.5 473.5,-686.5"/>
 <text text-anchor="start" x="481.5" y="-704.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="526" y="-693.5" font-family="Helvetica,sans-Serif" font-size="10.00">LatencyPlugin</text>

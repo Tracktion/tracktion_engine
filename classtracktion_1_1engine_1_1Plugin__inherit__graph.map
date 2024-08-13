@@ -12,7 +12,7 @@
 <area shape="rect" id="node17" href="$classtracktion_1_1engine_1_1FreezePointPlugin.html" title=" " alt="" coords="639,593,779,635"/>
 <area shape="rect" id="node18" href="$classtracktion_1_1engine_1_1ImpulseResponsePlugin.html" title="ImpulseResponsePlugin that loads an impulse response and applies it the audio stream." alt="" coords="620,659,797,700"/>
 <area shape="rect" id="node19" href="$classtracktion_1_1engine_1_1InsertPlugin.html" title=" " alt="" coords="639,724,779,765"/>
-<area shape="rect" id="node20" href="$classtracktion_1_1engine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incomming signal." alt="" coords="639,789,779,831"/>
+<area shape="rect" id="node20" href="$classtracktion_1_1engine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incoming signal." alt="" coords="639,789,779,831"/>
 <area shape="rect" id="node21" href="$classtracktion_1_1engine_1_1LevelMeterPlugin.html" title=" " alt="" coords="639,855,779,896"/>
 <area shape="rect" id="node22" href="$classtracktion_1_1engine_1_1LowPassPlugin.html" title=" " alt="" coords="639,920,779,961"/>
 <area shape="rect" id="node23" href="$classtracktion_1_1engine_1_1MidiModifierPlugin.html" title=" " alt="" coords="637,985,780,1027"/>

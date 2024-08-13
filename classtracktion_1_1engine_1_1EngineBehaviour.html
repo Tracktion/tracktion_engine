@@ -93,11 +93,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abd127976962524290705a06c9daea361"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f3e82ef9a836ee51503a519436d4c0d"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f3e82ef9a836ee51503a519436d4c0d">~EngineBehaviour</a> ()=default</td></tr>
 <tr class="separator:a8f3e82ef9a836ee51503a519436d4c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5904596b74d210355380f7673339ea09"><td class="memItemLeft" align="right" valign="top">virtual juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1RackType.html">RackType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a5904596b74d210355380f7673339ea09">createPresetRackType</a> (int, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
-<tr class="separator:a5904596b74d210355380f7673339ea09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60fed1b5b939e8d1503839439434a4f3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ab7b2ef82c571b9b9b6fa12668f942346">Plugin::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a60fed1b5b939e8d1503839439434a4f3">createCustomPlugin</a> (<a class="el" href="structtracktion_1_1engine_1_1PluginCreationInfo.html">PluginCreationInfo</a>)</td></tr>
 <tr class="memdesc:a60fed1b5b939e8d1503839439434a4f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This will be called if the <a class="el" href="classtracktion_1_1engine_1_1PluginManager.html">PluginManager</a> doesn't know how to create a <a class="el" href="classtracktion_1_1engine_1_1Plugin.html">Plugin</a> for the given info.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a60fed1b5b939e8d1503839439434a4f3">More...</a><br /></td></tr>
 <tr class="separator:a60fed1b5b939e8d1503839439434a4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc20b68795215ef15fc02d9a655a1542"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afc20b68795215ef15fc02d9a655a1542">doAdditionalInitialisation</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:afc20b68795215ef15fc02d9a655a1542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the host a chance to do any extra configuration after a plugin is loaded.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afc20b68795215ef15fc02d9a655a1542">More...</a><br /></td></tr>
+<tr class="separator:afc20b68795215ef15fc02d9a655a1542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77cd2758aaa9796abef5f166f4fb351c"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; juce::PluginDescription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a77cd2758aaa9796abef5f166f4fb351c">findDescriptionForFileOrID</a> (const juce::String &amp;)</td></tr>
 <tr class="memdesc:a77cd2758aaa9796abef5f166f4fb351c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a77cd2758aaa9796abef5f166f4fb351c">More...</a><br /></td></tr>
 <tr class="separator:a77cd2758aaa9796abef5f166f4fb351c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,36 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8f2b5f1f67c4c6099865229a80543ab3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f2b5f1f67c4c6099865229a80543ab3">setPluginDisabled</a> (const juce::String &amp;, bool)</td></tr>
 <tr class="memdesc:a8f2b5f1f67c4c6099865229a80543ab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should implement a way of saving if plugin is disabled or not.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f2b5f1f67c4c6099865229a80543ab3">More...</a><br /></td></tr>
 <tr class="separator:a8f2b5f1f67c4c6099865229a80543ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa274bffda0587a027f0aaa00c05e79e7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa274bffda0587a027f0aaa00c05e79e7">shouldLoadPlugin</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;p)</td></tr>
-<tr class="memdesc:aa274bffda0587a027f0aaa00c05e79e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should the plugin be loaded.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa274bffda0587a027f0aaa00c05e79e7">More...</a><br /></td></tr>
-<tr class="separator:aa274bffda0587a027f0aaa00c05e79e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc20b68795215ef15fc02d9a655a1542"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afc20b68795215ef15fc02d9a655a1542">doAdditionalInitialisation</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
-<tr class="memdesc:afc20b68795215ef15fc02d9a655a1542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the host a chance to do any extra configuration after a plugin is loaded.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afc20b68795215ef15fc02d9a655a1542">More...</a><br /></td></tr>
-<tr class="separator:afc20b68795215ef15fc02d9a655a1542"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b48d4dc65db1f9a966f5f06087e1747"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2b48d4dc65db1f9a966f5f06087e1747">getReferencedItems</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
-<tr class="memdesc:a2b48d4dc65db1f9a966f5f06087e1747"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special plugins that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2b48d4dc65db1f9a966f5f06087e1747">More...</a><br /></td></tr>
-<tr class="separator:a2b48d4dc65db1f9a966f5f06087e1747"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d8fd0947befe38f9d3584dbc99402dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a0d8fd0947befe38f9d3584dbc99402dc">reassignReferencedItem</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;, const <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>, double)</td></tr>
-<tr class="memdesc:a0d8fd0947befe38f9d3584dbc99402dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special plugins that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a0d8fd0947befe38f9d3584dbc99402dc">More...</a><br /></td></tr>
-<tr class="separator:a0d8fd0947befe38f9d3584dbc99402dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a59fe29e606c9d96c2fb66a0fe55d34c0">getReferencedItems</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;)</td></tr>
-<tr class="memdesc:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special clips that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a59fe29e606c9d96c2fb66a0fe55d34c0">More...</a><br /></td></tr>
-<tr class="separator:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abceff86ac26fc465a24da48921e6ebcc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#abceff86ac26fc465a24da48921e6ebcc">reassignReferencedItem</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;, const <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>, double)</td></tr>
-<tr class="memdesc:abceff86ac26fc465a24da48921e6ebcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special clips that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#abceff86ac26fc465a24da48921e6ebcc">More...</a><br /></td></tr>
-<tr class="separator:abceff86ac26fc465a24da48921e6ebcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1671d970928e6e411b0907759982d9a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">shouldBypassedPluginsBeRemovedFromPlaybackGraph</a> ()</td></tr>
-<tr class="memdesc:ae1671d970928e6e411b0907759982d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if plugins which have been bypassed should be included in the playback graph.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">More...</a><br /></td></tr>
-<tr class="separator:ae1671d970928e6e411b0907759982d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d8cd2b6b227cfa74104b096891418ba"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">shouldProcessAuxSendWhenTrackIsMuted</a> (<a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;)</td></tr>
-<tr class="memdesc:a4d8cd2b6b227cfa74104b096891418ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not to include muted track contents in aux send plugins.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">More...</a><br /></td></tr>
-<tr class="separator:a4d8cd2b6b227cfa74104b096891418ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172ed3ca1a2fd676297aa0a96de543b0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a172ed3ca1a2fd676297aa0a96de543b0">areClipSlotsEnabled</a> ()</td></tr>
-<tr class="memdesc:a172ed3ca1a2fd676297aa0a96de543b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns false, <a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a> Clips won't be included in the playback graph and arranger track clips will always be audible.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a172ed3ca1a2fd676297aa0a96de543b0">More...</a><br /></td></tr>
-<tr class="separator:a172ed3ca1a2fd676297aa0a96de543b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78646d63156e5bab0683f521b36ea775"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a78646d63156e5bab0683f521b36ea775">enableReadAheadForTimeStretchNodes</a> ()</td></tr>
-<tr class="memdesc:a78646d63156e5bab0683f521b36ea775"><td class="mdescLeft">&#160;</td><td class="mdescRight">TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a78646d63156e5bab0683f521b36ea775">More...</a><br /></td></tr>
-<tr class="separator:a78646d63156e5bab0683f521b36ea775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a1b87de6e250f15d993c90869e1cf4d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2a1b87de6e250f15d993c90869e1cf4d">shouldLoadPlugin</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a2a1b87de6e250f15d993c90869e1cf4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should the plugin be loaded.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2a1b87de6e250f15d993c90869e1cf4d">More...</a><br /></td></tr>
+<tr class="separator:a2a1b87de6e250f15d993c90869e1cf4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa963929141512658b6b282594a9818e5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa963929141512658b6b282594a9818e5">saveCustomPluginProperties</a> (juce::ValueTree &amp;, juce::AudioPluginInstance &amp;, juce::UndoManager *)</td></tr>
 <tr class="memdesc:aa963929141512658b6b282594a9818e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives plugins an opportunity to save custom data when the plugin state gets flushed.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#aa963929141512658b6b282594a9818e5">More...</a><br /></td></tr>
 <tr class="separator:aa963929141512658b6b282594a9818e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,14 +123,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aeb8ba08bf8b3da07a756fa9194ea7ae0">addSystemAudioIODeviceTypes</a> ()</td></tr>
 <tr class="memdesc:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="mdescLeft">&#160;</td><td class="mdescRight">In plugin builds, you might want to avoid adding the system audio devices and only use the host inputs.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#aeb8ba08bf8b3da07a756fa9194ea7ae0">More...</a><br /></td></tr>
 <tr class="separator:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4bf6af8049c0afb0240d0ddc9b22593c">getMiddleCOctave</a> ()</td></tr>
-<tr class="separator:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cf026c35e59330c677c2a0a1384e063"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a1cf026c35e59330c677c2a0a1384e063">setMiddleCOctave</a> (int)</td></tr>
-<tr class="separator:a1cf026c35e59330c677c2a0a1384e063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe6eca43fd05e57eb6ed3df9aa12857f"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afe6eca43fd05e57eb6ed3df9aa12857f">getDefaultNoteColour</a> ()</td></tr>
-<tr class="separator:afe6eca43fd05e57eb6ed3df9aa12857f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c188621dd2caecfea561d322d9490a7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a5c188621dd2caecfea561d322d9490a7">editHasBeenSaved</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, juce::File)</td></tr>
-<tr class="separator:a5c188621dd2caecfea561d322d9490a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a23d271f32c1c8d97e5894bad5e234c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a7a23d271f32c1c8d97e5894bad5e234c">shouldOpenAudioInputByDefault</a> ()</td></tr>
+<tr class="memdesc:a7a23d271f32c1c8d97e5894bad5e234c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, then the engine will attempt to open both an audio input and output.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a7a23d271f32c1c8d97e5894bad5e234c">More...</a><br /></td></tr>
+<tr class="separator:a7a23d271f32c1c8d97e5894bad5e234c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1b310af4db8572734e038f97ece891"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f1b310af4db8572734e038f97ece891">isDescriptionOfWaveDevicesSupported</a> ()</td></tr>
+<tr class="memdesc:a8f1b310af4db8572734e038f97ece891"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f1b310af4db8572734e038f97ece891">More...</a><br /></td></tr>
+<tr class="separator:a8f1b310af4db8572734e038f97ece891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd15850080de947e66bb89ec1c7664f6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afd15850080de947e66bb89ec1c7664f6">describeWaveDevices</a> (std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1WaveDeviceDescription.html">WaveDeviceDescription</a> &gt; &amp;, juce::AudioIODevice &amp;, bool)</td></tr>
+<tr class="memdesc:afd15850080de947e66bb89ec1c7664f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices for a given audio device.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afd15850080de947e66bb89ec1c7664f6">More...</a><br /></td></tr>
+<tr class="separator:afd15850080de947e66bb89ec1c7664f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1671d970928e6e411b0907759982d9a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">shouldBypassedPluginsBeRemovedFromPlaybackGraph</a> ()</td></tr>
+<tr class="memdesc:ae1671d970928e6e411b0907759982d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if plugins which have been bypassed should be included in the playback graph.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#ae1671d970928e6e411b0907759982d9a">More...</a><br /></td></tr>
+<tr class="separator:ae1671d970928e6e411b0907759982d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8cd2b6b227cfa74104b096891418ba"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">shouldProcessAuxSendWhenTrackIsMuted</a> (<a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a4d8cd2b6b227cfa74104b096891418ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not to include muted track contents in aux send plugins.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4d8cd2b6b227cfa74104b096891418ba">More...</a><br /></td></tr>
+<tr class="separator:a4d8cd2b6b227cfa74104b096891418ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78646d63156e5bab0683f521b36ea775"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a78646d63156e5bab0683f521b36ea775">enableReadAheadForTimeStretchNodes</a> ()</td></tr>
+<tr class="memdesc:a78646d63156e5bab0683f521b36ea775"><td class="mdescLeft">&#160;</td><td class="mdescRight">TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a78646d63156e5bab0683f521b36ea775">More...</a><br /></td></tr>
+<tr class="separator:a78646d63156e5bab0683f521b36ea775"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40e9c90accc2fb7e35d881c2699cfcb1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a40e9c90accc2fb7e35d881c2699cfcb1">isMidiDriverUsedForIncommingMessageTiming</a> ()</td></tr>
 <tr class="memdesc:a40e9c90accc2fb7e35d881c2699cfcb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return true if the incoming timestamp for MIDI messages should be used.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a40e9c90accc2fb7e35d881c2699cfcb1">More...</a><br /></td></tr>
 <tr class="separator:a40e9c90accc2fb7e35d881c2699cfcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,8 +148,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5eac74dc9b821fdade9bbe6d76b3d3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6871c4d9a5cd5f4333d7622e598bc08"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ad6871c4d9a5cd5f4333d7622e598bc08">shouldPlayMidiGuideNotes</a> ()</td></tr>
 <tr class="separator:ad6871c4d9a5cd5f4333d7622e598bc08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d7d362c66d34cf364ace7b39eb35f04"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2d7d362c66d34cf364ace7b39eb35f04">ignoreBWavTimestamps</a> ()</td></tr>
-<tr class="separator:a2d7d362c66d34cf364ace7b39eb35f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58f6412369b6ce814c4c0d9e0d568d2d"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a58f6412369b6ce814c4c0d9e0d568d2d">getNumberOfCPUsToUseForAudio</a> ()</td></tr>
 <tr class="separator:a58f6412369b6ce814c4c0d9e0d568d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96bbd9eb8f0d87dc9bcab7a4acf929b3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a96bbd9eb8f0d87dc9bcab7a4acf929b3">shouldProcessMutedTracks</a> ()</td></tr>
@@ -174,6 +156,39 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab01ae468c0669b8949015b4453f6ceae"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ab01ae468c0669b8949015b4453f6ceae">muteTrackContentsWhilstRecording</a> ()</td></tr>
 <tr class="memdesc:ab01ae468c0669b8949015b4453f6ceae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should track contents be audible whilst a recording is in progress.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#ab01ae468c0669b8949015b4453f6ceae">More...</a><br /></td></tr>
 <tr class="separator:ab01ae468c0669b8949015b4453f6ceae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6619ff1dd9cf8adf3d42ae2ae0acd873">setProcessPriority</a> (int)</td></tr>
+<tr class="memdesc:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="mdescLeft">&#160;</td><td class="mdescRight">0 = normal, 1 = high, 2 = realtime  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6619ff1dd9cf8adf3d42ae2ae0acd873">More...</a><br /></td></tr>
+<tr class="separator:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4bf6af8049c0afb0240d0ddc9b22593c">getMiddleCOctave</a> ()</td></tr>
+<tr class="separator:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf026c35e59330c677c2a0a1384e063"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a1cf026c35e59330c677c2a0a1384e063">setMiddleCOctave</a> (int)</td></tr>
+<tr class="separator:a1cf026c35e59330c677c2a0a1384e063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c188621dd2caecfea561d322d9490a7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a5c188621dd2caecfea561d322d9490a7">editHasBeenSaved</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, juce::File)</td></tr>
+<tr class="separator:a5c188621dd2caecfea561d322d9490a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37869df60395e549390c9207842a4d8e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EditLimits.html">EditLimits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a37869df60395e549390c9207842a4d8e">getEditLimits</a> ()</td></tr>
+<tr class="memdesc:a37869df60395e549390c9207842a4d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a37869df60395e549390c9207842a4d8e">More...</a><br /></td></tr>
+<tr class="separator:a37869df60395e549390c9207842a4d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5904596b74d210355380f7673339ea09"><td class="memItemLeft" align="right" valign="top">virtual juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1RackType.html">RackType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a5904596b74d210355380f7673339ea09">createPresetRackType</a> (int, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
+<tr class="separator:a5904596b74d210355380f7673339ea09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b48d4dc65db1f9a966f5f06087e1747"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2b48d4dc65db1f9a966f5f06087e1747">getReferencedItems</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
+<tr class="memdesc:a2b48d4dc65db1f9a966f5f06087e1747"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special plugins that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2b48d4dc65db1f9a966f5f06087e1747">More...</a><br /></td></tr>
+<tr class="separator:a2b48d4dc65db1f9a966f5f06087e1747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d8fd0947befe38f9d3584dbc99402dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a0d8fd0947befe38f9d3584dbc99402dc">reassignReferencedItem</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;, const <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>, double)</td></tr>
+<tr class="memdesc:a0d8fd0947befe38f9d3584dbc99402dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special plugins that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a0d8fd0947befe38f9d3584dbc99402dc">More...</a><br /></td></tr>
+<tr class="separator:a0d8fd0947befe38f9d3584dbc99402dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a59fe29e606c9d96c2fb66a0fe55d34c0">getReferencedItems</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;)</td></tr>
+<tr class="memdesc:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special clips that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to return them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a59fe29e606c9d96c2fb66a0fe55d34c0">More...</a><br /></td></tr>
+<tr class="separator:a59fe29e606c9d96c2fb66a0fe55d34c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abceff86ac26fc465a24da48921e6ebcc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#abceff86ac26fc465a24da48921e6ebcc">reassignReferencedItem</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;, const <a class="el" href="structtracktion_1_1engine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html">ProjectItemID</a>, double)</td></tr>
+<tr class="memdesc:abceff86ac26fc465a24da48921e6ebcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special clips that access items in the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#abceff86ac26fc465a24da48921e6ebcc">More...</a><br /></td></tr>
+<tr class="separator:abceff86ac26fc465a24da48921e6ebcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a172ed3ca1a2fd676297aa0a96de543b0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a172ed3ca1a2fd676297aa0a96de543b0">areClipSlotsEnabled</a> ()</td></tr>
+<tr class="memdesc:a172ed3ca1a2fd676297aa0a96de543b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns false, <a class="el" href="classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a> Clips won't be included in the playback graph and arranger track clips will always be audible.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a172ed3ca1a2fd676297aa0a96de543b0">More...</a><br /></td></tr>
+<tr class="separator:a172ed3ca1a2fd676297aa0a96de543b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe6eca43fd05e57eb6ed3df9aa12857f"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afe6eca43fd05e57eb6ed3df9aa12857f">getDefaultNoteColour</a> ()</td></tr>
+<tr class="separator:afe6eca43fd05e57eb6ed3df9aa12857f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d7d362c66d34cf364ace7b39eb35f04"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a2d7d362c66d34cf364ace7b39eb35f04">ignoreBWavTimestamps</a> ()</td></tr>
+<tr class="separator:a2d7d362c66d34cf364ace7b39eb35f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dc8a12b521122b53d10ba09bf7c3981"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a5dc8a12b521122b53d10ba09bf7c3981">areAudioClipsRemappedWhenTempoChanges</a> ()</td></tr>
 <tr class="separator:a5dc8a12b521122b53d10ba09bf7c3981"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfa96d58a339f60c225219228a6d8956"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#abfa96d58a339f60c225219228a6d8956">setAudioClipsRemappedWhenTempoChanges</a> (bool)</td></tr>
@@ -190,24 +205,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae507822ed583b2c7df32f4a1bb024db2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89ad26d9c394aa361f209cd0f506c3e6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a89ad26d9c394aa361f209cd0f506c3e6">setPluginsRemappedWhenTempoChanges</a> (bool)</td></tr>
 <tr class="separator:a89ad26d9c394aa361f209cd0f506c3e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37869df60395e549390c9207842a4d8e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EditLimits.html">EditLimits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a37869df60395e549390c9207842a4d8e">getEditLimits</a> ()</td></tr>
-<tr class="memdesc:a37869df60395e549390c9207842a4d8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a37869df60395e549390c9207842a4d8e">More...</a><br /></td></tr>
-<tr class="separator:a37869df60395e549390c9207842a4d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819176c2c08784e9c21b4b7c26a547c6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a819176c2c08784e9c21b4b7c26a547c6">lengthOfOneBeatDependsOnTimeSignature</a> ()</td></tr>
 <tr class="memdesc:a819176c2c08784e9c21b4b7c26a547c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that the length (in seconds) of one "beat" at any point in an edit is considered to be the length of one division in the current bar's time signature.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a819176c2c08784e9c21b4b7c26a547c6">More...</a><br /></td></tr>
 <tr class="separator:a819176c2c08784e9c21b4b7c26a547c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#af7308deba6f8c9a4567c2bb8e0d1f58a">getLevelMeterSettings</a> ()</td></tr>
-<tr class="separator:af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d6cfdc2c70a6c4cc8c2448609518fbf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9d6cfdc2c70a6c4cc8c2448609518fbf">setLevelMeterSettings</a> (<a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>)</td></tr>
-<tr class="separator:a9d6cfdc2c70a6c4cc8c2448609518fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6619ff1dd9cf8adf3d42ae2ae0acd873">setProcessPriority</a> (int)</td></tr>
-<tr class="separator:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f1b310af4db8572734e038f97ece891"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f1b310af4db8572734e038f97ece891">isDescriptionOfWaveDevicesSupported</a> ()</td></tr>
-<tr class="memdesc:a8f1b310af4db8572734e038f97ece891"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a8f1b310af4db8572734e038f97ece891">More...</a><br /></td></tr>
-<tr class="separator:a8f1b310af4db8572734e038f97ece891"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd15850080de947e66bb89ec1c7664f6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afd15850080de947e66bb89ec1c7664f6">describeWaveDevices</a> (std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1WaveDeviceDescription.html">WaveDeviceDescription</a> &gt; &amp;, juce::AudioIODevice &amp;, bool)</td></tr>
-<tr class="memdesc:afd15850080de947e66bb89ec1c7664f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices for a given audio device.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afd15850080de947e66bb89ec1c7664f6">More...</a><br /></td></tr>
-<tr class="separator:afd15850080de947e66bb89ec1c7664f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa4cf049347df32d5cb76329f4057138"><td class="memItemLeft" align="right" valign="top">virtual juce::MidiMessageSequence&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa4cf049347df32d5cb76329f4057138">createPlaybackMidiSequence</a> (const <a class="el" href="classtracktion_1_1engine_1_1MidiList.html">MidiList</a> &amp;list, <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a> &amp;clip, <a class="el" href="classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394">MidiList::TimeBase</a> tb, bool generateMPE)</td></tr>
 <tr class="memdesc:afa4cf049347df32d5cb76329f4057138"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the <a class="el" href="classtracktion_1_1engine_1_1MidiList.html">MidiList</a> to create a MidiMessageSequence for playback.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa4cf049347df32d5cb76329f4057138">More...</a><br /></td></tr>
 <tr class="separator:afa4cf049347df32d5cb76329f4057138"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,11 +220,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7605666b7f1e84e8d7c8166bb5823533"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a7605666b7f1e84e8d7c8166bb5823533">interpolateAutomation</a> ()</td></tr>
 <tr class="memdesc:a7605666b7f1e84e8d7c8166bb5823533"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolate automation at 10ms intervals (faster) or calculate actual value (slower)  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a7605666b7f1e84e8d7c8166bb5823533">More...</a><br /></td></tr>
 <tr class="separator:a7605666b7f1e84e8d7c8166bb5823533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#af7308deba6f8c9a4567c2bb8e0d1f58a">getLevelMeterSettings</a> ()</td></tr>
+<tr class="separator:af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6cfdc2c70a6c4cc8c2448609518fbf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9d6cfdc2c70a6c4cc8c2448609518fbf">setLevelMeterSettings</a> (<a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>)</td></tr>
+<tr class="separator:a9d6cfdc2c70a6c4cc8c2448609518fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html">ClipDefaults</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa77c190ce1e9f1ec2187a97aac3a2ff">getClipDefaults</a> ()</td></tr>
 <tr class="memdesc:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the defaults to be applied to new clips.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa77c190ce1e9f1ec2187a97aac3a2ff">More...</a><br /></td></tr>
 <tr class="separator:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4661476f3cb69540127dbb180ad83193"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4661476f3cb69540127dbb180ad83193">newClipAdded</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;, [[maybe_unused]] bool fromRecording)</td></tr>
-<tr class="memdesc:a4661476f3cb69540127dbb180ad83193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the defaults to be applied to new clips.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4661476f3cb69540127dbb180ad83193">More...</a><br /></td></tr>
+<tr class="memdesc:a4661476f3cb69540127dbb180ad83193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows a new clip to be customised.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4661476f3cb69540127dbb180ad83193">More...</a><br /></td></tr>
 <tr class="separator:a4661476f3cb69540127dbb180ad83193"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91b4473992ad5fd88cce3e3a4e5b9822"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a91b4473992ad5fd88cce3e3a4e5b9822">getDesiredControlSurfaces</a> ()</td></tr>
 <tr class="memdesc:a91b4473992ad5fd88cce3e3a4e5b9822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the control surfaces you want enabled in the engine.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a91b4473992ad5fd88cce3e3a4e5b9822">More...</a><br /></td></tr>
@@ -288,42 +292,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5904596b74d210355380f7673339ea09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5904596b74d210355380f7673339ea09">&#9670;&nbsp;</a></span>createPresetRackType()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1RackType.html">RackType</a>&gt; tracktion::engine::EngineBehaviour::createPresetRackType </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a60fed1b5b939e8d1503839439434a4f3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a60fed1b5b939e8d1503839439434a4f3">&#9670;&nbsp;</a></span>createCustomPlugin()</h2>
 
@@ -352,6 +320,34 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afc20b68795215ef15fc02d9a655a1542"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc20b68795215ef15fc02d9a655a1542">&#9670;&nbsp;</a></span>doAdditionalInitialisation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::doAdditionalInitialisation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gives the host a chance to do any extra configuration after a plugin is loaded. </p>
+
+</div>
+</div>
 <a id="a77cd2758aaa9796abef5f166f4fb351c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a77cd2758aaa9796abef5f166f4fb351c">&#9670;&nbsp;</a></span>findDescriptionForFileOrID()</h2>
 
@@ -377,8 +373,6 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list. </p>
-<p><br  />
- </p>
 
 </div>
 </div>
@@ -450,8 +444,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa274bffda0587a027f0aaa00c05e79e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa274bffda0587a027f0aaa00c05e79e7">&#9670;&nbsp;</a></span>shouldLoadPlugin()</h2>
+<a id="a2a1b87de6e250f15d993c90869e1cf4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a1b87de6e250f15d993c90869e1cf4d">&#9670;&nbsp;</a></span>shouldLoadPlugin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -463,7 +457,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldLoadPlugin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -479,8 +473,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afc20b68795215ef15fc02d9a655a1542"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc20b68795215ef15fc02d9a655a1542">&#9670;&nbsp;</a></span>doAdditionalInitialisation()</h2>
+<a id="aa963929141512658b6b282594a9818e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa963929141512658b6b282594a9818e5">&#9670;&nbsp;</a></span>saveCustomPluginProperties()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -489,9 +483,52 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::doAdditionalInitialisation </td>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::saveCustomPluginProperties </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::AudioPluginInstance &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::UndoManager *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gives plugins an opportunity to save custom data when the plugin state gets flushed. </p>
+
+</div>
+</div>
+<a id="a6fc10afdb07b280c2b117e828d8595da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fc10afdb07b280c2b117e828d8595da">&#9670;&nbsp;</a></span>canScanPluginsOutOfProcess()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::canScanPluginsOutOfProcess </td>
+          <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -503,7 +540,586 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gives the host a chance to do any extra configuration after a plugin is loaded. </p>
+<p>Return true if your application supports scanning plugins out of process. </p>
+<p>If you want to support scanning out of process, the allowing should be added to your JUCEApplication::initialise() function:</p>
+<p>void initialise (const juce::String&amp; commandLine) override { if (<a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a931641ede751b881243aefb8048eed2d" title="This is called by a child process in the app&#39;s start-up code, to invoke the actual scan.">PluginManager::startChildProcessPluginScan</a> (commandLine)) return;</p>
+<p>...continue as normal </p>
+
+</div>
+</div>
+<a id="a9107f745067757cab9c5e5d58b188d9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9107f745067757cab9c5e5d58b188d9d">&#9670;&nbsp;</a></span>autoInitialiseDeviceManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::autoInitialiseDeviceManager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>You may want to disable auto initialisation of the device manager if you are using the engine in a plugin. </p>
+
+</div>
+</div>
+<a id="aeb8ba08bf8b3da07a756fa9194ea7ae0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb8ba08bf8b3da07a756fa9194ea7ae0">&#9670;&nbsp;</a></span>addSystemAudioIODeviceTypes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::addSystemAudioIODeviceTypes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>In plugin builds, you might want to avoid adding the system audio devices and only use the host inputs. </p>
+
+</div>
+</div>
+<a id="a7a23d271f32c1c8d97e5894bad5e234c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a23d271f32c1c8d97e5894bad5e234c">&#9670;&nbsp;</a></span>shouldOpenAudioInputByDefault()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldOpenAudioInputByDefault </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If true, then the engine will attempt to open both an audio input and output. </p>
+<p>If false, it'll only open an output device. (This won't prevent your app opening an input device later if you allow the user to do that) </p>
+
+</div>
+</div>
+<a id="a8f1b310af4db8572734e038f97ece891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f1b310af4db8572734e038f97ece891">&#9670;&nbsp;</a></span>isDescriptionOfWaveDevicesSupported()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::isDescriptionOfWaveDevicesSupported </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device. </p>
+<p>If it's false, a standard, stereo pair layout will be automatically generated. </p>
+
+</div>
+</div>
+<a id="afd15850080de947e66bb89ec1c7664f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd15850080de947e66bb89ec1c7664f6">&#9670;&nbsp;</a></span>describeWaveDevices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::describeWaveDevices </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1WaveDeviceDescription.html">WaveDeviceDescription</a> &gt; &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::AudioIODevice &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices for a given audio device. </p>
+
+</div>
+</div>
+<a id="ae1671d970928e6e411b0907759982d9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1671d970928e6e411b0907759982d9a">&#9670;&nbsp;</a></span>shouldBypassedPluginsBeRemovedFromPlaybackGraph()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldBypassedPluginsBeRemovedFromPlaybackGraph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return if plugins which have been bypassed should be included in the playback graph. </p>
+<p>By default this is false and bypassed plugins will still call processBypassed and introduce the same latency as if they weren't. But by returning false here, you can opt to remove them from the playback graph entirely which means they won't introduce latency which can be useful for tracking. </p>
+
+</div>
+</div>
+<a id="a4d8cd2b6b227cfa74104b096891418ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d8cd2b6b227cfa74104b096891418ba">&#9670;&nbsp;</a></span>shouldProcessAuxSendWhenTrackIsMuted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldProcessAuxSendWhenTrackIsMuted </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether or not to include muted track contents in aux send plugins. </p>
+<p>Returning true here enables you to still listen to return busses when send tracks are muted or other tracks are soloed. </p>
+
+</div>
+</div>
+<a id="a78646d63156e5bab0683f521b36ea775"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78646d63156e5bab0683f521b36ea775">&#9670;&nbsp;</a></span>enableReadAheadForTimeStretchNodes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::enableReadAheadForTimeStretchNodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. </p>
+
+</div>
+</div>
+<a id="a40e9c90accc2fb7e35d881c2699cfcb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40e9c90accc2fb7e35d881c2699cfcb1">&#9670;&nbsp;</a></span>isMidiDriverUsedForIncommingMessageTiming()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::isMidiDriverUsedForIncommingMessageTiming </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return true if the incoming timestamp for MIDI messages should be used. </p>
+<p>If this returns false, the current system time will be used (which could be less accurate). N.B. this is called from multiple threads, including the MIDI thread for every incoming message so should be thread safe and quick to return. </p>
+
+</div>
+</div>
+<a id="a5eac74dc9b821fdade9bbe6d76b3d3d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eac74dc9b821fdade9bbe6d76b3d3d9">&#9670;&nbsp;</a></span>setMidiDriverUsedForIncommingMessageTiming()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setMidiDriverUsedForIncommingMessageTiming </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6871c4d9a5cd5f4333d7622e598bc08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6871c4d9a5cd5f4333d7622e598bc08">&#9670;&nbsp;</a></span>shouldPlayMidiGuideNotes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldPlayMidiGuideNotes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a58f6412369b6ce814c4c0d9e0d568d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f6412369b6ce814c4c0d9e0d568d2d">&#9670;&nbsp;</a></span>getNumberOfCPUsToUseForAudio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int tracktion::engine::EngineBehaviour::getNumberOfCPUsToUseForAudio </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96bbd9eb8f0d87dc9bcab7a4acf929b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96bbd9eb8f0d87dc9bcab7a4acf929b3">&#9670;&nbsp;</a></span>shouldProcessMutedTracks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldProcessMutedTracks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should muted tracks processing be disabled to save CPU. </p>
+
+<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a28e0de2c583d5f6bdc37849912dc1f58">tracktion::engine::AudioTrack::processAudioNodesWhileMuted()</a>.</p>
+
+</div>
+</div>
+<a id="ab01ae468c0669b8949015b4453f6ceae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab01ae468c0669b8949015b4453f6ceae">&#9670;&nbsp;</a></span>muteTrackContentsWhilstRecording()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::muteTrackContentsWhilstRecording </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should track contents be audible whilst a recording is in progress. </p>
+
+</div>
+</div>
+<a id="a6619ff1dd9cf8adf3d42ae2ae0acd873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6619ff1dd9cf8adf3d42ae2ae0acd873">&#9670;&nbsp;</a></span>setProcessPriority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setProcessPriority </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>0 = normal, 1 = high, 2 = realtime </p>
+
+</div>
+</div>
+<a id="a4bf6af8049c0afb0240d0ddc9b22593c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bf6af8049c0afb0240d0ddc9b22593c">&#9670;&nbsp;</a></span>getMiddleCOctave()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int tracktion::engine::EngineBehaviour::getMiddleCOctave </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1cf026c35e59330c677c2a0a1384e063"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cf026c35e59330c677c2a0a1384e063">&#9670;&nbsp;</a></span>setMiddleCOctave()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setMiddleCOctave </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5c188621dd2caecfea561d322d9490a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c188621dd2caecfea561d322d9490a7">&#9670;&nbsp;</a></span>editHasBeenSaved()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::editHasBeenSaved </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::File&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a37869df60395e549390c9207842a4d8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37869df60395e549390c9207842a4d8e">&#9670;&nbsp;</a></span>getEditLimits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structtracktion_1_1engine_1_1EditLimits.html">EditLimits</a> tracktion::engine::EngineBehaviour::getEditLimits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+
+</div>
+</div>
+<a id="a5904596b74d210355380f7673339ea09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5904596b74d210355380f7673339ea09">&#9670;&nbsp;</a></span>createPresetRackType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1RackType.html">RackType</a>&gt; tracktion::engine::EngineBehaviour::createPresetRackType </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -663,63 +1279,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1671d970928e6e411b0907759982d9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1671d970928e6e411b0907759982d9a">&#9670;&nbsp;</a></span>shouldBypassedPluginsBeRemovedFromPlaybackGraph()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldBypassedPluginsBeRemovedFromPlaybackGraph </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should return if plugins which have been bypassed should be included in the playback graph. </p>
-<p>By default this is false and bypassed plugins will still call processBypassed and introduce the same latency as if they weren't. But by returning false here, you can opt to remove them from the playback graph entirely which means they won't introduce latency which can be useful for tracking. </p>
-
-</div>
-</div>
-<a id="a4d8cd2b6b227cfa74104b096891418ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d8cd2b6b227cfa74104b096891418ba">&#9670;&nbsp;</a></span>shouldProcessAuxSendWhenTrackIsMuted()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldProcessAuxSendWhenTrackIsMuted </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html">AuxSendPlugin</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Whether or not to include muted track contents in aux send plugins. </p>
-<p>Returning true here enables you to still listen to return busses when send tracks are muted or other tracks are soloed. </p>
-
-</div>
-</div>
 <a id="a172ed3ca1a2fd676297aa0a96de543b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a172ed3ca1a2fd676297aa0a96de543b0">&#9670;&nbsp;</a></span>areClipSlotsEnabled()</h2>
 
@@ -747,212 +1306,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a78646d63156e5bab0683f521b36ea775"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78646d63156e5bab0683f521b36ea775">&#9670;&nbsp;</a></span>enableReadAheadForTimeStretchNodes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::enableReadAheadForTimeStretchNodes </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>TEMPORARY: If enabled, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. </p>
-
-</div>
-</div>
-<a id="aa963929141512658b6b282594a9818e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa963929141512658b6b282594a9818e5">&#9670;&nbsp;</a></span>saveCustomPluginProperties()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::saveCustomPluginProperties </td>
-          <td>(</td>
-          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::AudioPluginInstance &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::UndoManager *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gives plugins an opportunity to save custom data when the plugin state gets flushed. </p>
-
-</div>
-</div>
-<a id="a6fc10afdb07b280c2b117e828d8595da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fc10afdb07b280c2b117e828d8595da">&#9670;&nbsp;</a></span>canScanPluginsOutOfProcess()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::canScanPluginsOutOfProcess </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return true if your application supports scanning plugins out of process. </p>
-<p>If you want to support scanning out of process, the allowing should be added to you JUCEApplication::initialise() function:</p>
-<p>void initialise (const juce::String&amp; commandLine) override { if (<a class="el" href="classtracktion_1_1engine_1_1PluginManager.html#a931641ede751b881243aefb8048eed2d" title="This is called by a child process in the app&#39;s start-up code, to invoke the actual scan.">PluginManager::startChildProcessPluginScan</a> (commandLine)) return;</p>
-<p>continue like normal </p>
-
-</div>
-</div>
-<a id="a9107f745067757cab9c5e5d58b188d9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9107f745067757cab9c5e5d58b188d9d">&#9670;&nbsp;</a></span>autoInitialiseDeviceManager()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::autoInitialiseDeviceManager </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>You may want to disable auto initialisation of the device manager if you are using the engine in a plugin. </p>
-
-</div>
-</div>
-<a id="aeb8ba08bf8b3da07a756fa9194ea7ae0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb8ba08bf8b3da07a756fa9194ea7ae0">&#9670;&nbsp;</a></span>addSystemAudioIODeviceTypes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::addSystemAudioIODeviceTypes </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>In plugin builds, you might want to avoid adding the system audio devices and only use the host inputs. </p>
-
-</div>
-</div>
-<a id="a4bf6af8049c0afb0240d0ddc9b22593c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bf6af8049c0afb0240d0ddc9b22593c">&#9670;&nbsp;</a></span>getMiddleCOctave()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int tracktion::engine::EngineBehaviour::getMiddleCOctave </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1cf026c35e59330c677c2a0a1384e063"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cf026c35e59330c677c2a0a1384e063">&#9670;&nbsp;</a></span>setMiddleCOctave()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setMiddleCOctave </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="afe6eca43fd05e57eb6ed3df9aa12857f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe6eca43fd05e57eb6ed3df9aa12857f">&#9670;&nbsp;</a></span>getDefaultNoteColour()</h2>
 
@@ -964,121 +1317,6 @@ Public Member Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">virtual int tracktion::engine::EngineBehaviour::getDefaultNoteColour </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5c188621dd2caecfea561d322d9490a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c188621dd2caecfea561d322d9490a7">&#9670;&nbsp;</a></span>editHasBeenSaved()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::editHasBeenSaved </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::File&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a40e9c90accc2fb7e35d881c2699cfcb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40e9c90accc2fb7e35d881c2699cfcb1">&#9670;&nbsp;</a></span>isMidiDriverUsedForIncommingMessageTiming()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::isMidiDriverUsedForIncommingMessageTiming </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should return true if the incoming timestamp for MIDI messages should be used. </p>
-<p>If this returns false, the current system time will be used (which could be less accurate). N.B. this is called from multiple threads, including the MIDI thread for every incoming message so should be thread safe and quick to return. </p>
-
-</div>
-</div>
-<a id="a5eac74dc9b821fdade9bbe6d76b3d3d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eac74dc9b821fdade9bbe6d76b3d3d9">&#9670;&nbsp;</a></span>setMidiDriverUsedForIncommingMessageTiming()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setMidiDriverUsedForIncommingMessageTiming </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad6871c4d9a5cd5f4333d7622e598bc08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6871c4d9a5cd5f4333d7622e598bc08">&#9670;&nbsp;</a></span>shouldPlayMidiGuideNotes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldPlayMidiGuideNotes </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1115,87 +1353,6 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a58f6412369b6ce814c4c0d9e0d568d2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58f6412369b6ce814c4c0d9e0d568d2d">&#9670;&nbsp;</a></span>getNumberOfCPUsToUseForAudio()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int tracktion::engine::EngineBehaviour::getNumberOfCPUsToUseForAudio </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a96bbd9eb8f0d87dc9bcab7a4acf929b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96bbd9eb8f0d87dc9bcab7a4acf929b3">&#9670;&nbsp;</a></span>shouldProcessMutedTracks()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::shouldProcessMutedTracks </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should muted tracks processing be disabled to save CPU. </p>
-
-<p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a28e0de2c583d5f6bdc37849912dc1f58">tracktion::engine::AudioTrack::processAudioNodesWhileMuted()</a>.</p>
-
-</div>
-</div>
-<a id="ab01ae468c0669b8949015b4453f6ceae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab01ae468c0669b8949015b4453f6ceae">&#9670;&nbsp;</a></span>muteTrackContentsWhilstRecording()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::muteTrackContentsWhilstRecording </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should track contents be audible whilst a recording is in progress. </p>
 
 </div>
 </div>
@@ -1403,33 +1560,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a37869df60395e549390c9207842a4d8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37869df60395e549390c9207842a4d8e">&#9670;&nbsp;</a></span>getEditLimits()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="structtracktion_1_1engine_1_1EditLimits.html">EditLimits</a> tracktion::engine::EngineBehaviour::getEditLimits </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Should return the maximum number of elements that can be added to an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
-
-</div>
-</div>
 <a id="a819176c2c08784e9c21b4b7c26a547c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a819176c2c08784e9c21b4b7c26a547c6">&#9670;&nbsp;</a></span>lengthOfOneBeatDependsOnTimeSignature()</h2>
 
@@ -1457,155 +1587,6 @@ Public Member Functions</h2></td></tr>
 <p>So for example at 120BPM, in a bar of 4/4, one beat would be the length of a quarter-note (0.5s), but in a bar of 4/8, one beat would be the length of an eighth-note (0.25s)</p>
 <p>If false, then the length of one beat always depends only the current BPM at that point in the edit, so where the BPM = 120, one beat is always 0.5s, regardless of the time-sig.</p>
 <p>You shouldn't dynamically change this function's return value - just implement a function that always returns true or false. </p>
-
-</div>
-</div>
-<a id="af7308deba6f8c9a4567c2bb8e0d1f58a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7308deba6f8c9a4567c2bb8e0d1f58a">&#9670;&nbsp;</a></span>getLevelMeterSettings()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a> tracktion::engine::EngineBehaviour::getLevelMeterSettings </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9d6cfdc2c70a6c4cc8c2448609518fbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d6cfdc2c70a6c4cc8c2448609518fbf">&#9670;&nbsp;</a></span>setLevelMeterSettings()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setLevelMeterSettings </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6619ff1dd9cf8adf3d42ae2ae0acd873"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6619ff1dd9cf8adf3d42ae2ae0acd873">&#9670;&nbsp;</a></span>setProcessPriority()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setProcessPriority </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8f1b310af4db8572734e038f97ece891"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f1b310af4db8572734e038f97ece891">&#9670;&nbsp;</a></span>isDescriptionOfWaveDevicesSupported()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::isDescriptionOfWaveDevicesSupported </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device. </p>
-<p>If it's false, a standard, stereo pair layout will be automatically generated. </p>
-
-</div>
-</div>
-<a id="afd15850080de947e66bb89ec1c7664f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd15850080de947e66bb89ec1c7664f6">&#9670;&nbsp;</a></span>describeWaveDevices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void tracktion::engine::EngineBehaviour::describeWaveDevices </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="structtracktion_1_1engine_1_1WaveDeviceDescription.html">WaveDeviceDescription</a> &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">juce::AudioIODevice &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices for a given audio device. </p>
 
 </div>
 </div>
@@ -1686,7 +1667,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Must return the default looped sequence type to use. </p>
-<p>Current options are: 0: loopRangeDefinesAllRepetitions // The looped sequence is the same for all repetitions including the first. 1: loopRangeDefinesSubsequentRepetitions // The first section is the whole sequence, subsequent repitions are determined by the loop range. </p>
+<p>Current options are: 0: loopRangeDefinesAllRepetitions - The looped sequence is the same for all repetitions including the first. 1: loopRangeDefinesSubsequentRepetitions - The first section is the whole sequence, subsequent repitions are determined by the loop range. </p>
 
 </div>
 </div>
@@ -1741,6 +1722,57 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Interpolate automation at 10ms intervals (faster) or calculate actual value (slower) </p>
+
+</div>
+</div>
+<a id="af7308deba6f8c9a4567c2bb8e0d1f58a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7308deba6f8c9a4567c2bb8e0d1f58a">&#9670;&nbsp;</a></span>getLevelMeterSettings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a> tracktion::engine::EngineBehaviour::getLevelMeterSettings </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d6cfdc2c70a6c4cc8c2448609518fbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6cfdc2c70a6c4cc8c2448609518fbf">&#9670;&nbsp;</a></span>setLevelMeterSettings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::EngineBehaviour::setLevelMeterSettings </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1805,7 +1837,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the defaults to be applied to new clips. </p>
+<p>Allows a new clip to be customised. </p>
 
 </div>
 </div>
@@ -1880,7 +1912,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 12 2024 15:04:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Aug 13 2024 09:56:25 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

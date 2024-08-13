@@ -27825,8 +27825,8 @@
       <type>void</type>
       <name>initialise</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>ae355173093af07b650fc442b870e393a</anchor>
-      <arglist>(int defaultNumInputChannelsToOpen=512, int defaultNumOutputChannelsToOpen=512)</arglist>
+      <anchor>aa88862c9853a2a78f22826a853dff05d</anchor>
+      <arglist>(int defaultNumInputChannelsToOpen=defaultNumChannelsToOpen, int defaultNumOutputChannelsToOpen=defaultNumChannelsToOpen)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -28463,6 +28463,13 @@
       <name>warnOfWastedMidiMessagesFunction</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
       <anchor>aa27e24f0ea12a0a69db6b881cdb2e2b1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr int</type>
+      <name>defaultNumChannelsToOpen</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>aa1dcc7e4aad157d5d98283fffcadf836</anchor>
       <arglist></arglist>
     </member>
     <member kind="friend" protection="private">
@@ -32992,18 +32999,18 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual juce::ReferenceCountedObjectPtr&lt; RackType &gt;</type>
-      <name>createPresetRackType</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a5904596b74d210355380f7673339ea09</anchor>
-      <arglist>(int, Edit &amp;)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
       <type>virtual Plugin::Ptr</type>
       <name>createCustomPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a60fed1b5b939e8d1503839439434a4f3</anchor>
       <arglist>(PluginCreationInfo)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>doAdditionalInitialisation</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>afc20b68795215ef15fc02d9a655a1542</anchor>
+      <arglist>(ExternalPlugin &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual std::unique_ptr&lt; juce::PluginDescription &gt;</type>
@@ -33030,15 +33037,162 @@
       <type>virtual bool</type>
       <name>shouldLoadPlugin</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>aa274bffda0587a027f0aaa00c05e79e7</anchor>
-      <arglist>(ExternalPlugin &amp;p)</arglist>
+      <anchor>a2a1b87de6e250f15d993c90869e1cf4d</anchor>
+      <arglist>(ExternalPlugin &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
-      <name>doAdditionalInitialisation</name>
+      <name>saveCustomPluginProperties</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>afc20b68795215ef15fc02d9a655a1542</anchor>
-      <arglist>(ExternalPlugin &amp;)</arglist>
+      <anchor>aa963929141512658b6b282594a9818e5</anchor>
+      <arglist>(juce::ValueTree &amp;, juce::AudioPluginInstance &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>canScanPluginsOutOfProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a6fc10afdb07b280c2b117e828d8595da</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>autoInitialiseDeviceManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a9107f745067757cab9c5e5d58b188d9d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>addSystemAudioIODeviceTypes</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>aeb8ba08bf8b3da07a756fa9194ea7ae0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldOpenAudioInputByDefault</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a7a23d271f32c1c8d97e5894bad5e234c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>isDescriptionOfWaveDevicesSupported</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a8f1b310af4db8572734e038f97ece891</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>describeWaveDevices</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>afd15850080de947e66bb89ec1c7664f6</anchor>
+      <arglist>(std::vector&lt; WaveDeviceDescription &gt; &amp;, juce::AudioIODevice &amp;, bool)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldBypassedPluginsBeRemovedFromPlaybackGraph</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>ae1671d970928e6e411b0907759982d9a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldProcessAuxSendWhenTrackIsMuted</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a4d8cd2b6b227cfa74104b096891418ba</anchor>
+      <arglist>(AuxSendPlugin &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>enableReadAheadForTimeStretchNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a78646d63156e5bab0683f521b36ea775</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>isMidiDriverUsedForIncommingMessageTiming</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a40e9c90accc2fb7e35d881c2699cfcb1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setMidiDriverUsedForIncommingMessageTiming</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a5eac74dc9b821fdade9bbe6d76b3d3d9</anchor>
+      <arglist>(bool)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldPlayMidiGuideNotes</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>ad6871c4d9a5cd5f4333d7622e598bc08</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>getNumberOfCPUsToUseForAudio</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a58f6412369b6ce814c4c0d9e0d568d2d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldProcessMutedTracks</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a96bbd9eb8f0d87dc9bcab7a4acf929b3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>muteTrackContentsWhilstRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>ab01ae468c0669b8949015b4453f6ceae</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setProcessPriority</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a6619ff1dd9cf8adf3d42ae2ae0acd873</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>getMiddleCOctave</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a4bf6af8049c0afb0240d0ddc9b22593c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setMiddleCOctave</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a1cf026c35e59330c677c2a0a1384e063</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>editHasBeenSaved</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a5c188621dd2caecfea561d322d9490a7</anchor>
+      <arglist>(Edit &amp;, juce::File)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual EditLimits</type>
+      <name>getEditLimits</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a37869df60395e549390c9207842a4d8e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::ReferenceCountedObjectPtr&lt; RackType &gt;</type>
+      <name>createPresetRackType</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a5904596b74d210355380f7673339ea09</anchor>
+      <arglist>(int, Edit &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual juce::Array&lt; Exportable::ReferencedItem &gt;</type>
@@ -33070,73 +33224,10 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
-      <name>shouldBypassedPluginsBeRemovedFromPlaybackGraph</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>ae1671d970928e6e411b0907759982d9a</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>shouldProcessAuxSendWhenTrackIsMuted</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a4d8cd2b6b227cfa74104b096891418ba</anchor>
-      <arglist>(AuxSendPlugin &amp;)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
       <name>areClipSlotsEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a172ed3ca1a2fd676297aa0a96de543b0</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>enableReadAheadForTimeStretchNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a78646d63156e5bab0683f521b36ea775</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>saveCustomPluginProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>aa963929141512658b6b282594a9818e5</anchor>
-      <arglist>(juce::ValueTree &amp;, juce::AudioPluginInstance &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>canScanPluginsOutOfProcess</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a6fc10afdb07b280c2b117e828d8595da</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>autoInitialiseDeviceManager</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a9107f745067757cab9c5e5d58b188d9d</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>addSystemAudioIODeviceTypes</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>aeb8ba08bf8b3da07a756fa9194ea7ae0</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual int</type>
-      <name>getMiddleCOctave</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a4bf6af8049c0afb0240d0ddc9b22593c</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>setMiddleCOctave</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a1cf026c35e59330c677c2a0a1384e063</anchor>
-      <arglist>(int)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual int</type>
@@ -33146,59 +33237,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>editHasBeenSaved</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a5c188621dd2caecfea561d322d9490a7</anchor>
-      <arglist>(Edit &amp;, juce::File)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>isMidiDriverUsedForIncommingMessageTiming</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a40e9c90accc2fb7e35d881c2699cfcb1</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>setMidiDriverUsedForIncommingMessageTiming</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a5eac74dc9b821fdade9bbe6d76b3d3d9</anchor>
-      <arglist>(bool)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>shouldPlayMidiGuideNotes</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>ad6871c4d9a5cd5f4333d7622e598bc08</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>ignoreBWavTimestamps</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a2d7d362c66d34cf364ace7b39eb35f04</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual int</type>
-      <name>getNumberOfCPUsToUseForAudio</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a58f6412369b6ce814c4c0d9e0d568d2d</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>shouldProcessMutedTracks</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a96bbd9eb8f0d87dc9bcab7a4acf929b3</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>muteTrackContentsWhilstRecording</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>ab01ae468c0669b8949015b4453f6ceae</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -33258,53 +33300,11 @@
       <arglist>(bool)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual EditLimits</type>
-      <name>getEditLimits</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a37869df60395e549390c9207842a4d8e</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>lengthOfOneBeatDependsOnTimeSignature</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a819176c2c08784e9c21b4b7c26a547c6</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual LevelMeterSettings</type>
-      <name>getLevelMeterSettings</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>af7308deba6f8c9a4567c2bb8e0d1f58a</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>setLevelMeterSettings</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a9d6cfdc2c70a6c4cc8c2448609518fbf</anchor>
-      <arglist>(LevelMeterSettings)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>setProcessPriority</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a6619ff1dd9cf8adf3d42ae2ae0acd873</anchor>
-      <arglist>(int)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual bool</type>
-      <name>isDescriptionOfWaveDevicesSupported</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>a8f1b310af4db8572734e038f97ece891</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>describeWaveDevices</name>
-      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>afd15850080de947e66bb89ec1c7664f6</anchor>
-      <arglist>(std::vector&lt; WaveDeviceDescription &gt; &amp;, juce::AudioIODevice &amp;, bool)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual juce::MidiMessageSequence</type>
@@ -33333,6 +33333,20 @@
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a7605666b7f1e84e8d7c8166bb5823533</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual LevelMeterSettings</type>
+      <name>getLevelMeterSettings</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>af7308deba6f8c9a4567c2bb8e0d1f58a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>setLevelMeterSettings</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a9d6cfdc2c70a6c4cc8c2448609518fbf</anchor>
+      <arglist>(LevelMeterSettings)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual ClipDefaults</type>

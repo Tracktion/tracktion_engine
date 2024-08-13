@@ -388,7 +388,7 @@
 <!-- Node25 -->
 <g id="node25" class="node">
 <title>Node25</title>
-<g id="a_node25"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incomming signal.">
+<g id="a_node25"><a xlink:href="classtracktion_1_1engine_1_1LatencyPlugin.html" target="_top" xlink:title="A test plugin that introduces latency to the incoming signal.">
 <polygon fill="none" stroke="black" points="315,-686.5 315,-716.5 420,-716.5 420,-686.5 315,-686.5"/>
 <text text-anchor="start" x="323" y="-704.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
 <text text-anchor="middle" x="367.5" y="-693.5" font-family="Helvetica,sans-Serif" font-size="10.00">LatencyPlugin</text>

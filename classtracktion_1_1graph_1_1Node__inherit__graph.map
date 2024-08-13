@@ -9,9 +9,9 @@
 <area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1InsertNode.html" title=" " alt="" coords="292,397,432,439"/>
 <area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1InsertSendNode.html" title="The send node picks up audio/MIDI data from the InsertPlugin and then its output will be sent to the ..." alt="" coords="292,463,432,504"/>
 <area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html" title="A Node that introduces latency to balance the latency at the root Node and its position in the graph." alt="" coords="251,528,473,569"/>
-<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1LevelMeasuringNode.html" title="A Node that passes its incomming audio and MIDI through a LevelMeasurer." alt="" coords="283,593,441,635"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1LevelMeasuringNode.html" title="A Node that passes its incoming audio and MIDI through a LevelMeasurer." alt="" coords="283,593,441,635"/>
 <area shape="rect" id="node12" href="$classtracktion_1_1engine_1_1LiveMidiInjectingNode.html" title="A Node that injects MIDI message in to the stream, for keyboard key entry, note previews and MIDI ste..." alt="" coords="279,659,445,700"/>
-<area shape="rect" id="node13" href="$classtracktion_1_1engine_1_1LiveMidiOutputNode.html" title="A Node that calls the listeners of an AudioTrack with any incomming MIDI." alt="" coords="285,724,439,765"/>
+<area shape="rect" id="node13" href="$classtracktion_1_1engine_1_1LiveMidiOutputNode.html" title="A Node that calls the listeners of an AudioTrack with any incoming MIDI." alt="" coords="285,724,439,765"/>
 <area shape="rect" id="node14" href="$classtracktion_1_1engine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="292,789,432,831"/>
 <area shape="rect" id="node15" href="$classtracktion_1_1engine_1_1MelodyneNode.html" title="Plays back a Melodyne plugin." alt="" coords="292,855,432,896"/>
 <area shape="rect" id="node16" href="$classtracktion_1_1engine_1_1MidiInputDeviceNode.html" title="A Node that intercepts incoming live MIDI and inserts it in to the playback graph." alt="" coords="281,920,443,961"/>
