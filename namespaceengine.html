@@ -62,6 +62,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -70,12 +71,23 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceengine_1_1render__utils"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1render__utils.html">render_utils</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1FollowActions.html">FollowActions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EditLoader.html">EditLoader</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Some useful utility functions for asyncronously loading Edits on background threads.  <a href="classengine_1_1EditLoader.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer.html">Renderer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest level render operation.  <a href="classengine_1_1Renderer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EditRenderer.html">EditRenderer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Some useful utility functions for asyncronously rendering Edits on background threads.  <a href="classengine_1_1EditRenderer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ReadAheadTimeStretcher.html">ReadAheadTimeStretcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps a TimeStretcher but keeps a larger internal input and output buffer and uses a background thread to try and process frames, reducing CPU cost on real-time threads.  <a href="classengine_1_1ReadAheadTimeStretcher.html#details">More...</a><br /></td></tr>
@@ -139,6 +151,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a943f764db7a45607709ffcdb098ef23a"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="structtracktion_1_1engine_1_1MonotonicBeat.html">MonotonicBeat</a>)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a943f764db7a45607709ffcdb098ef23a">createFollowAction</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &amp;)</td></tr>
 <tr class="memdesc:a943f764db7a45607709ffcdb098ef23a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a follow action for a Clip.  <a href="namespaceengine.html#a943f764db7a45607709ffcdb098ef23a">More...</a><br /></td></tr>
 <tr class="separator:a943f764db7a45607709ffcdb098ef23a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6a89212d22c82b573d1471b23478e35"><td class="memItemLeft" align="right" valign="top">juce::StringPairArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ae6a89212d22c82b573d1471b23478e35">createAcidInfo</a> (Edit &amp;, TimeRange)</td></tr>
+<tr class="memdesc:ae6a89212d22c82b573d1471b23478e35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates ACID metadata info from the Edit.  <a href="namespaceengine.html#ae6a89212d22c82b573d1471b23478e35">More...</a><br /></td></tr>
+<tr class="separator:ae6a89212d22c82b573d1471b23478e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac427378780eb22c695cb6ffc6c5af8cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ac427378780eb22c695cb6ffc6c5af8cf">isCurrentThreadSupplyingExitStatus</a> ()</td></tr>
 <tr class="memdesc:ac427378780eb22c695cb6ffc6c5af8cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current thread has an active <a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html" title="Enables the calling thread to be cancelled from another thread and the calling thread to be able to q...">ScopedThreadExitStatusEnabler</a>.  <a href="namespaceengine.html#ac427378780eb22c695cb6ffc6c5af8cf">More...</a><br /></td></tr>
 <tr class="separator:ac427378780eb22c695cb6ffc6c5af8cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -289,6 +304,36 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae6a89212d22c82b573d1471b23478e35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6a89212d22c82b573d1471b23478e35">&#9670;&nbsp;</a></span>createAcidInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::StringPairArray engine::createAcidInfo </td>
+          <td>(</td>
+          <td class="paramtype">Edit &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimeRange&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates ACID metadata info from the Edit. </p>
+
+</div>
+</div>
 <a id="ac427378780eb22c695cb6ffc6c5af8cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac427378780eb22c695cb6ffc6c5af8cf">&#9670;&nbsp;</a></span>isCurrentThreadSupplyingExitStatus()</h2>
 
@@ -356,7 +401,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 13 2024 09:56:24 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Aug 13 2024 19:19:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

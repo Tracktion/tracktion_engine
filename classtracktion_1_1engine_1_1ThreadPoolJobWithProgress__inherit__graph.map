@@ -1,10 +1,9 @@
 <map id="tracktion::engine::ThreadPoolJobWithProgress" name="tracktion::engine::ThreadPoolJobWithProgress">
-<area shape="rect" id="node1" title=" " alt="" coords="5,119,207,161"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html" title=" " alt="" coords="256,5,417,61"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ExportJob.html" title=" " alt="" coords="267,86,407,127"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1RenderManager_1_1Job.html" title="The base class that all generator jobs derive from." alt="" coords="260,151,413,193"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html" title="Task that actually performs the render operation in blocks." alt="" coords="255,217,419,258"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1EditRenderJob.html" title=" " alt="" coords="474,86,614,127"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1ReverseRenderJob.html" title=" " alt="" coords="473,151,615,193"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="467,217,621,258"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,86,207,127"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html" title=" " alt="" coords="255,5,416,61"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ExportJob.html" title=" " alt="" coords="265,86,405,127"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1RenderManager_1_1Job.html" title="The base class that all generator jobs derive from." alt="" coords="259,151,412,193"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1EditRenderJob.html" title=" " alt="" coords="471,86,611,127"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1ReverseRenderJob.html" title=" " alt="" coords="471,151,612,193"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="464,217,619,258"/>
 </map>

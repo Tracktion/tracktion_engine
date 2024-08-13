@@ -5408,22 +5408,30 @@
     <name>tracktion_Renderer.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/export/</path>
     <filename>tracktion__Renderer_8h.html</filename>
-    <class kind="class">tracktion::engine::Renderer</class>
-    <class kind="struct">tracktion::engine::Renderer::Parameters</class>
-    <class kind="class">tracktion::engine::Renderer::RenderTask</class>
-    <class kind="struct">tracktion::engine::Renderer::Statistics</class>
-    <class kind="struct">tracktion::engine::Renderer::RenderResult</class>
-    <class kind="struct">tracktion::engine::Renderer::ScopedClipSlotDisabler</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-    <namespace>tracktion::engine</namespace>
-    <namespace>tracktion::engine::render_utils</namespace>
+    <class kind="class">engine::Renderer</class>
+    <class kind="struct">engine::Renderer::Parameters</class>
+    <class kind="class">engine::Renderer::RenderTask</class>
+    <class kind="struct">engine::Renderer::Statistics</class>
+    <class kind="struct">engine::Renderer::RenderResult</class>
+    <class kind="struct">engine::Renderer::ScopedClipSlotDisabler</class>
+    <class kind="class">engine::EditRenderer</class>
+    <class kind="class">engine::EditRenderer::Handle</class>
+    <namespace>graph</namespace>
+    <namespace>engine</namespace>
+    <namespace>engine::render_utils</namespace>
+    <member kind="function">
+      <type>juce::StringPairArray</type>
+      <name>createAcidInfo</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ae6a89212d22c82b573d1471b23478e35</anchor>
+      <arglist>(Edit &amp;, TimeRange)</arglist>
+    </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
       <name>createRenderTask</name>
-      <anchorfile>namespacetracktion_1_1engine_1_1render__utils.html</anchorfile>
-      <anchor>aaf443c9af74d539996ee548d6b2291a5</anchor>
-      <arglist>(Renderer::Parameters r, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
+      <anchorfile>namespaceengine_1_1render__utils.html</anchorfile>
+      <anchor>a44a3897f11c7a44c5d95f26b30856aac</anchor>
+      <arglist>(Renderer::Parameters, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -23595,13 +23603,6 @@
     </member>
     <member kind="variable">
       <type>bool</type>
-      <name>addAntiDenormalisationNoise</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateNodeParams.html</anchorfile>
-      <anchor>a3c73d4d4dc869c4459751fcdeb881d7c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
       <name>includeBypassedPlugins</name>
       <anchorfile>structtracktion_1_1engine_1_1CreateNodeParams.html</anchorfile>
       <anchor>a1ff6a7cc3930a077d5e7dd5b18d83b7f</anchor>
@@ -31794,20 +31795,6 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static bool</type>
-      <name>shouldAddAntiDenormalisationNoise</name>
-      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>a19ea9357170186a0b7de23fd11b59463</anchor>
-      <arglist>(Engine &amp;)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>setAddAntiDenormalisationNoise</name>
-      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>ad539bad8b46676547169ef05a2693872</anchor>
-      <arglist>(Engine &amp;, bool)</arglist>
-    </member>
-    <member kind="function" static="yes">
       <type>static void</type>
       <name>setThreadPoolStrategy</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
@@ -31915,6 +31902,18 @@
       <anchorfile>structEditProxyFunctions.html</anchorfile>
       <anchor>a630dc6a64945306631dd09afcfebf6ff</anchor>
       <arglist>(ARAPlaybackControllerHostRef ref, ARABool enable)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::EditRenderer</name>
+    <filename>classengine_1_1EditRenderer.html</filename>
+    <class kind="class">engine::EditRenderer::Handle</class>
+    <member kind="function" static="yes">
+      <type>static std::shared_ptr&lt; Handle &gt;</type>
+      <name>render</name>
+      <anchorfile>classengine_1_1EditRenderer.html</anchorfile>
+      <anchor>ae9bd1af3b8af1d4fbb4e1e706b2a0f39</anchor>
+      <arglist>(Renderer::Parameters, std::function&lt; void(tl::expected&lt; juce::File, std::string &gt;)&gt; finishedCallback, std::shared_ptr&lt; juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver &gt; thumbnailToUpdate={})</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -38662,6 +38661,31 @@
       <name>getProgress</name>
       <anchorfile>classengine_1_1EditLoader_1_1Handle.html</anchorfile>
       <anchor>a724ecfab8c333683f19153e5a21e7c2f</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::EditRenderer::Handle</name>
+    <filename>classengine_1_1EditRenderer_1_1Handle.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>~Handle</name>
+      <anchorfile>classengine_1_1EditRenderer_1_1Handle.html</anchorfile>
+      <anchor>a59ece351f4f352fa4d9e6385a3af6f6a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cancel</name>
+      <anchorfile>classengine_1_1EditRenderer_1_1Handle.html</anchorfile>
+      <anchor>a490e11940ebc8e8d013a577b32f0acb6</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProgress</name>
+      <anchorfile>classengine_1_1EditRenderer_1_1Handle.html</anchorfile>
+      <anchor>aaca16799f0c9f88597ac9cb895569ef4</anchor>
       <arglist>() const</arglist>
     </member>
   </compound>
@@ -53414,6 +53438,269 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::Renderer::Parameters</name>
+    <filename>structengine_1_1Renderer_1_1Parameters.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a3db6a829c9e6aea053517cda77e1dec8</anchor>
+      <arglist>()=delete</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a910ab6b9b469d9617cae422fe2ebe816</anchor>
+      <arglist>(Engine &amp;e)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a8964b793b5d92f4a78058d53686138ee</anchor>
+      <arglist>(Edit &amp;ed)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a84f49f76600c05596e2ac90de95fd5ac</anchor>
+      <arglist>(const Parameters &amp;)=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>aea20e5968854b2d3f82104d2a9c4be04</anchor>
+      <arglist>(Parameters &amp;&amp;)=default</arglist>
+    </member>
+    <member kind="function">
+      <type>Parameters &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a03c7abe445c43956613e39fbf323b51c</anchor>
+      <arglist>(const Parameters &amp;)=default</arglist>
+    </member>
+    <member kind="function">
+      <type>Parameters &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a4b8036e3b353fd81a529c359e7acc10e</anchor>
+      <arglist>(Parameters &amp;&amp;)=default</arglist>
+    </member>
+    <member kind="variable">
+      <type>Engine *</type>
+      <name>engine</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a8f4bc9065805c2c7a557c0f5c84e3348</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Edit *</type>
+      <name>edit</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ab09137329f16eca2cc9c544f60489069</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::BigInteger</type>
+      <name>tracksToDo</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a1d5e5ce975472ee8ffd924b730400e65</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; Clip * &gt;</type>
+      <name>allowedClips</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>afe0f0f2686917dc030fbf846b4d17430</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::File</type>
+      <name>destFile</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a0208b1dd7d3e91b683e279e9549c6707</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::AudioFormat *</type>
+      <name>audioFormat</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ad86747fba92393d073da07b642b03ce7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>bitDepth</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a72cb0b5b6982a9c0be8adf12770685d8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSizeForAudio</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a20c9ac6a2d9aee2d43b76e303fe00235</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRateForAudio</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a1c5ba6fa1edc2f9e5d7c2b99f351c583</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimeRange</type>
+      <name>time</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a9ffbef3267bbbde7616d190e3ab9c8bf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimeDuration</type>
+      <name>endAllowance</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a819127b855d7e3613906dd68d8ffbe0e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>createMidiFile</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ad507de4dcb5e27a51e6e8fc48b6cdc3b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>trimSilenceAtEnds</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>aa6b07ff345a06cd9847458fc5d2c0146</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>shouldNormalise</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>adfcc9b23cd51dafb586e610551e6752a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>shouldNormaliseByRMS</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a1888ffcfab8039aa0ed1764550369076</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>normaliseToLevelDb</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a18179292715438444c064e09977a28a0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>canRenderInMono</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a03b342f74cd97c4674758abd5b80d42e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>mustRenderInMono</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a089d2585310e32ecfd4dd6a68b7c87ec</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>usePlugins</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a99b358fa5c1b8ebd695ff8a13ccd7335</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMasterPlugins</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a3f9912d7e98940a5bc2ce06dab9ef07e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>realTimeRender</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a8c5ca94c142f0d8798e83996cdd2c61b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>ditheringEnabled</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ab2fbf914c8b9cf70e72cf7e3dbdf61d5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>checkNodesForAudio</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a5611a4464c1bd5f4d89eb3ee32e665d7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>quality</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a369d8bcbfe5cfe63de775995661e407e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringPairArray</type>
+      <name>metadata</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a76ea271f1cc63e21d0c6ae86ec86964e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>separateTracks</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ab06600fab0d7e097a6ef4b14d3253061</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>ProjectItem::Category</type>
+      <name>category</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ad22e656f15a49fd7797c89b22d0001fe</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>resultMagnitude</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a6485305067d53eb30ab39b1656c3fc77</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>resultRMS</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>abeefdb33c035cd36f1ffe3b6c2ee5c06</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>resultAudioDuration</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a63710dcc5c17931611b2efbfe60333b7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::ExpEnvelope::Parameters</name>
     <filename>structtracktion_1_1engine_1_1ExpEnvelope_1_1Parameters.html</filename>
     <member kind="variable">
@@ -53541,283 +53828,6 @@
       <name>release</name>
       <anchorfile>structtracktion_1_1engine_1_1LinEnvelope_1_1Parameters.html</anchorfile>
       <anchor>a65af635d49c20fa5187fe97d0b6d81de</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::Renderer::Parameters</name>
-    <filename>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a0ff37ae42736be1777d513b2a5b0f451</anchor>
-      <arglist>()=delete</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ac5fe7f8d8d0d615845a473b4dc9522a2</anchor>
-      <arglist>(Engine &amp;e)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a7e86d8399eb1cc27e626d9c682e6cd3a</anchor>
-      <arglist>(Edit &amp;ed)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a773fc8e9c028cf68d3f4f9e683273c65</anchor>
-      <arglist>(const Parameters &amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aba5591fe7c6f089b9075298e2da6ba79</anchor>
-      <arglist>(Parameters &amp;&amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type>Parameters &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a060e9817fbe53e49ed413b6736e921f8</anchor>
-      <arglist>(const Parameters &amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type>Parameters &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ab9d8c796b3feef2432cafa81adcc06b6</anchor>
-      <arglist>(Parameters &amp;&amp;)=default</arglist>
-    </member>
-    <member kind="variable">
-      <type>Engine *</type>
-      <name>engine</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aa733da3818e74dadc5ac79c28e149a92</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>Edit *</type>
-      <name>edit</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ad1a652836736130ecfb7ba56269b7ffe</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::BigInteger</type>
-      <name>tracksToDo</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a131696d785f275053ef96506de3facb3</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::Array&lt; Clip * &gt;</type>
-      <name>allowedClips</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>adc271b9615234b577179e5296a132277</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::File</type>
-      <name>destFile</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aa1b0b11cf9a2caf6dcea5809a71a5aba</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::AudioFormat *</type>
-      <name>audioFormat</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a1bc8de031c0e9fea0dbcfd7d5d82c4f9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>bitDepth</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a5992e413e918641beadce55934d212bc</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSizeForAudio</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a8fe22760447d387a61348d262fea3b87</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRateForAudio</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a0a718e9805272e6c45094d113def1da0</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>TimeRange</type>
-      <name>time</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a7958ef96d31b62dcbc750c9e57df1c12</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>TimeDuration</type>
-      <name>endAllowance</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a0443ed655394c106f40a0133b67dc5a9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>createMidiFile</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aacd6910381b9684d91aeb916b9e5178b</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>trimSilenceAtEnds</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a6c10492949c39d695a7ac5c5798dd372</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>shouldNormalise</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>af550766d81f5a3fa6d57b9822787ab9c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>shouldNormaliseByRMS</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ad27ad1e6611e77f66ccb4968933f8c8e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>normaliseToLevelDb</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aef51069aae446d826ede73c4b05ed075</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>canRenderInMono</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a8c9631ca063824b5acb7559a6fa9ca82</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>mustRenderInMono</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aa72a10317cc0a9dbe4091cfbcb8d908d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>usePlugins</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a8d80154278bb789507563fbfa74b16ad</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMasterPlugins</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a4a12175a30470928f45c45c13183daeb</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>realTimeRender</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a1faf09ed6016bf995238cc2c2fb6c1b7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>ditheringEnabled</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a1b4d33938ff65b3498cd7cd594ec400d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>separateTracks</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a88c659fdb404a28b75cc41160d898709</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>addAntiDenormalisationNoise</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>adb10665d95b5bfc8a4a6f83de1e8036b</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>checkNodesForAudio</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aa4d0132b0be08cea591d47eb36f29883</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>addAcidMetadata</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ad63593609596f5d92b1c5e53846504ee</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>quality</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>aa765ee24206aafe52ed8c2923c4067b1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringPairArray</type>
-      <name>metadata</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a04492530199a000fa78b9c025316513f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>ProjectItem::Category</type>
-      <name>category</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ac42ba01a74b1184e81e231aefe368bfb</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>resultMagnitude</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>ad01d5ea3da9506f9b99bf46d7619f83d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>resultRMS</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a171a648a5c31d51f40899374cc12c356</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>resultAudioDuration</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Parameters.html</anchorfile>
-      <anchor>a07272ae634e2541bc7195b1c70d6ba2d</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -63104,60 +63114,60 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::Renderer</name>
-    <filename>classtracktion_1_1engine_1_1Renderer.html</filename>
-    <class kind="struct">tracktion::engine::Renderer::Parameters</class>
-    <class kind="struct">tracktion::engine::Renderer::RenderResult</class>
-    <class kind="class">tracktion::engine::Renderer::RenderTask</class>
-    <class kind="struct">tracktion::engine::Renderer::ScopedClipSlotDisabler</class>
-    <class kind="struct">tracktion::engine::Renderer::Statistics</class>
+    <name>engine::Renderer</name>
+    <filename>classengine_1_1Renderer.html</filename>
+    <class kind="struct">engine::Renderer::Parameters</class>
+    <class kind="struct">engine::Renderer::RenderResult</class>
+    <class kind="class">engine::Renderer::RenderTask</class>
+    <class kind="struct">engine::Renderer::ScopedClipSlotDisabler</class>
+    <class kind="struct">engine::Renderer::Statistics</class>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>checkTargetFile</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>acb968cd727302932c216e9ebebde2957</anchor>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>aed910048d085f19c67ecb189f80fe189</anchor>
       <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>turnOffAllPlugins</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>ad2e210ac291d685ede86291ceb6e93ea</anchor>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>a4e67a3ebfcf969ff477c83191297ee6b</anchor>
       <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static ProjectItem::Ptr</type>
       <name>renderToProjectItem</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>aa4c52e7d780f6a3e2522593de3ad4531</anchor>
-      <arglist>(const juce::String &amp;taskDescription, const Parameters &amp;params)</arglist>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>af99d0958ea14851a74d656e39ce28e2b</anchor>
+      <arglist>(const juce::String &amp;taskDescription, const Parameters &amp;, ProjectItem::Category)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::File</type>
       <name>renderToFile</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>a10927e1c3643390ce47103eb503b428c</anchor>
-      <arglist>(const juce::String &amp;taskDescription, const Parameters &amp;params)</arglist>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>a03b1dea92a78e6b22d97e56965aca4e2</anchor>
+      <arglist>(const juce::String &amp;taskDescription, const Parameters &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>renderToFile</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>aae384b87abfb9cc49054fae1bbb08bf8</anchor>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>adadabf0f009b285ee0733b98e4fea520</anchor>
       <arglist>(const juce::String &amp;taskDescription, const juce::File &amp;outputFile, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, bool useACID=true, juce::Array&lt; Clip * &gt; clips={}, bool useThread=true)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>renderToFile</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>a18c17ee8d4a644c1cc30e6f087676009</anchor>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>a5136a591ae8e7e53a32fafce54a421c9</anchor>
       <arglist>(Edit &amp;, const juce::File &amp;, bool useThread=true)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static Statistics</type>
       <name>measureStatistics</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>a31135b1aead953e9f389393944fbbd39</anchor>
+      <anchorfile>classengine_1_1Renderer.html</anchorfile>
+      <anchor>a2c2ae2a3a17b6e28367aa4be497f29f0</anchor>
       <arglist>(const juce::String &amp;taskDescription, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, int blockSizeForAudio, double sampleRateForAudio=44100.0)</arglist>
     </member>
   </compound>
@@ -64106,130 +64116,129 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::Renderer::RenderResult</name>
-    <filename>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</filename>
+    <name>engine::Renderer::RenderResult</name>
+    <filename>structengine_1_1Renderer_1_1RenderResult.html</filename>
     <member kind="function">
       <type></type>
       <name>RenderResult</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>a01c0de74dd8b8b6f3ab47c7cccccb0b1</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>a144e22cc703549ab36252c98b67cb00f</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RenderResult</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>a242c645c841032303a7108814534bd76</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>a6d070f7bf3bb2dead1d63d3358c1c9f7</anchor>
       <arglist>(const juce::Result &amp;r, ProjectItem::Ptr mo)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RenderResult</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>a5206020ad4eae07134413a27d848c264</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>a2311f3cf14d2399707fd295f9699049b</anchor>
       <arglist>(const RenderResult &amp;other)</arglist>
     </member>
     <member kind="function">
       <type>RenderResult &amp;</type>
       <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>ab62594e5d0074f5d8fbec5c9eec3e6c0</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>a347029c1b00de03d3081d620d9c5b8e3</anchor>
       <arglist>(const RenderResult &amp;other)</arglist>
     </member>
     <member kind="variable">
       <type>juce::Result</type>
       <name>result</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>a66cb0e3e09d6cd2fc0e75c18562133db</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>a00613602b546ca2fab095018ec9080f1</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>juce::ReferenceCountedArray&lt; ProjectItem &gt;</type>
       <name>items</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1RenderResult.html</anchorfile>
-      <anchor>a1c93c5d5e399c7b73a64ee1ff379970c</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1RenderResult.html</anchorfile>
+      <anchor>af2e5e3b28e5d6e935ef5202f28d5b59a</anchor>
       <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::Renderer::RenderTask</name>
-    <filename>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</filename>
-    <base>tracktion::engine::ThreadPoolJobWithProgress</base>
+    <name>engine::Renderer::RenderTask</name>
+    <filename>classengine_1_1Renderer_1_1RenderTask.html</filename>
     <member kind="function">
       <type></type>
       <name>RenderTask</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a787e7508404c4a43616d65e0608dfff1</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>ab3d19ab633a9b15aa248e4806f974f97</anchor>
       <arglist>(const juce::String &amp;taskDescription, const Renderer::Parameters &amp;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RenderTask</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>aa91789d57104457f728cdda305c7682b</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>ad274724b5d2fb05c0e29325194fd882b</anchor>
       <arglist>(const juce::String &amp;taskDescription, const Renderer::Parameters &amp;, std::unique_ptr&lt; tracktion::graph::Node &gt;, std::unique_ptr&lt; tracktion::graph::PlayHead &gt;, std::unique_ptr&lt; tracktion::graph::PlayHeadState &gt;, std::unique_ptr&lt; ProcessState &gt;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~RenderTask</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a810492b5fe270d054eb1370fd8696cee</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>afce56d290f8c58c70e8690aa41ad0fd5</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>JobStatus</type>
       <name>runJob</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>af9e306939442394f467d47d1a201526a</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a10080a9dde4041e559c5b37784f45a65</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
       <name>getCurrentTaskProgress</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>ac16e97804c2bb9f0f5c971a29c5b0b87</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>abdbd9a89029ee7adf9be419dc4239459</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>performNormalisingAndTrimming</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>abc1ab8b3d7784722cc36ac421fe0126c</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>acff5d1e14c61bf03466d3d1c310fe458</anchor>
       <arglist>(const Renderer::Parameters &amp;target, const Renderer::Parameters &amp;intermediate)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>flushAllPlugins</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a500325706d639269ade191ba0789e83e</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a616e3f882aceae605148126c00916dc9</anchor>
       <arglist>(const Plugin::Array &amp;, double sampleRate, int samplesPerBlock)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>setAllPluginsRealtime</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a45c25dc212742c77cec82f97310b9925</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a752477112ba80588db520f1560861d4c</anchor>
       <arglist>(const Plugin::Array &amp;, bool realtime)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>addMidiMetaDataAndWriteToFile</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a44b47fd2144aebc855eb3ff869126710</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a0e789d2382a8cbc9ac569ef3a2e2db7d</anchor>
       <arglist>(juce::File, juce::MidiMessageSequence, const TempoSequence &amp;)</arglist>
     </member>
     <member kind="variable">
       <type>Renderer::Parameters</type>
       <name>params</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>adfcbd35ca101777176d67588d65c915a</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>ac62c604ab68f2f7733e949f6de0602a1</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>juce::String</type>
       <name>errorMessage</name>
-      <anchorfile>classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html</anchorfile>
-      <anchor>a5f8f22526563a3dfd260f62b6e9fb738</anchor>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a1499fc0d339d544e75224e6b7829d3c5</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -67371,41 +67380,41 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::Renderer::ScopedClipSlotDisabler</name>
-    <filename>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</filename>
+    <name>engine::Renderer::ScopedClipSlotDisabler</name>
+    <filename>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</filename>
     <member kind="function">
       <type></type>
       <name>ScopedClipSlotDisabler</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
-      <anchor>ac243a51213b7cfe9b5e4c64f6c6f69cc</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>a202680f1d7dc7d43f9ac775ba9c9bf9e</anchor>
       <arglist>(Edit &amp;e, Track::Array &amp;ta)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~ScopedClipSlotDisabler</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
-      <anchor>acd3739d4dbdc656cddbd3953b404b56b</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>ab5487dd09f4c81cc8a5da962108d0c58</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
       <type>Edit &amp;</type>
       <name>edit</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
-      <anchor>aa219e576ac0dc41d1e6f8b1e8ab9a03f</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>a1854c8f8f55c20c275ebc918a4341950</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>Track::Array</type>
       <name>tracks</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
-      <anchor>ac9e0ed6323264c63ebd0caac12675634</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>a369fb322bdd726c97be37dd8337f940e</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; bool &gt;</type>
       <name>playSlotClips</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
-      <anchor>a33835ed525d50767ddada6167cc163bb</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1ScopedClipSlotDisabler.html</anchorfile>
+      <anchor>a0aafa9ecb9b63b9b8e4a82311a02b887</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -70847,27 +70856,27 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::Renderer::Statistics</name>
-    <filename>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</filename>
+    <name>engine::Renderer::Statistics</name>
+    <filename>structengine_1_1Renderer_1_1Statistics.html</filename>
     <member kind="variable">
       <type>float</type>
       <name>peak</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a003752a60ac98d489cdbe9304e8ea63d</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>ae1594c2ee65d07206c0dafedb9135c7e</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>float</type>
       <name>average</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>adb0fa2ac4b21c2e4c838d8d295788030</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a74d156f2023430dc690b8a1329549ccf</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>float</type>
       <name>audioDuration</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>afdd49b4f43da8fbfcf76a076c8fe25dc</anchor>
+      <anchorfile>structengine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a2ef9690ade7bebc915a7228810c8e078</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -73664,7 +73673,7 @@
       <type></type>
       <name>~ThreadPoolJobWithProgress</name>
       <anchorfile>classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html</anchorfile>
-      <anchor>aed33ec7f1fa78dfbfe9396adf4321f82</anchor>
+      <anchor>aedd8cfd19e6dc8a8f31c6b2cd79f4f1a</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="pure">
@@ -73685,21 +73694,21 @@
       <type>void</type>
       <name>setManager</name>
       <anchorfile>classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html</anchorfile>
-      <anchor>a69bfd819c3f571c8ab8a6c5b7b7ba926</anchor>
+      <anchor>ace0471d1acb61c443ac08b26231f0b14</anchor>
       <arglist>(BackgroundJobManager &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setName</name>
       <anchorfile>classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html</anchorfile>
-      <anchor>aa0287b3ae54dee1b74b9902c455266bd</anchor>
+      <anchor>a816d72f3578b4dcaafc21155908d6737</anchor>
       <arglist>(const juce::String &amp;newName)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>prepareForJobDeletion</name>
       <anchorfile>classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html</anchorfile>
-      <anchor>a22ecfc281803e0e49bc9a0447d8d2ff7</anchor>
+      <anchor>aa9218889362b12ab06b54d4614bb98da</anchor>
       <arglist>()</arglist>
     </member>
   </compound>
@@ -86439,8 +86448,11 @@
   <compound kind="namespace">
     <name>engine</name>
     <filename>namespaceengine.html</filename>
+    <namespace>engine::render_utils</namespace>
     <class kind="class">engine::FollowActions</class>
     <class kind="class">engine::EditLoader</class>
+    <class kind="class">engine::Renderer</class>
+    <class kind="class">engine::EditRenderer</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
     <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
     <member kind="enumeration">
@@ -86506,6 +86518,13 @@
       <arglist>(Clip &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>juce::StringPairArray</type>
+      <name>createAcidInfo</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ae6a89212d22c82b573d1471b23478e35</anchor>
+      <arglist>(Edit &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>isCurrentThreadSupplyingExitStatus</name>
       <anchorfile>namespaceengine.html</anchorfile>
@@ -86526,6 +86545,21 @@
       <anchor>a3e0b9dd13c3ba3d7fe6c9905e9368e27</anchor>
       <arglist>()</arglist>
     </member>
+  </compound>
+  <compound kind="namespace">
+    <name>engine::render_utils</name>
+    <filename>namespaceengine_1_1render__utils.html</filename>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
+      <name>createRenderTask</name>
+      <anchorfile>namespaceengine_1_1render__utils.html</anchorfile>
+      <anchor>a44a3897f11c7a44c5d95f26b30856aac</anchor>
+      <arglist>(Renderer::Parameters, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>graph</name>
+    <filename>namespacegraph.html</filename>
   </compound>
   <compound kind="namespace">
     <name>juce</name>
@@ -86585,7 +86619,6 @@
     <namespace>tracktion::node_player_utils</namespace>
     <namespace>tracktion::PredefinedWavetable</namespace>
     <namespace>tracktion::RackNodeBuilder</namespace>
-    <namespace>tracktion::render_utils</namespace>
     <namespace>tracktion::test_utilities</namespace>
     <namespace>tracktion::TracktionBinaryData</namespace>
     <class kind="class">tracktion::FloatAudioFormat</class>
@@ -86738,7 +86771,6 @@
     <class kind="class">tracktion::Exportable</class>
     <class kind="class">tracktion::ExportJob</class>
     <class kind="class">tracktion::ReferencedMaterialList</class>
-    <class kind="class">tracktion::Renderer</class>
     <class kind="class">tracktion::RenderManager</class>
     <class kind="class">tracktion::RenderOptions</class>
     <class kind="class">tracktion::ArrangerTrack</class>
@@ -87034,7 +87066,6 @@
     <namespace>tracktion::engine::ModifierCommon</namespace>
     <namespace>tracktion::engine::PredefinedWavetable</namespace>
     <namespace>tracktion::engine::RackNodeBuilder</namespace>
-    <namespace>tracktion::engine::render_utils</namespace>
     <namespace>tracktion::engine::TracktionBinaryData</namespace>
     <class kind="class">tracktion::engine::FloatAudioFormat</class>
     <class kind="class">tracktion::engine::LAMEManager</class>
@@ -87186,7 +87217,6 @@
     <class kind="class">tracktion::engine::Exportable</class>
     <class kind="class">tracktion::engine::ExportJob</class>
     <class kind="class">tracktion::engine::ReferencedMaterialList</class>
-    <class kind="class">tracktion::engine::Renderer</class>
     <class kind="class">tracktion::engine::RenderManager</class>
     <class kind="class">tracktion::engine::RenderOptions</class>
     <class kind="class">tracktion::engine::ArrangerTrack</class>
@@ -90623,17 +90653,6 @@
       <anchorfile>namespacetracktion_1_1engine_1_1RackNodeBuilder.html</anchorfile>
       <anchor>a04a7a746c4e0509e07c8a5f17420a113</anchor>
       <arglist>(tracktion::engine::RackType &amp;, double sampleRate, int blockSize, std::unique_ptr&lt; tracktion::graph::Node &gt;, ProcessState &amp;, bool isRendering)</arglist>
-    </member>
-  </compound>
-  <compound kind="namespace">
-    <name>tracktion::engine::render_utils</name>
-    <filename>namespacetracktion_1_1engine_1_1render__utils.html</filename>
-    <member kind="function">
-      <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
-      <name>createRenderTask</name>
-      <anchorfile>namespacetracktion_1_1engine_1_1render__utils.html</anchorfile>
-      <anchor>aaf443c9af74d539996ee548d6b2291a5</anchor>
-      <arglist>(Renderer::Parameters r, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
