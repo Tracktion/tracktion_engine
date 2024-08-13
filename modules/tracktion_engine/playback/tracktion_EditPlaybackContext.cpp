@@ -1015,27 +1015,6 @@ void EditPlaybackContext::syncToContext (EditPlaybackContext* newContextToSyncTo
     }
 }
 
-static bool hasCheckedDenormNoise = false;
-
-bool EditPlaybackContext::shouldAddAntiDenormalisationNoise (Engine& e)
-{
-    static bool shouldAdd;
-
-    if (! hasCheckedDenormNoise)
-    {
-        shouldAdd = e.getPropertyStorage().getProperty (SettingID::addAntiDenormalNoise, false);
-        hasCheckedDenormNoise = true;
-    }
-
-    return shouldAdd;
-}
-
-void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
-{
-    e.getPropertyStorage().setProperty (SettingID::addAntiDenormalNoise, b);
-    hasCheckedDenormNoise = false;
-}
-
 //==============================================================================
 tracktion::graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {

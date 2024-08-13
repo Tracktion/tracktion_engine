@@ -1057,15 +1057,13 @@ void AudioTrack::freezeTrack()
     r.mustRenderInMono = false;
     r.usePlugins = true;
     r.useMasterPlugins = false;
-    r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
-    r.category = ProjectItem::Category::frozen;
 
     const Edit::ScopedRenderStatus srs (edit, true);
     const auto desc = TRANS("Creating track freeze for \"XDVX\"")
                         .replace ("XDVX", getName()) + "...";
 
     if (getProjectForEdit (edit) != nullptr)
-        Renderer::renderToProjectItem (desc, r);
+        Renderer::renderToProjectItem (desc, r, ProjectItem::Category::frozen);
     else
         Renderer::renderToFile (desc, r);
 

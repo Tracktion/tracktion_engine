@@ -31,7 +31,7 @@ public:
     class Handle
     {
     public:
-        /// Destructor
+        /// Destructor. Deleting the handle cancels the load process.
         ~Handle();
 
         /// Cancels loading the Edit
@@ -51,14 +51,14 @@ public:
     //==============================================================================
     /** Loads an Edit asyncronously on a background thread.
         This returns a Handle with a LoadContext which you can use to cancel the
-        operation or poll to get progress/status messages.
+        operation or poll to get progressstatus messages.
     */
     static std::shared_ptr<Handle> loadEdit (Edit::Options,
                                              std::function<void (std::unique_ptr<Edit>)> editLoadedCallback);
 
     /** Loads an Edit asyncronously from a file on a background thread.
         This returns a Handle with a LoadContext which you can use to cancel the
-        operation or poll to get progress/status messages.
+        operation or poll to get progress.
     */
     static std::shared_ptr<Handle> loadEdit (Engine&,
                                              juce::File,

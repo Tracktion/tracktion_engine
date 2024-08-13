@@ -299,7 +299,6 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.forRendering = true;
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
-        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
         cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 

@@ -217,7 +217,7 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
     if (isTrackRender())
         p.endAllowance = markedRegion ? 0.0s : 10.0s;
 
-    if (p.addAcidMetadata)
+    if (addAcidMetadata)
         addAcidInfo (edit, p);
 
     return (p.audioFormat != nullptr || p.createMidiFile)
@@ -316,9 +316,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     params.realTimeRender           = realTime;
     params.ditheringEnabled         = dither;
     params.quality                  = qualityIndex;
-    params.category                 = ProjectItem::Category::rendered;
     params.separateTracks           = tracksToSeparateFiles;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
 
     if (! isMarkedRegionBigEnough (markedRegionTime))
         markedRegion = false;
@@ -381,7 +379,8 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     if (addMetadata)
         params.metadata = getMetadata (edit);
 
-    params.addAcidMetadata = addAcidMetadata;
+    if (addAcidMetadata)
+        params.metadata.addArray (createAcidInfo (edit, params.time));
 
     return params;
 }
@@ -410,7 +409,6 @@ Renderer::Parameters RenderOptions::getRenderParameters (EditClip& clip)
     params.quality                  = qualityIndex;
     params.category                 = ProjectItem::Category::rendered;
     params.separateTracks           = tracksToSeparateFiles;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);
 
     if (const EditSnapshot::Ptr snapshot = clip.getEditSnapshot())
     {
@@ -450,7 +448,6 @@ Renderer::Parameters RenderOptions::getRenderParameters (MidiClip& clip)
     params.ditheringEnabled         = dither;
     params.quality                  = qualityIndex;
     params.category                 = ProjectItem::Category::rendered;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);
     params.time                     = clip.getEditTimeRange();
     params.tracksToDo               = getTrackIndexes (clip.edit);
     params.allowedClips             = allowedClips;

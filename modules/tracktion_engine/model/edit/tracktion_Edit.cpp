@@ -2568,10 +2568,10 @@ void Edit::updateFrozenTracks()
                 r.usePlugins = true;
                 r.useMasterPlugins = false;
                 r.category = ProjectItem::Category::frozen;
-                r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
 
                 Renderer::renderToProjectItem (TRANS("Updating frozen tracks for output device \"XDVX\"")
-                                                  .replace ("XDVX", outputDevice->getName()) + "...", r);
+                                                  .replace ("XDVX", outputDevice->getName()) + "...", r,
+                                               ProjectItem::Category::frozen);
 
                 if (! r.destFile.exists())
                 {
