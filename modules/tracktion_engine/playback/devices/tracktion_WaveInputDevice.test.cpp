@@ -138,7 +138,7 @@ namespace tracktion::inline engine
             {
                 const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
                                                   + static_cast<FrameCount> (inputLatencyNumSamples + outputLatencyNumSamples);
-                processLoopedBack (player, numFramesToProcess);
+                processLoopedBack (player, numFramesToProcess, { af });
             }
 
             tc.stop (false, true);
@@ -229,7 +229,7 @@ namespace tracktion::inline engine
             {
                 const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
                                                   + static_cast<FrameCount> (latencyTesterResult.deviceLatency + latencyTesterResult.adjustedNumSamples);
-                processLoopedBack (player, numFramesToProcess);
+                processLoopedBack (player, numFramesToProcess, { af });
             }
 
             tc.stop (false, true);
@@ -385,7 +385,7 @@ namespace tracktion::inline engine
             {
                 const auto numFramesToProcess = toBufferView (squareBuffer).getNumFrames()
                                                   + static_cast<FrameCount> (inputLatencyNumSamples + outputLatencyNumSamples);
-                processLoopedBack (player, numFramesToProcess);
+                processLoopedBack (player, numFramesToProcess, { af });
             }
 
             tc.stop (false, true);
