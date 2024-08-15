@@ -60,8 +60,8 @@ public:
     /** Returns whether start/stop is syncronsied. If you're not connected, this may not make sense. */
     bool isStartStopSyncEnabled() const;
 
-    /** Get the current session tempo. If you're not connected, this may not make sense. */
-    double getSessionTempo() const;
+    /** Get the current session tempo. If you're not connected, the optional will be invalid. */
+    std::optional<double> getSessionTempo() const;
 
     /** Number of beats until the next bar (quantum) - e.g. supply 4.0 for 4/4 cycles. */
     double getBeatsUntilNextCycle (double quantum) const;
