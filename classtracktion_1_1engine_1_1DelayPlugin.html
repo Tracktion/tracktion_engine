@@ -96,8 +96,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a28589e20850b1f31ec36dc3f4545cd1d"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DelayPlugin.html#a28589e20850b1f31ec36dc3f4545cd1d">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:a28589e20850b1f31ec36dc3f4545cd1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion_1_1engine_1_1DelayPlugin.html#a28589e20850b1f31ec36dc3f4545cd1d">More...</a><br /></td></tr>
 <tr class="separator:a28589e20850b1f31ec36dc3f4545cd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaed335b4e5152c7c673333d6b2a32652"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DelayPlugin.html#aaed335b4e5152c7c673333d6b2a32652">needsConstantBufferSize</a> () override</td></tr>
-<tr class="separator:aaed335b4e5152c7c673333d6b2a32652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8f7a3a8995e60689f946f4f523fd44f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DelayPlugin.html#ab8f7a3a8995e60689f946f4f523fd44f">getNumOutputChannelsGivenInputs</a> (int numInputChannels) override</td></tr>
 <tr class="memdesc:ab8f7a3a8995e60689f946f4f523fd44f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This must return the number of output channels that the plugin will produce, given a number of input channels.  <a href="classtracktion_1_1engine_1_1DelayPlugin.html#ab8f7a3a8995e60689f946f4f523fd44f">More...</a><br /></td></tr>
 <tr class="separator:ab8f7a3a8995e60689f946f4f523fd44f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,6 +229,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac913514606ec6bdbc89ffa81555064a5 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#acf100cbeccbba6dcf19088bd6bd598b0">canBeMoved</a> ()</td></tr>
 <tr class="separator:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a4b5b305d568fbd57d5493dd037435412">needsConstantBufferSize</a> ()</td></tr>
+<tr class="separator:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a7dbb254e58249cac04cd00842686c34b">isMissing</a> ()</td></tr>
 <tr class="memdesc:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">for things like VSTs where the DLL is missing.  <a href="classtracktion_1_1engine_1_1Plugin.html#a7dbb254e58249cac04cd00842686c34b">More...</a><br /></td></tr>
 <tr class="separator:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -714,33 +714,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aaed335b4e5152c7c673333d6b2a32652"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaed335b4e5152c7c673333d6b2a32652">&#9670;&nbsp;</a></span>needsConstantBufferSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::DelayPlugin::needsConstantBufferSize </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a3453b224a237581b576d9a9a77d33182">tracktion::engine::Plugin</a>.</p>
-
-</div>
-</div>
 <a id="ab8f7a3a8995e60689f946f4f523fd44f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab8f7a3a8995e60689f946f4f523fd44f">&#9670;&nbsp;</a></span>getNumOutputChannelsGivenInputs()</h2>
 
@@ -1051,7 +1024,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 15 2024 11:54:44 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Aug 15 2024 18:36:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

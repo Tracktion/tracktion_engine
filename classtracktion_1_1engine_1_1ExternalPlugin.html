@@ -196,8 +196,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9770a77d09a3598f2aa59d97e9ad3217"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98f5101f5905df7719d9ca472a14305c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a98f5101f5905df7719d9ca472a14305c">getTailLength</a> () const override</td></tr>
 <tr class="separator:a98f5101f5905df7719d9ca472a14305c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1765f010004f375c2a3b9258934a3cfb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a1765f010004f375c2a3b9258934a3cfb">needsConstantBufferSize</a> () override</td></tr>
-<tr class="separator:a1765f010004f375c2a3b9258934a3cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c29d0e077b775f504c62093a2153908"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a9c29d0e077b775f504c62093a2153908">trackPropertiesChanged</a> () override</td></tr>
 <tr class="memdesc:a9c29d0e077b775f504c62093a2153908"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed.  <a href="classtracktion_1_1engine_1_1ExternalPlugin.html#a9c29d0e077b775f504c62093a2153908">More...</a><br /></td></tr>
 <tr class="separator:a9c29d0e077b775f504c62093a2153908"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -328,6 +326,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac913514606ec6bdbc89ffa81555064a5 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#acf100cbeccbba6dcf19088bd6bd598b0">canBeMoved</a> ()</td></tr>
 <tr class="separator:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a4b5b305d568fbd57d5493dd037435412">needsConstantBufferSize</a> ()</td></tr>
+<tr class="separator:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7015ae8e7a79dbf04f9b12fc0368bc2 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ab7015ae8e7a79dbf04f9b12fc0368bc2">isInRack</a> () const</td></tr>
 <tr class="separator:ab7015ae8e7a79dbf04f9b12fc0368bc2 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a778efa8707039a76d4aa64f14f2388d2 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1RackType.html">RackType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a778efa8707039a76d4aa64f14f2388d2">getOwnerRackType</a> () const</td></tr>
@@ -1765,33 +1765,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a1765f010004f375c2a3b9258934a3cfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1765f010004f375c2a3b9258934a3cfb">&#9670;&nbsp;</a></span>needsConstantBufferSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::ExternalPlugin::needsConstantBufferSize </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a3453b224a237581b576d9a9a77d33182">tracktion::engine::Plugin</a>.</p>
-
-</div>
-</div>
 <a id="a9c29d0e077b775f504c62093a2153908"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c29d0e077b775f504c62093a2153908">&#9670;&nbsp;</a></span>trackPropertiesChanged()</h2>
 
@@ -2482,7 +2455,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 15 2024 11:54:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Aug 15 2024 18:36:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

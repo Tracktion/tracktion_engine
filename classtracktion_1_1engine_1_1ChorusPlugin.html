@@ -110,8 +110,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a49acdc730ea6cf9d87570ea7ae5e8cc5"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ChorusPlugin.html#a49acdc730ea6cf9d87570ea7ae5e8cc5">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:a49acdc730ea6cf9d87570ea7ae5e8cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion_1_1engine_1_1ChorusPlugin.html#a49acdc730ea6cf9d87570ea7ae5e8cc5">More...</a><br /></td></tr>
 <tr class="separator:a49acdc730ea6cf9d87570ea7ae5e8cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33ba97548347216a27a40bbade63b767"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ChorusPlugin.html#a33ba97548347216a27a40bbade63b767">needsConstantBufferSize</a> () override</td></tr>
-<tr class="separator:a33ba97548347216a27a40bbade63b767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5c8b4a51ca9ea9f77deb51705be8ae6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ChorusPlugin.html#ac5c8b4a51ca9ea9f77deb51705be8ae6">restorePluginStateFromValueTree</a> (const juce::ValueTree &amp;) override</td></tr>
 <tr class="separator:ac5c8b4a51ca9ea9f77deb51705be8ae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html">tracktion::engine::Plugin</a></td></tr>
@@ -231,6 +229,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac913514606ec6bdbc89ffa81555064a5 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#acf100cbeccbba6dcf19088bd6bd598b0">canBeMoved</a> ()</td></tr>
 <tr class="separator:acf100cbeccbba6dcf19088bd6bd598b0 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a4b5b305d568fbd57d5493dd037435412">needsConstantBufferSize</a> ()</td></tr>
+<tr class="separator:a4b5b305d568fbd57d5493dd037435412 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a7dbb254e58249cac04cd00842686c34b">isMissing</a> ()</td></tr>
 <tr class="memdesc:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">for things like VSTs where the DLL is missing.  <a href="classtracktion_1_1engine_1_1Plugin.html#a7dbb254e58249cac04cd00842686c34b">More...</a><br /></td></tr>
 <tr class="separator:a7dbb254e58249cac04cd00842686c34b inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -869,33 +869,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a33ba97548347216a27a40bbade63b767"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33ba97548347216a27a40bbade63b767">&#9670;&nbsp;</a></span>needsConstantBufferSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::ChorusPlugin::needsConstantBufferSize </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a3453b224a237581b576d9a9a77d33182">tracktion::engine::Plugin</a>.</p>
-
-</div>
-</div>
 <a id="ac5c8b4a51ca9ea9f77deb51705be8ae6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5c8b4a51ca9ea9f77deb51705be8ae6">&#9670;&nbsp;</a></span>restorePluginStateFromValueTree()</h2>
 
@@ -1011,7 +984,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 15 2024 11:54:44 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Aug 15 2024 18:36:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

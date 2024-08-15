@@ -7697,13 +7697,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1AirWindowsPlugin.html</anchorfile>
-      <anchor>ac18fbe55ac8427fdcbb9a45251ccf76b</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>restorePluginStateFromValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1AirWindowsPlugin.html</anchorfile>
@@ -17182,13 +17175,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1ChorusPlugin.html</anchorfile>
-      <anchor>a33ba97548347216a27a40bbade63b767</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>restorePluginStateFromValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1ChorusPlugin.html</anchorfile>
@@ -20836,13 +20822,6 @@
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
       <anchor>af457f76b975cba81bb9358aa54718988</anchor>
       <arglist>(juce::StringArray *, juce::StringArray *) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>ae74cbe297b793ac8c7958b8d41448ef5</anchor>
-      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -27552,13 +27531,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1DelayPlugin.html</anchorfile>
-      <anchor>aaed335b4e5152c7c673333d6b2a32652</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>int</type>
       <name>getNumOutputChannelsGivenInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1DelayPlugin.html</anchorfile>
@@ -33725,13 +33697,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1EqualiserPlugin.html</anchorfile>
-      <anchor>a687a9de418eeca927df682f723f21368</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>int</type>
       <name>getNumOutputChannelsGivenInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1EqualiserPlugin.html</anchorfile>
@@ -36166,13 +36131,6 @@
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
-      <anchor>a1765f010004f375c2a3b9258934a3cfb</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>trackPropertiesChanged</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
@@ -37304,13 +37262,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1FourOscPlugin.html</anchorfile>
-      <anchor>a46459aae2ea4a3259a7a5851d740932c</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>int</type>
       <name>getNumOutputChannelsGivenInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1FourOscPlugin.html</anchorfile>
@@ -38109,13 +38060,6 @@
       <name>canBeDisabled</name>
       <anchorfile>classtracktion_1_1engine_1_1FreezePointPlugin.html</anchorfile>
       <anchor>ae5c427941d6067a7ca517b1b2263a908</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1FreezePointPlugin.html</anchorfile>
-      <anchor>a2e2f904a78bcdd7a68839d28874862dc</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -38978,13 +38922,6 @@
       <name>getPluginType</name>
       <anchorfile>classtracktion_1_1engine_1_1ImpulseResponsePlugin.html</anchorfile>
       <anchor>a7931622cd69802064dea03db7548425f</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>abc4040b73df6530cd2bab9111d12735f</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -40806,13 +40743,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1LatencyPlugin.html</anchorfile>
-      <anchor>a3448dcf361d1fb8f5722f4207b65a10b</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>restorePluginStateFromValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1LatencyPlugin.html</anchorfile>
@@ -41441,13 +41371,6 @@
       <name>canBeDisabled</name>
       <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
       <anchor>a1d197716ae30f3d445190933951e711b</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
-      <anchor>aff0eb8e6520f7b2d574d52db7260cb48</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -43570,13 +43493,6 @@
       <name>getSelectableDescription</name>
       <anchorfile>classtracktion_1_1engine_1_1LowPassPlugin.html</anchorfile>
       <anchor>a773e8357eb30e5163e168dd51c3d4ee1</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1LowPassPlugin.html</anchorfile>
-      <anchor>a8fcd8af8d523b280305d1111abadb814</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -48630,6 +48546,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>removeIf</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
+      <anchor>ab42eb1e63ffdb2894c52f8cc9954473a</anchor>
+      <arglist>(Predicate &amp;&amp;pred)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>addToTimestamps</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
       <anchor>ad20f90468488aec6ec85eab841325809</anchor>
@@ -48824,13 +48747,6 @@
       <name>canBeAddedToClip</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiModifierPlugin.html</anchorfile>
       <anchor>a9930a09b93b1da5ef374a8b60e339bda</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiModifierPlugin.html</anchorfile>
-      <anchor>a63df0f9e824928512334f64b3a5df8c7</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -49931,13 +49847,6 @@
       <name>canBeAddedToRack</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiPatchBayPlugin.html</anchorfile>
       <anchor>a3e9cb06609230a97190fe9f055467d2a</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1MidiPatchBayPlugin.html</anchorfile>
-      <anchor>a8ad561ec7089cbfe44f579cd9b9b5c4d</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -54027,13 +53936,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1PatchBayPlugin.html</anchorfile>
-      <anchor>ae59a4f4802c12dd3e250f473ed7eddbc</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>initialise</name>
       <anchorfile>classtracktion_1_1engine_1_1PatchBayPlugin.html</anchorfile>
@@ -55041,13 +54943,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1PhaserPlugin.html</anchorfile>
-      <anchor>a1bbe7377817c871a46256e41256c02d3</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>initialise</name>
       <anchorfile>classtracktion_1_1engine_1_1PhaserPlugin.html</anchorfile>
@@ -55795,13 +55690,6 @@
       <anchorfile>classtracktion_1_1engine_1_1PitchShiftPlugin.html</anchorfile>
       <anchor>aa015bac2a83648cea72e79d3f94450be</anchor>
       <arglist>(int) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1PitchShiftPlugin.html</anchorfile>
-      <anchor>a766c1a2f31c2eef74110867c8a37f1dd</anchor>
-      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -57075,12 +56963,12 @@
       <anchor>acf100cbeccbba6dcf19088bd6bd598b0</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>needsConstantBufferSize</name>
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>a3453b224a237581b576d9a9a77d33182</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a4b5b305d568fbd57d5493dd037435412</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -64343,13 +64231,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1ReverbPlugin.html</anchorfile>
-      <anchor>a09b6250fa1d62c5cf9e93bdb9010d9cf</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>initialise</name>
       <anchorfile>classtracktion_1_1engine_1_1ReverbPlugin.html</anchorfile>
@@ -66544,13 +66425,6 @@
       <name>isSynth</name>
       <anchorfile>classtracktion_1_1engine_1_1SamplerPlugin.html</anchorfile>
       <anchor>adbe3c6723b0981687e56d50c79ce8ea5</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1SamplerPlugin.html</anchorfile>
-      <anchor>ac696d2d0d9e64628db0c6f37b76cb2de</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -73494,13 +73368,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1TextPlugin.html</anchorfile>
-      <anchor>a6aa4b52316cccbe90320f8142da499c0</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>juce::String</type>
       <name>getSelectableDescription</name>
       <anchorfile>classtracktion_1_1engine_1_1TextPlugin.html</anchorfile>
@@ -74950,13 +74817,6 @@
       <name>getSelectableDescription</name>
       <anchorfile>classtracktion_1_1engine_1_1ToneGeneratorPlugin.html</anchorfile>
       <anchor>a4a2d20ec767ac21ab2118705b9cfefb1</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1ToneGeneratorPlugin.html</anchorfile>
-      <anchor>a210d88a9d2adb158f3d8f2f2a3180423</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -83999,13 +83859,6 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1VCAPlugin.html</anchorfile>
-      <anchor>a1845baba3b074ff9da364f47c95d38ce</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>initialise</name>
       <anchorfile>classtracktion_1_1engine_1_1VCAPlugin.html</anchorfile>
@@ -84376,13 +84229,6 @@
       <name>getSelectableDescription</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
       <anchor>a008f368e970458d6d0df9b03e0227066</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>needsConstantBufferSize</name>
-      <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
-      <anchor>a4517539b30ac21eb4bf96c95ff257eb6</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">

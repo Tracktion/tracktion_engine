@@ -146,6 +146,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adbfc36cffe4967d7917312dfc859c98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59dd16222703446e0691dcf4fdeff170"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a59dd16222703446e0691dcf4fdeff170">removeNoteOnsAndOffs</a> ()</td></tr>
 <tr class="separator:a59dd16222703446e0691dcf4fdeff170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab42eb1e63ffdb2894c52f8cc9954473a"><td class="memTemplParams" colspan="2">template&lt;typename Predicate &gt; </td></tr>
+<tr class="memitem:ab42eb1e63ffdb2894c52f8cc9954473a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ab42eb1e63ffdb2894c52f8cc9954473a">removeIf</a> (Predicate &amp;&amp;pred)</td></tr>
+<tr class="memdesc:ab42eb1e63ffdb2894c52f8cc9954473a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes any notes that match the given predicate.  <a href="structtracktion_1_1engine_1_1MidiMessageArray.html#ab42eb1e63ffdb2894c52f8cc9954473a">More...</a><br /></td></tr>
+<tr class="separator:ab42eb1e63ffdb2894c52f8cc9954473a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad20f90468488aec6ec85eab841325809"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ad20f90468488aec6ec85eab841325809">addToTimestamps</a> (double delta) noexcept</td></tr>
 <tr class="separator:ad20f90468488aec6ec85eab841325809"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4be093a1f9eea8817cf23651494def0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae4be093a1f9eea8817cf23651494def0">addToNoteNumbers</a> (int delta) noexcept</td></tr>
@@ -932,6 +936,28 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ab42eb1e63ffdb2894c52f8cc9954473a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab42eb1e63ffdb2894c52f8cc9954473a">&#9670;&nbsp;</a></span>removeIf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Predicate &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::MidiMessageArray::removeIf </td>
+          <td>(</td>
+          <td class="paramtype">Predicate &amp;&amp;&#160;</td>
+          <td class="paramname"><em>pred</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes any notes that match the given predicate. </p>
+
+</div>
+</div>
 <a id="ad20f90468488aec6ec85eab841325809"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad20f90468488aec6ec85eab841325809">&#9670;&nbsp;</a></span>addToTimestamps()</h2>
 
@@ -1092,7 +1118,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 15 2024 11:54:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Aug 15 2024 18:36:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
