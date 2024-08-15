@@ -25,7 +25,6 @@ public:
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "HP/LP"; }
     juce::String getSelectableDescription() override    { return TRANS("Low/High-Pass Filter"); }
-    bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

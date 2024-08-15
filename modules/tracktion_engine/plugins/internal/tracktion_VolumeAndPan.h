@@ -55,7 +55,6 @@ public:
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getShortName (int) override                { return "VolPan"; }
     juce::String getSelectableDescription() override        { return getName(); }
-    bool needsConstantBufferSize() override                 { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;

@@ -44,7 +44,6 @@ int MidiModifierPlugin::getNumOutputChannelsGivenInputs (int)                   
 void MidiModifierPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}
 bool MidiModifierPlugin::takesAudioInput()                                         { return false; }
 bool MidiModifierPlugin::canBeAddedToClip()                                        { return false; }
-bool MidiModifierPlugin::needsConstantBufferSize()                                 { return false; }
 
 void MidiModifierPlugin::applyToBuffer (const PluginRenderContext& fc)
 {

@@ -64,7 +64,6 @@ public:
     juce::String getName() const override               { return TRANS("Delay"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getSelectableDescription() override    { return TRANS("Delay Plugin"); }
-    bool needsConstantBufferSize() override             { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
     void initialise (const PluginInitialisationInfo&) override;

@@ -23,7 +23,6 @@ public:
 
     juce::String getName() const override                   { return TRANS("Phaser"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
-    bool needsConstantBufferSize() override                 { return false; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }

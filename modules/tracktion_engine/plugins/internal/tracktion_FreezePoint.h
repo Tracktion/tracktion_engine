@@ -93,7 +93,6 @@ public:
     bool canBeAddedToRack() override                    { return false; }
     bool canBeAddedToMaster() override                  { return false; }
     bool canBeDisabled() override                       { return false; }
-    bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

@@ -83,7 +83,6 @@ public:
     double getLatencySeconds() override     { return latencySeconds; }
     bool noTail() override;
     double getTailLength() const override;
-    bool needsConstantBufferSize() override { return false; }
     void trackPropertiesChanged() override;
 
     juce::AudioProcessor* getWrappedAudioProcessor() const override     { return getAudioPluginInstance(); }

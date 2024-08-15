@@ -32,7 +32,6 @@ public:
     juce::String getShortName (int) override                            { return TRANS("Comp"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
-    bool needsConstantBufferSize() override                             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

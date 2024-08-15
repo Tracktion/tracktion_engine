@@ -42,7 +42,6 @@ public:
     bool canBeAddedToRack() override                    { return false; }
     bool canBeAddedToFolderTrack()   override           { return true;  }
     bool canBeMoved() override;
-    bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

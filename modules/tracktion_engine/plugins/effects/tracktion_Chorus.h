@@ -30,7 +30,6 @@ public:
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return TRANS("Chorus Plugin"); }
-    bool needsConstantBufferSize() override             { return false; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

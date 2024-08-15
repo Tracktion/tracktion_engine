@@ -67,7 +67,6 @@ public:
     bool producesAudioWhenNoAudioInput() override    { return true; }
     bool canBeAddedToClip() override                 { return true; }
     bool canBeAddedToRack() override                 { return true; }
-    bool needsConstantBufferSize() override          { return false; }
 
     //==============================================================================
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

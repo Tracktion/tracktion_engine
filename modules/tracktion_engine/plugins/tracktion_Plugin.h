@@ -284,7 +284,7 @@ public:
     virtual bool canBeAddedToMaster()                                   { return true; }
     virtual bool canBeDisabled()                                        { return true; }
     virtual bool canBeMoved()                                           { return true; }
-    virtual bool needsConstantBufferSize() = 0;
+    virtual bool needsConstantBufferSize()                              { return false; }
 
     /** for things like VSTs where the DLL is missing.    */
     virtual bool isMissing()                                            { return false; }
