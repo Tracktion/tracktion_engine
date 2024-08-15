@@ -32,16 +32,19 @@ public:
 
         TreeNode (const juce::ReferenceCountedObjectPtr<AutomatableParameter>& param)
             : parameter (param), type (AutomatableParameterTree::Parameter)
-        {}
+        {
+            jassert (parameter.get() != nullptr);
+        }
 
         juce::String name;
-        juce::ReferenceCountedObjectPtr<AutomatableParameter> parameter;
+        const juce::ReferenceCountedObjectPtr<AutomatableParameter> parameter;
         NodeType type;
         juce::OwnedArray<TreeNode> subNodes;
         TreeNode* parent = nullptr;
 
         void addSubNode (TreeNode* node)
         {
+            jassert (node != nullptr);
             subNodes.add (node);
             node->parent = this;
         }

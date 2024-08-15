@@ -1857,8 +1857,11 @@ void ExternalPlugin::buildParameterTree() const
         return;
 
     CRASH_TRACER_PLUGIN (getDebugName());
-    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));
-    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));
+    if (auto p1 = getAutomatableParameter (0))
+        paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p1));
+
+    if (auto p2 = getAutomatableParameter (0))
+        paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p2));
 
     juce::SortedSet<int> paramsInTree;
 
