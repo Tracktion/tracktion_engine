@@ -6813,10 +6813,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>double</type>
+      <type>std::optional&lt; double &gt;</type>
       <name>getSessionTempo</name>
       <anchorfile>classtracktion_1_1engine_1_1AbletonLink.html</anchorfile>
-      <anchor>a62016fc77733398b6602ffb1db2e8964</anchor>
+      <anchor>ae8f17ec26b8cae4cc87852bba76b6688</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
