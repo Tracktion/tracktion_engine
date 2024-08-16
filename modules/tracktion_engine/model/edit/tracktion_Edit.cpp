@@ -616,48 +616,48 @@ Edit::Edit (Options options)
     if (loadContext != nullptr && ! loadContext->shouldExit)
         loadContext->totalNumTracks = countNumTracks (state);
 
-    pluginCache                 = std::make_unique<PluginCache> (*this);
-    mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
-    transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
-    automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
-    markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
-    pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
-    frozenTrackCallback         = std::make_unique<FrozenTrackCallback> (*this);
-    masterPluginList            = std::make_unique<PluginList> (*this);
-    parameterChangeHandler      = std::make_unique<ParameterChangeHandler> (*this);
-    parameterControlMappings    = std::make_unique<ParameterControlMappings> (*this);
-    rackTypes                   = std::make_unique<RackTypeList> (*this);
-    trackCompManager            = std::make_unique<TrackCompManager> (*this);
-    changedPluginsList          = std::make_unique<ChangedPluginsList>();
-
-    undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
-
     try
     {
+        pluginCache                 = std::make_unique<PluginCache> (*this);
+        mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
+        transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
+        automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
+        markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
+        pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
+        frozenTrackCallback         = std::make_unique<FrozenTrackCallback> (*this);
+        masterPluginList            = std::make_unique<PluginList> (*this);
+        parameterChangeHandler      = std::make_unique<ParameterChangeHandler> (*this);
+        parameterControlMappings    = std::make_unique<ParameterControlMappings> (*this);
+        rackTypes                   = std::make_unique<RackTypeList> (*this);
+        trackCompManager            = std::make_unique<TrackCompManager> (*this);
+        changedPluginsList          = std::make_unique<ChangedPluginsList>();
+
+        undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
+
         initialise (options);
+
+        undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
+
+        if (loadContext != nullptr && ! loadContext->shouldExit)
+        {
+            loadContext->completed = true;
+            loadContext = nullptr;
+        }
+
+        // Don't spam logs with preview Edits
+        if (getProjectItemID().getProjectID() != 0)
+            TRACKTION_LOG ("Loaded edit: " + getName());
+
+        jassert (! engine.getActiveEdits().edits.contains (this));
+        engine.getActiveEdits().edits.add (this);
+
+        isFullyConstructed.store (true, std::memory_order_relaxed);
     }
-    catch (const std::runtime_error& e)
+    catch (...)
     {
-        notifyListenersOfDeletion(); // Avoids an assertion in the base class destructor
-        throw e;
+        // Something failed during construction so complete but isFullyConstructed will be false
+        jassert (! isFullyConstructed);
     }
-
-    undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
-
-    if (loadContext != nullptr && ! loadContext->shouldExit)
-    {
-        loadContext->completed = true;
-        loadContext = nullptr;
-    }
-
-    // Don't spam logs with preview Edits
-    if (getProjectItemID().getProjectID() != 0)
-        TRACKTION_LOG ("Loaded edit: " + getName());
-
-    jassert (! engine.getActiveEdits().edits.contains (this));
-    engine.getActiveEdits().edits.add (this);
-
-    isFullyConstructed.store (true, std::memory_order_relaxed);
 }
 
 static Edit::Options getOptionsFor (Engine& engine, Edit::EditRole role)
@@ -976,6 +976,7 @@ void Edit::loadTracks()
     TrackList::sortTracksByType (state, nullptr);
 
     trackList = std::make_unique<TrackList> (*this, state);
+    trackList->initialise();
     treeWatcher->linkedClipsChanged();
     updateTrackStatuses();
 }
@@ -2866,14 +2867,12 @@ void Edit::setEditMetadata (Metadata metadata)
 //==============================================================================
 std::unique_ptr<Edit> Edit::createEdit (Options options)
 {
-    try
-    {
-        return std::make_unique<Edit> (std::move (options));
-    }
-    catch (...)
-    {
-    }
+    auto edit = std::make_unique<Edit> (std::move (options));
 
+    if (edit->isFullyConstructed)
+        return edit;
+
+    options.engine.getEditDeleter().deleteEdit (std::move (edit));
     return {};
 }
 

@@ -59,6 +59,9 @@ struct TrackList    : public ValueTreeObjectList<Track>,
     /** Destructor. */
     ~TrackList() override;
 
+    /** Initialises the TrackList, building the child objects. */
+    void initialise();
+
     //==============================================================================
     /** Returns a Track for a given state. */
     Track* getTrackFor (const juce::ValueTree&) const;

@@ -14,7 +14,6 @@ namespace tracktion { inline namespace engine
 Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
     : EditItem (ed, v), state (v), pluginList (ed)
 {
-    edit.trackCache.addItem (*this);
     auto um = &edit.getUndoManager();
 
     trackName.referTo (state, IDs::name, um, {});
@@ -30,6 +29,7 @@ Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
         modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
 
     state.addListener (this);
+    edit.trackCache.addItem (*this);
 }
 
 Track::~Track()
@@ -477,7 +477,10 @@ void Track::updateTrackList()
     if (TrackList::hasAnySubTracks (state))
     {
         if (trackList == nullptr)
+        {
             trackList = std::make_unique<TrackList> (edit, state);
+            trackList->initialise();
+        }
     }
     else
     {

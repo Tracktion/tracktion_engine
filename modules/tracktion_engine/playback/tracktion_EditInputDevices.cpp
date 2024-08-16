@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 EditInputDevices::EditInputDevices (Edit& e, const juce::ValueTree& v)
-    : edit (e), state (v), editState (e.state)
+    : edit (e), state (v)
 {
     editState.addListener (this);
 

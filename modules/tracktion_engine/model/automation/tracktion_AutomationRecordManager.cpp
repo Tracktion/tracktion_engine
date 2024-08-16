@@ -31,7 +31,6 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
             jassertfalse;
     }
 
-
     readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
 }
 

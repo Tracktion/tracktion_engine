@@ -775,6 +775,11 @@ public:
             startTimer (10);
         }
 
+        ~LoadFinishedCallback() override
+        {
+            stopTimer();
+        }
+
         void timerCallback() override
         {
             if (! edit.isLoading())

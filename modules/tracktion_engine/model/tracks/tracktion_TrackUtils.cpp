@@ -76,14 +76,18 @@ TrackInsertPoint TrackInsertPoint::getEndOfTracks (Edit& e)
 TrackList::TrackList (Edit& e, const juce::ValueTree& parentTree)
     : ValueTreeObjectList<Track> (parentTree), edit (e)
 {
-    rebuildObjects();
-    rebuilding = false;
 }
 
 TrackList::~TrackList()
 {
     cancelPendingUpdate();
     freeObjects();
+}
+
+void TrackList::initialise()
+{
+    rebuildObjects();
+    rebuilding = false;
 }
 
 Track* TrackList::getTrackFor (const juce::ValueTree& v) const
