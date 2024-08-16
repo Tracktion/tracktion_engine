@@ -42807,6 +42807,13 @@
       <arglist>(OwnerType &amp;o, Edit &amp;e)</arglist>
     </member>
     <member kind="function">
+      <type></type>
+      <name>~LoadFinishedCallback</name>
+      <anchorfile>structtracktion_1_1engine_1_1Edit_1_1LoadFinishedCallback.html</anchorfile>
+      <anchor>ab358d29ad64230e5899af5030d914993</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>timerCallback</name>
       <anchorfile>structtracktion_1_1engine_1_1Edit_1_1LoadFinishedCallback.html</anchorfile>
@@ -76421,6 +76428,13 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>initialise</name>
+      <anchorfile>structtracktion_1_1engine_1_1TrackList.html</anchorfile>
+      <anchor>ac1610fbde7864f1ba47f5027a9956b56</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Track *</type>
       <name>getTrackFor</name>
       <anchorfile>structtracktion_1_1engine_1_1TrackList.html</anchorfile>
@@ -78050,10 +78064,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::ReferenceCountedObjectPtr&lt; AutomatableParameter &gt;</type>
+      <type>const juce::ReferenceCountedObjectPtr&lt; AutomatableParameter &gt;</type>
       <name>parameter</name>
       <anchorfile>structtracktion_1_1engine_1_1AutomatableParameterTree_1_1TreeNode.html</anchorfile>
-      <anchor>a4ddc2782ec43e28465a10e14d08eb917</anchor>
+      <anchor>a68220cd64f58fa6e5caf6e249316c32f</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
