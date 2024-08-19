@@ -1538,7 +1538,7 @@ std::optional<ColourArea> ExternalController::getColouredArea (const Edit& e)
     if (&e != getEdit())
         return {};
 
-    if (controlSurface == nullptr || ! getControlSurface().showingClipSlots() || ! getShowClipSlotSelectionColour() || ! isEnabled())
+    if (controlSurface == nullptr || controlSurface->numberOfTrackPads == 0 || ! getControlSurface().showingClipSlots() || ! getShowClipSlotSelectionColour() || ! isEnabled())
         return {};
 
     auto& ecm = getExternalControllerManager();
