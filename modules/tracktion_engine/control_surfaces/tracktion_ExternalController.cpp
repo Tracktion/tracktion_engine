@@ -49,7 +49,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     oscOutputAddr           = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
 
     showTrackSelection      = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
-    showClipSlotSelection   = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
+    showClipSlotSelection   = storage.getPropertyItem (SettingID::externControlShowClipSlotSelection, getName());
     selectionColour         = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
                                                                           juce::Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
     enabled                 = storage.getPropertyItem (SettingID::externControlEnable, getName());
