@@ -931,11 +931,9 @@ void DeviceManager::loadSettings()
     outMonoChans.clear();
     inStereoChans.clear();
     outEnabled.clear();
-    outEnabled.setBit (0);
-    outEnabled.setBit (1);
+    outEnabled.setRange (0, 256, true);
     inEnabled.clear();
-    inEnabled.setBit (0);
-    inEnabled.setBit (1);
+    inEnabled.setRange (0, 256, true);
 
     if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())   //else UI will take care about inputs/outputs names and their mapping to device channels
     {
@@ -1199,25 +1197,86 @@ void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
 
 void DeviceManager::setWaveOutChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
+    bool anyChanged = false;
+
     for (auto& ci : channels)
     {
         if (outEnabled[ci.indexInDevice] != b)
         {
             outEnabled.setBit (ci.indexInDevice, b);
-            rescanWaveDeviceList();
+            anyChanged = true;
         }
     }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
 }
 
 void DeviceManager::setWaveInChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
+    bool anyChanged = false;
+
     for (auto& ci : channels)
     {
         if (inEnabled[ci.indexInDevice] != b)
         {
             inEnabled.setBit (ci.indexInDevice, b);
-            rescanWaveDeviceList();
+            anyChanged = true;
         }
+    }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
+}
+
+void DeviceManager::enableAllWaveInputs()
+{
+    std::vector<ChannelIndex> chans;
+
+    for (auto& w : waveInputs)
+        for (auto index : w->getChannels())
+            chans.push_back (index);
+
+    setWaveInChannelsEnabled (chans, true);
+}
+
+void DeviceManager::enableAllWaveOutputs()
+{
+    std::vector<ChannelIndex> chans;
+
+    for (auto& w : waveOutputs)
+        for (auto index : w->getChannels())
+            chans.push_back (index);
+
+    setWaveOutChannelsEnabled (chans, true);
+}
+
+void DeviceManager::setAllWaveInputsToStereoPair()
+{
+    bool anyChanged = false;
+
+    for (auto& w : waveInputs)
+    {
+        for (auto ci : w->getChannels())
+        {
+            if (! inStereoChans[ci.indexInDevice / 2])
+            {
+                inStereoChans.setBit (ci.indexInDevice / 2, true);
+                anyChanged = true;
+            }
+        }
+    }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
+}
+
+void DeviceManager::setAllWaveOutputsToStereoPair()
+{
+    if (! outMonoChans.isZero())
+    {
+        outMonoChans.clear();
+        rescanWaveDeviceList();
     }
 }
 

@@ -141,6 +141,12 @@ public:
     bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }
     bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
 
+    void enableAllWaveInputs();
+    void enableAllWaveOutputs();
+
+    void setAllWaveInputsToStereoPair();
+    void setAllWaveOutputsToStereoPair();
+
     //==============================================================================
     int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }
     MidiOutputDevice* getMidiOutDevice (int index) const        { return index >= 0 && index < (int) midiOutputs.size() ? midiOutputs[(size_t) index].get() : nullptr; }
