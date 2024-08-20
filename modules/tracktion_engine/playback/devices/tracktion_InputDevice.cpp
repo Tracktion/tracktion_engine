@@ -245,47 +245,21 @@ bool InputDeviceInstance::isLivePlayEnabled (const Track& t) const
 void InputDeviceInstance::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)
 {
     if (v.getParent() == state)
-    {
         if (id == IDs::armed || id == IDs::targetID)
-        {
-            const auto targetID = EditItemID::fromVar (v[IDs::targetID]);
-
-            if (id == IDs::targetID)
-                if (auto t = findTrackForID (edit, targetID))
-                    t->changed();
-
-            changedTargetTrackIDs.push_back (targetID);
-            recordStatusUpdater.triggerAsyncUpdate();
-        }
-    }
+            handleDestinationChange (EditItemID::fromVar (v[IDs::targetID]),
+                                     id == IDs::targetID);
 }
 
 void InputDeviceInstance::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
-    {
-        const auto targetID = EditItemID::fromVar (c[IDs::targetID]);
-
-        if (auto t = findTrackForID (edit, targetID))
-            t->changed();
-
-        changedTargetTrackIDs.push_back (targetID);
-        recordStatusUpdater.triggerAsyncUpdate();
-    }
+        handleDestinationChange (EditItemID::fromVar (c[IDs::targetID]), true);
 }
 
 void InputDeviceInstance::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state && c.hasType (IDs::INPUTDEVICEDESTINATION))
-    {
-        const auto targetID = EditItemID::fromVar (c[IDs::targetID]);
-
-        if (auto t = findTrackForID (edit, targetID))
-            t->changed();
-
-        changedTargetTrackIDs.push_back (targetID);
-        recordStatusUpdater.triggerAsyncUpdate();
-    }
+        handleDestinationChange (EditItemID::fromVar (c[IDs::targetID]), true);
 }
 
 ClipSlot* InputDeviceInstance::getFreeSlot (AudioTrack& t)
@@ -298,6 +272,20 @@ ClipSlot* InputDeviceInstance::getFreeSlot (AudioTrack& t)
     sl.ensureNumberOfScenes (sl.getNumScenes() + 1);
 
     return t.getClipSlotList().getClipSlots().getLast();
+}
+
+void InputDeviceInstance::handleDestinationChange (EditItemID targetID, bool trackChanged)
+{
+    if (trackChanged)
+    {
+        destinationsChanged = true;
+
+        if (auto t = findTrackForID (edit, targetID))
+            t->changed();
+    }
+
+    changedTargetTrackIDs.push_back (targetID);
+    recordStatusUpdater.triggerAsyncUpdate();
 }
 
 void InputDeviceInstance::updateRecordingStatus()
@@ -328,7 +316,7 @@ void InputDeviceInstance::updateRecordingStatus()
         const bool isLivePlayActive = isLivePlayEnabled (*track);
 
         // This logic rebuilds the audio graph if the monitor state changes as it's a static node-type in the graph
-        if (! wasRecording && wasLivePlayActive != isLivePlayActive)
+        if (destinationsChanged || (! wasRecording && wasLivePlayActive != isLivePlayActive))
             edit.restartPlayback();
 
         wasLivePlayActive = isLivePlayActive;
@@ -338,6 +326,7 @@ void InputDeviceInstance::updateRecordingStatus()
     }
 
     changedTargetTrackIDs.clear();
+    destinationsChanged = false;
 }
 
 //==============================================================================
