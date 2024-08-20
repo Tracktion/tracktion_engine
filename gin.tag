@@ -28180,6 +28180,34 @@
       <arglist>(int chanNum)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>enableAllWaveInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a49572fa9d0c37de7fb9e5825c342816b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>enableAllWaveOutputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a7f11519fa25e8d33984bc7e8dbc9e907</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setAllWaveInputsToStereoPair</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>a0cbb0f608ebe66f4cc6a2cfd22b055f2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setAllWaveOutputsToStereoPair</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>abacdeb9c04e7837100a35a38ba7e65c0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>int</type>
       <name>getNumMidiOutDevices</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
