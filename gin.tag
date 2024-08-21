@@ -56873,6 +56873,20 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>AutomatableParameter *</type>
+      <name>addParam</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>af99279c46041387282eaaf967a37fa5f</anchor>
+      <arglist>(const juce::String &amp;paramID, const juce::String &amp;name, juce::NormalisableRange&lt; float &gt; valueRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>AutomatableParameter *</type>
+      <name>addParam</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>a0766b844daef02cd3c92db584978bdb2</anchor>
+      <arglist>(const juce::String &amp;paramID, const juce::String &amp;name, juce::NormalisableRange&lt; float &gt; valueRange, std::function&lt; juce::String(float)&gt; valueToStringFunction, std::function&lt; float(const juce::String &amp;)&gt; stringToValueFunction)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::StringArray</type>
       <name>getInputChannelNames</name>
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
@@ -57312,20 +57326,6 @@
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
       <anchor>a07b6c0a416bbca88fcd0ba0b233685bb</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>AutomatableParameter *</type>
-      <name>addParam</name>
-      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>af99279c46041387282eaaf967a37fa5f</anchor>
-      <arglist>(const juce::String &amp;paramID, const juce::String &amp;name, juce::NormalisableRange&lt; float &gt; valueRange)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>AutomatableParameter *</type>
-      <name>addParam</name>
-      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>a0766b844daef02cd3c92db584978bdb2</anchor>
-      <arglist>(const juce::String &amp;paramID, const juce::String &amp;name, juce::NormalisableRange&lt; float &gt; valueRange, std::function&lt; juce::String(float)&gt; valueToStringFunction, std::function&lt; float(const juce::String &amp;)&gt; stringToValueFunction)</arglist>
     </member>
     <member kind="function" protection="protected" static="yes">
       <type>static void</type>
