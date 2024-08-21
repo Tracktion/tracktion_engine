@@ -243,6 +243,12 @@ public:
     virtual double getTailLength() const                { return 0.0; }
     virtual bool canSidechain();
 
+    //==============================================================================
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange);
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange,
+                                    std::function<juce::String(float)> valueToStringFunction,
+                                    std::function<float(const juce::String&)> stringToValueFunction);
+
     juce::StringArray getInputChannelNames();
     juce::StringArray getSidechainSourceNames (bool allowNone);
     void setSidechainSourceByName (const juce::String& name);
@@ -418,12 +424,6 @@ protected:
     void valueTreeParentChanged (juce::ValueTree&) override;
 
     virtual void processingChanged();
-
-    //==============================================================================
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange);
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange,
-                                    std::function<juce::String(float)> valueToStringFunction,
-                                    std::function<float(const juce::String&)> stringToValueFunction);
 
     //==============================================================================
     static void getLeftRightChannelNames (juce::StringArray* ins, juce::StringArray* outs);
