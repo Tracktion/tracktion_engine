@@ -406,17 +406,17 @@ private:
     void interpolate (const AutomatableParameter&);
     void copy (const AutomatableParameter&);
     int updateIndex (TimePosition newTime);
-    
+
     void setPositionHiRes (TimePosition newTime) noexcept;
     void setPositionInterpolated (TimePosition newTime) noexcept;
-    
+
     struct AutoPoint
     {
         TimePosition time = 0_tp;
         float value = 0.0f;
         float curve = 0.0f;
     };
-    
+
     juce::Array<AutoPoint> points;
     int currentIndex = -1;
     float currentValue = 0.0f;
