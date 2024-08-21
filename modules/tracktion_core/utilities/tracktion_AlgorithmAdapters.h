@@ -153,4 +153,24 @@ Container& stable_remove_duplicates (Container& container)
     return container;
 }
 
+/** Removes nullptrs from a container. */
+template<class Container>
+Container remove_if_nullptr (Container&& container)
+{
+    auto new_end = std::remove_if (container.begin(), container.end(),
+                                   [] (const auto& v) { return v == nullptr; });
+    container.erase (new_end, container.end());
+
+    return std::forward<Container> (container);
+}
+
+/** Removes nullptrs from a juce::Array. */
+template<class Type>
+juce::Array<Type> remove_if_nullptr (juce::Array<Type>&& container)
+{
+    container.removeIf ([] (const auto& v) { return v == nullptr; });
+
+    return std::move (container);
+}
+
 }}
