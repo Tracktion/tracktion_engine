@@ -4718,8 +4718,6 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/modifiers/</path>
     <filename>tracktion__ModifierInternal_8h.html</filename>
     <class kind="struct">tracktion::engine::Ramp</class>
-    <class kind="struct">tracktion::engine::DiscreteLabelledParameter</class>
-    <class kind="struct">tracktion::engine::SuffixedParameter</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <namespace>tracktion::engine::PredefinedWavetable</namespace>
@@ -5046,6 +5044,15 @@
     <class kind="struct">tracktion::engine::ParameterControlMappings::Mapping</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ParameterHelpers.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__ParameterHelpers_8h.html</filename>
+    <class kind="struct">engine::DiscreteLabelledParameter</class>
+    <class kind="struct">engine::SuffixedParameter</class>
+    <class kind="struct">engine::ParameterWithStateValue</class>
+    <namespace>engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_PatchBay.h</name>
@@ -20880,45 +20887,45 @@
       <arglist>()</arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>thresholdValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>thresholdGain</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a5f2fc7e2ec4b35eb6f5a7726301e6ad2</anchor>
+      <anchor>aa98e25c4e3442d5586cce025a3413694</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>ratioValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>ratio</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>ae83cdd9318a983e2fd9dd7711cc25958</anchor>
+      <anchor>a4208ab063bb9a4518f69c3f5c545dad2</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>attackValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>attackMs</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a163b36f4bda2922afd374ab4386a663f</anchor>
+      <anchor>a401714d3d8c9b6eda36689597587e485</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>releaseValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>releaseMs</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a4845e3290efffa95407a363e279e7da7</anchor>
+      <anchor>a9fdf742d26b62d8632cd9f350be1a849</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>outputValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>outputDb</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>abe463603ff40fb4fcb8ffe3161b5ad83</anchor>
+      <anchor>a97f5a6f053fb98f9fef27a94407316c6</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>sidechainValue</name>
+      <type>ParameterWithStateValue</type>
+      <name>sidechainDb</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>ab43c1490e06f1e93f6bd551065576f51</anchor>
+      <anchor>ac4ea6d486b94b9e95d355081794da20b</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -20926,48 +20933,6 @@
       <name>useSidechainTrigger</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
       <anchor>aae77b2709da6cce5521a0c0a0cb2cbe5</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>thresholdGain</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a66d23154c1b2672e789502bd8dbae40c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>ratio</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a63723a2dc4a2382f1ec812f1761e1df3</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>attackMs</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a4990503c90974ac0a09a4104a54094c1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>releaseMs</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a48d305e3a27c808953ab658723682c82</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>outputDb</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a190465b7e1bdafa5ed6cbbfce6e0c6e0</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AutomatableParameter::Ptr</type>
-      <name>sidechainDb</name>
-      <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a3d0746ed73cbd9ce4e626b457fb1dc00</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" static="yes">
@@ -28507,77 +28472,76 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::DiscreteLabelledParameter</name>
-    <filename>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</filename>
-    <base>tracktion::engine::AutomatableParameter</base>
+    <name>engine::DiscreteLabelledParameter</name>
+    <filename>structengine_1_1DiscreteLabelledParameter.html</filename>
     <member kind="function">
       <type></type>
       <name>DiscreteLabelledParameter</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>a26412f8ededfbb00ef9eb8cae8678940</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a4f7e366e53e18935ed701046c80c5713</anchor>
       <arglist>(const juce::String &amp;xmlTag, const juce::String &amp;name, AutomatableEditItem &amp;owner, juce::Range&lt; float &gt; valueRangeToUse, int numStatesToUse=0, juce::StringArray labelsToUse={})</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~DiscreteLabelledParameter</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>a0f49530aa30059e8c0df28b2284108d1</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>aec49a8676d1d6fa378ba9dbd355ebd2b</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isDiscrete</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>afb24f8d0650cce4db691bc91f8602b5c</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a327f1080ea3bd241598991b39de0f625</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>int</type>
       <name>getNumberOfStates</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>acb7771906d6eab559f4c360c0b514c81</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a1582476a99458ae277f3742ef77b7c11</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
       <name>getValueForState</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>a13a6517f751d40c3dd7aece70cb7fb39</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a90fef6662931fcf5940c04791bb7e5f1</anchor>
       <arglist>(int i) const override</arglist>
     </member>
     <member kind="function">
       <type>int</type>
       <name>getStateForValue</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>ac94452500ac17467fadcaa8ab7027811</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a9ad3ecf7c1d920d9a6120d152857c70e</anchor>
       <arglist>(float value) const override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>hasLabels</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>af9760867023c4befb5e93e70c1b805e8</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a4ff6bbcc19c71fcc274997f3405498c4</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::StringArray</type>
       <name>getAllLabels</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>ac810c44348047152827e371da1f317e7</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>a1a37cea496e989994cbc181c8ad473a4</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getLabelForValue</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>a7a066632189e2013d84dca8c86466550</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>ae2f97010807520cf08c092990c265401</anchor>
       <arglist>(float val) const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
       <name>snapToState</name>
-      <anchorfile>structtracktion_1_1engine_1_1DiscreteLabelledParameter.html</anchorfile>
-      <anchor>ad0e538f601ac615aee5465323b79d862</anchor>
+      <anchorfile>structengine_1_1DiscreteLabelledParameter.html</anchorfile>
+      <anchor>adc05105d543f2fdc29ab7da778c6274c</anchor>
       <arglist>(float val) const override</arglist>
     </member>
   </compound>
@@ -53874,6 +53838,101 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>engine::ParameterWithStateValue</name>
+    <filename>structengine_1_1ParameterWithStateValue.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ParameterWithStateValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>abea763e41b69e6f533d8ed791f71d981</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ParameterWithStateValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a239a9afc2880146f75dfc0b0d9ae5476</anchor>
+      <arglist>(Plugin &amp;, const juce::String &amp;paramID, const juce::Identifier &amp;propertyName, const juce::String &amp;description, float defaultValue, juce::NormalisableRange&lt; float &gt; valueRange, std::function&lt; juce::String(float)&gt; valueToStringFunction={}, std::function&lt; float(const juce::String &amp;)&gt; stringToValueFunction={})</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ParameterWithStateValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a10a13d84c3befb0350d4f779f82d4f36</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ParameterWithStateValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a655e88c37edac689d0cf25fe05d79aa0</anchor>
+      <arglist>(ParameterWithStateValue &amp;&amp;)=default</arglist>
+    </member>
+    <member kind="function">
+      <type>ParameterWithStateValue &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a91fd02822663089c2b66e735d5e13005</anchor>
+      <arglist>(ParameterWithStateValue &amp;&amp;)=default</arglist>
+    </member>
+    <member kind="function">
+      <type>AutomatableParameter &amp;</type>
+      <name>getParameter</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>af31e82f8a4ca38c4eb4315e4df9ae13a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::CachedValue&lt; float &gt; &amp;</type>
+      <name>getCachedValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>ab4cdbd72b79616ecebd15cddd1f9ce75</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getCurrentValue</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a371154428edcdd5762d377e822986b60</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setParameter</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>affc1bd5e7cb9f1b43a2c052ab97782a0</anchor>
+      <arglist>(float newValue, juce::NotificationType)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a6ea409e482223fee8ca3195b5b36eb17</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setFromValueTree</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a05d400aa1585c58420922119f2c3f051</anchor>
+      <arglist>(const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>AutomatableParameter::Ptr</type>
+      <name>parameter</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>acd07ca15a67b1f76dc712470b5d850a2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; juce::CachedValue&lt; float &gt; &gt;</type>
+      <name>value</name>
+      <anchorfile>structengine_1_1ParameterWithStateValue.html</anchorfile>
+      <anchor>a8032e5b4ca67fdfdcc8356c4d17234dd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::PatchBayPlugin</name>
     <filename>classtracktion_1_1engine_1_1PatchBayPlugin.html</filename>
@@ -71894,42 +71953,41 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::SuffixedParameter</name>
-    <filename>structtracktion_1_1engine_1_1SuffixedParameter.html</filename>
-    <base>tracktion::engine::AutomatableParameter</base>
+    <name>engine::SuffixedParameter</name>
+    <filename>structengine_1_1SuffixedParameter.html</filename>
     <member kind="function">
       <type></type>
       <name>SuffixedParameter</name>
-      <anchorfile>structtracktion_1_1engine_1_1SuffixedParameter.html</anchorfile>
-      <anchor>a9fd9257c6152092fc61bde490cb65a01</anchor>
+      <anchorfile>structengine_1_1SuffixedParameter.html</anchorfile>
+      <anchor>a7d280da9d05582a2690f71224312dbf0</anchor>
       <arglist>(const juce::String &amp;xmlTag, const juce::String &amp;name, AutomatableEditItem &amp;owner, juce::NormalisableRange&lt; float &gt; valueRangeToUse, juce::String suffixToUse={})</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~SuffixedParameter</name>
-      <anchorfile>structtracktion_1_1engine_1_1SuffixedParameter.html</anchorfile>
-      <anchor>aa3e6239abe4ef4d5fe02fba444024dcd</anchor>
+      <anchorfile>structengine_1_1SuffixedParameter.html</anchorfile>
+      <anchor>a7a2ad0c517d319441d906ef7213b397e</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
       <name>valueToString</name>
-      <anchorfile>structtracktion_1_1engine_1_1SuffixedParameter.html</anchorfile>
-      <anchor>a96ccd45596be6b926ad1f7bff9c2abe3</anchor>
+      <anchorfile>structengine_1_1SuffixedParameter.html</anchorfile>
+      <anchor>a433cbff07c26d31601ed484f464daaec</anchor>
       <arglist>(float value) override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getLabel</name>
-      <anchorfile>structtracktion_1_1engine_1_1SuffixedParameter.html</anchorfile>
-      <anchor>ae47c17bb27647fb2fd0f7f0a910c4a8b</anchor>
+      <anchorfile>structengine_1_1SuffixedParameter.html</anchorfile>
+      <anchor>a37e0511cb3bac1c76a91812abbbcb17d</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="variable">
       <type>const juce::String</type>
       <name>suffix</name>
-      <anchorfile>structtracktion_1_1engine_1_1SuffixedParameter.html</anchorfile>
-      <anchor>a22a1f09de3eb6d4174be1a9d633e207c</anchor>
+      <anchorfile>structengine_1_1SuffixedParameter.html</anchorfile>
+      <anchor>aa906ddb33bbec91736007acef73f50d1</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86342,6 +86400,9 @@
     <class kind="class">engine::Renderer</class>
     <class kind="class">engine::EditRenderer</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <class kind="struct">engine::DiscreteLabelledParameter</class>
+    <class kind="struct">engine::SuffixedParameter</class>
+    <class kind="struct">engine::ParameterWithStateValue</class>
     <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
     <member kind="enumeration">
       <type></type>
@@ -86564,8 +86625,6 @@
     <class kind="class">tracktion::LFOModifier</class>
     <class kind="class">tracktion::MIDITrackerModifier</class>
     <class kind="struct">tracktion::Ramp</class>
-    <class kind="struct">tracktion::DiscreteLabelledParameter</class>
-    <class kind="struct">tracktion::SuffixedParameter</class>
     <class kind="class">tracktion::RandomModifier</class>
     <class kind="class">tracktion::StepModifier</class>
     <class kind="class">tracktion::AutomatableEditItem</class>
@@ -87010,8 +87069,6 @@
     <class kind="class">tracktion::engine::LFOModifier</class>
     <class kind="class">tracktion::engine::MIDITrackerModifier</class>
     <class kind="struct">tracktion::engine::Ramp</class>
-    <class kind="struct">tracktion::engine::DiscreteLabelledParameter</class>
-    <class kind="struct">tracktion::engine::SuffixedParameter</class>
     <class kind="class">tracktion::engine::RandomModifier</class>
     <class kind="class">tracktion::engine::StepModifier</class>
     <class kind="class">tracktion::engine::AutomatableEditItem</class>
