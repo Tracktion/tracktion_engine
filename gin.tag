@@ -40934,19 +40934,19 @@
       <type></type>
       <name>PlayState</name>
       <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>acd287adcf0ac95fc4453236731e898b0</anchor>
+      <anchor>a53ca97711ffc1cc434a8b86bdb413a52</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="acd287adcf0ac95fc4453236731e898b0af0a0bfe6bc7d2c58d2989034f83183e0">stopped</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="acd287adcf0ac95fc4453236731e898b0a7ed501a93c1205e3a23f7f0313ea65dc">playing</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a53ca97711ffc1cc434a8b86bdb413a52af0a0bfe6bc7d2c58d2989034f83183e0">stopped</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a53ca97711ffc1cc434a8b86bdb413a52a7ed501a93c1205e3a23f7f0313ea65dc">playing</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
       <name>QueueState</name>
       <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a10db53ee33384fbfa108f8538c8235c7</anchor>
+      <anchor>a41cf8678dca4c7481ec58cbbcc6fa7f1</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a10db53ee33384fbfa108f8538c8235c7a41886f27e15eb3f30bfc386a18bb41b0">stopQueued</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a10db53ee33384fbfa108f8538c8235c7a66416093d869af1489e779b53fff6b7f">playQueued</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a41cf8678dca4c7481ec58cbbcc6fa7f1a41886f27e15eb3f30bfc386a18bb41b0">stopQueued</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a41cf8678dca4c7481ec58cbbcc6fa7f1a66416093d869af1489e779b53fff6b7f">playQueued</enumvalue>
     </member>
     <member kind="function">
       <type></type>
@@ -40954,6 +40954,13 @@
       <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
       <anchor>a654dbc617d884c5a01d8de8bb62b0da4</anchor>
       <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>LaunchHandle</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>aa25f94538fb724d871c10529aee71c2c</anchor>
+      <arglist>(const LaunchHandle &amp;)</arglist>
     </member>
     <member kind="function">
       <type>PlayState</type>
@@ -40989,6 +40996,13 @@
       <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
       <anchor>a74c2852d97f37dfd6cc60816457da114</anchor>
       <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>playSynced</name>
+      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a80119c21688fc16669bf4f4c4e617a75</anchor>
+      <arglist>(const LaunchHandle &amp;, std::optional&lt; MonotonicBeat &gt;)</arglist>
     </member>
     <member kind="function">
       <type>SplitStatus</type>
