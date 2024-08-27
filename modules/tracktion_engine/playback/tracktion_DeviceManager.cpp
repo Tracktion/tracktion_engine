@@ -910,6 +910,7 @@ void DeviceManager::loadSettings()
             error = deviceManager.initialise (defaultNumInputChannelsToOpen,
                                               defaultNumOutputChannelsToOpen,
                                               nullptr, false, "Hosted Device", nullptr);
+            applyNewMidiDeviceList(); // Do this syncronously for hosted audio interfaces
         }
         else
         {
