@@ -156,13 +156,8 @@ class HostedMidiInputDevice : public MidiInputDevice
 {
 public:
     HostedMidiInputDevice (HostedAudioDeviceInterface& aif)
-        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), TRANS("MIDI Input"), "MIDI Input"), audioIf (aif)
+        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), TRANS("MIDI Input"), "MIDI Input")
     {
-    }
-
-    ~HostedMidiInputDevice() override
-    {
-        audioIf.midiInputs.removeFirstMatchingValue (this);
     }
 
     DeviceType getDeviceType() const override
@@ -250,9 +245,10 @@ private:
     };
 
     //==============================================================================
-    HostedAudioDeviceInterface& audioIf;
     juce::MidiBuffer pendingMidiMessages;
     juce::CriticalSection pendingMidiMessagesMutex;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HostedMidiInputDevice)
 };
 
 //==============================================================================
@@ -263,11 +259,6 @@ public:
         : MidiOutputDevice (aif.engine, { TRANS("MIDI Output"), juce::String() }), 
           audioIf (aif)
     {
-    }
-
-    ~HostedMidiOutputDevice() override
-    {
-        audioIf.midiOutputs.removeFirstMatchingValue (this);
     }
 
     MidiOutputDeviceInstance* createInstance (EditPlaybackContext& epc) override
@@ -314,6 +305,8 @@ private:
 
     HostedAudioDeviceInterface& audioIf;
     MidiMessageArray toSend;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HostedMidiOutputDevice)
 };
 
 //==============================================================================
@@ -417,8 +410,8 @@ void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer,
         inputLatencyProcessor->readAudioOverwriting (toBufferView (buffer));
     }
 
-    for (auto input : midiInputs)
-        if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input))
+    for (auto& input : midiInputs)
+        if (auto hostedInput = dynamic_cast<HostedMidiInputDevice*> (input.get()))
             hostedInput->processBlock (midi);
 
     midi.clear();
@@ -432,8 +425,8 @@ void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer,
         outputLatencyProcessor->readAudioOverwriting (toBufferView (buffer));
     }
 
-    for (auto output : midiOutputs)
-        if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output))
+    for (auto& output : midiOutputs)
+        if (auto hostedOutput = dynamic_cast<HostedMidiOutputDevice*> (output.get()))
             hostedOutput->processBlock (midi);
 }
 
@@ -472,18 +465,16 @@ juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()
     return res;
 }
 
-MidiOutputDevice* HostedAudioDeviceInterface::createMidiOutput()
+std::shared_ptr<MidiOutputDevice> HostedAudioDeviceInterface::createMidiOutput()
 {
-    auto device = new HostedMidiOutputDevice (*this);
-    midiOutputs.add (device);
-    return device;
+    midiOutputs.push_back (std::make_shared<HostedMidiOutputDevice> (*this));
+    return midiOutputs.back();
 }
 
-MidiInputDevice* HostedAudioDeviceInterface::createMidiInput()
+std::shared_ptr<MidiInputDevice> HostedAudioDeviceInterface::createMidiInput()
 {
-    auto device = new HostedMidiInputDevice (*this);
-    midiInputs.add (device);
-    return device;
+    midiInputs.push_back (std::make_shared<HostedMidiInputDevice> (*this));
+    return midiInputs.back();
 }
 
 }} // namespace tracktion { inline namespace engine

@@ -188,6 +188,7 @@ DeviceManager::~DeviceManager()
     gDeviceManager = nullptr;
 
     CRASH_TRACER
+    removeHostedAudioDeviceInterface();
     deviceManager.removeChangeListener (this);
 }
 
@@ -336,8 +337,8 @@ struct DeviceManager::MIDIDeviceList
     {
         if (sourceHostedAudioDeviceInterface)
         {
-            hostedMidiOut = std::unique_ptr<MidiOutputDevice> (sourceHostedAudioDeviceInterface->createMidiOutput());
-            hostedMidiIn = std::unique_ptr<MidiInputDevice> (sourceHostedAudioDeviceInterface->createMidiInput());
+            hostedMidiOut = sourceHostedAudioDeviceInterface->createMidiOutput();
+            hostedMidiIn = sourceHostedAudioDeviceInterface->createMidiInput();
         }
 
         if (useHardwareDevices)
