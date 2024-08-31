@@ -771,12 +771,14 @@ Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnD
 
 Edit::ScopedRenderStatus::~ScopedRenderStatus()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (edit.performingRenderCount > 0);
     --edit.performingRenderCount;
 
     if (edit.performingRenderCount == 0 && reallocateOnDestruction && edit.shouldPlay())
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
         edit.getTransport().ensureContextAllocated();
+    }
 }
 
 

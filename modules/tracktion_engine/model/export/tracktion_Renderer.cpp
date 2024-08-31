@@ -677,6 +677,7 @@ auto EditRenderer::render (Renderer::Parameters r,
 
     std::shared_ptr<Handle> renderHandle (new Handle());
     renderHandle->thumbnailToUpdate = std::move (thumbnailToUpdate);
+    auto srs = std::make_unique<Edit::ScopedRenderStatus> (*r.edit, false); // We can't reallocate as this object will be destroyed on a non-message thread
 
     auto destFile = r.destFile;
     auto renderTask = render_utils::createRenderTask (std::move (r), {},
@@ -686,7 +687,8 @@ auto EditRenderer::render (Renderer::Parameters r,
     renderHandle->renderThread = std::thread ([destFile,
                                               &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
                                               finishedCallback = std::move (finishedCallback),
-                                              renderTask = std::move (renderTask)]
+                                              renderTask = std::move (renderTask),
+                                              srs = std::move (srs)]
     {
         for (;;)
         {
