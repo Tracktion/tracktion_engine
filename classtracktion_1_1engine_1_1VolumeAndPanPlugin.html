@@ -116,6 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5b8c82a7215d8d4265098662de590cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a785f423d1dc1954c923daab5e3db0150"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a785f423d1dc1954c923daab5e3db0150">canBeAddedToRack</a> () override</td></tr>
 <tr class="separator:a785f423d1dc1954c923daab5e3db0150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d517664f403fda6c8487b27b85107e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a7d517664f403fda6c8487b27b85107e5">canBeMoved</a> () override</td></tr>
+<tr class="separator:a7d517664f403fda6c8487b27b85107e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af84cb099363ae8cfd1f9d4db9f2b6c3c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#af84cb099363ae8cfd1f9d4db9f2b6c3c">getVolumeDb</a> () const</td></tr>
 <tr class="separator:af84cb099363ae8cfd1f9d4db9f2b6c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9a0ef96ffc9ae1651e7e93ff2fbe259"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#af9a0ef96ffc9ae1651e7e93ff2fbe259">getSliderPos</a> () const</td></tr>
@@ -166,8 +168,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1958e56a0c6847f9f2c69e8c443a677b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a1958e56a0c6847f9f2c69e8c443a677b">getNumOutputChannelsGivenInputs</a> (int numInputs) override</td></tr>
 <tr class="memdesc:a1958e56a0c6847f9f2c69e8c443a677b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This must return the number of output channels that the plugin will produce, given a number of input channels.  <a href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a1958e56a0c6847f9f2c69e8c443a677b">More...</a><br /></td></tr>
 <tr class="separator:a1958e56a0c6847f9f2c69e8c443a677b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d517664f403fda6c8487b27b85107e5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a7d517664f403fda6c8487b27b85107e5">canBeMoved</a> () override</td></tr>
-<tr class="separator:a7d517664f403fda6c8487b27b85107e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a111102a1468b8f8c35fb36044a33739a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a111102a1468b8f8c35fb36044a33739a">restorePluginStateFromValueTree</a> (const juce::ValueTree &amp;) override</td></tr>
 <tr class="separator:a111102a1468b8f8c35fb36044a33739a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html">tracktion::engine::Plugin</a></td></tr>
@@ -497,6 +497,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a632055601bac5685eace0769c9461463"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827ec3c51064f4fe3c6af2dc39b4e5cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a52cf1de436f7a69de68cf9845a4294fe">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a827ec3c51064f4fe3c6af2dc39b4e5cf">panParam</a></td></tr>
 <tr class="separator:a827ec3c51064f4fe3c6af2dc39b4e5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0477a505a1eb103152a9cf1b5245c29d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a0477a505a1eb103152a9cf1b5245c29d">smoothingRampTimeSeconds</a> = 0.05</td></tr>
+<tr class="memdesc:a0477a505a1eb103152a9cf1b5245c29d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the time over which volume changes will be ramped, to avoid zipper noise.  <a href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#a0477a505a1eb103152a9cf1b5245c29d">More...</a><br /></td></tr>
+<tr class="separator:a0477a505a1eb103152a9cf1b5245c29d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion_1_1engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion_1_1engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html">tracktion::engine::Plugin</a></td></tr>
 <tr class="memitem:abbf6996c17acaab1df8370884bc3ec9a inherit pub_attribs_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1Plugin_1_1WindowState.html">WindowState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#abbf6996c17acaab1df8370884bc3ec9a">windowState</a></td></tr>
 <tr class="separator:abbf6996c17acaab1df8370884bc3ec9a inherit pub_attribs_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -794,6 +797,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#adef997e258ef6e0123097d9a16620572">tracktion::engine::Plugin</a>.</p>
+
+</div>
+</div>
+<a id="a7d517664f403fda6c8487b27b85107e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d517664f403fda6c8487b27b85107e5">&#9670;&nbsp;</a></span>canBeMoved()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::VolumeAndPanPlugin::canBeMoved </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#acf100cbeccbba6dcf19088bd6bd598b0">tracktion::engine::Plugin</a>.</p>
 
 </div>
 </div>
@@ -1313,33 +1343,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7d517664f403fda6c8487b27b85107e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d517664f403fda6c8487b27b85107e5">&#9670;&nbsp;</a></span>canBeMoved()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::VolumeAndPanPlugin::canBeMoved </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#acf100cbeccbba6dcf19088bd6bd598b0">tracktion::engine::Plugin</a>.</p>
-
-</div>
-</div>
 <a id="a111102a1468b8f8c35fb36044a33739a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a111102a1468b8f8c35fb36044a33739a">&#9670;&nbsp;</a></span>restorePluginStateFromValueTree()</h2>
 
@@ -1513,13 +1516,29 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a0477a505a1eb103152a9cf1b5245c29d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0477a505a1eb103152a9cf1b5245c29d">&#9670;&nbsp;</a></span>smoothingRampTimeSeconds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion::engine::VolumeAndPanPlugin::smoothingRampTimeSeconds = 0.05</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This is the time over which volume changes will be ramped, to avoid zipper noise. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__VolumeAndPan_8h.html">tracktion_VolumeAndPan.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 28 2024 13:44:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sat Aug 31 2024 14:41:16 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

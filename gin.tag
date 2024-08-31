@@ -84234,6 +84234,13 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>canBeMoved</name>
+      <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
+      <anchor>a7d517664f403fda6c8487b27b85107e5</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>float</type>
       <name>getVolumeDb</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
@@ -84381,13 +84388,6 @@
       <arglist>(int numInputs) override</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
-      <name>canBeMoved</name>
-      <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
-      <anchor>a7d517664f403fda6c8487b27b85107e5</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>restorePluginStateFromValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
@@ -84462,6 +84462,13 @@
       <name>panParam</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
       <anchor>a827ec3c51064f4fe3c6af2dc39b4e5cf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>smoothingRampTimeSeconds</name>
+      <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
+      <anchor>a0477a505a1eb103152a9cf1b5245c29d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" static="yes">
