@@ -1047,10 +1047,13 @@ void midiPanic (Edit& edit, bool resetPlugins)
         if (weakRef)
         {
             std::vector<juce::MidiMessage> messages;
-            messages.reserve (16);
+            messages.reserve (32);
 
             for (auto chan = 1; chan <= 16; ++chan)
+            {
                 messages.push_back (juce::MidiMessage::allNotesOff (chan));
+                messages.push_back (juce::MidiMessage::controllerEvent (chan, 0x40, 0)); // sustain pedal off
+            }
 
             injectMIDIToAllPlugins (*weakRef, messages);
 
