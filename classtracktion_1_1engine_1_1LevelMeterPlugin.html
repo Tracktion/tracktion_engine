@@ -100,9 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a63d76aa54975ddd4b9bc856e10c94cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d197716ae30f3d445190933951e711b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a1d197716ae30f3d445190933951e711b">canBeDisabled</a> () override</td></tr>
 <tr class="separator:a1d197716ae30f3d445190933951e711b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acef89560becedeab518dec48c4b11b4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#acef89560becedeab518dec48c4b11b4b">shoulMeasureCpuUsage</a> () const noexcept final</td></tr>
-<tr class="memdesc:acef89560becedeab518dec48c4b11b4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plugins can return false if they want to avoid the overhead of measuring the CPU usage.  <a href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#acef89560becedeab518dec48c4b11b4b">More...</a><br /></td></tr>
-<tr class="separator:acef89560becedeab518dec48c4b11b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40dfcb60503b1fac92759422ea5cecd5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a40dfcb60503b1fac92759422ea5cecd5">shouldMeasureCpuUsage</a> () const noexcept final</td></tr>
+<tr class="memdesc:a40dfcb60503b1fac92759422ea5cecd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Plugins can return false if they want to avoid the overhead of measuring the CPU usage.  <a href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a40dfcb60503b1fac92759422ea5cecd5">More...</a><br /></td></tr>
+<tr class="separator:a40dfcb60503b1fac92759422ea5cecd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f0b366e624b910902f8d52dc51600a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a8f0b366e624b910902f8d52dc51600a4">getNumOutputChannelsGivenInputs</a> (int numInputChannels) override</td></tr>
 <tr class="memdesc:a8f0b366e624b910902f8d52dc51600a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This must return the number of output channels that the plugin will produce, given a number of input channels.  <a href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a8f0b366e624b910902f8d52dc51600a4">More...</a><br /></td></tr>
 <tr class="separator:a8f0b366e624b910902f8d52dc51600a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,6 +169,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ace54006a96b21d81ee07df00fd1c7e2a inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ace54006a96b21d81ee07df00fd1c7e2a">trackPropertiesChanged</a> ()</td></tr>
 <tr class="memdesc:ace54006a96b21d81ee07df00fd1c7e2a inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed.  <a href="classtracktion_1_1engine_1_1Plugin.html#ace54006a96b21d81ee07df00fd1c7e2a">More...</a><br /></td></tr>
 <tr class="separator:ace54006a96b21d81ee07df00fd1c7e2a inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab8d62203243700936c28a3bcb16a747 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#aab8d62203243700936c28a3bcb16a747">midiPanic</a> ()</td></tr>
+<tr class="memdesc:aab8d62203243700936c28a3bcb16a747 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin to turn off any playing notes, if applicable.  <a href="classtracktion_1_1engine_1_1Plugin.html#aab8d62203243700936c28a3bcb16a747">More...</a><br /></td></tr>
+<tr class="separator:aab8d62203243700936c28a3bcb16a747 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6646140bca610b208b0753304e36d008 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a6646140bca610b208b0753304e36d008">prepareForNextBlock</a> (TimePosition)</td></tr>
 <tr class="memdesc:a6646140bca610b208b0753304e36d008 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called between successive rendering blocks.  <a href="classtracktion_1_1engine_1_1Plugin.html#a6646140bca610b208b0753304e36d008">More...</a><br /></td></tr>
 <tr class="separator:a6646140bca610b208b0753304e36d008 inherit pub_methods_classtracktion_1_1engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -790,8 +793,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="acef89560becedeab518dec48c4b11b4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acef89560becedeab518dec48c4b11b4b">&#9670;&nbsp;</a></span>shoulMeasureCpuUsage()</h2>
+<a id="a40dfcb60503b1fac92759422ea5cecd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40dfcb60503b1fac92759422ea5cecd5">&#9670;&nbsp;</a></span>shouldMeasureCpuUsage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -800,7 +803,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool tracktion::engine::LevelMeterPlugin::shoulMeasureCpuUsage </td>
+          <td class="memname">bool tracktion::engine::LevelMeterPlugin::shouldMeasureCpuUsage </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -816,7 +819,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Plugins can return false if they want to avoid the overhead of measuring the CPU usage. </p>
 <p>It's a small overhead but with many tracks, the level meters and vol/pan plugins can make a difference. </p>
 
-<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a699ee54da7050eeca762b34bed02baa7">tracktion::engine::Plugin</a>.</p>
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#af83fde3004690c8a76c2f62f88bdfc1b">tracktion::engine::Plugin</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1124,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 31 2024 19:10:13 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Sep 1 2024 08:12:59 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

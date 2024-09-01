@@ -3026,13 +3026,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>injectMIDIToAllPlugins</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa6c6e5c970c0ed8ad9f1f676eb88ccc1</anchor>
-      <arglist>(const Edit &amp;, const std::span&lt; juce::MidiMessage &gt; &amp;messagesToSend)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>midiPanic</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>abec75e330b13aa6aa67643a4d5d14be3</anchor>
@@ -35970,6 +35963,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>midiPanic</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
+      <anchor>ad74eee2c4eb724c20686e689da451f69</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>setEnabled</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
       <anchor>a99b88a696f0c0fcb0d98ac36d8e7a6f1</anchor>
@@ -37279,6 +37279,13 @@
       <name>reset</name>
       <anchorfile>classtracktion_1_1engine_1_1FourOscPlugin.html</anchorfile>
       <anchor>afc3cf486960aa1c49d141e9194d934d4</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>midiPanic</name>
+      <anchorfile>classtracktion_1_1engine_1_1FourOscPlugin.html</anchorfile>
+      <anchor>a6397d0be0bbb638313996590a667b972</anchor>
       <arglist>() override</arglist>
     </member>
     <member kind="function">
@@ -41381,9 +41388,9 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>shoulMeasureCpuUsage</name>
+      <name>shouldMeasureCpuUsage</name>
       <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
-      <anchor>acef89560becedeab518dec48c4b11b4b</anchor>
+      <anchor>a40dfcb60503b1fac92759422ea5cecd5</anchor>
       <arglist>() const noexcept final</arglist>
     </member>
     <member kind="function">
@@ -56840,6 +56847,13 @@
       <anchor>ace54006a96b21d81ee07df00fd1c7e2a</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>midiPanic</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>aab8d62203243700936c28a3bcb16a747</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
       <name>applyToBuffer</name>
@@ -56863,9 +56877,9 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
-      <name>shoulMeasureCpuUsage</name>
+      <name>shouldMeasureCpuUsage</name>
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>a699ee54da7050eeca762b34bed02baa7</anchor>
+      <anchor>af83fde3004690c8a76c2f62f88bdfc1b</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -84319,9 +84333,9 @@
     </member>
     <member kind="function">
       <type>bool</type>
-      <name>shoulMeasureCpuUsage</name>
+      <name>shouldMeasureCpuUsage</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
-      <anchor>a90524cd7fd1d0db38a15212d8069d9bf</anchor>
+      <anchor>a957b9b18e4f5ae020a6f1e72c445ed50</anchor>
       <arglist>() const noexcept final</arglist>
     </member>
     <member kind="function">
@@ -88495,13 +88509,6 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>aac0bf73a3ae386875f6df57b46881b14</anchor>
       <arglist>(const Edit &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>injectMIDIToAllPlugins</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>aa6c6e5c970c0ed8ad9f1f676eb88ccc1</anchor>
-      <arglist>(const Edit &amp;, const std::span&lt; juce::MidiMessage &gt; &amp;messagesToSend)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

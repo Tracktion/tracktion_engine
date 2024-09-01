@@ -1676,11 +1676,8 @@ Functions</h2></td></tr>
 <tr class="memitem:aac0bf73a3ae386875f6df57b46881b14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aac0bf73a3ae386875f6df57b46881b14">muteOrUnmuteAllPlugins</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="memdesc:aac0bf73a3ae386875f6df57b46881b14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles the enabled state of all plugins in an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion_1_1engine.html#aac0bf73a3ae386875f6df57b46881b14">More...</a><br /></td></tr>
 <tr class="separator:aac0bf73a3ae386875f6df57b46881b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6c6e5c970c0ed8ad9f1f676eb88ccc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aa6c6e5c970c0ed8ad9f1f676eb88ccc1">injectMIDIToAllPlugins</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, const std::span&lt; juce::MidiMessage &gt; &amp;messagesToSend)</td></tr>
-<tr class="memdesc:aa6c6e5c970c0ed8ad9f1f676eb88ccc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a list of MIDI messages to all the plugins in this edit.  <a href="namespacetracktion_1_1engine.html#aa6c6e5c970c0ed8ad9f1f676eb88ccc1">More...</a><br /></td></tr>
-<tr class="separator:aa6c6e5c970c0ed8ad9f1f676eb88ccc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec75e330b13aa6aa67643a4d5d14be3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#abec75e330b13aa6aa67643a4d5d14be3">midiPanic</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, bool resetPlugins)</td></tr>
-<tr class="memdesc:abec75e330b13aa6aa67643a4d5d14be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a "MIDI panic" on the edit, by resetting playback, and sending some all-note-off messages to all plugins in the edit, and optionally resetting them to kill any reverb tails, etc.  <a href="namespacetracktion_1_1engine.html#abec75e330b13aa6aa67643a4d5d14be3">More...</a><br /></td></tr>
+<tr class="memdesc:abec75e330b13aa6aa67643a4d5d14be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a "MIDI panic" on the edit, by sending all-note-off messages directly to all plugins in the edit, and optionally resetting them to kill any reverb tails, etc.  <a href="namespacetracktion_1_1engine.html#abec75e330b13aa6aa67643a4d5d14be3">More...</a><br /></td></tr>
 <tr class="separator:abec75e330b13aa6aa67643a4d5d14be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab06103f2b654c81b0f74d2f567d8e7f9"><td class="memTemplParams" colspan="2">template&lt;typename PluginType &gt; </td></tr>
 <tr class="memitem:ab06103f2b654c81b0f74d2f567d8e7f9"><td class="memTemplItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; PluginType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ab06103f2b654c81b0f74d2f567d8e7f9">insertNewPlugin</a> (<a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;, int index=0)</td></tr>
@@ -5587,36 +5584,6 @@ template&lt;typename TrackItemType &gt; </div>
 
 </div>
 </div>
-<a id="aa6c6e5c970c0ed8ad9f1f676eb88ccc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6c6e5c970c0ed8ad9f1f676eb88ccc1">&#9670;&nbsp;</a></span>injectMIDIToAllPlugins()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tracktion::engine::injectMIDIToAllPlugins </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::span&lt; juce::MidiMessage &gt; &amp;&#160;</td>
-          <td class="paramname"><em>messagesToSend</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sends a list of MIDI messages to all the plugins in this edit. </p>
-
-</div>
-</div>
 <a id="abec75e330b13aa6aa67643a4d5d14be3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abec75e330b13aa6aa67643a4d5d14be3">&#9670;&nbsp;</a></span>midiPanic()</h2>
 
@@ -5643,7 +5610,7 @@ template&lt;typename TrackItemType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Performs a "MIDI panic" on the edit, by resetting playback, and sending some all-note-off messages to all plugins in the edit, and optionally resetting them to kill any reverb tails, etc. </p>
+<p>Performs a "MIDI panic" on the edit, by sending all-note-off messages directly to all plugins in the edit, and optionally resetting them to kill any reverb tails, etc. </p>
 
 </div>
 </div>
@@ -9664,7 +9631,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Aug 31 2024 19:10:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sun Sep 1 2024 08:12:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
