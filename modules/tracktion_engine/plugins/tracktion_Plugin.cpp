@@ -657,7 +657,7 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 
     std::optional<ScopedCpuMeter> cpuMeter;
 
-    if (shoulMeasureCpuUsage())
+    if (shouldMeasureCpuUsage())
         cpuMeter.emplace (cpuUsageMs, 0.2);
 
     auto& arm = edit.getAutomationRecordManager();

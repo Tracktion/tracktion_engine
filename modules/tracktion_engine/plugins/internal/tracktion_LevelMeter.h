@@ -29,7 +29,7 @@ public:
     juce::String getShortName (int) override            { return "Meter"; }
     juce::String getTooltip() override                  { return TRANS("Level meter plugin") + "$levelmeterplugin"; }
     bool canBeDisabled() override                       { return false; }
-    bool shoulMeasureCpuUsage() const noexcept final    { return false; }
+    bool shouldMeasureCpuUsage() const noexcept final   { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
 
