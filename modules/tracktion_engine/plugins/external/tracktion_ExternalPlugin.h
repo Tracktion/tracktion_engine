@@ -57,6 +57,7 @@ public:
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void reset() override;
+    void midiPanic() override;
     void setEnabled (bool enabled) override;
 
     juce::Array<Exportable::ReferencedItem> getReferencedItems() override;
@@ -153,6 +154,7 @@ private:
 
     juce::MidiBuffer midiBuffer;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    std::atomic<bool> midiPanicNeeded { false };
 
     ActiveNoteList activeNotes;
 

@@ -439,9 +439,9 @@ juce::String Plugin::getTooltip()
     return getName() + "$genericfilter";
 }
 
-void Plugin::reset()
-{
-}
+void Plugin::reset() {}
+void Plugin::trackPropertiesChanged() {}
+void Plugin::midiPanic() {}
 
 //==============================================================================
 void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
