@@ -58,7 +58,7 @@ public:
         juce::AudioFormat* audioFormat = nullptr;               ///< The AudioFormat to use, can be nullptr if createMidiFile is true
 
         int bitDepth = 16;                                      ///< If this is an audio render, the bit depth to use
-        int blockSizeForAudio = 44100;                          ///< The block size to use
+        int blockSizeForAudio = 512;                            ///< The block size to use
         double sampleRateForAudio = 44100.0;                    ///< The sample rate to use
 
         TimeRange time;                                         ///< The time range to render
