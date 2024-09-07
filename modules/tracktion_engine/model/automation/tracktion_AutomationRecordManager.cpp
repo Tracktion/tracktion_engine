@@ -16,19 +16,29 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
 {
     if (edit.shouldPlay())
     {
-        std::unique_ptr<juce::MessageManagerLock> mml;
+        auto getMessageManagerLock = []() -> std::unique_ptr<juce::MessageManagerLock>
+        {
+            if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
+                return std::make_unique<juce::MessageManagerLock> (job);
 
-        if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
-            mml = std::make_unique<juce::MessageManagerLock> (job);
-        else if (auto t = juce::Thread::getCurrentThread())
-            mml = std::make_unique<juce::MessageManagerLock> (t);
-        else
-            jassert (juce::MessageManager::getInstance()->isThisTheMessageThread());
+            if (auto t = juce::Thread::getCurrentThread())
+                return  std::make_unique<juce::MessageManagerLock> (t);
 
-        if (mml == nullptr || mml->lockWasGained())
+            return {};
+        };
+
+        if (juce::MessageManager::getInstance()->isThisTheMessageThread())
+        {
             edit.getTransport().addChangeListener (this);
+        }
+        else if (auto mml = getMessageManagerLock(); mml && mml->lockWasGained())
+        {
+            edit.getTransport().addChangeListener (this);
+        }
         else
-            jassertfalse;
+        {
+            callBlocking ([this] { edit.getTransport().addChangeListener (this); });
+        }
     }
 
     readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
