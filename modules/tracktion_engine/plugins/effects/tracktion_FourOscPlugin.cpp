@@ -1449,6 +1449,11 @@ void FourOscPlugin::reset()
     turnOffAllVoices (false);
 }
 
+void FourOscPlugin::midiPanic()
+{
+    turnOffAllVoices (false);
+}
+
 void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     juce::ScopedLock sl (voicesLock);

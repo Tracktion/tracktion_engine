@@ -194,7 +194,10 @@ public:
     virtual void reset();
 
     /** Track name or colour has changed. */
-    virtual void trackPropertiesChanged() {}
+    virtual void trackPropertiesChanged();
+
+    /** Tells the plugin to turn off any playing notes, if applicable */
+    virtual void midiPanic();
 
     //==============================================================================
     /** Process the next block of data.
@@ -214,10 +217,11 @@ public:
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);
 
+    //==============================================================================
     /** Plugins can return false if they want to avoid the overhead of measuring the CPU usage.
         It's a small overhead but with many tracks, the level meters and vol/pan plugins can make a difference.
     */
-    virtual bool shoulMeasureCpuUsage() const noexcept  { return true; }
+    virtual bool shouldMeasureCpuUsage() const noexcept  { return true; }
 
     /** Returns the proportion of the current buffer size spent processing this plugin. */
     double getCpuUsage() const noexcept     { return juce::jlimit (0.0, 1.0, timeToCpuScale * cpuUsageMs.load()); }

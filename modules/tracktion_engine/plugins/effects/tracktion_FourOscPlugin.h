@@ -185,6 +185,7 @@ public:
     void deinitialise() override;
 
     void reset() override;
+    void midiPanic() override;
 
     void applyToBuffer (const PluginRenderContext&) override;
 

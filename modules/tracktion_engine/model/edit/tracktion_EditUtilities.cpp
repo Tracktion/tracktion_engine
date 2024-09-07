@@ -1031,41 +1031,16 @@ void muteOrUnmuteAllPlugins (const Edit& edit)
         p->setEnabled (numEnabled == 0);
 }
 
-void injectMIDIToAllPlugins (const Edit& edit, const std::span<juce::MidiMessage>& messages)
-{
-    for (auto p : getAllPlugins (edit, false))
-        if (p->isSynth())
-            if (auto at = dynamic_cast<AudioTrack*> (p->getOwnerTrack()))
-                for (auto& m : messages)
-                    at->injectLiveMidiMessage (m, MidiMessageArray::notMPE);
-}
-
 void midiPanic (Edit& edit, bool resetPlugins)
 {
-    juce::Timer::callAfterDelay (100, [weakRef = makeSafeRef (edit), resetPlugins]
+    for (auto p : getAllPlugins (edit, false))
     {
-        if (weakRef)
-        {
-            std::vector<juce::MidiMessage> messages;
-            messages.reserve (32);
+        p->midiPanic();
 
-            for (auto chan = 1; chan <= 16; ++chan)
-            {
-                messages.push_back (juce::MidiMessage::allNotesOff (chan));
-                messages.push_back (juce::MidiMessage::controllerEvent (chan, 0x40, 0)); // sustain pedal off
-            }
-
-            injectMIDIToAllPlugins (*weakRef, messages);
-
-            if (resetPlugins)
-                for (auto p : getAllPlugins (*weakRef, false))
-                    p->reset();
-        }
-    });
-
-    Edit::ScopedRenderStatus srd (edit, true);
+        if (resetPlugins)
+            p->reset();
+    }
 }
-
 
 //==============================================================================
 juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
