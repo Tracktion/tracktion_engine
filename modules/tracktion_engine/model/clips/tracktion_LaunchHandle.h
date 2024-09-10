@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
 //==============================================================================
@@ -101,25 +101,42 @@ public:
 
 private:
     //==============================================================================
-    struct State
+    // audio-write, message-read
+    std::atomic<PlayState> currentPlayState { PlayState::stopped };
+
+    //==============================================================================
+    // message-write, audio-read/write
+    struct NextState
     {
-        State();
-
-        PlayState status = PlayState::stopped;
-        std::optional<BeatRange> playedRange, lastPlayedRange;
-        std::optional<MonotonicBeatRange> playedMonotonicRange;
-
-        std::optional<QueueState> nextStatus;
-        std::optional<MonotonicBeat> nextEventTime;
+        QueueState queuedState;
+        std::optional<MonotonicBeat> queuedPosition;
     };
+    static_assert (std::is_trivially_copyable_v<NextState>);
 
-    static_assert (std::is_trivially_copyable_v<State>);
+    std::optional<NextState> nextState;
+    mutable crill::spin_mutex nextStateMutex;
 
-    MultipleWriterSeqLock<State> state;
-    crill::seqlock_object<std::optional<State>> stateToSyncFrom;
+    void pushNextState (QueueState, std::optional<MonotonicBeat>);
+    std::optional<NextState> peekNextState() const;
 
-    State getState() const      { return state.load(); }
-    void setState (State s)     { state.store (std::move (s)); }
+    //==============================================================================
+    // audio-write, message-read
+    static_assert (std::is_trivially_copyable_v<std::optional<BeatRange>>);
+    crill::seqlock_object<std::optional<BeatRange>> previouslyPlayedRange;
+
+    //==============================================================================
+    // audio-write, message-read
+    struct CurrentState
+    {
+        BeatPosition startBeat;
+        MonotonicBeat startMonotonicBeat;
+        BeatDuration duration;
+    };
+    static_assert (std::is_trivially_copyable_v<std::optional<CurrentState>>);
+
+    crill::seqlock_object<std::optional<CurrentState>> currentState;
+
+    crill::seqlock_object<std::optional<CurrentState>> stateToSyncFrom;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

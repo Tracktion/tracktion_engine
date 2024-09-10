@@ -385,6 +385,11 @@ namespace tracktion { inline namespace engine
 #endif
 
 //==============================================================================
+#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+ #include "../3rd_party/crill/spin_mutex.h"
+#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+
+//==============================================================================
 #include "../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
 //==============================================================================

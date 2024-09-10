@@ -6,8 +6,8 @@
 #ifndef CRILL_PROGRESSIVE_BACKOFF_WAIT_H
 #define CRILL_PROGRESSIVE_BACKOFF_WAIT_H
 
-#include <crill/platform.h>
-#include <crill/impl/progressive_backoff_wait_impl.h>
+#include "platform.h"
+#include "impl/progressive_backoff_wait_impl.h"
 
 namespace crill {
 

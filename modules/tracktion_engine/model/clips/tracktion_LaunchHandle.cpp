@@ -8,110 +8,124 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+#include "tracktion_LaunchHandle.h"
 
-LaunchHandle::State::State() = default;
+namespace tracktion::inline engine
+{
 
 //==============================================================================
 LaunchHandle::LaunchHandle (const LaunchHandle& o)
 {
-    setState (o.getState());
+    currentState.store (o.currentState.load());
 }
 
 LaunchHandle::PlayState LaunchHandle::getPlayingStatus() const
 {
-    return getState().status;
+    return currentPlayState.load (std::memory_order_acquire);
 }
 
 std::optional<LaunchHandle::QueueState> LaunchHandle::getQueuedStatus() const
 {
-    return getState().nextStatus;
+    const auto next = peekNextState();
+    return next ? std::optional (next->queuedState) : std::nullopt;
 }
 
 std::optional<MonotonicBeat> LaunchHandle::getQueuedEventPosition() const
 {
-    return getState().nextEventTime;
+    const auto next = peekNextState();
+    return next ? next->queuedPosition : std::nullopt;
 }
 
 void LaunchHandle::play (std::optional<MonotonicBeat> pos)
 {
-    auto s = getState();
-
-    s.nextStatus = QueueState::playQueued;
-    s.nextEventTime = pos;
-
-    setState (std::move (s));
+    pushNextState (QueueState::playQueued, pos);
 }
 
 void LaunchHandle::playSynced (const LaunchHandle& otherHandle, std::optional<MonotonicBeat> pos)
 {
-    stateToSyncFrom.store (otherHandle.getState());
+    stateToSyncFrom.store (otherHandle.currentState.load());
     play (pos);
 }
 
 void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
 {
-    auto s = getState();
-
-    if (s.status == PlayState::stopped)
+    if (currentPlayState.load (std::memory_order_acquire) == PlayState::stopped)
     {
-        if (s.nextStatus == QueueState::playQueued)
+        if (getQueuedStatus() == QueueState::playQueued)
         {
-            s.nextStatus = {};
-            s.nextEventTime = {};
-            setState (std::move (s));
+            const std::scoped_lock sl (nextStateMutex);
+            nextState = std::nullopt;
         }
 
         return;
     }
 
-    s.nextStatus = QueueState::stopQueued;
-    s.nextEventTime = pos;
-
-    setState (std::move (s));
+    pushNextState (QueueState::stopQueued, pos);
 }
 
 std::optional<BeatRange> LaunchHandle::getPlayedRange() const
 {
-    return getState().playedRange;
+    if (auto c = currentState.load())
+        return BeatRange (c->startBeat, c->duration);
+
+    return {};
 }
 
 std::optional<MonotonicBeatRange> LaunchHandle::getPlayedMonotonicRange() const
 {
-    return getState().playedMonotonicRange;
+    if (auto c = currentState.load())
+        return MonotonicBeatRange { BeatRange (c->startMonotonicBeat.v, c->duration) };
+
+    return {};
 }
 
 std::optional<BeatRange> LaunchHandle::getLastPlayedRange() const
 {
-    return getState().lastPlayedRange;
+    return previouslyPlayedRange.load();
 }
 
 auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
 {
-    auto s = getState();
-
+    const auto blockEditBeatRange = getBeatRange (syncRange);
     const auto blockMonotonicBeatRange = getMonotonicBeatRange (syncRange);
     const auto duration = blockMonotonicBeatRange.v.getLength();
+
+    const auto playState = currentPlayState.load (std::memory_order_acquire);
+
+    std::optional<NextState> ns;
+
+    const std::unique_lock sl (nextStateMutex, std::try_to_lock); // Keep this lock alive for the block
+
+    if (sl.owns_lock() && nextState.has_value())
+        ns = *nextState;
+
+    auto clearNextState = [&]
+                          {
+                              // If ns has a value, nextState must be locked
+                              if (ns.has_value())
+                                  nextState = std::nullopt;
+                          };
+
+    std::optional<QueueState> queuedState       = ns ? std::optional (ns->queuedState) : std::nullopt;
+    std::optional<MonotonicBeat> queuedPosition = ns ? std::optional (ns->queuedPosition) : std::nullopt;
+
+    auto cs = currentState.load();
 
     // Playhead isn't moving so just apply stop queued states straight away
     if (duration == 0_bd)
     {
         SplitStatus splitStatus;
 
-        if (s.nextStatus == QueueState::stopQueued)
+        if (queuedState == QueueState::stopQueued)
         {
             splitStatus.playing1 = false;
 
-            if (s.playedRange)
-                s.lastPlayedRange = s.playedRange;
+            if (cs)
+                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-            s.playedRange = std::nullopt;
-            s.playedMonotonicRange = std::nullopt;
-            s.status = PlayState::stopped;
-            s.nextStatus = std::nullopt;
-
-            setState (std::move (s));
+            currentState.store (std::nullopt);
+            currentPlayState.store (PlayState::stopped, std::memory_order_release);
+            clearNextState();
         }
 
         return splitStatus;
@@ -121,106 +135,105 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
 
     auto continuePlayingOrStopped = [&]
     {
-        splitStatus.playing1 = s.status == PlayState::playing;
-        splitStatus.range1 = getBeatRange (syncRange);
-        splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart())
-                                                   : std::nullopt;
+        splitStatus.playing1 = playState == PlayState::playing;
+        splitStatus.range1 = blockEditBeatRange;
+        splitStatus.playStartTime1 = cs ? std::optional (cs->startBeat)
+                                        : std::nullopt;
 
-        if (s.playedRange)
-            s.playedRange = withEndExtended (*s.playedRange, duration);
-
-        if (s.playedMonotonicRange)
-            s.playedMonotonicRange = MonotonicBeatRange { withEndExtended (s.playedMonotonicRange->v, duration) };
+        if (cs)
+        {
+            cs->duration = cs->duration + duration;
+            currentState.store (cs);
+        }
     };
 
     // Check if we need to change state
-    if (s.nextStatus)
+    if (queuedState)
     {
-        switch (*s.nextStatus)
+        switch (*queuedState)
         {
             case QueueState::playQueued:
             {
-                if (s.nextEventTime)
+                if (queuedPosition)
                 {
-                    if (s.nextEventTime->v <= blockMonotonicBeatRange.v.getStart())
+                    if (queuedPosition->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         // Try and sync from another state first
                         if (auto syncFrom = stateToSyncFrom.load())
                         {
-                            s = *syncFrom;
-
-                            s.playedRange = getBeatRange (syncRange).withStart (syncFrom->playedRange->getStart());
-                            s.playedMonotonicRange = MonotonicBeatRange { getMonotonicBeatRange (syncRange).v.withStart ( syncFrom->playedMonotonicRange->v.getStart()) };
-
+                            currentState.store (syncFrom);
                             stateToSyncFrom.store (std::nullopt);
+                            currentPlayState.store (PlayState::playing, std::memory_order_release);
                             continuePlayingOrStopped();
                         }
                         else
                         {
                             splitStatus.playing1 = true;
-                            splitStatus.range1 = getBeatRange (syncRange);
+                            splitStatus.range1 = blockEditBeatRange;
                             splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
-                            if (s.playedRange)
-                                s.lastPlayedRange = s.playedRange;
+                            if (cs)
+                                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-                            const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - s.nextEventTime->v;
+                            const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
 
-                            s.playedRange = BeatRange::endingAt (splitStatus.range1.getEnd(), numBeatsSinceLaunch);
-                            s.playedMonotonicRange = MonotonicBeatRange { BeatRange::endingAt (blockMonotonicBeatRange.v.getEnd(), numBeatsSinceLaunch) };
-                            s.status = PlayState::playing;
-                            s.nextStatus = std::nullopt;
+                            currentState.store (CurrentState
+                                                {
+                                                    blockEditBeatRange.getEnd() - numBeatsSinceLaunch,
+                                                    *queuedPosition,
+                                                    numBeatsSinceLaunch
+                                                });
+                            currentPlayState.store (PlayState::playing, std::memory_order_release);
                         }
+
+                        clearNextState();
                     }
-                    else if (blockMonotonicBeatRange.v.contains (s.nextEventTime->v))
+                    else if (blockMonotonicBeatRange.v.contains (queuedPosition->v))
                     {
+                        const auto firstSplitLength     = queuedPosition->v - blockMonotonicBeatRange.v.getStart();
+                        const auto secondSplitLength    = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
+
                         // Try and sync from another state first
                         if (auto syncFrom = stateToSyncFrom.load())
                         {
-                            const auto blockEditBeatRange = getBeatRange (syncRange);
-
-                            s.playedRange = blockEditBeatRange.withStart (syncFrom->playedRange->getStart());
-                            s.playedMonotonicRange = MonotonicBeatRange { getMonotonicBeatRange (syncRange).v.withStart ( syncFrom->playedMonotonicRange->v.getStart()) };
+                            currentState.store (syncFrom);
                             stateToSyncFrom.store (std::nullopt);
+                            currentPlayState.store (PlayState::playing, std::memory_order_release);
 
-                            const auto firstSplitLength     = s.nextEventTime->v - blockMonotonicBeatRange.v.getStart();
-                            const auto secondSplitLength    = blockMonotonicBeatRange.v.getEnd() - s.nextEventTime->v;
                             splitStatus.playing1        = false;
                             splitStatus.range1          = blockEditBeatRange.withLength (firstSplitLength);
                             splitStatus.playStartTime1  = std::nullopt;
                             splitStatus.playing2        = true;
                             splitStatus.range2          = BeatRange::endingAt (blockEditBeatRange.getEnd(), secondSplitLength);
-                            splitStatus.playStartTime2  = s.playedRange->getStart();
+                            splitStatus.playStartTime2  = syncFrom->startBeat;
                             splitStatus.isSplit         = true;
-
-                            s.status = PlayState::playing;
-                            s.nextEventTime = std::nullopt;
-                            s.nextStatus = std::nullopt;
                         }
                         else
                         {
-                            const auto blockEditBeatRange = getBeatRange (syncRange);
-
-                            splitStatus.playing1 = s.status == PlayState::playing;
-                            splitStatus.range1 = blockEditBeatRange.withLength (s.nextEventTime->v - blockMonotonicBeatRange.v.getStart());
-                            splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart()) : std::nullopt;
-                            splitStatus.playing2 = true;
-                            splitStatus.range2 = { splitStatus.range1.getEnd(), blockEditBeatRange.getEnd() };
-                            splitStatus.playStartTime2 = splitStatus.range2.getStart();
-                            splitStatus.isSplit = true;
+                            splitStatus.playing1        = playState == PlayState::playing;
+                            splitStatus.range1          = blockEditBeatRange.withLength (firstSplitLength);
+                            splitStatus.playStartTime1  = cs ? std::optional (cs->startBeat) : std::nullopt;
+                            splitStatus.playing2        = true;
+                            splitStatus.range2          = BeatRange::endingAt (blockEditBeatRange.getEnd(), secondSplitLength);
+                            splitStatus.playStartTime2  = splitStatus.range2.getStart();
+                            splitStatus.isSplit         = true;
 
                             assert(! splitStatus.range1.isEmpty());
                             assert(! splitStatus.range2.isEmpty());
 
-                            if (s.playedRange)
-                                s.lastPlayedRange = s.playedRange;
+                            if (cs)
+                                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-                            s.playedRange = { splitStatus.range2 };
-                            s.playedMonotonicRange = MonotonicBeatRange { BeatRange (s.nextEventTime->v, splitStatus.range2.getLength()) };
-                            s.status = PlayState::playing;
-                            s.nextEventTime = std::nullopt;
-                            s.nextStatus = std::nullopt;
+                            currentState.store (CurrentState
+                                                {
+                                                    *splitStatus.playStartTime2,
+                                                    *queuedPosition,
+                                                    secondSplitLength
+                                                });
+                            currentPlayState.store (PlayState::playing, std::memory_order_release);
                         }
+
+                        clearNextState();
                     }
                     else
                     {
@@ -229,73 +242,70 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                 }
                 else
                 {
-                    const auto blockEditBeatRange = getBeatRange (syncRange);
+                    splitStatus.playing1        = true;
+                    splitStatus.range1          = blockEditBeatRange;
+                    splitStatus.playStartTime1  = blockEditBeatRange.getStart();
 
-                    splitStatus.playing1 = true;
-                    splitStatus.range1 = blockEditBeatRange;
-                    splitStatus.playStartTime1 = blockEditBeatRange.getStart();
-
-                    s.playedRange = blockEditBeatRange;
-                    s.playedMonotonicRange = getMonotonicBeatRange (syncRange);
-                    s.status = PlayState::playing;
-                    s.nextStatus = std::nullopt;
+                    currentState.store (CurrentState
+                                        {
+                                            blockEditBeatRange.getStart(),
+                                            syncRange.start.monotonicBeat,
+                                            duration
+                                        });
+                    currentPlayState.store (PlayState::playing, std::memory_order_release);
+                    clearNextState();
                 }
 
                 break;
             }
             case QueueState::stopQueued:
             {
-                if (s.status == PlayState::stopped)
+                if (playState == PlayState::stopped)
                 {
                     splitStatus.playing1 = false;
-                    splitStatus.range1 = getBeatRange (syncRange);
+                    splitStatus.range1 = blockEditBeatRange;
                     splitStatus.playStartTime1 = std::nullopt;
 
-                    s.playedRange = std::nullopt;
-                    s.playedMonotonicRange = std::nullopt;
-                    s.nextStatus = std::nullopt;
-                    s.nextEventTime = std::nullopt;
+                    currentState.store (std::nullopt);
+                    clearNextState();
                 }
-                else if (s.nextEventTime)
+                else if (queuedPosition)
                 {
-                    if (s.nextEventTime->v <= blockMonotonicBeatRange.v.getStart())
+                    if (queuedPosition->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         splitStatus.playing1 = false;
-                        splitStatus.range1 = getBeatRange (syncRange);
+                        splitStatus.range1 = blockEditBeatRange;
                         splitStatus.playStartTime1 = std::nullopt;
 
-                        if (s.playedRange)
-                            s.lastPlayedRange = s.playedRange;
+                        if (cs)
+                            previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-                        s.playedRange = std::nullopt;
-                        s.playedMonotonicRange = std::nullopt;
-                        s.status = PlayState::stopped;
-                        s.nextStatus = std::nullopt;
+                        currentState.store (std::nullopt);
+                        currentPlayState.store (PlayState::stopped, std::memory_order_release);
+                        clearNextState();
                     }
-                    else if (blockMonotonicBeatRange.v.contains (s.nextEventTime->v))
+                    else if (blockMonotonicBeatRange.v.contains (queuedPosition->v))
                     {
-                        const auto blockEditBeatRange = getBeatRange (syncRange);
-                        const auto playingDuration = s.nextEventTime->v - blockMonotonicBeatRange.v.getStart();
+                        const auto firstSplitLength     = queuedPosition->v - blockMonotonicBeatRange.v.getStart();
+                        const auto secondSplitLength    = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
 
-                        splitStatus.playing1 = s.status == PlayState::playing;
-                        splitStatus.range1 = blockEditBeatRange.withLength (playingDuration);
-                        splitStatus.playStartTime1 = s.playedRange ? std::optional (s.playedRange->getStart()) : std::nullopt;
-                        splitStatus.playing2 = false;
-                        splitStatus.range2 = { splitStatus.range1.getEnd(), blockEditBeatRange.getEnd() };
-                        splitStatus.playStartTime2 = std::nullopt;
-                        splitStatus.isSplit = true;
+                        splitStatus.playing1        = playState == PlayState::playing;
+                        splitStatus.range1          = blockEditBeatRange.withLength (firstSplitLength);
+                        splitStatus.playStartTime1  = cs ? std::optional (cs->startBeat) : std::nullopt;
+                        splitStatus.playing2        = false;
+                        splitStatus.range2          = BeatRange::endingAt (blockEditBeatRange.getEnd(), secondSplitLength);
+                        splitStatus.playStartTime2  = std::nullopt;
+                        splitStatus.isSplit         = true;
 
                         assert(! splitStatus.range1.isEmpty());
                         assert(! splitStatus.range2.isEmpty());
 
-                        if (s.playedRange)
-                            s.lastPlayedRange = withEndExtended (*s.playedRange, playingDuration);
+                        if (cs)
+                            previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-                        s.playedRange = std::nullopt;
-                        s.playedMonotonicRange = std::nullopt;
-                        s.status = PlayState::stopped;
-                        s.nextEventTime = std::nullopt;
-                        s.nextStatus = std::nullopt;
+                        currentState.store (std::nullopt);
+                        currentPlayState.store (PlayState::stopped, std::memory_order_release);
+                        clearNextState();
                     }
                     else
                     {
@@ -304,19 +314,16 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                 }
                 else
                 {
-                    const auto blockEditBeatRange = getBeatRange (syncRange);
+                    splitStatus.playing1        = false;
+                    splitStatus.range1          = blockEditBeatRange;
+                    splitStatus.playStartTime1  = std::nullopt;
 
-                    splitStatus.playing1 = false;
-                    splitStatus.range1 = blockEditBeatRange;
-                    splitStatus.playStartTime1 = std::nullopt;
+                    if (cs)
+                        previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
 
-                    if (s.playedRange)
-                        s.lastPlayedRange = s.playedRange;
-
-                    s.playedRange = std::nullopt;
-                    s.playedMonotonicRange = std::nullopt;
-                    s.status = PlayState::stopped;
-                    s.nextStatus = std::nullopt;
+                    currentState.store (std::nullopt);
+                    currentPlayState.store (PlayState::stopped, std::memory_order_release);
+                    clearNextState();
                 }
 
                 break;
@@ -328,9 +335,25 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
         continuePlayingOrStopped();
     }
 
-    setState (std::move (s));
-
     return splitStatus;
 }
 
-}} // namespace tracktion { inline namespace engine
+//==============================================================================
+void LaunchHandle::pushNextState (QueueState s, std::optional<MonotonicBeat> b)
+{
+    const std::scoped_lock sl (nextStateMutex);
+    nextState = NextState { s, b };
+}
+
+std::optional<LaunchHandle::NextState> LaunchHandle::peekNextState() const
+{
+    if (const std::unique_lock sl (nextStateMutex, std::try_to_lock);
+        sl.owns_lock() && nextState.has_value())
+    {
+        return *nextState;
+    }
+
+    return {};
+}
+
+} // namespace tracktion::inline engine
