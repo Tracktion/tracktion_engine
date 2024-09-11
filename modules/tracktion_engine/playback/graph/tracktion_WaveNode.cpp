@@ -1863,6 +1863,69 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, pitchChangeSemitones);
 }
 
+WaveNodeRealTime::WaveNodeRealTime (BeatConfig c)
+    : TracktionEngineNode (c.processState),
+      editPositionBeats (c.editTime),
+      loopSectionBeats (c.loopSection),
+      offsetBeats (c.offset),
+      editItemID (c.itemID),
+      isOfflineRender (c.isOfflineRender),
+      resamplingQuality (c.resamplingQuality),
+      audioFile (c.audioFile),
+      speedFadeDescription (std::move (c.speedFadeDescription)),
+      editTempoSequence (std::move (c.editTempoSequence)),
+      warpMap (std::move (c.warpMap)),
+      timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (c.timeStretchMode, isOfflineRender)),
+      elastiqueProOptions (c.elastiqueProOptions),
+      clipLevel (c.liveClipLevel),
+      channelsToUse (c.sourceChannelsToUse),
+      destChannels (c.destChannelsToFill),
+      pitchChangeSemitones (c.pitchChangeSemitones),
+      readAhead (c.readAhead),
+      syncTempo (c.syncTempo),
+      syncPitch (c.syncPitch)
+{
+    fileTempoSequence = std::make_shared<tempo::Sequence> (std::move (c.sourceFileTempoMap));
+    fileTempoPosition = std::make_shared<tempo::Sequence::Position> (*fileTempoSequence);
+
+    if (c.chordPitchSequence)
+    {
+        chordPitchSequence = std::make_shared<tempo::Sequence> (*c.chordPitchSequence);
+        chordPitchPosition = std::make_shared<tempo::Sequence::Position> (*c.chordPitchSequence);
+    }
+
+    // This won't work with invalid or non-existent files!
+    jassert (! audioFile.isNull());
+
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inBeats()); };
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetBeats));
+    hash_combine (stateHash, editItemID.getRawID());
+    hash_combine (stateHash, channelsToUse.size());
+    hash_combine (stateHash, destChannels.size());
+    hash_combine (stateHash, audioFile.getHash());
+    hash_combine (stateHash, resamplingQuality);
+    hash_combine (stateHash, speedFadeDescription);
+
+    if (warpMap)
+        hash_combine (stateHash, *warpMap);
+
+    hash_combine (stateHash, static_cast<int> (timeStretcherMode));
+    hash_combine (stateHash, elastiqueProOptions.toString().hashCode());
+
+    hash_combine (stateHash, fileTempoSequence->hash());
+    hash_combine (stateHash, syncTempo);
+    hash_combine (stateHash, syncPitch);
+
+    if (chordPitchSequence)
+        hash_combine (stateHash, chordPitchSequence->hash());
+
+    hash_combine (stateHash, pitchChangeSemitones);
+}
+
 WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     TimeStretcher::Mode mode,
                                     TimeStretcher::ElastiqueProOptions options,

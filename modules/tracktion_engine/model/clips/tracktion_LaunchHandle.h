@@ -65,6 +65,12 @@ public:
     */
     void playSynced (const LaunchHandle&, std::optional<MonotonicBeat>);
 
+    /** Sets a duration to loop.
+        If enabled, this will loop the handle's play duration as if it was re-triggered every duration.
+        Set the nullopt to cancel looping.
+    */
+    void setLooping (std::optional<BeatDuration>);
+
     //==============================================================================
     /** Represents two beat ranges where the play state can be different in each. */
     struct SplitStatus
@@ -125,7 +131,7 @@ private:
     crill::seqlock_object<std::optional<BeatRange>> previouslyPlayedRange;
 
     //==============================================================================
-    // audio-write, message-read
+    // audio-write/read, message-read
     struct CurrentState
     {
         BeatPosition startBeat;
@@ -137,6 +143,7 @@ private:
     crill::seqlock_object<std::optional<CurrentState>> currentState;
 
     crill::seqlock_object<std::optional<CurrentState>> stateToSyncFrom;
+    crill::seqlock_object<std::optional<BeatDuration>> loopDuration;
 };
 
 } // namespace tracktion::inline engine

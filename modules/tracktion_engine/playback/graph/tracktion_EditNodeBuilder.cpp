@@ -549,24 +549,32 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 
             if (role == ClipRole::launcher)
             {
-                node = makeNode<WaveNodeRealTime> (playFile,
-                                                   timeStretcherMode, timeStretcherOpts,
-                                                   BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max())),
-                                                   clip.getOffsetInBeats(),
-                                                   clip.getLoopRangeBeats(),
-                                                   clip.getLiveClipLevel(),
-                                                   clip.getActiveChannels(),
-                                                   juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                                   params.processState,
-                                                   idToUse,
-                                                   params.forRendering,
-                                                   clip.getResamplingQuality(),
-                                                   speedFadeDesc, std::move (editTempoPosition),
-                                                   std::move (warpMap),
-                                                   seq, syncTempo, syncPitch,
-                                                   getChordTrackSequenceIfRequired (clip),
-                                                   clip.getPitchChange(),
-                                                   readAhead);
+                WaveNodeRealTime::BeatConfig config
+                {
+                    .processState = params.processState,
+                    .audioFile = playFile,
+                    .timeStretchMode = timeStretcherMode,
+                    .elastiqueProOptions = timeStretcherOpts,
+                    .editTime = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max())),
+                    .offset = clip.getOffsetInBeats(),
+                    .loopSection = clip.getLoopRangeBeats(),
+                    .liveClipLevel = clip.getLiveClipLevel(),
+                    .sourceChannelsToUse = clip.getActiveChannels(),
+                    .destChannelsToFill = juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                    .itemID = idToUse,
+                    .isOfflineRender = params.forRendering,
+                    .resamplingQuality = clip.getResamplingQuality(),
+                    .speedFadeDescription = speedFadeDesc,
+                    .editTempoSequence = std::move (editTempoPosition),
+                    .warpMap = std::move (warpMap),
+                    .sourceFileTempoMap = std::move (seq),
+                    .syncTempo = syncTempo,
+                    .syncPitch = syncPitch,
+                    .chordPitchSequence = getChordTrackSequenceIfRequired (clip),
+                    .pitchChangeSemitones = clip.getPitchChange(),
+                    .readAhead = readAhead
+                };
+                node = makeNode<WaveNodeRealTime> (std::move (config));
             }
             else
             {

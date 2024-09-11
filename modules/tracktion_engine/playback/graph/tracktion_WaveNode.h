@@ -90,7 +90,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
 };
 
-
 //==============================================================================
 //==============================================================================
 /**
@@ -134,6 +133,36 @@ public:
 
     /** Represets whether the file should try and match Edit pitch changes. */
     enum class SyncPitch : bool { no, yes };
+
+    /** Options for a beat-based WaveNodeRealTime. */
+    struct BeatConfig
+    {
+        ProcessState& processState;
+        const AudioFile& audioFile;
+        TimeStretcher::Mode timeStretchMode = TimeStretcher::Mode::disabled;
+        TimeStretcher::ElastiqueProOptions elastiqueProOptions;
+        BeatRange editTime;
+        BeatDuration offset;
+        BeatRange loopSection;
+        LiveClipLevel liveClipLevel;
+        juce::AudioChannelSet sourceChannelsToUse;
+        juce::AudioChannelSet destChannelsToFill;
+        EditItemID itemID;
+        bool isOfflineRender = false;
+        ResamplingQuality resamplingQuality = ResamplingQuality::lagrange;
+        SpeedFadeDescription speedFadeDescription;
+        std::optional<tempo::Sequence::Position> editTempoSequence;
+        std::optional<WarpMap> warpMap;
+        tempo::Sequence sourceFileTempoMap;
+        SyncTempo syncTempo = SyncTempo::no;
+        SyncPitch syncPitch = SyncPitch::no;
+        std::optional<tempo::Sequence> chordPitchSequence;
+        float pitchChangeSemitones = 1.0f;
+        ReadAhead readAhead = ReadAhead::no;
+    };
+
+    /** Constructs a beat-based WaveNodeRealTime. */
+    WaveNodeRealTime (BeatConfig);
 
     /**
         @param sourceFileTempoMap   A tempo map describing the changes in the source file.
