@@ -84,12 +84,18 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Disabler.html">Disabler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporarily disables change events e.g.  <a href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Disabler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html">Listener</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a80cf2eba8ab06e913e1ddc999c1e2a50"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a80cf2eba8ab06e913e1ddc999c1e2a50">ParameterChangeHandler</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="memdesc:a80cf2eba8ab06e913e1ddc999c1e2a50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html" title="Manages a set of AutomatableParameters for an Edit and notifies controllers and registered listeners ...">ParameterChangeHandler</a> for a given <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a80cf2eba8ab06e913e1ddc999c1e2a50">More...</a><br /></td></tr>
 <tr class="separator:a80cf2eba8ab06e913e1ddc999c1e2a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d77c6b0b767f34c4bab9d65a51cdc5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a2d77c6b0b767f34c4bab9d65a51cdc5e">addListener</a> (<a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html">Listener</a> &amp;)</td></tr>
+<tr class="separator:a2d77c6b0b767f34c4bab9d65a51cdc5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1098ad6410e097fe2bcdf6b46078c1b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a1098ad6410e097fe2bcdf6b46078c1b0">removeListener</a> (<a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html">Listener</a> &amp;)</td></tr>
+<tr class="separator:a1098ad6410e097fe2bcdf6b46078c1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a735f018346422dd458bf46819ddedfc3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a735f018346422dd458bf46819ddedfc3">isEventPending</a> () const noexcept</td></tr>
 <tr class="memdesc:a735f018346422dd458bf46819ddedfc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if there is either a parameter or action waiting to be assigned.  <a href="classtracktion_1_1engine_1_1ParameterChangeHandler.html#a735f018346422dd458bf46819ddedfc3">More...</a><br /></td></tr>
 <tr class="separator:a735f018346422dd458bf46819ddedfc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,6 +145,42 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2d77c6b0b767f34c4bab9d65a51cdc5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d77c6b0b767f34c4bab9d65a51cdc5e">&#9670;&nbsp;</a></span>addListener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ParameterChangeHandler::addListener </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html">Listener</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1098ad6410e097fe2bcdf6b46078c1b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1098ad6410e097fe2bcdf6b46078c1b0">&#9670;&nbsp;</a></span>removeListener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ParameterChangeHandler::removeListener </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html">Listener</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a735f018346422dd458bf46819ddedfc3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a735f018346422dd458bf46819ddedfc3">&#9670;&nbsp;</a></span>isEventPending()</h2>
 
@@ -356,7 +398,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 11 2024 17:51:31 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Thu Sep 12 2024 09:48:44 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

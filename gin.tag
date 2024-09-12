@@ -5025,6 +5025,7 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/automation/</path>
     <filename>tracktion__ParameterChangeHandler_8h.html</filename>
     <class kind="class">tracktion::engine::ParameterChangeHandler</class>
+    <class kind="struct">tracktion::engine::ParameterChangeHandler::Listener</class>
     <class kind="struct">tracktion::engine::ParameterChangeHandler::Disabler</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -42421,6 +42422,24 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::ParameterChangeHandler::Listener</name>
+    <filename>structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html</anchorfile>
+      <anchor>ac4288ae4e472d3b23c8e7560ce9de56e</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>pluginParameterChanged</name>
+      <anchorfile>structtracktion_1_1engine_1_1ParameterChangeHandler_1_1Listener.html</anchorfile>
+      <anchor>a71f66fb16428a78093aa7389dae656f1</anchor>
+      <arglist>(AutomatableParameter &amp;, bool isFollowingAutomation)=0</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::PhysicalMidiInputDevice::Listener</name>
     <filename>classtracktion_1_1engine_1_1PhysicalMidiInputDevice_1_1Listener.html</filename>
@@ -53114,12 +53133,27 @@
     <name>tracktion::engine::ParameterChangeHandler</name>
     <filename>classtracktion_1_1engine_1_1ParameterChangeHandler.html</filename>
     <class kind="struct">tracktion::engine::ParameterChangeHandler::Disabler</class>
+    <class kind="struct">tracktion::engine::ParameterChangeHandler::Listener</class>
     <member kind="function">
       <type></type>
       <name>ParameterChangeHandler</name>
       <anchorfile>classtracktion_1_1engine_1_1ParameterChangeHandler.html</anchorfile>
       <anchor>a80cf2eba8ab06e913e1ddc999c1e2a50</anchor>
       <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1ParameterChangeHandler.html</anchorfile>
+      <anchor>a2d77c6b0b767f34c4bab9d65a51cdc5e</anchor>
+      <arglist>(Listener &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classtracktion_1_1engine_1_1ParameterChangeHandler.html</anchorfile>
+      <anchor>a1098ad6410e097fe2bcdf6b46078c1b0</anchor>
+      <arglist>(Listener &amp;)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>

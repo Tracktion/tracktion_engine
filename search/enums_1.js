@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['category_14170',['Category',['../classtracktion_1_1engine_1_1ProjectItem.html#a863e45f26bfc71747622cf23cfef8514',1,'tracktion::engine::ProjectItem']]],
-  ['changetype_14171',['ChangeType',['../classtracktion_1_1engine_1_1MidiLearnState.html#ac813f7bccffc6d29c9dac1049cf2de11',1,'tracktion::engine::MidiLearnState']]],
-  ['channel_14172',['Channel',['../classtracktion_1_1engine_1_1RackInstance.html#a7933458ffdc09160dee8ae5e678c3073',1,'tracktion::engine::RackInstance']]],
-  ['chordtype_14173',['ChordType',['../classtracktion_1_1engine_1_1Chord.html#ae91300775fb639572d8aabbb0d2a1e7e',1,'tracktion::engine::Chord']]],
-  ['clearbuffers_14174',['ClearBuffers',['../namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33d',1,'tracktion::ClearBuffers()'],['../namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33d',1,'tracktion::graph::ClearBuffers()']]],
-  ['clipdirection_14175',['ClipDirection',['../classtracktion_1_1engine_1_1AudioClipBase.html#ad8f885dd3dfab9f6928a33a74089d992',1,'tracktion::engine::AudioClipBase']]],
-  ['closegap_14176',['CloseGap',['../namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34c',1,'tracktion::CloseGap()'],['../namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34c',1,'tracktion::engine::CloseGap()']]],
-  ['compressionlevel_14177',['CompressionLevel',['../classtracktion_1_1engine_1_1ExportJob.html#ad629bc3fb185219000c4d92759a24c5a',1,'tracktion::engine::ExportJob']]],
-  ['compressiontype_14178',['CompressionType',['../classtracktion_1_1engine_1_1TracktionArchiveFile.html#ac94769b3f8066dbb2a561521c2c0d67f',1,'tracktion::engine::TracktionArchiveFile']]],
-  ['continuityflags_14179',['ContinuityFlags',['../structtracktion_1_1engine_1_1AudioRenderContext.html#af677a61efc8ba15458a11a3170aa6b78',1,'tracktion::engine::AudioRenderContext']]],
-  ['countin_14180',['CountIn',['../classtracktion_1_1engine_1_1Edit.html#a5ecd9cc3e9357f31269f6cbc7ca79c4c',1,'tracktion::engine::Edit']]]
+  ['category_14177',['Category',['../classtracktion_1_1engine_1_1ProjectItem.html#a863e45f26bfc71747622cf23cfef8514',1,'tracktion::engine::ProjectItem']]],
+  ['changetype_14178',['ChangeType',['../classtracktion_1_1engine_1_1MidiLearnState.html#ac813f7bccffc6d29c9dac1049cf2de11',1,'tracktion::engine::MidiLearnState']]],
+  ['channel_14179',['Channel',['../classtracktion_1_1engine_1_1RackInstance.html#a7933458ffdc09160dee8ae5e678c3073',1,'tracktion::engine::RackInstance']]],
+  ['chordtype_14180',['ChordType',['../classtracktion_1_1engine_1_1Chord.html#ae91300775fb639572d8aabbb0d2a1e7e',1,'tracktion::engine::Chord']]],
+  ['clearbuffers_14181',['ClearBuffers',['../namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33d',1,'tracktion::ClearBuffers()'],['../namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33d',1,'tracktion::graph::ClearBuffers()']]],
+  ['clipdirection_14182',['ClipDirection',['../classtracktion_1_1engine_1_1AudioClipBase.html#ad8f885dd3dfab9f6928a33a74089d992',1,'tracktion::engine::AudioClipBase']]],
+  ['closegap_14183',['CloseGap',['../namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34c',1,'tracktion::CloseGap()'],['../namespacetracktion_1_1engine.html#a2b33ff26f5a23b76bceb9d152c43b34c',1,'tracktion::engine::CloseGap()']]],
+  ['compressionlevel_14184',['CompressionLevel',['../classtracktion_1_1engine_1_1ExportJob.html#ad629bc3fb185219000c4d92759a24c5a',1,'tracktion::engine::ExportJob']]],
+  ['compressiontype_14185',['CompressionType',['../classtracktion_1_1engine_1_1TracktionArchiveFile.html#ac94769b3f8066dbb2a561521c2c0d67f',1,'tracktion::engine::TracktionArchiveFile']]],
+  ['continuityflags_14186',['ContinuityFlags',['../structtracktion_1_1engine_1_1AudioRenderContext.html#af677a61efc8ba15458a11a3170aa6b78',1,'tracktion::engine::AudioRenderContext']]],
+  ['countin_14187',['CountIn',['../classtracktion_1_1engine_1_1Edit.html#a5ecd9cc3e9357f31269f6cbc7ca79c4c',1,'tracktion::engine::Edit']]]
 ];
