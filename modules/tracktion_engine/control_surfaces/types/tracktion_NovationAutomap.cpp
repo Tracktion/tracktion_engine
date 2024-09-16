@@ -898,7 +898,7 @@ void NovationAutomap::currentEditChanged (Edit* e)
             selectionManager->removeChangeListener (this);
 
         if (auto oldEdit = getEdit())
-            oldEdit->getParameterChangeHandler().removeListener (this);
+            oldEdit->getParameterChangeHandler().removeListener (*this);
 
         ControlSurface::currentEditChanged (e);
 
@@ -922,7 +922,7 @@ void NovationAutomap::currentEditChanged (Edit* e)
             load (*edit);
 
             if (edit->shouldPlay())
-                edit->getParameterChangeHandler().addListener (this);
+                edit->getParameterChangeHandler().addListener (*this);
         }
     }
 }
@@ -946,7 +946,7 @@ void NovationAutomap::initialiseDevice (bool connect)
 }
 
 
-void NovationAutomap::pluginParameterChanged (AutomatableParameter& param, bool isFollowingAutomation)
+void NovationAutomap::pluginParameterChanged (AutomatableParameter& param, bool /*isFollowingAutomation*/)
 {
     if (hostAutomap != nullptr)
         hostAutomap->paramChangedInt (param);
