@@ -868,33 +868,33 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
             aux->setMute (! aux->isMute());
 }
 
-void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum)
+void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum, bool press)
 {
     if (launchClip && currentEdit)
         if (auto t = getChannelTrack (channelNum))
-            launchClip (*currentEdit, *t, sceneNum);
+            launchClip (*currentEdit, *t, sceneNum, press);
 }
 
-void ExternalControllerManager::userStoppedClip (int channelNum)
+void ExternalControllerManager::userStoppedClip (int channelNum, bool press)
 {
     if (stopClip && currentEdit)
     {
         if (channelNum >= 0)
         {
             auto t = getChannelTrack (channelNum);
-            stopClip (*currentEdit, t);
+            stopClip (*currentEdit, t, press);
         }
         else
         {
-            stopClip (*currentEdit, nullptr);
+            stopClip (*currentEdit, nullptr, press);
         }
     }
 }
 
-void ExternalControllerManager::userLaunchedScene (int sceneNum)
+void ExternalControllerManager::userLaunchedScene (int sceneNum, bool press)
 {
     if (launchScene && currentEdit)
-        launchScene (*currentEdit, sceneNum);
+        launchScene (*currentEdit, sceneNum, press);
 }
 
 void ExternalControllerManager::userMovedQuickParam (float newLevel)
