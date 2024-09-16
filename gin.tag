@@ -22483,22 +22483,22 @@
       <type>void</type>
       <name>userLaunchedClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aedbf42b1369dd075f58c0cd28919156a</anchor>
-      <arglist>(int channelNum, int sceneNum)</arglist>
+      <anchor>a7e9b69a699a776edb535b2ebe694a242</anchor>
+      <arglist>(int channelNum, int sceneNum, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userStoppedClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>ae16951b5fb08d9a4fbed50759bc22c66</anchor>
-      <arglist>(int channelNum)</arglist>
+      <anchor>ab33073be258c2b4fddb90d01f47bdb55</anchor>
+      <arglist>(int channelNum, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userLaunchedScene</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a378b28db55c104620e6bdc2aba506670</anchor>
-      <arglist>(int sceneNum)</arglist>
+      <anchor>aca3483de39be2c9242bd73d220627cde</anchor>
+      <arglist>(int sceneNum, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -35677,22 +35677,22 @@
       <type>void</type>
       <name>userLaunchedClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>abd3dc29f3640bf136c1ee1cc75fa965e</anchor>
-      <arglist>(int channelNum, int clip)</arglist>
+      <anchor>abb48895c059bab919008639997b7d9fc</anchor>
+      <arglist>(int channelNum, int clip, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userStoppedClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>aed177573cd000a77c60ce40a583b5944</anchor>
-      <arglist>(int channelNum)</arglist>
+      <anchor>abaf000f37a837de70507c637ddd26e11</anchor>
+      <arglist>(int channelNum, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userLaunchedScene</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a8e5b3ffb31b26521deeadbeb6655c18f</anchor>
-      <arglist>(int scene)</arglist>
+      <anchor>ab57fd8ced001c4b405fbec637fee9497</anchor>
+      <arglist>(int scene, bool press)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -35765,24 +35765,24 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; void(Edit &amp;, Track &amp;, int)&gt;</type>
+      <type>std::function&lt; void(Edit &amp;, Track &amp;, int, bool)&gt;</type>
       <name>launchClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a8ddcbdf48dfcb8b1ce01306ec027f966</anchor>
+      <anchor>aad8ee7d46f1767da1dea9b50a3372328</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; void(Edit &amp;, Track *)&gt;</type>
+      <type>std::function&lt; void(Edit &amp;, Track *, bool)&gt;</type>
       <name>stopClip</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>aa5090e9921c70e286d23706d9592494a</anchor>
+      <anchor>a904031c4c3ecccc4095eec6aa00c710d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; void(Edit &amp;, int)&gt;</type>
+      <type>std::function&lt; void(Edit &amp;, int, bool)&gt;</type>
       <name>launchScene</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a7d456a87c0d4ba5ce4de31b6d4d67b70</anchor>
+      <anchor>a6dac2ba62de656c6509b66686fb48466</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">

@@ -116,7 +116,7 @@ var searchData=
   ['stepdepthparam_14017',['stepDepthParam',['../classtracktion_1_1engine_1_1RandomModifier.html#abd1dcf83f48c9c6f2c66591153d8af22',1,'tracktion::engine::RandomModifier']]],
   ['stepmodifierid_14018',['stepModifierID',['../structtracktion_1_1engine_1_1StepModifier_1_1Assignment.html#aa667874898706b43ae547ae707bde18d',1,'tracktion::engine::StepModifier::Assignment']]],
   ['stereo_14019',['stereo',['../classtracktion_1_1engine_1_1RenderOptions.html#a21425ba8da656d43ddc8dbc9205b8567',1,'tracktion::engine::RenderOptions']]],
-  ['stopclip_14020',['stopClip',['../classtracktion_1_1engine_1_1ExternalControllerManager.html#aa5090e9921c70e286d23706d9592494a',1,'tracktion::engine::ExternalControllerManager']]],
+  ['stopclip_14020',['stopClip',['../classtracktion_1_1engine_1_1ExternalControllerManager.html#a904031c4c3ecccc4095eec6aa00c710d',1,'tracktion::engine::ExternalControllerManager']]],
   ['storedname_14021',['storedName',['../structtracktion_1_1engine_1_1TracktionArchiveFile_1_1IndexEntry.html#a9242342bc591ab79369ecffe3792b4b2',1,'tracktion::engine::TracktionArchiveFile::IndexEntry']]],
   ['streamtime_14022',['streamTime',['../structtracktion_1_1engine_1_1AudioRenderContext.html#afc57dcdb5976ba618d4f882d89c653c0',1,'tracktion::engine::AudioRenderContext']]],
   ['stretchratio_14023',['stretchRatio',['../structtracktion_1_1engine_1_1AudioSegmentList_1_1Segment.html#a52815376e48d80358bacfefeb6ffbed3',1,'tracktion::engine::AudioSegmentList::Segment']]],
