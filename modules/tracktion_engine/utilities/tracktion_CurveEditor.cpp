@@ -130,7 +130,11 @@ void CurveEditor::paint (juce::Graphics& g)
         g.setColour (getCurveNameTextBackgroundColour());
         auto text = getCurveName();
         g.setFont (13.0f);
+       #if JUCE_MAJOR_VERSION >= 8
+        auto tw = juce::GlyphArrangement::getStringWidthInt (g.getCurrentFont(), text);
+       #else
         auto tw = g.getCurrentFont().getStringWidth (text);
+       #endif
         auto tx = getCurveNameOffset() - (tw + 8);
         g.fillRect (tx, 0, tw + 6, 16);
 
