@@ -1095,6 +1095,7 @@ void DeviceManager::setDefaultWaveOutDevice (juce::String deviceID)
                                                              deviceManager.getCurrentAudioDeviceType(),
                                                              deviceID);
                 rescanWaveDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1113,6 +1114,7 @@ void DeviceManager::setDefaultWaveInDevice (juce::String deviceID)
                                                              deviceManager.getCurrentAudioDeviceType(),
                                                              deviceID);
                 rescanWaveDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1128,6 +1130,7 @@ void DeviceManager::setDefaultMidiOutDevice (juce::String deviceID)
             {
                 engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, deviceID);
                 rescanMidiDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1143,6 +1146,7 @@ void DeviceManager::setDefaultMidiInDevice (juce::String deviceID)
             {
                 engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, deviceID);
                 rescanMidiDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1164,8 +1168,10 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
         }
 
         rescanWaveDeviceList();
+        reloadAllContextDevices();
     }
 }
+
 std::vector<WaveOutputDevice*> DeviceManager::getWaveOutputDevices()
 {
     dispatchPendingUpdates();
