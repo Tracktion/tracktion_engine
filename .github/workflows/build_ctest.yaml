@@ -49,10 +49,12 @@ jobs:
           - name: macOS_analyse
             target: TestRunner
             os: macos-latest
+            config_preset: "xcode"
             analyse: true
           - name: macOS_analyse
             target: Benchmarks
             os: macos-latest
+            config_preset: "xcode"
             analyse: true
 
     runs-on: ${{ matrix.os }}
