@@ -405,9 +405,10 @@ protected:
 
 private:
     mutable AsyncCaller trackDeviceEnabler, recordStatusUpdater;
-    bool wasLivePlayActive = false;
+    bool wasLivePlayActive = false, destinationsChanged = false;
     std::vector<EditItemID> changedTargetTrackIDs;
     void updateRecordingStatus();
+    void handleDestinationChange (EditItemID, bool);
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (InputDeviceInstance)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputDeviceInstance)

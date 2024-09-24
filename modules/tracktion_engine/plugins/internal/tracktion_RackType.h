@@ -202,6 +202,7 @@ public:
     RackType::Ptr findRackContaining (Plugin&) const;
     RackType::Ptr addRackTypeFrom (const juce::ValueTree&);
     RackType::Ptr addNewRack();
+    RackType::Ptr duplicateRack (EditItemID);
     void removeRackType (const RackType::Ptr& type);
     void importRackFiles (const juce::Array<juce::File>&);
 

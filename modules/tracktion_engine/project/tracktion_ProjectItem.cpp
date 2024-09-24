@@ -486,8 +486,11 @@ void ProjectItem::setName (const juce::String& n, SetNameMode mode)
 
             if (shouldRename)
             {
-                newDstFile = src.getParentDirectory().getChildFile (juce::File::createLegalFileName (n))
-                                                     .withFileExtension (src.getFileExtension());
+                // Don't use "withFileExtension" here as it will strip any name text after a period "."
+                const auto legalFileName = juce::File::createLegalFileName (n);
+                newDstFile = src.getParentDirectory().getChildFile (legalFileName + src.getFileExtension());
+                assert (newDstFile.hasFileExtension (src.getFileExtension()));
+                assert (newDstFile.getFileNameWithoutExtension() == legalFileName);
 
                 startTimer (1);
             }

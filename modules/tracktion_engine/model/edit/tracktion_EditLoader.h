@@ -24,19 +24,26 @@ public:
     /**
         A handle to a loading Edit.
         This internally runs a thread that loads the Edit.
+
+        You must keep the Handle alive in order to load the Edit. If it gets deleted
+        it will cancel the load.
     */
     class Handle
     {
     public:
-        /// Destructor
+        /// Destructor. Deleting the handle cancels the load process.
         ~Handle();
 
-        /// The LoadContext which can be used to get progress, status or cancel the job.
-        Edit::LoadContext loadContext;
+        /// Cancels loading the Edit
+        void cancel();
+
+        /// Returns the progress of the Edit load
+        float getProgress() const;
 
     private:
         friend EditLoader;
         std::thread loadThread;
+        Edit::LoadContext loadContext;
 
         Handle() = default;
     };
@@ -44,14 +51,14 @@ public:
     //==============================================================================
     /** Loads an Edit asyncronously on a background thread.
         This returns a Handle with a LoadContext which you can use to cancel the
-        operation or poll to get progress/status messages.
+        operation or poll to get progressstatus messages.
     */
     static std::shared_ptr<Handle> loadEdit (Edit::Options,
                                              std::function<void (std::unique_ptr<Edit>)> editLoadedCallback);
 
     /** Loads an Edit asyncronously from a file on a background thread.
         This returns a Handle with a LoadContext which you can use to cancel the
-        operation or poll to get progress/status messages.
+        operation or poll to get progress.
     */
     static std::shared_ptr<Handle> loadEdit (Engine&,
                                              juce::File,

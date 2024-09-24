@@ -27,7 +27,6 @@ public:
     juce::String getName() const override       { return TRANS("Pitch Shifter"); }
     juce::String getPluginType() override       { return xmlTypeName; }
     juce::String getShortName (int) override    { return TRANS("Pitch"); }
-    bool needsConstantBufferSize() override     { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

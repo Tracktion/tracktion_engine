@@ -1607,6 +1607,9 @@ bool MidiInputDevice::handleIncomingMessage (juce::MidiMessage& m)
 
     m.addToTimeStamp (adjustSecs);
 
+    if (overrideNoteVels && m.isNoteOn())
+        m.setVelocity (1.0f);
+
     if (! retrospectiveRecordLock && retrospectiveBuffer != nullptr)
         retrospectiveBuffer->addMessage (m, adjustSecs);
 

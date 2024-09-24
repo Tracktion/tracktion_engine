@@ -29,7 +29,6 @@ public:
     juce::String getPluginType() override           { return xmlTypeName; }
     juce::String getShortName (int) override        { return "EQ"; }
     juce::String getTooltip() override;
-    bool needsConstantBufferSize() override         { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, (int) EQ_CHANS); }
 

@@ -194,7 +194,10 @@ public:
     virtual void reset();
 
     /** Track name or colour has changed. */
-    virtual void trackPropertiesChanged() {}
+    virtual void trackPropertiesChanged();
+
+    /** Tells the plugin to turn off any playing notes, if applicable */
+    virtual void midiPanic();
 
     //==============================================================================
     /** Process the next block of data.
@@ -214,10 +217,11 @@ public:
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);
 
+    //==============================================================================
     /** Plugins can return false if they want to avoid the overhead of measuring the CPU usage.
         It's a small overhead but with many tracks, the level meters and vol/pan plugins can make a difference.
     */
-    virtual bool shoulMeasureCpuUsage() const noexcept  { return true; }
+    virtual bool shouldMeasureCpuUsage() const noexcept  { return true; }
 
     /** Returns the proportion of the current buffer size spent processing this plugin. */
     double getCpuUsage() const noexcept     { return juce::jlimit (0.0, 1.0, timeToCpuScale * cpuUsageMs.load()); }
@@ -242,6 +246,12 @@ public:
     virtual double getLatencySeconds()                  { return 0.0; }
     virtual double getTailLength() const                { return 0.0; }
     virtual bool canSidechain();
+
+    //==============================================================================
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange);
+    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange,
+                                    std::function<juce::String(float)> valueToStringFunction,
+                                    std::function<float(const juce::String&)> stringToValueFunction);
 
     juce::StringArray getInputChannelNames();
     juce::StringArray getSidechainSourceNames (bool allowNone);
@@ -284,7 +294,7 @@ public:
     virtual bool canBeAddedToMaster()                                   { return true; }
     virtual bool canBeDisabled()                                        { return true; }
     virtual bool canBeMoved()                                           { return true; }
-    virtual bool needsConstantBufferSize() = 0;
+    virtual bool needsConstantBufferSize()                              { return false; }
 
     /** for things like VSTs where the DLL is missing.    */
     virtual bool isMissing()                                            { return false; }
@@ -418,12 +428,6 @@ protected:
     void valueTreeParentChanged (juce::ValueTree&) override;
 
     virtual void processingChanged();
-
-    //==============================================================================
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange);
-    AutomatableParameter* addParam (const juce::String& paramID, const juce::String& name, juce::NormalisableRange<float> valueRange,
-                                    std::function<juce::String(float)> valueToStringFunction,
-                                    std::function<float(const juce::String&)> stringToValueFunction);
 
     //==============================================================================
     static void getLeftRightChannelNames (juce::StringArray* ins, juce::StringArray* outs);

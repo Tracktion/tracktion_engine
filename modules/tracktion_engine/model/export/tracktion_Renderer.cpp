@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
 void Renderer::turnOffAllPlugins (Edit& edit)
@@ -39,7 +39,6 @@ namespace render_utils
         cnp.forRendering = true;
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
-        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
         cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
@@ -79,35 +78,42 @@ struct Ditherers
 };
 
 //==============================================================================
-static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
+inline void addAcidInfo (Edit& edit, Renderer::Parameters& r)
 {
     if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0s)
+        r.metadata.addArray (createAcidInfo (edit, r.time));
+}
+
+juce::StringPairArray createAcidInfo (Edit& edit, TimeRange time)
+{
+    juce::StringPairArray metadata;
+
+    auto& pitch = edit.pitchSequence.getPitchAt (time.getStart());
+    auto& tempo = edit.tempoSequence.getTempoAt (time.getStart());
+    auto& timeSig = edit.tempoSequence.getTimeSigAt (time.getStart());
+
+    metadata.set (juce::WavAudioFormat::acidOneShot, "0");
+    metadata.set (juce::WavAudioFormat::acidRootSet, "1");
+    metadata.set (juce::WavAudioFormat::acidDiskBased, "1");
+    metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
+    metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
+
+    auto beats = tempo.getBpm() * (time.getLength().inSeconds() / 60);
+
+    if (std::abs (beats - int (beats)) < 0.001)
     {
-        auto& pitch = edit.pitchSequence.getPitchAt (r.time.getStart());
-        auto& tempo = edit.tempoSequence.getTempoAt (r.time.getStart());
-        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.getStart());
-
-        r.metadata.set (juce::WavAudioFormat::acidOneShot, "0");
-        r.metadata.set (juce::WavAudioFormat::acidRootSet, "1");
-        r.metadata.set (juce::WavAudioFormat::acidDiskBased, "1");
-        r.metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
-        r.metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
-
-        auto beats = tempo.getBpm() * (r.time.getLength().inSeconds() / 60);
-
-        if (std::abs (beats - int (beats)) < 0.001)
-        {
-            r.metadata.set (juce::WavAudioFormat::acidStretch, "1");
-            r.metadata.set (juce::WavAudioFormat::acidBeats, juce::String (juce::roundToInt (beats)));
-            r.metadata.set (juce::WavAudioFormat::acidDenominator, juce::String (timeSig.denominator.get()));
-            r.metadata.set (juce::WavAudioFormat::acidNumerator, juce::String (timeSig.numerator.get()));
-            r.metadata.set (juce::WavAudioFormat::acidTempo, juce::String (tempo.getBpm()));
-        }
-        else
-        {
-            r.metadata.set (juce::WavAudioFormat::acidStretch, "0");
-        }
+        metadata.set (juce::WavAudioFormat::acidStretch, "1");
+        metadata.set (juce::WavAudioFormat::acidBeats, juce::String (juce::roundToInt (beats)));
+        metadata.set (juce::WavAudioFormat::acidDenominator, juce::String (timeSig.denominator.get()));
+        metadata.set (juce::WavAudioFormat::acidNumerator, juce::String (timeSig.numerator.get()));
+        metadata.set (juce::WavAudioFormat::acidTempo, juce::String (tempo.getBpm()));
     }
+    else
+    {
+        metadata.set (juce::WavAudioFormat::acidStretch, "0");
+    }
+
+    return metadata;
 }
 
 //==============================================================================
@@ -135,7 +141,6 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.forRendering = true;
     cnp.includePlugins = r.usePlugins;
     cnp.includeMasterPlugins = r.useMasterPlugins;
-    cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
     cnp.includeBypassedPlugins = false;
     cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
@@ -156,6 +161,9 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
      sourceToUpdate (source)
 {
+    assert (playHead);
+    assert (playHeadState);
+    assert (processState);
 }
 
 Renderer::RenderTask::~RenderTask()
@@ -439,7 +447,6 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
         r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
         r.time = range;
-        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
         r.usePlugins = usePlugins;
         r.useMasterPlugins = usePlugins;
         r.tracksToDo = tracksToDo;
@@ -520,7 +527,7 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
     return {};
 }
 
-ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r)
+ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r, ProjectItem::Category category)
 {
     CRASH_TRACER
 
@@ -540,7 +547,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
         return {};
     }
 
-    if (r.category == ProjectItem::Category::none)
+    if (category == ProjectItem::Category::none)
     {
         // This test comes from some very old code which leaks the file and doesn't add the project item
         // if the category is 'none'... I've left the check in here but think it may be redundant - if you
@@ -563,7 +570,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
                                                      : ProjectItem::waveItemType(),
                                     renderedFile.getFileNameWithoutExtension().trim(),
                                     desc,
-                                    r.category,
+                                    category,
                                     true);
     }
 
@@ -590,7 +597,6 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
         r.blockSizeForAudio = blockSizeForAudio;
         r.sampleRateForAudio = sampleRateForAudio;
         r.time = range;
-        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
         r.tracksToDo = tracksToDo;
 
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
@@ -645,4 +651,63 @@ bool Renderer::checkTargetFile (Engine& e, const juce::File& file)
     return true;
 }
 
-}} // namespace tracktion { inline namespace engine
+//==============================================================================
+//==============================================================================
+EditRenderer::Handle::~Handle()
+{
+    cancel();
+    renderThread.join();
+}
+
+void EditRenderer::Handle::cancel()
+{
+    hasBeenCancelled = true;
+}
+
+float EditRenderer::Handle::getProgress() const
+{
+    return progress;
+}
+
+auto EditRenderer::render (Renderer::Parameters r,
+                           std::function<void (tl::expected<juce::File, std::string>)> finishedCallback_,
+                           std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate) -> std::shared_ptr<Handle>
+{
+    assert (finishedCallback_ && "You must supply a finished callback");
+
+    std::shared_ptr<Handle> renderHandle (new Handle());
+    renderHandle->thumbnailToUpdate = std::move (thumbnailToUpdate);
+    auto srs = std::make_unique<Edit::ScopedRenderStatus> (*r.edit, false); // We can't reallocate as this object will be destroyed on a non-message thread
+
+    auto destFile = r.destFile;
+    auto renderTask = render_utils::createRenderTask (std::move (r), {},
+                                                      &renderHandle->progress,
+                                                      renderHandle->thumbnailToUpdate.get());
+
+    renderHandle->renderThread = std::thread ([destFile,
+                                              &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
+                                              finishedCallback = std::move (finishedCallback_),
+                                              task = std::move (renderTask),
+                                              scopedRenderState = std::move (srs)]
+    {
+        for (;;)
+        {
+            if (hasBeenCancelledFlag)
+                return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
+
+            if (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
+                continue;
+
+            // Finished
+            if (auto err = task->errorMessage; err.isNotEmpty())
+                return finishedCallback (tl::unexpected (err.toStdString()));
+
+            return finishedCallback (destFile);
+        }
+    });
+
+    return renderHandle;
+}
+
+
+} // namespace tracktion::inline engine

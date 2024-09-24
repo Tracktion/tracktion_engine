@@ -637,6 +637,11 @@ private:
  #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
+#if JUCE_WINDOWS
+ #pragma warning (push)
+ #pragma warning (disable: 4456)
+#endif
+
 #define WIN32_LEAN_AND_MEAN 1
 #define Point CarbonDummyPointName
 #define Component CarbonDummyCompName
@@ -664,6 +669,10 @@ namespace tracktion { inline namespace engine {
 #undef WIN32_LEAN_AND_MEAN
 #undef Point
 #undef Component
+
+#if JUCE_WINDOWS
+ #pragma warning (pop)
+#endif
 
 #ifdef __GNUC__
  #pragma GCC diagnostic pop

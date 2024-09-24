@@ -19,7 +19,6 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
 {
     jassert (isClipState (state));
     jassert (getParent() == &targetParent);
-    edit.clipCache.addItem (*this);
 
     auto um = getUndoManager();
     clipName.referTo (state, IDs::name, um);
@@ -48,6 +47,7 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
     state.addListener (this);
 
     updateLinkedClipsCaller.setFunction ([this] { updateLinkedClips(); });
+    edit.clipCache.addItem (*this);
 }
 
 Clip::~Clip()

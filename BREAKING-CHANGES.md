@@ -3,6 +3,21 @@
 ## Develop
 
 ### Change
+The `Edit` constructor can now throw exceptions in rare cases. E.g. if it's being constructed on the message thread which is blocked.
+
+#### Possible Issues
+You may need to catch this exception.
+
+#### Workaround
+It's generally safer to use Edit::createEdit as this will catch the exception
+and just return a nullptr.
+
+
+#### Rationale
+Previously if the above scenario happened, the Edit would just be left in an invalid (likely to crash) state. Ths stops that happening.
+
+___
+### Change
 The APIs around `InputDevice` and `InputDeviceInstance` have been simplified to work more with `EditItemID`s.
 
 #### Possible Issues

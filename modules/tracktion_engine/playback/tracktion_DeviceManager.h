@@ -30,8 +30,10 @@ public:
     //==============================================================================
     ~DeviceManager() override;
 
-    void initialise (int defaultNumInputChannelsToOpen = 512,
-                     int defaultNumOutputChannelsToOpen = 512);
+    static constexpr int defaultNumChannelsToOpen = 512;
+
+    void initialise (int defaultNumInputChannelsToOpen  = defaultNumChannelsToOpen,
+                     int defaultNumOutputChannelsToOpen = defaultNumChannelsToOpen);
     void closeDevices();
     void saveSettings();
 
@@ -138,6 +140,12 @@ public:
     void setDeviceInChannelStereo (int channelNum, bool isStereoPair);
     bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }
     bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
+
+    void enableAllWaveInputs();
+    void enableAllWaveOutputs();
+
+    void setAllWaveInputsToStereoPair();
+    void setAllWaveOutputsToStereoPair();
 
     //==============================================================================
     int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }

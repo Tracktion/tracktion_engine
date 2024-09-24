@@ -41,7 +41,6 @@ public:
 
     juce::String getName() const override                               { return getPluginName(); }
     juce::String getPluginType() override                               { return xmlTypeName; }
-    bool needsConstantBufferSize() override                             { return false; }
     juce::String getSelectableDescription() override                    { return getName(); }
 
     void initialise(const PluginInitialisationInfo&) override           {}

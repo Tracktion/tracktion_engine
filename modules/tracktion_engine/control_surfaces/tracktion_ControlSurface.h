@@ -278,9 +278,9 @@ public:
     void userSelectedClipInTrack (int channelNum);
     void userSelectedPluginInTrack (int channelNum);
     void userPressedRecEnable (int channelNum, bool enableEtoE);
-    void userLaunchedClip (int channelNum, int sceneNum);
-    void userStoppedClip (int channelNum);
-    void userLaunchedScene (int sceneNum);
+    void userLaunchedClip (int channelNum, int sceneNum, bool press);
+    void userStoppedClip (int channelNum, bool press);
+    void userLaunchedScene (int sceneNum, bool press);
     void userPressedPlay();
     void userPressedRecord();
     void userPressedStop();

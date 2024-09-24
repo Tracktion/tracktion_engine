@@ -292,7 +292,9 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
         double getTempoFromLink() override
         {
-            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            if (juce::MessageManager::existsAndIsCurrentThread())
+                return link.captureAppSessionState().tempo();
+
             return link.captureAudioSessionState().tempo();
         }
 
@@ -555,12 +557,12 @@ double AbletonLink::getChaseProportion() const
     return implementation != nullptr ? implementation->chaseProportion.load() : 0.0;
 }
 
-double AbletonLink::getSessionTempo() const
+std::optional<double> AbletonLink::getSessionTempo() const
 {
     if (implementation != nullptr)
         return implementation->getTempoFromLink();
 
-    return 120.0;
+    return {};
 }
 
 void AbletonLink::setCustomOffset (int offsetMs)

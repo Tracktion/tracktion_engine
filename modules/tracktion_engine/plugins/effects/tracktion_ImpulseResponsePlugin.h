@@ -69,8 +69,6 @@ public:
     /** @internal */
     juce::String getPluginType() override;
     /** @internal */
-    bool needsConstantBufferSize() override;
-    /** @internal */
     juce::String getSelectableDescription() override;
 
     /** @internal */

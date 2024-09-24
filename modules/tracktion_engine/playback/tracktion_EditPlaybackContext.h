@@ -65,10 +65,6 @@ public:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScopedDeviceListReleaser)
     };
 
-    // This is a global setting
-    static bool shouldAddAntiDenormalisationNoise (Engine&);
-    static void setAddAntiDenormalisationNoise (Engine&, bool);
-
     //==============================================================================
     /**
         Used to temporarily reduce the process priority if a long operation like a file save is taking place.

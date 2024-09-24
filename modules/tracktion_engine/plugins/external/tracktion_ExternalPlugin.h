@@ -57,6 +57,7 @@ public:
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void reset() override;
+    void midiPanic() override;
     void setEnabled (bool enabled) override;
 
     juce::Array<Exportable::ReferencedItem> getReferencedItems() override;
@@ -83,7 +84,6 @@ public:
     double getLatencySeconds() override     { return latencySeconds; }
     bool noTail() override;
     double getTailLength() const override;
-    bool needsConstantBufferSize() override { return false; }
     void trackPropertiesChanged() override;
 
     juce::AudioProcessor* getWrappedAudioProcessor() const override     { return getAudioPluginInstance(); }
@@ -154,6 +154,7 @@ private:
 
     juce::MidiBuffer midiBuffer;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    std::atomic<bool> midiPanicNeeded { false };
 
     ActiveNoteList activeNotes;
 

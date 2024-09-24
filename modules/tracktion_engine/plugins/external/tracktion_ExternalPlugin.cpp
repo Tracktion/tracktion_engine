@@ -1137,6 +1137,7 @@ void ExternalPlugin::initialise (const PluginInitialisationInfo& info)
         mpeRemapper = std::make_unique<MPEChannelRemapper>();
 
     mpeRemapper->reset();
+    midiPanicNeeded = false;
 
     if (auto pi = getAudioPluginInstance())
     {
@@ -1216,9 +1217,25 @@ void ExternalPlugin::setEnabled (bool shouldEnable)
     }
 }
 
+void ExternalPlugin::midiPanic()
+{
+    midiPanicNeeded = true;
+}
+
 //==============================================================================
 void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, int numSamples, bool isPlaying)
 {
+    if (midiPanicNeeded)
+    {
+        midiPanicNeeded = false;
+
+        for (auto chan = 1; chan <= 16; ++chan)
+        {
+            midiBuffer.addEvent (juce::MidiMessage::allNotesOff (chan), 0);
+            midiBuffer.addEvent (juce::MidiMessage::controllerEvent (chan, 0x40, 0), 0); // sustain pedal off
+        }
+    }
+
     if (incoming.isAllNotesOff)
     {
         uint32_t eventsSentOnChannel = 0;
@@ -1315,109 +1332,113 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
     if (! isInstancePrepared.load (std::memory_order_acquire))
         return;
 
-    const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
+    bool pluginEnabled = isEnabled();
 
-    if (processedBypass || isEnabled())
+    if (! (pluginEnabled || fc.allowBypassedProcessing))
     {
-        assert (loadedInstance);
-        CRASH_TRACER_PLUGIN (getDebugName());
+        midiPanicNeeded = false;
+        return;
+    }
 
-        const juce::ScopedLock sl (processMutex);
-        auto pi = getAudioPluginInstance();
+    const bool processedBypass = ! pluginEnabled && fc.allowBypassedProcessing;
 
-        if (playhead != nullptr)
-            playhead->setCurrentContext (&fc);
+    assert (loadedInstance);
+    CRASH_TRACER_PLUGIN (getDebugName());
 
-        midiBuffer.clear();
+    const juce::ScopedLock sl (processMutex);
+    auto pi = getAudioPluginInstance();
 
-        if (fc.bufferForMidiMessages != nullptr)
-            prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.isPlaying);
+    if (playhead != nullptr)
+        playhead->setCurrentContext (&fc);
 
-        if (fc.destBuffer != nullptr)
+    midiBuffer.clear();
+
+    if (fc.bufferForMidiMessages != nullptr)
+        prepareIncomingMidiMessages (*fc.bufferForMidiMessages, fc.bufferNumSamples, fc.isPlaying);
+
+    if (fc.destBuffer != nullptr)
+    {
+        auto destNumChans = fc.destBuffer->getNumChannels();
+        jassert (destNumChans > 0);
+
+        auto numInputChannels = pi->getTotalNumInputChannels();
+        auto numOutputChannels = pi->getTotalNumOutputChannels();
+        auto numChansToProcess = std::max (std::max (1, numInputChannels), numOutputChannels);
+
+        if (destNumChans == numChansToProcess)
         {
-            auto destNumChans = fc.destBuffer->getNumChannels();
-            jassert (destNumChans > 0);
-
-            auto numInputChannels = pi->getTotalNumInputChannels();
-            auto numOutputChannels = pi->getTotalNumOutputChannels();
-            auto numChansToProcess = std::max (std::max (1, numInputChannels), numOutputChannels);
-
-            if (destNumChans == numChansToProcess)
-            {
-                processPluginBlock (*pi, fc, processedBypass);
-            }
-            else
-            {
-                AudioScratchBuffer asb (numChansToProcess, fc.bufferNumSamples);
-                auto& buffer = asb.buffer;
-
-                // Copy or existing channel or clear data
-                for (int i = 0; i < numChansToProcess; ++i)
-                {
-                    if (i < destNumChans)
-                        buffer.copyFrom (i, 0, *fc.destBuffer, i, fc.bufferStartSample, fc.bufferNumSamples);
-                    else
-                        buffer.clear (i, 0, fc.bufferNumSamples);
-                }
-
-                if (destNumChans == 1 && numInputChannels == 2)
-                {
-                    // If we're getting a mono in and need stereo, dupe the channel..
-                    buffer.copyFrom (1, 0, buffer, 0, 0, fc.bufferNumSamples);
-                }
-                else if (destNumChans == 2 && numInputChannels == 1)
-                {
-                    // If we're getting a stereo in and need mono, average the input..
-                    buffer.addFrom (0, 0, *fc.destBuffer, 1, fc.bufferStartSample, fc.bufferNumSamples);
-                    buffer.applyGain (0, 0, fc.bufferNumSamples, 0.5f);
-                }
-
-                PluginRenderContext fc2 (fc);
-                fc2.destBuffer = &asb.buffer;
-                fc2.bufferStartSample = 0;
-
-                processPluginBlock (*pi, fc2, processedBypass);
-
-                // Copy sample data back clearing unprocessed channels
-                for (int i = 0; i < destNumChans; ++i)
-                {
-                    if (i < numChansToProcess)
-                        fc.destBuffer->copyFrom (i, fc.bufferStartSample, buffer, i, 0, fc.bufferNumSamples);
-                    else if (i < 2 && numChansToProcess > 0) // convert mono output to stereo for next plugin
-                        fc.destBuffer->copyFrom (i, fc.bufferStartSample, buffer, 0, 0, fc.bufferNumSamples);
-                    else
-                        fc.destBuffer->clear (i, fc.bufferStartSample, fc.bufferNumSamples);
-                }
-            }
+            processPluginBlock (*pi, fc, processedBypass);
         }
         else
         {
-            AudioScratchBuffer asb (std::max (pi->getTotalNumInputChannels(),
-                                              pi->getTotalNumOutputChannels()), fc.bufferNumSamples);
+            AudioScratchBuffer asb (numChansToProcess, fc.bufferNumSamples);
+            auto& buffer = asb.buffer;
 
-            if (processedBypass)
-                pi->processBlockBypassed (asb.buffer, midiBuffer);
-            else
-                pi->processBlock (asb.buffer, midiBuffer);
-        }
-
-        if (fc.bufferForMidiMessages != nullptr)
-        {
-            fc.bufferForMidiMessages->clear();
-
-            if (! midiBuffer.isEmpty())
+            // Copy existing channel or clear data
+            for (int i = 0; i < numChansToProcess; ++i)
             {
-                for (auto itr : midiBuffer)
-                {
-                    const auto& msg = itr.getMessage();
-                    int midiEventPos = itr.samplePosition;
+                if (i < destNumChans)
+                    buffer.copyFrom (i, 0, *fc.destBuffer, i, fc.bufferStartSample, fc.bufferNumSamples);
+                else
+                    buffer.clear (i, 0, fc.bufferNumSamples);
+            }
 
-                    auto midiData = msg.getRawData();
-                    auto numBytes = msg.getRawDataSize();
+            if (destNumChans == 1 && numInputChannels == 2)
+            {
+                // If we're getting a mono in and need stereo, dupe the channel..
+                buffer.copyFrom (1, 0, buffer, 0, 0, fc.bufferNumSamples);
+            }
+            else if (destNumChans == 2 && numInputChannels == 1)
+            {
+                // If we're getting a stereo in and need mono, average the input..
+                buffer.addFrom (0, 0, *fc.destBuffer, 1, fc.bufferStartSample, fc.bufferNumSamples);
+                buffer.applyGain (0, 0, fc.bufferNumSamples, 0.5f);
+            }
 
-                    fc.bufferForMidiMessages->addMidiMessage (juce::MidiMessage (midiData, numBytes, fc.midiBufferOffset + midiEventPos / sampleRate),
-                                                              midiSourceID);
-                }
+            PluginRenderContext fc2 (fc);
+            fc2.destBuffer = &asb.buffer;
+            fc2.bufferStartSample = 0;
+
+            processPluginBlock (*pi, fc2, processedBypass);
+
+            // Copy sample data back clearing unprocessed channels
+            for (int i = 0; i < destNumChans; ++i)
+            {
+                if (i < numChansToProcess)
+                    fc.destBuffer->copyFrom (i, fc.bufferStartSample, buffer, i, 0, fc.bufferNumSamples);
+                else if (i < 2 && numChansToProcess > 0) // convert mono output to stereo for next plugin
+                    fc.destBuffer->copyFrom (i, fc.bufferStartSample, buffer, 0, 0, fc.bufferNumSamples);
+                else
+                    fc.destBuffer->clear (i, fc.bufferStartSample, fc.bufferNumSamples);
+            }
+        }
+    }
+    else
+    {
+        AudioScratchBuffer asb (std::max (pi->getTotalNumInputChannels(),
+                                          pi->getTotalNumOutputChannels()), fc.bufferNumSamples);
+
+        if (processedBypass)
+            pi->processBlockBypassed (asb.buffer, midiBuffer);
+        else
+            pi->processBlock (asb.buffer, midiBuffer);
+    }
+
+    if (fc.bufferForMidiMessages != nullptr)
+    {
+        fc.bufferForMidiMessages->clear();
+
+        if (! midiBuffer.isEmpty())
+        {
+            for (auto itr : midiBuffer)
+            {
+                const auto& msg = itr.getMessage();
+
+                auto midiData = msg.getRawData();
+                auto numBytes = msg.getRawDataSize();
+                auto time = fc.midiBufferOffset + itr.samplePosition / sampleRate;
+
+                fc.bufferForMidiMessages->addMidiMessage (juce::MidiMessage (midiData, numBytes, time), midiSourceID);
             }
         }
     }
@@ -1857,8 +1878,11 @@ void ExternalPlugin::buildParameterTree() const
         return;
 
     CRASH_TRACER_PLUGIN (getDebugName());
-    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));
-    paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));
+    if (auto p1 = getAutomatableParameter (0))
+        paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p1));
+
+    if (auto p2 = getAutomatableParameter (0))
+        paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p2));
 
     juce::SortedSet<int> paramsInTree;
 

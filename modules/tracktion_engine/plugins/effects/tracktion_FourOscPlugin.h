@@ -178,7 +178,6 @@ public:
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "4OSC"; }
     juce::String getSelectableDescription() override    { return TRANS("4OSC Plugin"); }
-    bool needsConstantBufferSize() override             { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
 
@@ -186,6 +185,7 @@ public:
     void deinitialise() override;
 
     void reset() override;
+    void midiPanic() override;
 
     void applyToBuffer (const PluginRenderContext&) override;
 

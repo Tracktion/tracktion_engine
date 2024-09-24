@@ -462,6 +462,7 @@ namespace tracktion { inline namespace engine
 #include "plugins/tracktion_Plugin.h"
 #include "plugins/tracktion_PluginList.h"
 #include "plugins/tracktion_PluginManager.h"
+#include "utilities/tracktion_ParameterHelpers.h"
 
 #include "project/tracktion_ProjectItem.h"
 #include "project/tracktion_ProjectSearchIndex.h"

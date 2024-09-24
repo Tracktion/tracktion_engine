@@ -122,8 +122,16 @@ private:
 //==============================================================================
 //==============================================================================
 ///@internal
-inline void processLoopedBack (EnginePlayer& player, std::integral auto numFramesToProcess)
+void waitForFileToBeMapped (const AudioFile&);
+
+//==============================================================================
+///@internal
+inline void processLoopedBack (EnginePlayer& player, std::integral auto numFramesToProcess,
+                               std::vector<AudioFile> filesToMap = {})
 {
+    for (auto& af : filesToMap)
+        test_utilities::waitForFileToBeMapped (af);
+
     using namespace choc::buffer;
     const auto numInputChannels = static_cast<ChannelCount> (player.getParams().inputChannels);
     FrameCount startFrame = 0;
@@ -147,10 +155,6 @@ inline void processLoopedBack (EnginePlayer& player, std::integral auto numFrame
         startFrame += numFramesThisTime;
     }
 }
-
-//==============================================================================
-///@internal
-void waitForFileToBeMapped (const AudioFile&);
 
 //==============================================================================
 ///@internal

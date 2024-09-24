@@ -155,14 +155,14 @@
     {
       "name": "xcode-DebugAsan",
       "configuration": "Debug",
-      "nativeToolOptions": [ "-enableAddressSanitizer YES",  "-enableUndefinedBehaviorSanitizer YES" ],
+      "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
       "name": "xcode-DebugTsan",
       "configuration": "Debug",
-      "nativeToolOptions": [ "-enableThreadSanitizer YES",  "-enableUndefinedBehaviorSanitizer YES" ],
+      "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },

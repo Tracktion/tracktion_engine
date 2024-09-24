@@ -188,6 +188,7 @@ DeviceManager::~DeviceManager()
     gDeviceManager = nullptr;
 
     CRASH_TRACER
+    removeHostedAudioDeviceInterface();
     deviceManager.removeChangeListener (this);
 }
 
@@ -336,8 +337,8 @@ struct DeviceManager::MIDIDeviceList
     {
         if (sourceHostedAudioDeviceInterface)
         {
-            hostedMidiOut = std::unique_ptr<MidiOutputDevice> (sourceHostedAudioDeviceInterface->createMidiOutput());
-            hostedMidiIn = std::unique_ptr<MidiInputDevice> (sourceHostedAudioDeviceInterface->createMidiInput());
+            hostedMidiOut = sourceHostedAudioDeviceInterface->createMidiOutput();
+            hostedMidiIn = sourceHostedAudioDeviceInterface->createMidiInput();
         }
 
         if (useHardwareDevices)
@@ -766,12 +767,18 @@ void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice& vmi)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
+    auto deviceName = vmi.getName();
     auto deviceID = vmi.getDeviceID();
 
     engine.getPropertyStorage().removePropertyItem (SettingID::virtualmidiin, deviceID);
 
     auto virtualDeviceIDs = getVirtualDeviceIDs (engine);
-    virtualDeviceIDs.removeString (deviceID);
+
+    if (virtualDeviceIDs.contains (deviceName) && ! virtualDeviceIDs.contains (deviceID))
+        virtualDeviceIDs.removeString (deviceName);
+    else
+        virtualDeviceIDs.removeString (deviceID);
+
     setVirtualDeviceIDs (engine, virtualDeviceIDs);
 
     rescanMidiDeviceList();
@@ -904,6 +911,7 @@ void DeviceManager::loadSettings()
             error = deviceManager.initialise (defaultNumInputChannelsToOpen,
                                               defaultNumOutputChannelsToOpen,
                                               nullptr, false, "Hosted Device", nullptr);
+            applyNewMidiDeviceList(); // Do this syncronously for hosted audio interfaces
         }
         else
         {
@@ -925,11 +933,9 @@ void DeviceManager::loadSettings()
     outMonoChans.clear();
     inStereoChans.clear();
     outEnabled.clear();
-    outEnabled.setBit (0);
-    outEnabled.setBit (1);
+    outEnabled.setRange (0, 256, true);
     inEnabled.clear();
-    inEnabled.setBit (0);
-    inEnabled.setBit (1);
+    inEnabled.setRange (0, 256, true);
 
     if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())   //else UI will take care about inputs/outputs names and their mapping to device channels
     {
@@ -1089,6 +1095,7 @@ void DeviceManager::setDefaultWaveOutDevice (juce::String deviceID)
                                                              deviceManager.getCurrentAudioDeviceType(),
                                                              deviceID);
                 rescanWaveDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1107,6 +1114,7 @@ void DeviceManager::setDefaultWaveInDevice (juce::String deviceID)
                                                              deviceManager.getCurrentAudioDeviceType(),
                                                              deviceID);
                 rescanWaveDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1122,6 +1130,7 @@ void DeviceManager::setDefaultMidiOutDevice (juce::String deviceID)
             {
                 engine.getPropertyStorage().setProperty (SettingID::defaultMidiOutDevice, deviceID);
                 rescanMidiDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1137,6 +1146,7 @@ void DeviceManager::setDefaultMidiInDevice (juce::String deviceID)
             {
                 engine.getPropertyStorage().setProperty (SettingID::defaultMidiInDevice, deviceID);
                 rescanMidiDeviceList();
+                reloadAllContextDevices();
             }
         }
     }
@@ -1158,8 +1168,10 @@ void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
         }
 
         rescanWaveDeviceList();
+        reloadAllContextDevices();
     }
 }
+
 std::vector<WaveOutputDevice*> DeviceManager::getWaveOutputDevices()
 {
     dispatchPendingUpdates();
@@ -1193,25 +1205,86 @@ void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
 
 void DeviceManager::setWaveOutChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
+    bool anyChanged = false;
+
     for (auto& ci : channels)
     {
         if (outEnabled[ci.indexInDevice] != b)
         {
             outEnabled.setBit (ci.indexInDevice, b);
-            rescanWaveDeviceList();
+            anyChanged = true;
         }
     }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
 }
 
 void DeviceManager::setWaveInChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
 {
+    bool anyChanged = false;
+
     for (auto& ci : channels)
     {
         if (inEnabled[ci.indexInDevice] != b)
         {
             inEnabled.setBit (ci.indexInDevice, b);
-            rescanWaveDeviceList();
+            anyChanged = true;
         }
+    }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
+}
+
+void DeviceManager::enableAllWaveInputs()
+{
+    std::vector<ChannelIndex> chans;
+
+    for (auto& w : waveInputs)
+        for (auto index : w->getChannels())
+            chans.push_back (index);
+
+    setWaveInChannelsEnabled (chans, true);
+}
+
+void DeviceManager::enableAllWaveOutputs()
+{
+    std::vector<ChannelIndex> chans;
+
+    for (auto& w : waveOutputs)
+        for (auto index : w->getChannels())
+            chans.push_back (index);
+
+    setWaveOutChannelsEnabled (chans, true);
+}
+
+void DeviceManager::setAllWaveInputsToStereoPair()
+{
+    bool anyChanged = false;
+
+    for (auto& w : waveInputs)
+    {
+        for (auto ci : w->getChannels())
+        {
+            if (! inStereoChans[ci.indexInDevice / 2])
+            {
+                inStereoChans.setBit (ci.indexInDevice / 2, true);
+                anyChanged = true;
+            }
+        }
+    }
+
+    if (anyChanged)
+        rescanWaveDeviceList();
+}
+
+void DeviceManager::setAllWaveOutputsToStereoPair()
+{
+    if (! outMonoChans.isZero())
+    {
+        outMonoChans.clear();
+        rescanWaveDeviceList();
     }
 }
 

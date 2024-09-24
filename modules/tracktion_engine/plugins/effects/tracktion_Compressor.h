@@ -32,7 +32,6 @@ public:
     juce::String getShortName (int) override                            { return TRANS("Comp"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
-    bool needsConstantBufferSize() override                             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
@@ -40,11 +39,9 @@ public:
 
     juce::String getSelectableDescription() override                    { return TRANS("Compressor/Limiter Plugin"); }
 
-    juce::CachedValue<float> thresholdValue, ratioValue, attackValue,
-                             releaseValue, outputValue, sidechainValue;
+    ParameterWithStateValue thresholdGain, ratio, attackMs,
+                            releaseMs, outputDb, sidechainDb;
     juce::CachedValue<bool> useSidechainTrigger;
-    AutomatableParameter::Ptr thresholdGain, ratio, attackMs,
-                              releaseMs, outputDb, sidechainDb;
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

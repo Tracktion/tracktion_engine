@@ -220,6 +220,13 @@ struct MidiMessageArray
                 messages.remove (i);
     }
 
+    /// Removes any notes that match the given predicate
+    template <typename Predicate>
+    void removeIf (Predicate&& pred)
+    {
+        messages.removeIf (pred);
+    }
+
     void addToTimestamps (double delta) noexcept
     {
         for (auto& m : messages)
@@ -262,7 +269,6 @@ struct MidiMessageArray
     bool isAllNotesOff = false;
 
 private:
-
     juce::Array<MidiMessageWithSource> messages;
 };
 

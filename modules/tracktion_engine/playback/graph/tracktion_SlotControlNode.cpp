@@ -148,7 +148,23 @@ void SlotControlNode::process (ProcessContext& pc)
 
         if (auto splitStatus = launchHandle->advance (syncRange);
             ! splitStatus.range1.isEmpty())
-           processSplitSection (pc, splitStatus);
+        {
+            // If we've just started playing, we need to check if we should have actually stopped and just cancel if so
+            if (auto playedMonotonicRange = launchHandle->getPlayedMonotonicRange();
+                playedMonotonicRange
+                && stopDuration
+                && splitStatus.isSplit
+                && ! splitStatus.playing1 && splitStatus.playing2)
+            {
+                const auto blockRange = MonotonicBeatRange { { syncRange.start.monotonicBeat.v, syncRange.end.monotonicBeat.v } };
+                const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
+
+                if (stopPoint.v <= blockRange.v.getEnd())
+                    return launchHandle->stop ({});
+            }
+
+            processSplitSection (pc, splitStatus);
+        }
     }
     else if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
     {

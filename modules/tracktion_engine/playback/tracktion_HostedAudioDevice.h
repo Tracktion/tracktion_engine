@@ -79,15 +79,15 @@ private:
     juce::StringArray getInputChannelNames();
     juce::StringArray getOutputChannelNames();
 
-    MidiOutputDevice* createMidiOutput();
-    MidiInputDevice* createMidiInput();
+    std::shared_ptr<MidiOutputDevice> createMidiOutput();
+    std::shared_ptr<MidiInputDevice> createMidiInput();
 
     Engine& engine;
     Parameters parameters;
     HostedAudioDeviceType* deviceType = nullptr;
 
-    juce::Array<MidiOutputDevice*> midiOutputs;
-    juce::Array<MidiInputDevice*> midiInputs;
+    std::vector<std::shared_ptr<MidiOutputDevice>> midiOutputs;
+    std::vector<std::shared_ptr<MidiInputDevice>> midiInputs;
 
     int maxChannels = 0;
     std::unique_ptr<LatencyProcessor> inputLatencyProcessor, outputLatencyProcessor;

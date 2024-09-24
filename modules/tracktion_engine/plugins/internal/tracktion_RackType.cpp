@@ -1375,6 +1375,18 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
     return type;
 }
 
+RackType::Ptr RackTypeList::duplicateRack (EditItemID rackID)
+{
+    if (auto source = getRackTypeForID (rackID))
+    {
+        auto newState = source->state.createCopy();
+        EditItemID::remapIDs (newState, nullptr, edit);
+        return addRackTypeFrom (newState);
+    }
+
+    return {};
+}
+
 void RackTypeList::importRackFiles (const juce::Array<juce::File>& files)
 {
     int oldNumRacks = size();

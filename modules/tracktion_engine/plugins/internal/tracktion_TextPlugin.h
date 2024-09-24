@@ -32,7 +32,6 @@ public:
     void applyToBuffer (const PluginRenderContext&) override {}
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
     bool producesAudioWhenNoAudioInput() override       { return false; }
-    bool needsConstantBufferSize() override             { return false; }
     juce::String getSelectableDescription() override    { return TRANS("Text Plugin"); }
 
     juce::CachedValue<juce::String> textTitle, textBody;

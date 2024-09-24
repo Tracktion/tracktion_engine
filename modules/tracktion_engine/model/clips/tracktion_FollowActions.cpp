@@ -450,11 +450,11 @@ std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
         maxProbability = container.probabilityRange.getEnd();
     }
 
-    return [followActionContainers = std::move (followActionContainers), ctx, maxProbability] (MonotonicBeat beat)
+    return [actionContainers = std::move (followActionContainers), ctx, maxProbability] (MonotonicBeat beat)
               {
                   const auto randomValue = ctx->random.nextFloat() * maxProbability;
 
-                  for (auto& actionContainer : followActionContainers)
+                  for (auto& actionContainer : actionContainers)
                   {
                       if (! actionContainer.probabilityRange.contains (randomValue))
                           continue;

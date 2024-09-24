@@ -1298,6 +1298,7 @@ protected:
                                                                      if (unloopedTimeNow >= recContext->recordingBlockRange.getEnd())
                                                                      {
                                                                          auto stopParams = recContext->stopParams;
+                                                                         recContext->stopRecording();
 
                                                                          // Temp unlock as stopRecording takes a unique lock
                                                                          contextLock.unlock_shared();

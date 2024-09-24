@@ -13,20 +13,37 @@ namespace tracktion::inline engine
 
 EditLoader::Handle::~Handle()
 {
+    cancel();
+
+    if (! loadContext.completed)
+        signalThreadShouldExit (loadThread.get_id());
+
     loadThread.join();
 }
 
-std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options options, std::function<void(std::unique_ptr<Edit>)> editLoadedCallback)
+void EditLoader::Handle::cancel()
+{
+    loadContext.shouldExit = true;
+}
+
+float EditLoader::Handle::getProgress() const
+{
+    return loadContext.progress;
+}
+
+std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options editOptions, std::function<void(std::unique_ptr<Edit>)> editLoadedCallback)
 {
     assert (editLoadedCallback && "Completion callback must be valid");
-    assert (options.loadContext == nullptr && "This function will return its own LoadContext to use so don't provide one");
-    assert (options.editState.hasType (IDs::EDIT) && "This must contain a valid Edit state");
+    assert (editOptions.loadContext == nullptr && "This function will return its own LoadContext to use so don't provide one");
+    assert (editOptions.editState.hasType (IDs::EDIT) && "This must contain a valid Edit state");
 
     auto handle = std::shared_ptr<Handle> (new Handle());
-    options.loadContext = &handle->loadContext;
-    handle->loadThread = std::thread ([options = std::move (options),
+    editOptions.loadContext = &handle->loadContext;
+    handle->loadThread = std::thread ([options = std::move (editOptions),
                                        completionCallback = std::move (editLoadedCallback)]
                                       {
+                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+
                                           auto opts = std::move (options);
                                           auto id = ProjectItemID::fromProperty (opts.editState, IDs::projectID);
 
@@ -40,14 +57,14 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options options,
     return handle;
 }
 
-std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::File file,
+std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::File editFile,
                                                           std::function<void (std::unique_ptr<Edit>)> editLoadedCallback,
                                                           Edit::EditRole role, int numUndoLevelsToStore)
 {
     assert (editLoadedCallback && "Completion callback must be valid");
 
     auto handle = std::shared_ptr<Handle> (new Handle());
-    Edit::Options options
+    Edit::Options editOptions
     {
         .engine = engine,
         .editState = {},
@@ -55,12 +72,14 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
         .role = role,
         .loadContext = &handle->loadContext,
         .numUndoLevelsToStore = numUndoLevelsToStore,
-        .editFileRetriever = [file] { return file; }
+        .editFileRetriever = [editFile] { return editFile; }
     };
 
-    handle->loadThread = std::thread ([options = std::move (options), file = std::move (file),
+    handle->loadThread = std::thread ([options = std::move (editOptions), file = std::move (editFile),
                                        completionCallback = std::move (editLoadedCallback)]
                                       {
+                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+
                                           auto opts = std::move (options);
                                           opts.editState = loadValueTree (file, IDs::EDIT);
 
@@ -74,6 +93,7 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
 
                                           opts.editProjectItemID = id;
 
+                                          // Load the Edit
                                           completionCallback (Edit::createEdit (opts));
                                       });
 

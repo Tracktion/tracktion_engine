@@ -314,7 +314,7 @@ private:
         te::MidiInputDevice& getMidiInputDevice() const
         {
             auto& dm = plugin.engineWrapper->engine.getDeviceManager();
-            auto dev = dm.getMidiInDevice (0);
+            auto dev = te::get_or (dm.getMidiInDevices(), 0, {});
             assert (dev != nullptr);
             assert (te::HostedAudioDeviceInterface::isHostedMidiInputDevice (*dev));
 

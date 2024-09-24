@@ -66,7 +66,11 @@ void Engine::initialise()
     pluginManager              = std::make_unique<PluginManager> (*this);
 
     if (engineBehaviour->autoInitialiseDeviceManager())
-        deviceManager->initialise();
+    {
+        deviceManager->initialise (getEngineBehaviour().shouldOpenAudioInputByDefault()
+                                        ? DeviceManager::defaultNumChannelsToOpen : 0,
+                                   DeviceManager::defaultNumChannelsToOpen);
+    }
 
     pluginManager->initialise();
     getProjectManager().initialise();
@@ -76,6 +80,9 @@ void Engine::initialise()
 
 Engine::~Engine()
 {
+    // First make sure to clear any edits that are in line to be deleted
+    editDeleter.reset();
+
     getProjectManager().saveList();
 
     getExternalControllerManager().shutdown();
@@ -83,8 +90,6 @@ Engine::~Engine()
     getBackgroundJobs().stopAndDeleteAllRunningJobs();
 
     temporaryFileManager->cleanUp();
-
-    editDeleter.reset();
 
     getRenderManager().cleanUp();
     backgroundJobManager.reset();

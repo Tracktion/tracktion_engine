@@ -26,13 +26,13 @@ class LaunchHandle
 {
 public:
     //==============================================================================
-    enum class PlayState
+    enum class PlayState : char
     {
         stopped,
         playing
     };
 
-    enum class QueueState
+    enum class QueueState : char
     {
         stopQueued,
         playQueued
@@ -41,6 +41,9 @@ public:
     //==============================================================================
     /** Creates a LaunchHandle. */
     LaunchHandle() = default;
+
+    /** Creates a copy of another LaunchHandle. */
+    LaunchHandle (const LaunchHandle&);
 
     /** Returns the current playback state. */
     PlayState getPlayingStatus() const;
@@ -56,6 +59,11 @@ public:
 
     /** Stop playing, optionally at a given beat position. */
     void stop (std::optional<MonotonicBeat>);
+
+    /** Starts playing, as if it was started at the same time as the given LaunchHandle.
+        This can optionally be delayed by supplying a MonotonicBeat to start at.
+    */
+    void playSynced (const LaunchHandle&, std::optional<MonotonicBeat>);
 
     //==============================================================================
     /** Represents two beat ranges where the play state can be different in each. */
@@ -108,6 +116,7 @@ private:
     static_assert (std::is_trivially_copyable_v<State>);
 
     MultipleWriterSeqLock<State> state;
+    crill::seqlock_object<std::optional<State>> stateToSyncFrom;
 
     State getState() const      { return state.load(); }
     void setState (State s)     { state.store (std::move (s)); }

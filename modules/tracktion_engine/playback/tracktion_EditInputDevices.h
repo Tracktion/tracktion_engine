@@ -33,7 +33,7 @@ public:
 
 private:
     Edit& edit;
-    juce::ValueTree state, editState;
+    juce::ValueTree state, editState { edit.state };
 
     void removeNonExistantInputDeviceStates();
     void addTrackDeviceInstanceToContext (const juce::ValueTree&) const;
@@ -43,10 +43,6 @@ private:
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
     void handleAsyncUpdate() override;
 
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override  {}
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override               {}
-    void valueTreeParentChanged (juce::ValueTree&) override                             {}
-    void valueTreeRedirected (juce::ValueTree&) override                                {}
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
 

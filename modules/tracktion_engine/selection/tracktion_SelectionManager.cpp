@@ -89,8 +89,13 @@ Selectable::~Selectable()
 
     if (! hasNotifiedListenersOfDeletion)
     {
-        // must call notifyListenersOfDeletion() in the innermost subclass's destructor!
-        jassertfalse;
+       #if JUCE_DEBUG
+        if (! selectableListeners.isEmpty())
+        {
+            // must call notifyListenersOfDeletion() in the innermost subclass's destructor!
+            jassertfalse;
+        }
+       #endif
 
         notifyListenersOfDeletion();
     }

@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "tracktion_Threads.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -151,6 +153,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LambdaTimer)
 };
 
+
 //==============================================================================
 /** Calls a function on the message thread checking a calling thread for an exit signal. */
 class MessageThreadCallback   : private juce::AsyncUpdater
@@ -195,6 +198,20 @@ public:
                 waiter.wait (50);
 
             if (thread->threadShouldExit())
+            {
+                hasBeenCancelled = true;
+                cancelPendingUpdate();
+            }
+
+            return;
+        }
+
+        if (isCurrentThreadSupplyingExitStatus())
+        {
+            while (! (shouldCurrentThreadExit() || hasFinished()))
+                waiter.wait (50);
+
+            if (shouldCurrentThreadExit())
             {
                 hasBeenCancelled = true;
                 cancelPendingUpdate();
@@ -249,11 +266,21 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockingFunction)
 };
 
+/** Calls a function on the message thread by posting a message and then waiting
+    for it to be delivered. If this fails for some reason, e.g. the calling thread
+    is trying to exit or is blocking the message thread, this will throw an
+    exception.
+*/
 inline bool callBlocking (std::function<void()> f)
 {
     BlockingFunction bf (f);
     bf.triggerAndWaitForCallback();
-    return bf.hasFinished();
+
+    if (! bf.hasFinished())
+        throw std::runtime_error ("Blocking function unable to complete");
+
+    return true;
 }
+
 
 }} // namespace tracktion { inline namespace engine

@@ -70,6 +70,11 @@ struct Edit::EditChangeResetterTimer  : private Timer
         startTimer (200);
     }
 
+    ~EditChangeResetterTimer() override
+    {
+        stopTimer();
+    }
+
     void timerCallback() override
     {
         stopTimer();
@@ -611,40 +616,48 @@ Edit::Edit (Options options)
     if (loadContext != nullptr && ! loadContext->shouldExit)
         loadContext->totalNumTracks = countNumTracks (state);
 
-    pluginCache                 = std::make_unique<PluginCache> (*this);
-    mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
-    transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
-    automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
-    markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
-    pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
-    frozenTrackCallback         = std::make_unique<FrozenTrackCallback> (*this);
-    masterPluginList            = std::make_unique<PluginList> (*this);
-    parameterChangeHandler      = std::make_unique<ParameterChangeHandler> (*this);
-    parameterControlMappings    = std::make_unique<ParameterControlMappings> (*this);
-    rackTypes                   = std::make_unique<RackTypeList> (*this);
-    trackCompManager            = std::make_unique<TrackCompManager> (*this);
-    changedPluginsList          = std::make_unique<ChangedPluginsList>();
-
-    undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
-
-    initialise (options);
-
-    undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
-
-    if (loadContext != nullptr && ! loadContext->shouldExit)
+    try
     {
-        loadContext->completed = true;
-        loadContext = nullptr;
+        pluginCache                 = std::make_unique<PluginCache> (*this);
+        mirroredPluginUpdateTimer   = std::make_unique<MirroredPluginUpdateTimer> (*this);
+        transportControl            = std::make_unique<TransportControl> (*this, state.getOrCreateChildWithName (IDs::TRANSPORT, nullptr));
+        automationRecordManager     = std::make_unique<AutomationRecordManager> (*this);
+        markerManager               = std::make_unique<MarkerManager> (*this, state.getOrCreateChildWithName (IDs::MARKERTRACK, nullptr));
+        pluginChangeTimer           = std::make_unique<PluginChangeTimer> (*this);
+        frozenTrackCallback         = std::make_unique<FrozenTrackCallback> (*this);
+        masterPluginList            = std::make_unique<PluginList> (*this);
+        parameterChangeHandler      = std::make_unique<ParameterChangeHandler> (*this);
+        parameterControlMappings    = std::make_unique<ParameterControlMappings> (*this);
+        rackTypes                   = std::make_unique<RackTypeList> (*this);
+        trackCompManager            = std::make_unique<TrackCompManager> (*this);
+        changedPluginsList          = std::make_unique<ChangedPluginsList>();
+
+        undoManager.setMaxNumberOfStoredUnits (1000 * options.numUndoLevelsToStore, options.numUndoLevelsToStore);
+
+        initialise (options);
+
+        undoTransactionTimer = std::make_unique<UndoTransactionTimer> (*this);
+
+        if (loadContext != nullptr && ! loadContext->shouldExit)
+        {
+            loadContext->completed = true;
+            loadContext = nullptr;
+        }
+
+        // Don't spam logs with preview Edits
+        if (getProjectItemID().getProjectID() != 0)
+            TRACKTION_LOG ("Loaded edit: " + getName());
+
+        jassert (! engine.getActiveEdits().edits.contains (this));
+        engine.getActiveEdits().edits.add (this);
+
+        isFullyConstructed.store (true, std::memory_order_relaxed);
     }
-
-    // Don't spam logs with preview Edits
-    if (getProjectItemID().getProjectID() != 0)
-        TRACKTION_LOG ("Loaded edit: " + getName());
-
-    jassert (! engine.getActiveEdits().edits.contains (this));
-    engine.getActiveEdits().edits.add (this);
-
-    isFullyConstructed.store (true, std::memory_order_relaxed);
+    catch (...)
+    {
+        // Something failed during construction so complete but isFullyConstructed will be false
+        jassert (! isFullyConstructed);
+    }
 }
 
 static Edit::Options getOptionsFor (Engine& engine, Edit::EditRole role)
@@ -758,12 +771,14 @@ Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnD
 
 Edit::ScopedRenderStatus::~ScopedRenderStatus()
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (edit.performingRenderCount > 0);
     --edit.performingRenderCount;
 
     if (edit.performingRenderCount == 0 && reallocateOnDestruction && edit.shouldPlay())
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
         edit.getTransport().ensureContextAllocated();
+    }
 }
 
 
@@ -963,6 +978,7 @@ void Edit::loadTracks()
     TrackList::sortTracksByType (state, nullptr);
 
     trackList = std::make_unique<TrackList> (*this, state);
+    trackList->initialise();
     treeWatcher->linkedClipsChanged();
     updateTrackStatuses();
 }
@@ -1007,6 +1023,28 @@ void Edit::initialiseTracks (const Options& options)
 
     for (auto t : getAllTracks (*this))
         t->refreshCurrentAutoParam();
+
+    // Garbage-collect any zombie destinations in the input device targets list
+    for (int j = inputDeviceState.getNumChildren(); --j >= 0;)
+    {
+        auto device = inputDeviceState.getChild (j);
+
+        if (device.hasType (IDs::INPUTDEVICE))
+        {
+            for (int i = device.getNumChildren(); --i >= 0;)
+            {
+                auto dest = device.getChild (i);
+
+                if (dest.hasType (IDs::INPUTDEVICEDESTINATION))
+                {
+                    auto targetID = EditItemID::fromVar (dest[IDs::targetID]);
+
+                    if (findTrackForID (*this, targetID) == nullptr)
+                        device.removeChild (dest, nullptr);
+                }
+            }
+        }
+    }
 }
 
 void Edit::initialiseAudioDevices()
@@ -1824,11 +1862,13 @@ Track::Ptr Edit::insertTrack (juce::ValueTree v, juce::ValueTree parent,
     return newTrack;
 }
 
-AudioTrack::Ptr Edit::insertNewAudioTrack (TrackInsertPoint insertPoint, SelectionManager* sm)
+AudioTrack::Ptr Edit::insertNewAudioTrack (TrackInsertPoint insertPoint, SelectionManager* sm, bool addDefaultPlugins)
 {
     if (auto newTrack = insertNewTrack (insertPoint, IDs::TRACK, sm))
     {
-        newTrack->pluginList.addDefaultTrackPlugins (false);
+        if (addDefaultPlugins)
+            newTrack->pluginList.addDefaultTrackPlugins (false);
+
         return dynamic_cast<AudioTrack*> (newTrack.get());
     }
 
@@ -2183,7 +2223,7 @@ void Edit::ensureNumberOfAudioTracks (int minimumNumTracks)
     {
         getTransport().stopIfRecording();
 
-        insertNewAudioTrack (TrackInsertPoint (nullptr, getTopLevelTracks (*this).getLast()), nullptr);
+        insertNewAudioTrack (TrackInsertPoint::getEndOfTracks (*this), nullptr);
     }
 }
 
@@ -2531,10 +2571,10 @@ void Edit::updateFrozenTracks()
                 r.usePlugins = true;
                 r.useMasterPlugins = false;
                 r.category = ProjectItem::Category::frozen;
-                r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
 
                 Renderer::renderToProjectItem (TRANS("Updating frozen tracks for output device \"XDVX\"")
-                                                  .replace ("XDVX", outputDevice->getName()) + "...", r);
+                                                  .replace ("XDVX", outputDevice->getName()) + "...", r,
+                                               ProjectItem::Category::frozen);
 
                 if (! r.destFile.exists())
                 {
@@ -2829,7 +2869,13 @@ void Edit::setEditMetadata (Metadata metadata)
 //==============================================================================
 std::unique_ptr<Edit> Edit::createEdit (Options options)
 {
-    return std::make_unique<Edit> (std::move (options));
+    auto edit = std::make_unique<Edit> (std::move (options));
+
+    if (edit->isFullyConstructed)
+        return edit;
+
+    options.engine.getEditDeleter().deleteEdit (std::move (edit));
+    return {};
 }
 
 std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce::ValueTree v, const Edit* editToMatch,

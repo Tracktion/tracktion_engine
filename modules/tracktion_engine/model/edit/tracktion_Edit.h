@@ -31,6 +31,11 @@ class ClipEffect;
     to uniquely identify this Edit, or use some of the static helper methods that
     return a `std::unique_ptr<Edit>`.
 
+    N.B. Constructing an Edit can throw an exception if it can't complete for some
+    reason e.g. if it's being constructed on the message thread which is blocked.
+    It's generally safer to use Edit::createEdit as this will catch the exception
+    and just return a nullptr.
+
     This is a high level overview of the Edit structure and the relevant objects.
     Note that this isn't an exhaustive list but should help you find the most relevant classes.
 
@@ -112,7 +117,10 @@ public:
         uint32_t numAudioTracks = 1;                                            ///< If non-zero, will ensure the edit has this many audio tracks
     };
 
-    /// Creates an Edit from a set of Options.
+    /** Creates an Edit from a set of Options.
+        It's generally safer to call createEdit rather than construct an Edit
+        directly in case it throws an exception during construction.
+    */
     Edit (Options);
 
     /// Creates a new, empty Edit with default options for a given role.
@@ -365,7 +373,7 @@ public:
 
     //==============================================================================
     /** Inserts a new AudioTrack in the Edit. */
-    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*);
+    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*, bool addDefaultPlugins = true);
 
     /** Inserts a new FolderTrack in the Edit, optionally as a submix. */
     juce::ReferenceCountedObjectPtr<FolderTrack> insertNewFolderTrack (TrackInsertPoint, SelectionManager*, bool asSubmix);
@@ -767,6 +775,11 @@ public:
             startTimer (10);
         }
 
+        ~LoadFinishedCallback() override
+        {
+            stopTimer();
+        }
+
         void timerCallback() override
         {
             if (! edit.isLoading())
@@ -843,6 +856,7 @@ private:
     juce::CachedValue<juce::String> midiTimecodeSourceDevice, midiMachineControlSourceDevice, midiMachineControlDestDevice;
     juce::CachedValue<TimecodeDisplayFormat> timecodeFormat;
     juce::ValueTree auxBusses, controllerMappings, automapState;
+    std::unique_ptr<ParameterChangeHandler> parameterChangeHandler;
     std::unique_ptr<ParameterControlMappings> parameterControlMappings;
     std::unique_ptr<RackTypeList> rackTypes;
     std::unique_ptr<PluginList> masterPluginList;
@@ -851,10 +865,10 @@ private:
     // transient properties (i.e. stuff that doesn't get saved)
     struct MirroredPluginUpdateTimer;
     std::unique_ptr<MirroredPluginUpdateTimer> mirroredPluginUpdateTimer;
-    juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> masterVolumePlugin;
     std::unique_ptr<TransportControl> transportControl;
-    mutable std::unique_ptr<AbletonLink> abletonLink;
     std::unique_ptr<AutomationRecordManager> automationRecordManager;
+    juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> masterVolumePlugin;
+    mutable std::unique_ptr<AbletonLink> abletonLink;
     std::unique_ptr<MarkerManager> markerManager;
     struct UndoTransactionTimer;
     std::unique_ptr<UndoTransactionTimer> undoTransactionTimer;
@@ -862,7 +876,6 @@ private:
     std::unique_ptr<PluginChangeTimer> pluginChangeTimer;
     struct FrozenTrackCallback;
     std::unique_ptr<FrozenTrackCallback> frozenTrackCallback;
-    std::unique_ptr<ParameterChangeHandler> parameterChangeHandler;
     std::unique_ptr<PluginCache> pluginCache;
     std::unique_ptr<TrackCompManager> trackCompManager;
     juce::Array<ModifierTimer*, juce::CriticalSection> modifierTimers;
