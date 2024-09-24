@@ -32,7 +32,7 @@ jobs:
             config_preset: "windows"
             build_preset: "windows"
             cmake_host_system_name: "Windows"
-          - publish_benchmark: true
+          - publish_benchmark: ${{ matrix.target == 'Benchmarks' }}
 
     runs-on: ${{ matrix.os }}
     steps:
