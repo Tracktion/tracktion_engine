@@ -7,7 +7,6 @@ on:
 
 env:
   BUILD_CONFIG: Release
-  BUILD_DIR: build
 
 jobs:
   test:
@@ -38,13 +37,13 @@ jobs:
             target: TestRunner
             os: macos-latest
             config_preset: "xcode"
-            build_preset: "xcode-ReleaseAsan"
+            build_preset: "xcode-asan"
             cmake_host_system_name: "Darwin"
           - name: macOS_asan
             target: Benchmarks
             os: macos-latest
             config_preset: "xcode"
-            build_preset: "xcode-ReleaseAsan"
+            build_preset: "xcode-asan"
             cmake_host_system_name: "Darwin"
           - name: macOS_analyse
             target: TestRunner
@@ -128,7 +127,7 @@ jobs:
         shell: bash
         if: ${{ matrix.analyse }}
         run: |
-          cd ${{ env.BUILD_DIR }}
+          cd cmake-${{ matrix.config_preset }}
           OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO`
           echo "$OUTPUT"
           WARNING_LINES=$(echo "$OUTPUT" | grep ": warning:")
