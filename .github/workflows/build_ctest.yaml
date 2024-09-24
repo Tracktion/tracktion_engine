@@ -32,7 +32,27 @@ jobs:
             config_preset: "windows"
             build_preset: "windows"
             cmake_host_system_name: "Windows"
-          - publish_benchmark: ${{ matrix.target == 'Benchmarks' }}
+          - publish_benchmark: true
+          # Extra tooled builds (outside of matrix)
+          - name: macOS_asan
+            target: TestRunner
+            os: macos-latest
+            config_preset: "xcode"
+            build_preset: "xcode-ReleaseAsan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_asan
+            target: Benchmarks
+            config_preset: "xcode"
+            build_preset: "xcode-ReleaseAsan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_analyse
+            target: TestRunner
+            os: macos-latest
+            analyse: true
+          - name: macOS_analyse
+            target: Benchmarks
+            os: macos-latest
+            analyse: true
 
     runs-on: ${{ matrix.os }}
     steps:

@@ -155,6 +155,20 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "xcode-ReleaseAsan",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-ReleaseTsan",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "windows-Debug",
       "configuration": "Debug",
       "configurePreset": "windows",
