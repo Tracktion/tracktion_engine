@@ -49,10 +49,12 @@ jobs:
             target: TestRunner
             os: macos-latest
             config_preset: "xcode"
+            cmake_host_system_name: "Darwin"
             analyse: true
           - name: macOS_analyse
             target: Benchmarks
             os: macos-latest
+            cmake_host_system_name: "Darwin"
             config_preset: "xcode"
             analyse: true
 
@@ -127,7 +129,7 @@ jobs:
         shell: bash
         if: ${{ matrix.analyse }}
         run: |
-          cd cmake-${{ matrix.config_preset }}
+          cd cmake-build/${{ matrix.cmake_host_system_name }}/cmake-${{ matrix.config_preset }}
           OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.BUILD_CONFIG }} LLVM_LTO=NO`
           echo "$OUTPUT"
           WARNING_LINES=$(echo "$OUTPUT" | grep ": warning:")
