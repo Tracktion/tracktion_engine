@@ -42,6 +42,7 @@ jobs:
             cmake_host_system_name: "Darwin"
           - name: macOS_asan
             target: Benchmarks
+            os: macos-latest
             config_preset: "xcode"
             build_preset: "xcode-ReleaseAsan"
             cmake_host_system_name: "Darwin"
