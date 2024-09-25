@@ -76,8 +76,8 @@ jobs:
             config_preset: "xcode"
             analyse: true
 
-    if: ${{ ! matrix.tsan || github.event_name == 'push' }}
     runs-on: ${{ matrix.os }}
+    if: ${{ ! matrix.tsan || github.event_name == 'push' }}
     steps:
       # Install dependencies
       - name: Install dependencies
