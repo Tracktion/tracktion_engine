@@ -5,14 +5,12 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  build_config: Release
-
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
+        build_config: [ Debug, Release ]
         name: [ linux, macOS, windows ]
         target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
         include:
@@ -117,9 +115,11 @@ jobs:
         if: ${{ ! matrix.analyse }}
         shell: bash
         env:
-          BM_API_KEY: ${{ matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
+          found_api_key: ${{ matrix.build_config == 'Release' && matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
+          BM_API_KEY: ${{ matrix.build_config == 'Release' && matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
           BM_BRANCH_NAME: ${{ github.ref }}
         run: |
+          echo found_api_key: ${{ env.found_api_key }}
           ROOT=$(pwd)
           echo $ROOT
           ctest --test-dir ${{ env.TEST_DIR }} -C ${{ env.build_config }} -R ${{ matrix.target }} -V
