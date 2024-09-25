@@ -108,7 +108,7 @@ jobs:
             g++ -v
           fi
 
-          cmake --build --preset ${{ matrix.build_preset }}-${{ env.build_config }} --target ${{ matrix.target }}
+          cmake --build --preset ${{ matrix.build_preset }}-${{ matrix.build_config }} --target ${{ matrix.target }}
 
       # Run products
       - name: "Run products"
@@ -122,7 +122,7 @@ jobs:
           echo found_api_key: ${{ env.found_api_key }}
           ROOT=$(pwd)
           echo $ROOT
-          ctest --test-dir ${{ env.TEST_DIR }} -C ${{ env.build_config }} -R ${{ matrix.target }} -V
+          ctest --test-dir ${{ env.TEST_DIR }} -C ${{ matrix.build_config }} -R ${{ matrix.target }} -V
 
       # Static analyse
       - name: "Static analyse products"
@@ -130,7 +130,7 @@ jobs:
         if: ${{ matrix.analyse }}
         run: |
           cd cmake-build/${{ matrix.cmake_host_system_name }}/cmake-${{ matrix.config_preset }}
-          OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ env.build_config }} LLVM_LTO=NO`
+          OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ matrix.build_config }} LLVM_LTO=NO`
           echo "$OUTPUT"
           WARNING_LINES=$(echo "$OUTPUT" | grep ": warning:")
           TRACKTION_WARNING_LINES=$(echo "$WARNING_LINES" | sed -n '/tracktion_engine\/modules\/tracktion_/p')
