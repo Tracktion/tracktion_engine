@@ -45,7 +45,7 @@ public:
     EditItemID getItemID() const                            { return editItemID; }
 
     /** Returns the MPESourceID used by this Node. */
-    MidiMessageArray::MPESourceID getMPESourceID() const    { return midiSourceID; }
+    MPESourceID getMPESourceID() const    { return midiSourceID; }
 
     /** Returns the ActiveNoteList in use for this Node.
         Call this after prepareToPlay to get the one in use.
@@ -80,7 +80,7 @@ private:
     std::function<bool()> shouldBeMutedDelegate = nullptr;
     std::shared_ptr<BeatDuration> dynamicOffsetBeats = std::make_shared<BeatDuration>();
 
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
     bool wasMute = false;
 };
 

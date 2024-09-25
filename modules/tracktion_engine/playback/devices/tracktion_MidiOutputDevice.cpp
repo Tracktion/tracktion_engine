@@ -66,7 +66,7 @@ public:
 
             updateParts (blockStart);
             buffer.addMidiMessage (juce::MidiMessage::fullFrame (hours, minutes, seconds, frames, midiTCType),
-                                   0, MidiMessageArray::notMPE);
+                                   0, {});
             lastMessageSent = juce::Time::getMillisecondCounter();
         }
         else if (lastTime != blockStart)
@@ -81,7 +81,7 @@ public:
                 {
                     updateParts (blockStart);
                     buffer.addMidiMessage (juce::MidiMessage::fullFrame (hours, minutes, seconds, frames, midiTCType),
-                                           0, MidiMessageArray::notMPE);
+                                           0, {});
                     lastMessageSent = now;
                 }
             }
@@ -128,7 +128,7 @@ public:
                         }
 
                         buffer.addMidiMessage (juce::MidiMessage::quarterFrame (sequenceIndex, value),
-                                               t - blockStart, MidiMessageArray::notMPE);
+                                               t - blockStart, {});
                     }
 
                     sequenceNum++;
@@ -196,7 +196,7 @@ public:
             needsToSendPosition = true;
 
             if (! isPlaying)
-                buffer.addMidiMessage (juce::MidiMessage::midiStop(), 0, MidiMessageArray::notMPE);
+                buffer.addMidiMessage (juce::MidiMessage::midiStop(), 0, {});
         }
 
         if (isPlaying)
@@ -231,9 +231,9 @@ public:
                         buffer.addMidiMessage (juce::MidiMessage::songPositionPointer (num / 6), 0);
 
                         if (num == 0 || (tc != nullptr && tc->isRecording()))
-                            buffer.addMidiMessage (juce::MidiMessage::midiStart(), 0, MidiMessageArray::notMPE);
+                            buffer.addMidiMessage (juce::MidiMessage::midiStart(), 0, {});
                         else
-                            buffer.addMidiMessage (juce::MidiMessage::midiContinue(), 0, MidiMessageArray::notMPE);
+                            buffer.addMidiMessage (juce::MidiMessage::midiContinue(), 0, {});
 
                         needsToSendPosition = false;
                     }
@@ -242,7 +242,7 @@ public:
                 if (! needsToSendPosition)
                     buffer.addMidiMessage (juce::MidiMessage::midiClock(),
                                            (num - startNum) * timePerNum,
-                                           MidiMessageArray::notMPE);
+                                           {});
 
                 ++num;
             }

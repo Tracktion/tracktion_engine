@@ -57,8 +57,7 @@ public:
                 if (! timeRange.contains (time))
                     break;
 
-                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(),
-                                                tracktion_engine::MidiMessageArray::notMPE);
+                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(), {});
             }
             else
             {

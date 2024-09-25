@@ -49,7 +49,7 @@ public:
             auto m = items[i].m;
             m.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
 
-            owner.handleIncomingMidiMessage (m);
+            owner.handleIncomingMidiMessage (m, owner.getMPESourceID());
 
             sent++;
         }
@@ -534,7 +534,7 @@ void MidiInputDevice::handleNoteOn (juce::MidiKeyboardState*, int /*midiChannel*
     if (eventReceivedFromDevice)
         return;
 
-    handleIncomingMidiMessage (juce::MidiMessage::noteOn (std::max (1, channelToUse.getChannelNumber()), midiNoteNumber, velocity));
+    handleIncomingMidiMessage (juce::MidiMessage::noteOn (std::max (1, channelToUse.getChannelNumber()), midiNoteNumber, velocity), midiSourceID);
 }
 
 void MidiInputDevice::handleNoteOff (juce::MidiKeyboardState*, int /*midiChannel*/, int midiNoteNumber, float)
@@ -542,13 +542,13 @@ void MidiInputDevice::handleNoteOff (juce::MidiKeyboardState*, int /*midiChannel
     if (eventReceivedFromDevice)
         return;
 
-    handleIncomingMidiMessage (juce::MidiMessage::noteOff (std::max (1, channelToUse.getChannelNumber()), midiNoteNumber));
+    handleIncomingMidiMessage (juce::MidiMessage::noteOff (std::max (1, channelToUse.getChannelNumber()), midiNoteNumber), midiSourceID);
 }
 
 void MidiInputDevice::handleIncomingMidiMessage (juce::MidiInput*, const juce::MidiMessage& m)
 {
     const juce::ScopedValueSetter<bool> svs (eventReceivedFromDevice, true, false);
-    handleIncomingMidiMessage (m);
+    handleIncomingMidiMessage (m, midiSourceID);
     keyboardState.processNextMidiEvent (m);
 }
 
@@ -577,9 +577,9 @@ void MidiInputDevice::connectionStateChanged()
             bankID = engine.getMidiProgramManager().getBankID (0, bankToUse);
 
         auto chan = channelToUse.getChannelNumber();
-        handleIncomingMidiMessage (juce::MidiMessage::controllerEvent (chan, 0x00, MidiControllerEvent::bankIDToCoarse (bankID)));
-        handleIncomingMidiMessage (juce::MidiMessage::controllerEvent (chan, 0x20, MidiControllerEvent::bankIDToFine (bankID)));
-        handleIncomingMidiMessage (juce::MidiMessage::programChange (chan, programToUse - 1));
+        handleIncomingMidiMessage (juce::MidiMessage::controllerEvent (chan, 0x00, MidiControllerEvent::bankIDToCoarse (bankID)), midiSourceID);
+        handleIncomingMidiMessage (juce::MidiMessage::controllerEvent (chan, 0x20, MidiControllerEvent::bankIDToFine (bankID)), midiSourceID);
+        handleIncomingMidiMessage (juce::MidiMessage::programChange (chan, programToUse - 1), midiSourceID);
     }
 }
 
@@ -1030,7 +1030,7 @@ public:
         return ! recordingContexts.empty();
     }
 
-    bool handleIncomingMidiMessage (const juce::MidiMessage& message)
+    bool handleIncomingMidiMessage (const juce::MidiMessage& message, MPESourceID sourceID)
     {
         {
             juce::ScopedLock sl (activeNotesLock);
@@ -1060,7 +1060,7 @@ public:
         juce::ScopedLock sl (consumerLock);
 
         for (auto c : consumers)
-            c->handleIncomingMidiMessage (message);
+            c->handleIncomingMidiMessage (message, sourceID);
 
         return recording || consumers.size() > 0;
     }
@@ -1500,7 +1500,7 @@ private:
     juce::Array<Consumer*> consumers;
     double lastEditTime = -1.0;
     double pausedTime = 0;
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
     ActiveNoteList activeNotes;
     std::unique_ptr<RecordStopper> recordStopper;
 
@@ -1627,7 +1627,7 @@ void MidiInputDevice::masterTimeUpdate (double time)
         instance->masterTimeUpdate (time);
 }
 
-void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage& message)
+void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage& message, MPESourceID sourceID)
 {
     bool messageUnused = true;
 
@@ -1635,7 +1635,7 @@ void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage& message)
         const juce::ScopedLock sl (instanceLock);
 
         for (auto i : instances)
-            if (i->handleIncomingMidiMessage (message))
+            if (i->handleIncomingMidiMessage (message, sourceID))
                 messageUnused = false;
     }
 

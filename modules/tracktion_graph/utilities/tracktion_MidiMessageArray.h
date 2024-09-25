@@ -15,29 +15,6 @@ namespace tracktion { inline namespace engine
 
 struct MidiMessageArray
 {
-    using MPESourceID = uint32_t;
-
-    static MPESourceID createUniqueMPESourceID() noexcept
-    {
-        static MPESourceID i = 0;
-        return ++i;
-    }
-
-    static constexpr MPESourceID notMPE = 0;
-
-    struct MidiMessageWithSource  : public juce::MidiMessage
-    {
-        MidiMessageWithSource (const juce::MidiMessage& m, MPESourceID source) : juce::MidiMessage (m), mpeSourceID (source) {}
-        MidiMessageWithSource (juce::MidiMessage&& m, MPESourceID source) : juce::MidiMessage (std::move (m)), mpeSourceID (source) {}
-
-        MidiMessageWithSource (const MidiMessageWithSource&) = default;
-        MidiMessageWithSource (MidiMessageWithSource&&) = default;
-        MidiMessageWithSource& operator= (const MidiMessageWithSource&) = default;
-        MidiMessageWithSource& operator= (MidiMessageWithSource&&) = default;
-
-        MPESourceID mpeSourceID = 0;
-    };
-
     bool isEmpty() const noexcept                                   { return messages.isEmpty(); }
     bool isNotEmpty() const noexcept                                { return ! messages.isEmpty(); }
 
@@ -138,7 +115,7 @@ struct MidiMessageArray
 
         for (const auto& m : source)
         {
-            auto copy = MidiMessageWithSource (m);
+            auto copy = tracktion::engine::MidiMessageWithSource (m);
             copy.addToTimeStamp (delta);
             messages.add (std::move (copy));
         }
@@ -268,8 +245,17 @@ struct MidiMessageArray
 
     bool isAllNotesOff = false;
 
+
+    //==============================================================================
+   #if ! JUCE_GCC
+    using MidiMessageWithSource [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MidiMessageWithSource;
+   #endif
+    using MPESourceID [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MPESourceID;
+    [[ deprecated("This function has moved into the parent namespace") ]] static MPESourceID createUniqueMPESourceID() { return tracktion::engine::createUniqueMPESourceID(); }
+    [[ deprecated("Just use a default-constructed MPESourceID instead of this") ]] static constexpr MPESourceID notMPE = {};
+
 private:
-    juce::Array<MidiMessageWithSource> messages;
+    juce::Array<tracktion::engine::MidiMessageWithSource> messages;
 };
 
 }} // namespace tracktion

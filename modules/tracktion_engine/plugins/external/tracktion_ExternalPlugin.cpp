@@ -1042,15 +1042,15 @@ struct ExternalPlugin::MPEChannelRemapper
     void reset() noexcept
     {
         for (auto& s : sourceAndChannel)
-            s = MidiMessageArray::notMPE;
+            s = {};
     }
 
     void clearChannel (int channel) noexcept
     {
-        sourceAndChannel[channel] = MidiMessageArray::notMPE;
+        sourceAndChannel[channel] = {};
     }
 
-    void remapMidiChannelIfNeeded (MidiMessageArray::MidiMessageWithSource& m) noexcept
+    void remapMidiChannelIfNeeded (MidiMessageWithSource& m) noexcept
     {
         auto channel = m.getChannel();
 
@@ -1070,7 +1070,7 @@ struct ExternalPlugin::MPEChannelRemapper
                 if (applyRemapIfExisting (chan, sourceAndChannelID, m))
                     return;
 
-            if (sourceAndChannel[channel] == MidiMessageArray::notMPE)
+            if (sourceAndChannel[channel] == 0)
             {
                 lastUsed[channel] = counter;
                 sourceAndChannel[channel] = sourceAndChannelID;
@@ -1091,7 +1091,7 @@ struct ExternalPlugin::MPEChannelRemapper
     int getBestChanToReuse() const noexcept
     {
         for (int chan = lowChannel; chan <= highChannel; ++chan)
-            if (sourceAndChannel[chan] == MidiMessageArray::notMPE)
+            if (sourceAndChannel[chan] == 0)
                 return chan;
 
         auto bestChan = lowChannel;
@@ -1109,12 +1109,12 @@ struct ExternalPlugin::MPEChannelRemapper
         return bestChan;
     }
 
-    bool applyRemapIfExisting (int channel, uint32_t sourceAndChannelID, MidiMessageArray::MidiMessageWithSource& m) noexcept
+    bool applyRemapIfExisting (int channel, uint32_t sourceAndChannelID, MidiMessageWithSource& m) noexcept
     {
         if (sourceAndChannel[channel] == sourceAndChannelID)
         {
             if (m.isNoteOff() || m.isAllNotesOff() || m.isResetAllControllers())
-                sourceAndChannel[channel] = MidiMessageArray::notMPE;
+                sourceAndChannel[channel] = 0;
             else
                 lastUsed[channel] = counter;
 

@@ -97,7 +97,7 @@ public:
     juce::MidiKeyboardState keyboardState;
 
     void handleIncomingMidiMessage (juce::MidiInput*, const juce::MidiMessage&) override;
-    virtual void handleIncomingMidiMessage (const juce::MidiMessage&) = 0;
+    virtual void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) = 0;
 
     RetrospectiveMidiBuffer* getRetrospectiveMidiBuffer() const     { return retrospectiveBuffer.get(); }
     void updateRetrospectiveBufferLength (double length) override;
@@ -106,7 +106,7 @@ public:
     juce::Array<AudioTrack*> getDestinationTracks();
 
     MidiChannel getMidiChannelFor (int rawChannelNumber) const;
-    MidiMessageArray::MPESourceID getMPESourceID() const            { return midiSourceID; }
+    MPESourceID getMPESourceID() const                              { return midiSourceID; }
 
     //==============================================================================
     /** Gets notified (lazily, not in real-time) when any MidiInputDevice's key's state changes. */
@@ -141,7 +141,7 @@ protected:
     int bankToUse = 0;
     NoteFilterRange noteFilterRange;
 
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
 
     std::unique_ptr<NoteDispatcher> noteDispatcher;
     std::vector<double> lastNoteOns;
@@ -165,7 +165,7 @@ protected:
     void loadMidiProps (const juce::XmlElement*);
     void saveMidiProps (juce::XmlElement&);
 
-    void sendMessageToInstances (const juce::MidiMessage&);
+    void sendMessageToInstances (const juce::MidiMessage&, MPESourceID);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDevice)
 };

@@ -20,7 +20,7 @@ class HostedMidiInputDeviceNode final : public tracktion::graph::Node,
 {
 public:
     HostedMidiInputDeviceNode (InputDeviceInstance&,
-                               MidiInputDevice&, MidiMessageArray::MPESourceID,
+                               MidiInputDevice&,
                                tracktion::graph::PlayHeadState&,
                                tracktion::ProcessState&);
     ~HostedMidiInputDeviceNode() override;
@@ -30,12 +30,11 @@ public:
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
 
 private:
     //==============================================================================
     InputDeviceInstance& instance;
-    const MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
 
     tracktion::graph::RealTimeSpinLock bufferMutex;
     MidiMessageArray incomingMessages;

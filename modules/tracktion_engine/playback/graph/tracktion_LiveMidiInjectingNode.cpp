@@ -78,7 +78,7 @@ void LiveMidiInjectingNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSource mm)
+void LiveMidiInjectingNode::injectMessage (MidiMessageWithSource mm)
 {
     mm.setTimeStamp (0.0);
 
@@ -87,7 +87,7 @@ void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSour
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageArray::MidiMessageWithSource& mm, bool& wasUsed)
+void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageWithSource& mm, bool& wasUsed)
 {
     if (&at != track.get())
         return;

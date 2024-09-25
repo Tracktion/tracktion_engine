@@ -153,7 +153,7 @@ private:
     int lastBlockSizeSamples = 0;
 
     juce::MidiBuffer midiBuffer;
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
     std::atomic<bool> midiPanicNeeded { false };
 
     ActiveNoteList activeNotes;

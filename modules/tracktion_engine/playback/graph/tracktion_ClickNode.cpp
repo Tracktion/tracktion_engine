@@ -152,7 +152,7 @@ void ClickGenerator::processBlock (choc::buffer::ChannelArrayView<float>* destBu
             if (t >= editTime.getStart())
                 bufferForMidiMessages->addMidiMessage (juce::MidiMessage::noteOn (10, note, gain),
                                                        (t - editTime.getStart()).inSeconds(),
-                                                       MidiMessageArray::notMPE);
+                                                       {});
 
             tempoPosition.add (1_bd);
             beatInfo = getBeatInfo (sequence, tempoPosition);
