@@ -28,7 +28,7 @@ var searchData=
   ['noteonlock_13644',['noteOnLock',['../classtracktion_1_1engine_1_1MidiOutputDevice.html#ae44929ddd116a33786d198b91236ae94',1,'tracktion::engine::MidiOutputDevice']]],
   ['notes_13645',['notes',['../structtracktion_1_1engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#a99c3bf30a2458017a30f6b3e11e56a0d',1,'tracktion::engine::StepClip::Pattern::CachedPattern::notes()'],['../structtracktion_1_1engine_1_1Clipboard_1_1MIDIEvents.html#a4ef3f8f6e1349b35cdf9fa45d1eb20f3',1,'tracktion::engine::Clipboard::MIDIEvents::notes()']]],
   ['notevalue_13646',['noteValue',['../structtracktion_1_1engine_1_1StepClip_1_1Channel.html#a52d1ac8dda0e1a9212902bdd468b9bc2',1,'tracktion::engine::StepClip::Channel']]],
-  ['notmpe_13647',['notMPE',['../structtracktion_1_1engine_1_1MidiMessageArray.html#a448db49ee269bfa1a0b86b41d193bd9e',1,'tracktion::engine::MidiMessageArray']]],
+  ['notmpe_13647',['notMPE',['../structtracktion_1_1engine_1_1MidiMessageArray.html#a399bfa0286481f0e74a03904a45e9c01',1,'tracktion::engine::MidiMessageArray']]],
   ['notsoloisolated_13648',['notSoloIsolated',['../structtracktion_1_1engine_1_1FreezePointPlugin_1_1ScopedTrackSoloIsolator.html#ac49e7c731b0f93041af22dd2b6c3aa65',1,'tracktion::engine::FreezePointPlugin::ScopedTrackSoloIsolator']]],
   ['nudge_13649',['nudge',['../classtracktion_1_1engine_1_1MackieMCU.html#a3514573a20c54ca8177d24cfb99dc452',1,'tracktion::engine::MackieMCU']]],
   ['numactivepoints_13650',['numActivePoints',['../classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html#a0333884b860c2f54473a34761a329834',1,'tracktion::engine::BreakpointOscillatorModifier']]],

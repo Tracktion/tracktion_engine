@@ -48646,10 +48646,10 @@
       <arglist>(int size)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static MPESourceID</type>
+      <type>static tracktion::engine::MPESourceID</type>
       <name>createUniqueMPESourceID</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>afb77d523b791bac15d0639277afa960d</anchor>
+      <anchor>af13a796b8cd3312a329f69f7f168eeea</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -48660,10 +48660,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable" static="yes">
-      <type>static constexpr MPESourceID</type>
+      <type>static constexpr tracktion::engine::MPESourceID</type>
       <name>notMPE</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>a448db49ee269bfa1a0b86b41d193bd9e</anchor>
+      <anchor>a399bfa0286481f0e74a03904a45e9c01</anchor>
       <arglist></arglist>
     </member>
   </compound>
