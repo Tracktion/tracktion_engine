@@ -90,9 +90,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af16570a412749a3d0a06c730cefcbecf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#af16570a412749a3d0a06c730cefcbecf">acceptInputBuffer</a> (choc::buffer::ChannelArrayView&lt; float &gt;)</td></tr>
 <tr class="memdesc:af16570a412749a3d0a06c730cefcbecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override this to receive audio input from the device if it has any.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#af16570a412749a3d0a06c730cefcbecf">More...</a><br /></td></tr>
 <tr class="separator:af16570a412749a3d0a06c730cefcbecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0ff3fbfe754ba44a78142e3082bff12"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#ad0ff3fbfe754ba44a78142e3082bff12">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;)</td></tr>
-<tr class="memdesc:ad0ff3fbfe754ba44a78142e3082bff12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override this to receive MIDI input from the device if it has any.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#ad0ff3fbfe754ba44a78142e3082bff12">More...</a><br /></td></tr>
-<tr class="separator:ad0ff3fbfe754ba44a78142e3082bff12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad9c9cbc64bcd854762f195c48ecb5a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#aad9c9cbc64bcd854762f195c48ecb5a9">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>)</td></tr>
+<tr class="memdesc:aad9c9cbc64bcd854762f195c48ecb5a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override this to receive MIDI input from the device if it has any.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#aad9c9cbc64bcd854762f195c48ecb5a9">More...</a><br /></td></tr>
+<tr class="separator:aad9c9cbc64bcd854762f195c48ecb5a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa91b163d7381932288af70a2def43fe8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#aa91b163d7381932288af70a2def43fe8">discardRecordings</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:aa91b163d7381932288af70a2def43fe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called when a recording is aborted so listeners should trash their temp data.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html#aa91b163d7381932288af70a2def43fe8">More...</a><br /></td></tr>
 <tr class="separator:aa91b163d7381932288af70a2def43fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +159,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad0ff3fbfe754ba44a78142e3082bff12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0ff3fbfe754ba44a78142e3082bff12">&#9670;&nbsp;</a></span>handleIncomingMidiMessage()</h2>
+<a id="aad9c9cbc64bcd854762f195c48ecb5a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad9c9cbc64bcd854762f195c48ecb5a9">&#9670;&nbsp;</a></span>handleIncomingMidiMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -172,8 +172,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void tracktion::engine::InputDeviceInstance::Consumer::handleIncomingMidiMessage </td>
           <td>(</td>
           <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -185,7 +195,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Override this to receive MIDI input from the device if it has any. </p>
 
-<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1MidiInputDeviceNode.html#afc0bd28fa2315bc2795288d55ea497c5">tracktion::engine::MidiInputDeviceNode</a>, and <a class="el" href="classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html#add1f151863059348da755c3e004c4694">tracktion::engine::HostedMidiInputDeviceNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1MidiInputDeviceNode.html#a73f21fd03d02a99a0273b02d9c73c362">tracktion::engine::MidiInputDeviceNode</a>, and <a class="el" href="classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html#ab36fd9f025286dc263d3e0807280b8d3">tracktion::engine::HostedMidiInputDeviceNode</a>.</p>
 
 </div>
 </div>
@@ -225,7 +235,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 24 2024 15:18:26 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Sep 25 2024 14:03:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

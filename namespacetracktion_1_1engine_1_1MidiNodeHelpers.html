@@ -74,19 +74,19 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5e260e7d2d706c13759a9ff1eb80ed00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#a5e260e7d2d706c13759a9ff1eb80ed00">createMessagesForTime</a> (<a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a> &amp;clipLevel, bool useMPEChannelMode, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</td></tr>
-<tr class="separator:a5e260e7d2d706c13759a9ff1eb80ed00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2c6ffe5a4da7c6933f42a0cc83313b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#ac2c6ffe5a4da7c6933f42a0cc83313b2">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> midiSourceID, double time, double midiTimeOffset, bool isPlaying)</td></tr>
-<tr class="separator:ac2c6ffe5a4da7c6933f42a0cc83313b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa44ea3451a512b49958ede81d09ff645"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#aa44ea3451a512b49958ede81d09ff645">createMessagesForTime</a> (<a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a> &amp;clipLevel, bool useMPEChannelMode, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a> midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</td></tr>
+<tr class="separator:aa44ea3451a512b49958ede81d09ff645"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3977b15e1c5da475a66f1bec58c58ffa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#a3977b15e1c5da475a66f1bec58c58ffa">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a> midiSourceID, double time, double midiTimeOffset, bool isPlaying)</td></tr>
+<tr class="separator:a3977b15e1c5da475a66f1bec58c58ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe685681eef1653d3a025b7570268b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">sanityCheckMidiBuffer</a> (const <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;midi, double maxTimeStamp)</td></tr>
 <tr class="memdesc:afe685681eef1653d3a025b7570268b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts if any MIDI messages are timestamped outside the given range.  <a href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">More...</a><br /></td></tr>
 <tr class="separator:afe685681eef1653d3a025b7570268b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac79f8b18a1b0457b3a6ce2dae8ebaaf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#ac79f8b18a1b0457b3a6ce2dae8ebaaf9">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> &amp;activeNoteList, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> midiSourceID, double midiTimeOffset, bool isPlaying)</td></tr>
-<tr class="separator:ac79f8b18a1b0457b3a6ce2dae8ebaaf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2af7d6541190626a1ea431cacfd1ec7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#ac2af7d6541190626a1ea431cacfd1ec7">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> &amp;activeNoteList, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a> midiSourceID, double midiTimeOffset, bool isPlaying)</td></tr>
+<tr class="separator:ac2af7d6541190626a1ea431cacfd1ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a5e260e7d2d706c13759a9ff1eb80ed00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e260e7d2d706c13759a9ff1eb80ed00">&#9670;&nbsp;</a></span>createMessagesForTime()</h2>
+<a id="aa44ea3451a512b49958ede81d09ff645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa44ea3451a512b49958ede81d09ff645">&#9670;&nbsp;</a></span>createMessagesForTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -130,7 +130,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td>
           <td class="paramname"><em>midiSourceID</em>, </td>
         </tr>
         <tr>
@@ -151,8 +151,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac2c6ffe5a4da7c6933f42a0cc83313b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2c6ffe5a4da7c6933f42a0cc83313b2">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[1/2]</span></h2>
+<a id="a3977b15e1c5da475a66f1bec58c58ffa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3977b15e1c5da475a66f1bec58c58ffa">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -172,7 +172,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td>
           <td class="paramname"><em>midiSourceID</em>, </td>
         </tr>
         <tr>
@@ -235,8 +235,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac79f8b18a1b0457b3a6ce2dae8ebaaf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac79f8b18a1b0457b3a6ce2dae8ebaaf9">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[2/2]</span></h2>
+<a id="ac2af7d6541190626a1ea431cacfd1ec7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2af7d6541190626a1ea431cacfd1ec7">&#9670;&nbsp;</a></span>createNoteOffs() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,7 +256,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td>
           <td class="paramname"><em>midiSourceID</em>, </td>
         </tr>
         <tr>
@@ -286,7 +286,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 24 2024 15:18:26 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Sep 25 2024 14:03:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

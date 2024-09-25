@@ -89,8 +89,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a418689c55491c55ed29e805dead30520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a418689c55491c55ed29e805dead30520">createInstance</a> (<a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> &amp;) override</td></tr>
 <tr class="memdesc:a418689c55491c55ed29e805dead30520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an instance to use for a given playback context.  <a href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a418689c55491c55ed29e805dead30520">More...</a><br /></td></tr>
 <tr class="separator:a418689c55491c55ed29e805dead30520"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4442996e72891e4ad9dfa322d4c66f66"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a4442996e72891e4ad9dfa322d4c66f66">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;) override</td></tr>
-<tr class="separator:a4442996e72891e4ad9dfa322d4c66f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4ffc56ea708f4caec8a56003347846a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#aa4ffc56ea708f4caec8a56003347846a">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>) override</td></tr>
+<tr class="separator:aa4ffc56ea708f4caec8a56003347846a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae6128b84dd6b6c922dd2091b4388a01"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#aae6128b84dd6b6c922dd2091b4388a01">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:aae6128b84dd6b6c922dd2091b4388a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#aae6128b84dd6b6c922dd2091b4388a01">More...</a><br /></td></tr>
 <tr class="separator:aae6128b84dd6b6c922dd2091b4388a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,14 +106,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8ae221f837e8d5554bcefc88f082b31f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8998e63df0e013d4d785e41df31cdc2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#ad8998e63df0e013d4d785e41df31cdc2">toggleMIDIInputSourceDevice</a> (const juce::String &amp;deviceID)</td></tr>
 <tr class="separator:ad8998e63df0e013d4d785e41df31cdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b3cebbfd0b4b407febdb2aba885a51a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a0b3cebbfd0b4b407febdb2aba885a51a">handleMessageFromPhysicalDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &amp;, const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:a0b3cebbfd0b4b407febdb2aba885a51a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39b2f1a4f145a67b294f8c54e9e4bad6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a39b2f1a4f145a67b294f8c54e9e4bad6">handleMessageFromPhysicalDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html">PhysicalMidiInputDevice</a> &amp;, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a39b2f1a4f145a67b294f8c54e9e4bad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a015b7d1e8a8f06d47f2ea6f26a876c6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8f">DeviceType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a015b7d1e8a8f06d47f2ea6f26a876c6c">getDeviceType</a> () const override</td></tr>
 <tr class="separator:a015b7d1e8a8f06d47f2ea6f26a876c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a671c3aaae21a9aaa96cb75bed408cc2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a671c3aaae21a9aaa96cb75bed408cc2f">handleIncomingMidiMessage</a> (juce::MidiInput *, const juce::MidiMessage &amp;) override</td></tr>
 <tr class="separator:a671c3aaae21a9aaa96cb75bed408cc2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e2e0b2f3fa4b44dd87e7d0a1b6428da"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#a8e2e0b2f3fa4b44dd87e7d0a1b6428da">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;)=0</td></tr>
-<tr class="separator:a8e2e0b2f3fa4b44dd87e7d0a1b6428da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade5c87f9a1415977a0a7cae638024668"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1VirtualMidiInputDevice.html#ade5c87f9a1415977a0a7cae638024668">handleIncomingMidiMessage</a> (const juce::MidiMessage &amp;, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>)=0</td></tr>
+<tr class="separator:ade5c87f9a1415977a0a7cae638024668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1MidiInputDevice')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">tracktion::engine::MidiInputDevice</a></td></tr>
 <tr class="memitem:a8806396a17e99f821ec492a0a29abb3d inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a8806396a17e99f821ec492a0a29abb3d">MidiInputDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, juce::String type, juce::String name, juce::String deviceID)</td></tr>
 <tr class="separator:a8806396a17e99f821ec492a0a29abb3d inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,8 +182,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa0c7e5b591e5d0e43b5c24d254460e4c inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae55980a90112e5477ebd773ea36ceb56 inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1MidiChannel.html">MidiChannel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#ae55980a90112e5477ebd773ea36ceb56">getMidiChannelFor</a> (int rawChannelNumber) const</td></tr>
 <tr class="separator:ae55980a90112e5477ebd773ea36ceb56 inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfbe2f4bd2a128b361b19033123aa525 inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#acfbe2f4bd2a128b361b19033123aa525">getMPESourceID</a> () const</td></tr>
-<tr class="separator:acfbe2f4bd2a128b361b19033123aa525 inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3c187990f859611ca82dc660a6ae24d inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#ad3c187990f859611ca82dc660a6ae24d">getMPESourceID</a> () const</td></tr>
+<tr class="separator:ad3c187990f859611ca82dc660a6ae24d inherit pub_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1InputDevice"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1InputDevice')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">tracktion::engine::InputDevice</a></td></tr>
 <tr class="memitem:a879e56f43859e9cd5e272e8c2334e19a inherit pub_methods_classtracktion_1_1engine_1_1InputDevice"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#a879e56f43859e9cd5e272e8c2334e19a">InputDevice</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, juce::String type, juce::String name, juce::String deviceID)</td></tr>
 <tr class="separator:a879e56f43859e9cd5e272e8c2334e19a inherit pub_methods_classtracktion_1_1engine_1_1InputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -321,8 +321,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af2daccc5a74e987394e8ccdd65886a31 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af55f702d44d334214c8843732d45b9a3 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#af55f702d44d334214c8843732d45b9a3">saveMidiProps</a> (juce::XmlElement &amp;)</td></tr>
 <tr class="separator:af55f702d44d334214c8843732d45b9a3 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4b531b6665d8d031093cee0bdc7d554 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#aa4b531b6665d8d031093cee0bdc7d554">sendMessageToInstances</a> (const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:aa4b531b6665d8d031093cee0bdc7d554 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bed9d732d79b17083f1a568528b9fe7 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a0bed9d732d79b17083f1a568528b9fe7">sendMessageToInstances</a> (const juce::MidiMessage &amp;, <a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>)</td></tr>
+<tr class="separator:a0bed9d732d79b17083f1a568528b9fe7 inherit pro_methods_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">tracktion::engine::MidiInputDevice</a></td></tr>
 <tr class="memitem:aa5d27c1d645464b6d0c1e97683373677 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#aa5d27c1d645464b6d0c1e97683373677">adjustSecs</a> { 0 }</td></tr>
 <tr class="separator:aa5d27c1d645464b6d0c1e97683373677 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -344,8 +344,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:ac2335abbf544a81c392f7bcef88185f3 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3050599c68f831cf29206e7fd4b4a6f8 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1MidiInputDevice_1_1NoteFilterRange.html">NoteFilterRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a3050599c68f831cf29206e7fd4b4a6f8">noteFilterRange</a></td></tr>
 <tr class="separator:a3050599c68f831cf29206e7fd4b4a6f8 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa33438e95ce74eca4d78f0bc6fd87408 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#aa33438e95ce74eca4d78f0bc6fd87408">midiSourceID</a> = <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#a9167457e005a03ad6995fd9bc902eea3">MidiMessageArray::createUniqueMPESourceID</a>()</td></tr>
-<tr class="separator:aa33438e95ce74eca4d78f0bc6fd87408 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacfcf0169f97ae225dc9028ff1abccf8 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#aacfcf0169f97ae225dc9028ff1abccf8">midiSourceID</a> = createUniqueMPESourceID()</td></tr>
+<tr class="separator:aacfcf0169f97ae225dc9028ff1abccf8 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5af409ec1e2680dd7c85ea79efe35b1 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; NoteDispatcher &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#ab5af409ec1e2680dd7c85ea79efe35b1">noteDispatcher</a></td></tr>
 <tr class="separator:ab5af409ec1e2680dd7c85ea79efe35b1 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03aaee72ea3e46f9c0584d80959c6788 inherit pro_attribs_classtracktion_1_1engine_1_1MidiInputDevice"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a03aaee72ea3e46f9c0584d80959c6788">lastNoteOns</a></td></tr>
@@ -479,8 +479,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a4442996e72891e4ad9dfa322d4c66f66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4442996e72891e4ad9dfa322d4c66f66">&#9670;&nbsp;</a></span>handleIncomingMidiMessage() <span class="overload">[1/3]</span></h2>
+<a id="aa4ffc56ea708f4caec8a56003347846a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4ffc56ea708f4caec8a56003347846a">&#9670;&nbsp;</a></span>handleIncomingMidiMessage() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -492,8 +492,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">void tracktion::engine::VirtualMidiInputDevice::handleIncomingMidiMessage </td>
           <td>(</td>
           <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598">MPESourceID</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -503,7 +513,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#a8e2e0b2f3fa4b44dd87e7d0a1b6428da">tracktion::engine::MidiInputDevice</a>.</p>
+<p>Implements <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#ade5c87f9a1415977a0a7cae638024668">tracktion::engine::MidiInputDevice</a>.</p>
 
 </div>
 </div>
@@ -671,8 +681,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0b3cebbfd0b4b407febdb2aba885a51a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b3cebbfd0b4b407febdb2aba885a51a">&#9670;&nbsp;</a></span>handleMessageFromPhysicalDevice()</h2>
+<a id="a39b2f1a4f145a67b294f8c54e9e4bad6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39b2f1a4f145a67b294f8c54e9e4bad6">&#9670;&nbsp;</a></span>handleMessageFromPhysicalDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -680,7 +690,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void tracktion::engine::VirtualMidiInputDevice::handleMessageFromPhysicalDevice </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html">PhysicalMidiInputDevice</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -748,8 +758,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a8e2e0b2f3fa4b44dd87e7d0a1b6428da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e2e0b2f3fa4b44dd87e7d0a1b6428da">&#9670;&nbsp;</a></span>handleIncomingMidiMessage() <span class="overload">[3/3]</span></h2>
+<a id="ade5c87f9a1415977a0a7cae638024668"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade5c87f9a1415977a0a7cae638024668">&#9670;&nbsp;</a></span>handleIncomingMidiMessage() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -783,7 +793,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 24 2024 15:18:26 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Sep 25 2024 14:03:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

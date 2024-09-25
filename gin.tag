@@ -4304,9 +4304,23 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
     <filename>tracktion__MidiMessageArray_8h.html</filename>
     <class kind="struct">tracktion::engine::MidiMessageArray</class>
-    <class kind="struct">tracktion::engine::MidiMessageArray::MidiMessageWithSource</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_MidiMessageWithSource.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
+    <filename>tracktion__MidiMessageWithSource_8h.html</filename>
+    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+    <member kind="typedef">
+      <type>uint32_t</type>
+      <name>MPESourceID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a48992ea02a0d6d6f423dcb9111351598</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiModifier.h</name>
@@ -4335,15 +4349,15 @@
       <type>void</type>
       <name>createMessagesForTime</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>a5e260e7d2d706c13759a9ff1eb80ed00</anchor>
-      <arglist>(MidiMessageArray &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, LiveClipLevel &amp;clipLevel, bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</arglist>
+      <anchor>aa44ea3451a512b49958ede81d09ff645</anchor>
+      <arglist>(MidiMessageArray &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, LiveClipLevel &amp;clipLevel, bool useMPEChannelMode, MPESourceID midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>createNoteOffs</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>ac2c6ffe5a4da7c6933f42a0cc83313b2</anchor>
-      <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MidiMessageArray::MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
+      <anchor>a3977b15e1c5da475a66f1bec58c58ffa</anchor>
+      <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -4356,8 +4370,8 @@
       <type>void</type>
       <name>createNoteOffs</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>ac79f8b18a1b0457b3a6ce2dae8ebaaf9</anchor>
-      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MidiMessageArray::MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
+      <anchor>ac2af7d6541190626a1ea431cacfd1ec7</anchor>
+      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -12796,15 +12810,15 @@
       <type>void</type>
       <name>injectLiveMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>af91f9370816743a2a769dd4ed01b7f81</anchor>
-      <arglist>(const MidiMessageArray::MidiMessageWithSource &amp;)</arglist>
+      <anchor>a1ade3e0160fc555d6f9a6a65062fad4f</anchor>
+      <arglist>(const MidiMessageWithSource &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>injectLiveMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>a4f6921e1022c6373b7a9873c9081be18</anchor>
-      <arglist>(const juce::MidiMessage &amp;, MidiMessageArray::MPESourceID)</arglist>
+      <anchor>ad0204a26b17a0f6311cec931ed1379ad</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -21603,8 +21617,8 @@
       <type>virtual void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html</anchorfile>
-      <anchor>ad0ff3fbfe754ba44a78142e3082bff12</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>aad9c9cbc64bcd854762f195c48ecb5a9</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -28254,8 +28268,8 @@
       <type>void</type>
       <name>broadcastMessageToAllVirtualDevices</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a739ea789b6f41d5d684aeec3a6c1bb14</anchor>
-      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
+      <anchor>a85c7ac683205c43655052de0e81e3910</anchor>
+      <arglist>(PhysicalMidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -38722,8 +38736,8 @@
       <type></type>
       <name>HostedMidiInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html</anchorfile>
-      <anchor>a0c4f4aeed037537fd109c8ae3c1b4bb4</anchor>
-      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;, tracktion::ProcessState &amp;)</arglist>
+      <anchor>ab97503296fac590fff0f15ff9fc0b16b</anchor>
+      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, tracktion::graph::PlayHeadState &amp;, tracktion::ProcessState &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -38764,8 +38778,8 @@
       <type>void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html</anchorfile>
-      <anchor>add1f151863059348da755c3e004c4694</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>ab36fd9f025286dc263d3e0807280b8d3</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -42208,8 +42222,8 @@
       <type>virtual void</type>
       <name>injectLiveMidiMessage</name>
       <anchorfile>structtracktion_1_1engine_1_1AudioTrack_1_1Listener.html</anchorfile>
-      <anchor>a1b035b618984a5b3b207fc7afc454afc</anchor>
-      <arglist>(AudioTrack &amp;, const MidiMessageArray::MidiMessageWithSource &amp;, bool &amp;wasUsed)=0</arglist>
+      <anchor>adce2793146dbc3ab64c9324f1ff17445</anchor>
+      <arglist>(AudioTrack &amp;, const MidiMessageWithSource &amp;, bool &amp;wasUsed)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
@@ -43407,10 +43421,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>MidiMessageArray::MPESourceID</type>
+      <type>MPESourceID</type>
       <name>getMPESourceID</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
-      <anchor>a6a1087202f9905fce33a5d04c7781c89</anchor>
+      <anchor>a03c54521fa96ec85399fa172f4b39160</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -47461,8 +47475,8 @@
       <type>virtual void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a8e2e0b2f3fa4b44dd87e7d0a1b6428da</anchor>
-      <arglist>(const juce::MidiMessage &amp;)=0</arglist>
+      <anchor>ade5c87f9a1415977a0a7cae638024668</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
     </member>
     <member kind="function">
       <type>RetrospectiveMidiBuffer *</type>
@@ -47500,10 +47514,10 @@
       <arglist>(int rawChannelNumber) const</arglist>
     </member>
     <member kind="function">
-      <type>MidiMessageArray::MPESourceID</type>
+      <type>MPESourceID</type>
       <name>getMPESourceID</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>acfbe2f4bd2a128b361b19033123aa525</anchor>
+      <anchor>ad3c187990f859611ca82dc660a6ae24d</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="variable">
@@ -47594,8 +47608,8 @@
       <type>void</type>
       <name>sendMessageToInstances</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>aa4b531b6665d8d031093cee0bdc7d554</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>a0bed9d732d79b17083f1a568528b9fe7</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)</arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>std::atomic&lt; double &gt;</type>
@@ -47668,10 +47682,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>MidiMessageArray::MPESourceID</type>
+      <type>MPESourceID</type>
       <name>midiSourceID</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>aa33438e95ce74eca4d78f0bc6fd87408</anchor>
+      <anchor>aacfcf0169f97ae225dc9028ff1abccf8</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -47754,8 +47768,8 @@
       <type></type>
       <name>MidiInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDeviceNode.html</anchorfile>
-      <anchor>a3be087d12dd38a4c7c1f4bf2174dfecd</anchor>
-      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;, EditItemID targetID)</arglist>
+      <anchor>abaea9d70cb1bb05f577592afb597f81f</anchor>
+      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MPESourceID, tracktion::graph::PlayHeadState &amp;, EditItemID targetID)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -47796,8 +47810,8 @@
       <type>void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiInputDeviceNode.html</anchorfile>
-      <anchor>afc0bd28fa2315bc2795288d55ea497c5</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a73f21fd03d02a99a0273b02d9c73c362</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -48379,12 +48393,18 @@
   <compound kind="struct">
     <name>tracktion::engine::MidiMessageArray</name>
     <filename>structtracktion_1_1engine_1_1MidiMessageArray.html</filename>
-    <class kind="struct">tracktion::engine::MidiMessageArray::MidiMessageWithSource</class>
     <member kind="typedef">
-      <type>uint32_t</type>
+      <type>tracktion::engine::MidiMessageWithSource</type>
+      <name>MidiMessageWithSource</name>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
+      <anchor>a09c500d204b93ed9142c2d091ec1d478</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>tracktion::engine::MPESourceID</type>
       <name>MPESourceID</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>ae21e698aa78c0b638625b354dc998efb</anchor>
+      <anchor>a73e5a7d5c52059c42446e68b987adadd</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -48629,8 +48649,8 @@
       <type>static MPESourceID</type>
       <name>createUniqueMPESourceID</name>
       <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>a9167457e005a03ad6995fd9bc902eea3</anchor>
-      <arglist>() noexcept</arglist>
+      <anchor>afb77d523b791bac15d0639277afa960d</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="variable">
       <type>bool</type>
@@ -48648,55 +48668,55 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::MidiMessageArray::MidiMessageWithSource</name>
-    <filename>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</filename>
+    <name>tracktion::engine::MidiMessageWithSource</name>
+    <filename>structtracktion_1_1engine_1_1MidiMessageWithSource.html</filename>
     <member kind="function">
       <type></type>
       <name>MidiMessageWithSource</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>a626e8426c785e4504c7e035131b7a7da</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>af19e35dc80432e5e29c10926fe60f61f</anchor>
       <arglist>(const juce::MidiMessage &amp;m, MPESourceID source)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>MidiMessageWithSource</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>a8f2644ecb9c1b7c347c3f964ca00e292</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>a44ce6123c1f58fc15253792801c17dd7</anchor>
       <arglist>(juce::MidiMessage &amp;&amp;m, MPESourceID source)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>MidiMessageWithSource</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>aac9c321e48310f54e5b7fc065b96e9b7</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>afef54e88545cbdc4a15a3fe9e6f9cdb9</anchor>
       <arglist>(const MidiMessageWithSource &amp;)=default</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>MidiMessageWithSource</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>a1e489f64a766e51b2542d5690e5da5fc</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>adaac3f88e6a8c51101ed5b855fef3050</anchor>
       <arglist>(MidiMessageWithSource &amp;&amp;)=default</arglist>
     </member>
     <member kind="function">
       <type>MidiMessageWithSource &amp;</type>
       <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>ae03768a6908aa71f7a202aae54af27b0</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>a6211d4be4b72fd9a35107921fbf5178e</anchor>
       <arglist>(const MidiMessageWithSource &amp;)=default</arglist>
     </member>
     <member kind="function">
       <type>MidiMessageWithSource &amp;</type>
       <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>a4a58a97f4356b8c1c5b6ba7d91b53128</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>a5120dc0b119dc2fc7fc376cc306da762</anchor>
       <arglist>(MidiMessageWithSource &amp;&amp;)=default</arglist>
     </member>
     <member kind="variable">
       <type>MPESourceID</type>
       <name>mpeSourceID</name>
-      <anchorfile>structtracktion_1_1engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html</anchorfile>
-      <anchor>a9484d25f5c6f35664623b0916445795d</anchor>
+      <anchorfile>structtracktion_1_1engine_1_1MidiMessageWithSource.html</anchorfile>
+      <anchor>a06e029b76a5f5bf656be733a6b65db4f</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -55262,8 +55282,8 @@
       <type>void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>a3eb7637b0daae67aaf3f541782c3e0d9</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a8c32d534d54728cf80ec310634d5f6fa</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -55325,8 +55345,8 @@
       <type>virtual void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>a8e2e0b2f3fa4b44dd87e7d0a1b6428da</anchor>
-      <arglist>(const juce::MidiMessage &amp;)=0</arglist>
+      <anchor>ade5c87f9a1415977a0a7cae638024668</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
     </member>
     <member kind="variable">
       <type>bool</type>
@@ -84125,8 +84145,8 @@
       <type>void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a4442996e72891e4ad9dfa322d4c66f66</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>aa4ffc56ea708f4caec8a56003347846a</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID) override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -84181,8 +84201,8 @@
       <type>void</type>
       <name>handleMessageFromPhysicalDevice</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a0b3cebbfd0b4b407febdb2aba885a51a</anchor>
-      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
+      <anchor>a39b2f1a4f145a67b294f8c54e9e4bad6</anchor>
+      <arglist>(PhysicalMidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>DeviceType</type>
@@ -84202,8 +84222,8 @@
       <type>virtual void</type>
       <name>handleIncomingMidiMessage</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a8e2e0b2f3fa4b44dd87e7d0a1b6428da</anchor>
-      <arglist>(const juce::MidiMessage &amp;)=0</arglist>
+      <anchor>ade5c87f9a1415977a0a7cae638024668</anchor>
+      <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
     </member>
     <member kind="variable">
       <type>bool</type>
@@ -87059,6 +87079,7 @@
     <class kind="struct">tracktion::LatencyProcessor</class>
     <class kind="class">tracktion::LockFreeObject</class>
     <class kind="struct">tracktion::MidiMessageArray</class>
+    <class kind="struct">tracktion::MidiMessageWithSource</class>
     <class kind="struct">tracktion::ScopedSignpost</class>
     <class kind="class">tracktion::PerformanceMeasurement</class>
     <class kind="class">tracktion::ScopedPerformanceMeasurement</class>
@@ -87473,6 +87494,7 @@
     <class kind="struct">tracktion::engine::ValueTreeComparator</class>
     <class kind="class">tracktion::engine::ReferenceCountedValueTree</class>
     <class kind="struct">tracktion::engine::MidiMessageArray</class>
+    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
     <member kind="typedef">
       <type>std::vector&lt; WarpPoint &gt;</type>
       <name>WarpMap</name>
@@ -87499,6 +87521,13 @@
       <name>HashCode</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a134d0029d7c5db278db98865a49c1b84</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>uint32_t</type>
+      <name>MPESourceID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a48992ea02a0d6d6f423dcb9111351598</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumeration">
@@ -90422,15 +90451,15 @@
       <type>void</type>
       <name>createMessagesForTime</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>a5e260e7d2d706c13759a9ff1eb80ed00</anchor>
-      <arglist>(MidiMessageArray &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, LiveClipLevel &amp;clipLevel, bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</arglist>
+      <anchor>aa44ea3451a512b49958ede81d09ff645</anchor>
+      <arglist>(MidiMessageArray &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, LiveClipLevel &amp;clipLevel, bool useMPEChannelMode, MPESourceID midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>createNoteOffs</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>ac2c6ffe5a4da7c6933f42a0cc83313b2</anchor>
-      <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MidiMessageArray::MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
+      <anchor>a3977b15e1c5da475a66f1bec58c58ffa</anchor>
+      <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -90443,8 +90472,8 @@
       <type>void</type>
       <name>createNoteOffs</name>
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
-      <anchor>ac79f8b18a1b0457b3a6ce2dae8ebaaf9</anchor>
-      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MidiMessageArray::MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
+      <anchor>ac2af7d6541190626a1ea431cacfd1ec7</anchor>
+      <arglist>(ActiveNoteList &amp;activeNoteList, MidiMessageArray &amp;destination, MPESourceID midiSourceID, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
