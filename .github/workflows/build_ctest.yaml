@@ -77,27 +77,35 @@ jobs:
             analyse: true
 
     runs-on: ${{ matrix.os }}
-    if: ${{ ! matrix.tsan || github.event_name == 'push' }}
     steps:
+      # Check if TSan should be run
+      - name: Check TSan jobs
+        if: ${{ ! matrix.tsan || github.event_name == 'push' }}
+        run: |
+          echo "SKIP_STEPS=1" >> $GITHUB_ENV
+
       # Install dependencies
       - name: Install dependencies
-        if: ${{ matrix.name == 'linux' }}
+        if: ${{ ! env.SKIP_STEPS && matrix.name == 'linux' }}
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update
           sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb ninja-build
 
       - uses: actions/checkout@v4
+        if: ${{ ! env.SKIP_STEPS }}
         with:
           submodules: true
 
       - name: Add Rubber Band submodule for testing
+        if: ${{ ! env.SKIP_STEPS }}
         run: |
           git submodule add -f https://github.com/breakfastquay/rubberband.git modules/3rd_party/rubberband
           git submodule update --init
 
       # Setup Environment Variables
       - name: Setup Environment Variables
+        if: ${{ ! env.SKIP_STEPS }}
         shell: bash
         run: |
           pwd
@@ -111,6 +119,7 @@ jobs:
 
       # Generate build files
       - name: "Generate Build Files"
+        if: ${{ ! env.SKIP_STEPS }}
         id: generate
         shell: bash
         run: |
@@ -119,7 +128,7 @@ jobs:
       # Build products
       - name: "Build products"
         shell: bash
-        if: ${{ ! matrix.analyse }}
+        if: ${{ ! env.SKIP_STEPS && ! matrix.analyse }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -133,7 +142,7 @@ jobs:
 
       # Run products
       - name: "Run products"
-        if: ${{ ! matrix.analyse }}
+        if: ${{ ! env.SKIP_STEPS && ! matrix.analyse }}
         shell: bash
         env:
           found_api_key: ${{ matrix.build_config == 'Release' && matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
@@ -148,7 +157,7 @@ jobs:
       # Static analyse
       - name: "Static analyse products"
         shell: bash
-        if: ${{ matrix.analyse }}
+        if: ${{ ! env.SKIP_STEPS && matrix.analyse }}
         run: |
           cd cmake-build/${{ matrix.cmake_host_system_name }}/cmake-${{ matrix.config_preset }}
           OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ matrix.build_config }} LLVM_LTO=NO`
