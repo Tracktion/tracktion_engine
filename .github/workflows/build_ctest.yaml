@@ -52,6 +52,7 @@ jobs:
             config_preset: "xcode"
             build_preset: "xcode-tsan"
             cmake_host_system_name: "Darwin"
+            tsan: true
           - name: macOS_tsan
             target: Benchmarks
             os: macos-latest
@@ -59,6 +60,7 @@ jobs:
             config_preset: "xcode"
             build_preset: "xcode-tsan"
             cmake_host_system_name: "Darwin"
+            tsan: true
           - name: macOS_analyse
             target: TestRunner
             os: macos-latest
@@ -76,6 +78,13 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      # Install dependencies
+      - name: Check TSan jobs
+        if: ${{ matrix.tsan && github.event_name == 'push' }}
+        run: |
+          echo "INFO: Skipping TSan runs on normal push events"
+          exit 0
+
       # Install dependencies
       - name: Install dependencies
         if: ${{ matrix.name == 'linux' }}
