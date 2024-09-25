@@ -80,7 +80,7 @@ jobs:
     steps:
       # Check if TSan should be run
       - name: Check TSan jobs
-        if: ${{ ! matrix.tsan || github.event_name == 'push' }}
+        if: ${{ matrix.tsan && github.event_name == 'push' }}
         run: |
           echo "SKIP_STEPS=1" >> $GITHUB_ENV
 
