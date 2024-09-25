@@ -76,15 +76,9 @@ jobs:
             config_preset: "xcode"
             analyse: true
 
+    if: ${{ ! matrix.tsan || github.event_name == 'push' }}
     runs-on: ${{ matrix.os }}
     steps:
-      # Install dependencies
-      - name: Check TSan jobs
-        if: ${{ matrix.tsan && github.event_name == 'push' }}
-        run: |
-          echo "INFO: Skipping TSan runs on normal push events"
-          exit 0
-
       # Install dependencies
       - name: Install dependencies
         if: ${{ matrix.name == 'linux' }}
