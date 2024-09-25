@@ -251,8 +251,8 @@ struct MidiMessageArray
     using MidiMessageWithSource [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MidiMessageWithSource;
    #endif
     using MPESourceID [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MPESourceID;
-    [[ deprecated("This function has moved into the parent namespace") ]] static MPESourceID createUniqueMPESourceID() { return tracktion::engine::createUniqueMPESourceID(); }
-    [[ deprecated("Just use a default-constructed MPESourceID instead of this") ]] static constexpr MPESourceID notMPE = {};
+    [[ deprecated("This function has moved into the parent namespace") ]] static tracktion::engine::MPESourceID createUniqueMPESourceID() { return tracktion::engine::createUniqueMPESourceID(); }
+    [[ deprecated("Just use a default-constructed MPESourceID instead of this") ]] static constexpr tracktion::engine::MPESourceID notMPE = {};
 
 private:
     juce::Array<tracktion::engine::MidiMessageWithSource> messages;
