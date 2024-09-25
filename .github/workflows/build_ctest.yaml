@@ -34,24 +34,42 @@ jobs:
           - name: macOS_asan
             target: TestRunner
             os: macos-latest
+            build_config: "Release"
             config_preset: "xcode"
             build_preset: "xcode-asan"
             cmake_host_system_name: "Darwin"
           - name: macOS_asan
             target: Benchmarks
             os: macos-latest
+            build_config: "Release"
             config_preset: "xcode"
             build_preset: "xcode-asan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_tsan
+            target: TestRunner
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-tsan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_tsan
+            target: Benchmarks
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-tsan"
             cmake_host_system_name: "Darwin"
           - name: macOS_analyse
             target: TestRunner
             os: macos-latest
+            build_config: "Release"
             config_preset: "xcode"
             cmake_host_system_name: "Darwin"
             analyse: true
           - name: macOS_analyse
             target: Benchmarks
             os: macos-latest
+            build_config: "Release"
             cmake_host_system_name: "Darwin"
             config_preset: "xcode"
             analyse: true
