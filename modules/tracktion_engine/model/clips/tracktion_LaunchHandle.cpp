@@ -52,6 +52,14 @@ void LaunchHandle::setLooping (std::optional<BeatDuration> duration)
     loopDuration.store (duration);
 }
 
+void LaunchHandle::nudge (BeatDuration duration)
+{
+    if (currentPlayState.load (std::memory_order_acquire) != PlayState::playing)
+        return;
+
+    nudgeBeats.fetch_add (duration.inBeats(), std::memory_order_acq_rel);
+}
+
 void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
 {
     if (currentPlayState.load (std::memory_order_acquire) == PlayState::stopped)
@@ -147,6 +155,17 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
 
         if (cs)
         {
+            if (auto nudge = BeatDuration::fromBeats (nudgeBeats.exchange (0.0, std::memory_order_acq_rel));
+                abs (nudge) > 0.01_bd)
+            {
+                const auto originalDuration = cs->duration;
+                cs->duration            = std::max (cs->duration + nudge, 0_bd);
+
+                const auto actualNudge = cs->duration - originalDuration;
+                cs->startBeat           = cs->startBeat - actualNudge;
+                cs->startMonotonicBeat  = { cs->startMonotonicBeat.v - actualNudge };
+            }
+
             cs->duration = cs->duration + duration;
             currentState.store (cs);
         }

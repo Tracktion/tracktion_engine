@@ -71,6 +71,9 @@ public:
     */
     void setLooping (std::optional<BeatDuration>);
 
+    /** Moves the playhead by a given number of beats. */
+    void nudge (BeatDuration);
+
     //==============================================================================
     /** Represents two beat ranges where the play state can be different in each. */
     struct SplitStatus
@@ -144,6 +147,10 @@ private:
 
     crill::seqlock_object<std::optional<CurrentState>> stateToSyncFrom;
     crill::seqlock_object<std::optional<BeatDuration>> loopDuration;
+
+    //==============================================================================
+    // audio-write/read, message-read/write
+    std::atomic<double> nudgeBeats { 0.0 };
 };
 
 } // namespace tracktion::inline engine
