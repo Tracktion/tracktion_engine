@@ -84226,10 +84226,10 @@
       <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
     </member>
     <member kind="variable">
-      <type>bool</type>
+      <type>const bool</type>
       <name>useAllInputs</name>
       <anchorfile>classtracktion_1_1engine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a51a19877e001402d16d701dff641e9dc</anchor>
+      <anchor>a197daebd18416dda92817a2f461122f2</anchor>
       <arglist></arglist>
     </member>
   </compound>
