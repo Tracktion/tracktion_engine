@@ -384,7 +384,7 @@ public:
         virtual void acceptInputBuffer (choc::buffer::ChannelArrayView<float>) {}
 
         /** Override this to receive MIDI input from the device if it has any. */
-        virtual void handleIncomingMidiMessage (const juce::MidiMessage&) {}
+        virtual void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) {}
 
         /** This is called when a recording is aborted so listeners should trash their temp data */
         virtual void discardRecordings (EditItemID /*targetID*/) {}

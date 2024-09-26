@@ -64,13 +64,13 @@ public:
     std::function<bool (Edit&)> isScrollingEnabled;
 
     /** Launch clip by track and index */
-    std::function<void (Edit&, Track&, int)> launchClip;
+    std::function<void (Edit&, Track&, int, bool)> launchClip;
 
     /** Stop all clips on track. If track is nullptr, stop all tracks */
-    std::function<void (Edit&, Track*)> stopClip;
+    std::function<void (Edit&, Track*, bool)> stopClip;
 
     /** Launch scene by index */
-    std::function<void (Edit&, int)> launchScene;
+    std::function<void (Edit&, int, bool)> launchScene;
 
     //==============================================================================
     void setCurrentEdit (Edit*, SelectionManager*);
@@ -171,9 +171,9 @@ public:
     void userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition, bool delta);
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
-    void userLaunchedClip (int channelNum, int clip);
-    void userStoppedClip (int channelNum);
-    void userLaunchedScene (int scene);
+    void userLaunchedClip (int channelNum, int clip, bool press);
+    void userStoppedClip (int channelNum, bool press);
+    void userLaunchedScene (int scene, bool press);
 
     void updateDeviceState();
 

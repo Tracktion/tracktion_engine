@@ -453,6 +453,7 @@ namespace tracktion { inline namespace engine
 
 #include "midi/tracktion_Musicality.h"
 #include "midi/tracktion_MidiNote.h"
+#include "../tracktion_graph/utilities/tracktion_MidiMessageWithSource.h"
 #include "../tracktion_graph/utilities/tracktion_MidiMessageArray.h"
 #include "midi/tracktion_ActiveNoteList.h"
 

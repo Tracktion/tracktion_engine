@@ -258,7 +258,7 @@ void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisatio
     if (info.nodeGraphToReplace != nullptr)
     {
         if (auto oldNode = findNode<CombiningNode> (*info.nodeGraphToReplace,
-                                                    [itemID = itemID] (auto& cn) { return cn.itemID == itemID; }))
+                                                    [id = itemID] (auto& cn) { return cn.itemID == id; }))
         {
             queueNoteOffsForClipsNoLongerPresent (*oldNode);
         }

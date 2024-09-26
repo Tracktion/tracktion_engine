@@ -267,28 +267,28 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
     }
 }
 
-void ControlSurface::userLaunchedClip (int channelNum, int sceneNum)
+void ControlSurface::userLaunchedClip (int channelNum, int sceneNum, bool press)
 {
     RETURN_IF_SAFE_RECORDING
 
     recentlyPressedPads.insert ({owner->channelStart + channelNum, owner->padStart + sceneNum});
 
-    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, owner->padStart + sceneNum);
+    externalControllerManager.userLaunchedClip (owner->channelStart + channelNum, owner->padStart + sceneNum, press);
     externalControllerManager.updatePadColours();
 }
 
-void ControlSurface::userStoppedClip (int channelNum)
+void ControlSurface::userStoppedClip (int channelNum, bool press)
 {
     RETURN_IF_SAFE_RECORDING
 
-    externalControllerManager.userStoppedClip (owner->channelStart + channelNum);
+    externalControllerManager.userStoppedClip (owner->channelStart + channelNum, press);
 }
 
-void ControlSurface::userLaunchedScene (int sceneNum)
+void ControlSurface::userLaunchedScene (int sceneNum, bool press)
 {
     RETURN_IF_SAFE_RECORDING
 
-    externalControllerManager.userLaunchedScene (owner->padStart + sceneNum);
+    externalControllerManager.userLaunchedScene (owner->padStart + sceneNum, press);
 }
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }

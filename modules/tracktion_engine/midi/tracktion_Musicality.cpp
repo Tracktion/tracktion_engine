@@ -1490,8 +1490,7 @@ void PatternGenerator::generatePattern()
     if (auto mc = getMidiClip())
     {
         if (auto at = mc->getAudioTrack())
-            at->injectLiveMidiMessage (juce::MidiMessage::allNotesOff (mc->getMidiChannel().getChannelNumber()),
-                                       MidiMessageArray::notMPE);
+            at->injectLiveMidiMessage (juce::MidiMessage::allNotesOff (mc->getMidiChannel().getChannelNumber()), {});
 
         switch (mode)
         {

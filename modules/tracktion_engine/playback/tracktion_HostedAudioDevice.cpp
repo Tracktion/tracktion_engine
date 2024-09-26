@@ -202,7 +202,8 @@ public:
     }
 
     using MidiInputDevice::handleIncomingMidiMessage;
-    void handleIncomingMidiMessage (const juce::MidiMessage& m) override
+
+    void handleIncomingMidiMessage (const juce::MidiMessage& m, MPESourceID) override
     {
         const juce::ScopedLock sl (pendingMidiMessagesMutex);
         pendingMidiMessages.addEvent (m, 0);
@@ -216,8 +217,8 @@ private:
     class HostedMidiInputDeviceInstance : public MidiInputDeviceInstanceBase
     {
     public:
-        HostedMidiInputDeviceInstance (HostedMidiInputDevice& owner_, EditPlaybackContext& epc)
-            : MidiInputDeviceInstanceBase (owner_, epc)
+        HostedMidiInputDeviceInstance (HostedMidiInputDevice& dev, EditPlaybackContext& epc)
+            : MidiInputDeviceInstanceBase (dev, epc), mpeSourceID (dev.getMPESourceID())
         {
         }
 
@@ -234,12 +235,13 @@ private:
 
                 auto msg = mmm.getMessage();
                 msg.setTimeStamp (globalStreamTime + blockStreamTime);
-                handleIncomingMidiMessage (std::move (msg));
+                handleIncomingMidiMessage (std::move (msg), mpeSourceID);
             }
         }
 
     private:
         const double sampleRate = context.getSampleRate();
+        MPESourceID mpeSourceID;
 
         HostedMidiInputDevice& getHostedMidiInputDevice() const   { return static_cast<HostedMidiInputDevice&> (owner); }
     };
@@ -256,7 +258,7 @@ class HostedMidiOutputDevice : public MidiOutputDevice
 {
 public:
     HostedMidiOutputDevice (HostedAudioDeviceInterface& aif)
-        : MidiOutputDevice (aif.engine, { TRANS("MIDI Output"), juce::String() }), 
+        : MidiOutputDevice (aif.engine, { TRANS("MIDI Output"), juce::String() }),
           audioIf (aif)
     {
     }
@@ -279,7 +281,7 @@ public:
 
     void sendMessageNow (const juce::MidiMessage& message) override
     {
-        toSend.addMidiMessage (message, 0, MidiMessageArray::notMPE);
+        toSend.addMidiMessage (message, 0, {});
         toSend.sortByTimestamp();
     }
 

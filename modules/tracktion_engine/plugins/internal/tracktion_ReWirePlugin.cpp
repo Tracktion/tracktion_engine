@@ -727,7 +727,7 @@ private:
     juce::BigInteger bufferSourceChannels;
 
     juce::OwnedArray<ReWireMIDIEvent> storedMessages;
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
 
     int references = 0, pluginsServedThisFrame = 0;
     double sampleRate = 0;

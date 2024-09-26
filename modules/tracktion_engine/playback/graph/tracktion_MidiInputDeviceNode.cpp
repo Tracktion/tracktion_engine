@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice& owner, MidiMessageArray::MPESourceID msi,
+MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice& owner, MPESourceID msi,
                                           tracktion::graph::PlayHeadState& phs, EditItemID targetID_)
     : instance (idi),
       midiInputDevice (owner),
@@ -51,7 +51,7 @@ void MidiInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitial
         auto programToUse = midiInputDevice.getProgramToUse();
 
         if (channelToUse.isValid() && programToUse > 0)
-            handleIncomingMidiMessage (juce::MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1));
+            handleIncomingMidiMessage (juce::MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1), {});
     }
 
     {
@@ -79,7 +79,7 @@ void MidiInputDeviceNode::process (ProcessContext& pc)
     processSection (pc, splitTimelineRange.timelineRange1);
 }
 
-void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message)
+void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message, MPESourceID sourceID)
 {
     if (state->activeNode.load (std::memory_order_acquire) != this)
         return;
@@ -91,8 +91,8 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
         if (state->numIncomingMessages < state->incomingMessages.size())
         {
-            auto& m = *state->incomingMessages.getUnchecked (state->numIncomingMessages);
-            m = message;
+            auto& m = *state->incomingMessages[state->numIncomingMessages];
+            m = { message, sourceID };
 
             if (channelToUse > 0)
                 m.setChannel (channelToUse);
@@ -126,7 +126,7 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
             newMess.setChannel (channelToUse);
 
         const std::lock_guard sl (state->liveMessagesMutex);
-        state->liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), midiSourceID);
+        state->liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), sourceID);
     }
 }
 
@@ -156,17 +156,18 @@ void MidiInputDeviceNode::processSection (ProcessContext& pc, juce::Range<int64_
 
         jassert (state->numIncomingMessages <= state->incomingMessages.size());
 
-        if (int num = juce::jmin (state->numIncomingMessages, state->incomingMessages.size()))
+        if (auto num = juce::jmin ((size_t) state->numIncomingMessages, state->incomingMessages.size()))
         {
             // not quite right as the first event won't be at the start of the buffer, but near enough for live stuff
-            const auto timeAdjust = state->incomingMessages.getUnchecked (0)->getTimeStamp();
+            const auto timeAdjust = state->incomingMessages.front()->getTimeStamp();
 
-            for (int i = 0; i < num; ++i)
+            for (size_t i = 0; i < num; ++i)
             {
-                auto m = state->incomingMessages.getUnchecked (i);
-                destMidi.addMidiMessage (*m,
-                                         juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m->getTimeStamp() - timeAdjust),
-                                         midiSourceID);
+                auto& m = *state->incomingMessages[i];
+
+                destMidi.addMidiMessage (m,
+                                         juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m.getTimeStamp() - timeAdjust),
+                                         m.mpeSourceID);
             }
         }
 

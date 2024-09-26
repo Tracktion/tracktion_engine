@@ -34,7 +34,7 @@ public:
     bool isUsedForExternalControl() const           { return externalController != nullptr; }
 
     using MidiInputDevice::handleIncomingMidiMessage;
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
 
     void loadProps() override;
     void saveProps() override;
@@ -67,7 +67,7 @@ public:
     void closeDevice() override;
 
 private:
-    void handleIncomingMidiMessageInt (const juce::MidiMessage&);
+    void handleIncomingMidiMessageInt (const juce::MidiMessage&, MPESourceID);
 
     friend struct PhysicalMidiInputDeviceInstance;
     juce::MidiDeviceInfo deviceInfo;

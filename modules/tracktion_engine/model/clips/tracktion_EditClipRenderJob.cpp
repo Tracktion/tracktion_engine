@@ -127,7 +127,14 @@ bool EditRenderJob::setUpRender()
     }
 
     CRASH_TRACER
-    callBlocking ([this] { renderStatus = std::make_unique<Edit::ScopedRenderStatus> (*params.edit, false); });
+    try
+    {
+        callBlocking ([this] { renderStatus = std::make_unique<Edit::ScopedRenderStatus> (*params.edit, false); });
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
 
     if (params.separateTracks)
         renderSeparateTracks();
@@ -184,7 +191,15 @@ EditRenderJob::RenderPass::~RenderPass()
     task = nullptr;
 
     if (owner.editDeleter.willDeleteObject())
-        callBlocking ([this] { Renderer::turnOffAllPlugins (*r.edit); });
+    {
+        try
+        {
+            callBlocking ([this] { Renderer::turnOffAllPlugins (*r.edit); });
+        }
+        catch (std::runtime_error&)
+        {
+        }
+    }
 
     // overwite with temp file
     if (! errorMessage.isEmpty() && owner.silenceOnBackup)
@@ -273,12 +288,19 @@ bool EditRenderJob::RenderPass::initialise()
     jassert (task == nullptr);
     jassert (r.sampleRateForAudio > 7000);
 
-    callBlocking ([this]
-                  {
-                      Renderer::turnOffAllPlugins (*r.edit);
-                      r.edit->initialiseAllPlugins();
-                      r.edit->getTransport().stop (false, true);
-                  });
+    try
+    {
+        callBlocking ([this]
+                      {
+                          Renderer::turnOffAllPlugins (*r.edit);
+                          r.edit->initialiseAllPlugins();
+                          r.edit->getTransport().stop (false, true);
+                      });
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
 
     if (r.tracksToDo.countNumberOfSetBits() > 0
         && r.destFile.hasWriteAccess()
@@ -303,7 +325,15 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
         std::unique_ptr<tracktion::graph::Node> node;
-        callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+
+        try
+        {
+            callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+        }
+        catch (std::runtime_error&)
+        {
+            return false;
+        }
 
         if (node)
         {

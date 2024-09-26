@@ -670,10 +670,10 @@ float EditRenderer::Handle::getProgress() const
 }
 
 auto EditRenderer::render (Renderer::Parameters r,
-                           std::function<void (tl::expected<juce::File, std::string>)> finishedCallback,
+                           std::function<void (tl::expected<juce::File, std::string>)> finishedCallback_,
                            std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate) -> std::shared_ptr<Handle>
 {
-    assert (finishedCallback && "You must supply a finished callback");
+    assert (finishedCallback_ && "You must supply a finished callback");
 
     std::shared_ptr<Handle> renderHandle (new Handle());
     renderHandle->thumbnailToUpdate = std::move (thumbnailToUpdate);
@@ -686,20 +686,20 @@ auto EditRenderer::render (Renderer::Parameters r,
 
     renderHandle->renderThread = std::thread ([destFile,
                                               &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
-                                              finishedCallback = std::move (finishedCallback),
-                                              renderTask = std::move (renderTask),
-                                              srs = std::move (srs)]
+                                              finishedCallback = std::move (finishedCallback_),
+                                              task = std::move (renderTask),
+                                              scopedRenderState = std::move (srs)]
     {
         for (;;)
         {
             if (hasBeenCancelledFlag)
                 return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
 
-            if (renderTask->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
+            if (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
                 continue;
 
             // Finished
-            if (auto err = renderTask->errorMessage; err.isNotEmpty())
+            if (auto err = task->errorMessage; err.isNotEmpty())
                 return finishedCallback (tl::unexpected (err.toStdString()));
 
             return finishedCallback (destFile);

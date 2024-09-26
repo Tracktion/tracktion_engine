@@ -1666,16 +1666,16 @@ void CustomControlSurface::auxTrack (float val, int param)              { userMo
 void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
 void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
 
-void CustomControlSurface::launchClip1 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 0); }
-void CustomControlSurface::launchClip2 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 1); }
-void CustomControlSurface::launchClip3 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 2); }
-void CustomControlSurface::launchClip4 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 3); }
-void CustomControlSurface::launchClip5 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 4); }
-void CustomControlSurface::launchClip6 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 5); }
-void CustomControlSurface::launchClip7 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 6); }
-void CustomControlSurface::launchClip8 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 7); }
-void CustomControlSurface::stopClips (float val, int param)     { if (shouldActOnValue (val)) userStoppedClip (param); }
-void CustomControlSurface::launchScene (float val, int param)   { if (shouldActOnValue (val)) userLaunchedScene (param); }
+void CustomControlSurface::launchClip1 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 0, isValueNonZero (val)); }
+void CustomControlSurface::launchClip2 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 1, isValueNonZero (val)); }
+void CustomControlSurface::launchClip3 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 2, isValueNonZero (val)); }
+void CustomControlSurface::launchClip4 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 3, isValueNonZero (val)); }
+void CustomControlSurface::launchClip5 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 4, isValueNonZero (val)); }
+void CustomControlSurface::launchClip6 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 5, isValueNonZero (val)); }
+void CustomControlSurface::launchClip7 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 6, isValueNonZero (val)); }
+void CustomControlSurface::launchClip8 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 7, isValueNonZero (val)); }
+void CustomControlSurface::stopClips (float val, int param)     { if (shouldActOnValue (val)) userStoppedClip (param, isValueNonZero (val)); }
+void CustomControlSurface::launchScene (float val, int param)   { if (shouldActOnValue (val)) userLaunchedScene (param, isValueNonZero (val)); }
 void CustomControlSurface::clipBankUp1 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-1); }
 void CustomControlSurface::clipBankUp4 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-4); }
 void CustomControlSurface::clipBankUp8 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-8); }

@@ -57,13 +57,13 @@ public:
     virtual void select() = 0;
     virtual Selectable* getSelectableObject() = 0;
 
-    void paramChangedInt (AutomatableParameter* param)
+    void paramChangedInt (AutomatableParameter& param)
     {
         if (! inSetParamValue)
         {
             {
                 const juce::ScopedLock sl (dirtyParamLock);
-                dirtyParams.add (param);
+                dirtyParams.add (&param);
             }
 
             triggerAsyncUpdate();
@@ -897,6 +897,9 @@ void NovationAutomap::currentEditChanged (Edit* e)
         if (selectionManager != nullptr)
             selectionManager->removeChangeListener (this);
 
+        if (auto oldEdit = getEdit())
+            oldEdit->getParameterChangeHandler().removeListener (*this);
+
         ControlSurface::currentEditChanged (e);
 
         if ((selectionManager = newSelectionManager) != nullptr)
@@ -917,6 +920,9 @@ void NovationAutomap::currentEditChanged (Edit* e)
             createAllPluginAutomaps();
             hostAutomap = std::make_unique<HostAutoMap> (*this);
             load (*edit);
+
+            if (edit->shouldPlay())
+                edit->getParameterChangeHandler().addListener (*this);
         }
     }
 }
@@ -939,13 +945,14 @@ void NovationAutomap::initialiseDevice (bool connect)
     }
 }
 
-void NovationAutomap::paramChanged (AutomatableParameter* param)
+
+void NovationAutomap::pluginParameterChanged (AutomatableParameter& param, bool /*isFollowingAutomation*/)
 {
     if (hostAutomap != nullptr)
         hostAutomap->paramChangedInt (param);
 
     for (auto map : pluginAutomap)
-        if (map->getSelectableObject() == param->getPlugin())
+        if (map->getSelectableObject() == param.getPlugin())
             map->paramChangedInt (param);
 }
 

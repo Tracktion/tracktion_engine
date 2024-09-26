@@ -301,16 +301,23 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
     sort (launcherNodes,
           [](auto& n1, auto& n2)
               {
-                  auto& lh1 = n1->getLaunchHandle();
-                  auto& lh2 = n2->getLaunchHandle();
+                  auto stateToValue = [] (const LaunchHandle& lh)
+                  {
+                      if (lh.getPlayingStatus() == playing) return 1;
 
-                  if (lh1.getPlayingStatus() == playing)
-                      return true;
+                      if (auto q1 = lh.getQueuedStatus())
+                      {
+                          if (q1 == playQueued) return 2;
+                          if (q1 == stopQueued) return 3;
+                      }
 
-                  if (auto q1 = lh1.getQueuedStatus(); q1 == playQueued)
-                      return lh2.getPlayingStatus() != playing;
+                      return 4;
+                  };
 
-                  return false;
+                  auto v1 = stateToValue (n1->getLaunchHandle());
+                  auto v2 = stateToValue (n2->getLaunchHandle());
+
+                  return v1 < v2;
               });
 }
 

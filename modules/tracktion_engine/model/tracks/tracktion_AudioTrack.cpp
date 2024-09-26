@@ -20,8 +20,7 @@ struct AudioTrack::TrackMuter  : private juce::AsyncUpdater
     void handleAsyncUpdate() override
     {
         for (int i = 1; i <= 16; ++i)
-            owner.injectLiveMidiMessage (juce::MidiMessage::allNotesOff (i),
-                                         MidiMessageArray::notMPE);
+            owner.injectLiveMidiMessage (juce::MidiMessage::allNotesOff (i), {});
 
         owner.trackMuter = nullptr;
     }
@@ -702,7 +701,7 @@ void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity,
             currentlyPlayingGuideNotes.add (pitch);
             injectLiveMidiMessage (juce::MidiMessage::noteOn (midiChannel.getChannelNumber(),
                                                               pitch, (uint8_t) velocity),
-                                   MidiMessageArray::notMPE);
+                                   {});
         }
 
         if (autorelease)
@@ -729,7 +728,7 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
                 currentlyPlayingGuideNotes.add (pitch);
                 injectLiveMidiMessage (juce::MidiMessage::noteOn (midiChannel.getChannelNumber(),
                                                                   pitch, (uint8_t) vels.getUnchecked (i)),
-                                       MidiMessageArray::notMPE);
+                                       {});
             }
         }
     }
@@ -749,8 +748,7 @@ void AudioTrack::turnOffGuideNotes (MidiChannel midiChannel)
     auto channel = midiChannel.getChannelNumber();
 
     for (auto note : currentlyPlayingGuideNotes)
-        injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, note),
-                               MidiMessageArray::notMPE);
+        injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, note), {});
 
     currentlyPlayingGuideNotes.clear();
 }
@@ -872,7 +870,7 @@ bool AudioTrack::hasAnyTracksFeedingIn()
 }
 
 //==============================================================================
-void AudioTrack::injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithSource& message)
+void AudioTrack::injectLiveMidiMessage (const MidiMessageWithSource& message)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     bool wasUsed = false;
@@ -882,7 +880,7 @@ void AudioTrack::injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithS
         edit.warnOfWastedMidiMessages (nullptr, this);
 }
 
-void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageArray::MPESourceID source)
+void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MPESourceID source)
 {
     injectLiveMidiMessage ({ m, source });
 }
