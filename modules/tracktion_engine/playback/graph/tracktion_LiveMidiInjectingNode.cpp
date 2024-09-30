@@ -32,6 +32,7 @@ tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.hasMidi = true;
+    assert (props.nodeID != 0);
     hash_combine (props.nodeID, track->itemID.getRawID());
 
     return props;

@@ -95,6 +95,7 @@ TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std
 tracktion::graph::NodeProperties TrackMutingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
+    assert (props.nodeID != 0);
     hash_combine (props.nodeID, trackMuteState->getItemID());
 
     return props;
