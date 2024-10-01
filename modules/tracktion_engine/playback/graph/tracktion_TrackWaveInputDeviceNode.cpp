@@ -31,7 +31,12 @@ std::vector<tracktion::graph::Node*> TrackWaveInputDeviceNode::getDirectInputNod
 
 tracktion::graph::NodeProperties TrackWaveInputDeviceNode::getNodeProperties()
 {
-    return input->getNodeProperties();
+    auto props = input->getNodeProperties();
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (16857601999796838624ul)); // "TrackWaveInputDeviceNode"
+
+    return props;
 }
 
 void TrackWaveInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
