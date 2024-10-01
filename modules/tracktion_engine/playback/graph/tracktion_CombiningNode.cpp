@@ -162,7 +162,6 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
     hash_combine (nodeProperties.nodeID, props.nodeID);
-    hash_combine (nodeProperties.nodeID, beatRange);
 
    #if USE_PARTITION_INSERTION
     const auto lower = std::partition_point (inputs.begin(), inputs.end(),

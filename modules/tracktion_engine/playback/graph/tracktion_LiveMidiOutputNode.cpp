@@ -41,7 +41,11 @@ LiveMidiOutputNode::LiveMidiOutputNode (Clip& c, std::unique_ptr<tracktion::grap
 tracktion::graph::NodeProperties LiveMidiOutputNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    props.nodeID = 0;
+
+    constexpr size_t magicHash = 4059895422156500610; // "LiveMidiOutputNode"
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, magicHash);
 
     return props;
 }

@@ -35,7 +35,7 @@ public:
 
     DeviceType getDeviceType() const override      { return deviceType; }
 
-    bool useAllInputs = false;
+    const bool useAllInputs = false;
 
 private:
     juce::String openDevice() override;

@@ -10,17 +10,22 @@
 
 #pragma once
 
+#include <span>
 
 namespace tracktion { inline namespace graph
 {
 
 namespace node_player_utils
 {
-    /** Returns true if all the nodes in the graph have a unique nodeID. */
-    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    /** Returns true if all the nodes in this collection have a unique nodeID. */
+    template<typename Collection>
+    bool areNodeIDsUnique (Collection&& nodes, bool ignoreZeroIDs)
     {
         std::vector<size_t> nodeIDs;
-        visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
+
+        for (auto n : nodes)
+            nodeIDs.push_back (n->getNodeProperties().nodeID);
+
         std::sort (nodeIDs.begin(), nodeIDs.end());
 
         if (ignoreZeroIDs)
@@ -29,7 +34,26 @@ namespace node_player_utils
                            nodeIDs.end());
 
         auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
+
+       #if JUCE_DEBUG
+        if (uniqueEnd != nodeIDs.end())
+        {
+            DBG("-- Duplicate Node IDs:");
+
+            for (auto id : std::span<size_t> (uniqueEnd, nodeIDs.end()))
+                DBG("\t" << id);
+        }
+       #endif
+
         return uniqueEnd == nodeIDs.end();
+    }
+
+    /** Returns true if all the nodes in the graph have a unique nodeID. */
+    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    {
+        std::vector<Node*> nodes;
+        visitNodes (node, [&] (Node& n) { nodes.push_back (&n); }, false);
+        return areNodeIDsUnique (nodes, ignoreZeroIDs);
     }
 
     /** Returns true if all there are any feedback loops in the graph. */
@@ -71,6 +95,7 @@ namespace node_player_utils
         // First give the Nodes a chance to transform
         auto nodeGraph = createNodeGraph (std::move (node));
         assert (! areThereAnyCycles (nodeGraph->orderedNodes));
+        jassert (areNodeIDsUnique (nodeGraph->orderedNodes, true));
 
         // Next, initialise all the nodes, this will call prepareToPlay on them
         const PlaybackInitialisationInfo info { sampleRate, blockSize,

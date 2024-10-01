@@ -73,7 +73,11 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();
     props.latencyNumSamples = std::max (0, props.latencyNumSamples + latencyNumSamples);
-    props.nodeID = (size_t) plugin->itemID.getRawID();
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, (size_t) plugin->itemID.getRawID());
+    else
+        props.nodeID = (size_t) plugin->itemID.getRawID();
 
     if (isPrepared)
         cachedNodeProperties = props;
