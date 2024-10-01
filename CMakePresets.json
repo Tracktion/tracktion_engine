@@ -1,22 +1,17 @@
 {
-  "version": 6,
+  "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 23,
+    "minor": 22,
     "patch": 0
   },
-  //==============================================================================
-  // Config
-  //==============================================================================
   "configurePresets": [
     {
-      // Base presets
       "name": "binary-dir",
       "binaryDir": "cmake-build/${hostSystemName}/cmake-${presetName}",
       "hidden": true
     },
     {
-      // Configs for single-config generators
       "name": "Debug",
       "hidden": true,
       "inherits": [ "binary-dir" ],
@@ -41,14 +36,12 @@
        }
     },
     {
-      // Ninja
       "name": "ninja",
       "generator": "Ninja",
       "inherits": [ "binary-dir" ],
       "hidden": true
     },
     {
-      // Ninja-multi
       "name": "ninja-multi",
       "generator": "Ninja Multi-Config",
       "inherits": [ "binary-dir" ],
@@ -69,7 +62,6 @@
       "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=thread" }
     },
     {
-      // Xcode
       "name": "xcode",
       "generator": "Xcode",
       "inherits": [ "binary-dir" ],
@@ -77,7 +69,6 @@
       "hidden": false
     },
     {
-      // Windows
       "name": "windows",
       "architecture": "x64",
       "inherits": [ "binary-dir" ],
@@ -85,9 +76,6 @@
       "hidden": false
     }
   ],
-  //==============================================================================
-  // Build
-  //==============================================================================
   "buildPresets": [
     {
       "name": "ninja-Debug",
@@ -141,45 +129,59 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_RelWithDebInfo",
+      "name": "xcode-RelWithDebInfo",
       "configuration": "RelWithDebInfo",
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_Release",
+      "name": "xcode-Release",
       "configuration": "Release",
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_DebugAsan",
+      "name": "xcode-asan-Debug",
       "configuration": "Debug",
       "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "xcode_DebugTsan",
+      "name": "xcode-tsan-Debug",
       "configuration": "Debug",
       "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
       "configurePreset": "xcode",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
-      "name": "windows_Debug",
+      "name": "xcode-asan-Release",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-tsan-Release",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "windows-Debug",
       "configuration": "Debug",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
-      "name": "windows_RelWithDebInfo",
+      "name": "windows-RelWithDebInfo",
       "configuration": "RelWithDebInfo",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
-      "name": "windows_Release",
+      "name": "windows-Release",
       "configuration": "Release",
       "configurePreset": "windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
