@@ -393,7 +393,7 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& messag
     return false;
 }
 
-void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
+void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m, MPESourceID sourceID)
 {
     if (minimumLengthMs > 0)
     {
@@ -427,14 +427,14 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage
         if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
         {
             // If the note is on and we get another on, send the off before the on
-            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f));
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f), sourceID);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
         else
         {
             // otherwise send the on and track its on
             activeNotes.startNote (m.getChannel(), m.getNoteNumber());
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
     }
     else if (m.isNoteOff())
@@ -443,16 +443,16 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage
         if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
         {
             activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
     }
     else
     {
-        handleIncomingMidiMessageInt (m);
+        handleIncomingMidiMessageInt (m, sourceID);
     }
 }
 
-void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m)
+void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m, MPESourceID sourceID)
 {
     {
         const std::scoped_lock sl (listenerLock);
@@ -474,7 +474,7 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMess
                 if (isTakingControllerMessages)
                     controllerParser->processMessage (message);
 
-                sendMessageToInstances (message);
+                sendMessageToInstances (message, sourceID);
             }
         }
 

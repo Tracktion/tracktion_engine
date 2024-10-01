@@ -20,7 +20,7 @@ public:
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     using MidiInputDevice::handleIncomingMidiMessage;
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
     juce::String getSelectableDescription() override;
 
     void setEnabled (bool) override;
@@ -31,11 +31,11 @@ public:
     void setMIDIInputSourceDevices (const juce::StringArray deviceIDs);
     void toggleMIDIInputSourceDevice (const juce::String& deviceID);
 
-    void handleMessageFromPhysicalDevice (MidiInputDevice&, const juce::MidiMessage&);
+    void handleMessageFromPhysicalDevice (PhysicalMidiInputDevice&, const juce::MidiMessage&);
 
     DeviceType getDeviceType() const override      { return deviceType; }
 
-    bool useAllInputs = false;
+    const bool useAllInputs = false;
 
 private:
     juce::String openDevice() override;

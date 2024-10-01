@@ -16,10 +16,12 @@ namespace tracktion { inline namespace engine
 namespace MidiNodeHelpers
 {
     inline void createMessagesForTime (MidiMessageArray& destBuffer,
-                                       juce::MidiMessageSequence& sourceSequence, double time,
+                                       juce::MidiMessageSequence& sourceSequence,
+                                       double time,
                                        juce::Range<int> channelNumbers,
                                        LiveClipLevel& clipLevel,
-                                       bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                       bool useMPEChannelMode,
+                                       MPESourceID midiSourceID,
                                        juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         if (useMPEChannelMode)
@@ -77,7 +79,7 @@ namespace MidiNodeHelpers
     }
 
     inline void createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& sourceSequence,
-                                MidiMessageArray::MPESourceID midiSourceID,
+                                MPESourceID midiSourceID,
                                 double time, double midiTimeOffset, bool isPlaying)
     {
         int activeChannels = 0;
@@ -126,7 +128,7 @@ namespace MidiNodeHelpers
 
     inline void createNoteOffs (ActiveNoteList& activeNoteList,
                                 MidiMessageArray& destination,
-                                MidiMessageArray::MPESourceID midiSourceID,
+                                MPESourceID midiSourceID,
                                 double midiTimeOffset, bool isPlaying)
     {
         int activeChannels = 0;

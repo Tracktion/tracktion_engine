@@ -593,7 +593,7 @@ inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
 inline size_t Node::getAllocatedBytes() const
 {
     return audioBuffer.getView().data.getBytesNeeded (audioBuffer.getSize())
-        + (size_t (midiBuffer.size()) * sizeof (tracktion_engine::MidiMessageArray::MidiMessageWithSource));
+        + (size_t (midiBuffer.size()) * sizeof (tracktion_engine::MidiMessageWithSource));
 }
 
 inline void Node::setOptimisations (NodeOptimisations newOptimisations)

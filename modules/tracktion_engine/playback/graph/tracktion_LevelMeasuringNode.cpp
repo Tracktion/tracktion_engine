@@ -19,6 +19,17 @@ LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> 
                         tracktion::graph::AllocateAudioBuffer::no });
 }
 
+tracktion::graph::NodeProperties LevelMeasuringNode::getNodeProperties()
+{
+    auto props = input->getNodeProperties();
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (8615130320210846551)); // "LevelMeasuringNode"
+
+    return props;
+}
+
+
 void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();

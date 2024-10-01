@@ -32,6 +32,7 @@ tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.hasMidi = true;
+    assert (props.nodeID != 0);
     hash_combine (props.nodeID, track->itemID.getRawID());
 
     return props;
@@ -78,7 +79,7 @@ void LiveMidiInjectingNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSource mm)
+void LiveMidiInjectingNode::injectMessage (MidiMessageWithSource mm)
 {
     mm.setTimeStamp (0.0);
 
@@ -87,7 +88,7 @@ void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSour
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageArray::MidiMessageWithSource& mm, bool& wasUsed)
+void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageWithSource& mm, bool& wasUsed)
 {
     if (&at != track.get())
         return;

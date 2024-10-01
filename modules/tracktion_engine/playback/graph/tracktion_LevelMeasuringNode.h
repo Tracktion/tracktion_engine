@@ -19,7 +19,7 @@ class LevelMeasuringNode final  : public tracktion::graph::Node
 public:
     LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeasurer&);
 
-    tracktion::graph::NodeProperties getNodeProperties() override        { return input->getNodeProperties(); }
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
     void process (tracktion::graph::Node::ProcessContext&) override;

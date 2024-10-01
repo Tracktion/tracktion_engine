@@ -11,11 +11,10 @@
 namespace tracktion { inline namespace engine
 {
 
-HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&, MidiMessageArray::MPESourceID msi,
+HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&,
                                                       tracktion::graph::PlayHeadState&, tracktion::ProcessState& ps)
     : TracktionEngineNode (ps),
-      instance (idi),
-      midiSourceID (msi)
+      instance (idi)
 {
 }
 
@@ -64,13 +63,13 @@ void HostedMidiInputDeviceNode::process (ProcessContext& pc)
             incomingMessages.remove (i);
 }
 
-void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message)
+void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message, MPESourceID sourceID)
 {
     const auto globalStreamTime = instance.edit.engine.getDeviceManager().getCurrentStreamTime();
 
     // Timestamps will have global stream times so convert these to buffer offsets
     const std::lock_guard<tracktion::graph::RealTimeSpinLock> lock (bufferMutex);
-    incomingMessages.addMidiMessage (message, message.getTimeStamp() - globalStreamTime, midiSourceID);
+    incomingMessages.addMidiMessage (message, message.getTimeStamp() - globalStreamTime, sourceID);
 }
 
 }} // namespace tracktion { inline namespace engine

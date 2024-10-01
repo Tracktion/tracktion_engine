@@ -654,7 +654,7 @@ void DeviceManager::injectMIDIMessageToDefaultDevice (const juce::MidiMessage& m
         input->handleIncomingMidiMessage (nullptr, m);
 }
 
-void DeviceManager::broadcastMessageToAllVirtualDevices (MidiInputDevice& source, const juce::MidiMessage& m)
+void DeviceManager::broadcastMessageToAllVirtualDevices (PhysicalMidiInputDevice& source, const juce::MidiMessage& m)
 {
     const std::shared_lock sl (contextLock);
 

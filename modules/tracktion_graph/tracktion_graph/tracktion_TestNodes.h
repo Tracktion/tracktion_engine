@@ -57,8 +57,7 @@ public:
                 if (! timeRange.contains (time))
                     break;
 
-                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(),
-                                                tracktion_engine::MidiMessageArray::notMPE);
+                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(), {});
             }
             else
             {
@@ -264,7 +263,12 @@ public:
 
     NodeProperties getNodeProperties() override
     {
-        return node->getNodeProperties();
+        auto props = node->getNodeProperties();
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, static_cast<size_t> (9437249422822785445ul)); // "FunctionNode"
+
+        return props;
     }
 
     std::vector<Node*> getDirectInputNodes() override
@@ -313,8 +317,8 @@ class GainNode final : public Node
 {
 public:
     /** Creates a GainNode that doesn't own its input. */
-    GainNode (Node* inputNode, std::function<float()> gainFunc)
-        : input (inputNode), gainFunction (std::move (gainFunc))
+    GainNode (Node* inputNode, std::function<float()> gainFunc, size_t nodeHashToUse = 0)
+        : input (inputNode), gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
         assert (input != nullptr);
         assert (gainFunction);
@@ -322,9 +326,9 @@ public:
     }
 
     /** Creates a GainNode that owns its input. */
-    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc)
+    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc, size_t nodeHashToUse = 0)
         : ownedInput (std::move (inputNode)), input (ownedInput.get()),
-          gainFunction (std::move (gainFunc))
+          gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
         assert (ownedInput != nullptr);
         assert (input != nullptr);
@@ -335,6 +339,10 @@ public:
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
+
+        if (nodeHash != 0)
+            hash_combine (props.nodeID, nodeHash);
+
         constexpr size_t gainNodeMagicHash = size_t (0x6761696e4e6f6465);
 
         if (props.nodeID != 0)
@@ -386,6 +394,7 @@ private:
     Node* input = nullptr;
     std::function<float()> gainFunction;
     float lastGain = 0.0f;
+    size_t nodeHash = 0;
 };
 
 //==============================================================================
@@ -418,7 +427,10 @@ public:
         constexpr size_t sendNodeMagicHash = size_t (0x73656e644e6f6465);
 
         if (props.nodeID != 0)
+        {
+            hash_combine (props.nodeID, busID);
             hash_combine (props.nodeID, sendNodeMagicHash);
+        }
 
         return props;
     }
@@ -489,7 +501,9 @@ public:
             props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
-            hash_combine (props.nodeID, nodeProps.nodeID);
+
+            if (props.nodeID != 0 || nodeProps.nodeID != 0)
+                hash_combine (props.nodeID, nodeProps.nodeID);
         }
 
         constexpr size_t returnNodeMagicHash = size_t (0x72657475726e);
@@ -627,6 +641,7 @@ private:
         // Create a summing node if required
         if (sends.size() > 0)
         {
+            const auto returnNodeID = getNodeProperties().nodeID;
             std::vector<std::unique_ptr<Node>> ownedNodes;
 
             if (input)
@@ -640,7 +655,7 @@ private:
                 if (! gainFunction)
                     continue;
 
-                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction)));
+                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction), returnNodeID));
 				sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
 			}
 

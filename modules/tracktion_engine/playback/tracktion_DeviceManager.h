@@ -165,7 +165,7 @@ public:
     juce::String getDefaultMidiInDeviceID() const               { return defaultMidiInID; }
 
     void injectMIDIMessageToDefaultDevice (const juce::MidiMessage&);
-    void broadcastMessageToAllVirtualDevices (MidiInputDevice&, const juce::MidiMessage&);
+    void broadcastMessageToAllVirtualDevices (PhysicalMidiInputDevice&, const juce::MidiMessage&);
 
     void broadcastStreamTimeToMidiDevices (double streamTime);
     bool shouldSendMidiTimecode() const noexcept                { return sendMidiTimecode; }

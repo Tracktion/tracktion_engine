@@ -48,6 +48,7 @@ tracktion::graph::NodeProperties ArrangerLauncherSwitchingNode::getNodePropertie
     for (auto n : nodes)
     {
         auto nodeProps = n->getNodeProperties();
+        assert (nodeProps.nodeID != 0);
         props.hasAudio = props.hasAudio || nodeProps.hasAudio;
         props.hasMidi = props.hasMidi || nodeProps.hasMidi;
         props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);

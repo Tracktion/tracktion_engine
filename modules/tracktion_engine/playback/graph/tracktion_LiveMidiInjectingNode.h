@@ -38,13 +38,13 @@ private:
 
     juce::CriticalSection liveMidiLock;
     MidiMessageArray liveMidiMessages;
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
 
     //==============================================================================
-    void injectMessage (MidiMessageArray::MidiMessageWithSource);
+    void injectMessage (MidiMessageWithSource);
 
     //==============================================================================
-    void injectLiveMidiMessage (AudioTrack&, const MidiMessageArray::MidiMessageWithSource&, bool& wasUsed) override;
+    void injectLiveMidiMessage (AudioTrack&, const MidiMessageWithSource&, bool& wasUsed) override;
     void recordedMidiMessageSentToPlugins (AudioTrack&, const juce::MidiMessage&) override {}
 };
 

@@ -19,7 +19,7 @@ class MidiInputDeviceNode final : public tracktion::graph::Node,
 {
 public:
     MidiInputDeviceNode (InputDeviceInstance&,
-                         MidiInputDevice&, MidiMessageArray::MPESourceID,
+                         MidiInputDevice&, MPESourceID,
                          tracktion::graph::PlayHeadState&,
                          EditItemID targetID);
     ~MidiInputDeviceNode() override;
@@ -29,14 +29,14 @@ public:
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
     void discardRecordings (EditItemID) override;
 
 private:
     //==============================================================================
     InputDeviceInstance& instance;
     MidiInputDevice& midiInputDevice;
-    const MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
+    const MPESourceID midiSourceID;
     tracktion::graph::PlayHeadState& playHeadState;
     const EditItemID targetID;
     const size_t nodeID = hash ((size_t) midiSourceID, targetID);
@@ -51,14 +51,14 @@ private:
         NodeState()
         {
             for (int i = 256; --i >= 0;)
-                incomingMessages.add (new juce::MidiMessage (0x80, 0, 0));
+                incomingMessages.push_back (std::make_unique<MidiMessageWithSource> (juce::MidiMessage (0x80, 0, 0), MPESourceID()));
         }
 
         std::atomic<MidiInputDeviceNode*> activeNode { nullptr };
 
         std::mutex incomingMessagesMutex;
-        juce::OwnedArray<juce::MidiMessage> incomingMessages;
-        int numIncomingMessages = 0;
+        std::vector<std::unique_ptr<MidiMessageWithSource>> incomingMessages;
+        uint32_t numIncomingMessages = 0;
 
         std::mutex liveMessagesMutex;
         MidiMessageArray liveRecordedMessages;

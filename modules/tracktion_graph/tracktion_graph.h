@@ -91,6 +91,7 @@
 #endif
 
 //==============================================================================
+#include "utilities/tracktion_MidiMessageWithSource.h"
 #include "utilities/tracktion_MidiMessageArray.h"
 namespace tracktion_engine = tracktion::engine;
 

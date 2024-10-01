@@ -505,7 +505,7 @@ namespace MidiHelpers
                                        double time,
                                        juce::Range<int> channelNumbers,
                                        LiveClipLevel& clipLevel,
-                                       bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                       bool useMPEChannelMode, MPESourceID midiSourceID,
                                        juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         if (useMPEChannelMode)
@@ -671,7 +671,7 @@ public:
                                         ActiveNoteList&,
                                         juce::Range<int> channelNumbers,
                                         LiveClipLevel&,
-                                        bool useMPEChannelMode, MidiMessageArray::MPESourceID,
+                                        bool useMPEChannelMode, MPESourceID,
                                         juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         juce::ignoreUnused (destBuffer, time, channelNumbers, useMPEChannelMode, controllerMessagesScratchBuffer);
@@ -708,7 +708,7 @@ struct EventGenerator   : public MidiGenerator
                                 ActiveNoteList& activeNoteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         thread_local MidiMessageArray scratchBuffer, cleanedBufferToMerge;
@@ -850,7 +850,7 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator.createMessagesForTime (destBuffer,
@@ -970,7 +970,7 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         // Ensure the correct sequence is cached
@@ -1086,7 +1086,7 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator->createMessagesForTime (destBuffer,
@@ -1208,7 +1208,7 @@ public:
                          LiveClipLevel& clipLevel,
                          juce::Range<int> channelNumbers,
                          bool useMPEChannelMode,
-                         MidiMessageArray::MPESourceID midiSourceID,
+                         MPESourceID midiSourceID,
                          bool isPlaying,
                          bool isContiguousWithPreviousBlock,
                          bool lastBlockOfLoop)

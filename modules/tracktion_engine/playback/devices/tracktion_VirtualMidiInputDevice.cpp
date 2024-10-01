@@ -91,11 +91,8 @@ void VirtualMidiInputDevice::loadProps()
 
     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);
 
-    if (! isTrackDevice() && n != nullptr)
-    {
+    if (! isTrackDevice() && n != nullptr && ! useAllInputs)
         inputDeviceIDs.addTokens (n->getStringAttribute ("inputDevices"), ";", {});
-        useAllInputs = n->getBoolAttribute ("useAllInputs", false);
-    }
 
     MidiInputDevice::loadMidiProps (n.get());
 }
@@ -104,8 +101,9 @@ void VirtualMidiInputDevice::saveProps()
 {
     juce::XmlElement n ("SETTINGS");
 
-    n.setAttribute ("inputDevices", inputDeviceIDs.joinIntoString (";"));
-    n.setAttribute ("useAllInputs", useAllInputs);
+    if (! useAllInputs)
+        n.setAttribute ("inputDevices", inputDeviceIDs.joinIntoString (";"));
+
     MidiInputDevice::saveMidiProps (n);
 
     juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
@@ -113,18 +111,18 @@ void VirtualMidiInputDevice::saveProps()
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);
 }
 
-void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
+void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m, MPESourceID sourceID)
 {
     auto message = m;
 
     if (handleIncomingMessage (message))
-        sendMessageToInstances (message);
+        sendMessageToInstances (message, sourceID);
 }
 
-void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice& dev, const juce::MidiMessage& m)
+void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (PhysicalMidiInputDevice& dev, const juce::MidiMessage& m)
 {
     if (useAllInputs || inputDeviceIDs.contains (dev.getDeviceID()))
-        handleIncomingMidiMessage (m);
+        handleIncomingMidiMessage (m, dev.getMPESourceID());
 }
 
 juce::String VirtualMidiInputDevice::getSelectableDescription()

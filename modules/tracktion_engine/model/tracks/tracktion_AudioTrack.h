@@ -105,8 +105,8 @@ public:
     juce::Array<Track*> getInputTracks() const override;
     juce::Array<Track*> findSidechainSourceTracks() const;
 
-    void injectLiveMidiMessage (const MidiMessageArray::MidiMessageWithSource&);
-    void injectLiveMidiMessage (const juce::MidiMessage&, MidiMessageArray::MPESourceID);
+    void injectLiveMidiMessage (const MidiMessageWithSource&);
+    void injectLiveMidiMessage (const juce::MidiMessage&, MPESourceID);
 
     //==============================================================================
     bool isMuted (bool includeMutingByDestination) const override;
@@ -175,7 +175,7 @@ public:
             If the message was used, the listener should set the wasUsed argument to true or a
             message may be shown to the user to notify them of why they couldn't hear the sound.
         */
-        virtual void injectLiveMidiMessage (AudioTrack&, const MidiMessageArray::MidiMessageWithSource&, bool& wasUsed) = 0;
+        virtual void injectLiveMidiMessage (AudioTrack&, const MidiMessageWithSource&, bool& wasUsed) = 0;
 
         /** Called when a recorded MidiMessage (i.e. from a clip) has been sent to the plugin chain.
             This will be called from the message thread.
