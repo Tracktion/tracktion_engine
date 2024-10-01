@@ -35,6 +35,7 @@ namespace node_player_utils
 
         auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
 
+       #if JUCE_DEBUG
         if (uniqueEnd != nodeIDs.end())
         {
             DBG("-- Duplicate Node IDs:");
@@ -42,6 +43,7 @@ namespace node_player_utils
             for (auto id : std::span<size_t> (uniqueEnd, nodeIDs.end()))
                 DBG("\t" << id);
         }
+       #endif
 
         return uniqueEnd == nodeIDs.end();
     }
