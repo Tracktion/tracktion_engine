@@ -60,6 +60,9 @@ tracktion::graph::NodeProperties InsertNode::getNodeProperties()
     if (sendNode)
         props.latencyNumSamples += sendNode->getLatencyAtInput();
 
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (5738295899482615961ul)); // "InsertNode"
+
     return props;
 }
 
@@ -105,6 +108,9 @@ tracktion::graph::NodeProperties InsertSendNode::getNodeProperties()
     {
         auto props = input->getNodeProperties();
         props.latencyNumSamples = std::numeric_limits<int>::min();
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, static_cast<size_t> (18118259460788248666ul)); // "InsertSendNode"
 
         return props;
     }
