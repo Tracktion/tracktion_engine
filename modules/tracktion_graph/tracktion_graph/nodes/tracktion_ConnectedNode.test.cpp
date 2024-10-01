@@ -42,8 +42,8 @@ private:
     {
         beginTest ("Two sin waves");
         {
-            auto sinNode1 = std::make_shared<SinNode> (220.0f);
-            auto sinNode2 = std::make_shared<SinNode> (220.0f);
+            auto sinNode1 = std::make_shared<SinNode> (220.0f, 1);
+            auto sinNode2 = std::make_shared<SinNode> (220.0f, 2);
             auto connectedNode = std::make_unique<ConnectedNode>();
 
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });

@@ -138,7 +138,11 @@ void FadeInOutNode::setDynamicOffsetTime (TimeDuration newOffset)
 tracktion::graph::NodeProperties FadeInOutNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    props.nodeID = 0;
+
+    constexpr size_t magicHash = size_t (1990331549666805526); // "FadeInOutNode"
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, magicHash);
 
     return props;
 }

@@ -31,7 +31,15 @@ public:
 
     tracktion::graph::NodeProperties getNodeProperties() override
     {
-        return input->getNodeProperties();
+        auto props = input->getNodeProperties();
+
+        if (props.nodeID != 0)
+        {
+            hash_combine (props.nodeID, static_cast<size_t> (meterPlugin.itemID.getRawID()));
+            hash_combine (props.nodeID, static_cast<size_t> (3731138684616245860)); // LevelMeasurerProcessingNode
+        }
+
+        return props;
     }
 
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override

@@ -41,6 +41,9 @@ tracktion::graph::NodeProperties RackInstanceNode::getNodeProperties()
     props.hasMidi = true;
     props.hasAudio = true;
 
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (3615177560026405684)); // "RackInstanceNode"
+
     return props;
 }
 

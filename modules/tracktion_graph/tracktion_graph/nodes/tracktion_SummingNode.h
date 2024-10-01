@@ -84,7 +84,9 @@ public:
             props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
-            hash_combine (props.nodeID, nodeProps.nodeID);
+
+            if (props.nodeID != 0 || nodeProps.nodeID != 0)
+                hash_combine (props.nodeID, nodeProps.nodeID);
         }
 
         cachedNodeProperties = props;
