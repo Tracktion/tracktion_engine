@@ -74,10 +74,46 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a4b1c4e5cabcdcc57cc3f0fe522548177"><td class="memTemplParams" colspan="2">template&lt;typename Collection &gt; </td></tr>
+<tr class="memitem:a4b1c4e5cabcdcc57cc3f0fe522548177"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1node__player__utils.html#a4b1c4e5cabcdcc57cc3f0fe522548177">areNodeIDsUnique</a> (Collection &amp;&amp;nodes, bool ignoreZeroIDs)</td></tr>
+<tr class="memdesc:a4b1c4e5cabcdcc57cc3f0fe522548177"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if all the nodes in this collection have a unique nodeID.  <a href="namespacetracktion_1_1graph_1_1node__player__utils.html#a4b1c4e5cabcdcc57cc3f0fe522548177">More...</a><br /></td></tr>
+<tr class="separator:a4b1c4e5cabcdcc57cc3f0fe522548177"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a2dcb31d870f9c43c952a91ecfc7a43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph_1_1node__player__utils.html#a3a2dcb31d870f9c43c952a91ecfc7a43">reserveAudioBufferPool</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *rootNode, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;allNodes, <a class="el" href="classtracktion_1_1graph_1_1AudioBufferPool.html">AudioBufferPool</a> &amp;audioBufferPool, size_t numThreads, int blockSize)</td></tr>
 <tr class="separator:a3a2dcb31d870f9c43c952a91ecfc7a43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a4b1c4e5cabcdcc57cc3f0fe522548177"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b1c4e5cabcdcc57cc3f0fe522548177">&#9670;&nbsp;</a></span>areNodeIDsUnique()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Collection &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::graph::node_player_utils::areNodeIDsUnique </td>
+          <td>(</td>
+          <td class="paramtype">Collection &amp;&amp;&#160;</td>
+          <td class="paramname"><em>nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ignoreZeroIDs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if all the nodes in this collection have a unique nodeID. </p>
+
+</div>
+</div>
 <a id="a3a2dcb31d870f9c43c952a91ecfc7a43"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a2dcb31d870f9c43c952a91ecfc7a43">&#9670;&nbsp;</a></span>reserveAudioBufferPool()</h2>
 
@@ -122,14 +158,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1AudioBufferPool.html#ab9c6b512799e86e6f3dbc7570c612cbc">tracktion::graph::AudioBufferPool::reserve()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0">tracktion::graph::Node::getDirectInputNodes()</a>, <a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">tracktion::graph::Node::getNodeProperties()</a>, and <a class="el" href="classtracktion_1_1graph_1_1AudioBufferPool.html#ab9c6b512799e86e6f3dbc7570c612cbc">tracktion::graph::AudioBufferPool::reserve()</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 30 2024 17:19:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Oct 1 2024 12:43:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

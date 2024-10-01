@@ -4965,6 +4965,13 @@
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::graph::node_player_utils</namespace>
     <member kind="function">
+      <type>bool</type>
+      <name>areNodeIDsUnique</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1node__player__utils.html</anchorfile>
+      <anchor>a4b1c4e5cabcdcc57cc3f0fe522548177</anchor>
+      <arglist>(Collection &amp;&amp;nodes, bool ignoreZeroIDs)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>reserveAudioBufferPool</name>
       <anchorfile>namespacetracktion_1_1graph_1_1node__player__utils.html</anchorfile>
@@ -38220,15 +38227,15 @@
       <type></type>
       <name>GainNode</name>
       <anchorfile>classtracktion_1_1graph_1_1GainNode.html</anchorfile>
-      <anchor>a62c01325def0f7e5acaf2491fcd07c32</anchor>
-      <arglist>(Node *inputNode, std::function&lt; float()&gt; gainFunc)</arglist>
+      <anchor>a9302b7c20b34d36a4baf5e2f6c9285e1</anchor>
+      <arglist>(Node *inputNode, std::function&lt; float()&gt; gainFunc, size_t nodeHashToUse=0)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>GainNode</name>
       <anchorfile>classtracktion_1_1graph_1_1GainNode.html</anchorfile>
-      <anchor>a3aa24542181906045551037ea8dec92f</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, std::function&lt; float()&gt; gainFunc)</arglist>
+      <anchor>a0d78775d7b05c0b1ccabb6ed42077fd4</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, std::function&lt; float()&gt; gainFunc, size_t nodeHashToUse=0)</arglist>
     </member>
     <member kind="function">
       <type>NodeProperties</type>
@@ -91100,6 +91107,13 @@
   <compound kind="namespace">
     <name>tracktion::graph::node_player_utils</name>
     <filename>namespacetracktion_1_1graph_1_1node__player__utils.html</filename>
+    <member kind="function">
+      <type>bool</type>
+      <name>areNodeIDsUnique</name>
+      <anchorfile>namespacetracktion_1_1graph_1_1node__player__utils.html</anchorfile>
+      <anchor>a4b1c4e5cabcdcc57cc3f0fe522548177</anchor>
+      <arglist>(Collection &amp;&amp;nodes, bool ignoreZeroIDs)</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>reserveAudioBufferPool</name>

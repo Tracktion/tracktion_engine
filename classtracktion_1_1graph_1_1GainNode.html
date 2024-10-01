@@ -81,12 +81,12 @@ Inheritance diagram for tracktion::graph::GainNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a62c01325def0f7e5acaf2491fcd07c32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1GainNode.html#a62c01325def0f7e5acaf2491fcd07c32">GainNode</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *inputNode, std::function&lt; float()&gt; gainFunc)</td></tr>
-<tr class="memdesc:a62c01325def0f7e5acaf2491fcd07c32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1graph_1_1GainNode.html">GainNode</a> that doesn't own its input.  <a href="classtracktion_1_1graph_1_1GainNode.html#a62c01325def0f7e5acaf2491fcd07c32">More...</a><br /></td></tr>
-<tr class="separator:a62c01325def0f7e5acaf2491fcd07c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3aa24542181906045551037ea8dec92f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1GainNode.html#a3aa24542181906045551037ea8dec92f">GainNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, std::function&lt; float()&gt; gainFunc)</td></tr>
-<tr class="memdesc:a3aa24542181906045551037ea8dec92f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1graph_1_1GainNode.html">GainNode</a> that owns its input.  <a href="classtracktion_1_1graph_1_1GainNode.html#a3aa24542181906045551037ea8dec92f">More...</a><br /></td></tr>
-<tr class="separator:a3aa24542181906045551037ea8dec92f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9302b7c20b34d36a4baf5e2f6c9285e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1GainNode.html#a9302b7c20b34d36a4baf5e2f6c9285e1">GainNode</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *inputNode, std::function&lt; float()&gt; gainFunc, size_t nodeHashToUse=0)</td></tr>
+<tr class="memdesc:a9302b7c20b34d36a4baf5e2f6c9285e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1graph_1_1GainNode.html">GainNode</a> that doesn't own its input.  <a href="classtracktion_1_1graph_1_1GainNode.html#a9302b7c20b34d36a4baf5e2f6c9285e1">More...</a><br /></td></tr>
+<tr class="separator:a9302b7c20b34d36a4baf5e2f6c9285e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d78775d7b05c0b1ccabb6ed42077fd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1GainNode.html#a0d78775d7b05c0b1ccabb6ed42077fd4">GainNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, std::function&lt; float()&gt; gainFunc, size_t nodeHashToUse=0)</td></tr>
+<tr class="memdesc:a0d78775d7b05c0b1ccabb6ed42077fd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1graph_1_1GainNode.html">GainNode</a> that owns its input.  <a href="classtracktion_1_1graph_1_1GainNode.html#a0d78775d7b05c0b1ccabb6ed42077fd4">More...</a><br /></td></tr>
+<tr class="separator:a0d78775d7b05c0b1ccabb6ed42077fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab87105018d6db776ebb1c8d1152bd834"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1GainNode.html#ab87105018d6db776ebb1c8d1152bd834">getNodeProperties</a> () override</td></tr>
 <tr class="memdesc:ab87105018d6db776ebb1c8d1152bd834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1graph_1_1GainNode.html#ab87105018d6db776ebb1c8d1152bd834">More...</a><br /></td></tr>
 <tr class="separator:ab87105018d6db776ebb1c8d1152bd834"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,8 +164,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a62c01325def0f7e5acaf2491fcd07c32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62c01325def0f7e5acaf2491fcd07c32">&#9670;&nbsp;</a></span>GainNode() <span class="overload">[1/2]</span></h2>
+<a id="a9302b7c20b34d36a4baf5e2f6c9285e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9302b7c20b34d36a4baf5e2f6c9285e1">&#9670;&nbsp;</a></span>GainNode() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,7 +180,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; float()&gt;&#160;</td>
-          <td class="paramname"><em>gainFunc</em>&#160;</td>
+          <td class="paramname"><em>gainFunc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nodeHashToUse</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -194,8 +200,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3aa24542181906045551037ea8dec92f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3aa24542181906045551037ea8dec92f">&#9670;&nbsp;</a></span>GainNode() <span class="overload">[2/2]</span></h2>
+<a id="a0d78775d7b05c0b1ccabb6ed42077fd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d78775d7b05c0b1ccabb6ed42077fd4">&#9670;&nbsp;</a></span>GainNode() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -210,7 +216,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; float()&gt;&#160;</td>
-          <td class="paramname"><em>gainFunc</em>&#160;</td>
+          <td class="paramname"><em>gainFunc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nodeHashToUse</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -353,7 +365,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 30 2024 17:19:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Oct 1 2024 12:43:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
