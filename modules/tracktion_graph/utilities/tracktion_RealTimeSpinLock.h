@@ -10,9 +10,7 @@
 
 #pragma once
 
-#if JUCE_INTEL
- #include <emmintrin.h>
-#endif
+#include "../../tracktion_core/utilities/tracktion_CPU.h"
 
 namespace tracktion { inline namespace graph
 {
@@ -34,11 +32,7 @@ public:
 
             for (int i = 0; i < 10; ++i)
             {
-                #if JUCE_INTEL
-                 _mm_pause();
-                #else
-                 __asm__ __volatile__ ("yield");
-                #endif
+                tracktion::core::pause();
 
                 if (try_lock())
                     return;
