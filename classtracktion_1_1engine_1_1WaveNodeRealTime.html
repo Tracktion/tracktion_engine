@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtracktion_1_1engine_1_1WaveNodeRealTime-members.html">List of all members</a>  </div>
@@ -83,6 +84,12 @@ Inheritance diagram for tracktion::engine::WaveNodeRealTime:</div>
 </div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html">BeatConfig</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for a beat-based <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file.">WaveNodeRealTime</a>.  <a href="structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ad6fef24de866d868234a6d5624f5eebd"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebd">ReadAhead</a> : bool { <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebda7fa3b767c460b54a2be4d49030b349c7">no</a>
@@ -106,6 +113,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9b49cfccaffe66e429b7e313147ff18f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a9b49cfccaffe66e429b7e313147ff18f">WaveNodeRealTime</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a>, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, bool isOfflineRender, <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>=<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6ba358bbd8944e77ed1509836a4fb9ad265">ResamplingQuality::lagrange</a>, <a class="el" href="structtracktion_1_1engine_1_1SpeedFadeDescription.html">SpeedFadeDescription</a>={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79e">TimeStretcher::Mode</a>=TimeStretcher::Mode::disabled, <a class="el" href="structtracktion_1_1engine_1_1TimeStretcher_1_1ElastiqueProOptions.html">TimeStretcher::ElastiqueProOptions</a>={}, float pitchChangeSemitones=0.0f, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebd">ReadAhead</a>=<a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebda7fa3b767c460b54a2be4d49030b349c7">ReadAhead::no</a>)</td></tr>
 <tr class="memdesc:a9b49cfccaffe66e429b7e313147ff18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">offset is a time added to the start of the file, e.g.  <a href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a9b49cfccaffe66e429b7e313147ff18f">More...</a><br /></td></tr>
 <tr class="separator:a9b49cfccaffe66e429b7e313147ff18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f5223e310e2de69db7b413bbb9e7428"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a4f5223e310e2de69db7b413bbb9e7428">WaveNodeRealTime</a> (<a class="el" href="structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html">BeatConfig</a>)</td></tr>
+<tr class="memdesc:a4f5223e310e2de69db7b413bbb9e7428"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a beat-based <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file.">WaveNodeRealTime</a>.  <a href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a4f5223e310e2de69db7b413bbb9e7428">More...</a><br /></td></tr>
+<tr class="separator:a4f5223e310e2de69db7b413bbb9e7428"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2beee4a48ac78fcec1b545d7f1383239"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a2beee4a48ac78fcec1b545d7f1383239">WaveNodeRealTime</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79e">TimeStretcher::Mode</a>, <a class="el" href="structtracktion_1_1engine_1_1TimeStretcher_1_1ElastiqueProOptions.html">TimeStretcher::ElastiqueProOptions</a>, BeatRange editTime, BeatDuration offset, BeatRange loopSection, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a>, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, bool isOfflineRender, <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>, <a class="el" href="structtracktion_1_1engine_1_1SpeedFadeDescription.html">SpeedFadeDescription</a>, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; <a class="el" href="namespacetracktion_1_1engine.html#adeeadbd2dea66b29cc5bb3586b64326a">WarpMap</a> &gt;, tempo::Sequence sourceFileTempoMap, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a5344568de02983a82feb480f494403ef">SyncTempo</a>, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#aa6e19053cc6abc23eea7f6d677c09738">SyncPitch</a>, std::optional&lt; tempo::Sequence &gt; chordPitchSequence, float pitchChangeSemitones=1.0f, <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebd">ReadAhead</a>=<a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebda7fa3b767c460b54a2be4d49030b349c7">ReadAhead::no</a>)</td></tr>
 <tr class="separator:a2beee4a48ac78fcec1b545d7f1383239"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a545bbe10d508ba9932e143dfc73077"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html#a8a545bbe10d508ba9932e143dfc73077">setDynamicOffsetBeats</a> (BeatDuration) override</td></tr>
@@ -332,7 +342,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9b49cfccaffe66e429b7e313147ff18f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b49cfccaffe66e429b7e313147ff18f">&#9670;&nbsp;</a></span>WaveNodeRealTime() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b49cfccaffe66e429b7e313147ff18f">&#9670;&nbsp;</a></span>WaveNodeRealTime() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -458,8 +468,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a4f5223e310e2de69db7b413bbb9e7428"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f5223e310e2de69db7b413bbb9e7428">&#9670;&nbsp;</a></span>WaveNodeRealTime() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tracktion::engine::WaveNodeRealTime::WaveNodeRealTime </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html">BeatConfig</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a beat-based <a class="el" href="classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file.">WaveNodeRealTime</a>. </p>
+
+</div>
+</div>
 <a id="a2beee4a48ac78fcec1b545d7f1383239"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2beee4a48ac78fcec1b545d7f1383239">&#9670;&nbsp;</a></span>WaveNodeRealTime() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2beee4a48ac78fcec1b545d7f1383239">&#9670;&nbsp;</a></span>WaveNodeRealTime() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -773,7 +803,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 1 2024 16:41:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Oct 2 2024 09:35:49 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

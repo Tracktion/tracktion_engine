@@ -3905,10 +3905,9 @@
     <name>tracktion_LaunchHandle.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/clips/</path>
     <filename>tracktion__LaunchHandle_8h.html</filename>
-    <class kind="class">tracktion::engine::LaunchHandle</class>
-    <class kind="struct">tracktion::engine::LaunchHandle::SplitStatus</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
+    <class kind="class">engine::LaunchHandle</class>
+    <class kind="struct">engine::LaunchHandle::SplitStatus</class>
+    <namespace>engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_LaunchQuantisation.h</name>
@@ -6748,6 +6747,7 @@
     <class kind="struct">tracktion::engine::WarpPoint</class>
     <class kind="class">tracktion::engine::WaveNode</class>
     <class kind="class">tracktion::engine::WaveNodeRealTime</class>
+    <class kind="struct">tracktion::engine::WaveNodeRealTime::BeatConfig</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
     <member kind="typedef">
@@ -15476,6 +15476,164 @@
       <anchorfile>classtracktion_1_1graph_1_1BasicSummingNode.html</anchorfile>
       <anchor>ad8ad604c991192e5d716ca7cc4b01f3d</anchor>
       <arglist>(ProcessContext &amp;pc) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::WaveNodeRealTime::BeatConfig</name>
+    <filename>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</filename>
+    <member kind="variable">
+      <type>ProcessState &amp;</type>
+      <name>processState</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>aa965a3bb18c58d5d313b75c823e06376</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const AudioFile &amp;</type>
+      <name>audioFile</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a57888e0d51c6eaab61b3e14d85733873</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimeStretcher::Mode</type>
+      <name>timeStretchMode</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a7bd845e4b7ba88269ea1285eef6256ba</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TimeStretcher::ElastiqueProOptions</type>
+      <name>elastiqueProOptions</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a9b57f97d54387c09e54914361378030e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>editTime</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a694dd0b61f9b30bf919a933649e9f39d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatDuration</type>
+      <name>offset</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a65f5b82613388d8b54b69f8ee8986995</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>BeatRange</type>
+      <name>loopSection</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a6fdbdd98421f6dc57dcec9a4e4e66955</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>LiveClipLevel</type>
+      <name>liveClipLevel</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>aafe16bfe4bcf05c0123beff8036447a2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::AudioChannelSet</type>
+      <name>sourceChannelsToUse</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a34dcbd349067dba94f5be3ff0cb9612c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::AudioChannelSet</type>
+      <name>destChannelsToFill</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>ab9995c3a264f71416f8c854c8c70aa6d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>EditItemID</type>
+      <name>itemID</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a2cf2ef75194e08ded5701758da2dc150</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>isOfflineRender</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a6c0946345d13ca1244973a0b4b83467a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>ResamplingQuality</type>
+      <name>resamplingQuality</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a40c9954387916b1d616470cb5a4a65b9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SpeedFadeDescription</type>
+      <name>speedFadeDescription</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a70ba98c5f6a089e96e3df21f3009df94</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; tempo::Sequence::Position &gt;</type>
+      <name>editTempoSequence</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a169cdba043d1a965217fb35056626ff1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; WarpMap &gt;</type>
+      <name>warpMap</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>ae073893de65f4be685564feb6c52edc6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>tempo::Sequence</type>
+      <name>sourceFileTempoMap</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>adebac87dce15f9f3bf660f99aafa72ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SyncTempo</type>
+      <name>syncTempo</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a9491016eed934d7cbfbf88bb88415b8d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>SyncPitch</type>
+      <name>syncPitch</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a098a8beaa5c7db0620d80aae17875c05</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; tempo::Sequence &gt;</type>
+      <name>chordPitchSequence</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a2b0a4976fd735393b0c4d67b61d23219</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>pitchChangeSemitones</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a66ab99040f78929733d490f7da0b8761</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>ReadAhead</type>
+      <name>readAhead</name>
+      <anchorfile>structtracktion_1_1engine_1_1WaveNodeRealTime_1_1BeatConfig.html</anchorfile>
+      <anchor>a0d4ba8b374487f4dc495a9f6076adfdf</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -40956,109 +41114,123 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::LaunchHandle</name>
-    <filename>classtracktion_1_1engine_1_1LaunchHandle.html</filename>
-    <class kind="struct">tracktion::engine::LaunchHandle::SplitStatus</class>
+    <name>engine::LaunchHandle</name>
+    <filename>classengine_1_1LaunchHandle.html</filename>
+    <class kind="struct">engine::LaunchHandle::SplitStatus</class>
     <member kind="enumeration">
       <type></type>
       <name>PlayState</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a53ca97711ffc1cc434a8b86bdb413a52</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ada096023e677738fd840c60a6d09566c</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a53ca97711ffc1cc434a8b86bdb413a52af0a0bfe6bc7d2c58d2989034f83183e0">stopped</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a53ca97711ffc1cc434a8b86bdb413a52a7ed501a93c1205e3a23f7f0313ea65dc">playing</enumvalue>
+      <enumvalue file="classengine_1_1LaunchHandle.html" anchor="ada096023e677738fd840c60a6d09566caf0a0bfe6bc7d2c58d2989034f83183e0">stopped</enumvalue>
+      <enumvalue file="classengine_1_1LaunchHandle.html" anchor="ada096023e677738fd840c60a6d09566ca7ed501a93c1205e3a23f7f0313ea65dc">playing</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
       <name>QueueState</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a41cf8678dca4c7481ec58cbbcc6fa7f1</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a0004edbfe6f268c38645cd4eb2bf8c2c</anchor>
       <arglist></arglist>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a41cf8678dca4c7481ec58cbbcc6fa7f1a41886f27e15eb3f30bfc386a18bb41b0">stopQueued</enumvalue>
-      <enumvalue file="classtracktion_1_1engine_1_1LaunchHandle.html" anchor="a41cf8678dca4c7481ec58cbbcc6fa7f1a66416093d869af1489e779b53fff6b7f">playQueued</enumvalue>
+      <enumvalue file="classengine_1_1LaunchHandle.html" anchor="a0004edbfe6f268c38645cd4eb2bf8c2ca41886f27e15eb3f30bfc386a18bb41b0">stopQueued</enumvalue>
+      <enumvalue file="classengine_1_1LaunchHandle.html" anchor="a0004edbfe6f268c38645cd4eb2bf8c2ca66416093d869af1489e779b53fff6b7f">playQueued</enumvalue>
     </member>
     <member kind="function">
       <type></type>
       <name>LaunchHandle</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a654dbc617d884c5a01d8de8bb62b0da4</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a61916eed222acb5518e39f5c52c9ba8d</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>LaunchHandle</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>aa25f94538fb724d871c10529aee71c2c</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ace2925cfe03225e6837ed9c2ee7e7723</anchor>
       <arglist>(const LaunchHandle &amp;)</arglist>
     </member>
     <member kind="function">
       <type>PlayState</type>
       <name>getPlayingStatus</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a8ccfe28e0bf96b1dbf408134f504f4f5</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a76a3d5b3314e66da6c1e6eb8e04da3e3</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; QueueState &gt;</type>
       <name>getQueuedStatus</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a55ac3b0925d272e609268017875a350e</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a48b94a7af7997148f2cf3c9b84c50bc3</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; MonotonicBeat &gt;</type>
       <name>getQueuedEventPosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a9be26eece3054c7cf3330749eac57da7</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ae445d6ae807915c5d8c80a77f46da91d</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>play</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>aa0bb92f8fe8b224e167b2f7c9274ac5f</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a048e2a838a0d22d27a7e4fffae05e564</anchor>
       <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>stop</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a74c2852d97f37dfd6cc60816457da114</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a4dd3af5bfb73c8275a8a6f07bf108dfc</anchor>
       <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>playSynced</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a80119c21688fc16669bf4f4c4e617a75</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a267a00124933df8bfec03b4a4c945db9</anchor>
       <arglist>(const LaunchHandle &amp;, std::optional&lt; MonotonicBeat &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLooping</name>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a5a61080680fdc7a39dd88775f638d6b1</anchor>
+      <arglist>(std::optional&lt; BeatDuration &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>nudge</name>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a682b63522dc440d92b36d0d60daed2fb</anchor>
+      <arglist>(BeatDuration)</arglist>
     </member>
     <member kind="function">
       <type>SplitStatus</type>
       <name>advance</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>ae1e2eae7188d64e78f0983cc1e3b15f2</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a759319ade34b79108acc4e5153ba36cb</anchor>
       <arglist>(const SyncRange &amp;)</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; BeatRange &gt;</type>
       <name>getPlayedRange</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a2e7746f95b519db8e64b313c03a32f2b</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ac705e11de5d9bf349ce0cb52afb9952a</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; MonotonicBeatRange &gt;</type>
       <name>getPlayedMonotonicRange</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>ab3f12787e9c8f7174fcd59399084118f</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>abe3a0fcd19900a2d4026cb75559439db</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; BeatRange &gt;</type>
       <name>getLastPlayedRange</name>
-      <anchorfile>classtracktion_1_1engine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a2c442687da7debadcd6063139fee872e</anchor>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>ade868096c77f22f07e3f02a1a46511c6</anchor>
       <arglist>() const</arglist>
     </member>
   </compound>
@@ -70796,55 +70968,55 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::LaunchHandle::SplitStatus</name>
-    <filename>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</filename>
+    <name>engine::LaunchHandle::SplitStatus</name>
+    <filename>structengine_1_1LaunchHandle_1_1SplitStatus.html</filename>
     <member kind="variable">
       <type>bool</type>
       <name>playing1</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a299d456a397b279589028ec947c66152</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a1537cc2dd5099310c21a38169c291ea2</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>bool</type>
       <name>playing2</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a1f8496e176fa7feee4b8eb6e3be7a700</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>ad38f6eb6d365909cb1b72551b45ca1fe</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>BeatRange</type>
       <name>range1</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a4000a02b4ed2a85a8f117c903e3630dc</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>aa9fb4fa9e2d814b2c64e447e715008a7</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>BeatRange</type>
       <name>range2</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a43dea8940b0cca44b28e15cbbdebc51a</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a6dc1d6123856268bd17a8b86df16ba5b</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>bool</type>
       <name>isSplit</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>af75e12c3281c588260f880250e06db91</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a5391c99f2cb96e157a3c7c6cb330b832</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>std::optional&lt; BeatPosition &gt;</type>
       <name>playStartTime1</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a7478fe05b9cb77a84cce156a70f0d8e6</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a7574842b2cba8797e3c9791598e29f1d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>std::optional&lt; BeatPosition &gt;</type>
       <name>playStartTime2</name>
-      <anchorfile>structtracktion_1_1engine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
-      <anchor>a99f676e508bc0cc729b101fd8ae24172</anchor>
+      <anchorfile>structengine_1_1LaunchHandle_1_1SplitStatus.html</anchorfile>
+      <anchor>a7226637c201dc731de4a0807003b6528</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86109,6 +86281,7 @@
     <base>tracktion::graph::Node</base>
     <base>tracktion::engine::TracktionEngineNode</base>
     <base>tracktion::engine::DynamicallyOffsettableNodeBase</base>
+    <class kind="struct">tracktion::engine::WaveNodeRealTime::BeatConfig</class>
     <member kind="enumeration">
       <type></type>
       <name>ReadAhead</name>
@@ -86142,6 +86315,13 @@
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
       <anchor>a9b49cfccaffe66e429b7e313147ff18f</anchor>
       <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::disabled, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f, ReadAhead=ReadAhead::no)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>WaveNodeRealTime</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
+      <anchor>a4f5223e310e2de69db7b413bbb9e7428</anchor>
+      <arglist>(BeatConfig)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -86492,6 +86672,7 @@
     <filename>namespaceengine.html</filename>
     <namespace>engine::render_utils</namespace>
     <class kind="class">engine::FollowActions</class>
+    <class kind="class">engine::LaunchHandle</class>
     <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::Renderer</class>
     <class kind="class">engine::EditRenderer</class>
@@ -86771,7 +86952,6 @@
     <class kind="class">tracktion::EditClip</class>
     <class kind="class">tracktion::EditRenderJob</class>
     <class kind="class">tracktion::LauncherClipPlaybackHandle</class>
-    <class kind="class">tracktion::LaunchHandle</class>
     <class kind="class">tracktion::MarkerClip</class>
     <class kind="class">tracktion::MidiClip</class>
     <class kind="class">tracktion::ReverseRenderJob</class>
@@ -87216,7 +87396,6 @@
     <class kind="class">tracktion::engine::EditClip</class>
     <class kind="class">tracktion::engine::EditRenderJob</class>
     <class kind="class">tracktion::engine::LauncherClipPlaybackHandle</class>
-    <class kind="class">tracktion::engine::LaunchHandle</class>
     <class kind="class">tracktion::engine::MarkerClip</class>
     <class kind="class">tracktion::engine::MidiClip</class>
     <class kind="class">tracktion::engine::ReverseRenderJob</class>
