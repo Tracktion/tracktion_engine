@@ -47,6 +47,9 @@ struct ScopedThreadExitStatusEnabler
     /** Cleans up the exit status. */
     ~ScopedThreadExitStatusEnabler();
 
+    /** Returns the thread_id. */
+    std::thread::id getID() const   { return threadID; }
+
 private:
     const std::thread::id threadID { std::this_thread::get_id() };
 };

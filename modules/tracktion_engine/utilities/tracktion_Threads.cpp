@@ -108,7 +108,7 @@ void signalThreadShouldExit (std::thread::id id)
 
     // If you get a block here it means you haven't created a ScopedThreadExitStatusEnabler for the above thread::id
     while (! details::isThreadSupplyingExitStatus  (id))
-        std::this_thread::sleep_for(1ms);
+        std::this_thread::sleep_for (1ms);
 
     details::getShouldExitFlag (id, false) = true;
 }

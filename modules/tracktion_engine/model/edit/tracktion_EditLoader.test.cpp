@@ -93,6 +93,22 @@ TEST_SUITE("tracktion_engine")
             CHECK (loadedEdit == nullptr);
         }
     }
+
+    TEST_CASE ("Failed Edit Load")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        juce::File invalidFile;
+        bool done = false;
+
+        auto editLoader = EditLoader::loadEdit (engine, invalidFile, [&done] (auto) { done = true; });
+
+        while (! done)
+            std::this_thread::sleep_for (20ms);
+
+        editLoader.reset();
+
+    }
 }
 
 } // namespace tracktion::inline engine

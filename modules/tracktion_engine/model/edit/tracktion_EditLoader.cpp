@@ -15,9 +15,10 @@ EditLoader::Handle::~Handle()
 {
     cancel();
 
-    if (! loadContext.completed)
-        signalThreadShouldExit (loadThread.get_id());
+    if (threadExitEnabler)
+        signalThreadShouldExit (threadExitEnabler->getID());
 
+    assert (loadThread.joinable()); // Thre thread should have always been started
     loadThread.join();
 }
 
@@ -39,11 +40,21 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options editOpti
 
     auto handle = std::shared_ptr<Handle> (new Handle());
     editOptions.loadContext = &handle->loadContext;
-    handle->loadThread = std::thread ([options = std::move (editOptions),
-                                       completionCallback = std::move (editLoadedCallback)]
+    auto threadStarted = std::make_shared<Semaphore>();
+    handle->loadThread = std::thread ([threadStarted,
+                                       handleRef = std::weak_ptr (handle),
+                                       options = std::move (editOptions),
+                                       completionCallback = std::move (editLoadedCallback)]() mutable
                                       {
-                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+                                          if (auto h = handleRef.lock())
+                                          {
+                                              h->threadExitEnabler = std::make_unique<ScopedThreadExitStatusEnabler>();
+                                              handleRef.reset();
+                                          }
 
+                                          threadStarted->signal();
+
+                                          // Actually load the Edit
                                           auto opts = std::move (options);
                                           auto id = ProjectItemID::fromProperty (opts.editState, IDs::projectID);
 
@@ -53,6 +64,9 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options editOpti
                                           opts.editProjectItemID = id;
                                           completionCallback (Edit::createEdit (std::move (opts)));
                                       });
+
+    // Wait until the thread has started so it's properly registered with the ExitStatusEnabler
+    threadStarted->wait();
 
     return handle;
 }
@@ -75,11 +89,21 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
         .editFileRetriever = [editFile] { return editFile; }
     };
 
-    handle->loadThread = std::thread ([options = std::move (editOptions), file = std::move (editFile),
-                                       completionCallback = std::move (editLoadedCallback)]
+    auto threadStarted = std::make_shared<Semaphore>();
+    handle->loadThread = std::thread ([threadStarted,
+                                       handleRef = std::weak_ptr (handle),
+                                       options = std::move (editOptions), file = std::move (editFile),
+                                       completionCallback = std::move (editLoadedCallback)]() mutable
                                       {
-                                          const ScopedThreadExitStatusEnabler threadExitEnabler;
+                                          if (auto h = handleRef.lock())
+                                          {
+                                              h->threadExitEnabler = std::make_unique<ScopedThreadExitStatusEnabler>();
+                                              handleRef.reset();
+                                          }
 
+                                          threadStarted->signal();
+
+                                          // Actually load the Edit
                                           auto opts = std::move (options);
                                           opts.editState = loadValueTree (file, IDs::EDIT);
 
@@ -96,6 +120,9 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
                                           // Load the Edit
                                           completionCallback (Edit::createEdit (opts));
                                       });
+
+    // Wait until the thread has started so it's properly registered with the ExitStatusEnabler
+    threadStarted->wait();
 
     return handle;
 }

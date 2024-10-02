@@ -43,6 +43,7 @@ public:
     private:
         friend EditLoader;
         std::thread loadThread;
+        std::unique_ptr<ScopedThreadExitStatusEnabler> threadExitEnabler;
         Edit::LoadContext loadContext;
 
         Handle() = default;
