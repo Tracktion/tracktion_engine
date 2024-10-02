@@ -68058,6 +68058,13 @@
       <anchor>acff547a683cfb1fc38542d6c427af766</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function">
+      <type>std::thread::id</type>
+      <name>getID</name>
+      <anchorfile>structengine_1_1ScopedThreadExitStatusEnabler.html</anchorfile>
+      <anchor>a49e14d8e1d2b78ac97cab3c93494ad5f</anchor>
+      <arglist>() const</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::FreezePointPlugin::ScopedTrackFreezer</name>
