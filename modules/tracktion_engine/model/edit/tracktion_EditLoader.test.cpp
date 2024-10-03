@@ -99,7 +99,7 @@ TEST_SUITE("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
 
         juce::File invalidFile;
-        bool done = false;
+        std::atomic<bool> done { false };
 
         auto editLoader = EditLoader::loadEdit (engine, invalidFile, [&done] (auto) { done = true; });
 
