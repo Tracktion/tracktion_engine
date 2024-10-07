@@ -29316,10 +29316,10 @@
       <arglist>(Track::Ptr, TrackInsertPoint)</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>Track::Ptr</type>
       <name>copyTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>ac652c05bd8570e73d63a468a2fb40412</anchor>
+      <anchor>a8f9a08a2379e05b2c18fe385ceeca80e</anchor>
       <arglist>(Track::Ptr, TrackInsertPoint)</arglist>
     </member>
     <member kind="function">
