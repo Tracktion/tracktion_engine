@@ -1943,12 +1943,12 @@ void Edit::moveTrack (Track::Ptr t, TrackInsertPoint destination)
         sm->keepSelectedObjectsOnScreen();
 }
 
-void Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
+Track::Ptr Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
 {
     CRASH_TRACER
 
     if (t == nullptr)
-        return;
+        return {};
 
     juce::ValueTree newParent (state), preceedingTrack;
 
@@ -1965,7 +1965,7 @@ void Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
     auto precedingIndex = preceedingTrack.isValid() ? newParent.indexOf (preceedingTrack) : 0;
 
     if (newParent.isAChildOf (t->state) || newParent == t->state)
-        return;
+        return {};
 
     auto newTrack = t->state.createCopy();
 
@@ -1981,7 +1981,7 @@ void Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
         auto newIndex = precedingIndex + 1;
 
         if (currentIndex < 0 || newIndex < 0)
-            return;
+            return {};
 
         newParent.addChild (newTrack, newIndex, &undoManager);
     }
@@ -2034,7 +2034,11 @@ void Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
                 }
             }
         }
+
+        return track;
     }
+
+    return {};
 }
 
 void Edit::updateTrackStatuses()
