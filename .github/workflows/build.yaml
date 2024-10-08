@@ -12,7 +12,7 @@ jobs:
       matrix:
         build_config: [ Debug, Release ]
         name: [ linux, macOS, windows ]
-        target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo ]
+        target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo_common ]
         include:
           - name: linux
             os: ubuntu-latest

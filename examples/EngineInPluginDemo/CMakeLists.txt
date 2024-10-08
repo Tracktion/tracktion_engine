@@ -97,3 +97,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_options(${TARGET_NAME} PRIVATE "-m64")
   endif()
 endif()
+
+# Add custom target to avoid building LV2 which is broken with PIP sources
+add_custom_target(${TARGET_NAME}_common)
+add_dependencies(${TARGET_NAME}_common
+    ${TARGET_NAME}_VST3
+    ${TARGET_NAME}_Standalone)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    add_dependencies(${TARGET_NAME}_common
+        ${TARGET_NAME}_AU)
+endif()
