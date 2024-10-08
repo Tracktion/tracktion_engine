@@ -54,4 +54,4 @@ jobs:
         shell: bash
         run: |
           cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }}
-          cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo TestRunner Benchmarks
+          cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo_common TestRunner Benchmarks
