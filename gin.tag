@@ -62061,6 +62061,13 @@
       <arglist>(int index, juce::Point&lt; float &gt; pos)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>flushStateToValueTree</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
+      <anchor>aaac92bc21d19bbe1babef11f413ab06d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Array&lt; const RackConnection * &gt;</type>
       <name>getConnections</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
@@ -91408,14 +91415,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__graph-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_engine-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__engine-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__graph-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -91504,13 +91511,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>
