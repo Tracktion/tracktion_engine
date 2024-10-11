@@ -1950,6 +1950,8 @@ Track::Ptr Edit::copyTrack (Track::Ptr t, TrackInsertPoint destination)
     if (t == nullptr)
         return {};
 
+    t->flushStateToValueTree();
+
     juce::ValueTree newParent (state), preceedingTrack;
 
     if (destination.parentTrackID.isValid())

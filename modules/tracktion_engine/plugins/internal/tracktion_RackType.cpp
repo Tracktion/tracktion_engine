@@ -561,6 +561,12 @@ void RackType::setPluginPosition (int index, juce::Point<float> pos)
     }
 }
 
+void RackType::flushStateToValueTree()
+{
+    for (auto& plugin : getPlugins())
+        plugin->flushPluginStateToValueTree();
+}
+
 //==============================================================================
 juce::Array<EditItemID> RackType::getPluginsWhichTakeInputFrom (EditItemID sourceId) const
 {
@@ -1379,6 +1385,7 @@ RackType::Ptr RackTypeList::duplicateRack (EditItemID rackID)
 {
     if (auto source = getRackTypeForID (rackID))
     {
+        source->flushStateToValueTree();
         auto newState = source->state.createCopy();
         EditItemID::remapIDs (newState, nullptr, edit);
         return addRackTypeFrom (newState);

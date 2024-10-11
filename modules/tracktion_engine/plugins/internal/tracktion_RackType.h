@@ -70,6 +70,8 @@ public:
     juce::Point<float> getPluginPosition (int index) const;
     void setPluginPosition (int index, juce::Point<float> pos);
 
+    void flushStateToValueTree();
+
     //==============================================================================
     juce::Array<const RackConnection*> getConnections() const noexcept;
 
