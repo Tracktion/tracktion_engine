@@ -16,8 +16,7 @@ namespace tracktion { inline namespace engine
 
     Also looks after some global automation settings.
 */
-class AutomationRecordManager   : public juce::ChangeBroadcaster,
-                                  private juce::ChangeListener
+class AutomationRecordManager   : private juce::ChangeListener
 {
 public:
     //==============================================================================
@@ -68,10 +67,7 @@ private:
 
     struct AutomationParamData
     {
-        AutomationParamData (AutomatableParameter& p, float value)
-            : parameter (p), originalValue (value)
-        {
-        }
+        AutomationParamData (AutomatableParameter&, float value);
 
         struct Change
         {
@@ -85,21 +81,31 @@ private:
         AutomatableParameter& parameter;
         juce::Array<Change> changes;
         float originalValue;
+        std::optional<Change> lastChangeFlushed;
+        std::optional<float> valueAtLoopEnd;
+        const TimeDuration glideTime = AutomationRecordManager::getGlideSeconds (parameter.getEngine());
     };
 
     Edit& edit;
     juce::CriticalSection lock;
     juce::OwnedArray<AutomationParamData> recordedParams;
     bool writingAutomation = false;
-    juce::CachedValue<bool> readingAutomation;
+    juce::CachedValue<bool> readingAutomation; //ddd Should be atomic
     bool wasPlaying = false;
+    LambdaTimer flushTimer { [this] { flushAutomation(); } };
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
     void parameterBeingDeleted (AutomatableParameter&);
 
-    void applyChangesToParameter (AutomationParamData*, TimePosition endTime, bool toEnd);
+    void flushAutomation();
+    static void flushSection (AutomationCurve&, TimeRange time, std::span<AutomationParamData::Change>);
+
+    enum class IsFlushing { no, yes };
+    enum class ToEnd { no, yes };
+    enum class CanGlide { no, yes };
+    void applyChangesToParameter (AutomationParamData&, TimePosition endTime, ToEnd, CanGlide, IsFlushing);
 
     void changeListenerCallback (juce::ChangeBroadcaster*);
 };

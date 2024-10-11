@@ -187,7 +187,7 @@ template<typename PositionType>
 //==============================================================================
 /** Adds an amount to the end of the range and returns a new range. */
 template<typename PositionType>
-[[ nodiscard ]] RangeType<PositionType> withEndExtended (RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
+[[ nodiscard ]] RangeType<PositionType> withEndExtended (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 //==============================================================================
 //        _        _           _  _
@@ -377,7 +377,7 @@ template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
 template<typename PositionType>
-inline RangeType<PositionType> withEndExtended (RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)
+inline RangeType<PositionType> withEndExtended (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)
 {
     return r.withEnd (r.getEnd() + d);
 }
