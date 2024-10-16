@@ -812,6 +812,9 @@ static bool connectionIsValid (juce::ValueTree& rack, EditItemID srcID,
 
 void RackType::removeBrokenConnections (juce::ValueTree& rack, juce::UndoManager* um)
 {
+    if (um && um->isPerformingUndoRedo())
+        return;
+
     for (int i = rack.getNumChildren(); --i >= 0;)
     {
         auto c = rack.getChild (i);
