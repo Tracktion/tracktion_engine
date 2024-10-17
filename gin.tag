@@ -59026,6 +59026,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isWindowShowing</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a7fce117a164e6913e59b64b50d70c6dc</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>showWindowExplicitly</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
@@ -59034,17 +59041,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>closeWindowExplicitly</name>
+      <name>showWindowIfTemporarilyHidden</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
-      <anchor>a97e9bf4f0cd8765572df70e6ff10da0b</anchor>
+      <anchor>a3e24e712422e5837db888c052ef0acef</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isWindowShowing</name>
-      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
-      <anchor>a7fce117a164e6913e59b64b50d70c6dc</anchor>
-      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -59055,9 +59055,23 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>closeWindowExplicitly</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a97e9bf4f0cd8765572df70e6ff10da0b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>hideWindowForShutdown</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
       <anchor>a55eeba1dfe5d1ea7557bc131e5b41ed8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>hideWindowTemporarily</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a6a4d0d14a04ef6a6185e50c5f2b55326</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -59073,6 +59087,41 @@
       <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
       <anchor>aa03ee1c4aa9372fd1e9a2e7ea305f793</anchor>
       <arglist>(const juce::MouseEvent &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>hideAllWindowsTemporarily</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>aa82d9d5b4e04b8187c52217faec4fb8d</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>showAllTemporarilyHiddenWindows</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>ad9407ea7972d10741d19c059b7af36b5</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>showOrHideAllWindows</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a875bd60228549c1f6375fda962a04f2c</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::vector&lt; PluginWindowState * &gt;</type>
+      <name>getAllWindows</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a02bd66d37596c9ea0dda7738624e0153</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static uint32_t</type>
+      <name>getNumOpenWindows</name>
+      <anchorfile>structtracktion_1_1engine_1_1PluginWindowState.html</anchorfile>
+      <anchor>a1c90f655f1f43c19be2d1f27a5713dea</anchor>
+      <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="variable">
       <type>Edit &amp;</type>
