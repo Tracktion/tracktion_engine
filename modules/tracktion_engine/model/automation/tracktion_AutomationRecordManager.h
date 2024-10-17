@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+//==============================================================================
+//==============================================================================
 /** Stores automation data as it's being read in, and writes it back to the
     edit when recording finishes.
 
@@ -27,7 +29,7 @@ public:
     /** Toggles automation playback
         Matches the auto play button on the transport controls.
     */
-    bool isReadingAutomation() const noexcept    { return readingAutomation; }
+    bool isReadingAutomation() const noexcept    { return readingAutomation.get(); }
     void setReadingAutomation (bool);
 
     /** Toggles automation recording
@@ -65,7 +67,7 @@ private:
     //==============================================================================
     AutomationRecordManager (const AutomationRecordManager&);
 
-    struct AutomationParamData
+    struct AutomationParamData : public AutomatableParameter::Listener
     {
         AutomationParamData (AutomatableParameter&, float value);
 
@@ -79,33 +81,39 @@ private:
         };
 
         AutomatableParameter& parameter;
+        const AutomationMode mode = getAutomationMode (parameter);
         juce::Array<Change> changes;
         float originalValue;
         std::optional<Change> lastChangeFlushed;
         std::optional<float> valueAtLoopEnd;
         const TimeDuration glideTime = AutomationRecordManager::getGlideSeconds (parameter.getEngine());
+        juce::SparseSet<TimePosition> timeRangeCovered;
+
+    private:
+        const ScopedListener listener { parameter, *this};
+        void curveHasChanged (AutomatableParameter&) override {}
+        void parameterChangeGestureEnd (AutomatableParameter&) override;
     };
 
     Edit& edit;
     juce::CriticalSection lock;
     juce::OwnedArray<AutomationParamData> recordedParams;
     bool writingAutomation = false;
-    juce::CachedValue<bool> readingAutomation; //ddd Should be atomic
+    juce::CachedValue<AtomicWrapper<bool>> readingAutomation;
     bool wasPlaying = false;
     LambdaTimer flushTimer { [this] { flushAutomation(); } };
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
+    void punchOut (AutomatableParameter&, bool toEnd);
     void parameterBeingDeleted (AutomatableParameter&);
+    void parameterChangeGestureEnd (AutomatableParameter&);
 
     void flushAutomation();
     static void flushSection (AutomationCurve&, TimeRange time, std::span<AutomationParamData::Change>);
 
-    enum class IsFlushing { no, yes };
-    enum class ToEnd { no, yes };
-    enum class CanGlide { no, yes };
-    void applyChangesToParameter (AutomationParamData&, TimePosition endTime, ToEnd, CanGlide, IsFlushing);
+    void applyChangesToParameter (AutomationParamData*, TimePosition endTime, bool toEnd);
 
     void changeListenerCallback (juce::ChangeBroadcaster*);
 };

@@ -221,6 +221,9 @@ public:
         virtual void parameterChanged (AutomatableParameter&, float /*newValue*/) {}
         virtual void parameterChangeGestureBegin (AutomatableParameter&) {}
         virtual void parameterChangeGestureEnd (AutomatableParameter&) {}
+
+        /** Called when this parameter starts or stops recording. */
+        virtual void recordingStatusChanged (AutomatableParameter&) {}
     };
 
     void addListener (Listener* l)              { listeners.add (l); }
@@ -266,6 +269,9 @@ protected:
 
 
 //==============================================================================
+/** Looks for the Track this parameter is currently on and returns the AutomationMode for it. */
+AutomationMode getAutomationMode (const AutomatableParameter&);
+
 /** Returns all the Assignments of a specific type. */
 template<typename AssignmentType>
 juce::ReferenceCountedArray<AssignmentType> getAssignmentsOfType (const AutomatableParameter& ap)

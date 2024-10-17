@@ -1025,6 +1025,7 @@ juce::String AutomatableParameter::getFullName() const
 void AutomatableParameter::resetRecordingStatus()
 {
     isRecording = false;
+    listeners.call (&Listener::recordingStatusChanged, *this);
 }
 
 //==============================================================================
@@ -1074,6 +1075,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         {
                             isRecording = true;
                             arm.postFirstAutomationChange (*this, currentValue);
+                            listeners.call (&Listener::recordingStatusChanged, *this);
                         }
 
                         arm.postAutomationChange (*this, time, value);
@@ -1224,6 +1226,14 @@ void AutomatableParameter::curveHasChanged()
 }
 
 //==============================================================================
+AutomationMode getAutomationMode (const AutomatableParameter& ap)
+{
+    if (auto t = ap.getTrack())
+        return t->automationMode;
+
+    return AutomationMode::read;
+}
+
 AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableParameter::ModifierAssignment& ass)
 {
     for (auto modifier : getAllModifierSources (ass.edit))

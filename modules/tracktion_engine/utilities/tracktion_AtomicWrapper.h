@@ -62,16 +62,35 @@ struct AtomicWrapper
         return *this;
     }
 
-    /** Compares the unerlaying value of another wrapper with this one. */
+    /** Assigns a value to this one atomically. */
+    AtomicWrapper& operator= (const Type& other) noexcept
+    {
+        value.store (Constrainer::constrain (other));
+        return *this;
+    }
+
+    /** Compares the underlaying value of another wrapper with this one. */
     bool operator== (const AtomicWrapper& other) const noexcept
     {
         return value.load() == other.value.load();
     }
 
-    /** Compares the unerlaying value of another wrapper with this one. */
+    /** Compares the underlaying value of another wrapper with this one. */
     bool operator!= (const AtomicWrapper& other) const noexcept
     {
         return value.load() != other.value.load();
+    }
+
+    /** Compares another value with this one. */
+    bool operator== (const Type& other) const noexcept
+    {
+        return value.load() == other;
+    }
+
+    /** Compares another value with this one. */
+    bool operator!= (const Type& other) const noexcept
+    {
+        return value.load() != other;
     }
 
     //==============================================================================

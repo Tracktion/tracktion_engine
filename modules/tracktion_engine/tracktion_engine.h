@@ -432,6 +432,7 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================
+#include "model/automation/tracktion_AutomationMode.h"
 #include "model/automation/tracktion_AutomationCurve.h"
 #include "model/edit/tracktion_EditItem.h"
 #include "model/automation/tracktion_AutomatableParameterTree.h"
