@@ -18,20 +18,40 @@ struct PluginWindowState  : private juce::Timer
     void incRefCount();
     void decRefCount();
 
-    void showWindowExplicitly();
-    void closeWindowExplicitly();
-
+    //==============================================================================
     bool isWindowShowing() const;
+
+    void showWindowExplicitly();
+    void showWindowIfTemporarilyHidden();
     void recreateWindowIfShowing();
+
+    void closeWindowExplicitly();
     void hideWindowForShutdown();
+    void hideWindowTemporarily();
+
+    /// Calls hideWindowTemporarily() for any windows of plugins in this edit
+    static void hideAllWindowsTemporarily (Edit&);
+    /// Calls showWindowIfTemporarilyHidden() for all plugins in this edit
+    static void showAllTemporarilyHiddenWindows (Edit&);
+
+    /// If any windows are showing, hide them all temporarily, otherwise
+    /// bring back any temporarily hidden ones.
+    static void showOrHideAllWindows (Edit&);
+
+    /// Finds all windows for all plugins in this edit
+    static std::vector<PluginWindowState*> getAllWindows (Edit&);
+    /// Counts the number of visible windows for plugins in this edit
+    static uint32_t getNumOpenWindows (Edit&);
 
     // Attempts to use either the last saved bounds from this state,
     // or pick a default position for a newly created window that is
     // going  to hold this plugin's UI
     juce::Point<int> choosePositionForPluginWindow();
 
+    /// Can be used to manually fire a mouse event into the window
     void pluginClicked (const juce::MouseEvent&);
 
+    //==============================================================================
     Edit& edit;
     Engine& engine;
     std::unique_ptr<juce::Component> pluginWindow;
