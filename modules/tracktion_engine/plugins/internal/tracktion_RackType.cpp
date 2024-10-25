@@ -1384,15 +1384,18 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
     return type;
 }
 
+RackType::Ptr RackTypeList::duplicateRack (RackType& rackType)
+{
+    rackType.flushStateToValueTree();
+    auto newState = rackType.state.createCopy();
+    EditItemID::remapIDs (newState, nullptr, edit);
+    return addRackTypeFrom (newState);
+}
+
 RackType::Ptr RackTypeList::duplicateRack (EditItemID rackID)
 {
     if (auto source = getRackTypeForID (rackID))
-    {
-        source->flushStateToValueTree();
-        auto newState = source->state.createCopy();
-        EditItemID::remapIDs (newState, nullptr, edit);
-        return addRackTypeFrom (newState);
-    }
+        return duplicateRack (*source);
 
     return {};
 }
