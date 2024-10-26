@@ -171,134 +171,6 @@ struct DeviceManager::PrepareToStartCaller  : public juce::AsyncUpdater
 };
 
 //==============================================================================
-//==============================================================================
-DeviceManager::DeviceManager (Engine& e) : engine (e)
-{
-    CRASH_TRACER
-
-    prepareToStartCaller = std::make_unique<PrepareToStartCaller> (*this);
-
-    deviceManager.addChangeListener (this);
-
-    gDeviceManager = &deviceManager;
-}
-
-DeviceManager::~DeviceManager()
-{
-    gDeviceManager = nullptr;
-
-    CRASH_TRACER
-    removeHostedAudioDeviceInterface();
-    deviceManager.removeChangeListener (this);
-}
-
-void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
-{
-    defaultNumInputChannelsToOpen = defaultNumInputs;
-    defaultNumOutputChannelsToOpen = defaultNumOutputs;
-
-    loadSettings();
-    finishedInitialising = true;
-    rescanMidiDeviceList();
-    rescanWaveDeviceList();
-    updateNumCPUs();
-
-    deviceManager.addAudioCallback (this);
-
-    midiRescanIntervalSeconds = engine.getPropertyStorage().getProperty (SettingID::midiScanIntervalSeconds, 4);
-    restartMidiCheckTimer();
-}
-
-void DeviceManager::closeDevices()
-{
-    CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
-
-    lastMIDIDeviceList.reset();
-    lastAvailableWaveDeviceList.reset();
-
-    jassert (activeContexts.isEmpty());
-    clearAllContextDevices();
-
-    deviceManager.removeAudioCallback (this);
-
-    midiOutputs.clear();
-
-    {
-        const std::unique_lock sl (midiInputsMutex);
-        midiInputs.clear();
-    }
-
-    waveInputs.clear();
-    waveOutputs.clear();
-}
-
-void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices,
-                                     bool resetOutputDevices, bool latencySettings, bool mixSettings)
-{
-    TRACKTION_LOG ("Returning audio settings to defaults");
-
-    auto& storage = engine.getPropertyStorage();
-
-    if (deviceSettings)
-    {
-        storage.removeProperty (SettingID::audio_device_setup);
-        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
-    }
-
-    if (latencySettings)
-    {
-        storage.setProperty (SettingID::maxLatency, 5.0f);
-        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
-    }
-
-    if (mixSettings)
-    {
-        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
-        updateNumCPUs();
-
-        storage.setProperty (SettingID::use64Bit, false);
-    }
-
-    if (resetInputDevices)
-        for (auto wid : waveInputs)
-            wid->resetToDefault();
-
-    if (resetOutputDevices)
-        for (auto wod : waveOutputs)
-            wod->resetToDefault();
-
-    loadSettings();
-    TransportControl::restartAllTransports (engine, false);
-    SelectionManager::refreshAllPropertyPanels();
-}
-
-void DeviceManager::setMidiDeviceScanIntervalSeconds (int intervalSeconds)
-{
-    midiRescanIntervalSeconds = intervalSeconds;
-    engine.getPropertyStorage().setProperty (SettingID::midiScanIntervalSeconds, intervalSeconds);
-    restartMidiCheckTimer();
-}
-
-void DeviceManager::restartMidiCheckTimer()
-{
-    if (usesHardwareMidiDevices() && midiRescanIntervalSeconds != 0)
-        startTimer (midiRescanIntervalSeconds * 1000);
-    else
-        stopTimer();
-}
-
-void DeviceManager::rescanMidiDeviceList()
-{
-    onlyRescanMidiOnHardwareChange = false;
-    startTimer (5);
-}
-
-void DeviceManager::timerCallback()
-{
-    applyNewMidiDeviceList();
-}
-
 static constexpr const char* allMidiInsName = "All MIDI Ins";
 static constexpr const char* allMidiInsID = "all_midi_in";
 
@@ -318,6 +190,7 @@ static void setVirtualDeviceIDs (Engine& engine, const juce::StringArray& list)
     engine.getPropertyStorage().setProperty (SettingID::virtualmididevices, list.joinIntoString (";"));
 }
 
+//==============================================================================
 struct DeviceManager::MIDIDeviceList
 {
     juce::Array<juce::MidiDeviceInfo> midiIns, midiOuts;
@@ -508,6 +381,135 @@ struct DeviceManager::MIDIDeviceList
         return list;
     }
 };
+
+//==============================================================================
+//==============================================================================
+DeviceManager::DeviceManager (Engine& e) : engine (e)
+{
+    CRASH_TRACER
+
+    prepareToStartCaller = std::make_unique<PrepareToStartCaller> (*this);
+
+    deviceManager.addChangeListener (this);
+
+    gDeviceManager = &deviceManager;
+}
+
+DeviceManager::~DeviceManager()
+{
+    gDeviceManager = nullptr;
+
+    CRASH_TRACER
+    removeHostedAudioDeviceInterface();
+    deviceManager.removeChangeListener (this);
+}
+
+void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
+{
+    defaultNumInputChannelsToOpen = defaultNumInputs;
+    defaultNumOutputChannelsToOpen = defaultNumOutputs;
+
+    loadSettings();
+    finishedInitialising = true;
+    rescanMidiDeviceList();
+    rescanWaveDeviceList();
+    updateNumCPUs();
+
+    deviceManager.addAudioCallback (this);
+
+    midiRescanIntervalSeconds = engine.getPropertyStorage().getProperty (SettingID::midiScanIntervalSeconds, 4);
+    restartMidiCheckTimer();
+}
+
+void DeviceManager::closeDevices()
+{
+    CRASH_TRACER
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    lastMIDIDeviceList.reset();
+    lastAvailableWaveDeviceList.reset();
+
+    jassert (activeContexts.isEmpty());
+    clearAllContextDevices();
+
+    deviceManager.removeAudioCallback (this);
+
+    midiOutputs.clear();
+
+    {
+        const std::unique_lock sl (midiInputsMutex);
+        midiInputs.clear();
+    }
+
+    waveInputs.clear();
+    waveOutputs.clear();
+}
+
+void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices,
+                                     bool resetOutputDevices, bool latencySettings, bool mixSettings)
+{
+    TRACKTION_LOG ("Returning audio settings to defaults");
+
+    auto& storage = engine.getPropertyStorage();
+
+    if (deviceSettings)
+    {
+        storage.removeProperty (SettingID::audio_device_setup);
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+    }
+
+    if (latencySettings)
+    {
+        storage.setProperty (SettingID::maxLatency, 5.0f);
+        storage.setProperty (SettingID::lowLatencyBuffer, 5.8f);
+    }
+
+    if (mixSettings)
+    {
+        storage.setProperty (SettingID::cpu, juce::SystemStats::getNumCpus());
+        updateNumCPUs();
+
+        storage.setProperty (SettingID::use64Bit, false);
+    }
+
+    if (resetInputDevices)
+        for (auto wid : waveInputs)
+            wid->resetToDefault();
+
+    if (resetOutputDevices)
+        for (auto wod : waveOutputs)
+            wod->resetToDefault();
+
+    loadSettings();
+    TransportControl::restartAllTransports (engine, false);
+    SelectionManager::refreshAllPropertyPanels();
+}
+
+void DeviceManager::setMidiDeviceScanIntervalSeconds (int intervalSeconds)
+{
+    midiRescanIntervalSeconds = intervalSeconds;
+    engine.getPropertyStorage().setProperty (SettingID::midiScanIntervalSeconds, intervalSeconds);
+    restartMidiCheckTimer();
+}
+
+void DeviceManager::restartMidiCheckTimer()
+{
+    if (usesHardwareMidiDevices() && midiRescanIntervalSeconds != 0)
+        startTimer (midiRescanIntervalSeconds * 1000);
+    else
+        stopTimer();
+}
+
+void DeviceManager::rescanMidiDeviceList()
+{
+    onlyRescanMidiOnHardwareChange = false;
+    startTimer (5);
+}
+
+void DeviceManager::timerCallback()
+{
+    applyNewMidiDeviceList();
+}
 
 void DeviceManager::applyNewMidiDeviceList()
 {
