@@ -143,7 +143,7 @@ var searchData=
   ['removeprojectitem_11421',['removeProjectItem',['../classtracktion_1_1engine_1_1Project.html#a280ed99488ed94d871ccbacc6f523889',1,'tracktion::engine::Project']]],
   ['removeproperty_11422',['removeProperty',['../classtracktion_1_1engine_1_1PropertyStorage.html#a99b5e342310ef9d465f7634cea6471c9',1,'tracktion::engine::PropertyStorage']]],
   ['removepropertyitem_11423',['removePropertyItem',['../classtracktion_1_1engine_1_1PropertyStorage.html#afca275cdfb883d878ac8afc338d33d99',1,'tracktion::engine::PropertyStorage']]],
-  ['removeracktype_11424',['removeRackType',['../classtracktion_1_1engine_1_1RackTypeList.html#aee6a9b3515bad7de601ef84c6b53a895',1,'tracktion::engine::RackTypeList']]],
+  ['removeracktype_11424',['removeRackType',['../classtracktion_1_1engine_1_1RackTypeList.html#ad8a1beeebed011b2b3273128994e5379',1,'tracktion::engine::RackTypeList']]],
   ['removerangefromprogression_11425',['removeRangeFromProgression',['../classtracktion_1_1engine_1_1PatternGenerator.html#af75ab75583c553b3d6b5d7b7a2f68486',1,'tracktion::engine::PatternGenerator']]],
   ['removeredundantpoints_11426',['removeRedundantPoints',['../classtracktion_1_1engine_1_1AutomationCurve.html#a8a9928c5e6ccc535f929a7dfa4890e25',1,'tracktion::engine::AutomationCurve']]],
   ['removeregionandclosegap_11427',['removeRegionAndCloseGap',['../classtracktion_1_1engine_1_1AutomationCurve.html#a87211f15819bdab374c7410f5ebf3e59',1,'tracktion::engine::AutomationCurve']]],
