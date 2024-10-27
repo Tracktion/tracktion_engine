@@ -445,6 +445,13 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                 return true;
             });
 
+            edit.clipSlotCache.visitItems ([&] (auto cs) {
+                if (auto c = cs->getClip())
+                    if (c->getLinkGroupID().isNotEmpty())
+                        linkedClipsMap[c->getLinkGroupID()].add(c);
+            });
+
+
             linkedClipsMapDirty = false;
         }
 
