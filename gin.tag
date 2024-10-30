@@ -52834,6 +52834,13 @@
       <anchor>abf180cf9fef0648df9d52f36094e25b5</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>defaultMasterVolumedB</name>
+      <anchorfile>structtracktion_1_1engine_1_1Edit_1_1Options.html</anchorfile>
+      <anchor>ae3457802ed6165bba407094603d46ef3</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::Oscillator</name>
