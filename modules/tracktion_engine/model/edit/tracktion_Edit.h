@@ -115,6 +115,8 @@ public:
         std::function<juce::File (const juce::String&)> filePathResolver = {};  ///< An optional filePathResolver to use.
 
         uint32_t numAudioTracks = 1;                                            ///< If non-zero, will ensure the edit has this many audio tracks
+
+        float defaultMasterVolumedB = -3.0f;                                    ///< The initial level for the edit's master volume
     };
 
     /** Creates an Edit from a set of Options.
@@ -942,7 +944,7 @@ private:
     void initialiseTempoAndPitch();
     void initialiseTimecode (juce::ValueTree&);
     void initialiseTransport();
-    void initialiseMasterVolume();
+    void initialiseMasterVolume (const Options&);
     void initialiseVideo();
     void initialiseClickTrack();
     void initialiseTracks (const Options&);

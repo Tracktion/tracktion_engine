@@ -809,7 +809,7 @@ void Edit::initialise (const Options& options)
     initialiseTransport();
     initialiseVideo();
     initialiseClickTrack();
-    initialiseMasterVolume();
+    initialiseMasterVolume (options);
     initialiseRacks();
     initialiseMasterPlugins();
     initialiseAudioDevices();
@@ -903,7 +903,7 @@ void Edit::initialiseTransport()
     initialiseTimecode (transportState);
 }
 
-void Edit::initialiseMasterVolume()
+void Edit::initialiseMasterVolume (const Options& options)
 {
     auto* um = &undoManager;
 
@@ -922,7 +922,10 @@ void Edit::initialiseMasterVolume()
     if (! masterVolState.isValid())
     {
         masterVolState = VolumeAndPanPlugin::create();
-        masterVolState.setProperty (IDs::volume, decibelsToVolumeFaderPosition (-3.0f), nullptr);
+
+        if (options.defaultMasterVolumedB != 0)
+            masterVolState.setProperty (IDs::volume, decibelsToVolumeFaderPosition (options.defaultMasterVolumedB), nullptr);
+
         mvTree.addChild (masterVolState, -1, nullptr);
     }
 
