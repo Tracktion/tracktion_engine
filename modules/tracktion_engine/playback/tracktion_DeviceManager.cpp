@@ -434,11 +434,18 @@ void DeviceManager::closeDevices()
 
     deviceManager.removeAudioCallback (this);
 
-    midiOutputs.clear();
-
     {
-        const std::unique_lock sl (midiInputsMutex);
-        midiInputs.clear();
+        // In rare situations, a context could be iterating these
+        // device lists, so lock the context before removing them
+        decltype(midiInputs) oldMIDIInputs;
+        decltype(midiOutputs) oldMIDIOutputs;
+
+        {
+            const std::unique_lock sl1 (contextLock);
+            const std::unique_lock sl2 (midiInputsMutex);
+            std::swap (oldMIDIInputs, midiInputs);
+            std::swap (oldMIDIOutputs, midiOutputs);
+        }
     }
 
     waveInputs.clear();
