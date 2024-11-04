@@ -623,8 +623,6 @@ juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldS
     if (getMidiOutput().outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");
 
-    stop();
-
     shouldSendMidiTimecode = shouldSendMidiTC;
     timecodeGenerator->update (&edit);
     midiClockGenerator->reset (&edit);
