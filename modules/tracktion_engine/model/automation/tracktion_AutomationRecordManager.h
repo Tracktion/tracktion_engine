@@ -72,7 +72,6 @@ private:
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
-    void punchOut (AutomatableParameter&, bool toEnd);
     void parameterBeingDeleted (AutomatableParameter&);
 };
 

@@ -33,7 +33,6 @@ namespace tracktion::inline engine
         //==============================================================================
         virtual void postFirstAutomationChange (AutomatableParameter&, float originalValue) = 0;
         virtual void postAutomationChange (AutomatableParameter&, TimePosition time, float value) = 0;
-        virtual void punchOut (AutomatableParameter&, bool toEnd) = 0;
         virtual void parameterBeingDeleted (AutomatableParameter&) = 0;
     };
 
@@ -227,10 +226,6 @@ namespace tracktion::inline engine
                 }
             }
 
-            void punchOut (AutomatableParameter&, bool) override
-            {
-            }
-
             void parameterBeingDeleted (AutomatableParameter& param) override
             {
                 const juce::ScopedLock sl (lock);
@@ -386,6 +381,7 @@ namespace tracktion::inline engine
                 }
 
                 readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
+                writingAutomation.referTo (edit.getTransport().state, IDs::automationWrite, nullptr, true);
             }
 
             ~AutomationRecordManager() override
@@ -406,13 +402,13 @@ namespace tracktion::inline engine
                 {
                     readingAutomation = b;
 
-                    engine.getExternalControllerManager().automationModeChanged (readingAutomation.get(), writingAutomation);
+                    engine.getExternalControllerManager().automationModeChanged (readingAutomation.get(), writingAutomation.get());
                 }
             }
 
             bool isWritingAutomation() const noexcept override
             {
-                return writingAutomation;
+                return writingAutomation.get();
             }
 
             void setWritingAutomation (bool b) override
@@ -421,7 +417,7 @@ namespace tracktion::inline engine
                 {
                     writingAutomation = b;
 
-                    engine.getExternalControllerManager().automationModeChanged (readingAutomation.get(), writingAutomation);
+                    engine.getExternalControllerManager().automationModeChanged (readingAutomation.get(), writingAutomation.get());
                 }
             }
 
@@ -528,8 +524,7 @@ namespace tracktion::inline engine
             Edit& edit;
             juce::CriticalSection lock;
             juce::OwnedArray<AutomationParamData> recordedParams;
-            bool writingAutomation = false;
-            juce::CachedValue<AtomicWrapper<bool>> readingAutomation;
+            juce::CachedValue<AtomicWrapper<bool>> readingAutomation, writingAutomation;
             bool wasPlaying = false;
             LambdaTimer flushTimer { [this] { flushAutomation(); } };
 
@@ -565,7 +560,7 @@ namespace tracktion::inline engine
                 }
             }
 
-            void punchOut (AutomatableParameter& param, bool toEnd) override
+            void punchOut (AutomatableParameter& param, bool toEnd)
             {
                 auto recordedParam = std::ranges::find_if (recordedParams,
                                                            [&param] (auto& p) { return &p->parameter == &param; });
@@ -952,11 +947,6 @@ namespace tracktion::inline engine
     void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, TimePosition time, float value)
     {
         pimpl->postAutomationChange (param, time, value);
-    }
-
-    void AutomationRecordManager::punchOut (AutomatableParameter& param, bool toEnd)
-    {
-        pimpl->punchOut (param, toEnd);
     }
 
     void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param)
