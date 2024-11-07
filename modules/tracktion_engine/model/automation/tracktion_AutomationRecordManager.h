@@ -8,8 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
+
+/** @internal */
+class AutomationRecordManagerBase;
 
 //==============================================================================
 //==============================================================================
@@ -18,7 +21,7 @@ namespace tracktion { inline namespace engine
 
     Also looks after some global automation settings.
 */
-class AutomationRecordManager   : private juce::ChangeListener
+class AutomationRecordManager
 {
 public:
     //==============================================================================
@@ -29,22 +32,19 @@ public:
     /** Toggles automation playback
         Matches the auto play button on the transport controls.
     */
-    bool isReadingAutomation() const noexcept    { return readingAutomation.get(); }
+    bool isReadingAutomation() const noexcept;
     void setReadingAutomation (bool);
 
     /** Toggles automation recording
         Matches the auto rec button on the transport controls.
     */
-    bool isWritingAutomation() const noexcept    { return writingAutomation; }
+    bool isWritingAutomation() const noexcept;
     void setWritingAutomation (bool);
 
     /** flips the write mode, first punching out if it needs to. */
     void toggleWriteAutomationMode();
 
     //==============================================================================
-    // Called by the transportcontrol
-    void playStartedOrStopped();
-
     // True if some parameter data has been recorded since play began.
     bool isRecordingAutomation() const;
 
@@ -65,57 +65,15 @@ public:
 
 private:
     //==============================================================================
-    AutomationRecordManager (const AutomationRecordManager&);
+    AutomationRecordManager (const AutomationRecordManager&) = delete;
 
-    struct AutomationParamData : public AutomatableParameter::Listener
-    {
-        AutomationParamData (AutomatableParameter&, float value);
-
-        struct Change
-        {
-            inline Change (TimePosition t, float v) noexcept
-                : time (t), value (v) {}
-
-            TimePosition time;
-            float value;
-        };
-
-        AutomatableParameter& parameter;
-        const AutomationMode mode = getAutomationMode (parameter);
-        juce::Array<Change> changes;
-        float originalValue;
-        std::optional<Change> lastChangeFlushed;
-        std::optional<float> valueAtLoopEnd;
-        const TimeDuration glideTime = AutomationRecordManager::getGlideSeconds (parameter.getEngine());
-        juce::SparseSet<TimePosition> timeRangeCovered;
-
-    private:
-        const ScopedListener listener { parameter, *this};
-        void curveHasChanged (AutomatableParameter&) override {}
-        void parameterChangeGestureEnd (AutomatableParameter&) override;
-    };
-
-    Edit& edit;
-    juce::CriticalSection lock;
-    juce::OwnedArray<AutomationParamData> recordedParams;
-    bool writingAutomation = false;
-    juce::CachedValue<AtomicWrapper<bool>> readingAutomation;
-    bool wasPlaying = false;
-    LambdaTimer flushTimer { [this] { flushAutomation(); } };
+    std::unique_ptr<AutomationRecordManagerBase> pimpl;
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
     void punchOut (AutomatableParameter&, bool toEnd);
     void parameterBeingDeleted (AutomatableParameter&);
-    void parameterChangeGestureEnd (AutomatableParameter&);
-
-    void flushAutomation();
-    static void flushSection (AutomationCurve&, TimeRange time, std::span<AutomationParamData::Change>);
-
-    void applyChangesToParameter (AutomationParamData*, TimePosition endTime, bool toEnd);
-
-    void changeListenerCallback (juce::ChangeBroadcaster*);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

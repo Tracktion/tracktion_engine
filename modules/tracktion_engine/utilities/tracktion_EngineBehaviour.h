@@ -261,7 +261,7 @@ public:
     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)     { return {}; }
 
     // Experimental
-    virtual bool enableExperimentalRealTimeAutomation()                              { return false; }
+    virtual bool enableExperimentalAutomation()                                     { return false; }
 };
 
 }} // namespace tracktion { inline namespace engine
