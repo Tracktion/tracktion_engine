@@ -1424,6 +1424,15 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
         node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node), true);
 
+        // If we have any inputs, we need a third muting Node to fully block the clips whilst recording
+        // The above muting node will still let clips sound if they are going to a aux send, sidechain etc.
+        if (at.edit.engine.getEngineBehaviour().shouldProcessMutedTracks()
+            && ! at.edit.getEditInputDevices().getDevicesForTargetTrack (at).isEmpty())
+        {
+            node = makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (at, true, processMidiWhenMuted),
+                                              std::move (node), false);
+        }
+
         node = createTrackCompNode (at, std::move (node), params);
     }
 
